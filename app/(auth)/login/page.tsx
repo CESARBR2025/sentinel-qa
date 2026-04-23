@@ -1,0 +1,518 @@
+'use client'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
+
+// ─── Iconos ───────────────────────────────────────────────────────────────────
+function IconUser() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+}
+function IconLock() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="5" y="11" width="14" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+}
+function IconShield() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/></svg>
+}
+function IconArrow() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+}
+function IconCheck() {
+  return <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12l5 5L20 7"/></svg>
+}
+
+// ─── Terminal de logs ─────────────────────────────────────────────────────────
+type LogType = 'ok' | 'warn' | 'err' | 'info' | 'dim'
+interface LogLine { k: number; ts: string; type: LogType; text: string }
+
+function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
+  const [lines, setLines] = useState<LogLine[]>([])
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const keyRef  = useRef(0)
+
+  const push = useCallback((type: LogType, text: string) => {
+    const now = new Date()
+    const ts  = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`
+    setLines(ls => [...ls, { k: keyRef.current++, ts, type, text }].slice(-9))
+  }, [])
+
+  useEffect(() => {
+    const boot: [number, LogType, string][] = [
+      [80,  'info', 'iniciando cliente SSPM-SJR v4.2.1'],
+      [320, 'dim',  'resolviendo host → sspm.sanjuandelrio.gob.mx'],
+      [520, 'dim',  'handshake TLS 1.3 — cert SHA-256 verificado'],
+      [120, 'ok',   'canal cifrado AES-256-GCM establecido'],
+      [200, 'dim',  'verificando integridad del cliente (0x4F··A1C2)'],
+      [340, 'warn', 'esperando credenciales de operador...'],
+    ]
+    let t = 0
+    const timers = boot.map(([d, type, text]) => { t += d; return setTimeout(() => push(type, text), t) })
+    return () => timers.forEach(clearTimeout)
+  }, [push])
+
+  useEffect(() => {
+    if (phase === 'submitting-1') {
+      push('info', 'enviando credenciales al servidor de auth')
+      setTimeout(() => push('dim', 'buscando operador en directorio...'), 300)
+    }
+    if (phase === 'otp') {
+      push('ok',   'credenciales válidas · operador localizado')
+      setTimeout(() => push('warn', 'pendiente: código 2FA del autenticador'), 250)
+      setTimeout(() => push('info', 'TOTP · Google/Authy/Microsoft Authenticator · TTL 30s'), 550)
+    }
+    if (phase === 'submitting-2') push('info', 'validando token TOTP...')
+    if (phase === 'success') {
+      push('ok', 'token aceptado · doble factor superado')
+      setTimeout(() => push('ok', 'sesión autorizada · abriendo tablero C4'), 250)
+    }
+    if (failed === 'credentials') push('err', 'credenciales rechazadas · verifique sus datos')
+    if (failed === 'otp')         push('err', 'token TOTP inválido · reintente')
+  }, [phase, failed]) // eslint-disable-line
+
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight
+  }, [lines])
+
+  return (
+    <div style={{ borderTop:'1px solid var(--line)', background:'#050810', display:'grid', gridTemplateRows:'auto 1fr', height:240 }}>
+      <div style={{ display:'flex', alignItems:'center', gap:10, padding:'9px 16px', borderBottom:'1px solid var(--line)', background:'var(--ink-2)', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.16em', color:'var(--text-dim)', textTransform:'uppercase' }}>
+        <span style={{ width:8,height:8,display:'inline-block',background:'var(--red)',borderRadius:0 }}/>
+        <span style={{ width:8,height:8,display:'inline-block',background:'var(--gold)',borderRadius:0 }}/>
+        <span style={{ width:8,height:8,display:'inline-block',background:'var(--ok)',borderRadius:0 }}/>
+        <span style={{ marginLeft:6 }}>ssp-secure@terminal — /auth/session</span>
+      </div>
+      <div ref={bodyRef} style={{ padding:'10px 16px 14px', fontFamily:'JetBrains Mono,monospace', fontSize:11.5, lineHeight:1.65, color:'var(--text-dim)', overflow:'hidden', position:'relative' }}>
+        {lines.map(l => (
+          <div key={l.k} style={{ whiteSpace:'pre' }}>
+            <span style={{ color:'var(--text-mute)', marginRight:10 }}>[{l.ts}]</span>
+            <span style={{ color: l.type==='ok'?'var(--ok)':l.type==='warn'?'var(--gold)':l.type==='err'?'var(--red)':l.type==='info'?'#6da4d0':'var(--text-mute)' }}>
+              {l.type==='err'?'✗ ':l.type==='ok'?'✓ ':l.type==='warn'?'⚠ ':'› '}{l.text}
+            </span>
+          </div>
+        ))}
+        <div style={{ whiteSpace:'pre' }}>
+          <span style={{ color:'var(--text-mute)', marginRight:10 }}>[--:--:--]</span>
+          <span style={{ color:'var(--text-mute)' }}>$ </span>
+          <span style={{ display:'inline-block', width:7, height:13, background:'var(--gold)', verticalAlign:'middle', marginLeft:3, animation:'blink 1s step-end infinite' }}/>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── OTP — 6 inputs individuales ─────────────────────────────────────────────
+function OtpInput({ value, onChange, error }: { value: string; onChange: (v: string) => void; error: boolean }) {
+  const refs = useRef<(HTMLInputElement | null)[]>([])
+
+  const setChar = (i: number, c: string) => {
+    const chars = value.padEnd(6, ' ').split('')
+    chars[i] = c
+    onChange(chars.join('').trimEnd())
+  }
+
+  const handleChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const c = e.target.value.replace(/\D/g,'').slice(-1)
+    if (!c) return
+    setChar(i, c)
+    if (i < 5) refs.current[i+1]?.focus()
+  }
+
+  const handleKey = (i: number, e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace') {
+      e.preventDefault()
+      if (value[i]) { setChar(i,'') } else if (i > 0) {
+        refs.current[i-1]?.focus()
+        setTimeout(() => setChar(i-1,''), 0)
+      }
+    }
+    if (e.key==='ArrowLeft'  && i>0) refs.current[i-1]?.focus()
+    if (e.key==='ArrowRight' && i<5) refs.current[i+1]?.focus()
+  }
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const txt = (e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6)
+    if (txt) { e.preventDefault(); onChange(txt); setTimeout(()=>refs.current[Math.min(txt.length,5)]?.focus(),0) }
+  }
+
+  return (
+    <div style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:8, marginBottom:8 }} onPaste={handlePaste}>
+      {[0,1,2,3,4,5].map(i => (
+        <input
+          key={i}
+          ref={el => { refs.current[i] = el }}
+          value={value[i]||''}
+          onChange={e => handleChange(i,e)}
+          onKeyDown={e => handleKey(i,e)}
+          inputMode="numeric"
+          maxLength={1}
+          style={{
+            width:'100%', aspectRatio:'1/1.15',
+            background:'var(--ink-2)', border:`1px solid ${error?'var(--red)':value[i]?'var(--gold)':'var(--line-2)'}`,
+            color: error?'var(--red)':value[i]?'var(--gold)':'var(--text)',
+            textAlign:'center', fontFamily:'JetBrains Mono,monospace',
+            fontSize:26, fontWeight:700, outline:'none',
+            boxShadow: value[i]&&!error?'0 0 0 3px rgba(212,164,58,0.12)':error?'0 0 0 3px rgba(192,34,58,0.15)':'none',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ─── Login principal ──────────────────────────────────────────────────────────
+export default function LoginPage() {
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+  const fromPath     = searchParams.get('from') ?? '/dashboard'
+
+  const [phase,   setPhase]   = useState<'idle'|'submitting-1'|'otp'|'submitting-2'|'success'>('idle')
+  const [failed,  setFailed]  = useState<'credentials'|'otp'|null>(null)
+  const [email,   setEmail]   = useState('')
+  const [pwd,     setPwd]     = useState('')
+  const [showPwd, setShowPwd] = useState(false)
+  const [otp,     setOtp]     = useState('')
+  const [otpTime, setOtpTime] = useState(30)
+  const [sessionId, setSessionId] = useState('----')
+  useEffect(() => {
+    setSessionId(String(Math.floor(Math.random()*9000+1000))+'-QRO')
+  }, [])
+
+  // Timer TOTP (30 s)
+  useEffect(() => {
+    if (phase !== 'otp') return
+    const remaining = 30 - (Math.floor(Date.now()/1000) % 30)
+    setOtpTime(remaining)
+    const iv = setInterval(() => setOtpTime(30 - (Math.floor(Date.now()/1000) % 30)), 1000)
+    return () => clearInterval(iv)
+  }, [phase])
+
+  // Auto-submit cuando hay 6 dígitos
+  useEffect(() => {
+    if (phase === 'otp' && otp.length === 6) handleOtpSubmit()
+  }, [otp]) // eslint-disable-line
+
+  const [dateStr, setDateStr] = useState('----.--.--')
+  useEffect(() => {
+    const d = new Date()
+    setDateStr(`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`)
+  }, [])
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
+    if (!email || !pwd) return
+    setPhase('submitting-1')
+    setFailed(null)
+
+    const { data, error } = await authClient.signIn.email({ email, password: pwd })
+
+    if (error) {
+      setFailed('credentials')
+      setPhase('idle')
+      return
+    }
+
+    // better-auth retorna twoFactorRedirect:true (HTTP 200) cuando 2FA está activo
+    if ((data as { twoFactorRedirect?: boolean } | null)?.twoFactorRedirect) {
+      setPhase('otp')
+      return
+    }
+
+    setPhase('success')
+    setTimeout(() => router.push(fromPath), 1500)
+  }
+
+  async function handleOtpSubmit() {
+    if (otp.length !== 6 || phase === 'submitting-2') return
+    setPhase('submitting-2')
+    setFailed(null)
+
+    await authClient.twoFactor.verifyTotp(
+      { code: otp },
+      {
+        onSuccess: () => {
+          setPhase('success')
+          setTimeout(() => router.push(fromPath), 1500)
+        },
+        onError: () => {
+          setFailed('otp')
+          setPhase('otp')
+          setOtp('')
+        },
+      }
+    )
+  }
+
+  const step = phase === 'idle' || phase === 'submitting-1' ? 1 : phase === 'success' ? 3 : 2
+
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+        :root {
+          --ink:      #070b16;
+          --ink-2:    #0b1220;
+          --ink-3:    #111a2e;
+          --line:     #1b2742;
+          --line-2:   #2a3a5e;
+          --text:     #d8e0f0;
+          --text-dim: #7f8faf;
+          --text-mute:#4a5878;
+          --navy:     #14224a;
+          --red:      #c0223a;
+          --red-hi:   #e03349;
+          --gold:     #d4a43a;
+          --gold-hi:  #f0be4c;
+          --ok:       #4a9e6a;
+        }
+        *{box-sizing:border-box;}
+        html,body{margin:0;padding:0;background:var(--ink);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;overflow:hidden;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+        @keyframes blink{50%{opacity:0}}
+        @keyframes fadein{from{opacity:0}to{opacity:1}}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .field-input-shake{animation:shake .35s ease;}
+        @media(max-width:960px){
+          .stage{grid-template-columns:1fr!important;grid-template-rows:auto 1fr;overflow:auto;position:static!important;}
+          html,body{overflow:auto;}
+          .left-panel{padding:32px 28px!important;}
+          .h1-big{font-size:42px!important;}
+          .main-panel{padding:28px 24px!important;}
+        }
+      `}</style>
+
+      <div className="stage" style={{ position:'fixed',inset:0,display:'grid',gridTemplateColumns:'1.05fr 1fr',background:`radial-gradient(ellipse at 25% 20%,rgba(20,34,74,.35),transparent 55%),radial-gradient(ellipse at 80% 90%,rgba(192,34,58,.10),transparent 60%),var(--ink)` }}>
+        {/* Grid blueprint */}
+        <div style={{ position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px)',backgroundSize:'32px 32px',pointerEvents:'none' }}/>
+
+        {/* Corners dorados */}
+        {[{top:18,left:18,borderTop:'1px solid',borderLeft:'1px solid'},{top:18,right:18,borderTop:'1px solid',borderRight:'1px solid'},{bottom:18,left:18,borderBottom:'1px solid',borderLeft:'1px solid'},{bottom:18,right:18,borderBottom:'1px solid',borderRight:'1px solid'}].map((s,i) => (
+          <div key={i} style={{ position:'absolute',width:22,height:22,borderColor:'var(--gold)',borderStyle:'solid',borderWidth:0,opacity:.6,...s }}/>
+        ))}
+
+        {/* ── PANEL IZQUIERDO ── */}
+        <aside className="left-panel" style={{ position:'relative',padding:'52px 60px 44px',borderRight:'1px solid var(--line)',background:'linear-gradient(180deg,rgba(20,34,74,.35) 0%,transparent 60%),linear-gradient(180deg,var(--ink-2) 0%,var(--ink) 100%)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
+
+          {/* Brand */}
+          <div style={{ display:'flex',alignItems:'center',gap:22,paddingBottom:26,borderBottom:'1px solid var(--line)' }}>
+            <div style={{ position:'relative',width:104,height:104,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+              <div style={{ position:'absolute',inset:-8,borderRadius:'50%',background:'radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0%,rgba(212,164,58,.10) 35%,rgba(212,164,58,0) 72%)',filter:'blur(8px)' }}/>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-shield.png" alt="Escudo SSPM" width={88} height={88} style={{ position:'relative',zIndex:1,objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
+            </div>
+            <div style={{ width:1,background:'linear-gradient(180deg,transparent,var(--gold),transparent)',alignSelf:'stretch',opacity:.55 }}/>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-text-light.png" alt="SSPM" style={{ height:58,maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
+          </div>
+
+          {/* Headline */}
+          <div style={{ marginTop:30 }}>
+            <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--red)',letterSpacing:'0.3em',textTransform:'uppercase',marginBottom:18,display:'flex',alignItems:'center',gap:10 }}>
+              <span style={{ width:26,height:1,background:'var(--red)',display:'inline-block' }}/>
+              Acceso oficial · uso restringido
+            </div>
+            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:104,lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(212,164,58,.15)' }}>
+              <span style={{ color:'var(--gold)' }}>SENTINEL</span>
+            </h1>
+            <div style={{ display:'flex',gap:10,alignItems:'center',marginTop:16,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
+              <span>S.S.P.M.</span><span style={{ color:'var(--gold)' }}>·</span>
+              <span>SAN JUAN DEL RÍO</span><span style={{ color:'var(--gold)' }}>·</span>
+              <span>QRO</span>
+            </div>
+          </div>
+
+          {/* Sentinel mark */}
+          <div style={{ marginTop:34,display:'flex',alignItems:'center',gap:14 }}>
+            <div style={{ flexShrink:0,width:28,height:1,background:'var(--gold)' }}/>
+            <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.12em',color:'var(--text-dim)',textTransform:'lowercase',lineHeight:1.5 }}>
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>S</span>istema de{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>E</span>nlace,{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>N</span>eutralización,{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>T</span>ácticas e{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>I</span>nteligencia{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>L</span>ocal
+            </div>
+            <div style={{ flex:1,height:1,background:'var(--gold)' }}/>
+          </div>
+
+          {/* Protocolo */}
+          <div style={{ marginTop:30,border:'1px solid var(--line)',background:'linear-gradient(180deg,rgba(20,34,74,.35) 0%,rgba(11,18,32,.1) 100%)',padding:'18px 20px',position:'relative' }}>
+            <div style={{ position:'absolute',top:-1,left:0,width:40,height:2,background:'var(--gold)' }}/>
+            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.22em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:14 }}>
+              <span>› Protocolo de acceso</span>
+              <span style={{ color:'var(--gold)' }}>Nivel 3</span>
+            </div>
+            <div style={{ display:'grid',gap:10,fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--text)',letterSpacing:'0.08em' }}>
+              {[
+                ['Canal cifrado extremo a extremo','Activo'],
+                ['Verificación de identidad en dos pasos','Requerido'],
+                ['Registro de sesión y trazabilidad','Habilitado'],
+              ].map(([lbl,meta]) => (
+                <div key={lbl} style={{ display:'grid',gridTemplateColumns:'14px 1fr auto',gap:12,alignItems:'center' }}>
+                  <span style={{ color:'var(--ok)',fontSize:14 }}>✓</span>
+                  <span>{lbl}</span>
+                  <span style={{ color:'var(--text-mute)',fontSize:10,letterSpacing:'0.18em',textTransform:'uppercase' }}>{meta}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop:16,paddingTop:12,borderTop:'1px dashed var(--line-2)',display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:9,letterSpacing:'0.22em',color:'var(--text-mute)',textTransform:'uppercase' }}>
+              <span>SESIÓN · {dateStr}</span>
+              <span style={{ color:'var(--gold)' }}>SIGN: 0x4F··A1C2</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* ── PANEL DERECHO ── */}
+        <section style={{ position:'relative',display:'grid',gridTemplateRows:'auto 1fr auto',overflow:'hidden' }}>
+
+          {/* Topbar */}
+          <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 28px',borderBottom:'1px solid var(--line)',fontFamily:'JetBrains Mono,monospace',fontSize:10,color:'var(--text-dim)',letterSpacing:'0.2em',textTransform:'uppercase',background:'rgba(7,11,22,.5)' }}>
+            <div style={{ display:'flex',alignItems:'center',gap:10 }}>
+              <span style={{ width:7,height:7,borderRadius:'50%',background:'var(--gold)',boxShadow:'0 0 10px var(--gold)',display:'inline-block',animation:'pulse 2.2s ease-in-out infinite' }}/>
+              <span>SSPM-SJR · ACCESO SEGURO</span>
+            </div>
+            <div style={{ display:'flex',alignItems:'center',gap:10,color:'var(--gold)' }}>
+              <span>CIFRADO TLS 1.3</span>
+              <span style={{ color:'var(--text-dim)' }}>·</span>
+              <span>SESIÓN {sessionId}</span>
+            </div>
+          </div>
+
+          {/* Formulario */}
+          <div className="main-panel" style={{ padding:'60px 56px 20px',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative' }}>
+
+            {/* Overlay de éxito */}
+            {phase === 'success' && (
+              <div style={{ position:'absolute',inset:0,background:'var(--ink)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',zIndex:20,animation:'fadein .3s ease' }}>
+                <div style={{ width:90,height:90,borderRadius:'50%',border:'2px solid var(--ok)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 40px rgba(74,158,106,.35)',marginBottom:22 }}>
+                  <IconCheck />
+                </div>
+                <h3 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:28,letterSpacing:'0.1em',textTransform:'uppercase',margin:'0 0 6px',color:'var(--text)' }}>Acceso concedido</h3>
+                <p style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.18em',color:'var(--text-dim)',textTransform:'uppercase',margin:0 }}>Redirigiendo al tablero</p>
+              </div>
+            )}
+
+            {/* Encabezado del form */}
+            <div style={{ marginBottom:28 }}>
+              <span style={{ display:'inline-flex',alignItems:'center',gap:8,fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.24em',color:'var(--gold)',textTransform:'uppercase',border:'1px solid var(--gold)',padding:'4px 10px',marginBottom:14 }}>
+                <IconShield />
+                {phase === 'otp' || phase === 'submitting-2' ? 'ETAPA 2 · VERIFICACIÓN 2FA' : 'ETAPA 1 · CREDENCIALES'}
+              </span>
+              <h2 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:34,letterSpacing:'0.02em',textTransform:'uppercase',margin:0,color:'var(--text)' }}>
+                {phase === 'otp' || phase === 'submitting-2' ? 'Verificación en dos pasos' : 'Inicio de sesión'}
+              </h2>
+              <div style={{ color:'var(--text-dim)',fontSize:13,marginTop:8 }}>
+                {phase === 'otp' || phase === 'submitting-2'
+                  ? 'Ingresa el código de 6 dígitos de tu app autenticadora.'
+                  : 'Acceso restringido a personal autorizado de la SSPM.'}
+              </div>
+            </div>
+
+            {/* Stepper */}
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:26 }}>
+              {[['01','CREDENCIALES',1],['02','DOBLE FACTOR',2],['03','TABLERO C4',3]].map(([num,label,s]) => {
+                const n = Number(s)
+                const active = step === n
+                const done   = step > n
+                return (
+                  <div key={num} style={{ borderTop:`2px solid ${active?'var(--gold)':done?'var(--ok)':'var(--line-2)'}`,paddingTop:10,fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.18em',color:active?'var(--gold)':done?'var(--ok)':'var(--text-mute)',textTransform:'uppercase' }}>
+                    <span style={{ marginRight:8,color:active?'var(--gold)':done?'var(--ok)':'var(--text-mute)' }}>{num}</span>{label}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* ── FASE 1: credenciales ── */}
+            {(phase === 'idle' || phase === 'submitting-1') && (
+              <form onSubmit={handleLogin}>
+                {/* Email */}
+                <div style={{ marginBottom:16 }}>
+                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:8,display:'flex',justifyContent:'space-between' }}>
+                    <span>Correo institucional</span>
+                    <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>formato: usuario@sjr.gob.mx</span>
+                  </div>
+                  <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'12px 14px',boxShadow:failed==='credentials'?'0 0 0 3px rgba(192,34,58,.15)':'none',transition:'border-color .15s,box-shadow .15s' }}>
+                    <IconUser />
+                    <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="usuario@sjr.gob.mx" autoComplete="email" type="email" required disabled={phase==='submitting-1'}
+                      style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:14,letterSpacing:'0.06em' }}
+                      onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--gold)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(212,164,58,.12)' }}
+                      onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--red)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div style={{ marginBottom:4 }}>
+                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:8,display:'flex',justifyContent:'space-between' }}>
+                    <span>Contraseña</span>
+                    <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>mín. 8 caracteres</span>
+                  </div>
+                  <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'12px 14px',transition:'border-color .15s,box-shadow .15s' }}>
+                    <IconLock />
+                    <input type={showPwd?'text':'password'} value={pwd} onChange={e=>setPwd(e.target.value)} placeholder="••••••••••••" autoComplete="current-password" required disabled={phase==='submitting-1'}
+                      style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:14,letterSpacing:'0.06em' }}
+                      onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--gold)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(212,164,58,.12)' }}
+                      onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--red)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
+                    />
+                    <button type="button" onClick={()=>setShowPwd(s=>!s)} style={{ background:'none',border:'none',color:'var(--text-dim)',cursor:'pointer',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.15em',padding:'4px 6px' }}>
+                      {showPwd?'OCULTAR':'VER'}
+                    </button>
+                  </div>
+                </div>
+
+                {failed === 'credentials' && (
+                  <div style={{ marginTop:14,padding:'10px 14px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <span>⚠</span><span>Credenciales incorrectas · Verifique sus datos de acceso</span>
+                  </div>
+                )}
+
+                <button type="submit" disabled={phase==='submitting-1'||!email||!pwd}
+                  style={{ marginTop:22,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'15px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15,letterSpacing:'0.22em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
+                  onMouseEnter={e=>{if(phase!=='submitting-1')e.currentTarget.style.background='var(--red-hi)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.background='var(--red)'}}>
+                  {phase==='submitting-1'
+                    ? <><span style={{ width:14,height:14,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/> Validando…</>
+                    : <>⬢ Acceder al sistema <IconArrow /></>}
+                </button>
+              </form>
+            )}
+
+            {/* ── FASE 2: TOTP ── */}
+            {(phase === 'otp' || phase === 'submitting-2') && (
+              <div>
+                <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:8,display:'flex',justifyContent:'space-between' }}>
+                  <span>Código de verificación · 6 dígitos</span>
+                  <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>App autenticadora</span>
+                </div>
+                <OtpInput value={otp} onChange={setOtp} error={failed==='otp'} />
+                <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.16em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:20 }}>
+                  <span>Código se renueva en <span style={{ color:'var(--gold)' }}>00:{String(otpTime).padStart(2,'0')}</span></span>
+                  <span style={{ color:'var(--text-mute)' }}>Google · Authy</span>
+                </div>
+
+                {failed === 'otp' && (
+                  <div style={{ marginBottom:14,padding:'10px 14px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <span>⚠</span><span>Token incorrecto · Verifica tu app autenticadora e intenta de nuevo</span>
+                  </div>
+                )}
+
+                <button onClick={handleOtpSubmit} disabled={phase==='submitting-2'||otp.length!==6}
+                  style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'15px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15,letterSpacing:'0.22em',textTransform:'uppercase',cursor:otp.length!==6||phase==='submitting-2'?'not-allowed':'pointer',opacity:otp.length!==6?0.5:1 }}>
+                  {phase==='submitting-2'
+                    ? <><span style={{ width:14,height:14,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/> Verificando token…</>
+                    : <>Confirmar e ingresar <IconArrow /></>}
+                </button>
+
+                <button onClick={()=>{setPhase('idle');setFailed(null);setOtp('')}}
+                  style={{ marginTop:10,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'15px 18px',background:'transparent',color:'var(--text)',border:'1px solid var(--line-2)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15,letterSpacing:'0.22em',textTransform:'uppercase',cursor:'pointer' }}>
+                  ← Volver a credenciales
+                </button>
+              </div>
+            )}
+          </div>
+
+          <Terminal phase={phase} failed={failed} />
+        </section>
+      </div>
+    </>
+  )
+}
