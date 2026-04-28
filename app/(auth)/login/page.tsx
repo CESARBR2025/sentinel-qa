@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 
@@ -100,8 +100,17 @@ function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
 }
 
 // ─── OTP — 6 inputs individuales ─────────────────────────────────────────────
-function OtpInput({ value, onChange, error }: { value: string; onChange: (v: string) => void; error: boolean }) {
+function OtpInput({ value, onChange, error, focusFirst }: { value: string; onChange: (v: string) => void; error?: boolean; focusFirst?: boolean }) {
   const refs = useRef<(HTMLInputElement | null)[]>([])
+
+  // Focus primer input cuando hay error o se solicita
+  useEffect(() => {
+    if (focusFirst) {
+      refs.current[0]?.focus()
+    } else if (error) {
+      refs.current[0]?.focus()
+    }
+  }, [focusFirst, error])
 
   const setChar = (i: number, c: string) => {
     const chars = value.padEnd(6, ' ').split('')
@@ -160,12 +169,34 @@ function OtpInput({ value, onChange, error }: { value: string; onChange: (v: str
 
 // ─── Login principal ──────────────────────────────────────────────────────────
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
+  )
+}
+
+function LoginContent() {
   const router       = useRouter()
   const searchParams = useSearchParams()
   const fromPath     = searchParams.get('from') ?? '/dashboard'
 
   const [phase,   setPhase]   = useState<'idle'|'submitting-1'|'otp'|'submitting-2'|'success'>('idle')
   const [failed,  setFailed]  = useState<'credentials'|'otp'|null>(null)
+  const [focusOtpInput, setFocusOtpInput] = useState(false)
+
+  // Flujo de éxito: overlay (800ms) → loader (1800ms) → dashboard
+  useEffect(() => {
+    if (phase !== 'success') return
+    const t1 = setTimeout(() => {
+      ;(window as unknown as { __showLoader?: (msg: string, minMs?: number) => void })
+        .__showLoader?.('Cargando tablero...', 99999)
+    }, 800)
+    const t2 = setTimeout(() => { window.location.href = fromPath }, 800 + 1800)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [phase, fromPath])
+
+  // Limpiar overlay en OTP mode para reintentos
   const [email,   setEmail]   = useState('')
   const [pwd,     setPwd]     = useState('')
   const [showPwd, setShowPwd] = useState(false)
@@ -196,12 +227,21 @@ export default function LoginPage() {
     setDateStr(`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`)
   }, [])
 
+  // Animación de生成 código 2FA antes de pedirlo
+  const [generating2FA, setGenerating2FA] = useState(false)
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     if (!email || !pwd) return
+    
+    // Animación de "Generando código..."
+    setGenerating2FA(true)
     setPhase('submitting-1')
     setFailed(null)
-
+    
+    await new Promise(r => setTimeout(r, 1200)) // Animation 1.2s
+    setGenerating2FA(false)
+    
     const { data, error } = await authClient.signIn.email({ email, password: pwd })
 
     if (error) {
@@ -217,7 +257,6 @@ export default function LoginPage() {
     }
 
     setPhase('success')
-    setTimeout(() => router.push(fromPath), 1500)
   }
 
   async function handleOtpSubmit() {
@@ -230,12 +269,12 @@ export default function LoginPage() {
       {
         onSuccess: () => {
           setPhase('success')
-          setTimeout(() => router.push(fromPath), 1500)
         },
         onError: () => {
           setFailed('otp')
           setPhase('otp')
           setOtp('')
+          setFocusOtpInput(true)
         },
       }
     )
@@ -244,7 +283,7 @@ export default function LoginPage() {
   const step = phase === 'idle' || phase === 'submitting-1' ? 1 : phase === 'success' ? 3 : 2
 
   return (
-    <>
+    <div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
         :root {
@@ -293,24 +332,27 @@ export default function LoginPage() {
         <aside className="left-panel" style={{ position:'relative',padding:'52px 60px 44px',borderRight:'1px solid var(--line)',background:'linear-gradient(180deg,rgba(20,34,74,.35) 0%,transparent 60%),linear-gradient(180deg,var(--ink-2) 0%,var(--ink) 100%)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
 
           {/* Brand */}
-          <div style={{ display:'flex',alignItems:'center',gap:22,paddingBottom:26,borderBottom:'1px solid var(--line)' }}>
-            <div style={{ position:'relative',width:104,height:104,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
-              <div style={{ position:'absolute',inset:-8,borderRadius:'50%',background:'radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0%,rgba(212,164,58,.10) 35%,rgba(212,164,58,0) 72%)',filter:'blur(8px)' }}/>
+          <div style={{ display:'flex',alignItems:'center',gap:18,paddingBottom:26,borderBottom:'1px solid var(--line)' }}>
+            <div style={{ position:'relative',width:96,height:96,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+              <div style={{ position:'absolute',inset:-6,borderRadius:'50%',background:'radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0%,rgba(212,164,58,.10) 35%,rgba(212,164,58,0) 72%)',filter:'blur(6px)' }}/>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-shield.png" alt="Escudo SSPM" width={88} height={88} style={{ position:'relative',zIndex:1,objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
+              <img src="/logo-shield.png" alt="Escudo SSPM" width={84} height={84} style={{ position:'relative',zIndex:1,objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
             </div>
             <div style={{ width:1,background:'linear-gradient(180deg,transparent,var(--gold),transparent)',alignSelf:'stretch',opacity:.55 }}/>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-text-light.png" alt="SSPM" style={{ height:58,maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
+            <img src="/logo-text-light.png" alt="SSPM" style={{ height:56,maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
           </div>
 
           {/* Headline */}
           <div style={{ marginTop:30 }}>
-            <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--red)',letterSpacing:'0.3em',textTransform:'uppercase',marginBottom:18,display:'flex',alignItems:'center',gap:10 }}>
+            <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--red)',letterSpacing:'0.3em',textTransform:'uppercase',marginBottom:20,display:'flex',alignItems:'center',gap:10 }}>
               <span style={{ width:26,height:1,background:'var(--red)',display:'inline-block' }}/>
               Acceso oficial · uso restringido
             </div>
-            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:104,lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(212,164,58,.15)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 16 }}>
+              <img src="/logo_sentinel.png" alt="SENTINEL" style={{ height: 180, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(212,164,58,0.5))' }} />
+            </div>
+            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:104,lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(212,164,58,.15)',textAlign:'center' }}>
               <span style={{ color:'var(--gold)' }}>SENTINEL</span>
             </h1>
             <div style={{ display:'flex',gap:10,alignItems:'center',marginTop:16,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
@@ -324,11 +366,13 @@ export default function LoginPage() {
           <div style={{ marginTop:34,display:'flex',alignItems:'center',gap:14 }}>
             <div style={{ flexShrink:0,width:28,height:1,background:'var(--gold)' }}/>
             <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.12em',color:'var(--text-dim)',textTransform:'lowercase',lineHeight:1.5 }}>
-              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>S</span>istema de{' '}
-              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>E</span>nlace,{' '}
-              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>N</span>eutralización,{' '}
-              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>T</span>ácticas e{' '}
-              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>I</span>nteligencia{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>S</span>istema{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>E</span>stratégico{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>N</span>acional{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>T</span> de trazabilidad{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>I</span> e inteligencia{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>N</span> para la{' '}
+              <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>E</span>valuación{' '}
               <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>L</span>ocal
             </div>
             <div style={{ flex:1,height:1,background:'var(--gold)' }}/>
@@ -391,6 +435,9 @@ export default function LoginPage() {
               </div>
             )}
 
+            {/* Solo mostrar formulario si NO es success */}
+            {phase !== 'success' && (
+            <>
             {/* Encabezado del form */}
             <div style={{ marginBottom:28 }}>
               <span style={{ display:'inline-flex',alignItems:'center',gap:8,fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.24em',color:'var(--gold)',textTransform:'uppercase',border:'1px solid var(--gold)',padding:'4px 10px',marginBottom:14 }}>
@@ -465,13 +512,15 @@ export default function LoginPage() {
                   </div>
                 )}
 
-                <button type="submit" disabled={phase==='submitting-1'||!email||!pwd}
-                  style={{ marginTop:22,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'15px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15,letterSpacing:'0.22em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
+<button type="submit" disabled={phase==='submitting-1'||!email||!pwd}
+                  style={{ marginTop:22,display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%',padding:'14px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:14,letterSpacing:'0.2em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
                   onMouseEnter={e=>{if(phase!=='submitting-1')e.currentTarget.style.background='var(--red-hi)'}}
                   onMouseLeave={e=>{e.currentTarget.style.background='var(--red)'}}>
                   {phase==='submitting-1'
-                    ? <><span style={{ width:14,height:14,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/> Validando…</>
-                    : <>⬢ Acceder al sistema <IconArrow /></>}
+                    ? generating2FA
+                      ? <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:13 }}><span style={{ width:12,height:12,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Generando código 2FA...</span>
+                      : <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:13 }}><span style={{ width:12,height:12,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Validando…</span>
+                    : <span>⬢ Acceder al sistema</span>}
                 </button>
               </form>
             )}
@@ -483,7 +532,7 @@ export default function LoginPage() {
                   <span>Código de verificación · 6 dígitos</span>
                   <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>App autenticadora</span>
                 </div>
-                <OtpInput value={otp} onChange={setOtp} error={failed==='otp'} />
+                <OtpInput value={otp} onChange={setOtp} error={failed==='otp'} focusFirst={focusOtpInput} />
                 <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.16em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:20 }}>
                   <span>Código se renueva en <span style={{ color:'var(--gold)' }}>00:{String(otpTime).padStart(2,'0')}</span></span>
                   <span style={{ color:'var(--text-mute)' }}>Google · Authy</span>
@@ -508,11 +557,14 @@ export default function LoginPage() {
                 </button>
               </div>
             )}
+
+            </>
+            )}
           </div>
 
-          <Terminal phase={phase} failed={failed} />
+          {phase !== 'success' && <Terminal phase={phase} failed={failed} />}
         </section>
       </div>
-    </>
+    </div>
   )
 }

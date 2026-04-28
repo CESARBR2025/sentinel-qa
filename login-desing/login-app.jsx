@@ -274,10 +274,13 @@ function App() {
       <aside className="left">
         <div className="brand">
           <div className="brand-shield-wrap">
-            <img className="brand-shield" src="assets/logo-shield.png" alt="Escudo SSPM" />
+            <img className="brand-shield" src="assets/logo-shield.png" alt="Escudo SSPM" style={{height: 18, width: 18}} />
           </div>
           <div className="brand-divider" />
-          <img className="brand-wordmark" src="assets/logo-text-light.png" alt="Secretaría de Seguridad Pública Municipal" />
+          <div className="brand-text">
+            <img className="brand-wordmark" src="assets/logo-text-light.png" alt="Secretaría de Seguridad Pública" style={{height: 12}} />
+            <div className="brand-subtitle">Seguridad Pública</div>
+          </div>
         </div>
 
         <div className="headline">
