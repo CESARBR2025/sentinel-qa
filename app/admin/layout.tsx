@@ -2,36 +2,28 @@ import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { db }       from '@/lib/db/index'
-import { notificaciones } from '@/lib/db/schema'
-import { eq, and, desc } from 'drizzle-orm'
+import { users, roles } from '@/lib/db/schema'
+import { eq }       from 'drizzle-orm'
 import Link         from 'next/link'
-import PrevencionNav from './PrevencionNav'
-import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones'
-import { generarAlertasBusquedas }  from '@/lib/notificaciones/checker'
 
-export default async function PrevencionLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  // Generate alerts for this user (idempotent)
-  await generarAlertasBusquedas(session.user.id)
+  const [u] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
 
-  // Fetch initial unread notifications to pass as SSR props
-  const initialNotifs = await db
-    .select()
-    .from(notificaciones)
-    .where(and(
-      eq(notificaciones.userId, session.user.id),
-      eq(notificaciones.leida, false),
-    ))
-    .orderBy(desc(notificaciones.creadoEn))
+  if (u?.rolNombre !== 'Administrador') redirect('/dashboard')
 
   return (
     <div style={{ minHeight: '100vh', background: '#070b16', color: '#d8e0f0', fontFamily: 'Inter,system-ui,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      {/* Barra superior */}
-      <header style={{ borderBottom: '1px solid #1b2742', padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', gap: 24 }}>
+      <header style={{ borderBottom: '1px solid #1b2742', padding: '16px 48px', display: 'flex', alignItems: 'center', gap: 24 }}>
         <Link
           href="/dashboard"
           style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em', color: '#4a5878', textTransform: 'uppercase', textDecoration: 'none' }}
@@ -41,23 +33,29 @@ export default async function PrevencionLayout({ children }: { children: React.R
         <div style={{ width: 1, height: 16, background: '#1b2742' }} />
         <div>
           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#c0223a', textTransform: 'uppercase' }}>
-            Prevención del Delito
+            Sistema
           </span>
           <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#d8e0f0' }}>
-            ATENCIÓN A <span style={{ color: '#d4a43a' }}>VÍCTIMAS</span>
+            ADMINISTRACIÓN
           </span>
         </div>
 
-        {/* Campanilla — top right */}
-        <div style={{ marginLeft: 'auto' }}>
-          <CampanillaNotificaciones initialNotifs={initialNotifs} />
-        </div>
+        <nav style={{ marginLeft: 'auto', display: 'flex', gap: 32 }}>
+          {[
+            { label: 'Usuarios', href: '/admin/usuarios' },
+            { label: 'Roles',    href: '/admin/roles'    },
+          ].map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.18em', color: '#8a9bc0', textTransform: 'uppercase', textDecoration: 'none' }}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
       </header>
 
-      {/* Sub-navegación */}
-      <PrevencionNav />
-
-      {/* Contenido */}
       <main style={{ padding: '40px 48px' }}>
         {children}
       </main>

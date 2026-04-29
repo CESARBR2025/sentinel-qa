@@ -9,7 +9,7 @@ const MODULES: Module[] = [
   { label: 'Incidentes',            sub: 'Registro y despacho',             icon: '⬡' },
   { label: 'Reportes',              sub: 'Diario y estadístico',            icon: '⬡' },
   { label: 'Catálogos',             sub: 'Tipos y sectores',                icon: '⬡' },
-  { label: 'Administración',        sub: 'Usuarios y permisos',             icon: '⬡' },
+  { label: 'Administración',        sub: 'Usuarios y permisos',             icon: '⬡', href: '/admin/usuarios' },
 ]
 
 function ModuleCard({ label, sub, icon, href }: Module) {

@@ -1,12 +1,15 @@
 import { db }  from '@/lib/db/index'
-import { medidasProteccion, visitasDomiciliarias } from '@/lib/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { medidasProteccion, visitasDomiciliarias, medidaAutoridadesAdicionales } from '@/lib/db/schema'
+import { eq, desc, asc } from 'drizzle-orm'
 import Link         from 'next/link'
 import { notFound } from 'next/navigation'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
 import { SemaforoVigencia }         from '@/components/prevencion/SemaforoVigencia'
 import { AutoridadBadge }           from '@/components/prevencion/AutoridadBadge'
 import { VisitaModal }              from '@/components/prevencion/VisitaModal'
+import { ProrrogaViewerModal }  from '@/components/prevencion/ProrrogaViewerModal'
+import { ProrrogaModal }        from '@/components/prevencion/ProrrogaModal'
+import { AgregarAutoridadForm } from '@/components/prevencion/AgregarAutoridadForm'
 
 export default async function MedidaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -24,6 +27,12 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
     .from(visitasDomiciliarias)
     .where(eq(visitasDomiciliarias.medidaId, id))
     .orderBy(desc(visitasDomiciliarias.fechaVisita))
+
+  const autoridadesAdicionales = await db
+    .select()
+    .from(medidaAutoridadesAdicionales)
+    .where(eq(medidaAutoridadesAdicionales.medidaId, id))
+    .orderBy(asc(medidaAutoridadesAdicionales.creadoEn))
 
   const semaforo = calcularSemaforoVigencia(medida.fechaVencimiento)
 
@@ -44,18 +53,29 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
               {medida.expediente}
             </h2>
             <SemaforoVigencia color={semaforo} />
+            {medida.prorrogada && (
+              <span style={{ padding: '3px 8px', border: '1px solid #d4a43a', color: '#d4a43a', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                PRÓRROGA
+              </span>
+            )}
             <AutoridadBadge autoridad={medida.autoridad} />
+            {autoridadesAdicionales.map(a => (
+              <AutoridadBadge key={a.id} autoridad={a.autoridad} />
+            ))}
           </div>
           <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 14, color: '#8a9bc0', margin: 0 }}>
             {medida.victima}
           </p>
         </div>
-        <Link
-          href="/prevencion/medidas"
-          style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
-        >
-          ← Regresar
-        </Link>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          {semaforo === 'rojo' && <ProrrogaModal medidaId={id} />}
+          <Link
+            href="/prevencion/medidas"
+            style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
+          >
+            ← Regresar
+          </Link>
+        </div>
       </div>
 
       {/* Detalle */}
@@ -80,7 +100,60 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
           {medida.tiempoMedida    && <Field label="Tiempo"        value={medida.tiempoMedida} />}
           {medida.fechaVencimiento && <Field label="Vencimiento"  value={medida.fechaVencimiento} />}
           {medida.tipoApercibimiento && <Field label="Apercibimiento" value={medida.tipoApercibimiento} />}
+{medida.prorrogada && (
+            <Field label="Doc. prorrogue" value={
+              medida.archivoProrrogaUrl ? (
+                <ProrrogaViewerModal archivoProrrogaUrl={medida.archivoProrrogaUrl} />
+              ) : (
+                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.08em' }}>
+                  Sin archivo adjunto
+                </span>
+              )
+            } />
+          )}
         </Card>
+      </div>
+
+      {/* Autoridades adicionales */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <div>
+            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 2 }}>
+              › Autoridades Adicionales
+            </div>
+            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.1em' }}>
+              {autoridadesAdicionales.length === 0
+                ? 'Solo la autoridad principal'
+                : `${autoridadesAdicionales.length} autoridad${autoridadesAdicionales.length !== 1 ? 'es' : ''} adicional${autoridadesAdicionales.length !== 1 ? 'es' : ''}`}
+            </div>
+          </div>
+        </div>
+
+        {autoridadesAdicionales.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+            {autoridadesAdicionales.map(a => (
+              <div key={a.id} style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '10px 16px', display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                <AutoridadBadge autoridad={a.autoridad} />
+                {a.nOficio && (
+                  <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#d8e0f0' }}>
+                    Oficio: {a.nOficio}
+                  </span>
+                )}
+                {a.fechaOficio && (
+                  <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878' }}>
+                    {a.fechaOficio}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <AgregarAutoridadForm
+          medidaId={id}
+          autoridadPrincipal={medida.autoridad}
+          yaAgregadas={autoridadesAdicionales.map(a => a.autoridad)}
+        />
       </div>
 
       {medida.observaciones && (

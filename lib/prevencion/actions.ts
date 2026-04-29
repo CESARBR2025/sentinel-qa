@@ -6,10 +6,14 @@ import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { eq }             from 'drizzle-orm'
 import { db }             from '@/lib/db/index'
+import { addDays, addMonths, isBefore, parseISO, format } from 'date-fns'
+import { promises as fs } from 'fs'
+import path               from 'path'
 import {
   medidasProteccion, visitasDomiciliarias,
   fichasBusqueda, seguimientosBusqueda,
   solicitudesInformacion, solicitudesC4Internas, contestaciones,
+  medidaAutoridadesAdicionales,
 } from '@/lib/db/schema'
 
 export async function createMedida(formData: FormData) {
@@ -65,6 +69,74 @@ export async function createVisita(medidaId: string, formData: FormData) {
   revalidatePath(`/prevencion/medidas/${medidaId}`)
 }
 
+export async function addAutoridadMedida(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) throw new Error('No autenticado')
+
+  const medidaId   = (formData.get('medidaId')   as string).trim()
+  const autoridad  = (formData.get('autoridad')  as string).trim()
+  const nOficio    = (formData.get('nOficio')    as string | null)?.trim() || null
+  const fechaOficioRaw = (formData.get('fechaOficio') as string | null)?.trim() || null
+
+  await db.insert(medidaAutoridadesAdicionales).values({
+    medidaId,
+    autoridad,
+    nOficio,
+    fechaOficio: fechaOficioRaw || null,
+    creadoPor:   session.user.id,
+  })
+
+  revalidatePath(`/prevencion/medidas/${medidaId}`)
+}
+
+export async function createProrroga(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) throw new Error('No autenticado')
+
+  const medidaId = (formData.get('medidaId') as string).trim()
+  const cantidad = Number(formData.get('cantidad'))
+  const unidad   = formData.get('unidad') as 'dias' | 'meses'
+  const archivo  = formData.get('archivo') as File | null
+
+  const [medida] = await db
+    .select({ fechaVencimiento: medidasProteccion.fechaVencimiento, expediente: medidasProteccion.expediente })
+    .from(medidasProteccion)
+    .where(eq(medidasProteccion.id, medidaId))
+    .limit(1)
+
+  if (!medida) throw new Error('Medida no encontrada')
+
+  // Extend from today if already expired, otherwise from current end date
+  const today = new Date()
+  const base  = medida.fechaVencimiento ? parseISO(medida.fechaVencimiento) : today
+  const start = isBefore(base, today) ? today : base
+  const newDate = unidad === 'dias' ? addDays(start, cantidad) : addMonths(start, cantidad)
+
+  // Save uploaded file locally if provided
+  let archivoPath: string | null = null
+  if (archivo && archivo.size > 0) {
+    const folio    = medida.expediente.replace(/[^a-zA-Z0-9_-]/g, '_')
+    const ext      = path.extname(archivo.name) || '.bin'
+    const filename = `${Date.now()}${ext}`
+    const dir      = path.join(process.cwd(), 'uploads', 'medidas_proteccion', folio, 'prorroga')
+    await fs.mkdir(dir, { recursive: true })
+    await fs.writeFile(path.join(dir, filename), Buffer.from(await archivo.arrayBuffer()))
+    archivoPath = `uploads/medidas_proteccion/${folio}/prorroga/${filename}`
+  }
+
+  await db.update(medidasProteccion)
+    .set({
+      fechaVencimiento:   format(newDate, 'yyyy-MM-dd'),
+      prorrogada:         true,
+      archivoProrrogaUrl: archivoPath,
+      actualizadoEn:      new Date(),
+    })
+    .where(eq(medidasProteccion.id, medidaId))
+
+  revalidatePath(`/prevencion/medidas/${medidaId}`)
+  revalidatePath('/prevencion/medidas')
+}
+
 // ── Búsquedas / Protocolo Alba ────────────────────────────────────────────────
 
 export async function createFicha(formData: FormData) {
@@ -102,12 +174,24 @@ export async function createSeguimiento(formData: FormData) {
 
   const fichaId = (formData.get('fichaId') as string).trim()
   const tipo    = (formData.get('tipo') as string).trim()
+  const archivo = formData.get('archivo') as File | null
+
+  let archivoUrl: string | null = null
+  if (archivo && archivo.size > 0) {
+    const ext      = path.extname(archivo.name) || '.bin'
+    const filename = `${tipo}_${Date.now()}${ext}`
+    const dir      = path.join(process.cwd(), 'uploads', 'busquedas', fichaId, 'seguimientos')
+    await fs.mkdir(dir, { recursive: true })
+    await fs.writeFile(path.join(dir, filename), Buffer.from(await archivo.arrayBuffer()))
+    archivoUrl = `uploads/busquedas/${fichaId}/seguimientos/${filename}`
+  }
 
   await db.insert(seguimientosBusqueda).values({
     fichaId,
     tipo,
     fechaHoraEnvio: new Date(),
     registradoPor:  session.user.id,
+    archivoUrl,
   })
 
   revalidatePath(`/prevencion/busquedas/${fichaId}`)

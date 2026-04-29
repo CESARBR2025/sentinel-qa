@@ -1,40 +1,86 @@
 import { db }   from '@/lib/db/index'
-import { medidasProteccion } from '@/lib/db/schema'
-import { desc }  from 'drizzle-orm'
+import { medidasProteccion, visitasDomiciliarias } from '@/lib/db/schema'
+import { desc, eq, and }  from 'drizzle-orm'
 import Link      from 'next/link'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
 import { SemaforoVigencia }         from '@/components/prevencion/SemaforoVigencia'
 import { AutoridadBadge }           from '@/components/prevencion/AutoridadBadge'
+import { MedidasFiltros }           from '@/components/prevencion/MedidasFiltros'
+import { Suspense } from 'react'
 
-export default async function MedidasPage() {
-  const rows = await db
+const COLOR_MAP: Record<string, string> = {
+  vigentes:   'verde',
+  por_vencer: 'amarillo',
+  vencidas:   'rojo',
+  sin_fecha:  'gris',
+}
+
+export default async function MedidasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    estado?:      string
+    autoridad?:   string
+    sinVisita?:   string
+    prorrogadas?: string
+  }>
+}) {
+  const { estado, autoridad, sinVisita, prorrogadas } = await searchParams
+
+  // Build DB conditions
+  const conds = []
+  if (autoridad)           conds.push(eq(medidasProteccion.autoridad, autoridad))
+  if (prorrogadas === '1') conds.push(eq(medidasProteccion.prorrogada, true))
+
+  let rows = await db
     .select()
     .from(medidasProteccion)
+    .where(conds.length ? and(...conds) : undefined)
     .orderBy(desc(medidasProteccion.creadoEn))
 
-  const semaforos = rows.map(r => calcularSemaforoVigencia(r.fechaVencimiento))
-  const total     = rows.length
-  const activas   = rows.filter(r => r.status === 'activa').length
-  const porVencer = semaforos.filter(s => s === 'amarillo').length
-  const vencidas  = semaforos.filter(s => s === 'rojo').length
+  // Semáforo filter (computed from date, not stored)
+  const targetColor = estado ? COLOR_MAP[estado] : null
+  if (targetColor) {
+    rows = rows.filter(r => calcularSemaforoVigencia(r.fechaVencimiento) === targetColor)
+  }
 
+  // Sin visita filter
+  if (sinVisita === '1') {
+    const conVisita = await db
+      .selectDistinct({ medidaId: visitasDomiciliarias.medidaId })
+      .from(visitasDomiciliarias)
+    const idsConVisita = new Set(conVisita.map(v => v.medidaId))
+    rows = rows.filter(r => !idsConVisita.has(r.id))
+  }
+
+  const semaforos = rows.map(r => calcularSemaforoVigencia(r.fechaVencimiento))
+
+  // Stats siempre del total sin filtros (para contexto)
+  const allRows  = await db.select({ fv: medidasProteccion.fechaVencimiento, status: medidasProteccion.status }).from(medidasProteccion)
+  const allSem   = allRows.map(r => calcularSemaforoVigencia(r.fv))
   const STATS = [
-    { label: 'Total',      value: total,     color: '#4a5878' },
-    { label: 'Activas',    value: activas,   color: '#4a9e6a' },
-    { label: 'Por vencer', value: porVencer, color: '#d4a43a' },
-    { label: 'Vencidas',   value: vencidas,  color: '#c0223a' },
+    { label: 'Total',      value: allRows.length,                            color: '#4a5878' },
+    { label: 'Activas',    value: allRows.filter(r => r.status === 'activa').length, color: '#4a9e6a' },
+    { label: 'Por vencer', value: allSem.filter(s => s === 'amarillo').length,       color: '#d4a43a' },
+    { label: 'Vencidas',   value: allSem.filter(s => s === 'rojo').length,           color: '#c0223a' },
   ]
+
+  const hayFiltro = !!(estado || autoridad || sinVisita || prorrogadas)
 
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#d8e0f0', margin: '0 0 6px' }}>
             Libro Digital — <span style={{ color: '#d4a43a' }}>Medidas de Protección</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
-            {total} expediente{total !== 1 ? 's' : ''} registrado{total !== 1 ? 's' : ''}
+            {hayFiltro ? (
+              <>{rows.length} resultado{rows.length !== 1 ? 's' : ''} · <span style={{ color: '#d4a43a' }}>filtros activos</span></>
+            ) : (
+              <>{allRows.length} expediente{allRows.length !== 1 ? 's' : ''} registrado{allRows.length !== 1 ? 's' : ''}</>
+            )}
           </p>
         </div>
         <Link
@@ -46,7 +92,7 @@ export default async function MedidasPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 24 }}>
         {STATS.map(s => (
           <div key={s.label} style={{ background: '#0b1220', border: `1px solid ${s.color}40`, padding: '16px 20px' }}>
             <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 38, color: s.color, lineHeight: 1 }}>{s.value}</div>
@@ -55,10 +101,15 @@ export default async function MedidasPage() {
         ))}
       </div>
 
+      {/* Filtros */}
+      <Suspense>
+        <MedidasFiltros />
+      </Suspense>
+
       {/* Table */}
       {rows.length === 0 ? (
         <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2a3a5e', letterSpacing: '0.15em' }}>
-          › No hay expedientes registrados — crea el primero.
+          {hayFiltro ? '› Sin resultados para los filtros seleccionados.' : '› No hay expedientes registrados — crea el primero.'}
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
@@ -76,7 +127,14 @@ export default async function MedidasPage() {
               {rows.map((r, i) => (
                 <tr key={r.id} style={{ borderBottom: '1px solid #0f1826', background: i % 2 === 0 ? 'transparent' : 'rgba(27,39,66,0.2)' }}>
                   <td style={{ padding: '10px 12px' }}>
-                    <SemaforoVigencia color={semaforos[i]} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <SemaforoVigencia color={semaforos[i]} />
+                      {r.prorrogada && (
+                        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, color: '#d4a43a', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                          PRÓRROGA
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td style={{ padding: '10px 12px', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#d8e0f0', whiteSpace: 'nowrap' }}>
                     {r.expediente}

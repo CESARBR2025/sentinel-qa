@@ -3,7 +3,8 @@ import { createFicha } from '@/lib/prevencion/actions'
 
 const TIPOS = [
   { value: 'PROTOCOLO_ALBA',   label: 'Protocolo Alba' },
-  { value: 'BUSQUEDA_PERSONA', label: 'Búsqueda de Persona' },
+  { value: 'PROTOCOLO_AMBAR',  label: 'Protocolo Ambar' },
+  { value: 'BUSQUEDA_PERSONA',  label: 'Búsqueda de Persona' },
 ]
 
 export default function NuevaFichaPage() {

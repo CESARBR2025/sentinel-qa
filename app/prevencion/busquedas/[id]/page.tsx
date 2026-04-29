@@ -1,5 +1,5 @@
 import { db } from '@/lib/db/index'
-import { fichasBusqueda, seguimientosBusqueda } from '@/lib/db/schema'
+import { fichasBusqueda, seguimientosBusqueda, users } from '@/lib/db/schema'
 import { eq, asc } from 'drizzle-orm'
 import Link         from 'next/link'
 import { notFound } from 'next/navigation'
@@ -9,6 +9,7 @@ import { CancelacionModal }    from '@/components/prevencion/CancelacionModal'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#c0223a' },
+  PROTOCOLO_AMBAR:  { label: 'Protocolo Ambar',     color: '#d4a43a' },
   BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#5a8fd4' },
 }
 
@@ -33,8 +34,17 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
   if (!ficha) notFound()
 
   const seguimientos = await db
-    .select()
+    .select({
+      id:              seguimientosBusqueda.id,
+      tipo:            seguimientosBusqueda.tipo,
+      fechaHoraEnvio:  seguimientosBusqueda.fechaHoraEnvio,
+      archivoUrl:      seguimientosBusqueda.archivoUrl,
+      registradoPor:   seguimientosBusqueda.registradoPor,
+      nombreUsuario:   users.name,
+      apellidoUsuario: users.apellido,
+    })
     .from(seguimientosBusqueda)
+    .leftJoin(users, eq(seguimientosBusqueda.registradoPor, users.id))
     .where(eq(seguimientosBusqueda.fichaId, id))
     .orderBy(asc(seguimientosBusqueda.creadoEn))
 
@@ -115,8 +125,10 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
           fichaId={id}
           fechaActivacionISO={toISO(ficha.fechaActivacion)}
           seguimientosRegistrados={seguimientos.map(s => ({
-            tipo:              s.tipo,
+            tipo:               s.tipo,
             fechaHoraEnvioISO: toISO(s.fechaHoraEnvio),
+            archivoUrl:        s.archivoUrl,
+            nombreUsuario:     s.nombreUsuario && s.apellidoUsuario ? `${s.nombreUsuario} ${s.apellidoUsuario}` : s.nombreUsuario,
           }))}
           fichaActiva={fichaActiva}
         />

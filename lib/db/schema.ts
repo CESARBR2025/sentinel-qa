@@ -156,6 +156,8 @@ export const medidasProteccion = pgTable('medidas_proteccion', {
   observaciones:        text('observaciones'),
   // 'activa' | 'por_vencer' | 'vencida' | 'cerrada'
   status:               varchar('status', { length: 50 }).notNull().default('activa'),
+  prorrogada:           boolean('prorrogada').notNull().default(false),
+  archivoProrrogaUrl:   varchar('archivo_prorroga_url',    { length: 500 }),
   creadoPor:            text('creado_por').references(() => users.id),
   creadoEn:             timestamp('creado_en').notNull().defaultNow(),
   actualizadoEn:        timestamp('actualizado_en').notNull().defaultNow(),
@@ -206,7 +208,8 @@ export const seguimientosBusqueda = pgTable('seguimientos_busqueda', {
   tipo:           varchar('tipo', { length: 50 }).notNull(),
   fechaHoraEnvio: timestamp('fecha_hora_envio').notNull(),
   registradoPor:  text('registrado_por').references(() => users.id),
-  creadoEn:       timestamp('creado_en').notNull().defaultNow(),
+  archivoUrl:      varchar('archivo_url', { length: 500 }),
+  creadoEn:        timestamp('creado_en').notNull().defaultNow(),
 })
 
 // ─── Prevención del Delito — Área Jurídica ────────────────────────────────────
@@ -257,10 +260,29 @@ export const contestaciones = pgTable('contestaciones', {
   creadoEn:           timestamp('creado_en').notNull().defaultNow(),
 })
 
+// Autoridades adicionales que refuerzan o amplían la medida (una medida, N oficios)
+export const medidaAutoridadesAdicionales = pgTable('medida_autoridades_adicionales', {
+  id:          uuid('id').primaryKey().defaultRandom(),
+  medidaId:    uuid('medida_id').notNull()
+                 .references(() => medidasProteccion.id, { onDelete: 'cascade' }),
+  // 'FISCALIA' | 'UMECA' | 'JUZGADOS' | 'SEC_MUJER'
+  autoridad:   varchar('autoridad',   { length: 50  }).notNull(),
+  nOficio:     varchar('n_oficio',    { length: 100 }),
+  fechaOficio: date('fecha_oficio'),
+  creadoPor:   text('creado_por').references(() => users.id),
+  creadoEn:    timestamp('creado_en').notNull().defaultNow(),
+})
+
 // ─── Relations — Prevención ───────────────────────────────────────────────────
 export const medidasProteccionRelations = relations(medidasProteccion, ({ one, many }) => ({
-  creadoPorUser: one(users, { fields: [medidasProteccion.creadoPor], references: [users.id] }),
-  visitas:       many(visitasDomiciliarias),
+  creadoPorUser:        one(users, { fields: [medidasProteccion.creadoPor], references: [users.id] }),
+  visitas:              many(visitasDomiciliarias),
+  autoridadesAdicionales: many(medidaAutoridadesAdicionales),
+}))
+
+export const medidaAutoridadesAdicionalesRelations = relations(medidaAutoridadesAdicionales, ({ one }) => ({
+  medida:        one(medidasProteccion, { fields: [medidaAutoridadesAdicionales.medidaId], references: [medidasProteccion.id] }),
+  creadoPorUser: one(users,            { fields: [medidaAutoridadesAdicionales.creadoPor], references: [users.id] }),
 }))
 
 export const visitasDomiciliariasRelations = relations(visitasDomiciliarias, ({ one }) => ({
@@ -294,6 +316,30 @@ export const contestacionesRelations = relations(contestaciones, ({ one }) => ({
   creadoPorUser: one(users, { fields: [contestaciones.creadoPor], references: [users.id] }),
 }))
 
+// ─── Notificaciones ──────────────────────────────────────────────────────────
+export const notificaciones = pgTable(
+  'notificaciones',
+  {
+    id:       uuid('id').primaryKey().defaultRandom(),
+    userId:   text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    tipo:     varchar('tipo',    { length: 100 }).notNull(), // 'busqueda_plazo'
+    titulo:   varchar('titulo',  { length: 300 }).notNull(),
+    mensaje:  text('mensaje').notNull(),
+    href:     varchar('href',    { length: 500 }),
+    leida:    boolean('leida').notNull().default(false),
+    // Para búsquedas: identifican el evento exacto y evitan duplicados
+    fichaId:  uuid('ficha_id').references(() => fichasBusqueda.id, { onDelete: 'cascade' }),
+    hito:     varchar('hito',    { length: 50 }),
+    creadoEn: timestamp('creado_en').notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.userId, t.fichaId, t.hito)],
+)
+
+export const notificacionesRelations = relations(notificaciones, ({ one }) => ({
+  user:  one(users,          { fields: [notificaciones.userId],  references: [users.id] }),
+  ficha: one(fichasBusqueda, { fields: [notificaciones.fichaId], references: [fichasBusqueda.id] }),
+}))
+
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 export type Rol                    = typeof roles.$inferSelect
 export type User                   = typeof users.$inferSelect
@@ -305,4 +351,6 @@ export type FichaBusqueda          = typeof fichasBusqueda.$inferSelect
 export type SeguimientoBusqueda    = typeof seguimientosBusqueda.$inferSelect
 export type SolicitudInformacion   = typeof solicitudesInformacion.$inferSelect
 export type SolicitudC4Interna     = typeof solicitudesC4Internas.$inferSelect
+export type MedidaAutoridadAdicional = typeof medidaAutoridadesAdicionales.$inferSelect
+export type Notificacion             = typeof notificaciones.$inferSelect
 export type Contestacion           = typeof contestaciones.$inferSelect
