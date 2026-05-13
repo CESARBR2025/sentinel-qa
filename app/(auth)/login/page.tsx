@@ -73,7 +73,7 @@ function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
   }, [lines])
 
   return (
-    <div style={{ borderTop:'1px solid var(--line)', background:'#050810', display:'grid', gridTemplateRows:'auto 1fr', height:240 }}>
+    <div className="terminal-panel" style={{ borderTop:'1px solid var(--line)', background:'#050810', display:'grid', gridTemplateRows:'auto 1fr', height:240 }}>
       <div style={{ display:'flex', alignItems:'center', gap:10, padding:'9px 16px', borderBottom:'1px solid var(--line)', background:'var(--ink-2)', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.16em', color:'var(--text-dim)', textTransform:'uppercase' }}>
         <span style={{ width:8,height:8,display:'inline-block',background:'var(--red)',borderRadius:0 }}/>
         <span style={{ width:8,height:8,display:'inline-block',background:'var(--gold)',borderRadius:0 }}/>
@@ -143,7 +143,7 @@ function OtpInput({ value, onChange, error, focusFirst }: { value: string; onCha
   }
 
   return (
-    <div style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:8, marginBottom:8 }} onPaste={handlePaste}>
+    <div className="otp-input-wrapper" style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:8, marginBottom:8 }} onPaste={handlePaste}>
       {[0,1,2,3,4,5].map(i => (
         <input
           key={i}
@@ -158,9 +158,10 @@ function OtpInput({ value, onChange, error, focusFirst }: { value: string; onCha
             background:'var(--ink-2)', border:`1px solid ${error?'var(--red)':value[i]?'var(--gold)':'var(--line-2)'}`,
             color: error?'var(--red)':value[i]?'var(--gold)':'var(--text)',
             textAlign:'center', fontFamily:'JetBrains Mono,monospace',
-            fontSize:26, fontWeight:700, outline:'none',
+            fontWeight:700, outline:'none',
             boxShadow: value[i]&&!error?'0 0 0 3px rgba(212,164,58,0.12)':error?'0 0 0 3px rgba(192,34,58,0.15)':'none',
           }}
+          className="otp-input-field"
         />
       ))}
     </div>
@@ -185,14 +186,14 @@ function LoginContent() {
   const [failed,  setFailed]  = useState<'credentials'|'otp'|null>(null)
   const [focusOtpInput, setFocusOtpInput] = useState(false)
 
-  // Flujo de éxito: overlay (800ms) → loader (1800ms) → dashboard
+  // Flujo de éxito: overlay (2800ms) → loader (1200ms) → dashboard
   useEffect(() => {
     if (phase !== 'success') return
     const t1 = setTimeout(() => {
       ;(window as unknown as { __showLoader?: (msg: string, minMs?: number) => void })
         .__showLoader?.('Cargando tablero...', 99999)
-    }, 800)
-    const t2 = setTimeout(() => { window.location.href = fromPath }, 800 + 1800)
+    }, 2800)
+    const t2 = setTimeout(() => { window.location.href = fromPath }, 2800 + 1200)
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [phase, fromPath])
 
@@ -309,14 +310,39 @@ function LoginContent() {
         @keyframes fadein{from{opacity:0}to{opacity:1}}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
         @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes cyber-reveal-success {
+          0% { opacity: 0; transform: scale(0.95); clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%); }
+          50% { opacity: 1; transform: scale(1.02); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); filter: drop-shadow(0 0 10px rgba(74,158,106,0.8)); }
+          100% { transform: scale(1); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        }
+        @keyframes text-glitch {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .cyber-success-wrap { animation: fadein 0.5s ease forwards; }
+        .cyber-success-icon { animation: cyber-reveal-success 1.2s cubic-bezier(0.1,0.9,0.2,1) forwards; }
+        .cyber-success-text { animation: text-glitch 0.6s ease 0.6s both; }
         .field-input-shake{animation:shake .35s ease;}
         @media(max-width:960px){
-          .stage{grid-template-columns:1fr!important;grid-template-rows:auto 1fr;overflow:auto;position:static!important;}
-          html,body{overflow:auto;}
-          .left-panel{padding:32px 28px!important;}
-          .h1-big{font-size:42px!important;}
-          .main-panel{padding:28px 24px!important;}
+          .stage{grid-template-columns:1fr!important;grid-template-rows:auto 1fr;overflow-y:auto;position:relative!important;min-height:100vh;}
+          html,body{overflow-y:auto;}
+          .left-panel{padding:32px 24px!important; border-right:none!important; border-bottom:1px solid var(--line);}
+          .h1-big{font-size:64px!important;}
+          .main-panel{padding:32px 24px!important;}
+          .terminal-panel{height:180px!important;}
+          .topbar-container{flex-direction:column; gap:8px; align-items:flex-start!important; padding:12px 24px!important;}
         }
+        @media(max-width:480px){
+          .left-panel{display:none!important;}
+          .topbar-container{display:none!important;}
+          .main-panel{padding:24px 16px!important;}
+          .terminal-panel{height:140px!important;}
+          .otp-input-wrapper{gap:4px!important;}
+          .otp-input-field{font-size:20px!important;}
+          .hide-mobile{display:none!important;}
+          .mobile-logo{display:flex!important;}
+        }
+        .otp-input-field { font-size: 26px; }
       `}</style>
 
       <div className="stage" style={{ position:'fixed',inset:0,display:'grid',gridTemplateColumns:'1.05fr 1fr',background:`radial-gradient(ellipse at 25% 20%,rgba(20,34,74,.35),transparent 55%),radial-gradient(ellipse at 80% 90%,rgba(192,34,58,.10),transparent 60%),var(--ink)` }}>
@@ -332,7 +358,7 @@ function LoginContent() {
         <aside className="left-panel" style={{ position:'relative',padding:'52px 60px 44px',borderRight:'1px solid var(--line)',background:'linear-gradient(180deg,rgba(20,34,74,.35) 0%,transparent 60%),linear-gradient(180deg,var(--ink-2) 0%,var(--ink) 100%)',display:'flex',flexDirection:'column',overflow:'hidden' }}>
 
           {/* Brand */}
-          <div style={{ display:'flex',alignItems:'center',gap:18,paddingBottom:26,borderBottom:'1px solid var(--line)' }}>
+          <div className="hide-mobile" style={{ display:'flex',alignItems:'center',gap:18,paddingBottom:26,borderBottom:'1px solid var(--line)' }}>
             <div style={{ position:'relative',width:96,height:96,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
               <div style={{ position:'absolute',inset:-6,borderRadius:'50%',background:'radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0%,rgba(212,164,58,.10) 35%,rgba(212,164,58,0) 72%)',filter:'blur(6px)' }}/>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -355,7 +381,7 @@ function LoginContent() {
             <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:104,lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(212,164,58,.15)',textAlign:'center' }}>
               <span style={{ color:'var(--gold)' }}>SENTINEL</span>
             </h1>
-            <div style={{ display:'flex',gap:10,alignItems:'center',marginTop:16,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
+            <div className="hide-mobile" style={{ display:'flex',gap:10,alignItems:'center',marginTop:16,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
               <span>S.S.P.M.</span><span style={{ color:'var(--gold)' }}>·</span>
               <span>SAN JUAN DEL RÍO</span><span style={{ color:'var(--gold)' }}>·</span>
               <span>QRO</span>
@@ -363,7 +389,7 @@ function LoginContent() {
           </div>
 
           {/* Sentinel mark */}
-          <div style={{ marginTop:34,display:'flex',alignItems:'center',gap:14 }}>
+          <div className="hide-mobile" style={{ marginTop:34,display:'flex',alignItems:'center',gap:14 }}>
             <div style={{ flexShrink:0,width:28,height:1,background:'var(--gold)' }}/>
             <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.12em',color:'var(--text-dim)',textTransform:'lowercase',lineHeight:1.5 }}>
               <span style={{ color:'var(--gold)',fontWeight:700,textTransform:'uppercase' }}>S</span>istema{' '}
@@ -379,7 +405,7 @@ function LoginContent() {
           </div>
 
           {/* Protocolo */}
-          <div style={{ marginTop:30,border:'1px solid var(--line)',background:'linear-gradient(180deg,rgba(20,34,74,.35) 0%,rgba(11,18,32,.1) 100%)',padding:'18px 20px',position:'relative' }}>
+          <div className="hide-mobile" style={{ marginTop:30,border:'1px solid var(--line)',background:'linear-gradient(180deg,rgba(20,34,74,.35) 0%,rgba(11,18,32,.1) 100%)',padding:'18px 20px',position:'relative' }}>
             <div style={{ position:'absolute',top:-1,left:0,width:40,height:2,background:'var(--gold)' }}/>
             <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.22em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:14 }}>
               <span>› Protocolo de acceso</span>
@@ -406,10 +432,23 @@ function LoginContent() {
         </aside>
 
         {/* ── PANEL DERECHO ── */}
-        <section style={{ position:'relative',display:'grid',gridTemplateRows:'auto 1fr auto',overflow:'hidden' }}>
+        <section style={{ position:'relative',display:'flex',flexDirection:'column',overflow:'hidden',height:'100%' }}>
+
+          {/* Header móvil — solo visible en ≤480px */}
+          <div className="mobile-logo" style={{
+            display:'none', alignItems:'center', gap:10,
+            padding:'18px 20px', borderBottom:'1px solid var(--line)',
+            background:'rgba(7,11,22,.85)',
+          }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo_sentinel.png" alt="S" style={{ height:36, objectFit:'contain', filter:'drop-shadow(0 0 8px rgba(212,164,58,0.5))' }} />
+            <span style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:800, fontSize:30, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--gold)', lineHeight:1 }}>
+              ENTINEL
+            </span>
+          </div>
 
           {/* Topbar */}
-          <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 28px',borderBottom:'1px solid var(--line)',fontFamily:'JetBrains Mono,monospace',fontSize:10,color:'var(--text-dim)',letterSpacing:'0.2em',textTransform:'uppercase',background:'rgba(7,11,22,.5)' }}>
+          <div className="topbar-container" style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 28px',borderBottom:'1px solid var(--line)',fontFamily:'JetBrains Mono,monospace',fontSize:10,color:'var(--text-dim)',letterSpacing:'0.2em',textTransform:'uppercase',background:'rgba(7,11,22,.5)' }}>
             <div style={{ display:'flex',alignItems:'center',gap:10 }}>
               <span style={{ width:7,height:7,borderRadius:'50%',background:'var(--gold)',boxShadow:'0 0 10px var(--gold)',display:'inline-block',animation:'pulse 2.2s ease-in-out infinite' }}/>
               <span>SSPM-SJR · ACCESO SEGURO</span>
@@ -422,18 +461,7 @@ function LoginContent() {
           </div>
 
           {/* Formulario */}
-          <div className="main-panel" style={{ padding:'60px 56px 20px',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative' }}>
-
-            {/* Overlay de éxito */}
-            {phase === 'success' && (
-              <div style={{ position:'absolute',inset:0,background:'var(--ink)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',zIndex:20,animation:'fadein .3s ease' }}>
-                <div style={{ width:90,height:90,borderRadius:'50%',border:'2px solid var(--ok)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 40px rgba(74,158,106,.35)',marginBottom:22 }}>
-                  <IconCheck />
-                </div>
-                <h3 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:28,letterSpacing:'0.1em',textTransform:'uppercase',margin:'0 0 6px',color:'var(--text)' }}>Acceso concedido</h3>
-                <p style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.18em',color:'var(--text-dim)',textTransform:'uppercase',margin:0 }}>Redirigiendo al tablero</p>
-              </div>
-            )}
+          <div className="main-panel" style={{ flex: 1, padding:'60px 56px 20px',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative' }}>
 
             {/* Solo mostrar formulario si NO es success */}
             {phase !== 'success' && (
@@ -563,6 +591,30 @@ function LoginContent() {
           </div>
 
           {phase !== 'success' && <Terminal phase={phase} failed={failed} />}
+
+          {/* Overlay de éxito Ciberpunk a nivel de toda la sección */}
+          {phase === 'success' && (
+            <div className="cyber-success-wrap" style={{ position:'absolute',inset:0,background:'rgba(5,8,16,0.92)',backdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',zIndex:999 }}>
+              {/* Grid background success */}
+              <div style={{ position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(74,158,106,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(74,158,106,0.08) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none' }}/>
+              
+              {/* Línea horizontal central */}
+              <div style={{ position:'absolute',top:'50%',left:0,right:0,height:1,background:'rgba(74,158,106,0.4)',boxShadow:'0 0 15px rgba(74,158,106,1)' }}/>
+
+              <div className="cyber-success-icon" style={{ width:120,height:120,background:'var(--ink)',borderRadius:4,border:'1px solid var(--ok)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 40px rgba(74,158,106,.35), inset 0 0 20px rgba(74,158,106,.2)',marginBottom:36,position:'relative',zIndex:2 }}>
+                 {/* Decorative brackets */}
+                 <div style={{ position:'absolute',top:-2,left:-2,width:16,height:16,borderTop:'2px solid var(--ok)',borderLeft:'2px solid var(--ok)'}}/>
+                 <div style={{ position:'absolute',bottom:-2,right:-2,width:16,height:16,borderBottom:'2px solid var(--ok)',borderRight:'2px solid var(--ok)'}}/>
+                 <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+              
+              <div className="cyber-success-text" style={{ textAlign:'center',position:'relative',zIndex:2 }}>
+                 <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:12,color:'var(--ok)',letterSpacing:'0.4em',textTransform:'uppercase',marginBottom:12 }}>[ STATUS: AUTHENTICATED ]</div>
+                 <h3 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:46,letterSpacing:'0.08em',textTransform:'uppercase',margin:'0 0 8px',color:'#fff',textShadow:'0 0 24px rgba(74,158,106,0.8)' }}>Acceso concedido</h3>
+                 <p style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.18em',color:'var(--text-dim)',textTransform:'uppercase',margin:0 }}>Iniciando enlace seguro con el núcleo C4...</p>
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </div>

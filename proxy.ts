@@ -14,8 +14,10 @@ export async function proxy(request: NextRequest) {
 
   if (isPublic(pathname)) return NextResponse.next()
 
+  const origin = request.nextUrl.origin.replace(/^https(?=:\/\/localhost)/, 'http')
+
   const { data: session } = await betterFetch<Session>('/api/auth/get-session', {
-    baseURL:  request.nextUrl.origin,
+    baseURL:  origin,
     headers:  { cookie: request.headers.get('cookie') ?? '' },
   })
 
