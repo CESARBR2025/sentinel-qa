@@ -13,11 +13,16 @@ interface Props {
 }
 
 export function SeguimientoTimeline({ fichaId, fechaActivacionISO, seguimientosRegistrados, fichaActiva }: Props) {
-  const [pendingTipo, setPendingTipo] = useState<string | null>(null)
-  const [modalOpen, setModalOpen]    = useState(false)
-  const [tipoEnModal, setTipoEnModal] = useState<string | null>(null)
-  const [, startTransition]           = useTransition()
+  const [pendingTipo, setPendingTipo]   = useState<string | null>(null)
+  const [modalOpen, setModalOpen]       = useState(false)
+  const [tipoEnModal, setTipoEnModal]   = useState<string | null>(null)
+  const [evidencia, setEvidencia]       = useState<{ url: string; label: string } | null>(null)
+  const [, startTransition]             = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
+
+  function getExt(url: string) {
+    return url.split('.').pop()?.toLowerCase() ?? ''
+  }
 
   const fechaActivacion = new Date(fechaActivacionISO)
   const registradosMap  = new Map(seguimientosRegistrados.map(s => [s.tipo, s]))
@@ -31,6 +36,7 @@ export function SeguimientoTimeline({ fichaId, fechaActivacionISO, seguimientosR
     e.preventDefault()
     const fd = new FormData(formRef.current!)
     fd.set('fichaId', fichaId)
+    fd.set('tipo', tipoEnModal ?? '')
     setPendingTipo(tipoEnModal)
     setModalOpen(false)
     startTransition(async () => {
@@ -42,6 +48,75 @@ export function SeguimientoTimeline({ fichaId, fechaActivacionISO, seguimientosR
 
   return (
     <div>
+      {/* Modal de evidencia */}
+      {evidencia && (
+        <div
+          onClick={e => e.target === e.currentTarget && setEvidencia(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1100,
+            background: 'rgba(7,11,22,0.92)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24,
+          }}
+        >
+          <div style={{
+            background: '#0b1220', border: '1px solid #1b2742',
+            display: 'flex', flexDirection: 'column',
+            width: '90vw', maxWidth: 900, maxHeight: '90vh',
+            boxShadow: '0 0 0 1px rgba(212,164,58,0.12), 0 24px 64px rgba(0,0,0,0.7)',
+          }}>
+            {/* Header */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '12px 20px', borderBottom: '1px solid #1b2742', flexShrink: 0,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 2, height: 16, background: '#d4a43a', boxShadow: '0 0 6px #d4a43a' }} />
+                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#4a5878' }}>
+                  Evidencia —
+                </span>
+                <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 15, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#d4a43a' }}>
+                  {evidencia.label}
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <a
+                  href={evidencia.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#8a9bc0', letterSpacing: '0.12em', textTransform: 'uppercase', textDecoration: 'none' }}
+                >
+                  Abrir en nueva pestaña ↗
+                </a>
+                <button
+                  onClick={() => setEvidencia(null)}
+                  style={{ background: 'transparent', border: '1px solid #1b2742', color: '#4a5878', cursor: 'pointer', padding: '4px 10px', fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Contenido */}
+            <div style={{ flex: 1, overflow: 'auto', minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#070b16' }}>
+              {['jpg', 'jpeg', 'png'].includes(getExt(evidencia.url)) ? (
+                <img
+                  src={evidencia.url}
+                  alt="Evidencia"
+                  style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain', display: 'block' }}
+                />
+              ) : (
+                <iframe
+                  src={evidencia.url}
+                  style={{ width: '100%', height: '75vh', border: 'none' }}
+                  title="Evidencia PDF"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modal de carga de archivo */}
       {modalOpen && (
         <div style={{
@@ -148,14 +223,15 @@ export function SeguimientoTimeline({ fichaId, fechaActivacionISO, seguimientosR
                     </div>
                   )}
                   {registro.archivoUrl && (
-                    <a
-                      href={`/api/uploads/${registro.archivoUrl.replace(/^uploads\//, '')}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ display: 'inline-block', marginTop: 3, fontSize: 10, color: '#d4a43a', textDecoration: 'none' }}
+                    <button
+                      onClick={() => setEvidencia({
+                        url:   `/api/uploads/${registro.archivoUrl!.replace(/^uploads\//, '')}`,
+                        label: getLabelSeguimiento(tipo),
+                      })}
+                      style={{ display: 'inline-block', marginTop: 3, fontSize: 10, color: '#d4a43a', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
                     >
                       📎 Ver evidencia
-                    </a>
+                    </button>
                   )}
                 </div>
               ) : (
