@@ -25,7 +25,7 @@ export default function SeleccionAtencionPage() {
       label: 'Rondín',
       sub: 'Control de patrullaje preventivo, puntos de firma y geolocalización de unidades.',
       icon: <MapPin size={28} />,
-      href: '/rondin',
+      href: '/911/rondin',
       stats: [{ label: 'Rutas', value: '24' }, { label: 'Activas', value: '18' }]
     }
   ]
@@ -35,24 +35,7 @@ export default function SeleccionAtencionPage() {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       {/* NAVBAR */}
-      <header style={{ 
-        borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, 
-        display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff',
-        position: 'sticky', top: 0, zIndex: 100
-      }}>
-        <Link href="/dashboard" style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <ArrowLeft size={14} /> Dashboard
-        </Link>
-        <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
-        <div style={{ flexGrow: 1 }}>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
-            SSPM PREVENCIÓN
-          </span>
-          <span style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 22, letterSpacing: '0.05em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>
-            SISTEMA DE <span style={{ color: '#3b82f6' }}>OPERACIONES</span>
-          </span>
-        </div>
-      </header>
+
 
       {/* CONTENIDO */}
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 48px' }}>
