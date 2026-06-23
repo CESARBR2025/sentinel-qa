@@ -9,7 +9,7 @@ export default function SeleccionAtencionPage() {
       label: 'Ciudadano',
       sub: 'Base de datos de atención, registros de identidad y antecedentes de contacto.',
       icon: <Users size={28} />,
-      href: '/ciudadano',
+      href: '/911/ciudadano',
       stats: [{ label: 'Registros', value: '8.4k' }, { label: 'Hoy', value: '+12' }]
     },
     {
@@ -17,7 +17,7 @@ export default function SeleccionAtencionPage() {
       label: 'WhatsApp',
       sub: 'Gestión de reportes entrantes vía mensajería instantánea y despacho digital.',
       icon: <MessageSquare size={28} />,
-      href: '/whatsapp',
+      href: '/911/whatsapp',
       stats: [{ label: 'Mensajes', value: '142' }, { label: 'Pendientes', value: '5' }]
     },
     {
