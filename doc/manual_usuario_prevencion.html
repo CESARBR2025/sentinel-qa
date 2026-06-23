@@ -1,0 +1,3391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial Interactivo: Prevención del Delito · Sentinel</title>
+  <!-- Google Fonts used in the real Sentinel app -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #070b16;
+      --bg-gradient: linear-gradient(135deg, #070b16 0%, #0d1525 100%);
+      --surface: #0b1220;
+      --surface-solid: #0d1525;
+      --border: #1b2742;
+      --border-focus: #2a3a5e;
+      --gold: #d4a43a;
+      --gold-glow: rgba(212, 164, 58, 0.15);
+      --red: #c0223a;
+      --red-glow: rgba(192, 34, 58, 0.15);
+      --green: #4a9e6a;
+      --green-glow: rgba(74, 158, 106, 0.15);
+      --blue: #5a8fd4;
+      --text: #d8e0f0;
+      --text-muted: #8a9bc0;
+      --text-dark: #4a5878;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── BARRA SUPERIOR DEL TUTORIAL ── */
+    header {
+      background: #070b16;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--red) 0%, #7e1222 100%);
+      color: #ffffff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      padding: 4px 10px;
+      border-radius: 2px;
+      text-transform: uppercase;
+    }
+
+    header h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    header h1 span {
+      color: var(--gold);
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-exit {
+      background: transparent;
+      border: 1px solid var(--red);
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      cursor: pointer;
+      display: none;
+      transition: var(--transition);
+    }
+
+    .btn-exit:hover {
+      background: var(--red);
+      box-shadow: 0 0 15px var(--red-glow);
+    }
+
+    /* ── PANTALLA 1: SELECCIÓN DE MÓDULO ── */
+    #pantalla-seleccion {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .selector-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .selector-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dark);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 40px;
+    }
+
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 30px;
+      cursor: pointer;
+      text-align: left;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: var(--transition);
+    }
+
+    .module-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-focus);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-medidas { border-left: 3px solid var(--green); }
+    .card-busquedas { border-left: 3px solid var(--gold); }
+    .card-juridico { border-left: 3px solid var(--red); }
+
+    .module-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .module-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .module-card .action-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .card-medidas .action-label { color: var(--green); }
+    .card-busquedas .action-label { color: var(--gold); }
+    .card-juridico .action-label { color: var(--red); }
+
+    /* ── PANTALLA 2: MODO PRESENTACIÓN ── */
+    #pantalla-tutorial {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .tutorial-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      padding: 24px;
+      height: calc(100vh - 120px);
+      overflow: hidden;
+    }
+
+    @media (max-width: 1024px) {
+      .tutorial-workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow-y: auto;
+      }
+    }
+
+    /* VISOR DE MOCKUPS */
+    .mockup-column {
+      background: #070b16;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mockup-body {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Puntero Fijo en Viewport */
+    .focus-circle {
+      position: fixed;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      background: rgba(212, 164, 58, 0.15);
+      box-shadow: 0 0 20px var(--gold);
+      animation: pulse 1.5s infinite;
+      pointer-events: none;
+      display: none;
+      z-index: 9999;
+      transition: all 0.15s ease-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Botón flotante de autocompletar dentro del mockup */
+    .mock-autofill-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #d4a43a;
+      color: #070b16;
+      border: none;
+      padding: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 15;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .mock-autofill-btn:hover { background: #c5932a; }
+
+    /* INSTRUCCIONES DERECHA */
+    .instruction-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .instruction-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .instruction-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--gold);
+    }
+
+    .module-medidas .instruction-card::before { background: var(--green); }
+    .module-busquedas .instruction-card::before { background: var(--gold); }
+    .module-juridico .instruction-card::before { background: var(--red); }
+
+    .step-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .instruction-card h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 14px;
+    }
+
+    .instruction-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+
+    .instruction-text strong { color: #ffffff; }
+
+    .alert-box {
+      border-radius: 0;
+      padding: 16px 20px;
+      display: flex;
+      gap: 12px;
+      border-left: 3px solid;
+      background: rgba(255,255,255,0.02);
+      margin-top: auto;
+    }
+
+    .alert-box-warn { border-color: var(--gold); background: rgba(212,164,58,0.05); }
+    .alert-box-info { border-color: var(--blue); background: rgba(90,143,212,0.05); }
+    .alert-box-danger { border-color: var(--red); background: rgba(192,34,58,0.05); }
+    .alert-box-success { border-color: var(--green); background: rgba(74,158,106,0.05); }
+
+    .alert-icon { font-size: 16px; flex-shrink: 0; }
+
+    .alert-content h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .alert-content p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    /* CONTROLES */
+    .navigation-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 16px 24px;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: #ffffff;
+      padding: 10px 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: rgba(255,255,255,0.03);
+      border-color: var(--text-muted);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    .btn-next-action {
+      background: var(--red);
+      color: #ffffff;
+      border: 1px solid var(--red);
+    }
+
+    .btn-next-action:hover:not(:disabled) { background: #e62643; border-color: #e62643; }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .progress-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: var(--transition);
+    }
+
+    .progress-dot.active { background: var(--gold); }
+    .module-medidas .progress-dot.active { background: var(--green); }
+    .module-busquedas .progress-dot.active { background: var(--gold); }
+    .module-juridico .progress-dot.active { background: var(--red); }
+
+    .progress-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dark);
+    }
+
+    /* ── ESTILOS SIMULADOS EXACTOS DEL SISTEMA REAL ── */
+    .mock-header {
+      border-bottom: 1px solid #1b2742;
+      padding: 0 16px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #070b16;
+      flex-shrink: 0;
+    }
+
+    .mock-header-back {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      color: #4a5878;
+      text-transform: uppercase;
+    }
+
+    .mock-header-divider {
+      width: 1px;
+      height: 16px;
+      background: #1b2742;
+    }
+
+    .mock-header-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: #c0223a;
+      text-transform: uppercase;
+    }
+
+    .mock-header-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-left: 10px;
+      color: #d8e0f0;
+    }
+
+    .mock-header-title span { color: #d4a43a; }
+
+    .mock-nav {
+      border-bottom: 1px solid #1b2742;
+      padding: 0 16px;
+      display: flex;
+      background: #070b16;
+      flex-shrink: 0;
+    }
+
+    .mock-nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #8a9bc0;
+      white-space: nowrap;
+    }
+
+    .mock-nav-link.active {
+      color: #d4a43a;
+      border-bottom: 2px solid #d4a43a;
+    }
+
+    .mock-page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .mock-page-title h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #d8e0f0;
+      margin: 0;
+    }
+
+    .mock-page-title p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #4a5878;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin: 4px 0 0 0;
+    }
+
+    .mock-action-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      background: #c0223a;
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: 1px solid #c0223a;
+      cursor: pointer;
+    }
+
+    .mock-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .mock-stat-box {
+      background: #0b1220;
+      border: 1px solid rgba(74, 88, 120, 0.25);
+      padding: 10px 14px;
+    }
+
+    .mock-stat-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .mock-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      color: #4a5878;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .mock-real-card {
+      background: #0b1220;
+      border: 1px solid #1b2742;
+      padding: 16px;
+    }
+
+    .mock-card-section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      letter-spacing: 0.25em;
+      color: #d4a43a;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .mock-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .mock-form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mock-form-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #8a9bc0;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .mock-form-input {
+      padding: 9px 12px;
+      background: #070b16;
+      border: 1px solid #2a3a5e;
+      color: #d8e0f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .mock-form-input:disabled { opacity: 0.45; }
+
+    .mock-form-select {
+      padding: 9px 12px;
+      background: #070b16;
+      border: 1px solid #2a3a5e;
+      color: #d8e0f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      outline: none;
+      width: 100%;
+    }
+    .mock-form-select:disabled { opacity: 0.45; }
+
+    .mock-form-textarea {
+      padding: 9px 12px;
+      background: #070b16;
+      border: 1px solid #2a3a5e;
+      color: #d8e0f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      resize: none;
+    }
+    .mock-form-textarea:disabled { opacity: 0.45; }
+
+    .mock-real-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .mock-real-table th {
+      padding: 8px 10px;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #4a5878;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 400;
+      border-bottom: 1px solid #1b2742;
+    }
+
+    .mock-real-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #0f1826;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #d8e0f0;
+    }
+
+    .mock-badge-status {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .status-verde { background: #4a9e6a; box-shadow: 0 0 6px #4a9e6a; }
+    .status-amarillo { background: #d4a43a; box-shadow: 0 0 6px #d4a43a; }
+    .status-rojo { background: #c0223a; box-shadow: 0 0 6px #c0223a; }
+    .status-gris { background: #64748b; }
+
+    .mock-badge-auth {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      padding: 2px 6px;
+      border: 1px solid #1b2742;
+      color: #8a9bc0;
+      letter-spacing: 0.05em;
+    }
+
+    .mock-real-modal-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(7, 11, 22, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .mock-real-modal {
+      background: #0d1525;
+      border: 1px solid #1b2742;
+      padding: 32px;
+      width: 90%;
+      max-width: 440px;
+      position: relative;
+    }
+
+    .mock-real-modal-stripe {
+      position: absolute;
+      top: -1px; left: 0; width: 48px; height: 2px;
+      background: #d4a43a;
+    }
+
+    .mock-real-modal-stripe-cancel {
+      position: absolute;
+      top: -1px; left: 0; width: 48px; height: 2px;
+      background: #c0223a;
+    }
+
+    .mock-real-modal-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #d8e0f0;
+      margin-bottom: 20px;
+    }
+
+    .mock-real-bulletin-container {
+      background: #ffffff;
+      color: #000000;
+      padding: 24px;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid #dddddd;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    .mock-real-bulletin-header {
+      border-bottom: 3px solid #c0223a;
+      padding-bottom: 6px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .mock-real-bulletin-header h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #c0223a;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mock-real-bulletin-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 12px;
+    }
+
+    .mock-real-bulletin-photo {
+      height: 110px;
+      background: #eeeeee;
+      border: 1px solid #cccccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #aaaaaa;
+    }
+
+    .mock-real-bulletin-data {
+      font-size: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mock-real-bulletin-data div { line-height: 1.4; }
+    .mock-real-bulletin-data strong { font-weight: 700; color: #000000; }
+
+    /* ESTILOS DE COMPONENTES DEL FORMULARIO DE DRIZZLE / NEXT.JS */
+    .s-section {
+      border: 1px solid #1b2742;
+      background: #0b1220;
+      margin-bottom: 24px;
+    }
+    .s-section-title {
+      background: #0b1220;
+      padding: 10px 20px;
+      border-bottom: 1px solid #1b2742;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #d4a43a;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+    .s-section-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .s-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .s-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .s-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #8a9bc0;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .s-input {
+      background: #070b16;
+      border: 1px solid #1b2742;
+      color: #d8e0f0;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 9px 12px;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      border-radius: 0;
+    }
+    .s-input:disabled { opacity: 0.45; cursor: not-allowed; }
+    .s-select {
+      background: #070b16;
+      border: 1px solid #1b2742;
+      color: #d8e0f0;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 9px 12px;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      border-radius: 0;
+    }
+    .s-select:disabled { opacity: 0.45; cursor: not-allowed; }
+    .s-textarea {
+      background: #070b16;
+      border: 1px solid #1b2742;
+      color: #d8e0f0;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 9px 12px;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      resize: vertical;
+      border-radius: 0;
+    }
+    .s-textarea:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Ficha de Detalles */
+    .s-card {
+      background: #0b1220;
+      border: 1px solid #1b2742;
+      padding: 20px;
+    }
+    .s-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      color: #d4a43a;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .s-card-field {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .s-card-field:last-child { margin-bottom: 0; }
+    .s-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #4a5878;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      min-width: 110px;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+    .s-card-value {
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      color: #d8e0f0;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── BARRA SUPERIOR DEL TUTORIAL ── -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-badge">SENTINEL</div>
+      <h1>Módulo de Prevención — <span>Guía Interactiva</span></h1>
+    </div>
+    <div class="header-info">
+      <button id="btn-exit" class="btn-exit" onclick="salirAlMenu()">
+        🗙 Salir
+      </button>
+      <div class="version-tag" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dark);">v0.1 · 2026</div>
+    </div>
+  </header>
+
+  <!-- ── PANTALLA 1: SELECCIÓN DE MÓDULO ── -->
+  <div id="pantalla-seleccion">
+    <h2 class="selector-title">Selecciona el flujo a consultar</h2>
+    <p class="selector-subtitle">Simulación de flujos reales con la totalidad de campos, modales e interfaces de la base de datos.</p>
+
+    <div class="module-grid">
+      
+      <!-- CARD 1: MEDIDAS DE PROTECCIÓN -->
+      <div class="module-card card-medidas" onclick="iniciarTutorial('medidas')">
+        <div class="module-icon-container">🛡️</div>
+        <h3>Medidas de Protección</h3>
+        <p>Aprende todo el flujo: Libro Digital, formulario de 6 secciones con todos los campos, expediente completo de detalle, modal de visitas con apercibimiento y carga de prórrogas.</p>
+        <span class="action-label">Ver Funcionamiento →</span>
+      </div>
+
+      <!-- CARD 2: BÚSQUEDAS Y PROTOCOLOS -->
+      <div class="module-card card-busquedas" onclick="iniciarTutorial('busquedas')">
+        <div class="module-icon-container">🔍</div>
+        <h3>Búsquedas y Protocolos</h3>
+        <p>Captura todos los campos de activación, bandeja de control, timeline completo de los 24 hitos de tiempo, boletín imprimible del C4 y modal oficial de localización.</p>
+        <span class="action-label">Ver Funcionamiento →</span>
+      </div>
+
+      <!-- CARD 3: MÓDULO JURÍDICO -->
+      <div class="module-card card-juridico" onclick="iniciarTutorial('juridico')">
+        <div class="module-icon-container">⚖️</div>
+        <h3>Módulo Jurídico</h3>
+        <p>Captura de la solicitud, bandeja de requerimientos, expediente detallado, envío de peticiones de videovigilancia a C4, carga de respuestas PDF y registro de acuse de entrega.</p>
+        <span class="action-label">Ver Funcionamiento →</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PANTALLA 2: MODO TUTORIAL PRESENTACIÓN ── -->
+  <div id="pantalla-tutorial">
+    <div class="tutorial-workspace">
+      
+      <!-- COLUMNA IZQUIERDA: VISOR DE MOCKUPS -->
+      <div class="mockup-column">
+        
+        <!-- CABECERA REAL SIMULADA -->
+        <div class="mock-header">
+          <span class="mock-header-back">← Dashboard</span>
+          <div class="mock-header-divider"></div>
+          <div>
+            <span class="mock-header-tag">Prevención del Delito</span>
+            <span id="mock-header-title-text" class="mock-header-title">Atención a <span>Víctimas</span></span>
+          </div>
+          <div style="margin-left: auto; font-size: 14px; color: #4a5878;">🔔</div>
+        </div>
+
+        <!-- SUB-NAVEGACIÓN REAL SIMULADA -->
+        <div class="mock-nav" id="mock-navigation-bar">
+          <span class="mock-nav-link" id="nav-link-medidas">🛡️ Medidas de Protección</span>
+          <span class="mock-nav-link" id="nav-link-busquedas">🔍 Búsquedas / Alba</span>
+          <span class="mock-nav-link" id="nav-link-juridico">⚖️ Área Jurídica</span>
+        </div>
+        
+        <!-- CUERPO DE LA INTERFAZ -->
+        <div class="mockup-body" id="mockup-body-content">
+          <!-- Botón de autocompletar dinámico -->
+          <button id="mock-autofill" class="mock-autofill-btn" onclick="ejecutarAutofill()">⚡ Autocompletar Paso</button>
+
+          <!-- RENDER DINÁMICO DE MOCKUP -->
+          <div id="mockup-html-container"></div>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: EXPLICACIÓN DE INSTRUCCIONES -->
+      <div class="instruction-column">
+        
+        <div class="instruction-card">
+          <span id="step-badge" class="step-badge">Paso 1 de 5</span>
+          <h2 id="step-title">Título de la diapositiva</h2>
+          <div id="step-text" class="instruction-text">
+            Cargando descripción...
+          </div>
+          
+          <div id="step-alert" class="alert-box alert-box-info">
+            <span class="alert-icon">💡</span>
+            <div id="step-alert-content" class="alert-content">
+              <h4>Consejo</h4>
+              <p>Descripción del consejo operativo...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BARRA DE CONTROLES -->
+        <div class="navigation-bar">
+          <button id="btn-prev" class="nav-btn" onclick="slideAnterior()">
+            🡸 Anterior
+          </button>
+          
+          <div class="progress-container">
+            <div id="progress-dots" class="progress-dots"></div>
+            <span id="progress-text" class="progress-text">1 / 5</span>
+          </div>
+
+          <button id="btn-next" class="nav-btn btn-next-action" onclick="slideSiguiente()">
+            Siguiente 🡺
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Puntero Fijo al Viewport (Directo en body para evitar recortes de overflow) -->
+  <div id="focus-circle" class="focus-circle"></div>
+
+  <!-- PIE DE PÁGINA (FOOTER) -->
+  <footer>
+    SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
+  </footer>
+<script>
+// Valores de estado mutables para simular la captura en los mockups
+let mFormValues = {};
+let mFormEnabled = false;
+let mActiveRecord = {
+  expediente: 'MP-2026-095',
+  nOficio: 'F-902/2026',
+  fechaOficio: '2026-06-23',
+  fechaRecepcion: '2026-06-23',
+  personaRecepciona: 'Oficial Carlos Adrian',
+  autoridad: 'FISCALIA',
+  nombreAutoridad: 'Lic. Roberto Gómez (M.P.)',
+  delitos: 'Violencia Familiar y Amenazas',
+  victima: 'Karla Mendoza Ortíz',
+  demandado: 'Martín Sosa Luna',
+  tipoMedida: 'Prohibición de acercarse a la víctima y desalojo',
+  domicilioProteccion: 'Av. Juárez #450, Col. Centro',
+  colonia: 'Centro',
+  telefono: '427-123-4567',
+  tiempoMedida: '30 días',
+  fechaVencimiento: '2026-07-23',
+  tipoApercibimiento: 'Arresto de 36 horas en caso de desacato',
+  enlace: 'Suboficial Juan M. Torres',
+  observaciones: 'Víctima manifiesta temor fundado por amenazas de muerte.'
+};
+let mActiveRecordExpired = Object.assign({}, mActiveRecord, { fechaVencimiento: '2026-07-23' });
+let mActiveRecordProrrogated = Object.assign({}, mActiveRecord, { fechaVencimiento: '2026-08-22', prorrogada: true });
+
+let bFormValues = {};
+let bFormEnabled = false;
+let bActiveRecord = {
+  id: '1',
+  tipo: 'PROTOCOLO_ALBA',
+  folio: 'ALBA-2026-015',
+  fechaActivacion: '23/06/2026 10:00',
+  fechaAceptacion: '23/06/2026 10:15',
+  carpetaInvestigacion: 'CI-SJR-402-2026',
+  nombreDesaparecida: 'Karla Espinoza Cruz',
+  edad: 24,
+  enlace: 'Oficial Diana Rojas',
+  rtAtiende: 'RT Zona Oriente',
+  elementoNovedades: 'Unidad SSP-302',
+  status: 'activa'
+};
+let bActiveRecordClosed = Object.assign({}, bActiveRecord, { status: 'cancelada' });
+
+let jFormValues = {};
+let jFormEnabled = false;
+let jActiveRecord = {
+  id: '1',
+  oficio: 'JUR-2026-090',
+  fechaActivacion: '23/06/2026 10:30',
+  fechaAceptacion: '23/06/2026 10:45',
+  enlace: 'Abog. Manuel Cruz',
+  autoridad: 'FISCALIA',
+  fiscalSolicita: 'Lic. Rosaura Díaz (M.P. SJR)',
+  delito: 'Daño en propiedad privada',
+  carpetaInvestigacion: 'CI-SJR-402-2026',
+  solicitudTexto: 'Se solicita de manera urgente copia en video de las grabaciones del C4 del crucero de Av. Juárez e Hidalgo, del día 20 de junio de las 14:00 a las 16:00 hs, debido a una carpeta de investigación por daños.',
+  status: 'en_juridico'
+};
+let jActiveRecordClosed = Object.assign({}, jActiveRecord, { status: 'completado' });
+let jC4Text = '';
+let jC4BtnEnabled = false;
+let jContestDate = '';
+let jContestPdf = '';
+let jAcDate = '';
+let jAcTime = '';
+let jAcRecibio = '';
+let jContestBtnEnabled = false;
+
+// ==========================================
+// RENDERERS DINÁMICOS DETALLADOS (SIN COMPACTACIONES)
+// ==========================================
+
+function renderSemaforoBadge(color) {
+  const cfg = {
+    verde:    { color: '#4a9e6a', label: 'VIGENTE'    },
+    amarillo: { color: '#d4a43a', label: 'POR VENCER' },
+    rojo:     { color: '#c0223a', label: 'VENCIDA'    },
+    gris:     { color: '#4a5878', label: 'SIN FECHA'  },
+  };
+  const c = cfg[color] || cfg.gris;
+  return `
+    <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border: 1px solid ${c.color}; color: ${c.color}; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap;">
+      <span style="width: 5px; height: 5px; border-radius: 50%; background: ${c.color}; flex-shrink: 0;"></span>
+      ${c.label}
+    </span>
+  `;
+}
+
+function renderAutoridadBadge(auth) {
+  const cfg = {
+    FISCALIA:  { label: 'Fiscalía',   color: '#c0223a' },
+    UMECA:     { label: 'UMECA',      color: '#d4a43a' },
+    JUZGADOS:  { label: 'Juzgados',   color: '#5a8fd4' },
+    SEC_MUJER: { label: 'Sec. Mujer', color: '#9a6ad4' },
+  };
+  const c = cfg[auth] || { label: auth, color: '#4a5878' };
+  return `
+    <span style="display: inline-block; padding: 2px 8px; border: 1px solid ${c.color}; color: ${c.color}; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;">
+      ${c.label}
+    </span>
+  `;
+}
+
+function renderMedidasList(records, stats) {
+  const rowHtml = records.map((r, idx) => `
+    <tr style="border-bottom: 1px solid #0f1826; background: ${idx % 2 === 0 ? 'transparent' : 'rgba(27,39,66,0.2)'};">
+      <td style="padding: 10px 12px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          ${renderSemaforoBadge(r.semaforoColor)}
+          ${r.prorrogada ? `
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #d4a43a; letter-spacing: 0.14em; text-transform: uppercase;">
+              PRÓRROGA
+            </span>
+          ` : ''}
+        </div>
+      </td>
+      <td style="padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #d8e0f0; white-space: nowrap;">
+        ${r.expediente}
+      </td>
+      <td style="padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        ${r.victima}
+      </td>
+      <td style="padding: 10px 12px;">
+        ${renderAutoridadBadge(r.autoridad)}
+      </td>
+      <td style="padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: 11px; color: #8a9bc0; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        ${r.tipoMedida || '—'}
+      </td>
+      <td style="padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8a9bc0; white-space: nowrap;">
+        ${r.fechaVencimiento || '—'}
+      </td>
+      <td style="padding: 10px 12px;">
+        <span id="${idx === 0 ? 'mock-ver-medida-link' : ''}" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #d4a43a; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; cursor: pointer; font-weight: bold;">
+          Ver →
+        </span>
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+      <div>
+        <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 6px;">
+          Libro Digital — <span style="color: #d4a43a;">Medidas de Protección</span>
+        </h2>
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+          ${records.length} expediente${records.length !== 1 ? 's' : ''} registrado${records.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+      <button id="mock-nueva-btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #c0223a; color: #fff; border: 1px solid #c0223a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;">
+        + Nueva medida
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+      ${stats.map(s => `
+        <div style="background: #0b1220; border: 1px solid ${s.color}40; padding: 16px 20px;">
+          <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 38px; color: ${s.color}; line-height: 1;">${s.value}</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px;">${s.label}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Filtros -->
+    <div style="margin-bottom: 24px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        ${['Todas', 'Vigentes', 'Por vencer', 'Vencidas', 'Sin fecha'].map((lbl, idx) => `
+          <button style="padding: 5px 14px; background: ${idx === 0 ? '#1b2742' : 'transparent'}; border: 1px solid ${idx === 0 ? '#d4a43a' : '#1b2742'}; color: ${idx === 0 ? '#d4a43a' : '#4a5878'}; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;">
+            ${lbl}
+          </button>
+        `).join('')}
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <select style="padding: 5px 12px; background: #0b1220; border: 1px solid #1b2742; color: #4a5878; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; outline: none;">
+          <option>Todas las autoridades</option>
+          <option>Fiscalía</option>
+          <option>UMECA</option>
+          <option>Juzgados</option>
+          <option>Sec. de la Mujer</option>
+        </select>
+        <button style="padding: 5px 14px; background: transparent; border: 1px solid #1b2742; color: #4a5878; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;">
+          Sin visita
+        </button>
+        <button style="padding: 5px 14px; background: transparent; border: 1px solid #1b2742; color: #4a5878; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;">
+          Prorrogadas
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid #1b2742;">
+            ${['Estado', 'Expediente', 'Víctima', 'Autoridad', 'Tipo medida', 'Vencimiento', ''].map(h => `
+              <th style="padding: 10px 12px; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 400; white-space: nowrap;">
+                ${h}
+              </th>
+            `).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${rowHtml}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderNuevaMedidaForm(values, enabled) {
+  const getVal = (field) => values[field] || '';
+  const AUTORIDADES_OPTIONS = [
+    { value: 'FISCALIA',  label: 'Fiscalía' },
+    { value: 'UMECA',     label: 'UMECA' },
+    { value: 'JUZGADOS',  label: 'Juzgados' },
+    { value: 'SEC_MUJER', label: 'Secretaría de la Mujer' },
+  ];
+
+  return `
+    <div style="margin-bottom: 32px;">
+      <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 6px;">
+        Nueva <span style="color: #d4a43a;">Medida de Protección</span>
+      </h2>
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+        Captura los datos del oficio y la víctima
+      </p>
+    </div>
+
+    <form style="display: flex; flex-direction: column; gap: 28px;">
+      <!-- Seccion 1 -->
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Datos del Oficio</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">No. Expediente *</span>
+              <input type="text" id="m-exp" value="${getVal('expediente')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">No. Oficio *</span>
+              <input type="text" id="m-oficio" value="${getVal('nOficio')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Fecha del Oficio *</span>
+              <input type="date" id="m-fechaOficio" value="${getVal('fechaOficio')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Fecha de Recepción *</span>
+              <input type="date" id="m-fechaRecepcion" value="${getVal('fechaRecepcion')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Persona que Recepciona *</span>
+            <input type="text" id="m-recep" value="${getVal('personaRecepciona')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+          </label>
+        </div>
+      </div>
+
+      <!-- Seccion 2 -->
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Autoridad Emisora</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Autoridad *</span>
+              <select id="m-aut" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%;" disabled>
+                <option value="">— Seleccionar —</option>
+                ${AUTORIDADES_OPTIONS.map(o => `<option value="${o.value}" ${getVal('autoridad') === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+              </select>
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Nombre de quien emite (Fiscal / Juez)</span>
+              <input type="text" id="m-nom-aut" value="${getVal('nombreAutoridad')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Delito(s)</span>
+            <textarea id="m-delitos" rows="2" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box; resize: vertical;" disabled>${getVal('delitos')}</textarea>
+          </label>
+        </div>
+      </div>
+
+      <!-- Seccion 3 -->
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Víctima y Demandado</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Nombre de la Víctima *</span>
+            <input type="text" id="m-victima" value="${getVal('victima')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+          </label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Nombre del Demandado</span>
+              <input type="text" id="m-demandado" value="${getVal('demandado')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Tipo de Medida de Protección</span>
+              <input type="text" id="m-tipo" value="${getVal('tipoMedida')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seccion 4 -->
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Domicilio de Protección</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Domicilio *</span>
+            <textarea id="m-dom" rows="2" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box; resize: vertical;" disabled>${getVal('domicilioProteccion')}</textarea>
+          </label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Colonia</span>
+              <input type="text" id="m-col" value="${getVal('colonia')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Teléfono</span>
+              <input type="tel" id="m-tel" value="${getVal('telefono')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seccion 5 -->
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Vigencia y Apercibimiento</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Tiempo de la Medida</span>
+              <input type="text" id="m-tiempo" value="${getVal('tiempoMedida')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Fecha de Vencimiento</span>
+              <input type="date" id="m-vence" value="${getVal('fechaVencimiento')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Tipo de Apercibimiento</span>
+            <input type="text" id="m-aperc" value="${getVal('tipoApercibimiento')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+          </label>
+        </div>
+      </div>
+
+      <!-- Seccion 6 -->
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Datos Internos</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Enlace asignado</span>
+            <input type="text" id="m-enlace" value="${getVal('enlace')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Observaciones</span>
+            <textarea id="m-obs" rows="3" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box; resize: vertical;" disabled>${getVal('observaciones')}</textarea>
+          </label>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div style="display: flex; gap: 12px; padding-top: 4px;">
+        <span style="padding: 11px 20px; background: transparent; color: #7f8faf; border: 1px solid #2a3a5e; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; cursor: not-allowed;">
+          ← Cancelar
+        </span>
+        <button id="mock-save-medida-btn" type="button" style="flex: 1; padding: 12px 24px; background: ${enabled ? '#c0223a' : '#6a1520'}; color: #fff; border: 1px solid #c0223a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; cursor: ${enabled ? 'pointer' : 'not-allowed'};" ${enabled ? '' : 'disabled'}>
+          Guardar Medida →
+        </button>
+      </div>
+    </form>
+  `;
+}
+
+function renderMedidaDetail(record, opts = {}) {
+  const semaforo = opts.semaforo || 'verde';
+  const showProrrogaBtn = opts.showProrrogaBtn || false;
+  const showAgregarAutoridadInline = opts.showAgregarAutoridadInline || false;
+  const yaAgregadas = opts.yaAgregadas || [];
+  const visitas = opts.visitas || [];
+  const activeModal = opts.activeModal || null;
+
+  // Render detail card fields
+  const fOficio = `
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">No. Oficio</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.nOficio}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Fecha Oficio</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaOficio}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Fecha Recepción</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaRecepcion}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Recepciona</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.personaRecepciona}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Autoridad</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${renderAutoridadBadge(record.autoridad)}</span>
+    </div>
+    ${record.nombreAutoridad ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Emite</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.nombreAutoridad}</span>
+      </div>
+    ` : ''}
+    ${record.delitos ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Delito(s)</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.delitos}</span>
+      </div>
+    ` : ''}
+  `;
+
+  const fMedida = `
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Víctima</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.victima}</span>
+    </div>
+    ${record.demandado ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Demandado</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.demandado}</span>
+      </div>
+    ` : ''}
+    ${record.tipoMedida ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Tipo Medida</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.tipoMedida}</span>
+      </div>
+    ` : ''}
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Domicilio</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.domicilioProteccion}</span>
+    </div>
+    ${record.colonia ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Colonia</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.colonia}</span>
+      </div>
+    ` : ''}
+    ${record.telefono ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Teléfono</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.telefono}</span>
+      </div>
+    ` : ''}
+    ${record.tiempoMedida ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Tiempo</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.tiempoMedida}</span>
+      </div>
+    ` : ''}
+    ${record.fechaVencimiento ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Vencimiento</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaVencimiento}</span>
+      </div>
+    ` : ''}
+    ${record.tipoApercibimiento ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Apercibimiento</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.tipoApercibimiento}</span>
+      </div>
+    ` : ''}
+    ${record.prorrogada ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Doc. prorrogue</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #d4a43a; text-decoration: underline; cursor: not-allowed; flex: 1;">📎 Ver archivo de Prórroga</span>
+      </div>
+    ` : ''}
+  `;
+
+  const autAdicionalesHTML = yaAgregadas.length === 0
+    ? '<div style="font-family:\'JetBrains Mono\', monospace; font-size:10px; color:#4a5878;">Solo la autoridad principal</div>'
+    : yaAgregadas.map(a => `
+        <div style="background: #070b16; border: 1px solid #1b2742; padding: 10px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          ${renderAutoridadBadge(a.autoridad)}
+          ${a.nOficio ? `<span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #d8e0f0;">Oficio: ${a.nOficio}</span>` : ''}
+          ${a.fechaOficio ? `<span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878;">${a.fechaOficio}</span>` : ''}
+        </div>
+      `).join('');
+
+  const visitasHTML = visitas.length === 0
+    ? '<div style="padding: 32px 0; text-align: center; font-family: \'JetBrains Mono\', monospace; font-size: 10px; color: #2a3a5e; letter-spacing: 0.15em;">› Sin visitas registradas</div>'
+    : visitas.map(v => `
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 14px 18px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #d4a43a; white-space: nowrap;">
+            ${v.fechaVisita} · ${v.horaVisita}
+          </span>
+          ${v.apercibimientoAplicado ? `
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #c0223a; border: 1px solid #c0223a; padding: 2px 7px; letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap;">
+              Apercibimiento aplicado
+            </span>
+          ` : ''}
+          ${v.resultado ? `
+            <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #8a9bc0; flex: 1;">
+              ${v.resultado}
+            </span>
+          ` : ''}
+        </div>
+      `).join('');
+
+  // Modals overlays
+  let modalOverlayHTML = '';
+  if (activeModal === 'visita') {
+    modalOverlayHTML = `
+      <div class="mock-real-modal-overlay">
+        <div class="mock-real-modal">
+          <div class="mock-real-modal-stripe"></div>
+          <div class="mock-real-modal-title">Registrar <span style="color:#d4a43a;">Visita Domiciliaria</span></div>
+          <form style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Fecha *</span>
+                <input type="date" id="v-fecha" class="mock-form-input" disabled />
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Hora *</span>
+                <input type="time" id="v-hora" class="mock-form-input" disabled />
+              </label>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Resultado de la visita</span>
+              <textarea id="v-res" class="mock-form-textarea" rows="3" placeholder="Describir estado de la víctima y observaciones..." disabled></textarea>
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="v-aperc" style="width: 14px; height: 14px; accent-color: #c0223a;" disabled />
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8a9bc0; letter-spacing: 0.12em; text-transform: uppercase;">Se aplicó apercibimiento</span>
+            </label>
+            <div style="display: flex; gap: 10px; padding-top: 8px;">
+              <span class="mock-btn" style="padding: 9px 16px; border-color: #2a3a5e; color: #7f8faf; cursor: not-allowed;">Cancelar</span>
+              <button type="button" id="mock-save-visita-btn" class="mock-btn mock-btn-primary" style="flex: 1; padding: 10px 16px; background: #6a1520; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; color: #fff;" disabled>Guardar Visita</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  } else if (activeModal === 'prorrogada') {
+    modalOverlayHTML = `
+      <div class="mock-real-modal-overlay">
+        <div class="mock-real-modal">
+          <div class="mock-real-modal-stripe"></div>
+          <div class="mock-real-modal-title">Habilitar <span style="color:#d4a43a;">Prórroga</span></div>
+          <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.12em; text-transform: uppercase; margin-top: -12px; margin-bottom: 20px;">La vigencia se extiende desde hoy</p>
+          <form style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+              <div>
+                <label style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px;">Extensión *</label>
+                <input type="number" id="p-dur" class="mock-form-input" placeholder="ej. 30" disabled />
+              </div>
+              <div>
+                <label style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px;">Unidad</label>
+                <select id="p-unit" class="mock-form-select" disabled><option value="dias">Días</option><option value="meses">Meses</option></select>
+              </div>
+            </div>
+            <div>
+              <span style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px;">Documento de solicitud (opcional)</span>
+              <input type="file" id="p-file" class="mock-form-input" disabled />
+              <p style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #2a3a5e; letter-spacing: 0.1em; margin-top: 4px;">PDF, imagen o Word —</p>
+            </div>
+            <div style="display: flex; gap: 10px; padding-top: 8px;">
+              <button type="button" id="mock-confirm-prorroga-btn" class="mock-btn mock-btn-primary" style="flex: 1; padding: 10px 0; background: #6a1520; color: #fff; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase;" disabled>Confirmar prórroga</button>
+              <span class="mock-btn" style="padding: 10px 20px; border-color: #1b2742; color: #8a9bc0; cursor: not-allowed;">Cancelar</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  }
+
+  // Section Inline authority form
+  const agregarAutoridadFormHTML = showAgregarAutoridadInline
+    ? `
+      <div class="mock-real-card" style="border-left: 3px solid #d4a43a;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #d4a43a; text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 16px;">› Agregar Autoridad Adicional</div>
+        <form style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div class="mock-form-field">
+              <span class="mock-form-label">Autoridad *</span>
+              <select id="a-aut" class="mock-form-select" disabled>
+                <option value="UMECA">UMECA</option>
+                <option value="JUZGADOS">Juzgados</option>
+                <option value="SEC_MUJER">Secretaría de la Mujer</option>
+              </select>
+            </div>
+            <div class="mock-form-field">
+              <span class="mock-form-label">No. Oficio</span>
+              <input type="text" id="a-oficio" class="mock-form-input" placeholder="Opcional" disabled />
+            </div>
+            <div class="mock-form-field">
+              <span class="mock-form-label">Fecha Oficio</span>
+              <input type="date" id="a-fecha" class="mock-form-input" disabled />
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="mock-save-aut-btn" class="mock-action-btn" style="padding: 7px 18px; background: #6a1520; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; color: #fff;" disabled>Confirmar</button>
+            <span class="mock-btn" style="padding: 7px 14px; border-color: #1b2742; color: #8a9bc0; cursor: not-allowed;">Cancelar</span>
+          </div>
+        </form>
+      </div>
+    `
+    : `
+      <button class="mock-action-btn" id="mock-add-aut-btn" style="padding: 6px 14px; background: transparent; border: 1px solid #1b2742; color: #8a9bc0; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;">
+        + Agregar autoridad
+      </button>
+    `;
+
+  return `
+    <div style="position: relative; width: 100%; height: 100%;">
+      <!-- Background details page -->
+      <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.12em;">
+        <span style="color: #d4a43a; cursor: pointer; text-decoration: underline;" id="mock-medidas-regresar">Medidas</span>
+        <span>›</span>
+        <span style="color: #8a9bc0;">${record.expediente}</span>
+      </div>
+
+      <div style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
+            <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0;">
+              ${record.expediente}
+            </h2>
+            ${renderSemaforoBadge(semaforo)}
+            ${record.prorrogada ? `
+              <span style="padding: 3px 8px; border: 1px solid #d4a43a; color: #d4a43a; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;">
+                PRÓRROGA
+              </span>
+            ` : ''}
+            ${renderAutoridadBadge(record.autoridad)}
+            ${yaAgregadas.map(a => renderAutoridadBadge(a.autoridad)).join('')}
+          </div>
+          <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #8a9bc0; margin: 0;">
+            ${record.victima}
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          ${showProrrogaBtn ? `
+            <button id="mock-solicitar-prorroga-btn" style="padding: 8px 18px; background: rgba(212,164,58,0.1); border: 1px solid #d4a43a; color: #d4a43a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;">
+              Solicitar Prórroga
+            </button>
+          ` : ''}
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; text-transform: uppercase; cursor: not-allowed;">← Regresar</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;">
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">› Datos del Oficio</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${fOficio}
+          </div>
+        </div>
+
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">› Medida de Protección</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${fMedida}
+          </div>
+        </div>
+      </div>
+
+      <!-- Autoridades adicionales -->
+      <div style="margin-bottom: 32px; border-top: 1px solid #1b2742; padding-top: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 2px;">
+              › Autoridades Adicionales
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.10em;">
+              ${yaAgregadas.length === 0 ? 'Solo la autoridad principal' : `${yaAgregadas.length} autoridad${yaAgregadas.length !== 1 ? 'es' : ''} adicional${yaAgregadas.length !== 1 ? 'es' : ''}`}
+            </div>
+          </div>
+        </div>
+        ${yaAgregadas.length > 0 ? `<div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;">${autAdicionalesHTML}</div>` : ''}
+        ${agregarAutoridadFormHTML}
+      </div>
+
+      ${record.observaciones ? `
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 16px 20px; margin-bottom: 32px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 8px;">› Observaciones</div>
+          <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #8a9bc0; margin: 0; line-height: 1.6;">${record.observaciones}</p>
+        </div>
+      ` : ''}
+
+      <!-- Visitas Domiciliarias -->
+      <div style="border-top: 1px solid #1b2742; padding-top: 20px; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 4px;">› Visitas Domiciliarias</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.10em;">
+              ${visitas.length} visita${visitas.length !== 1 ? 's' : ''} registrada${visitas.length !== 1 ? 's' : ''}
+            </div>
+          </div>
+          <button id="mock-registrar-visita-btn" style="padding: 9px 18px; background: #c0223a; color: #fff; border: 1px solid #c0223a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;">
+            + Registrar Visita
+          </button>
+        </div>
+        ${visitasHTML}
+      </div>
+
+      <!-- Modal overlay on top if open -->
+      ${modalOverlayHTML}
+    </div>
+  `;
+}
+
+function renderBusquedasList(records) {
+  const rowHtml = records.map((r, idx) => `
+    <tr style="border-bottom: 1px solid #0f1826; background: ${idx % 2 === 0 ? 'transparent' : 'rgba(27,39,66,0.2)'};">
+      <td style="padding: 10px 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: ${r.tipo === 'PROTOCOLO_ALBA' ? '#c0223a' : '#5a8fd4'}; border: 1px solid ${r.tipo === 'PROTOCOLO_ALBA' ? '#c0223a' : '#5a8fd4'}; padding: 2px 7px; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;">
+          ${r.tipo === 'PROTOCOLO_ALBA' ? 'Protocolo Alba' : 'Búsqueda de Persona'}
+        </span>
+      </td>
+      <td style="padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #d8e0f0; white-space: nowrap;">
+        ${r.folio || '—'}
+      </td>
+      <td style="padding: 10px 12px; font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        ${r.nombreDesaparecida}
+      </td>
+      <td style="padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8a9bc0; text-align: center;">
+        ${r.edad || '—'}
+      </td>
+      <td style="padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8a9bc0; white-space: nowrap;">
+        ${r.fechaActivacion}
+      </td>
+      <td style="padding: 10px 12px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: ${r.status === 'activa' ? '#c0223a' : '#4a9e6a'};">
+          ${r.status === 'activa' ? '● Activa' : '✓ Cerrada'}
+        </span>
+      </td>
+      <td style="padding: 10px 12px;">
+        <span id="${idx === 0 ? 'mock-ver-busq-link' : ''}" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #d4a43a; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; cursor: pointer; font-weight: bold;">
+          Ver →
+        </span>
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
+      <div>
+        <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 6px;">
+          Búsquedas / <span style="color: #d4a43a;">Protocolo Alba</span>
+        </h2>
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+          ${records.length} ficha${records.length !== 1 ? 's' : ''} registrada${records.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+      <button id="mock-nueva-busq-btn" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #c0223a; color: #fff; border: 1px solid #c0223a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;">
+        + Activar protocolo
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; max-width: 600px;">
+      <div style="background: #0b1220; border: 1px solid #4a587840; padding: 16px 20px;">
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 38px; color: #4a5878; line-height: 1;">${records.length}</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px;">Total</div>
+      </div>
+      <div style="background: #0b1220; border: 1px solid #c0223a40; padding: 16px 20px;">
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 38px; color: #c0223a; line-height: 1;">${records.filter(r => r.status === 'activa').length}</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px;">Activas</div>
+      </div>
+      <div style="background: #0b1220; border: 1px solid #4a9e6a40; padding: 16px 20px;">
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 38px; color: #4a9e6a; line-height: 1;">${records.filter(r => r.status === 'cancelada').length}</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 4px;">Cerradas</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid #1b2742;">
+            ${['Tipo', 'Folio', 'Nombre', 'Edad', 'Activación', 'Estado', ''].map(h => `
+              <th style="padding: 10px 12px; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 400; white-space: nowrap;">${h}</th>
+            `).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${rowHtml}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderNuevaBusquedaForm(values, enabled) {
+  const getVal = (field) => values[field] || '';
+  const TIPOS = [
+    { value: 'PROTOCOLO_ALBA',   label: 'Protocolo Alba' },
+    { value: 'PROTOCOLO_AMBAR',  label: 'Protocolo Ambar' },
+    { value: 'BUSQUEDA_PERSONA', label: 'Búsqueda de Persona' },
+  ];
+
+  return `
+    <div style="max-width: 760px;">
+      <div style="margin-bottom: 32px;">
+        <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 6px;">
+          Activar <span style="color: #d4a43a;">Protocolo / Búsqueda</span>
+        </h2>
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+          Registra los datos de activación — se generará la ficha de difusión automáticamente
+        </p>
+      </div>
+
+      <form style="display: flex; flex-direction: column; gap: 28px;">
+        <!-- Tipo y folio -->
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Tipo de Activación</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Tipo *</span>
+                <select id="b-tipo" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%;" disabled>
+                  <option value="">— Seleccionar —</option>
+                  ${TIPOS.map(o => `<option value="${o.value}" ${getVal('tipo') === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+                </select>
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Folio</span>
+                <input type="text" id="b-folio" value="${getVal('folio')}" placeholder="ej. ALBA-2025-001" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+              </label>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Fecha y Hora de Activación *</span>
+                <input type="datetime-local" id="b-fecha" value="${getVal('fechaActivacion')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Fecha y Hora de Aceptación</span>
+                <input type="datetime-local" id="b-fecha-ac" value="${getVal('fechaAceptacion')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+              </label>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Carpeta de Investigación</span>
+              <input type="text" id="b-carpeta" value="${getVal('carpetaInvestigacion')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+        </div>
+
+        <!-- Persona desaparecida -->
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Datos de la Persona</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Nombre Completo *</span>
+              <input type="text" id="b-nombre" value="${getVal('nombreDesaparecida')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Edad</span>
+              <input type="number" id="b-edad" value="${getVal('edad')}" placeholder="años" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+        </div>
+
+        <!-- Personal asignado -->
+        <div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 12px;">› Personal Asignado</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #0b1220; border: 1px solid #1b2742;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Enlace asignado</span>
+                <input type="text" id="b-enlace" value="${getVal('enlace')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">RT que Atiende</span>
+                <input type="text" id="b-rt" value="${getVal('rtAtiende')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+              </label>
+            </div>
+            <label style="display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a9bc0; letter-spacing: 0.15em; text-transform: uppercase;">Elemento de Novedades</span>
+              <input type="text" id="b-nov" value="${getVal('elementoNovedades')}" style="padding: 9px 12px; background: #070b16; border: 1px solid #2a3a5e; color: #d8e0f0; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; width: 100%; box-sizing: border-box;" disabled />
+            </label>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div style="display: flex; gap: 12px; padding-top: 4px;">
+          <span style="padding: 11px 20px; background: transparent; color: #7f8faf; border: 1px solid #2a3a5e; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; cursor: not-allowed;">
+            ← Cancelar
+          </span>
+          <button id="mock-save-busq-btn" type="button" style="flex: 1; padding: 12px 24px; background: ${enabled ? '#c0223a' : '#6a1520'}; color: #fff; border: 1px solid #c0223a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; cursor: ${enabled ? 'pointer' : 'not-allowed'};" ${enabled ? '' : 'disabled'}>
+            Activar Protocolo →
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+}
+
+function renderBusquedaDetail(record, opts = {}) {
+  const activeModal = opts.activeModal || null;
+  const cancelationValues = opts.cancelationValues || {};
+  const timelineHitos = opts.timelineHitos || [];
+  const activeHitoToRegister = opts.activeHitoToRegister || null;
+
+  const fActivacion = `
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Folio</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.folio || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Tipo</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.tipo === 'PROTOCOLO_ALBA' ? 'Protocolo Alba' : 'Búsqueda de Persona'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Activación</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaActivacion}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Aceptación</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaAceptacion || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Carpeta Invest.</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.carpetaInvestigacion || '—'}</span>
+    </div>
+  `;
+
+  const fAsignado = `
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Enlace</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.enlace || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">RT que atiende</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.rtAtiende || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Elemento Novedades</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.elementoNovedades || '—'}</span>
+    </div>
+    ${record.status === 'cancelada' ? `
+      <div style="display: flex; gap: 12px; align-items: flex-start; border-top: 1px solid #1b2742; padding-top: 8px; margin-top: 8px;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Cancelación</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">23/06/2026 12:00</span>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Fiscal cancela</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">Lic. Francisco Pérez R. (Fiscal Adscrito)</span>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Motivo</span>
+        <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">Persona localizada en buenas condiciones de salud física. Manifestó retiro voluntario del domicilio. Se da de baja la alerta Alba.</span>
+      </div>
+    ` : ''}
+  `;
+
+  // Render the 24 hitos
+  const hitos = [
+    { key: 'CONTESTACION_INICIAL', label: 'Contestación inicial', delayHours: 0, date: '23/06/2026 10:00' },
+    { key: '24H', label: '24 horas', delayHours: 24, date: '24/06/2026 10:00' },
+    { key: '48H', label: '48 horas', delayHours: 48, date: '25/06/2026 10:00' },
+    { key: '72H', label: '72 horas', delayHours: 72, date: '26/06/2026 10:00' },
+    ...Array.from({ length: 20 }, (_, i) => ({
+      key: `MENSUAL_${i + 1}`,
+      label: `Mes ${i + 1}`,
+      delayMonths: i + 1,
+      date: `${23}/${String(7 + i > 12 ? (7 + i) - 12 : 7 + i).padStart(2, '0')}/2026 10:00`
+    }))
+  ];
+
+  const hitosRowsHTML = hitos.map((h, index) => {
+    const reg = timelineHitos.find(t => t.tipo === h.key);
+    const registrado = !!reg;
+    const is24hVencido = (h.key === '24H' && !registrado && !opts.hideVencidos);
+
+    const rowColor = registrado ? 'rgba(74,158,106,0.06)'
+                   : is24hVencido ? 'rgba(192,34,58,0.06)'
+                   : 'transparent';
+
+    const borderColor = registrado ? '#4a9e6a30'
+                     : is24hVencido ? '#c0223a30'
+                     : '#1b274220';
+
+    return `
+      <div style="display: grid; grid-template-columns: 150px 150px 1fr 100px; align-items: center; gap: 12px; padding: 9px 16px; background: ${rowColor}; border: 1px solid ${borderColor};">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: ${registrado ? '#4a9e6a' : is24hVencido ? '#c0223a' : '#d8e0f0'}">
+          ${h.label}
+        </span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.06em;">
+          ${h.date}
+        </span>
+        ${registrado ? `
+          <div>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a9e6a; letter-spacing: 0.06em;">
+              ✓ ${reg.fechaHora}
+            </span>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #4a5878; letter-spacing: 0.06em; margin-top: 2px;">
+              por Admin
+            </div>
+            ${reg.archivo ? `
+              <div style="display: inline-block; margin-top: 3px; font-size: 10px; color: #d4a43a; cursor: not-allowed;">📎 Ver evidencia</div>
+            ` : ''}
+          </div>
+        ` : `
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: ${is24hVencido ? '#c0223a' : '#2a3a5e'}; letter-spacing: 0.1em; text-transform: uppercase;">
+            ${is24hVencido ? '⚠ Vencido' : '—'}
+          </span>
+        `}
+        
+        ${!registrado && record.status === 'activa' ? `
+          <button id="${h.key === activeHitoToRegister ? 'mock-reg-hito-btn' : ''}" style="padding: 4px 10px; background: transparent; color: #d4a43a; border: 1px solid #d4a43a50; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; white-space: nowrap;">
+            Registrar
+          </button>
+        ` : '<span></span>'}
+      </div>
+    `;
+  }).join('');
+
+  // Modals overlays
+  let modalOverlayHTML = '';
+  if (activeModal === 'timeline_hito') {
+    modalOverlayHTML = `
+      <div class="mock-real-modal-overlay">
+        <div class="mock-real-modal">
+          <div class="mock-real-modal-stripe"></div>
+          <div class="mock-real-modal-title">Registrar <span style="color:#d4a43a;">24 horas</span></div>
+          <form style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+              <label class="mock-form-label" style="display: block; margin-bottom: 6px;">Evidencia (PDF o Imagen)</label>
+              <input type="file" id="h-file" class="mock-form-input" disabled />
+              <p style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #2a3a5e; margin-top: 4px;" id="h-file-label">Opcional — PDF, JPG o PNG</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button type="button" id="mock-confirm-hito-btn" class="mock-btn mock-btn-primary" style="flex: 1; padding: 10px 0; background: #6a1520; color: #fff; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase;" disabled>Confirmar</button>
+              <span class="mock-btn" style="padding: 10px 20px; border-color: #1b2742; color: #8a9bc0; cursor: not-allowed;">Cancelar</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  } else if (activeModal === 'cancelacion') {
+    modalOverlayHTML = `
+      <div class="mock-real-modal-overlay">
+        <div class="mock-real-modal" style="border-color: #c0223a40;">
+          <div class="mock-real-modal-stripe-cancel"></div>
+          <div class="mock-real-modal-title">Cancelar <span style="color:#c0223a;">Ficha de Búsqueda</span></div>
+          <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.1em; margin-top: -12px; margin-bottom: 24px;">Esta acción cierra el expediente y detiene todas las alertas de seguimiento.</p>
+          <form style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="mock-form-field">
+              <span class="mock-form-label">Fecha y Hora de Cancelación *</span>
+              <input type="datetime-local" id="c-fecha" class="mock-form-input" disabled />
+            </div>
+            <div class="mock-form-field">
+              <span class="mock-form-label">Fiscal que Cancela *</span>
+              <input type="text" id="c-fiscal" class="mock-form-input" disabled />
+            </div>
+            <div class="mock-form-field">
+              <span class="mock-form-label">Motivo / Observaciones</span>
+              <textarea id="c-motivo" class="mock-form-textarea" rows="3" disabled></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; padding-top: 8px;">
+              <span class="mock-btn" style="padding: 9px 16px; border-color: #2a3a5e; color: #7f8faf; cursor: not-allowed;">Cancelar</span>
+              <button type="button" id="mock-confirm-cancel-btn" class="mock-btn mock-btn-primary" style="flex: 1; padding: 10px 16px; background: #6a1520; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; color: #fff;" disabled>Confirmar cancelación</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div style="position: relative; width: 100%; height: 100%;">
+      <!-- Background page -->
+      <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.12em;">
+        <span style="color: #d4a43a; cursor: pointer; text-decoration: underline;" id="mock-busquedas-regresar">Búsquedas</span>
+        <span>›</span>
+        <span style="color: #8a9bc0;">${record.folio || record.id}</span>
+      </div>
+
+      <div style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #c0223a; border: 1px solid #c0223a; padding: 2px 8px; letter-spacing: 0.12em; text-transform: uppercase;">
+              ${record.tipo === 'PROTOCOLO_ALBA' ? 'Protocolo Alba' : 'Búsqueda de Persona'}
+            </span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: ${record.status === 'activa' ? '#c0223a' : '#4a9e6a'}">
+              ${record.status === 'activa' ? '● Activa' : '✓ Cerrada'}
+            </span>
+          </div>
+          <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 4px;">
+            ${record.nombreDesaparecida}
+          </h2>
+          <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8a9bc0; margin: 0;">
+            ${record.edad} años
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <span id="mock-imprimir-btn" style="padding: 9px 16px; background: transparent; color: #d4a43a; border: 1px solid #d4a43a50; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;">
+            Imprimir ficha →
+          </span>
+          ${record.status === 'activa' ? `
+            <button id="mock-cancelar-ficha-btn" style="padding: 9px 18px; background: transparent; color: #c0223a; border: 1px solid #c0223a50; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;">
+              Cancelar ficha
+            </button>
+          ` : ''}
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;">
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">› Datos de Activación</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${fActivacion}
+          </div>
+        </div>
+
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">› Personal Asignado</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${fAsignado}
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div style="border-top: 1px solid #1b2742; padding-top: 20px; margin-bottom: 24px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">
+          › Seguimientos de Tiempo (${timelineHitos.length}/24 registrados)
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 150px 150px 1fr 100px; gap: 12px; padding: 6px 16px; border-bottom: 1px solid #1b2742; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; text-transform: uppercase;">
+          <span>Hito</span><span>Esperado</span><span>Registrado</span><span></span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px; max-height: 250px; overflow-y: auto; border: 1px solid #1b2742; padding: 4px;">
+          ${hitosRowsHTML}
+        </div>
+      </div>
+
+      ${modalOverlayHTML}
+    </div>
+  `;
+}
+
+function renderPrintFicha(record) {
+  return `
+    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+      <span class="mock-btn" style="padding: 6px 12px; font-family: 'JetBrains Mono', monospace; font-size: 9px; cursor: not-allowed; border-color: #2a3a5e;">🖨️ Mandar a Imprimir</span>
+      <span style="color: #d4a43a; font-family: 'JetBrains Mono', monospace; font-size: 10px; cursor: pointer; text-decoration: underline;" id="mock-back-from-print">Regresar →</span>
+    </div>
+    <div class="mock-real-bulletin-container">
+      <div class="mock-real-bulletin-header">
+        <h3>ALERTA PROTOCOLO ALBA</h3>
+      </div>
+      <div class="mock-real-bulletin-grid">
+        <div class="mock-real-bulletin-photo">👤</div>
+        <div class="mock-real-bulletin-data">
+          <div><strong>Nombre:</strong> ${record.nombreDesaparecida}</div>
+          <div><strong>Folio:</strong> ${record.folio || '—'}</div>
+          <div><strong>Carpeta:</strong> ${record.carpetaInvestigacion || '—'}</div>
+          <div><strong>Edad:</strong> ${record.edad} AÑOS</div>
+          <div><strong>Estatus:</strong> ACTIVA (Búsqueda Municipal)</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderJuridicoList(records) {
+  const rowHtml = records.map((r, idx) => `
+    <tr style="border-bottom: 1px solid #0f1a2e; background: ${idx % 2 === 0 ? 'transparent' : 'rgba(27,39,66,0.1)'};">
+      <td style="padding: 12px 16px; color: #d8e0f0; font-weight: 600;">${r.oficio}</td>
+      <td style="padding: 12px 16px;">${renderAutoridadBadge(r.autoridad)}</td>
+      <td style="padding: 12px 16px; color: #8a9bc0;">${r.delito || '—'}</td>
+      <td style="padding: 12px 16px; color: #8a9bc0; font-family: 'JetBrains Mono', monospace; font-size: 10px;">${r.carpetaInvestigacion || '—'}</td>
+      <td style="padding: 12px 16px; color: #8a9bc0; font-family: 'JetBrains Mono', monospace; font-size: 10px;">${r.fechaActivacion}</td>
+      <td style="padding: 12px 16px; text-align: right;">
+        <span id="${idx === 0 ? 'mock-ver-jur-link' : ''}" style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #d4a43a; letter-spacing: 0.14em; text-decoration: none; text-transform: uppercase; cursor: pointer; font-weight: bold;">
+          Ver →
+        </span>
+      </td>
+    </tr>
+  `).join('');
+
+  const tableBody = records.length === 0
+    ? `
+      <div style="padding: 64px 0; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #2a3a5e; letter-spacing: 0.15em; text-transform: uppercase;">
+        › No hay solicitudes activas en la bandeja
+      </div>
+    `
+    : `
+      <div style="border: 1px solid #1b2742; overflow: hidden; margin-top: 20px;">
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 13px;">
+          <thead>
+            <tr style="background: #0b1220; border-bottom: 1px solid #1b2742;">
+              ${['Oficio', 'Autoridad', 'Delito', 'Carpeta', 'Fecha Activación', ''].map(h => `
+                <th style="padding: 12px 16px; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400;">
+                  ${h}
+                </th>
+              `).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rowHtml}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+  return `
+    <div style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div>
+        <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 4px;">
+          Bandeja <span style="color: #d4a43a;">Jurídica</span>
+        </h2>
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+          ${records.length} solicitud${records.length !== 1 ? 'es' : ''} activa${records.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+      <button id="mock-nueva-sol-btn" style="padding: 10px 20px; background: #c0223a; color: #fff; border: 1px solid #c0223a; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; cursor: pointer;">
+        + Nueva Solicitud
+      </button>
+    </div>
+    ${tableBody}
+  `;
+}
+
+function renderNuevaSolicitudForm(values, enabled) {
+  const getVal = (field) => values[field] || '';
+  const AUTORIDADES = [
+    { value: 'FISCALIA',  label: 'Fiscalía' },
+    { value: 'UMECA',     label: 'UMECA' },
+    { value: 'JUZGADOS',  label: 'Juzgados' },
+    { value: 'SEC_MUJER', label: 'Secretaría de la Mujer' },
+  ];
+
+  return `
+    <div>
+      <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.12em;">
+        <span>Área Jurídica</span> › <span>Nueva Solicitud</span>
+      </div>
+
+      <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 32px;">
+        Nueva <span style="color: #d4a43a;">Solicitud de Información</span>
+      </h2>
+
+      <form style="max-width: 800px; display: flex; flex-direction: column; gap: 0;">
+        <!-- Seccion Datos del Oficio -->
+        <div style="border: 1px solid #1b2742; border-bottom: none;">
+          <div style="background: #0b1220; padding: 10px 20px; border-bottom: 1px solid #1b2742; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #d4a43a; letter-spacing: 0.25em; text-transform: uppercase;">
+            › Datos del Oficio
+          </div>
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">N° de Oficio *</label>
+                <input type="text" id="j-oficio" value="${getVal('oficio')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Enlace</label>
+                <input type="text" id="j-enlace" value="${getVal('enlace')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Fecha y hora de activación *</label>
+                <input type="datetime-local" id="j-fecha" value="${getVal('fechaActivacion')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Fecha y hora de aceptación</label>
+                <input type="datetime-local" id="j-fecha-ac" value="${getVal('fechaAceptacion')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seccion Autoridad Emisora -->
+        <div style="border: 1px solid #1b2742; border-bottom: none;">
+          <div style="background: #0b1220; padding: 10px 20px; border-bottom: 1px solid #1b2742; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #d4a43a; letter-spacing: 0.25em; text-transform: uppercase;">
+            › Autoridad Emisora
+          </div>
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Autoridad *</label>
+                <select id="j-aut" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled>
+                  <option value="" disabled>Seleccionar...</option>
+                  ${AUTORIDADES.map(o => `<option value="${o.value}" ${getVal('autoridad') === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+                </select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Fiscal que solicita</label>
+                <input type="text" id="j-fiscal" value="${getVal('fiscalSolicita')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seccion Datos del Caso -->
+        <div style="border: 1px solid #1b2742;">
+          <div style="background: #0b1220; padding: 10px 20px; border-bottom: 1px solid #1b2742; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #d4a43a; letter-spacing: 0.25em; text-transform: uppercase;">
+            › Datos del Caso
+          </div>
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Delito</label>
+                <input type="text" id="j-delito" value="${getVal('delito')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Carpeta de investigación</label>
+                <input type="text" id="j-carpeta" value="${getVal('carpetaInvestigacion')}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box;" disabled />
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Texto de la solicitud</label>
+              <textarea id="j-sol-texto" rows="4" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box; resize: vertical;" disabled>${getVal('solicitudTexto')}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 24px 0 0; display: flex; gap: 20px; align-items: center;">
+          <button id="mock-turnar-jur-btn" type="button" style="padding: 12px 28px; background: ${enabled ? '#c0223a' : '#6a1520'}; color: #fff; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; cursor: ${enabled ? 'pointer' : 'not-allowed'};" ${enabled ? '' : 'disabled'}>
+            Turnar a Jurídico
+          </button>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; text-transform: uppercase; cursor: not-allowed;">
+            Cancelar
+          </span>
+        </div>
+      </form>
+    </div>
+  `;
+}
+
+function renderJuridicoDetail(record, opts = {}) {
+  const c4Solicitudes = opts.c4Solicitudes || [];
+  const contestacion = opts.contestacion || null;
+  const showC4FormInline = opts.showC4FormInline || false;
+  const showContestacionFormInline = opts.showContestacionFormInline || false;
+
+  const fOficio = `
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Oficio</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.oficio}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Activación</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaActivacion}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Aceptación</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fechaAceptacion || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Enlace</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.enlace || '—'}</span>
+    </div>
+  `;
+
+  const fCaso = `
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Fiscal</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.fiscalSolicita || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Delito</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.delito || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Carpeta</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.carpetaInvestigacion || '—'}</span>
+    </div>
+    <div style="display: flex; gap: 12px; align-items: flex-start;">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Solicitud</span>
+      <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${record.solicitudTexto || '—'}</span>
+    </div>
+  `;
+
+  // Solicitudes a C4 list
+  const c4ItemsHTML = c4Solicitudes.length === 0
+    ? `<div style="padding: 16px 0; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #2a3a5e; letter-spacing: 0.15em;">› Sin solicitudes a C4 registradas</div>`
+    : c4Solicitudes.map(c4 => `
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 12px 16px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px;">
+            ${c4.creadoEn} · <span style="color: ${c4.status === 'completada' ? '#4a9e6a' : '#d4a43a'}">${c4.status}</span>
+          </div>
+          <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #d8e0f0; margin: 0;">
+            ${c4.descripcionEvidencias}
+          </p>
+        </div>
+      `).join('');
+
+  // Inline forms
+  let c4FormHTML = '';
+  if (showC4FormInline && record.status !== 'completado') {
+    c4FormHTML = `
+      <form style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+        <textarea id="c4-desc" name="descripcionEvidencias" required rows="3" placeholder="Describir evidencias o información a solicitar al C4..." style="background: #0b1220; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 12px; resize: vertical; width: 100%; box-sizing: border-box;" disabled>${opts.c4TextValue || ''}</textarea>
+        <div>
+          <button type="button" id="mock-save-c4-btn" style="padding: 9px 20px; background: ${opts.c4BtnEnabled ? '#d4a43a' : '#5c481d'}; color: ${opts.c4BtnEnabled ? '#070b16' : '#8a9bc0'}; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; cursor: ${opts.c4BtnEnabled ? 'pointer' : 'not-allowed'};" ${opts.c4BtnEnabled ? '' : 'disabled'}>
+            Registrar petición a C4
+          </button>
+        </div>
+      </form>
+    `;
+  }
+
+  let contestacionHTML = '';
+  if (record.status === 'completado' && contestacion) {
+    contestacionHTML = `
+      <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Fecha contestación</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${contestacion.fechaContestacion}</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Archivo PDF</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d4a43a; text-decoration: underline; flex: 1;">📎 ${contestacion.archivoPdfUrl}</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Fecha de entrega</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${contestacion.fechaEntrega || '—'}</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Hora de entrega</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${contestacion.horaEntrega || '—'}</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start; grid-column: span 2;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase; min-width: 110px; padding-top: 2px; flex-shrink: 0;">Recibió</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 12px; color: #d8e0f0; flex: 1;">${contestacion.nombreQuienRecibio || '—'}</span>
+          </div>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a9e6a; letter-spacing: 0.15em; text-transform: uppercase; border-top: 1px solid #1b2742; padding-top: 12px; margin-top: 12px;">
+          ✓ Expediente completado — campos en solo lectura
+        </div>
+      </div>
+    `;
+  } else if (showContestacionFormInline && record.status !== 'completado') {
+    contestacionHTML = `
+      <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+        <form style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Fecha de contestación *</label>
+              <input type="date" id="cont-fecha" value="${opts.contestDateValue || ''}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box; outline: none;" disabled />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">URL / Ruta del PDF</label>
+              <input type="text" id="cont-pdf" value="${opts.contestPdfValue || ''}" placeholder="Ruta o URL del archivo PDF..." style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box; outline: none;" disabled />
+            </div>
+          </div>
+
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-top: 4px;">
+            › Acuse de Entrega
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 14px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Fecha de entrega</label>
+              <input type="date" id="ac-fecha" value="${opts.acDateValue || ''}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box; outline: none;" disabled />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Hora de entrega</label>
+              <input type="time" id="ac-hora" value="${opts.acTimeValue || ''}" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box; outline: none;" disabled />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <label style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #4a5878; letter-spacing: 0.15em; text-transform: uppercase;">Nombre de quien recibió</label>
+              <input type="text" id="ac-recibe" value="${opts.acRecibioValue || ''}" placeholder="Nombre completo" style="background: #070b16; border: 1px solid #1b2742; color: #d8e0f0; font-family: 'Inter', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; box-sizing: border-box; outline: none;" disabled />
+            </div>
+          </div>
+
+          <div style="margin-top: 8px;">
+            <button type="button" id="mock-save-contest-btn" style="padding: 10px 24px; background: ${opts.contestBtnEnabled ? '#4a9e6a' : '#1b2742'}; color: ${opts.contestBtnEnabled ? '#070b16' : '#4a5878'}; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; cursor: ${opts.contestBtnEnabled ? 'pointer' : 'not-allowed'}; width: 100%; text-align: center; justify-content: center;" ${opts.contestBtnEnabled ? '' : 'disabled'}>
+              Registrar Contestación y Acuse
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+  }
+
+  return `
+    <div>
+      <!-- Breadcrumb -->
+      <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #4a5878; letter-spacing: 0.12em;">
+        <span style="color: #d4a43a; cursor: pointer; text-decoration: underline;" id="mock-jur-breadcrumb">Área Jurídica</span>
+        <span>›</span>
+        <span style="color: #8a9bc0;">${record.oficio}</span>
+      </div>
+
+      <!-- Header -->
+      <div style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;">
+            ${renderAutoridadBadge(record.autoridad)}
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: ${record.status === 'completado' ? '#4a9e6a' : '#d4a43a'};">
+              ${record.status === 'completado' ? '✓ Completado' : '● En Jurídico'}
+            </span>
+          </div>
+          <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em; text-transform: uppercase; color: #d8e0f0; margin: 0 0 4px;">
+            ${record.oficio}
+          </h2>
+          ${record.delito ? `
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8a9bc0; margin: 0;">
+              ${record.delito}
+            </p>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Detail cards -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px;">
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">› Datos del Oficio</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${fOficio}
+          </div>
+        </div>
+        <div style="background: #0b1220; border: 1px solid #1b2742; padding: 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">› Datos del Caso</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${fCaso}
+          </div>
+        </div>
+      </div>
+
+      <!-- Solicitudes a C4 -->
+      <div style="margin-bottom: 40px; border-top: 1px solid #1b2742; padding-top: 20px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">
+          › Solicitudes a C4 (${c4Solicitudes.length} registrada${c4Solicitudes.length !== 1 ? 's' : ''})
+        </div>
+        ${c4FormHTML}
+        ${c4ItemsHTML}
+      </div>
+
+      <!-- Contestación -->
+      <div style="border-top: 1px solid #1b2742; padding-top: 20px; margin-bottom: 24px;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; color: #d4a43a; text-transform: uppercase; margin-bottom: 16px;">
+          › Contestación y Acuse de Entrega
+        </div>
+        ${contestacionHTML}
+      </div>
+    </div>
+  `;
+}
+
+
+// ==========================================
+// DEFINICIONES DE DIAPOSITIVAS / TUTORIALES CON GETTERS DINÁMICOS
+// ==========================================
+const tutoriales = {
+  medidas: [
+    {
+      title: "El Libro Digital",
+      badge: "Medidas · Paso 1 de 10",
+      text: "El Libro Digital es el concentrado principal del sistema (`app/prevencion/medidas/page.tsx`). Muestra la lista de medidas vigentes y expiradas con sus semáforos de vigencia. Para iniciar el registro de una nueva orden de protección oficial recibida de la Fiscalía o Juzgados, haz clic directamente en el botón rojo **'+ Nueva medida'** arriba a la derecha.",
+      alert: { type: "info", title: "Acción operativa", text: "Haz clic en **'+ Nueva medida'** en la esquina superior derecha del listado para ir al formulario de registro." },
+      focusId: "mock-nueva-btn",
+      get mockup() {
+        return renderMedidasList([
+          {
+            expediente: 'MP-2026-081',
+            victima: 'Diana López Montes',
+            autoridad: 'FISCALIA',
+            tipoMedida: 'Ronda periódica y auxilio inmediato',
+            fechaVencimiento: '2026-07-15',
+            semaforoColor: 'verde',
+            prorrogada: false
+          }
+        ], [
+          { label: 'Total', value: 1, color: '#4a5878' },
+          { label: 'Activas', value: 1, color: '#4a9e6a' },
+          { label: 'Por vencer', value: 0, color: '#d4a43a' },
+          { label: 'Vencidas', value: 0, color: '#c0223a' }
+        ]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-nueva-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Formulario de Registro Completo",
+      badge: "Medidas · Paso 2 de 10",
+      text: "Este es el formulario real de captura (`app/prevencion/medidas/nueva/page.tsx`). Contiene **todas las 6 secciones oficiales** del esquema de base de datos. Para no escribir manualmente, haz clic en el botón dorado **'⚡ Autocompletar Paso'** arriba a la derecha. Se llenarán todos los campos reales (delito, domicilio, vigencia, apercibimiento) y se habilitará el botón. Luego, presiona **'Guardar Medida →'** al final de la página.",
+      alert: { type: "warn", title: "Campos Obligatorios", text: "Los campos marcados con asterisco (*), como el No. Expediente, la Dirección y la Autoridad, son estrictamente obligatorios en el esquema de Drizzle." },
+      focusId: "mock-save-medida-btn",
+      get mockup() {
+        return renderNuevaMedidaForm(mFormValues, mFormEnabled);
+      },
+      onLoad: () => {
+        document.getElementById('mock-save-medida-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+        document.getElementById('mockup-body-content').scrollTop = 0;
+      },
+      autofill: () => {
+        mFormValues = Object.assign({}, mActiveRecord);
+        mFormEnabled = true;
+        cargarPaso();
+      }
+    },
+    {
+      title: "Libro Digital Actualizado",
+      badge: "Medidas · Paso 3 de 10",
+      text: "Al guardar el formulario, el sistema te redirige a la tabla del **Libro Digital** en tiempo real. Ahora verás el nuevo expediente **`MP-2026-095`** de **`Karla Mendoza Ortíz`** con su semáforo en **Verde (Vigente)**. Haz clic sobre el enlace dorado **'Ver →'** al final de su fila para abrir el expediente detallado del caso.",
+      alert: { type: "success", title: "Expediente Creado", text: "La medida ha quedado indexada en el libro digital de forma permanente y el semáforo indica vigencia activa." },
+      focusId: "mock-ver-medida-link",
+      get mockup() {
+        return renderMedidasList([
+          {
+            expediente: 'MP-2026-095',
+            victima: 'Karla Mendoza Ortíz',
+            autoridad: 'FISCALIA',
+            tipoMedida: 'Prohibición de acercarse a la víctima y desalojo',
+            fechaVencimiento: '2026-07-23',
+            semaforoColor: 'verde',
+            prorrogada: false
+          },
+          {
+            expediente: 'MP-2026-081',
+            victima: 'Diana López Montes',
+            autoridad: 'FISCALIA',
+            tipoMedida: 'Ronda periódica y auxilio inmediato',
+            fechaVencimiento: '2026-07-15',
+            semaforoColor: 'verde',
+            prorrogada: false
+          }
+        ], [
+          { label: 'Total', value: 2, color: '#4a5878' },
+          { label: 'Activas', value: 2, color: '#4a9e6a' },
+          { label: 'Por vencer', value: 0, color: '#d4a43a' },
+          { label: 'Vencidas', value: 0, color: '#c0223a' }
+        ]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-ver-medida-link').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Ficha del Expediente (Detalle Inicial)",
+      badge: "Medidas · Paso 4 de 10",
+      text: "Esta es la ficha del expediente real (`app/prevencion/medidas/[id]/page.tsx`). Muestra la información organizada en dos tarjetas side-by-side con todos los campos reales de base de datos. En la parte inferior, verás la sección de **Autoridades Adicionales** vacía (Solo la autoridad principal). Haz clic en el botón **'+ Agregar autoridad'** para simular la asociación de un segundo oficio de otra dependencia.",
+      alert: { type: "info", title: "Autoridades Co-responsables", text: "Es común que una medida sea turnada o ampliada por otras dependencias (ej. UMECA o Juzgados). Esto se modela en la tabla `medida_autoridades_adicionales`." },
+      focusId: "mock-add-aut-btn",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecord, { semaforo: 'verde', showAgregarAutoridadInline: false, yaAgregadas: [], visitas: [] });
+      },
+      onLoad: () => {
+        document.getElementById('mock-add-aut-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Autoridad Adicional (Formulario Real)",
+      badge: "Medidas · Paso 5 de 10",
+      text: "Al presionar el botón se despliega el formulario inline `AgregarAutoridadForm.tsx` de tu código. Muestra un select de autoridades disponibles, un input de oficio y fecha del oficio. Haz clic en el botón dorado **'⚡ Autocompletar Paso'** arriba en el mockup, y luego presiona **'Confirmar'**.",
+      alert: { type: "info", title: "Regla del Select", text: "El select del formulario filtra automáticamente y solo muestra las autoridades que aún no han sido asignadas a esta medida." },
+      focusId: "mock-save-aut-btn",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecord, { semaforo: 'verde', showAgregarAutoridadInline: true, yaAgregadas: [], visitas: [] });
+      },
+      onLoad: () => {
+        document.getElementById('mock-save-aut-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        document.getElementById('a-aut').value = 'UMECA';
+        document.getElementById('a-oficio').value = 'UM-84/2026';
+        document.getElementById('a-fecha').value = '2026-06-23';
+        const btn = document.getElementById('mock-save-aut-btn');
+        btn.disabled = false;
+        setTimeout(() => { posicionarEnfoque("mock-save-aut-btn"); }, 50);
+      }
+    },
+    {
+      title: "Expediente con Autoridad Adicional",
+      badge: "Medidas · Paso 6 de 10",
+      text: "El formulario se ha guardado. Nota cómo la cabecera del expediente ahora despliega de forma dinámica dos insignias de autoridad (**Fiscalía** y **UMECA**) y la sección de autoridades detalla el oficio asociado. Ahora, desplázate a la sección inferior de **Visitas Domiciliarias** y haz clic en el botón rojo **'+ Registrar Visita'**.",
+      alert: { type: "success", title: "Base de Datos Vinculada", text: "La tabla `medida_autoridades_adicionales` ha quedado correctamente asociada mediante la clave foránea `medida_id`." },
+      focusId: "mock-registrar-visita-btn",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecord, { semaforo: 'verde', showAgregarAutoridadInline: false, yaAgregadas: [ { autoridad: 'UMECA', nOficio: 'UM-84/2026', fechaOficio: '2026-06-23' } ], visitas: [] });
+      },
+      onLoad: () => {
+        document.getElementById('mock-registrar-visita-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Visita Domiciliaria",
+      badge: "Medidas · Paso 7 de 10",
+      text: "Se ha abierto el modal oficial de registro de visitas (`VisitaModal.tsx`). Muestra la fecha de visita, hora de visita, resultado (en un campo textarea) y la casilla binaria de apercibimiento. Haz clic en el botón dorado **'⚡ Autocompletar Paso'** para rellenar los datos de campo de la policía, marca la casilla **'Se aplicó apercibimiento'** y luego presiona **'Guardar Visita'**.",
+      alert: { type: "warn", title: "Apercibimiento Judicial", text: "Marcar la casilla binaria enviará un booleano `true` para registrar formalmente que la patrulla dio lectura del apercibimiento en el domicilio de protección." },
+      focusId: "mock-save-visita-btn",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecord, { semaforo: 'verde', showAgregarAutoridadInline: false, yaAgregadas: [ { autoridad: 'UMECA', nOficio: 'UM-84/2026', fechaOficio: '2026-06-23' } ], visitas: [], activeModal: 'visita' });
+      },
+      onLoad: () => {
+        document.getElementById('mock-save-visita-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        document.getElementById('v-fecha').value = '2026-06-23';
+        document.getElementById('v-hora').value = '11:00';
+        document.getElementById('v-res').value = 'Se realiza patrullaje y visita de control. La víctima Karla Mendoza se encuentra resguardada, tranquila y sin novedades.';
+        document.getElementById('v-aperc').checked = true;
+        const btn = document.getElementById('mock-save-visita-btn');
+        btn.disabled = false;
+        setTimeout(() => { posicionarEnfoque("mock-save-visita-btn"); }, 50);
+      }
+    },
+    {
+      title: "Historial de Visitas Actualizado",
+      badge: "Medidas · Paso 8 de 10",
+      text: "La visita ha quedado registrada e insertada en el listado cronológico de visitas domiciliarias con su correspondiente marca roja de **'APERCIBIMIENTO APLICADO'**. Supongamos ahora que la medida ha llegado a su fecha de vencimiento. El semáforo de cabecera cambiará a **Rojo (Vencida)** y se activará el botón dorado **'Solicitar Prórroga'**. Haz clic en el botón dorado **'Solicitar Prórroga'**.",
+      alert: { type: "success", title: "Visitas de Seguridad", text: "El registro guarda de manera auditable la fecha, hora y el usuario que asienta la visita para fines legales." },
+      focusId: "mock-solicitar-prorroga-btn",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecordExpired, { semaforo: 'rojo', showAgregarAutoridadInline: false, yaAgregadas: [ { autoridad: 'UMECA', nOficio: 'UM-84/2026', fechaOficio: '2026-06-23' } ], visitas: [ { fechaVisita: '2026-06-23', horaVisita: '11:00', resultado: 'Se realiza patrullaje y visita de control. La víctima Karla Mendoza se encuentra resguardada, tranquila y sin novedades.', apercibimientoAplicado: true } ], showProrrogaBtn: true });
+      },
+      onLoad: () => {
+        document.getElementById('mock-solicitar-prorroga-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Habilitar Prórroga (Modal Real)",
+      badge: "Medidas · Paso 9 de 10",
+      text: "Se ha abierto el modal `ProrrogaModal.tsx` para prorrogar la vigencia. Contiene un input numérico para la extensión, un select de unidad (Días / Meses) y un cargador de archivos para el oficio de solicitud de la Fiscalía. Haz clic en **'⚡ Autocompletar Paso'** y luego presiona **'Confirmar prórroga'**.",
+      alert: { type: "info", title: "Efecto Administrativo", text: "Al confirmar la prórroga, el sistema marca el expediente como `prorrogada` (true), suma el tiempo a la vigencia actual y asocia el documento oficial." },
+      focusId: "mock-confirm-prorroga-btn",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecordExpired, { semaforo: 'rojo', showAgregarAutoridadInline: false, yaAgregadas: [ { autoridad: 'UMECA', nOficio: 'UM-84/2026', fechaOficio: '2026-06-23' } ], visitas: [ { fechaVisita: '2026-06-23', horaVisita: '11:00', resultado: 'Se realiza patrullaje y visita de control. La víctima Karla Mendoza se encuentra...', apercibimientoAplicado: true } ], activeModal: 'prorrogada' });
+      },
+      onLoad: () => {
+        document.getElementById('mock-confirm-prorroga-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        document.getElementById('p-dur').value = '30';
+        document.getElementById('p-unit').value = 'dias';
+        const fileLabel = document.createElement('span');
+        fileLabel.style.fontFamily = 'JetBrains Mono, monospace';
+        fileLabel.style.fontSize = '9px';
+        fileLabel.style.color = '#8a9bc0';
+        fileLabel.style.marginTop = '4px';
+        fileLabel.style.display = 'block';
+        fileLabel.innerText = '📎 oficio_prorroga_104.pdf cargado';
+        document.getElementById('p-file').parentElement.appendChild(fileLabel);
+        const btn = document.getElementById('mock-confirm-prorroga-btn');
+        btn.disabled = false;
+        setTimeout(() => { posicionarEnfoque("mock-confirm-prorroga-btn"); }, 50);
+      }
+    },
+    {
+      title: "Prórroga Habilitada y Recálculo",
+      badge: "Medidas · Paso 10 de 10",
+      text: "¡El expediente ha sido prorrogado con éxito! Observa cómo el semáforo de vigencia ha retornado a **Verde (Vigente)**, se muestra una insignia dorada de **'PRÓRROGA'** en la cabecera, la fecha de vencimiento se recalculó al **`2026-08-22`** (+30 días), y se habilitó la visualización del archivo adjunto (`oficio_prorroga_104.pdf`). Haz clic en el enlace breadcrumb **'Medidas'** en la esquina superior izquierda para regresar al Libro Digital.",
+      alert: { type: "success", title: "Flujo de Medidas Concluido", text: "Has completado todas las operaciones del módulo de medidas: captura, vinculación de autoridades, bitácora de visitas con apercibimiento y extensiones." },
+      focusId: "mock-medidas-regresar",
+      get mockup() {
+        return renderMedidaDetail(mActiveRecordProrrogated, { semaforo: 'verde', showAgregarAutoridadInline: false, yaAgregadas: [ { autoridad: 'UMECA', nOficio: 'UM-84/2026', fechaOficio: '2026-06-23' } ], visitas: [ { fechaVisita: '2026-06-23', horaVisita: '11:00', resultado: 'Se realiza patrullaje y visita de control. La víctima Karla Mendoza se encuentra...', apercibimientoAplicado: true } ] });
+      },
+      onLoad: () => {
+        document.getElementById('mock-medidas-regresar').addEventListener('click', () => { salirAlMenu(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    }
+  ],
+  busquedas: [
+    {
+      title: "Bandeja de Búsquedas",
+      badge: "Búsquedas · Paso 1 de 10",
+      text: "Bienvenido a la bandeja de búsquedas y protocolos (`app/prevencion/busquedas/page.tsx`). Muestra la lista de fichas activas e inactivas. Para activar un nuevo protocolo Alba, Ambar o búsqueda de persona, haz clic en el botón rojo **'+ Activar protocolo'** arriba a la derecha.",
+      alert: { type: "info", title: "Acción operativa", text: "Haz clic en **'+ Activar protocolo'** para iniciar la ficha de búsqueda." },
+      focusId: "mock-nueva-busq-btn",
+      get mockup() {
+        return renderBusquedasList([
+          { tipo: 'PROTOCOLO_ALBA', folio: 'ALBA-2026-001', nombreDesaparecida: 'Diana López Montes', edad: 25, fechaActivacion: '15/06/2026 10:00', status: 'activa' }
+        ]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-nueva-busq-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Activar Protocolo",
+      badge: "Búsquedas · Paso 2 de 10",
+      text: "Este es el formulario real de activación (`app/prevencion/busquedas/nueva/page.tsx`). Contiene **3 secciones completas** con campos del esquema de base de datos. Haz clic en **'⚡ Autocompletar Paso'** para rellenar los datos de Karla Espinoza Cruz (edad 24, enlace Diana Rojas, unidad SSP-302) y luego presiona **'Activar Protocolo →'**.",
+      alert: { type: "warn", title: "Campos de Activación", text: "Registrar la fecha y hora exacta de activación y el nombre completo de la persona es crítico para la validez legal del protocolo." },
+      focusId: "mock-save-busq-btn",
+      get mockup() {
+        return renderNuevaBusquedaForm(bFormValues, bFormEnabled);
+      },
+      onLoad: () => {
+        document.getElementById('mock-save-busq-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+        document.getElementById('mockup-body-content').scrollTop = 0;
+      },
+      autofill: () => {
+        bFormValues = Object.assign({}, bActiveRecord);
+        bFormEnabled = true;
+        cargarPaso();
+      }
+    },
+    {
+      title: "Bandeja de Búsquedas con Nuevo Registro",
+      badge: "Búsquedas · Paso 3 de 10",
+      text: "¡Protocolo activado! Regresas a la tabla general de búsquedas. Observa cómo el nuevo caso **`ALBA-2026-015`** de **`Karla Espinoza Cruz`** figura con estatus **Activa** en rojo. Haz clic en el enlace dorado **'Ver →'** en esa fila para abrir el expediente detallado del caso.",
+      alert: { type: "success", title: "Expediente Activo", text: "Al crearse la ficha, la base de datos genera de manera automática los 24 hitos del timeline de seguimiento en base a la fecha de activación." },
+      focusId: "mock-ver-busq-link",
+      get mockup() {
+        return renderBusquedasList([
+          { tipo: 'PROTOCOLO_ALBA', folio: 'ALBA-2026-015', nombreDesaparecida: 'Karla Espinoza Cruz', edad: 24, fechaActivacion: '23/06/2026 10:00', status: 'activa' },
+          { tipo: 'PROTOCOLO_ALBA', folio: 'ALBA-2026-001', nombreDesaparecida: 'Diana López Montes', edad: 25, fechaActivacion: '15/06/2026 10:00', status: 'activa' }
+        ]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-ver-busq-link').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Detalle y Timeline (Inicial)",
+      badge: "Búsquedas · Paso 4 de 10",
+      text: "Estás dentro del expediente detallado del caso (`app/prevencion/busquedas/[id]/page.tsx`). Muestra las tarjetas de detalles. Abajo, se renderiza el timeline interactivo `SeguimientoTimeline.tsx` que carga los **24 hitos**. Nota cómo el primer hito (Contestación inicial) ya está registrado, pero el de **24 horas** se encuentra en color rojo como **'⚠ Vencido'**. Haz clic en el botón dorado **'Registrar'** en la fila de 24 horas.",
+      alert: { type: "danger", title: "Hitos Obligatorios Vencidos", text: "Si un plazo vence sin que el analista suba la evidencia oficial, la plataforma marcará el hito en color rojo como aviso de incumplimiento legal." },
+      focusId: "mock-reg-hito-btn",
+      get mockup() {
+        return renderBusquedaDetail(bActiveRecord, { timelineHitos: [ { tipo: 'CONTESTACION_INICIAL', fechaHora: '23/06/2026 10:15' } ], activeHitoToRegister: '24H' });
+      },
+      onLoad: () => {
+        document.getElementById('mock-reg-hito-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Reporte 24 Horas",
+      badge: "Búsquedas · Paso 5 de 10",
+      text: "Se ha abierto el modal oficial de carga del timeline (`SeguimientoTimeline.tsx`). Pide cargar la evidencia (PDF o Imagen). Haz clic en el botón dorado **'⚡ Autocompletar Paso'** arriba en el mockup para simular la selección del archivo adjunto y luego presiona **'Confirmar'**.",
+      alert: { type: "info", title: "Carga de Evidencia", text: "Subir la evidencia (informes de campo, bitácoras) deja asentado el trabajo municipal ante reclamos de derechos humanos o ministeriales." },
+      focusId: "mock-confirm-hito-btn",
+      get mockup() {
+        return renderBusquedaDetail(bActiveRecord, { timelineHitos: [ { tipo: 'CONTESTACION_INICIAL', fechaHora: '23/06/2026 10:15' } ], activeModal: 'timeline_hito', activeHitoToRegister: '24H' });
+      },
+      onLoad: () => {
+        document.getElementById('mock-confirm-hito-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        const fileLabel = document.getElementById('h-file-label');
+        if (fileLabel) fileLabel.innerText = '📎 reporte_24h_c4.pdf adjuntado';
+        const btn = document.getElementById('mock-confirm-hito-btn');
+        btn.disabled = false;
+        setTimeout(() => { posicionarEnfoque("mock-confirm-hito-btn"); }, 50);
+      }
+    },
+    {
+      title: "Timeline Actualizado",
+      badge: "Búsquedas · Paso 6 de 10",
+      text: "¡Hito guardado con éxito! Observa cómo el hito de **24 horas** ha cambiado a verde con la leyenda **'✓ Registrado por Admin'** y el enlace para descargar la evidencia. Ahora, para generar la ficha técnica de búsqueda física, haz clic en el botón dorado **'Imprimir ficha →'** arriba en la cabecera.",
+      alert: { type: "success", title: "Evidencia Guardada", text: "Una vez adjuntado el archivo, la alerta de vencimiento desaparece automáticamente de todas las bandejas." },
+      focusId: "mock-imprimir-btn",
+      get mockup() {
+        return renderBusquedaDetail(bActiveRecord, { timelineHitos: [ { tipo: 'CONTESTACION_INICIAL', fechaHora: '23/06/2026 10:15' }, { tipo: '24H', fechaHora: '24/06/2026 10:20', archivo: 'reporte_24h_c4.pdf' } ] });
+      },
+      onLoad: () => {
+        document.getElementById('mock-imprimir-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Hoja de Difusión Oficial",
+      badge: "Búsquedas · Paso 7 de 10",
+      text: "Esta es la hoja de difusión generada. Permite la impresión limpia para distribución en campo (se ocultan automáticamente los elementos web). Haz clic en el enlace breadcrumb **'Regresar →'** en la esquina superior derecha del mockup para volver al expediente del caso.",
+      alert: { type: "success", title: "Impresión Lista", text: "Esta ficha utiliza estilos CSS de impresión (`@media print`) para encuadrar la foto y los señalamientos de manera formal." },
+      focusId: "mock-back-from-print",
+      get mockup() {
+        return renderPrintFicha(bActiveRecord);
+      },
+      onLoad: () => {
+        document.getElementById('mock-back-from-print').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Cancelar Ficha (Localización)",
+      badge: "Búsquedas · Paso 8 de 10",
+      text: "Cuando la persona sea localizada sana y salva (o se resuelva el caso judicial), el analista debe proceder a la localización para detener todas las alarmas. Haz clic en el botón **'Cancelar ficha'** en el encabezado del mockup para abrir el panel oficial.",
+      alert: { type: "info", title: "Conclusión de Búsqueda", text: "La cancelación es el término formal del caso, requiriendo asentar el fiscal a cargo de la desactivación del protocolo." },
+      focusId: "mock-cancelar-ficha-btn",
+      get mockup() {
+        return renderBusquedaDetail(bActiveRecord, { timelineHitos: [ { tipo: 'CONTESTACION_INICIAL', fechaHora: '23/06/2026 10:15' }, { tipo: '24H', fechaHora: '24/06/2026 10:20', archivo: 'reporte_24h_c4.pdf' } ], hideVencidos: true });
+      },
+      onLoad: () => {
+        document.getElementById('mock-cancelar-ficha-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Cierre por Localización",
+      badge: "Búsquedas · Paso 9 de 10",
+      text: "Se ha abierto el modal `CancelacionModal.tsx` de tu código. Pide fecha y hora de cancelación, el fiscal que autoriza y observaciones detalladas. Haz clic en **'⚡ Autocompletar Paso'** y luego presiona **'Confirmar cancelación'**.",
+      alert: { type: "danger", title: "Efecto en la Base de Datos", text: "Al confirmar, la ficha de búsqueda cambia su estatus a 'cancelada' y bloquea permanentemente todas las alertas de plazos." },
+      focusId: "mock-confirm-cancel-btn",
+      get mockup() {
+        return renderBusquedaDetail(bActiveRecord, { timelineHitos: [ { tipo: 'CONTESTACION_INICIAL', fechaHora: '23/06/2026 10:15' }, { tipo: '24H', fechaHora: '24/06/2026 10:20', archivo: 'reporte_24h_c4.pdf' } ], activeModal: 'cancelacion', hideVencidos: true });
+      },
+      onLoad: () => {
+        document.getElementById('mock-confirm-cancel-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        document.getElementById('c-fecha').value = '2026-06-23T12:00';
+        document.getElementById('c-fiscal').value = 'Lic. Francisco Pérez R. (Fiscal Adscrito)';
+        document.getElementById('c-motivo').value = 'Persona localizada en buenas condiciones de salud física. Manifestó retiro voluntario del domicilio. Se da de baja la alerta Alba.';
+        const btn = document.getElementById('mock-confirm-cancel-btn');
+        btn.disabled = false;
+        setTimeout(() => { posicionarEnfoque("mock-confirm-cancel-btn"); }, 50);
+      }
+    },
+    {
+      title: "Expediente Cerrado",
+      badge: "Búsquedas · Paso 10 de 10",
+      text: "¡El expediente ha sido cerrado! El estatus de la ficha en la cabecera es ahora **'✓ Cerrada'** en verde. La tarjeta de 'Personal Asignado' muestra los campos oficiales del cierre (Fecha, Fiscal, Motivo). Se han ocultado todos los controles de edición y registro en la vista detallada de acuerdo al código real. Haz clic en el breadcrumb **'Búsquedas'** en la esquina superior izquierda para regresar.",
+      alert: { type: "success", title: "Flujo de Búsquedas Concluido", text: "Has completado satisfactoriamente el recorrido operativo del módulo de búsquedas y timelines de seguimiento." },
+      focusId: "mock-busquedas-regresar",
+      get mockup() {
+        return renderBusquedaDetail(bActiveRecordClosed, { timelineHitos: [ { tipo: 'CONTESTACION_INICIAL', fechaHora: '23/06/2026 10:15' }, { tipo: '24H', fechaHora: '24/06/2026 10:20', archivo: 'reporte_24h_c4.pdf' } ], hideVencidos: true });
+      },
+      onLoad: () => {
+        document.getElementById('mock-busquedas-regresar').addEventListener('click', () => { salirAlMenu(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    }
+  ],
+  juridico: [
+    {
+      title: "Bandeja Jurídica",
+      badge: "Jurídico · Paso 1 de 9",
+      text: "Bienvenido al área jurídica (`app/prevencion/juridico/page.tsx`). Esta bandeja recopila y archiva requerimientos formales de información emitidos por fiscales o juzgados externos. Actualmente se encuentra vacía. Haz clic en el botón rojo **'+ Nueva Solicitud'** arriba a la derecha para iniciar la captura de un requerimiento.",
+      alert: { type: "info", title: "Filtro Automático de Estatus", text: "De acuerdo al código real, esta bandeja solo despliega solicitudes que cuenten con estatus `'en_juridico'`. Los casos completados se archivan de inmediato." },
+      focusId: "mock-nueva-sol-btn",
+      get mockup() {
+        return renderJuridicoList([]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-nueva-sol-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Solicitud (NuevaSolicitudPage)",
+      badge: "Jurídico · Paso 2 de 9",
+      text: "Este es el formulario real de captura (`app/prevencion/juridico/solicitudes/nueva/page.tsx`). Contiene **3 secciones completas** con campos obligatorios para asentar el requerimiento ministerial. Haz clic en el botón dorado **'⚡ Autocompletar Paso'** para rellenar los datos (oficio, activación, delitos y carpeta) y presiona **'Turnar a Jurídico'**.",
+      alert: { type: "warn", title: "Validación de Oficio", text: "Es obligatorio asentar el número de oficio ministerial y la fecha de activación del trámite para turnarlo formalmente al departamento." },
+      focusId: "mock-turnar-jur-btn",
+      get mockup() {
+        return renderNuevaSolicitudForm(jFormValues, jFormEnabled);
+      },
+      onLoad: () => {
+        document.getElementById('mock-turnar-jur-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+        document.getElementById('mockup-body-content').scrollTop = 0;
+      },
+      autofill: () => {
+        jFormValues = Object.assign({}, jActiveRecord);
+        jFormEnabled = true;
+        cargarPaso();
+      }
+    },
+    {
+      title: "Bandeja Jurídica Actualizada",
+      badge: "Jurídico · Paso 3 de 9",
+      text: "La solicitud ha quedado indexada con éxito. Verás la bandeja de solicitudes activas con el oficio **`JUR-2026-090`** asignado al estatus **'en_juridico'** en color oro. Haz clic sobre el enlace dorado **'Ver →'** al final de la fila para abrir el expediente detallado del caso.",
+      alert: { type: "info", title: "Privacidad e Información", text: "Solo los usuarios autorizados del área jurídica y administradores del sistema pueden ingresar a esta bandeja por temas de seguridad de la Fiscalía." },
+      focusId: "mock-ver-jur-link",
+      get mockup() {
+        return renderJuridicoList([ jActiveRecord ]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-ver-jur-link').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Expediente Jurídico (Inicial)",
+      badge: "Jurídico · Paso 4 de 9",
+      text: "Estás dentro de la ficha detallada (`app/prevencion/juridico/solicitudes/[id]/page.tsx`). Muestra las tarjetas side-by-side de datos del oficio y caso. Abajo se ubica el bloque de **Solicitudes a C4** y la tarjeta de **Contestación** vacía. Haz clic en el campo textarea de C4 en el mockup para simular la petición de grabaciones al centro de monitoreo técnico.",
+      alert: { type: "info", title: "Bandeja C4", text: "Es usual requerir material de videovigilancia a C4 para responder requerimientos del Ministerio Público. Esto queda asentado en la tabla `solicitudes_c4_internas`." },
+      focusId: "c4-desc",
+      get mockup() {
+        return renderJuridicoDetail(jActiveRecord, { showC4FormInline: true, showContestacionFormInline: true });
+      },
+      onLoad: () => {
+        document.getElementById('c4-desc').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Petición Interna a C4",
+      badge: "Jurídico · Paso 5 de 9",
+      text: "Has habilitado el formulario `SolicitudC4Form.tsx`. Pide la descripción de las evidencias de video deseadas. Haz clic en el botón dorado **'⚡ Autocompletar Paso'** arriba en el mockup, y luego presiona **'Registrar petición a C4'**.",
+      alert: { type: "info", title: "Integridad de Auditoría", text: "Registrar esta solicitud internamente deja asentado a qué hora el área jurídica requirió el video y a qué hora C4 respondió para transparentar tiempos de respuesta." },
+      focusId: "mock-save-c4-btn",
+      get mockup() {
+        return renderJuridicoDetail(jActiveRecord, { showC4FormInline: true, showContestacionFormInline: true, c4TextValue: jC4Text, c4BtnEnabled: jC4BtnEnabled });
+      },
+      onLoad: () => {
+        document.getElementById('mock-save-c4-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        jC4Text = 'Se solicita de manera urgente copia en video de las grabaciones del C4 del crucero de Av. Juárez e Hidalgo, del día 20 de junio de las 14:00 a las 16:00 hs, correspondiente a la cámara C4-82.';
+        jC4BtnEnabled = true;
+        cargarPaso();
+      }
+    },
+    {
+      title: "Petición a C4 Registrada",
+      badge: "Jurídico · Paso 6 de 9",
+      text: "La petición interna al C4 ha sido registrada con estatus **'pendiente'** en oro. Una vez recibidos los discos físicos del C4 y elaborado el oficio de contestación oficial, se debe registrar el acuse. Desplázate al bloque de **Contestación y Acuse de Entrega** al final de la página y haz clic en el campo de **Fecha de contestación**.",
+      alert: { type: "success", title: "Bitácora Interna", text: "La bitácora refleja la hora exacta de registro y el estatus para el seguimiento del expediente." },
+      focusId: "cont-fecha",
+      get mockup() {
+        return renderJuridicoDetail(jActiveRecord, { showC4FormInline: true, showContestacionFormInline: true, c4Solicitudes: [ { creadoEn: '23/06/2026 10:50', status: 'pendiente', descripcionEvidencias: 'Se solicita de manera urgente copia en video de las grabaciones del C4 del crucero de Av. Juárez e Hidalgo, del día 20 de junio de las 14:00 a las 16:00 hs, correspondiente a la cámara C4-82.' } ] });
+      },
+      onLoad: () => {
+        document.getElementById('cont-fecha').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Registrar Contestación y Acuse",
+      badge: "Jurídico · Paso 7 de 9",
+      text: "Se ha activado el formulario `ContestacionForm.tsx` en el visor. Pide la fecha del oficio de respuesta, la ruta del PDF firmado y los datos del acuse de recibido (quién recibió de forma autógrafa, fecha y hora de entrega). Haz clic en el botón dorado **'⚡ Autocompletar Paso'** arriba en el mockup, y luego presiona el botón verde **'Registrar Contestación y Acuse'**.",
+      alert: { type: "warn", title: "Respaldo Jurídico", text: "Asentar los datos exactos del acuse de recibo de la Fiscalía protege legalmente a la secretaría ante quejas por omisión o retraso de entrega." },
+      focusId: "mock-save-contest-btn",
+      get mockup() {
+        return renderJuridicoDetail(jActiveRecord, { showC4FormInline: true, showContestacionFormInline: true, c4Solicitudes: [ { creadoEn: '23/06/2026 10:50', status: 'pendiente', descripcionEvidencias: 'Se solicita de manera urgente copia en video de las grabaciones del C4 del crucero de Av. Juárez e Hidalgo, del día 20 de junio de las 14:00 a las 16:00 hs, correspondiente a la cámara C4-82.' } ], contestDateValue: jContestDate, contestPdfValue: jContestPdf, acDateValue: jAcDate, acTimeValue: jAcTime, acRecibioValue: jAcRecibio, contestBtnEnabled: jContestBtnEnabled });
+      },
+      onLoad: () => {
+        document.getElementById('mock-save-contest-btn').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'block';
+      },
+      autofill: () => {
+        jContestDate = '2026-06-23';
+        jContestPdf = 'uploads/oficios/JUR-090-respuesta.pdf';
+        jAcDate = '2026-06-23';
+        jAcTime = '11:45';
+        jAcRecibio = 'Lic. Adriana Torres Ramos (Auxiliar de Fiscal)';
+        jContestBtnEnabled = true;
+        cargarPaso();
+      }
+    },
+    {
+      title: "Expediente Cerrado (Solo Lectura)",
+      badge: "Jurídico · Paso 8 de 9",
+      text: "¡El trámite legal ha sido archivado! Nota cómo la cabecera ahora muestra el estatus **'✓ Completado'** en verde. El formulario de petición a C4 se ha retirado y los campos de la contestación pasaron a ser estáticos en **modo de solo lectura** para auditoría. Haz clic en el enlace breadcrumb **'Área Jurídica'** arriba a la izquierda del mockup para volver al listado.",
+      alert: { type: "success", title: "Seguridad de Datos", text: "Al completarse el caso, el sistema bloquea los campos del acuse para evitar alteraciones malintencionadas en el historial." },
+      focusId: "mock-jur-breadcrumb",
+      get mockup() {
+        return renderJuridicoDetail(jActiveRecordClosed, { showC4FormInline: false, showContestacionFormInline: false, c4Solicitudes: [ { creadoEn: '23/06/2026 10:50', status: 'completada', descripcionEvidencias: 'Se solicita de manera urgente copia en video de las grabaciones del C4 del crucero de Av. Juárez e Hidalgo, del día 20 de junio de las 14:00 a las 16:00 hs, correspondiente a la cámara C4-82.' } ], contestacion: { fechaContestacion: '2026-06-23', archivoPdfUrl: 'JUR-090-respuesta.pdf', fechaEntrega: '2026-06-23', horaEntrega: '11:45', nombreQuienRecibio: 'Lic. Adriana Torres Ramos (Auxiliar de Fiscal)' } });
+      },
+      onLoad: () => {
+        document.getElementById('mock-jur-breadcrumb').addEventListener('click', () => { slideSiguiente(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    },
+    {
+      title: "Bandeja Jurídica Final (Caso Archivado)",
+      badge: "Jurídico · Paso 9 de 9",
+      text: "¡El expediente ha sido archivado en la base de datos! Dado que ya está marcado como completado, la bandeja filtra de manera automática y el oficio `JUR-2026-090` ya no se muestra. Has finalizado el flujo del departamento jurídico del sistema.",
+      alert: { type: "success", title: "Archivado Automático", text: "El comportamiento real de la base de datos archiva de inmediato los requerimientos completados para mantener la bandeja de entrada limpia." },
+      focusId: "mock-nueva-sol-btn",
+      get mockup() {
+        return renderJuridicoList([]);
+      },
+      onLoad: () => {
+        document.getElementById('mock-nueva-sol-btn').addEventListener('click', () => { salirAlMenu(); });
+        document.getElementById('mock-autofill').style.display = 'none';
+      }
+    }
+  ]
+};
+
+
+// ==========================================
+// CONTROLADORES DE INTERFAZ Y NAVEGACIÓN
+// ==========================================
+let moduloActivo = '';
+let pasoActivo = 0;
+let datosPasos = [];
+
+// Iniciar el tutorial para un módulo seleccionado
+function iniciarTutorial(modulo) {
+  moduloActivo = modulo;
+  pasoActivo = 0;
+  datosPasos = tutoriales[modulo];
+  
+  // Resetear estados para simular capturas limpias en cada inicio
+  mFormValues = {};
+  mFormEnabled = false;
+  bFormValues = {};
+  bFormEnabled = false;
+  jFormValues = {};
+  jFormEnabled = false;
+  jC4Text = '';
+  jC4BtnEnabled = false;
+  jContestDate = '';
+  jContestPdf = '';
+  jAcDate = '';
+  jAcTime = '';
+  jAcRecibio = '';
+  jContestBtnEnabled = false;
+
+  // Ajustar visibilidad de pantallas
+  document.getElementById('pantalla-seleccion').style.display = 'none';
+  document.getElementById('pantalla-tutorial').style.display = 'flex';
+  document.getElementById('btn-exit').style.display = 'block';
+  
+  // Aplicar color en base al modulo
+  const container = document.getElementById('pantalla-tutorial');
+  container.className = ''; 
+  container.classList.add(`module-${modulo}`);
+
+  // Cambiar links de subnavegacion activos
+  document.getElementById('nav-link-medidas').className = 'mock-nav-link' + (modulo === 'medidas' ? ' active' : '');
+  document.getElementById('nav-link-busquedas').className = 'mock-nav-link' + (modulo === 'busquedas' ? ' active' : '');
+  document.getElementById('nav-link-juridico').className = 'mock-nav-link' + (modulo === 'juridico' ? ' active' : '');
+
+  // Título en cabecera real simulada
+  const titleText = document.getElementById('mock-header-title-text');
+  if (modulo === 'juridico') {
+    titleText.innerHTML = 'Área <span>Jurídica</span>';
+  } else {
+    titleText.innerHTML = 'Atención a <span>Víctimas</span>';
+  }
+
+  generarPuntosProgreso();
+  cargarPaso();
+}
+
+// Volver a la pantalla de selección
+function salirAlMenu() {
+  document.getElementById('pantalla-seleccion').style.display = 'flex';
+  document.getElementById('pantalla-tutorial').style.display = 'none';
+  document.getElementById('btn-exit').style.display = 'none';
+  document.getElementById('focus-circle').style.display = 'none';
+}
+
+// Genera los círculos inferiores de progreso
+function generarPuntosProgreso() {
+  const container = document.getElementById('progress-dots');
+  container.innerHTML = '';
+  
+  datosPasos.forEach((_, idx) => {
+    const dot = document.createElement('div');
+    dot.classList.add('progress-dot');
+    if (idx === pasoActivo) dot.classList.add('active');
+    container.appendChild(dot);
+  });
+}
+
+// Carga los datos de la diapositiva actual
+function cargarPaso() {
+  const step = datosPasos[pasoActivo];
+  
+  // Actualizar Textos
+  document.getElementById('step-badge').innerText = step.badge;
+  document.getElementById('step-title').innerText = step.title;
+  document.getElementById('step-text').innerHTML = step.text;
+  
+  // Actualizar Consejo / Alerta
+  const alertBox = document.getElementById('step-alert');
+  const alertContent = document.getElementById('step-alert-content');
+  
+  alertBox.className = 'alert-box'; // reset
+  alertBox.classList.add(`alert-box-${step.alert.type}`);
+  
+  let icon = '💡';
+  if (step.alert.type === 'warn') icon = '⚠️';
+  if (step.alert.type === 'danger') icon = '🚨';
+  if (step.alert.type === 'success') icon = '✓';
+  
+  document.querySelector('#step-alert .alert-icon').innerText = icon;
+  alertContent.querySelector('h4').innerText = step.alert.title;
+  alertContent.querySelector('p').innerHTML = step.alert.text;
+
+  // Renderizar Mockup HTML en el visor
+  document.getElementById('mockup-html-container').innerHTML = step.mockup;
+
+  // Actualizar Controles de Navegación
+  document.getElementById('btn-prev').disabled = (pasoActivo === 0);
+  document.getElementById('progress-text').innerText = `${pasoActivo + 1} / ${datosPasos.length}`;
+  
+  const nextBtn = document.getElementById('btn-next');
+  if (pasoActivo === datosPasos.length - 1) {
+    nextBtn.innerText = 'Finalizar Recorrido ✓';
+  } else {
+    nextBtn.innerText = 'Siguiente 🡺';
+  }
+
+  // Activar el punto de progreso correspondiente
+  document.querySelectorAll('.progress-dot').forEach((dot, idx) => {
+    if (idx === pasoActivo) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+
+  // Ejecutar gancho de carga de la diapositiva para enlazar interactividad
+  if (step.onLoad) {
+    step.onLoad();
+  }
+
+  // Enfocar y activar el círculo de aviso sobre el elemento destacado
+  setTimeout(() => {
+    posicionarEnfoque(step.focusId);
+  }, 100);
+}
+
+// Mueve el círculo de enfoque arriba del elemento indicado
+function posicionarEnfoque(targetId) {
+  const target = document.getElementById(targetId);
+  const focus = document.getElementById('focus-circle');
+  
+  if (target && focus) {
+    const rect = target.getBoundingClientRect();
+    
+    // Check if the element has 0 size or is hidden
+    if (rect.width === 0 || rect.height === 0 || window.getComputedStyle(target).display === 'none') {
+      focus.style.display = 'none';
+      return;
+    }
+    
+    // Posicionamiento fixed respecto al Viewport de forma milimétrica
+    focus.style.position = 'fixed';
+    focus.style.top = (rect.top + rect.height/2 - 24) + 'px';
+    focus.style.left = (rect.left + rect.width/2 - 24) + 'px';
+    focus.style.display = 'block';
+  } else {
+    focus.style.display = 'none';
+  }
+}
+
+// Disparador del autocompletado en el mockup de la izquierda
+function ejecutarAutofill() {
+  const step = datosPasos[pasoActivo];
+  if (step && step.autofill) {
+    step.autofill();
+  }
+}
+
+// Avanzar
+function slideSiguiente() {
+  if (pasoActivo < datosPasos.length - 1) {
+    pasoActivo++;
+    cargarPaso();
+  } else {
+    alert('Has completado este módulo operativo. Puedes revisar cualquier otro flujo en el menú principal.');
+    salirAlMenu();
+  }
+}
+
+// Retroceder
+function slideAnterior() {
+  if (pasoActivo > 0) {
+    pasoActivo--;
+    cargarPaso();
+  }
+}
+
+// Reposicionar el círculo ante el scroll y resize
+document.getElementById('mockup-body-content').addEventListener('scroll', () => {
+  if (moduloActivo && datosPasos[pasoActivo]) {
+    posicionarEnfoque(datosPasos[pasoActivo].focusId);
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (moduloActivo && datosPasos[pasoActivo]) {
+    posicionarEnfoque(datosPasos[pasoActivo].focusId);
+  }
+});
+
+// Setup click handlers for subnav links to jump directly if requested
+document.getElementById('nav-link-medidas').addEventListener('click', () => {
+  if(confirm("¿Deseas cambiar al recorrido de Medidas de Protección?")) iniciarTutorial('medidas');
+});
+document.getElementById('nav-link-busquedas').addEventListener('click', () => {
+  if(confirm("¿Deseas cambiar al recorrido de Búsquedas y Protocolos?")) iniciarTutorial('busquedas');
+});
+document.getElementById('nav-link-juridico').addEventListener('click', () => {
+  if(confirm("¿Deseas cambiar al recorrido de Área Jurídica?")) iniciarTutorial('juridico');
+});
+
+</script>
+</body>
+</html>
