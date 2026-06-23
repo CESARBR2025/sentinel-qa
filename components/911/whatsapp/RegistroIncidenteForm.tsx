@@ -161,9 +161,8 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                                 icon={ClipboardCheck}
                                 as="select"
                             >
-                                <option>EN ESPERA</option>
-                                <option>UNIDAD EN CAMINO</option>
-                                <option>EN ATENCIÓN</option>
+                                <option>DESPACHO</option>
+                                <option>SIN DESPACHO</option>
                             </RolField>
 
                             {/* Los pusimos como campos individuales en la misma fila */}
