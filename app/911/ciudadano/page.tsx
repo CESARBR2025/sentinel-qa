@@ -6,10 +6,7 @@ import { redirect } from "next/navigation";
 
 import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
-
 import Formulario911 from "./Formulario911";
-
-
 
 export default async function Ciudadano911Page() {
   const session = await auth.api.getSession({
@@ -30,43 +27,69 @@ export default async function Ciudadano911Page() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#e2e8f0",
+        background: "#f8fafc",
         color: "#1e293b",
       }}
     >
-         <DashboardHeader user={user} />
+      {/* INYECCIÓN DE ESTILOS COMPATIBLE CON SERVER COMPONENTS */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+        
+        .sentinel-label-fix label {
+          font-family: 'JetBrains Mono', monospace !important;
+          font-size: 10px !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.12em !important;
+          color: #64748b !important;
+          font-weight: 600 !important;
+        }
+
+        .sentinel-label-fix input, 
+        .sentinel-label-fix select, 
+        .sentinel-label-fix textarea {
+          border-radius: 2px !important;
+          font-family: 'Inter', sans-serif !important;
+        }
+      `}} />
+
+      <DashboardHeader user={user} />
+      
       <div
+        className="sentinel-label-fix"
         style={{
-          maxWidth: "1400px",
+          maxWidth: "1200px",
           margin: "0 auto",
-          padding: "32px",
+          padding: "40px 32px",
           display: "flex",
           flexDirection: "column",
-          gap: "24px",
+          gap: "32px",
         }}
       >
-       
-
         <div
           style={{
-            background: "#f8fafc",
-            border: "1px solid #cbd5e1",
-            borderRadius: "16px",
-            padding: "24px",
+            background: "#ffffff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "4px",
+            padding: "40px",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
           }}
         >
+          {/* ENCABEZADO ESTILO SENTINEL */}
           <div
             style={{
-              marginBottom: "24px",
+              marginBottom: "40px",
+              borderBottom: "1px solid #f1f5f9",
+              paddingBottom: "24px"
             }}
           >
             <div
               style={{
-                color: "#3b82f6",
-                fontSize: "12px",
+                color: "#2563eb",
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "11px",
                 fontWeight: 700,
                 textTransform: "uppercase",
-                letterSpacing: "0.15em",
+                letterSpacing: "0.25em",
               }}
             >
               Sistema de Atención de Emergencias
@@ -74,25 +97,35 @@ export default async function Ciudadano911Page() {
 
             <h1
               style={{
-                margin: "8px 0",
-                fontSize: "36px",
+                margin: "12px 0",
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: "38px",
                 fontWeight: 800,
-                color: "#1e293b",
+                color: "#0f172a",
+                textTransform: "uppercase",
+                letterSpacing: "0.02em",
               }}
             >
-              Reporte de Llamada al 911
+              Reporte de Llamada <span style={{ color: "#3b82f6" }}>al 911</span>
             </h1>
 
-            <p
-              style={{
-                margin: 0,
-                color: "#64748b",
-              }}
-            >
-              Registro inicial de incidentes reportados por la ciudadanía.
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '4px', height: '16px', background: '#3b82f6' }} />
+                <p
+                  style={{
+                    margin: 0,
+                    fontFamily: "'Inter', sans-serif",
+                    color: "#64748b",
+                    fontSize: "14px",
+                    fontWeight: 500
+                  }}
+                >
+                  Registro inicial de incidentes reportados por la ciudadanía.
+                </p>
+            </div>
           </div>
 
+          {/* AQUÍ VA EL FORMULARIO DE TU AMIGO */}
           <Formulario911 />
         </div>
 
