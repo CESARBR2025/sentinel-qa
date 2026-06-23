@@ -34,6 +34,7 @@ export default async function Ciudadano911Page() {
         color: "#1e293b",
       }}
     >
+         <DashboardHeader user={user} />
       <div
         style={{
           maxWidth: "1400px",
@@ -44,7 +45,7 @@ export default async function Ciudadano911Page() {
           gap: "24px",
         }}
       >
-        <DashboardHeader user={user} />
+       
 
         <div
           style={{
