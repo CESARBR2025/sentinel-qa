@@ -52,15 +52,6 @@ export default function SeleccionAtencionPage() {
             SISTEMA DE <span style={{ color: '#3b82f6' }}>OPERACIONES</span>
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94a3b8', margin: 0 }}>OPERADOR</p>
-            <p style={{ fontSize: 12, fontWeight: 600, color: '#1e293b', margin: 0 }}>ID-94210</p>
-          </div>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #dbeafe', color: '#2563eb' }}>
-            <UserCircle size={20} />
-          </div>
-        </div>
       </header>
 
       {/* CONTENIDO */}
