@@ -30,6 +30,15 @@ const MODULES: Module[] = [
     status: 'active',
     stats: [{ label: 'Casos Activos', value: '14' }, { label: 'Prioridad Alta', value: '3' }]
   },
+   { 
+    id: '911',
+    label: 'Gestión 911', 
+    sub: 'Reportes Ciudadanos · Gestión', 
+    icon: <ShieldIcon />, 
+    href: '/911',
+    size: 'large',
+    status: 'active'
+  },
   { 
     id: 'incidentes',
     label: 'Incidentes',            
