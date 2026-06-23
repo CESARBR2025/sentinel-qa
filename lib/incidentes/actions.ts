@@ -106,7 +106,7 @@ export async function createIncidente(formData: FormData) {
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: inc.id })
 
   revalidatePath('/incidentes')
-  redirect(`/incidentes/${inc.id}`)
+  redirect(`/911/whatsapp/incidentes`)
 }
 
 // ─── Personas afectadas ───────────────────────────────────────────────────────

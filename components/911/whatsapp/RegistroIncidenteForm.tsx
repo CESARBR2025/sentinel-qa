@@ -6,24 +6,32 @@ import {
 } from 'lucide-react';
 import { RolField } from '@/components/rol_servicios/RolInputs';
 import { FormSection } from '@/components/911/whatsapp/FormSection';
-import { DashboardHeader } from "@/components/partials/Header"; // EL COMPONENTE CORRECTO
+import { DashboardHeader } from "@/components/partials/Header";
+import { createIncidente } from '@/lib/incidentes/actions'; // MODIFICACIÓN: Importar acción
 
-export default function RegistroIncidenteZen({ user }: { user: any }) {
+// MODIFICACIÓN: Añadido tiposIncidente a los props
+export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: any, tiposIncidente: any[] }) {
     const [canal, setCanal] = useState('WHATSAPP');
     const [isAnonimo, setIsAnonimo] = useState(false);
+    console.log("MI ID DE USUARIO ES:", user?.id);
 
     return (
-        <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-            {/* Carga de fuentes idéntica al diseño Sentinel */}
+        // MODIFICACIÓN: Se cambió div por form y se agregó la acción
+        <form action={createIncidente} style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+
+            {/* MODIFICACIÓN: Campos ocultos obligatorios para la API */}
+            <input type="hidden" name="canal" value="whatsapp" />
+            <input type="hidden" name="tipoReporte" value="normal" />
+            <input type="hidden" name="fechaHoraInicio" value={new Date().toISOString()} />
+            <input type="hidden" name="capturadoPor" value={user?.id} />
+            {isAnonimo && <input type="hidden" name="anonimo" value="true" />}
+
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-            {/* HEADER ESTÁNDAR DEL PROYECTO */}
             <DashboardHeader user={user} />
 
-            {/* CONTENIDO PRINCIPAL CON ESTILO ZEN */}
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
 
-                {/* TÍTULO DE MÓDULO ESTILO SENTINEL */}
                 <div style={{ marginBottom: '40px' }}>
                     <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
                         Módulo de Operaciones
@@ -43,12 +51,10 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
-                    {/* SECCIÓN 01: ORIGEN */}
                     <section className="sentinel-card">
                         <h2 className="sentinel-section-title">Origen y Reportante</h2>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
 
-                            {/* CANAL FIJO - NO MANIPULABLE */}
                             <RolField
                                 label="Canal de Entrada"
                                 icon={MessageSquare}
@@ -56,17 +62,17 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                                 disabled
                             />
 
-                            {/* GRUPO DE WHATSAPP (SIEMPRE VISIBLE) */}
                             <RolField
+                                name="grupoWhatsapp" // MODIFICACIÓN: Agregado name
                                 label="Grupo de WhatsApp"
                                 icon={MessageSquare}
                                 placeholder="Nombre del grupo..."
                             />
 
-                            {/* REPORTANTE Y TOGGLE ANÓNIMO */}
                             <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
                                 <div style={{ flexGrow: 1 }}>
                                     <RolField
+                                        name="nombreReportante" // MODIFICACIÓN: Agregado name
                                         label="Nombre del Reportante"
                                         icon={User}
                                         placeholder={isAnonimo ? "MODO ANÓNIMO ACTIVO" : "Nombre del ciudadano"}
@@ -96,15 +102,22 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                         </div>
                     </section>
 
-                    {/* SECCIÓN 02: DETALLE */}
                     <section className="sentinel-card">
                         <h2 className="sentinel-section-title">Detalles del Suceso</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                            <RolField label="Tipo de Incidente" icon={AlertTriangle} as="select">
-                                <option>DISTURBIO EN VÍA PÚBLICA</option>
-                                <option>ROBO A TRANSEÚNTE</option>
-                                <option>ACCIDENTE VIAL</option>
-                                <option>VIOLENCIA FAMILIAR</option>
+                            {/* MODIFICACIÓN: Select dinámico conectado a la base de datos */}
+                            <RolField
+                                label="Tipo de Incidente"
+                                icon={AlertTriangle}
+                                as="select"
+                                name="tipoIncidenteId"
+                            >
+                                <option value="">Seleccione un tipo...</option>
+                                {tiposIncidente?.map((tipo) => (
+                                    <option key={tipo.id} value={tipo.id}>
+                                        {tipo.nombre}
+                                    </option>
+                                ))}
                             </RolField>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -112,6 +125,7 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                                     Descripción de los Hechos
                                 </label>
                                 <textarea
+                                    name="descripcion" // MODIFICACIÓN: Agregado name
                                     placeholder="Describa la situación reportada..."
                                     style={{
                                         width: '100%', height: '120px', padding: '16px', background: '#ffffff',
@@ -123,32 +137,30 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                         </div>
                     </section>
 
-                    {/* SECCIÓN 03: UBICACIÓN */}
                     <section className="sentinel-card">
                         <h2 className="sentinel-section-title">Ubicación</h2>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
                             <div style={{ gridColumn: 'span 2' }}>
-                                <RolField label="Domicilio Exacto" icon={MapPin} placeholder="Calle, Colonia y Entre calles..." />
+                                <RolField name="calle" label="Domicilio Exacto" icon={MapPin} placeholder="Calle, Colonia y Entre calles..." />
                             </div>
-                            <RolField label="Punto de Referencia" icon={MapPin} placeholder="Ej: Portón café, frente a tienda..." />
-                            <RolField label="Referencia Visual" icon={MapPin} placeholder="Fachada, color de casa..." />
+                            <RolField name="colonia" label="Colonia" icon={MapPin} placeholder="Nombre de la colonia..." />
+                            <RolField name="referenciaUbicacion" label="Referencia Visual" icon={MapPin} placeholder="Fachada, color de casa..." />
                         </div>
                     </section>
 
-                    {/* SECCIÓN 04: CONTROL */}
-                    {/* SECCIÓN 04: CONTROL */}
                     <section className="sentinel-card">
                         <h2 className="sentinel-section-title">Despacho y Control</h2>
                         <div style={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(5, 1fr)', // Forzamos 5 columnas para que nada se salga
-                            gap: '16px', // Espaciado un poco más apretado para que quepa todo
+                            gridTemplateColumns: 'repeat(5, 1fr)',
+                            gap: '16px',
                             alignItems: 'end'
                         }}>
                             <RolField
                                 label="Operador"
                                 icon={User}
-                                defaultValue={user?.name || 'ALEXANDRA'}
+                                // Mostramos el nombre del usuario logueado
+                                defaultValue={user?.name || 'SISTEMA'}
                                 disabled
                             />
                             <RolField
@@ -160,12 +172,11 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                                 label="Estatus Inicial"
                                 icon={ClipboardCheck}
                                 as="select"
+                                defaultValue="SIN DESPACHAR"
                             >
-                                <option>DESPACHO</option>
-                                <option>SIN DESPACHO</option>
+                                <option value="sin_despachar">SIN DESPACHAR</option>
                             </RolField>
 
-                            {/* Los pusimos como campos individuales en la misma fila */}
                             <RolField
                                 label="Inicio"
                                 icon={Clock}
@@ -181,7 +192,6 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
 
                 </div>
 
-                {/* ACCIONES FINALES */}
                 <div style={{
                     marginTop: '64px',
                     paddingTop: '32px',
@@ -191,7 +201,8 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                     gap: '40px',
                     alignItems: 'center'
                 }}>
-                    <button style={{
+                    {/* MODIFICACIÓN: Botón ahora es tipo submit */}
+                    <button type="submit" style={{
                         background: '#0f172a',
                         color: '#ffffff',
                         padding: '16px 48px',
@@ -210,7 +221,6 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                 </div>
             </main>
 
-            {/* FOOTER */}
             <footer style={{
                 padding: '32px 48px',
                 fontFamily: 'JetBrains Mono, monospace',
@@ -226,7 +236,6 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
                 SSPM · SAN JUAN DEL RÍO · QRO · SISTEMA TÁCTICO v1.0
             </footer>
 
-            {/* ESTILOS GLOBALES COMPLEMENTARIOS */}
             <style jsx global>{`
         .sentinel-card {
           background: #ffffff;
@@ -262,6 +271,6 @@ export default function RegistroIncidenteZen({ user }: { user: any }) {
           letter-spacing: 0.1em !important;
         }
       `}</style>
-        </div>
+        </form>
     );
 }
