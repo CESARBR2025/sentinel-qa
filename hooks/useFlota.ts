@@ -1,11 +1,13 @@
 'use client'
-
 import { useState, useCallback, useRef } from 'react'
 
 export interface VehiculoOption {
-  id:    number
-  placa: string
-  label: string
+  id: number; placa: string; marca: string
+  modelo: string; color: string; tipo: string; label: string
+}
+
+interface FiltrosFlota {
+  placa?: string; marca?: string; modelo?: string; color?: string
 }
 
 export function useFlota() {
@@ -14,21 +16,25 @@ export function useFlota() {
   const [error,      setError]      = useState<string | null>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const buscar = useCallback((placa: string) => {
+  const buscar = useCallback((filtros: FiltrosFlota = {}) => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
-    if (!placa || placa.length < 2) { setResultados([]); return }
 
     debounceRef.current = setTimeout(async () => {
-      setCargando(true)
-      setError(null)
+      setCargando(true); setError(null)
       try {
-        const res = await fetch(
-          `/api/rol-servicios/externos/flota?placa=${encodeURIComponent(placa)}`
-        )
-        if (res.status === 404) { setResultados([]); return }
+        const params = new URLSearchParams()
+        if (filtros.placa)  params.set('placa',  filtros.placa)
+        if (filtros.marca)  params.set('marca',  filtros.marca)
+        if (filtros.modelo) params.set('modelo', filtros.modelo)
+        if (filtros.color)  params.set('color',  filtros.color)
+
+        const url = params.size > 0
+          ? `/api/rol-servicios/externos/flota?${params}`
+          : `/api/rol-servicios/externos/flota`
+
+        const res = await fetch(url)
         if (!res.ok) throw new Error('Error al buscar unidad')
-        const data: VehiculoOption[] = await res.json()
-        setResultados(data)
+        setResultados(await res.json())
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Error desconocido')
         setResultados([])
@@ -38,10 +44,7 @@ export function useFlota() {
     }, 350)
   }, [])
 
-  const limpiar = useCallback(() => {
-    setResultados([])
-    setError(null)
-  }, [])
+  const limpiar = useCallback(() => { setResultados([]); setError(null) }, [])
 
   return { resultados, cargando, error, buscar, limpiar }
 }
