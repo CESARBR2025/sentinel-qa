@@ -3,10 +3,21 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db/index"; // Asegúrate de que esta ruta sea correcta
+import { eq } from "drizzle-orm";
+import { 
+  catTiposEmergencia, 
+  catTiposIncidente, 
+  catPrioridades, 
+  catMediosCanalizacion 
+} from "@/lib/db/schema";
 
 import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
 import Formulario911 from "./Formulario911";
+
+
+
 
 export default async function Ciudadano911Page() {
   const session = await auth.api.getSession({
@@ -22,6 +33,13 @@ export default async function Ciudadano911Page() {
     apellido?: string;
     email: string;
   };
+
+    const [emergencias, incidentes, prioridades, canalizaciones] = await Promise.all([
+    db.select().from(catTiposEmergencia).where(eq(catTiposEmergencia.activo, true)),
+    db.select().from(catTiposIncidente).where(eq(catTiposIncidente.activo, true)),
+    db.select().from(catPrioridades).where(eq(catPrioridades.activo, true)),
+    db.select().from(catMediosCanalizacion).where(eq(catMediosCanalizacion.activo, true)),
+  ]);
 
   return (
     <main
@@ -126,7 +144,15 @@ export default async function Ciudadano911Page() {
           </div>
 
           {/* AQUÍ VA EL FORMULARIO DE TU AMIGO */}
-          <Formulario911 />
+          <Formulario911 
+            user={user} 
+            catalogos={{
+              emergencias,
+              incidentes,
+              prioridades,
+              canalizaciones
+            }}
+          />
         </div>
 
         <DashboardFooter />
