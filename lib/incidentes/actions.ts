@@ -45,6 +45,7 @@ function validarEnum<T extends string>(valor: string | null, permitidos: readonl
   return valor as T
 }
 
+
 // ─── Alta de incidente ────────────────────────────────────────────────────────
 export async function createIncidente(formData: FormData) {
   const session = await requireOperador()
@@ -64,7 +65,8 @@ export async function createIncidente(formData: FormData) {
 
   // Validar que fin no sea anterior a inicio
   if (fechaHoraFin && new Date(fechaHoraFin) < new Date(fechaHoraInicio))
-    throw new Error('fechaHoraFin no puede ser anterior a fechaHoraInicio')
+    throw new Error('fechaHoraFin no puede ser anterior a fechaHoraInicio');
+  
 
   // Estatus inicial según canal
   const estatus = canal === 'radio' ? 'en_despacho' : 'sin_despachar'
@@ -103,12 +105,23 @@ export async function createIncidente(formData: FormData) {
     capturadoPor:        session.user.id,
   }).returning()
 
+    if (formData.get('tipoReporte') === 'extorsion') {
+    formData.set('incidenteId', inc.id); // Le pasamos el ID necesario
+    await createExtorsion(formData);     // Consumimos la función que ya tenías
+  }
+
+  // Si es alarma escolar, hacemos lo mismo
+  if (formData.get('tipoReporte') === 'alarma_escolar') {
+    formData.set('incidenteId', inc.id);
+    await createAlarmaEscolar(formData); // Consumimos la función que ya tenías
+  }
+
+
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: inc.id })
 
   revalidatePath('/incidentes')
-  redirect(`/911/whatsapp/incidentes`)
+  return inc 
 }
-
 // ─── Personas afectadas ───────────────────────────────────────────────────────
 export async function addPersonaAfectada(formData: FormData) {
   const session = await requireOperador()
@@ -148,6 +161,22 @@ export async function deletePersonaAfectada(formData: FormData) {
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
+
+export async function createRecorridoCompleto(formData: FormData) {
+  // 1. Ejecutamos tu función createIncidente (que ya devuelve el objeto 'inc')
+  // Como el canal es 'radio', el estatus quedará en 'en_despacho'
+  const inc = await createIncidente(formData);
+
+  // 2. Inyectamos el ID generado al formData para que el reporte de campo sepa a qué incidente pertenece
+  formData.set('incidenteId', inc.id);
+
+  // 3. Ejecutamos la creación del reporte de campo
+  // Esto llenará la tabla 'incidente_reporte_campo' y pasará el estatus a 'atendido'
+  await createReporteCampo(formData);
+
+  // 4. Redirección final al detalle del incidente
+  redirect(`/incidentes/${inc.id}`);
+}
 // ─── Despacho ─────────────────────────────────────────────────────────────────
 export async function createDespacho(formData: FormData) {
   const session     = await requireOperador()
@@ -247,6 +276,8 @@ export async function createReporteCampo(formData: FormData) {
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
+
+
 // ─── Extorsión ────────────────────────────────────────────────────────────────
 export async function createExtorsion(formData: FormData) {
   const session = await requireOperador()
@@ -304,3 +335,6 @@ export async function createAlarmaEscolar(formData: FormData) {
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_alarma_escolar', entidadId: incidenteId })
   revalidatePath(`/incidentes/${incidenteId}`)
 }
+
+
+

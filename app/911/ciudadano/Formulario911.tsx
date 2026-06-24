@@ -30,7 +30,11 @@ export default function Formulario911({ user, catalogos }: { user: { name: strin
     };
 
     return (
-        <form action={createIncidente}>
+        <form action={async (fd) => {
+  const inc = await createIncidente(fd);
+  // Como el 911 no lleva reporte de campo, redireccionamos aquí
+  window.location.href = `/incidentes/${inc.id}`;
+}}>
         <input type="hidden" name="canal" value="911" />
             {/* SECCIÓN 01 */}
             <div className="panel">
