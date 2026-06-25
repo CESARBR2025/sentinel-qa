@@ -22,7 +22,7 @@ async function requireOperador() {
     .where(eq(users.id, session.user.id))
     .limit(1)
 
-  const rolesPermitidos = ['Administrador', 'Operador']
+  const rolesPermitidos = ['Administrador', 'Operador', 'Oficial de Campo']
   if (!u?.rolNombre || !rolesPermitidos.includes(u.rolNombre)) redirect('/dashboard')
 
   return session

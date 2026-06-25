@@ -4,10 +4,23 @@ import { redirect } from 'next/navigation'
 import { SignOutButton } from './sign-out-button'
 import { Enable2FA } from './enable-2fa'
 import { ModuleCards } from './module-cards'
+import { db } from '@/lib/db/index'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  // Redirect Oficial de Campo to their dedicated view
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (userRole?.rolNombre === 'Oficial de Campo') redirect('/oficial')
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean

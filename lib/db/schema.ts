@@ -880,3 +880,4 @@ export const incidenteAlarmaEscolar = pgTable("incidente_alarma_escolar", {
   foreignKey({ columns: [table.incidenteId], foreignColumns: [incidentes.id], name: "iae_incidente_fk" }).onDelete("cascade"),
   unique("incidente_alarma_escolar_incidente_uq").on(table.incidenteId), // 1:1
 ])
+
