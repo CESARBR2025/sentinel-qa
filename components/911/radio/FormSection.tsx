@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   MessageSquare, User, AlertTriangle, MapPin,
-  ClipboardCheck, Clock, Shield, Send, Search, Check, Loader2,
+  ClipboardCheck, Clock, Shield, Send, Search, Check, Loader2, Plus, X,
   FileText, Gavel, Car, Hash, Archive
 } from 'lucide-react';
 import { createRecorridoCompleto } from "@/lib/incidentes/actions";
@@ -70,6 +70,24 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
   const [tieneVehiculo, setTieneVehiculo] = useState("false");
   const [datosPositivos, setDatosPositivos] = useState("positivo");
 
+  const [detenidos, setDetenidos] = useState<string[]>([""]);
+
+  // Funciones para manejar los detenidos
+  const manejarCambioDetenido = (index: number, valor: string) => {
+    const nuevos = [...detenidos];
+    nuevos[index] = valor;
+    setDetenidos(nuevos);
+  };
+
+  const agregarDetenido = () => setDetenidos([...detenidos, ""]);
+
+  const eliminarDetenido = (index: number) => {
+    if (detenidos.length > 1) {
+      setDetenidos(detenidos.filter((_, i) => i !== index));
+    } else {
+      setDetenidos([""]); // Si es el último, solo lo limpia
+    }
+  };
 
   return (
     <form action={createRecorridoCompleto}>
@@ -238,16 +256,55 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
 
                 {tieneDetencion === "true" && (
                   <>
-                    <div style={{ gridColumn: 'span 2' }}>
-                      <SentinelField label="Nombre de los Detenidos" name="nombreDetenidos" icon={User} placeholder="Separados por comas..." />
+                    {/* LISTA DINÁMICA DE DETENIDOS */}
+                    <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Nombres de los Detenidos
+                      </label>
+
+                      {detenidos.map((nombre, index) => (
+                        <div key={index} style={{ display: 'flex', gap: '8px', animation: 'fadeIn 0.2s ease' }}>
+                          <div style={{ flex: 1 }}>
+                            <SentinelField
+                              label=""
+                              placeholder={`Nombre del detenido ${index + 1}`}
+                              icon={User}
+                              value={nombre}
+                              onChange={(e: any) => manejarCambioDetenido(index, e.target.value)}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => eliminarDetenido(index)}
+                            style={{ height: '46px', padding: '0 12px', background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', cursor: 'pointer', borderRadius: '2px' }}
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+
+                      <button
+                        type="button"
+                        onClick={agregarDetenido}
+                        style={{
+                          alignSelf: 'flex-start',
+                          display: 'flex', alignItems: 'center', gap: '8px',
+                          background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe',
+                          padding: '8px 16px', borderRadius: '2px', cursor: 'pointer',
+                          fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600
+                        }}
+                      >
+                        <Plus size={14} /> AÑADIR OTRO DETENIDO
+                      </button>
+
+                      {/* Input oculto para enviar los nombres como JSON al servidor */}
+                      <input type="hidden" name="nombreDetenidos" value={JSON.stringify(detenidos.filter(n => n.trim() !== ""))} />
                     </div>
+
                     <SentinelField label="Autoridad que recibe" name="autoridadRecibe" icon={Shield} placeholder="Ej. MP, Juzgado Cívico" />
-                    <SentinelField label="Expediente / Carpeta CI" name="expedienteCi" icon={FileText} placeholder="Número de carpeta..." />
-                    <SentinelField label="Delito / Falta" name="delitoFalta" icon={AlertTriangle} placeholder="Clasificación jurídica" />
                   </>
                 )}
 
-                {/* El monto debe ser entero para la API */}
                 {tipoIncidente === "1" && (
                   <SentinelField
                     label="Monto de lo Robado (Solo números)"
