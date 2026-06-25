@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, unique, serial, text, integer, boolean, varchar, timestamp, time, uuid, date, check } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, unique, serial, text, integer, boolean, varchar, timestamp, time, uuid, date, check, numeric } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -724,6 +724,8 @@ export const incidentes = pgTable("incidentes", {
   entreCalles:         varchar("entre_calles", { length: 200 }),
   referenciaUbicacion: varchar("referencia_ubicacion", { length: 300 }),
   municipio:           varchar({ length: 100 }).default('San Juan del Río').notNull(),
+   latitud:  numeric("latitud", { precision: 12, scale: 9 }),
+  longitud: numeric("longitud", { precision: 12, scale: 9 }),
   // Clasificación
   tipoEmergenciaId:    integer("tipo_emergencia_id"),
   tipoIncidenteId:     integer("tipo_incidente_id"),

@@ -73,6 +73,10 @@ export async function createIncidente(formData: FormData) {
 
   const { folio, consecutivo } = await generarFolioIncidente()
 
+   const lat = formData.get('latitud') ? String(formData.get('latitud')) : null;
+  const lng = formData.get('longitud') ? String(formData.get('longitud')) : null;
+
+
   const [inc] = await db.insert(incidentes).values({
     folio,
     folioConsecutivo:    consecutivo,
@@ -90,6 +94,8 @@ export async function createIncidente(formData: FormData) {
     entreCalles:         str(formData, 'entreCalles'),
     referenciaUbicacion: str(formData, 'referenciaUbicacion'),
     municipio:           str(formData, 'municipio') ?? 'San Juan del Río',
+    latitud:  lat,
+    longitud: lng,
     tipoEmergenciaId:    num(formData, 'tipoEmergenciaId'),
     tipoIncidenteId:     num(formData, 'tipoIncidenteId'),
     prioridadId:         num(formData, 'prioridadId'),
