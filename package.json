@@ -15,6 +15,7 @@
     "db:create-admin": "tsx lib/db/create-admin.ts"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.8",
     "better-auth": "^1.6.7",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.2",

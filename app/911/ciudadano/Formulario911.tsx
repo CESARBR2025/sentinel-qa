@@ -72,7 +72,6 @@ export default function Formulario911({ user, catalogos }: {
         });
     };
 
-    // 3. Función para cuando busques una dirección en el buscador
     const onPlaceChanged = () => {
         const place = autocompleteRef.current?.getPlace();
 
@@ -106,8 +105,6 @@ export default function Formulario911({ user, catalogos }: {
             });
         }
     };
-
-
     return (
         <form action={async (fd) => {
             // ESTO ES LO NUEVO:
@@ -291,7 +288,9 @@ export default function Formulario911({ user, catalogos }: {
 
                 <div className="grid">
                     <div>
+
                         <label>Calle y número</label>
+
                         <input
                             type="text"
                             name="calle" // <--- Mantiene conexión con backend
@@ -308,6 +307,7 @@ export default function Formulario911({ user, catalogos }: {
                             value={direccion.colonia} // <--- Esto hace que se llene solo
                             onChange={(e) => setDireccion({ ...direccion, colonia: e.target.value })} // <--- Permite correcciones manuales
                         />
+
                     </div>
 
                     <div>
