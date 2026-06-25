@@ -319,9 +319,6 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                         />
                       )}
                     </div>
-
-                    <SentinelField label="Expediente / Carpeta CI" name="expedienteCi" icon={FileText} placeholder="Número de carpeta..." />
-                    <SentinelField label="Delito / Falta" name="delitoFalta" icon={AlertTriangle} placeholder="Clasificación jurídica" />
                   </>
                 )}
 
