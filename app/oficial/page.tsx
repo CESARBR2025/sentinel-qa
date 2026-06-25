@@ -1,13 +1,15 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { ClipboardList } from 'lucide-react'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
+import { ToastExito } from '@/components/oficial/ToastExito'
 import { db } from '@/lib/db/index'
 import { users, roles, incidentes, incidenteReporteCampo } from '@/lib/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
 
-export default async function OficialDashboardPage() {
+export default async function OficialDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
@@ -44,8 +46,11 @@ export default async function OficialDashboardPage() {
       sql`fecha_hora_inicio >= ${hoyISO}`
     ))
 
+  const params = await searchParams
+
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+      <ToastExito show={params.exito === '1'} />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         .card-o {
@@ -107,7 +112,7 @@ export default async function OficialDashboardPage() {
 
 
           {/* Card */}
-          <div className="card-o">
+          <Link href="/oficial/nuevo" className="card-o" style={{ textDecoration: 'none' }}>
             <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#2563eb', transition: 'width 0.4s ease', width: 32 }}></div>
             <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#2563eb', transition: 'height 0.4s ease', height: 32 }}></div>
 
@@ -130,7 +135,7 @@ export default async function OficialDashboardPage() {
               </p>
             </div>
 
-          </div>
+          </Link>
 
         </div>
 
