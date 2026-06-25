@@ -44,11 +44,30 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
 };
 
 
+
 export default function ReporteRecorridoZen({ user, catalogos }: { user: any, catalogos: any }) {
-  // Hook para buscar al mando
+  // Hook e instancia para el MANDO (Ya lo tienes)
   const empMando = useEmpleado();
   const [nominaMando, setNominaMando] = useState("");
   const [nombreMando, setNombreMando] = useState("");
+
+  // --- NUEVO: Hook e instancia para el OFICIAL QUE REPORTA ---
+  const empOficial = useEmpleado();
+  const [nominaOficial, setNominaOficial] = useState("");
+  const [nombreOficial, setNombreOficial] = useState("");
+
+  // Función para buscar al Oficial
+  const buscarOficial = async () => {
+    if (!nominaOficial) return;
+    await empOficial.buscarPorNomina(nominaOficial);
+  };
+
+  // Efecto para asignar el nombre del oficial cuando se encuentre
+  useEffect(() => {
+    if (empOficial.empleado) {
+      setNombreOficial(empOficial.empleado.nombre);
+    }
+  }, [empOficial.empleado]);
 
   // 1. Esta función solo dispara la búsqueda
   const buscarMando = async () => {
@@ -62,6 +81,8 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
       setNombreMando(empMando.empleado.nombre);
     }
   }, [empMando.empleado]); // Se ejecuta cada vez que el "empleado" del hook cambie
+
+
   const [isAnonimo, setIsAnonimo] = useState(false);
 
   const [tipoIncidente, setTipoIncidente] = useState("");
@@ -123,15 +144,57 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
             <section className="sentinel-card">
               <h2 className="sentinel-section-title">Origen e Identificación</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+
                 <SentinelField label="Canal de Origen" icon={MessageSquare} value="RADIO" disabled />
 
-                {/* Este campo es REQUERIDO por la API para canal Radio */}
+                {/* --- BUSCADOR DE NÓMINA PARA EL OFICIAL --- */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    Nómina Oficial que Reporta
+                  </label>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
+                      <input
+                        type="text"
+                        placeholder="Nómina..."
+                        value={nominaOficial}
+                        onChange={(e) => setNominaOficial(e.target.value)}
+                        onBlur={buscarOficial}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarOficial(); } }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 12px 12px 40px',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          borderLeft: '4px solid #3b82f6',
+                          borderRadius: '2px',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '14px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={buscarOficial}
+                      style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}
+                    >
+                      {empOficial.cargando ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                    </button>
+                  </div>
+                  {empOficial.error && <span style={{ color: '#dc2626', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>{empOficial.error}</span>}
+                </div>
+
+                {/* Nombre del oficial (Se autocompleta) */}
                 <SentinelField
                   label="Nombre del Oficial que Reporta"
                   name="nombreOficial"
                   icon={Shield}
-                  placeholder="Nombre completo del oficial"
+                  placeholder="Se llenará automáticamente..."
                   required
+                  value={nombreOficial}
+                  onChange={(e: any) => setNombreOficial(e.target.value)}
                 />
 
                 <SentinelField label="Folio CAD" name="folioCad" icon={Hash} placeholder="Número CAD..." />
@@ -143,6 +206,10 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   disabled
                 />
 
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', gridColumn: 'span 1' }}>
+                  {/* Espacio ajustado para que no descuadre la fila */}
+                </div>
+
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', gridColumn: 'span 2' }}>
                   <div style={{ flexGrow: 1 }}>
                     <SentinelField
@@ -153,7 +220,6 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       disabled={isAnonimo}
                     />
                   </div>
-                  {/* Input oculto para que el servidor reciba el booleano correcto */}
                   <input type="hidden" name="anonimo" value={isAnonimo ? "true" : "false"} />
                   <button type="button" onClick={() => setIsAnonimo(!isAnonimo)} className="sentinel-btn-toggle">
                     {isAnonimo ? '[ ANÓNIMO: ON ]' : '[ ANÓNIMO: OFF ]'}
@@ -433,7 +499,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 {/* Campo de Nombre del Mando (Se llena solo) */}
                 <SentinelField
                   label="Policía a Cargo (Mando)"
-                  name="policiaCargo" 
+                  name="policiaCargo"
                   icon={Shield}
                   placeholder="Nombre del mando responsable"
                   value={nombreMando}
