@@ -89,6 +89,8 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
     }
   };
 
+  const [autoridadSeleccionada, setAutoridadSeleccionada] = useState("MINISTERIO PÚBLICO");
+
   return (
     <form action={createRecorridoCompleto}>
       <input type="hidden" name="canal" value="radio" />
@@ -216,8 +218,10 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 {/* SELECT DINÁMICO */}
                 <SentinelField
                   label="Datos Positivos/Negativos"
-                  name="datosPositivosNegativos"
+                  // Si es "otro", no le ponemos 'name' aquí para que no se duplique
+                  name={datosPositivos !== "otro" ? "datosPositivosNegativos" : ""}
                   as="select"
+                  icon={Search}
                   value={datosPositivos}
                   onChange={(e: any) => setDatosPositivos(e.target.value)}
                 >
@@ -226,14 +230,13 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   <option value="otro">OTRO (ESPECIFICAR)</option>
                 </SentinelField>
 
-                {/* CAMPO "A MANITA" - Solo aparece si eliges OTRO */}
                 {datosPositivos === "otro" && (
-                  <div style={{ gridColumn: 'span 3', marginTop: '-16px', animation: 'fadeIn 0.3s ease' }}>
+                  <div style={{ gridColumn: 'span 3', marginTop: '-16px' }}>
                     <SentinelField
                       label="Especifique el resultado"
-                      name="datosPositivosNegativosDetalle"
+                      name="datosPositivosNegativos" // El backend recibirá este valor
                       icon={FileText}
-                      placeholder="Escriba aquí la observación detallada..."
+                      placeholder="Escriba aquí la observación..."
                       fullWidth
                     />
                   </div>
@@ -263,7 +266,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       </label>
 
                       {detenidos.map((nombre, index) => (
-                        <div key={index} style={{ display: 'flex', gap: '8px', animation: 'fadeIn 0.2s ease' }}>
+                        <div key={index} style={{ display: 'flex', gap: '8px' }}>
                           <div style={{ flex: 1 }}>
                             <SentinelField
                               label=""
@@ -273,35 +276,52 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                               onChange={(e: any) => manejarCambioDetenido(index, e.target.value)}
                             />
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => eliminarDetenido(index)}
-                            style={{ height: '46px', padding: '0 12px', background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', cursor: 'pointer', borderRadius: '2px' }}
-                          >
+                          <button type="button" onClick={() => eliminarDetenido(index)} style={{ height: '46px', padding: '0 12px', background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', cursor: 'pointer', borderRadius: '2px' }}>
                             <X size={14} />
                           </button>
                         </div>
                       ))}
 
-                      <button
-                        type="button"
-                        onClick={agregarDetenido}
-                        style={{
-                          alignSelf: 'flex-start',
-                          display: 'flex', alignItems: 'center', gap: '8px',
-                          background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe',
-                          padding: '8px 16px', borderRadius: '2px', cursor: 'pointer',
-                          fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600
-                        }}
-                      >
-                        <Plus size={14} /> AÑADIR OTRO DETENIDO
+                      <button type="button" onClick={agregarDetenido} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', padding: '8px 16px', borderRadius: '2px', cursor: 'pointer', fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600 }}>
+                        <Plus size={14} /> AÑADIR OTRO
                       </button>
 
-                      {/* Input oculto para enviar los nombres como JSON al servidor */}
-                      <input type="hidden" name="nombreDetenidos" value={JSON.stringify(detenidos.filter(n => n.trim() !== ""))} />
+                      {/* ESTA ES LA CLAVE: Convierte el array a un string separado por comas para el backend */}
+                      <input
+                        type="hidden"
+                        name="nombreDetenidos"
+                        value={detenidos.filter(n => n.trim() !== "").join(", ")}
+                      />
                     </div>
 
-                    <SentinelField label="Autoridad que recibe" name="autoridadRecibe" icon={Shield} placeholder="Ej. MP, Juzgado Cívico" />
+                    {/* AUTORIDAD QUE RECIBE */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <SentinelField
+                        label="Autoridad que recibe"
+                        name={autoridadSeleccionada !== "OTRO" ? "autoridadRecibe" : ""}
+                        as="select"
+                        icon={Shield}
+                        value={autoridadSeleccionada}
+                        onChange={(e: any) => setAutoridadSeleccionada(e.target.value)}
+                      >
+                        <option value="MINISTERIO PÚBLICO">MINISTERIO PÚBLICO</option>
+                        <option value="JUZGADO CÍVICO">JUZGADO CÍVICO</option>
+                        <option value="FISCALÍA GENERAL">FISCALÍA GENERAL</option>
+                        <option value="OTRO">OTRO (ESPECIFICAR)</option>
+                      </SentinelField>
+
+                      {autoridadSeleccionada === "OTRO" && (
+                        <SentinelField
+                          label="Especifique Autoridad"
+                          name="autoridadRecibe" // Se envía con el mismo nombre que espera el backend
+                          placeholder="Nombre de la autoridad..."
+                          icon={FileText}
+                        />
+                      )}
+                    </div>
+
+                    <SentinelField label="Expediente / Carpeta CI" name="expedienteCi" icon={FileText} placeholder="Número de carpeta..." />
+                    <SentinelField label="Delito / Falta" name="delitoFalta" icon={AlertTriangle} placeholder="Clasificación jurídica" />
                   </>
                 )}
 
@@ -416,12 +436,11 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 {/* Campo de Nombre del Mando (Se llena solo) */}
                 <SentinelField
                   label="Policía a Cargo (Mando)"
-                  name="policiaCargo"
+                  name="policiaCargo" 
                   icon={Shield}
                   placeholder="Nombre del mando responsable"
                   value={nombreMando}
                   onChange={(e: any) => setNombreMando(e.target.value)}
-                  disabled
                 />
 
                 {/* Campo Final */}

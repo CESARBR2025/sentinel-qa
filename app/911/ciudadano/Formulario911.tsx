@@ -31,6 +31,9 @@ export default function Formulario911({ user, catalogos }: {
         ]);
     };
 
+    const [esLlamadaAlarma, setEsLlamadaAlarma] = useState(false);
+    const [nombreResponsable, setNombreResponsable] = useState(""); // Nuevo estado
+
     return (
         <form action={async (fd) => {
             const inc = await createIncidente(fd);
@@ -113,14 +116,14 @@ export default function Formulario911({ user, catalogos }: {
                         <label>¿Usuario Frecuente?</label>
                         <select name="esUsuarioFrecuente">
                             <option value="false">No</option>
-    <option value="true">Sí</option>
+                            <option value="true">Sí</option>
                         </select>
                     </div>
                     <div>
                         <label>¿Persona Afectada?</label>
                         <select name="esPersonaAfectada">
                             <option value="false">No</option>
-    <option value="true">Sí</option>
+                            <option value="true">Sí</option>
                         </select>
                     </div>
                     <div>
@@ -133,7 +136,7 @@ export default function Formulario911({ user, catalogos }: {
                 </div>
             </div>
 
-            {/* SECCIÓN 03 */}
+            {/* SECCIÓN 03 - Actualizada */}
             <div className="panel">
                 <div className="titulo-con-boton">
                     <h2 className="sentinel-title">Personas Afectadas</h2>
@@ -147,19 +150,22 @@ export default function Formulario911({ user, catalogos }: {
                         <div className="grid">
                             <div>
                                 <label>Nombre</label>
-                                <input type="text" placeholder="Nombre completo" />
+                                {/* Agregamos name="p_nombre" */}
+                                <input type="text" name="p_nombre" placeholder="Nombre completo" />
                             </div>
                             <div>
                                 <label>Sexo</label>
-                                <select>
+                                {/* Agregamos name="p_sexo" */}
+                                <select name="p_sexo">
+                                    <option value="NE">N/E</option>
                                     <option value="M">Masculino</option>
                                     <option value="F">Femenino</option>
-                                    <option value="NE">N/E</option>
                                 </select>
                             </div>
                             <div>
                                 <label>Edad</label>
-                                <input type="number" />
+                                {/* Agregamos name="p_edad" */}
+                                <input type="number" name="p_edad" />
                             </div>
                         </div>
                     </div>
@@ -234,110 +240,137 @@ export default function Formulario911({ user, catalogos }: {
                             <label>Establecimiento / Escuela</label>
                             <input type="text" name="establecimiento" />
                         </div>
+
+                        <div>
+                            <label>¿Origen del Reporte?</label>
+                            <select
+                                value={esLlamadaAlarma ? "true" : "false"}
+                                onChange={(e) => {
+                                    const esLlamada = e.target.value === "true";
+                                    setEsLlamadaAlarma(esLlamada);
+                                    if (esLlamada) setNombreResponsable("SISTEMA");
+                                    else setNombreResponsable("");
+                                }}
+                            >
+                                <option value="false">Manual (Escribir nombre)</option>
+                                <option value="true">Llamada (Automático)</option>
+                            </select>
+                        </div>
+
                         <div>
                             <label>Nombre del Responsable</label>
-                            <input type="text" name="nombreResponsable" />
+                            <input
+                                type="text"
+                                name="nombreResponsable"
+                                value={nombreResponsable}
+                                onChange={(e) => setNombreResponsable(e.target.value)}
+                                readOnly={esLlamadaAlarma}
+                                className={esLlamadaAlarma ? "readonly-input" : ""}
+                                placeholder={esLlamadaAlarma ? "SISTEMA" : "Nombre de quien reporta"}
+                            />
                         </div>
+
                         <div>
                             <label>Inmueble</label>
                             <input type="text" name="inmueble" />
+                        </div>
+
+                        {/* NUEVO CAMPO NUMÉRICO */}
+                        <div>
+                            <label>Número de Activaciones</label>
+                            <input
+                                type="number"
+                                name="numeroActivaciones"
+                                min="1"
+                                defaultValue="1"
+                                placeholder="0"
+                            />
                         </div>
                     </div>
                 </div>
             )}
 
+            {/* MODIFICACIÓN: Si es extorsión, se ocultan estas dos secciones */}
+            {tipoReporte !== "extorsion" && (
+                <>
+                    {/* SECCIÓN 05 */}
+                    <div className="panel">
+                        <h2 className="sentinel-title">Clasificación Técnica</h2>
+                        <div className="grid">
+                            <div>
+                                <label>Tipo de Emergencia</label>
+                                {/* Agregamos el condicional al required para que no bloquee el envío si está oculto */}
+                                <select name="tipoEmergenciaId" required={tipoReporte !== "extorsion"}>
+                                    <option value="">Seleccionar...</option>
+                                    {catalogos.emergencias.map((item) => (
+                                        <option key={item.id} value={item.id}>{item.nombre}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label>Tipo de Incidente</label>
+                                <select name="tipoIncidenteId" required={tipoReporte !== "extorsion"}>
+                                    <option value="">Seleccionar...</option>
+                                    {catalogos.incidentes.map((item) => (
+                                        <option key={item.id} value={item.id}>{item.nombre}</option>
+                                    ))}
+                                </select>
+                            </div>
 
+                            <div>
+                                <label>Prioridad</label>
+                                <select name="prioridadId" required={tipoReporte !== "extorsion"}>
+                                    {catalogos.prioridades.map((item) => (
+                                        <option key={item.id} value={item.id}>{item.nombre}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-            {/* SECCIÓN 05 */}
-            <div className="panel">
-                <h2 className="sentinel-title">Clasificación Técnica</h2>
-                <div className="grid">
-                    <div>
-                        <label>Tipo de Emergencia</label>
-                        <select name="tipoEmergenciaId" required>
-                            <option value="">Seleccionar...</option>
-                            {catalogos.emergencias.map((item) => (
-                                <option key={item.id} value={item.id}>{item.nombre}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label>Tipo de Incidente</label>
-                        <select name="tipoIncidenteId" required>
-                            <option value="">Seleccionar...</option>
-                            {catalogos.incidentes.map((item) => (
-                                <option key={item.id} value={item.id}>{item.nombre}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Prioridad</label>
-                        <select name="prioridadId" required>
-                            {catalogos.prioridades.map((item) => (
-                                <option key={item.id} value={item.id}>{item.nombre}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div style={{ marginTop: "16px" }}>
-                        <label>Descripción del Incidente</label>
-                        <textarea
-                            name="descripcion"
-                            rows={5}
-                            placeholder="Describa brevemente lo reportado por el ciudadano..."
-                        />
-                    </div>
-                </div>
-            </div>
-
-
-            {/* SECCIÓN 06 */}
-            <div className="panel">
-                <h2>Canalización</h2>
-
-                <div className="grid">
-                    <div>
-                        <label>Medio de Canalización</label>
-                        <select name="medioCanalizacionId">
-                            <option value="">Seleccionar...</option>
-                            {catalogos.canalizaciones.map((item) => (
-                                <option key={item.id} value={item.id}>{item.nombre}</option>
-                            ))}
-                        </select>
+                            <div style={{ marginTop: "16px" }}>
+                                <label>Descripción del Incidente</label>
+                                <textarea
+                                    name="descripcion"
+                                    rows={5}
+                                    placeholder="Describa brevemente lo reportado por el ciudadano..."
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label>¿Requiere Despacho?</label>
-                        <select name="requiereDespacho">
-                            <option value="true">Sí (Enviar a despacho)</option>
-                            <option value="false">No (Informativo)</option>
-                        </select>
+                    {/* SECCIÓN 06 */}
+                    <div className="panel">
+                        <h2>Canalización</h2>
+                        <div className="grid">
+                            <div>
+                                <label>Medio de Canalización</label>
+                                <select name="medioCanalizacionId">
+                                    <option value="">Seleccionar...</option>
+                                    {catalogos.canalizaciones.map((item) => (
+                                        <option key={item.id} value={item.id}>{item.nombre}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>¿Requiere Despacho?</label>
+                                <select name="requiereDespacho">
+                                    <option value="true">Sí (Enviar a despacho)</option>
+                                    <option value="false">No (Informativo)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Estatus Inicial</label>
+                                <input value="SIN DESPACHAR" className="readonly-input" readOnly />
+                            </div>
+                        </div>
+
+                        <div style={{ marginTop: "16px" }}>
+                            <label>Observaciones del Operador</label>
+                            <textarea name="observaciones" rows={3} placeholder="Notas internas..." />
+                        </div>
                     </div>
-                    <div>
-                        <label>Estatus Inicial</label>
-                        <input value="SIN DESPACHAR" className="readonly-input" readOnly />
-                    </div>
-                </div>
-
-                <div style={{ marginTop: "16px" }}>
-                    <label>Observaciones del Operador</label>
-                    <textarea name="observaciones" rows={3} placeholder="Notas internas..." />
-                </div>
-
-
-                <div>
-                    <label>Capturó</label>
-                    <input
-                        type="text"
-                        name="nombreOficial"
-                        value={`${user.name} ${user.apellido || ""}`}
-                        readOnly
-                        className="readonly-input"
-                    />
-                </div>
-
-            </div>
+                </>
+            )}
 
 
 

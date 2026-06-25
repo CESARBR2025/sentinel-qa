@@ -105,6 +105,28 @@ export async function createIncidente(formData: FormData) {
     capturadoPor:        session.user.id,
   }).returning()
 
+  const pNombres = formData.getAll('p_nombre') as string[];
+  const pSexos   = formData.getAll('p_sexo') as string[];
+  const pEdades  = formData.getAll('p_edad') as string[];
+
+  // Creamos el array de objetos para insertar
+  const personasParaInsertar = pNombres.map((nombre, i) => {
+    // Solo procesamos si el nombre no está vacío para evitar basura
+    if (!nombre.trim()) return null; 
+    
+    return {
+      incidenteId: inc.id,
+      nombre: nombre.trim(),
+      sexo: (pSexos[i] as 'M' | 'F' | 'NE') || 'NE',
+      edad: pEdades[i] ? Number(pEdades[i]) : null,
+    };
+  }).filter(Boolean); // Eliminamos los nulos
+
+  if (personasParaInsertar.length > 0) {
+    // @ts-ignore - Drizzle insert values
+    await db.insert(incidentePersonasAfectadas).values(personasParaInsertar);
+  }
+
     if (formData.get('tipoReporte') === 'extorsion') {
     formData.set('incidenteId', inc.id); // Le pasamos el ID necesario
     await createExtorsion(formData);     // Consumimos la función que ya tenías
