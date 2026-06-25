@@ -68,6 +68,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
   const [tieneDetencion, setTieneDetencion] = useState("false");
   const [tieneCateo, setTieneCateo] = useState("false");
   const [tieneVehiculo, setTieneVehiculo] = useState("false");
+  const [datosPositivos, setDatosPositivos] = useState("positivo");
 
 
   return (
@@ -193,7 +194,32 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 <div style={{ gridColumn: 'span 2' }}>
                   <SentinelField label="Referencia de Ubicación" name="referenciaUbicacion" icon={MapPin} placeholder="Ej. Frente a la tienda, portón negro..." />
                 </div>
-                <SentinelField label="Datos Positivos/Negativos" name="datosPositivosNegativos" icon={Search} placeholder="¿Se encontró lo reportado?" />
+
+                {/* SELECT DINÁMICO */}
+                <SentinelField
+                  label="Datos Positivos/Negativos"
+                  name="datosPositivosNegativos"
+                  as="select"
+                  value={datosPositivos}
+                  onChange={(e: any) => setDatosPositivos(e.target.value)}
+                >
+                  <option value="positivo">SÍ (POSITIVO)</option>
+                  <option value="negativo">NO (NEGATIVO)</option>
+                  <option value="otro">OTRO (ESPECIFICAR)</option>
+                </SentinelField>
+
+                {/* CAMPO "A MANITA" - Solo aparece si eliges OTRO */}
+                {datosPositivos === "otro" && (
+                  <div style={{ gridColumn: 'span 3', marginTop: '-16px', animation: 'fadeIn 0.3s ease' }}>
+                    <SentinelField
+                      label="Especifique el resultado (A manita)"
+                      name="datosPositivosNegativosDetalle"
+                      icon={FileText}
+                      placeholder="Escriba aquí la observación detallada..."
+                      fullWidth
+                    />
+                  </div>
+                )}
               </div>
             </section>
 
@@ -337,7 +363,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   icon={Shield}
                   placeholder="Nombre del mando responsable"
                   value={nombreMando}
-                  onChange={(e: any) => setNombreMando(e.target.value)} 
+                  onChange={(e: any) => setNombreMando(e.target.value)}
                   disabled
                 />
 
