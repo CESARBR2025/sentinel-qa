@@ -212,7 +212,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 {datosPositivos === "otro" && (
                   <div style={{ gridColumn: 'span 3', marginTop: '-16px', animation: 'fadeIn 0.3s ease' }}>
                     <SentinelField
-                      label="Especifique el resultado (A manita)"
+                      label="Especifique el resultado"
                       name="datosPositivosNegativosDetalle"
                       icon={FileText}
                       placeholder="Escriba aquí la observación detallada..."
