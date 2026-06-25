@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MessageSquare, User, AlertTriangle, MapPin,
-  ClipboardCheck, Clock, Shield, Send, Search,
+  ClipboardCheck, Clock, Shield, Send, Search, Check, Loader2,
   FileText, Gavel, Car, Hash, Archive
 } from 'lucide-react';
 import { createRecorridoCompleto } from "@/lib/incidentes/actions";
+import { useEmpleado } from '@/hooks/useEmpleado'; // Importar el hook
 
 import { DashboardHeader } from "@/components/partials/Header";
 
@@ -42,8 +43,25 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
   );
 };
 
-export default function ReporteRecorridoZen({ user, catalogos }: { user: any, catalogos: any }) {
 
+export default function ReporteRecorridoZen({ user, catalogos }: { user: any, catalogos: any }) {
+  // Hook para buscar al mando
+  const empMando = useEmpleado();
+  const [nominaMando, setNominaMando] = useState("");
+  const [nombreMando, setNombreMando] = useState("");
+
+  // 1. Esta función solo dispara la búsqueda
+  const buscarMando = async () => {
+    if (!nominaMando) return;
+    await empMando.buscarPorNomina(nominaMando);
+  };
+
+  // 2. Este efecto reacciona cuando el hook encuentra al empleado
+  useEffect(() => {
+    if (empMando.empleado) {
+      setNombreMando(empMando.empleado.nombre);
+    }
+  }, [empMando.empleado]); // Se ejecuta cada vez que el "empleado" del hook cambie
   const [isAnonimo, setIsAnonimo] = useState(false);
 
   const [tipoIncidente, setTipoIncidente] = useState("");
@@ -219,12 +237,21 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
             <section className="sentinel-card">
               <h2 className="sentinel-section-title">Aseguramientos y Cateos</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+
+                {/* Campo de Objetos (Ocupa todo el ancho) */}
                 <div style={{ gridColumn: 'span 3' }}>
-                  <SentinelField label="Objetos Recuperados" name="objetosRecuperados" as="textarea" placeholder="Descripción de bienes asegurados..." />
+                  <SentinelField
+                    label="Objetos Recuperados"
+                    name="objetosRecuperados"
+                    as="textarea"
+                    placeholder="Descripción de bienes asegurados..."
+                  />
                 </div>
 
+                {/* Selector de Vehículo */}
                 <SentinelField
                   label="¿Aseguró Vehículo?"
+                  name="aseguroVehiculo" // Asegúrate de poner el name para el form
                   as="select"
                   value={tieneVehiculo}
                   onChange={(e: any) => setTieneVehiculo(e.target.value)}
@@ -233,7 +260,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   <option value="true">SÍ</option>
                 </SentinelField>
 
-                {/* CAMPOS QUE APARECEN SI ES "SÍ" */}
+                {/* CAMPOS CONDICIONALES DE VEHÍCULO */}
                 {tieneVehiculo === "true" && (
                   <>
                     <SentinelField label="Vehículos Recuperados" name="vehiculosRecuperados" icon={Car} placeholder="Placas, Serie, Color..." />
@@ -242,12 +269,19 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   </>
                 )}
 
-
-                <SentinelField label="¿Hubo Cateo?" name="hayCateo" as="select" value={tieneCateo} onChange={(e: any) => setTieneCateo(e.target.value)}>
+                {/* Selector de Cateo */}
+                <SentinelField
+                  label="¿Hubo Cateo?"
+                  name="hayCateo"
+                  as="select"
+                  value={tieneCateo}
+                  onChange={(e: any) => setTieneCateo(e.target.value)}
+                >
                   <option value="false">NO</option>
                   <option value="true">SÍ</option>
                 </SentinelField>
 
+                {/* CAMPOS CONDICIONALES DE CATEO */}
                 {tieneCateo === "true" && (
                   <>
                     <div style={{ gridColumn: 'span 2' }}>
@@ -257,11 +291,63 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   </>
                 )}
 
+                {/* --- BUSCADOR DE NÓMINA PARA EL MANDO --- */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    Nómina del Mando
+                  </label>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
+                      <input
+                        type="text"
+                        placeholder="Escriba nómina..."
+                        value={nominaMando}
+                        onChange={(e) => setNominaMando(e.target.value)}
+                        onBlur={buscarMando}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarMando(); } }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 12px 12px 40px',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          borderLeft: '4px solid #3b82f6',
+                          borderRadius: '2px',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '14px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={buscarMando}
+                      style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}
+                    >
+                      {empMando.cargando ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                    </button>
+                  </div>
+                  {empMando.error && <span style={{ color: '#dc2626', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>{empMando.error}</span>}
+                </div>
 
-                {/* Este campo mapea a policiaCargo en la DB */}
-                <SentinelField label="Policía a Cargo (Mando)" name="policiaCargo" icon={Shield} placeholder="Nombre del mando responsable" />
+                {/* Campo de Nombre del Mando (Se llena solo) */}
+                <SentinelField
+                  label="Policía a Cargo (Mando)"
+                  name="policiaCargo"
+                  icon={Shield}
+                  placeholder="Nombre del mando responsable"
+                  value={nombreMando}
+                  onChange={(e: any) => setNombreMando(e.target.value)} 
+                  disabled
+                />
 
-                <SentinelField label="Personal que ingresó a CI" name="personalIngresoCi" icon={User} placeholder="Nombre del agente en fiscalía" />
+                {/* Campo Final */}
+                <SentinelField
+                  label="Personal que ingresó a CI"
+                  name="personalIngresoCi"
+                  icon={User}
+                  placeholder="Nombre del agente en fiscalía"
+                />
               </div>
             </section>
 
