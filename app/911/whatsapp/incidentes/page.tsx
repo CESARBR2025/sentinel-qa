@@ -146,7 +146,7 @@ export default async function ListadoWhatsAppPage({
                         totalPages={totalPages}
                         totalCount={totalCount} // <-- Añade esto
                         pageSize={pageSize}     // <-- Añade esto
-                        baseUrl="/911/whatsapp"
+                        baseUrl="/911/whatsapp/incidentes"
                     />
                 </div>
             </main>
