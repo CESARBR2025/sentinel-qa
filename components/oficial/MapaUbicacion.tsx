@@ -22,7 +22,7 @@ export function MapaUbicacion({
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
   const markerRef = useRef<google.maps.Marker | null>(null)
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(() => !!window.google?.maps)
   const [currentLoc, setCurrentLoc] = useState<LocationData | null>(null)
 
   const geocodeAndSelect = useCallback((lat: number, lng: number) => {
@@ -88,8 +88,21 @@ export function MapaUbicacion({
   }, [geocodeAndSelect])
 
   useEffect(() => {
+    // Si ya cargó, listo
     if (window.google?.maps) { setLoaded(true); return }
 
+    // Si ya hay un script de Google Maps en el DOM (cargando), esperar
+    const existing = document.querySelector(
+      'script[src*="maps.googleapis.com/maps/api/js"]'
+    )
+
+    if (existing) {
+      // Ya está inyectado, esperar a que termine
+      existing.addEventListener('load', () => setLoaded(true))
+      return
+    }
+
+    // No existe, inyectarlo
     const script = document.createElement('script')
     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`
     script.async = true

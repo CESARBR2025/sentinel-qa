@@ -1,17 +1,35 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
-import { Save, Shield } from "lucide-react";
+import React, { useState } from "react";
+import { Save, Shield, Info, CheckCircle, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEmpleado } from '@/hooks/useEmpleado';
 
-export default function FormularioRol() {
+// --- COMPONENTE AUXILIAR (Igual que en D1) ---
+const SentinelField = ({ label, icon: Icon, name, type = "text", required = false, ...props }: any) => (
+  <div style={fieldContainerStyle}>
+    <label style={labelStyle}>
+      {label} {required && <span style={{ color: '#ef4444' }}>*</span>}
+    </label>
+    <div style={{ position: 'relative' }}>
+      {Icon && <Icon size={14} style={iconStyle} />}
+      <input
+        name={name}
+        type={type}
+        required={required}
+        style={{ ...inputStyle, paddingLeft: Icon ? '38px' : '12px' }}
+        {...props}
+      />
+    </div>
+  </div>
+);
+
+export default function FormularioRol({ user }: { user: any }) {
   const router = useRouter();
 
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [activo, setActivo] = useState(true);
-
   const [guardando, setGuardando] = useState(false);
 
   const guardar = async (e: React.FormEvent) => {
@@ -27,14 +45,8 @@ export default function FormularioRol() {
     try {
       const res = await fetch("/api/admin/roles", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombre,
-          descripcion,
-          activo,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, descripcion, activo }),
       });
 
       const data = await res.json();
@@ -45,7 +57,6 @@ export default function FormularioRol() {
       }
 
       alert("Rol registrado correctamente.");
-
       router.push("/admin/roles");
       router.refresh();
     } catch (error) {
@@ -57,98 +68,104 @@ export default function FormularioRol() {
   };
 
   return (
-    <form
-      onSubmit={guardar}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "32px",
-      }}
-    >
+    <form onSubmit={guardar} style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      
+      {/* 1. SECCIÓN DE IDENTIFICACIÓN DEL ROL */}
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}>
-          <Shield size={18} />
-          INFORMACIÓN DEL ROL
+          <Shield size={18} /> IDENTIFICACIÓN DEL ROL
         </h2>
 
         <div style={grid2Style}>
-          <div style={fieldContainerStyle}>
-            <label style={labelStyle}>
-              Nombre del Rol
-              <span style={{ color: "#dc2626" }}> *</span>
-            </label>
-
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="Ej. Administrador"
-              style={inputStyle}
-              required
-            />
-          </div>
+          <SentinelField 
+            label="Nombre del Rol" 
+            name="nombre"
+            icon={Shield} 
+            required 
+            placeholder="Ej. AUDITOR_SR"
+            value={nombre}
+            onChange={(e: any) => setNombre(e.target.value)}
+          />
 
           <div style={fieldContainerStyle}>
-            <label style={labelStyle}>
-              Estado
-            </label>
-
-            <select
-              value={activo ? "true" : "false"}
-              onChange={(e) => setActivo(e.target.value === "true")}
-              style={inputStyle}
-            >
-              <option value="true">
-                ACTIVO
-              </option>
-
-              <option value="false">
-                INACTIVO
-              </option>
-            </select>
+            <label style={labelStyle}>Estado Operativo</label>
+            <div style={{ position: 'relative' }}>
+              <CheckCircle size={14} style={iconStyle} />
+              <select
+                value={activo ? "true" : "false"}
+                onChange={(e) => setActivo(e.target.value === "true")}
+                style={{ ...inputStyle, paddingLeft: '38px', appearance: 'none' }}
+              >
+                <option value="true">ACTIVO / VIGENTE</option>
+                <option value="false">INACTIVO / SUSPENDIDO</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div
-          style={{
-            marginTop: "24px",
-          }}
-        >
-          <label style={labelStyle}>
-            Descripción
-          </label>
-
-          <textarea
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-            rows={5}
-            placeholder="Descripción del rol..."
-            style={{
-              ...inputStyle,
-              resize: "vertical",
-              minHeight: "120px",
-            }}
-          />
+        <div style={{ marginTop: "24px" }}>
+          <label style={labelStyle}>Descripción y Alcance Legal</label>
+          <div style={{ position: 'relative' }}>
+             <Info size={14} style={{ ...iconStyle, top: '15px', transform: 'none' }} />
+             <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                placeholder="Describa las facultades y limitaciones de este rol..."
+                style={{
+                  ...inputStyle,
+                  paddingLeft: '38px',
+                  resize: "vertical",
+                  minHeight: "120px",
+                  paddingTop: '12px'
+                }}
+              />
+          </div>
         </div>
       </section>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          paddingBottom: "80px",
-        }}
-      >
+      {/* 2. SECCIÓN DE AUDITORÍA (Visual) */}
+      <section className="sentinel-panel" style={{ borderLeftColor: '#d4a43a' }}>
+        <h2 style={{ ...sectionTitleStyle, color: '#d4a43a' }}>
+          <AlertCircle size={18} /> TRAZABILIDAD DE REGISTRO
+        </h2>
+        <div style={grid2Style}>
+          <div style={fieldContainerStyle}>
+            <label style={labelStyle}>Usuario Responsable</label>
+            <input 
+              readOnly 
+              style={{ ...inputStyle, background: '#f8fafc', color: '#64748b' }} 
+              value={`${user?.name || ''} ${user?.apellido || ''}`}
+            />
+          </div>
+          <div style={fieldContainerStyle}>
+            <label style={labelStyle}>Fecha de Sistema</label>
+            <input 
+              readOnly 
+              style={{ ...inputStyle, background: '#f8fafc', color: '#64748b' }} 
+              value={new Date().toLocaleDateString('es-MX')}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* BOTÓN DE ACCIÓN */}
+      <div style={{ display: "flex", justifyContent: "center", paddingBottom: "100px" }}>
         <button
           type="submit"
           disabled={guardando}
-          style={btnSubmitStyle}
+          style={{
+            ...btnSubmitStyle,
+            opacity: guardando ? 0.7 : 1,
+            cursor: guardando ? "not-allowed" : "pointer"
+          }}
         >
-          <Save size={18} />
-
-          {guardando
-            ? "GUARDANDO..."
-            : "GUARDAR ROL"}
+          {guardando ? (
+            <>SINCRONIZANDO...</>
+          ) : (
+            <>
+              <Save size={18} /> REGISTRAR ROL EN SISTEMA
+            </>
+          )}
         </button>
       </div>
 
@@ -159,79 +176,68 @@ export default function FormularioRol() {
           border-left: 4px solid #2563eb;
           padding: 32px;
           border-radius: 4px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
         }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-          border-color: #2563eb;
-          box-shadow: 0 0 0 2px rgba(37, 99, 235, .10);
-        }
-
-        button:hover {
-          opacity: .92;
+        input:focus, select:focus, textarea:focus {
+          border-color: #2563eb !important;
+          outline: none;
         }
       `}</style>
     </form>
   );
 }
 
-const grid2Style = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "24px",
+// --- ESTILOS TÁCTICOS UNIFICADOS (Basados en D1) ---
+const grid2Style = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" };
+const fieldContainerStyle = { display: "flex", flexDirection: "column" as const, gap: "8px" };
+const labelStyle = { 
+  fontFamily: "JetBrains Mono", 
+  fontSize: "10px", 
+  fontWeight: 700, 
+  color: "#64748b", 
+  textTransform: "uppercase" as const, 
+  letterSpacing: "0.1em" 
 };
-
-const fieldContainerStyle = {
-  display: "flex",
-  flexDirection: "column" as const,
-  gap: "8px",
+const inputStyle = { 
+  width: "100%", 
+  padding: "12px", 
+  border: "1px solid #e2e8f0", 
+  borderRadius: "2px", 
+  fontFamily: "Inter", 
+  fontSize: "14px", 
+  transition: "all 0.2s" 
 };
-
-const labelStyle = {
-  fontFamily: "JetBrains Mono",
-  fontSize: "10px",
-  fontWeight: 700,
-  color: "#64748b",
-  textTransform: "uppercase" as const,
-  letterSpacing: ".12em",
+const iconStyle = { 
+  position: 'absolute' as const, 
+  left: '12px', 
+  top: '50%', 
+  transform: 'translateY(-50%)', 
+  color: '#94a3b8',
+  zIndex: 1
 };
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px",
-  border: "1px solid #e2e8f0",
-  borderRadius: "2px",
-  fontFamily: "Inter",
-  fontSize: "14px",
-  outline: "none",
+const sectionTitleStyle = { 
+  fontFamily: "Barlow Condensed", 
+  fontSize: "20px", 
+  fontWeight: 800, 
+  color: "#0f172a", 
+  marginBottom: "24px", 
+  display: "flex", 
+  alignItems: "center", 
+  gap: "12px", 
+  textTransform: "uppercase" as const 
 };
-
-const sectionTitleStyle = {
-  fontFamily: "Barlow Condensed",
-  fontSize: "22px",
-  fontWeight: 800,
-  color: "#0f172a",
-  marginBottom: "24px",
-  display: "flex",
-  alignItems: "center",
+const btnSubmitStyle = { 
+  background: "#0f172a", 
+  color: "#ffffff", 
+  padding: "20px 60px", 
+  border: "none", 
+  borderRadius: "2px", 
+  fontFamily: "JetBrains Mono", 
+  fontWeight: 700, 
+  fontSize: "13px", 
+  letterSpacing: "0.2em", 
+  display: "flex", 
+  alignItems: "center", 
   gap: "12px",
-  textTransform: "uppercase" as const,
-};
-
-const btnSubmitStyle = {
-  background: "#0f172a",
-  color: "#ffffff",
-  padding: "18px 50px",
-  border: "none",
-  borderRadius: "2px",
-  fontFamily: "JetBrains Mono",
-  fontWeight: 700,
-  fontSize: "13px",
-  letterSpacing: ".2em",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  gap: "12px",
+  transition: "background 0.2s"
 };

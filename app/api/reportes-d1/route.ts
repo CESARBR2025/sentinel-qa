@@ -24,68 +24,65 @@ export async function POST(request: Request) {
       if (val === "false" || val === false) return false;
       return null;
     };
-console.log(body);
+    console.log(body);
     // 3. Ejecutar el procedimiento almacenado
     // Nota: Usamos una consulta directa para llamar al SP y capturar el OUT parameter
     await db.execute(sql`
-        CALL insertar_reporte_d1(
-          ${clean(body.folioDenuncia)}, 
-          ${clean(body.iph)}, 
-          ${clean(body.folioCu)}, 
-          ${clean(body.corporacion)}, 
-          ${clean(body.sector)}, 
-          ${clean(body.grupoAdscripcion)},
-          ${clean(body.fechaReporte)}, 
-          ${clean(body.horaReporte)}, 
-          ${clean(body.fechaAvistamiento)}, 
-          ${clean(body.horaAvistamiento)},
-          ${clean(body.fechaDespacho)}, 
-          ${clean(body.horaDespacho)}, 
-          ${clean(body.fechaConfirmacion)}, 
-          ${clean(body.horaConfirmacion)},
-          ${clean(body.fechaLlegada)}, 
-          ${clean(body.horaLlegada)}, 
-          ${clean(body.horaInicioDenuncia)}, 
-          ${clean(body.horaFinDenuncia)},
-          ${clean(body.horaTerminoAtencion)}, 
-          ${clean(body.horaCuestionario)},
-          ${clean(body.lugarHecho)}, 
-          ${clean(body.lugarApoyo)}, 
-          ${clean(body.coloniaHecho)},
-          ${clean(body.coloniaApoyo)} ,
-          ${clean(body.municipio)}, 
-          ${clean(body.latitudHecho)}, 
-          ${clean(body.longitudHecho)},
-          ${clean(body.nominaMando)}, 
-          ${clean(body.policiaCargo)},
-          ${clean(body.tipoEvento)}, 
-          ${clean(body.delito)}, 
-          ${toBool(body.violencia)},    
-          ${clean(body.crp)}, 
-          ${clean(body.policiaDenuncia)}, 
-          ${clean(body.policiaFirmaD1)}, 
-          ${clean(body.policiaIngresaCu)}, 
-          ${toBool(body.requirioTablet)}, 
-          ${toBool(body.funcionabaTablet)},
-          ${Number(body.ofendidoHombre) || 0}, 
-          ${Number(body.ofendidoMujer) || 0}, 
-          ${Number(body.numCuestionarios) || 0}, 
-          ${toBool(body.intervinoGs)},
-          ${toBool(body.seGeneroD1)}, 
-          ${toBool(body.seVaAGenerarD1)}, 
-          ${clean(body.observaciones)},
-          ${session.user.id},
-          NULL -- Este es el placeholder para el parámetro OUT p_id_generado
-        )
-    `);
+  CALL insertar_reporte_d1(
+    ${clean(body.folioDenuncia)},
+    ${clean(body.iph)},
+    ${clean(body.folioCu)},
+    ${clean(body.corporacion)},
+    ${clean(body.sector)},
+    ${clean(body.grupoAdscripcion)},
+    ${clean(body.fechaReporte)}::date,
+    ${clean(body.horaReporte)}::time,
+    ${clean(body.fechaAvistamiento)}::date,
+    ${clean(body.horaAvistamiento)}::time,
+    ${clean(body.fechaDespacho)}::date,
+    ${clean(body.horaDespacho)}::time,
+    ${clean(body.fechaConfirmacion)}::date,
+    ${clean(body.horaConfirmacion)}::time,
+    ${clean(body.fechaLlegada)}::date,
+    ${clean(body.horaLlegada)}::time,
+    ${clean(body.horaInicioDenuncia)}::time,
+    ${clean(body.horaFinDenuncia)}::time,
+    ${clean(body.horaTerminoAtencion)}::time,
+    ${clean(body.horaCuestionario)}::time,
+    ${clean(body.lugarHecho)},
+    ${clean(body.lugarApoyo)},
+    ${clean(body.coloniaHecho)},
+    ${clean(body.coloniaApoyo)},
+    ${clean(body.municipio)},
+    ${clean(body.latitudHecho)},
+    ${clean(body.longitudHecho)},
+    ${clean(body.nominaMando)},
+    ${clean(body.policiaCargo)},
+    ${clean(body.tipoEvento)},
+    ${clean(body.delito)},
+    ${toBool(body.violencia)},
+    ${clean(body.crp)},
+    ${clean(body.policiaDenuncia)},
+    ${clean(body.policiaFirmaD1)},
+    ${clean(body.policiaIngresaCu)},
+    ${toBool(body.requirioTablet)},
+    ${toBool(body.funcionabaTablet)},
+    ${Number(body.ofendidoHombre) || 0},
+    ${Number(body.ofendidoMujer) || 0},
+    ${Number(body.numCuestionarios) || 0},
+    ${toBool(body.intervinoGs)},
+    ${toBool(body.seGeneroD1)},
+    ${toBool(body.seVaAGenerarD1)},
+    ${clean(body.observaciones)},
+    ${session.user.id},
+    ${clean(body.reporteCampoId)}::uuid
+  )
+`)
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Reporte D1 registrado exitosamente en la base de datos.",
-      },
-      { status: 201 },
-    );
+return NextResponse.json(
+  { success: true, message: 'Reporte D1 registrado exitosamente.' },
+  { status: 201 }
+)
   } catch (error: any) {
     console.error("Error en API D1 (Stored Procedure):", error);
 

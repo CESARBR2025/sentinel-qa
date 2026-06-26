@@ -10,7 +10,8 @@ import {
   Search
 } from 'lucide-react';
 import { useEmpleado } from '@/hooks/useEmpleado';
-
+import { useRouter } from 'next/navigation'
+import { useOficialFormStore } from '@/lib/oficial/store'
 
 const mapContainerStyle = { width: '100%', height: '350px', borderRadius: '4px' };
 const center = { lat: 20.3889, lng: -99.9961 };
@@ -38,20 +39,33 @@ const SentinelField = ({ label, icon: Icon, name, type = "text", required = fals
   </div>
 );
 
+interface Prefill {
+  reporteCampoId: string | null
+  lugarHecho: string
+  coloniaHecho: string
+  lat: number | null
+  lng: number | null
+  policiaCargo: string
+}
 
-
-export default function FormularioD1({ user }: { user: any }) {
+export default function FormularioD1({ user, prefill }: { user: any; prefill?: Prefill }) {
   const [coords, setCoords] = useState(center);
-  const [coordsHecho, setCoordsHecho] = useState(centerDefault);
-  const [dirHecho, setDirHecho] = useState({ calle: '', colonia: '' });
+  const [coordsHecho, setCoordsHecho] = useState({
+    lat: prefill?.lat ?? 20.3889,
+    lng: prefill?.lng ?? -99.9961,
+  })
+  const [dirHecho, setDirHecho] = useState({
+    calle: prefill?.lugarHecho ?? '',
+    colonia: prefill?.coloniaHecho ?? '',
+  })
   const [coordsApoyo, setCoordsApoyo] = useState(centerDefault);
   const [dirApoyo, setDirApoyo] = useState({ calle: '', colonia: '' });
   const [nominaMando, setNominaMando] = useState('');
-  const [nombreMando, setNombreMando] = useState('');
+  const [nombreMando, setNombreMando] = useState(prefill?.policiaCargo ?? '')
   const [buscandoMando, setBuscandoMando] = useState(false);
   const [errorMando, setErrorMando] = useState('');
-   const ahora = new Date();
- const [fReporte, setFReporte] = useState(ahora.toISOString().split('T')[0]); // YYYY-MM-DD
+  const ahora = new Date();
+  const [fReporte, setFReporte] = useState(ahora.toISOString().split('T')[0]); // YYYY-MM-DD
   const [hReporte, setHReporte] = useState(ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })); // HH:MM
   const empMando = useEmpleado();
 
@@ -96,25 +110,33 @@ export default function FormularioD1({ user }: { user: any }) {
     }
   }, [empMando.empleado]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const body = Object.fromEntries(formData.entries());
-    const res = await fetch("/api/reportes-d1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  const router = useRouter()
+  const resetStore = useOficialFormStore(s => s.reset)
 
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data.error);
-      return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const body = {
+      ...Object.fromEntries(formData.entries()),
+      reporteCampoId: prefill?.reporteCampoId ?? null,
     }
-    alert("Reporte registrado correctamente.");
-  };
+
+    const res = await fetch('/api/reportes-d1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+
+    const data = await res.json()
+    if (!res.ok) {
+      alert(data.error)
+      return
+    }
+
+    // Limpiar store y redirigir
+    resetStore()
+    router.push('/oficial?exito=1')
+  }
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
