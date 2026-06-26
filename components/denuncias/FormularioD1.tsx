@@ -7,7 +7,9 @@ import {
   FileText, Clock, Shield, MapPin, User,
   CheckCircle, AlertCircle, Users, Save,
   Navigation as NavigationIcon, Hash, Loader2, // <-- Añade estos
-  Search
+  Search,
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { useEmpleado } from '@/hooks/useEmpleado';
 import { useRouter } from 'next/navigation'
@@ -67,6 +69,8 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
   const ahora = new Date();
   const [fReporte, setFReporte] = useState(ahora.toISOString().split('T')[0]); // YYYY-MM-DD
   const [hReporte, setHReporte] = useState(ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })); // HH:MM
+  const [step, setStep] = useState(1);
+
   const empMando = useEmpleado();
 
   const { isLoaded } = useJsApiLoader({
@@ -105,6 +109,10 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
   };
 
   useEffect(() => {
+    console.log("STEP:", step);
+}, [step]);
+
+  useEffect(() => {
     if (empMando.empleado) {
       setNombreMando(empMando.empleado.nombre);
     }
@@ -114,7 +122,12 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
   const resetStore = useOficialFormStore(s => s.reset)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("SUBMIT", step);
     e.preventDefault()
+
+    if (step < 4) return;
+
+    
     const formData = new FormData(e.currentTarget)
     const body = {
       ...Object.fromEntries(formData.entries()),
@@ -139,15 +152,16 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <form onSubmit={handleSubmit} onKeyDown={(e) => { if (e.key === 'Enter' && step < 4) e.preventDefault(); }} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
       <input type="hidden" name="latitudHecho" value={coordsHecho.lat} />
       <input type="hidden" name="longitudHecho" value={coordsHecho.lng} />
       <input type="hidden" name="latitudApoyo" value={coordsApoyo.lat} />
       <input type="hidden" name="longitudApoyo" value={coordsApoyo.lng} />
-      <input type="text" />
+      
 
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}
+      <div style={{ display: step === 1 ? 'flex' : 'none', flexDirection: 'column', gap: '32px' }}>
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><FileText size={18} /> IDENTIFICACIÓN LEGAL</h2>
         <div style={grid3Style}>
@@ -159,7 +173,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
           <SentinelField label="Grupo de Adscripción" name="grupoAdscripcion" />
         </div>
       </section>
-
+      
       {/* 2. CRONOMETRÍA COMPLETA (EL TIMELINE) */}
       <section className="sentinel-panel" style={{ borderLeftColor: '#d4a43a' }}>
         <h2 style={{ ...sectionTitleStyle, color: '#d4a43a' }}><Clock size={18} /> CRONOMETRÍA OPERATIVA</h2>
@@ -196,8 +210,10 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
           </div>
         </div>
       </section>
+      </div>
 
       {/* 3. UBICACIÓN Y GEORREFERENCIACIÓN */}
+      <div style={{ display: step === 2 ? 'block' : 'none' }}>
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><NavigationIcon size={20} /> GEORREFERENCIACIÓN OPERATIVA</h2>
 
@@ -264,7 +280,9 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
 
         </div>
       </section>
-
+      </div>
+      
+      <div style={{ display: step === 3 ? 'flex' : 'none', flexDirection: 'column', gap: '32px' }}>
       {/* 4. CLASIFICACIÓN Y RESULTADOS */}
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><AlertCircle size={18} /> DETALLES DEL EVENTO</h2>
@@ -287,8 +305,11 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
           </div>
         </div>
       </section>
+      </div>
+
 
       {/* 5. PERSONAL, EQUIPO Y D1 */}
+      <div style={{ display: step === 4 ? 'flex' : 'none', flexDirection: 'column', gap: '32px' }}>
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><Shield size={18} /> PERSONAL Y EQUIPAMIENTO</h2>
         <div style={grid3Style}>
@@ -391,12 +412,38 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
           <textarea name="observaciones" style={{ ...inputStyle, minHeight: '100px', paddingTop: '12px' }} placeholder="Escriba aquí..." />
         </div>
       </section>
-
-      <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '100px' }}>
-        <button type="submit" style={btnSubmitStyle}>
-          <Save size={18} /> REGISTRAR REPORTE D1
-        </button>
       </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px', paddingBottom: '80px' }}>
+  {/* BOTÓN ATRÁS */}
+  {step > 1 ? (
+    <button type="button" onClick={() => setStep(step - 1)} style={btnBackStyle}>
+      <ArrowLeft size={16} /> ANTERIOR
+    </button>
+  ) : <div />}
+
+  {/* BOTÓN SIGUIENTE O REGISTRAR */}
+<button
+  type={step === 4 ? "submit" : "button"}
+  onClick={(e) => {
+    if (step < 4) {
+      e.preventDefault();
+      setStep((s) => s + 1);
+    }
+  }}
+  style={step === 4 ? btnSubmitStyle : btnNextStyle}
+>
+  {step === 4 ? (
+    <>
+      <Save size={18} /> FINALIZAR REPORTE D1
+    </>
+  ) : (
+    <>
+      SIGUIENTE <ArrowRight size={16} />
+    </>
+  )}
+</button>
+</div>
 
       <style jsx>{`
         .sentinel-panel {
@@ -417,7 +464,6 @@ const labelStyle = { fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight:
 const inputStyle = { width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '2px', fontFamily: 'Inter', fontSize: '14px', outline: 'none' };
 const iconStyle = { position: 'absolute' as const, left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' };
 const sectionTitleStyle = { fontFamily: 'Barlow Condensed', fontSize: '20px', fontWeight: 800, color: '#0f172a', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px', textTransform: 'uppercase' as const };
-const btnSubmitStyle = { background: '#0f172a', color: '#ffffff', padding: '20px 60px', border: 'none', borderRadius: '2px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '13px', letterSpacing: '0.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' };
 const subPanelStyle = {
   background: '#f8fafc',
   padding: '24px',
@@ -456,3 +502,8 @@ const loaderStyle = {
   fontSize: '12px',
   color: '#64748b'
 };
+
+const btnNextStyle = { background: '#2563eb', color: '#ffffff', padding: '16px 32px', border: 'none', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };
+const btnBackStyle = { background: '#ffffff', color: '#64748b', padding: '16px 32px', border: '1px solid #e2e8f0', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };
+// Modifica tu btnSubmitStyle actual para que sea verde (opcional):
+const btnSubmitStyle = { background: '#059669', color: '#ffffff', padding: '16px 40px', border: 'none', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };
