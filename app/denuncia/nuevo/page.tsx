@@ -149,7 +149,6 @@ export default async function NuevaDenunciaD1Page() {
           <FormularioD1 user={user} />
         </div>
 
-        <DashboardFooter />
       </div>
     </main>
   );
