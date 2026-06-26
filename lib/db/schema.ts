@@ -720,6 +720,8 @@ export const incidentes = pgTable("incidentes", {
   esMigrante:          boolean("es_migrante").default(false).notNull(),
   // Ubicación
   calle:               varchar({ length: 200 }),
+  numeroExterior: varchar('numero_exterior', { length: 20 }),
+numeroInterior: varchar('numero_interior', { length: 20 }),
   colonia:             varchar({ length: 150 }),
   entreCalles:         varchar("entre_calles", { length: 200 }),
   referenciaUbicacion: varchar("referencia_ubicacion", { length: 300 }),

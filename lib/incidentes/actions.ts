@@ -90,6 +90,8 @@ export async function createIncidente(formData: FormData) {
     esPersonaAfectada:   bool(formData, 'esPersonaAfectada'),
     esMigrante:          bool(formData, 'esMigrante'),
     calle:               str(formData, 'calle'),
+    numeroExterior:      str(formData, 'numero_exterior'),
+    numeroInterior:      str(formData, 'numero_interior'),
     colonia:             str(formData, 'colonia'),
     entreCalles:         str(formData, 'entreCalles'),
     referenciaUbicacion: str(formData, 'referenciaUbicacion'),
