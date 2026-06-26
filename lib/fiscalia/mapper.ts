@@ -72,7 +72,12 @@ export function rowToSolicitud(row: Record<string, unknown>): SolicitudEvidencia
     reporteCampoId:           str(row.reporte_campo_id),
     estadoTramite:            str(row.estado_tramite),
     estadoEvidencia:          str(row.estado_evidencia),
-    monitoristaFechasRequeridas: str(row.monitorista_fechas_requeridas),
+    monitoristaFechasRequeridas: (() => {
+      const v = row.monitorista_fechas_requeridas
+      if (v === null || v === undefined) return null
+      if (typeof v === 'string') return v
+      return JSON.stringify(v)
+    })(),
     numCarpetaInvestigacion:  str(row.num_carpeta_investigacion),
     fechaCierre:              str(row.fecha_cierre),
   }

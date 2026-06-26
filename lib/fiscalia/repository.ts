@@ -48,6 +48,16 @@ export async function obtenerSolicitudesPendientes() {
     fecha_peticion: "2026-06-26T18:20:50.864Z",
   },
 ];
+
+[
+  { solicitud_id: 1, colonia: "Centro", calle: "Av. Juárez", atendida: true },
+  {
+    solicitud_id: 2,
+    colonia: "Zona Industrial",
+    calle: "Eje Central",
+    atendida: true,
+  },
+];
 export async function obtenerSolicitudesEnProceso() {
   const result = await query<Record<string, unknown>>(
     `SELECT rd.*

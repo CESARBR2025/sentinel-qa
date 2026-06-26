@@ -127,15 +127,19 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista }: Props)
                     ) : tab === 'en_proceso' ? (
                       <PedirEvidenciasBoton solicitudId={s.id} />
                     ) : (
-                      <span style={{
-                        fontFamily: 'JetBrains Mono,monospace',
-                        fontSize: 9,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        color: '#0891b2',
-                      }}>
-                        Enviado
-                      </span>
+                      <PedirEvidenciasBoton
+                        solicitudId={s.id}
+                        existingEvidencias={(() => {
+                          try {
+                            const raw = s.monitoristaFechasRequeridas
+                            if (!raw) return []
+                            const parsed = JSON.parse(raw)
+                            return Array.isArray(parsed) ? parsed : []
+                          } catch {
+                            return []
+                          }
+                        })()}
+                      />
                     )}
                   </td>
                 </tr>

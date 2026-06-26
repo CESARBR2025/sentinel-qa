@@ -4,6 +4,17 @@ import { useState } from 'react'
 import { Plus, X } from 'lucide-react'
 import { accionPedirEvidencias } from '@/lib/fiscalia/actions'
 
+interface ExistingEvidencia {
+  solicitud_id: number
+  fecha_peticion: string
+  colonia: string
+  calle: string
+  numero: string
+  hora_inicio: string
+  hora_fin: string
+  atendida: boolean
+}
+
 interface EvidenciaItem {
   colonia: string
   calle: string
@@ -27,11 +38,30 @@ const inputSx: React.CSSProperties = {
   boxSizing: 'border-box',
 }
 
-export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
+const readOnlySx: React.CSSProperties = {
+  width: '100%',
+  padding: '8px 10px',
+  border: '1px solid #f1f5f9',
+  fontFamily: 'Inter,sans-serif',
+  fontSize: 12,
+  color: '#64748b',
+  background: '#f8fafc',
+  boxSizing: 'border-box',
+}
+
+export function PedirEvidenciasBoton({
+  solicitudId,
+  existingEvidencias,
+}: {
+  solicitudId: string
+  existingEvidencias?: ExistingEvidencia[]
+}) {
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<EvidenciaItem[]>([emptyItem()])
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const isReadding = existingEvidencias !== undefined && existingEvidencias.length > 0
 
   function update(i: number, field: keyof EvidenciaItem, value: string) {
     setItems(prev => prev.map((it, idx) => idx === i ? { ...it, [field]: value } : it))
@@ -62,8 +92,10 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
     }
 
     const ahora = new Date().toISOString()
-    const payload = validos.map((it, idx) => ({
-      solicitud_id: idx + 1,
+    const base = existingEvidencias ?? []
+    const nextId = base.reduce((max, ex) => Math.max(max, ex.solicitud_id), 0) + 1
+    const nuevas = validos.map((it, idx) => ({
+      solicitud_id: nextId + idx,
       fecha_peticion: ahora,
       colonia: it.colonia.trim(),
       calle: it.calle.trim(),
@@ -73,11 +105,13 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
       atendida: false,
     }))
 
+    const merged = [...base, ...nuevas]
+
     setPending(true)
 
     const form = e.currentTarget
     const fd = new FormData(form)
-    fd.set('evidencias', JSON.stringify(payload))
+    fd.set('evidencias', JSON.stringify(merged))
 
     const res = await accionPedirEvidencias(fd)
     setPending(false)
@@ -101,16 +135,16 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
           padding: '5px 14px',
-          border: '1px solid #059669',
+          border: `1px solid ${isReadding ? '#0891b2' : '#059669'}`,
           background: '#ffffff',
-          color: '#059669',
+          color: isReadding ? '#0891b2' : '#059669',
           cursor: 'pointer',
           transition: 'all 0.15s ease',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = '#059669'; e.currentTarget.style.color = '#ffffff'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#059669'; }}
+        onMouseEnter={e => { e.currentTarget.style.background = isReadding ? '#0891b2' : '#059669'; e.currentTarget.style.color = '#ffffff'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = isReadding ? '#0891b2' : '#059669'; }}
       >
-        Pedir Evidencias
+        {isReadding ? 'Pedir más evidencias' : 'Pedir Evidencias'}
       </button>
 
       {open && (
@@ -133,7 +167,7 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
             }}
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ position: 'absolute', top: 0, left: 0, width: 48, height: 3, background: '#059669' }}></div>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: 48, height: 3, background: isReadding ? '#0891b2' : '#059669' }}></div>
 
             {error && (
               <div style={{
@@ -160,7 +194,7 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
                 margin: '0 0 4px 0',
                 color: '#0f172a',
               }}>
-                Pedir Evidencias
+                {isReadding ? 'Solicitar más evidencias' : 'Pedir Evidencias'}
               </h3>
               <p style={{
                 fontFamily: 'Inter,sans-serif',
@@ -169,12 +203,91 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
                 margin: 0,
                 lineHeight: 1.5,
               }}>
-                Especifique las ubicaciones y horarios donde el monitorista debe tomar las fotografías.
+                {isReadding
+                  ? 'Las ubicaciones ya enviadas se muestran abajo. Agregue nuevas ubicaciones para solicitar más evidencias.'
+                  : 'Especifique las ubicaciones y horarios donde el monitorista debe tomar las fotografías.'}
               </p>
             </div>
 
             <form onSubmit={handleSubmit}>
               <input type="hidden" name="id" value={solicitudId} />
+
+              {/* Existing evidencias (read-only) */}
+              {existingEvidencias && existingEvidencias.length > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{
+                    fontFamily: 'JetBrains Mono,monospace',
+                    fontSize: 9,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#64748b',
+                    marginBottom: 12,
+                  }}>
+                    Evidencias ya solicitadas ({existingEvidencias.length})
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {existingEvidencias.map((ex, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          border: '1px solid #f1f5f9',
+                          background: '#fafafa',
+                          padding: 16,
+                        }}
+                      >
+                        <div style={{
+                          fontFamily: 'JetBrains Mono,monospace',
+                          fontSize: 9,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          color: '#94a3b8',
+                          marginBottom: 10,
+                        }}>
+                          Ubicación {i + 1}
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
+                          <div>
+                            <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Colonia</label>
+                            <div style={readOnlySx}>{ex.colonia}</div>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Calle</label>
+                            <div style={readOnlySx}>{ex.calle}</div>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Número</label>
+                            <div style={readOnlySx}>{ex.numero}</div>
+                          </div>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                          <div>
+                            <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Hora Inicio</label>
+                            <div style={readOnlySx}>{ex.hora_inicio}</div>
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Hora Fin</label>
+                            <div style={readOnlySx}>{ex.hora_fin}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* New evidence form */}
+              {isReadding && (
+                <div style={{
+                  fontFamily: 'JetBrains Mono,monospace',
+                  fontSize: 9,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#0891b2',
+                  marginBottom: 12,
+                }}>
+                  Agregar nuevas ubicaciones
+                </div>
+              )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
                 {items.map((it, i) => (
@@ -209,7 +322,7 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
                       color: '#059669',
                       marginBottom: 12,
                     }}>
-                      Ubicación {i + 1}
+                      Nueva ubicación {i + 1}
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
@@ -379,12 +492,12 @@ export function PedirEvidenciasBoton({ solicitudId }: { solicitudId: string }) {
                     fontWeight: 600,
                     padding: '8px 20px',
                     border: 'none',
-                    background: pending ? '#34d399' : '#059669',
+                    background: pending ? (isReadding ? '#67e8f9' : '#34d399') : (isReadding ? '#0891b2' : '#059669'),
                     color: '#ffffff',
                     cursor: pending ? 'not-allowed' : 'pointer',
                   }}
                 >
-                  {pending ? 'Enviando...' : 'Enviar a Monitorista'}
+                  {pending ? 'Guardando...' : (isReadding ? 'Agregar y Guardar' : 'Enviar a Monitorista')}
                 </button>
               </div>
             </form>
