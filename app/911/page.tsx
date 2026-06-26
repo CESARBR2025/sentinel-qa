@@ -58,7 +58,7 @@ export default async function SeleccionAtencionPage() {
       label: 'Ciudadano',
       sub: 'Base de datos de atención, registros de identidad y antecedentes de contacto.',
       icon: <Users size={28} />,
-      href: '/911/ciudadano',
+      href: '/911/ciudadano/incidentes',
       stats: [{ label: 'Canal 911 hoy', value: String(stats.hoy911) }, { label: 'Total', value: String(stats.total) }]
     },
     {
@@ -66,7 +66,7 @@ export default async function SeleccionAtencionPage() {
       label: 'WhatsApp',
       sub: 'Gestión de reportes entrantes vía mensajería instantánea y despacho digital.',
       icon: <MessageSquare size={28} />,
-      href: '/911/whatsapp',
+      href: '/911/whatsapp/incidentes',
       stats: [{ label: 'WhatsApp hoy', value: String(stats.hoyWA) }, { label: 'Total', value: String(stats.total) }]
     },
     {
@@ -74,7 +74,7 @@ export default async function SeleccionAtencionPage() {
       label: 'Rondín',
       sub: 'Control de patrullaje preventivo, puntos de firma y geolocalización de unidades.',
       icon: <MapPin size={28} />,
-      href: '/911/rondin',
+      href: '/911/rondin/incidentes',
       stats: [{ label: 'Radio hoy', value: String(stats.hoyRadio) }, { label: 'Total', value: String(stats.total) }]
     },
     {
