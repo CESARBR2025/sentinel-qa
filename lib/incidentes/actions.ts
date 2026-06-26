@@ -123,7 +123,7 @@ export async function createIncidente(formData: FormData) {
   }).filter(Boolean); // Eliminamos los nulos
 
   if (personasParaInsertar.length > 0) {
-    // @ts-ignore - Drizzle insert values
+    // @ts-expect-error - Drizzle insert values
     await db.insert(incidentePersonasAfectadas).values(personasParaInsertar);
   }
 

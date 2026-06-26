@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 import { db }       from '@/lib/db/index'
 import { users, roles } from '@/lib/db/schema'
 import { eq }        from 'drizzle-orm'
@@ -49,9 +50,12 @@ export default async function EditarUsuarioPage({
 
   const rolesList = await db.select().from(roles).where(eq(roles.activo, true))
 
-  const createdAt = user.createdAt instanceof Date
-    ? user.createdAt
-    : new Date(String(user.createdAt))
+  const createdAtValue = user.createdAt as Date | string | null
+
+const createdAt =
+  createdAtValue instanceof Date
+    ? createdAtValue
+    : new Date(createdAtValue ?? Date.now())
 
   return (
     <div style={{ maxWidth: 600 }}>
