@@ -78,7 +78,10 @@ export async function accionPedirEvidencias(formData: FormData): Promise<{ succe
     const id = formData.get('id')
     if (typeof id !== 'string' || !id.trim()) return { success: false, error: 'ID de solicitud inválido' }
 
-    await pedirEvidencias(id)
+    const evidencias = formData.get('evidencias')
+    if (typeof evidencias !== 'string' || !evidencias.trim()) return { success: false, error: 'Debe agregar al menos una ubicación' }
+
+    await pedirEvidencias(id, evidencias)
 
     revalidatePath('/fiscalia/solicitudes')
     return { success: true }

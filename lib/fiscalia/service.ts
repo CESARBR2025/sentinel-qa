@@ -4,6 +4,7 @@ import {
   obtenerSolicitudesEnProceso,
   obtenerSolicitudesConMonitorista,
   actualizarEstadoSolicitud,
+  actualizarSolicitudConEvidencias,
 } from './repository'
 import { rowToSolicitud } from './mapper'
 import type { SolicitudEvidencia } from './types'
@@ -32,6 +33,6 @@ export async function listarSolicitudesConMonitorista(): Promise<SolicitudEviden
   return rows.map(rowToSolicitud)
 }
 
-export async function pedirEvidencias(id: string): Promise<void> {
-  await actualizarEstadoSolicitud(id, 'EN_ANALISIS', 'PENDIENTE_MONITORISTA')
+export async function pedirEvidencias(id: string, evidencias: string): Promise<void> {
+  await actualizarSolicitudConEvidencias(id, 'EN_ANALISIS', 'PENDIENTE_MONITORISTA', evidencias)
 }
