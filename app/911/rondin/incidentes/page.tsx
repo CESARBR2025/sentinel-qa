@@ -53,7 +53,7 @@ export default async function ListadoRondinPage() {
 
                     <Link href="/911/rondin" style={btnNuevoStyle}>
                         <Plus size={14} color="#3b82f6" />
-                        <span>NUEVA INTERVENCIÓN</span>
+                        <span>NUEVO REGISTRO</span>
                     </Link>
                 </div>
 
@@ -108,7 +108,7 @@ export default async function ListadoRondinPage() {
                                             </div>
                                         </td>
                                         <td style={{ ...tdStyle, textAlign: 'right' }}>
-                                            <Link href={`/incidentes/${item.id}`} style={btnViewStyle}>
+                                            <Link href={`/911/rondin/incidentes/${item.id}`} style={btnViewStyle}>
                                                 <Eye size={14} />
                                                 DETALLES
                                             </Link>

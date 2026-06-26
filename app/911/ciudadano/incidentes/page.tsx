@@ -114,7 +114,7 @@ export default async function Listado911Page() {
                                             </div>
                                         </td>
                                         <td style={{ ...tdStyle, textAlign: 'right' }}>
-                                            <Link href={`/incidentes/${item.id}`} style={btnViewStyle}>
+                                            <Link href={`/911/ciudadano/incidentes/${item.id}`} style={btnViewStyle}>
                                                 <Eye size={14} />
                                                 VER FICHA
                                             </Link>
