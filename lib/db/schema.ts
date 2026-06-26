@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, unique, serial, text, integer, boolean, varchar, timestamp, time, uuid, date, check } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, unique, serial, text, integer, boolean, varchar, timestamp, time, uuid, date, check, numeric } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -880,3 +880,82 @@ export const incidenteAlarmaEscolar = pgTable("incidente_alarma_escolar", {
   foreignKey({ columns: [table.incidenteId], foreignColumns: [incidentes.id], name: "iae_incidente_fk" }).onDelete("cascade"),
   unique("incidente_alarma_escolar_incidente_uq").on(table.incidenteId), // 1:1
 ])
+
+
+export const reportesD1 = pgTable("reportes_d1", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	// --- IDENTIFICACIÓN LEGAL ---
+	folioDenuncia: varchar("folio_denuncia", { length: 50 }).notNull(),
+	iph: varchar("iph", { length: 100 }),
+	folioCu: varchar("folio_cu", { length: 100 }),
+	corporacion: varchar("corporacion", { length: 100 }).default("SSPM"),
+	sector: varchar("sector", { length: 50 }),
+	grupoAdscripcion: varchar("grupo_adscripcion", { length: 100 }),
+
+	// --- CRONOMETRÍA ---
+	fechaReporte: date("fecha_reporte").notNull(),
+	horaReporte: time("hora_reporte").notNull(),
+	fechaAvistamiento: date("fecha_avistamiento"),
+	horaAvistamiento: time("hora_avistamiento"),
+	fechaDespacho: date("fecha_despacho"),
+	horaDespacho: time("hora_despacho"),
+	fechaConfirmacion: date("fecha_confirmacion"),
+	horaConfirmacion: time("hora_confirmacion"),
+	fechaLlegada: date("fecha_llegada"),
+	horaLlegada: time("hora_llegada"),
+	horaInicioDenuncia: time("hora_inicio_denuncia"),
+	horaFinDenuncia: time("hora_fin_denuncia"),
+	horaTerminoAtencion: time("hora_termino_atencion"),
+	horaCuestionario: time("hora_cuestionario"),
+
+	// --- UBICACIÓN ---
+	lugarHecho: text("lugar_hecho"),
+	lugarApoyo: text("lugar_apoyo"),
+	municipio: varchar("municipio", { length: 100 }).default("San Juan del Río"),
+	colonia: varchar("colonia", { length: 100 }),
+	referencias: text("referencias"),
+	latitud: numeric("latitud", { precision: 10, scale: 8 }),
+	longitud: numeric("longitud", { precision: 11, scale: 8 }),
+
+	  nominaMando: varchar("nomina_mando", { length: 50 }),
+  policiaCargo: varchar("policia_a_cargo", { length: 255 }),
+
+	// --- DETALLES ---
+	tipoEvento: varchar("tipo_evento", { length: 10 }).notNull(),
+	delito: varchar("delito", { length: 255 }).notNull(),
+	violencia: boolean().default(false),
+
+	// --- PERSONAL Y EQUIPO ---
+	crp: varchar("crp", { length: 50 }),
+	policiaDenuncia: varchar("policia_denuncia", { length: 255 }),
+	policiaFirmaD1: varchar("policia_firma_d1", { length: 255 }),
+	policiaIngresaCu: varchar("policia_ingresa_cu", { length: 255 }),
+	requirioTablet: boolean("requirio_tablet").default(false),
+	funcionabaTablet: boolean("funcionaba_tablet").default(false),
+
+	// --- VICTIMOLOGÍA ---
+	ofendidoHombre: integer("ofendido_hombre").default(0),
+	ofendidoMujer: integer("ofendido_mujer").default(0),
+	numCuestionarios: integer("num_cuestionarios").default(0),
+	intervinoGs: boolean("intervino_gs").default(false),
+
+	// --- ESTATUS ---
+	seGeneroD1: boolean("se_genero_d1").default(false),
+	seVaAGenerarD1: boolean("se_va_a_generar_d1").default(false),
+	observaciones: text(),
+
+	// --- CONTROL (Siguiendo tu estilo de accounts) ---
+	capturadoPor: text("capturado_por").notNull(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	// LLAVE FORÁNEA EXPLÍCITA (Igual que en tu tabla accounts)
+	foreignKey({
+		columns: [table.capturadoPor],
+		foreignColumns: [users.id],
+		name: "reportes_d1_capturado_por_users_id_fk"
+	}).onDelete("restrict"),
+	
+	// UNICIDAD DEL FOLIO
+	unique("reportes_d1_folio_denuncia_unique").on(table.folioDenuncia),
+]);

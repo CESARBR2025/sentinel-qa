@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, usuarioModulos, modulos, sessions, roles, catDependencias, twoFactors, accounts, solicitudesInformacion, contestaciones, solicitudesC4Internas, medidasProteccion, visitasDomiciliarias, fichasBusqueda, seguimientosBusqueda, medidaAutoridadesAdicionales, notificaciones, permisos, catOrigenesEvento, eventos, catTiposIncidente, catPrioridades, catEstatusEvento, catTurnos } from "./schema";
+import { users, usuarioModulos, modulos, sessions, roles, catDependencias, twoFactors, accounts, solicitudesInformacion, contestaciones, solicitudesC4Internas, medidasProteccion, visitasDomiciliarias, fichasBusqueda, seguimientosBusqueda, medidaAutoridadesAdicionales, notificaciones, permisos, catOrigenesEvento, eventos, catTiposIncidente, catPrioridades, catEstatusEvento, catTurnos, catSectores, rolesServicio, rolAsignaciones, catRadios, catBodyCams, rolEstadoFuerza, catEstadoFuerzaConceptos, rolObservaciones, catTiposObservacion, incidentes, incidenteAlarmaEscolar, incidenteDespacho, incidenteExtorsion, incidentePersonasAfectadas, auditLog, catTiposEmergencia, catMediosCanalizacion, incidenteReporteCampo, incidenteDespachoElementos, incidenteDespachoUnidades, reportesD1, ofiOficiales, ofiReportesCampo } from "./schema";
 
 export const usuarioModulosRelations = relations(usuarioModulos, ({one}) => ({
 	user: one(users, {
@@ -35,6 +35,18 @@ export const usersRelations = relations(users, ({one, many}) => ({
 	medidaAutoridadesAdicionales: many(medidaAutoridadesAdicionales),
 	notificaciones: many(notificaciones),
 	eventos: many(eventos),
+	rolesServicios_firmadoPor: many(rolesServicio, {
+		relationName: "rolesServicio_firmadoPor_users_id"
+	}),
+	rolesServicios_creadoPor: many(rolesServicio, {
+		relationName: "rolesServicio_creadoPor_users_id"
+	}),
+	incidenteDespachos: many(incidenteDespacho),
+	auditLogs: many(auditLog),
+	incidentes: many(incidentes),
+	incidenteReporteCampos: many(incidenteReporteCampo),
+	reportesD1s: many(reportesD1),
+	ofiOficiales: many(ofiOficiales),
 }));
 
 export const modulosRelations = relations(modulos, ({many}) => ({
@@ -209,10 +221,12 @@ export const catOrigenesEventoRelations = relations(catOrigenesEvento, ({many}) 
 
 export const catTiposIncidenteRelations = relations(catTiposIncidente, ({many}) => ({
 	eventos: many(eventos),
+	incidentes: many(incidentes),
 }));
 
 export const catPrioridadesRelations = relations(catPrioridades, ({many}) => ({
 	eventos: many(eventos),
+	incidentes: many(incidentes),
 }));
 
 export const catEstatusEventoRelations = relations(catEstatusEvento, ({many}) => ({
@@ -221,4 +235,205 @@ export const catEstatusEventoRelations = relations(catEstatusEvento, ({many}) =>
 
 export const catTurnosRelations = relations(catTurnos, ({many}) => ({
 	eventos: many(eventos),
+}));
+
+export const rolesServicioRelations = relations(rolesServicio, ({one, many}) => ({
+	catSectore: one(catSectores, {
+		fields: [rolesServicio.sectorId],
+		references: [catSectores.id]
+	}),
+	user_firmadoPor: one(users, {
+		fields: [rolesServicio.firmadoPor],
+		references: [users.id],
+		relationName: "rolesServicio_firmadoPor_users_id"
+	}),
+	user_creadoPor: one(users, {
+		fields: [rolesServicio.creadoPor],
+		references: [users.id],
+		relationName: "rolesServicio_creadoPor_users_id"
+	}),
+	rolAsignaciones: many(rolAsignaciones),
+	rolEstadoFuerzas: many(rolEstadoFuerza),
+	rolObservaciones: many(rolObservaciones),
+}));
+
+export const catSectoresRelations = relations(catSectores, ({many}) => ({
+	rolesServicios: many(rolesServicio),
+}));
+
+export const rolAsignacionesRelations = relations(rolAsignaciones, ({one}) => ({
+	rolesServicio: one(rolesServicio, {
+		fields: [rolAsignaciones.rolId],
+		references: [rolesServicio.id]
+	}),
+	catRadio: one(catRadios, {
+		fields: [rolAsignaciones.radioId],
+		references: [catRadios.id]
+	}),
+	catBodyCam: one(catBodyCams, {
+		fields: [rolAsignaciones.bodyCamId],
+		references: [catBodyCams.id]
+	}),
+}));
+
+export const catRadiosRelations = relations(catRadios, ({many}) => ({
+	rolAsignaciones: many(rolAsignaciones),
+}));
+
+export const catBodyCamsRelations = relations(catBodyCams, ({many}) => ({
+	rolAsignaciones: many(rolAsignaciones),
+}));
+
+export const rolEstadoFuerzaRelations = relations(rolEstadoFuerza, ({one}) => ({
+	rolesServicio: one(rolesServicio, {
+		fields: [rolEstadoFuerza.rolId],
+		references: [rolesServicio.id]
+	}),
+	catEstadoFuerzaConcepto: one(catEstadoFuerzaConceptos, {
+		fields: [rolEstadoFuerza.conceptoId],
+		references: [catEstadoFuerzaConceptos.id]
+	}),
+}));
+
+export const catEstadoFuerzaConceptosRelations = relations(catEstadoFuerzaConceptos, ({many}) => ({
+	rolEstadoFuerzas: many(rolEstadoFuerza),
+}));
+
+export const rolObservacionesRelations = relations(rolObservaciones, ({one}) => ({
+	rolesServicio: one(rolesServicio, {
+		fields: [rolObservaciones.rolId],
+		references: [rolesServicio.id]
+	}),
+	catTiposObservacion: one(catTiposObservacion, {
+		fields: [rolObservaciones.tipoId],
+		references: [catTiposObservacion.id]
+	}),
+}));
+
+export const catTiposObservacionRelations = relations(catTiposObservacion, ({many}) => ({
+	rolObservaciones: many(rolObservaciones),
+}));
+
+export const incidenteAlarmaEscolarRelations = relations(incidenteAlarmaEscolar, ({one}) => ({
+	incidente: one(incidentes, {
+		fields: [incidenteAlarmaEscolar.incidenteId],
+		references: [incidentes.id]
+	}),
+}));
+
+export const incidentesRelations = relations(incidentes, ({one, many}) => ({
+	incidenteAlarmaEscolars: many(incidenteAlarmaEscolar),
+	incidenteDespachos: many(incidenteDespacho),
+	incidenteExtorsions: many(incidenteExtorsion),
+	incidentePersonasAfectadas: many(incidentePersonasAfectadas),
+	catTiposEmergencia: one(catTiposEmergencia, {
+		fields: [incidentes.tipoEmergenciaId],
+		references: [catTiposEmergencia.id]
+	}),
+	catTiposIncidente: one(catTiposIncidente, {
+		fields: [incidentes.tipoIncidenteId],
+		references: [catTiposIncidente.id]
+	}),
+	catPrioridade: one(catPrioridades, {
+		fields: [incidentes.prioridadId],
+		references: [catPrioridades.id]
+	}),
+	catMediosCanalizacion: one(catMediosCanalizacion, {
+		fields: [incidentes.medioCanalizacionId],
+		references: [catMediosCanalizacion.id]
+	}),
+	user: one(users, {
+		fields: [incidentes.capturadoPor],
+		references: [users.id]
+	}),
+	incidenteReporteCampos: many(incidenteReporteCampo),
+}));
+
+export const incidenteDespachoRelations = relations(incidenteDespacho, ({one, many}) => ({
+	incidente: one(incidentes, {
+		fields: [incidenteDespacho.incidenteId],
+		references: [incidentes.id]
+	}),
+	user: one(users, {
+		fields: [incidenteDespacho.despachadoPor],
+		references: [users.id]
+	}),
+	incidenteDespachoElementos: many(incidenteDespachoElementos),
+	incidenteDespachoUnidades: many(incidenteDespachoUnidades),
+}));
+
+export const incidenteExtorsionRelations = relations(incidenteExtorsion, ({one}) => ({
+	incidente: one(incidentes, {
+		fields: [incidenteExtorsion.incidenteId],
+		references: [incidentes.id]
+	}),
+}));
+
+export const incidentePersonasAfectadasRelations = relations(incidentePersonasAfectadas, ({one}) => ({
+	incidente: one(incidentes, {
+		fields: [incidentePersonasAfectadas.incidenteId],
+		references: [incidentes.id]
+	}),
+}));
+
+export const auditLogRelations = relations(auditLog, ({one}) => ({
+	user: one(users, {
+		fields: [auditLog.userId],
+		references: [users.id]
+	}),
+}));
+
+export const catTiposEmergenciaRelations = relations(catTiposEmergencia, ({many}) => ({
+	incidentes: many(incidentes),
+}));
+
+export const catMediosCanalizacionRelations = relations(catMediosCanalizacion, ({many}) => ({
+	incidentes: many(incidentes),
+}));
+
+export const incidenteReporteCampoRelations = relations(incidenteReporteCampo, ({one}) => ({
+	incidente: one(incidentes, {
+		fields: [incidenteReporteCampo.incidenteId],
+		references: [incidentes.id]
+	}),
+	user: one(users, {
+		fields: [incidenteReporteCampo.capturadoPor],
+		references: [users.id]
+	}),
+}));
+
+export const incidenteDespachoElementosRelations = relations(incidenteDespachoElementos, ({one}) => ({
+	incidenteDespacho: one(incidenteDespacho, {
+		fields: [incidenteDespachoElementos.despachoId],
+		references: [incidenteDespacho.id]
+	}),
+}));
+
+export const incidenteDespachoUnidadesRelations = relations(incidenteDespachoUnidades, ({one}) => ({
+	incidenteDespacho: one(incidenteDespacho, {
+		fields: [incidenteDespachoUnidades.despachoId],
+		references: [incidenteDespacho.id]
+	}),
+}));
+
+export const reportesD1Relations = relations(reportesD1, ({one}) => ({
+	user: one(users, {
+		fields: [reportesD1.capturadoPor],
+		references: [users.id]
+	}),
+}));
+
+export const ofiOficialesRelations = relations(ofiOficiales, ({one, many}) => ({
+	user: one(users, {
+		fields: [ofiOficiales.userId],
+		references: [users.id]
+	}),
+	ofiReportesCampos: many(ofiReportesCampo),
+}));
+
+export const ofiReportesCampoRelations = relations(ofiReportesCampo, ({one}) => ({
+	ofiOficiale: one(ofiOficiales, {
+		fields: [ofiReportesCampo.ofiOficialId],
+		references: [ofiOficiales.id]
+	}),
 }));
