@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MessageSquare, User, AlertTriangle, MapPin,
-  ClipboardCheck, Clock, Shield, Send, Search,
+  ClipboardCheck, Clock, Shield, Send, Search, Check, Loader2, Plus, X,
   FileText, Gavel, Car, Hash, Archive
 } from 'lucide-react';
 import { createRecorridoCompleto } from "@/lib/incidentes/actions";
+import { useEmpleado } from '@/hooks/useEmpleado'; // Importar el hook
 
 import { DashboardHeader } from "@/components/partials/Header";
 
@@ -42,7 +43,45 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
   );
 };
 
+
+
 export default function ReporteRecorridoZen({ user, catalogos }: { user: any, catalogos: any }) {
+  // Hook e instancia para el MANDO (Ya lo tienes)
+  const empMando = useEmpleado();
+  const [nominaMando, setNominaMando] = useState("");
+  const [nombreMando, setNombreMando] = useState("");
+
+  // --- NUEVO: Hook e instancia para el OFICIAL QUE REPORTA ---
+  const empOficial = useEmpleado();
+  const [nominaOficial, setNominaOficial] = useState("");
+  const [nombreOficial, setNombreOficial] = useState("");
+
+  // Función para buscar al Oficial
+  const buscarOficial = async () => {
+    if (!nominaOficial) return;
+    await empOficial.buscarPorNomina(nominaOficial);
+  };
+
+  // Efecto para asignar el nombre del oficial cuando se encuentre
+  useEffect(() => {
+    if (empOficial.empleado) {
+      setNombreOficial(empOficial.empleado.nombre);
+    }
+  }, [empOficial.empleado]);
+
+  // 1. Esta función solo dispara la búsqueda
+  const buscarMando = async () => {
+    if (!nominaMando) return;
+    await empMando.buscarPorNomina(nominaMando);
+  };
+
+  // 2. Este efecto reacciona cuando el hook encuentra al empleado
+  useEffect(() => {
+    if (empMando.empleado) {
+      setNombreMando(empMando.empleado.nombre);
+    }
+  }, [empMando.empleado]); // Se ejecuta cada vez que el "empleado" del hook cambie
+
 
   const [isAnonimo, setIsAnonimo] = useState(false);
 
@@ -50,7 +89,28 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
   const [tieneDetencion, setTieneDetencion] = useState("false");
   const [tieneCateo, setTieneCateo] = useState("false");
   const [tieneVehiculo, setTieneVehiculo] = useState("false");
+  const [datosPositivos, setDatosPositivos] = useState("positivo");
 
+  const [detenidos, setDetenidos] = useState<string[]>([""]);
+
+  // Funciones para manejar los detenidos
+  const manejarCambioDetenido = (index: number, valor: string) => {
+    const nuevos = [...detenidos];
+    nuevos[index] = valor;
+    setDetenidos(nuevos);
+  };
+
+  const agregarDetenido = () => setDetenidos([...detenidos, ""]);
+
+  const eliminarDetenido = (index: number) => {
+    if (detenidos.length > 1) {
+      setDetenidos(detenidos.filter((_, i) => i !== index));
+    } else {
+      setDetenidos([""]); // Si es el último, solo lo limpia
+    }
+  };
+
+  const [autoridadSeleccionada, setAutoridadSeleccionada] = useState("MINISTERIO PÚBLICO");
 
   return (
     <form action={createRecorridoCompleto}>
@@ -84,15 +144,57 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
             <section className="sentinel-card">
               <h2 className="sentinel-section-title">Origen e Identificación</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+
                 <SentinelField label="Canal de Origen" icon={MessageSquare} value="RADIO" disabled />
 
-                {/* Este campo es REQUERIDO por la API para canal Radio */}
+                {/* --- BUSCADOR DE NÓMINA PARA EL OFICIAL --- */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    Nómina Oficial que Reporta
+                  </label>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
+                      <input
+                        type="text"
+                        placeholder="Nómina..."
+                        value={nominaOficial}
+                        onChange={(e) => setNominaOficial(e.target.value)}
+                        onBlur={buscarOficial}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarOficial(); } }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 12px 12px 40px',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          borderLeft: '4px solid #3b82f6',
+                          borderRadius: '2px',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '14px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={buscarOficial}
+                      style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}
+                    >
+                      {empOficial.cargando ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                    </button>
+                  </div>
+                  {empOficial.error && <span style={{ color: '#dc2626', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>{empOficial.error}</span>}
+                </div>
+
+                {/* Nombre del oficial (Se autocompleta) */}
                 <SentinelField
                   label="Nombre del Oficial que Reporta"
                   name="nombreOficial"
                   icon={Shield}
-                  placeholder="Nombre completo del oficial"
+                  placeholder="Se llenará automáticamente..."
                   required
+                  value={nombreOficial}
+                  onChange={(e: any) => setNombreOficial(e.target.value)}
                 />
 
                 <SentinelField label="Folio CAD" name="folioCad" icon={Hash} placeholder="Número CAD..." />
@@ -104,6 +206,10 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   disabled
                 />
 
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', gridColumn: 'span 1' }}>
+                  {/* Espacio ajustado para que no descuadre la fila */}
+                </div>
+
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end', gridColumn: 'span 2' }}>
                   <div style={{ flexGrow: 1 }}>
                     <SentinelField
@@ -114,7 +220,6 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       disabled={isAnonimo}
                     />
                   </div>
-                  {/* Input oculto para que el servidor reciba el booleano correcto */}
                   <input type="hidden" name="anonimo" value={isAnonimo ? "true" : "false"} />
                   <button type="button" onClick={() => setIsAnonimo(!isAnonimo)} className="sentinel-btn-toggle">
                     {isAnonimo ? '[ ANÓNIMO: ON ]' : '[ ANÓNIMO: OFF ]'}
@@ -175,7 +280,33 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 <div style={{ gridColumn: 'span 2' }}>
                   <SentinelField label="Referencia de Ubicación" name="referenciaUbicacion" icon={MapPin} placeholder="Ej. Frente a la tienda, portón negro..." />
                 </div>
-                <SentinelField label="Datos Positivos/Negativos" name="datosPositivosNegativos" icon={Search} placeholder="¿Se encontró lo reportado?" />
+
+                {/* SELECT DINÁMICO */}
+                <SentinelField
+                  label="Datos Positivos/Negativos"
+                  // Si es "otro", no le ponemos 'name' aquí para que no se duplique
+                  name={datosPositivos !== "otro" ? "datosPositivosNegativos" : ""}
+                  as="select"
+                  icon={Search}
+                  value={datosPositivos}
+                  onChange={(e: any) => setDatosPositivos(e.target.value)}
+                >
+                  <option value="positivo">SÍ (POSITIVO)</option>
+                  <option value="negativo">NO (NEGATIVO)</option>
+                  <option value="otro">OTRO (ESPECIFICAR)</option>
+                </SentinelField>
+
+                {datosPositivos === "otro" && (
+                  <div style={{ gridColumn: 'span 3', marginTop: '-16px' }}>
+                    <SentinelField
+                      label="Especifique el resultado"
+                      name="datosPositivosNegativos" // El backend recibirá este valor
+                      icon={FileText}
+                      placeholder="Escriba aquí la observación..."
+                      fullWidth
+                    />
+                  </div>
+                )}
               </div>
             </section>
 
@@ -194,16 +325,69 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
 
                 {tieneDetencion === "true" && (
                   <>
-                    <div style={{ gridColumn: 'span 2' }}>
-                      <SentinelField label="Nombre de los Detenidos" name="nombreDetenidos" icon={User} placeholder="Separados por comas..." />
+                    {/* LISTA DINÁMICA DE DETENIDOS */}
+                    <div style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Nombres de los Detenidos
+                      </label>
+
+                      {detenidos.map((nombre, index) => (
+                        <div key={index} style={{ display: 'flex', gap: '8px' }}>
+                          <div style={{ flex: 1 }}>
+                            <SentinelField
+                              label=""
+                              placeholder={`Nombre del detenido ${index + 1}`}
+                              icon={User}
+                              value={nombre}
+                              onChange={(e: any) => manejarCambioDetenido(index, e.target.value)}
+                            />
+                          </div>
+                          <button type="button" onClick={() => eliminarDetenido(index)} style={{ height: '46px', padding: '0 12px', background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', cursor: 'pointer', borderRadius: '2px' }}>
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+
+                      <button type="button" onClick={agregarDetenido} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', padding: '8px 16px', borderRadius: '2px', cursor: 'pointer', fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600 }}>
+                        <Plus size={14} /> AÑADIR OTRO
+                      </button>
+
+                      {/* ESTA ES LA CLAVE: Convierte el array a un string separado por comas para el backend */}
+                      <input
+                        type="hidden"
+                        name="nombreDetenidos"
+                        value={detenidos.filter(n => n.trim() !== "").join(", ")}
+                      />
                     </div>
-                    <SentinelField label="Autoridad que recibe" name="autoridadRecibe" icon={Shield} placeholder="Ej. MP, Juzgado Cívico" />
-                    <SentinelField label="Expediente / Carpeta CI" name="expedienteCi" icon={FileText} placeholder="Número de carpeta..." />
-                    <SentinelField label="Delito / Falta" name="delitoFalta" icon={AlertTriangle} placeholder="Clasificación jurídica" />
+
+                    {/* AUTORIDAD QUE RECIBE */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <SentinelField
+                        label="Autoridad que recibe"
+                        name={autoridadSeleccionada !== "OTRO" ? "autoridadRecibe" : ""}
+                        as="select"
+                        icon={Shield}
+                        value={autoridadSeleccionada}
+                        onChange={(e: any) => setAutoridadSeleccionada(e.target.value)}
+                      >
+                        <option value="MINISTERIO PÚBLICO">MINISTERIO PÚBLICO</option>
+                        <option value="JUZGADO CÍVICO">JUZGADO CÍVICO</option>
+                        <option value="FISCALÍA GENERAL">FISCALÍA GENERAL</option>
+                        <option value="OTRO">OTRO (ESPECIFICAR)</option>
+                      </SentinelField>
+
+                      {autoridadSeleccionada === "OTRO" && (
+                        <SentinelField
+                          label="Especifique Autoridad"
+                          name="autoridadRecibe" // Se envía con el mismo nombre que espera el backend
+                          placeholder="Nombre de la autoridad..."
+                          icon={FileText}
+                        />
+                      )}
+                    </div>
                   </>
                 )}
 
-                {/* El monto debe ser entero para la API */}
                 {tipoIncidente === "1" && (
                   <SentinelField
                     label="Monto de lo Robado (Solo números)"
@@ -219,12 +403,21 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
             <section className="sentinel-card">
               <h2 className="sentinel-section-title">Aseguramientos y Cateos</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+
+                {/* Campo de Objetos (Ocupa todo el ancho) */}
                 <div style={{ gridColumn: 'span 3' }}>
-                  <SentinelField label="Objetos Recuperados" name="objetosRecuperados" as="textarea" placeholder="Descripción de bienes asegurados..." />
+                  <SentinelField
+                    label="Objetos Recuperados"
+                    name="objetosRecuperados"
+                    as="textarea"
+                    placeholder="Descripción de bienes asegurados..."
+                  />
                 </div>
 
+                {/* Selector de Vehículo */}
                 <SentinelField
                   label="¿Aseguró Vehículo?"
+                  name="aseguroVehiculo" // Asegúrate de poner el name para el form
                   as="select"
                   value={tieneVehiculo}
                   onChange={(e: any) => setTieneVehiculo(e.target.value)}
@@ -233,7 +426,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   <option value="true">SÍ</option>
                 </SentinelField>
 
-                {/* CAMPOS QUE APARECEN SI ES "SÍ" */}
+                {/* CAMPOS CONDICIONALES DE VEHÍCULO */}
                 {tieneVehiculo === "true" && (
                   <>
                     <SentinelField label="Vehículos Recuperados" name="vehiculosRecuperados" icon={Car} placeholder="Placas, Serie, Color..." />
@@ -242,12 +435,19 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   </>
                 )}
 
-
-                <SentinelField label="¿Hubo Cateo?" name="hayCateo" as="select" value={tieneCateo} onChange={(e: any) => setTieneCateo(e.target.value)}>
+                {/* Selector de Cateo */}
+                <SentinelField
+                  label="¿Hubo Cateo?"
+                  name="hayCateo"
+                  as="select"
+                  value={tieneCateo}
+                  onChange={(e: any) => setTieneCateo(e.target.value)}
+                >
                   <option value="false">NO</option>
                   <option value="true">SÍ</option>
                 </SentinelField>
 
+                {/* CAMPOS CONDICIONALES DE CATEO */}
                 {tieneCateo === "true" && (
                   <>
                     <div style={{ gridColumn: 'span 2' }}>
@@ -257,11 +457,62 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   </>
                 )}
 
+                {/* --- BUSCADOR DE NÓMINA PARA EL MANDO --- */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    Nómina del Mando
+                  </label>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
+                      <input
+                        type="text"
+                        placeholder="Escriba nómina..."
+                        value={nominaMando}
+                        onChange={(e) => setNominaMando(e.target.value)}
+                        onBlur={buscarMando}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarMando(); } }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 12px 12px 40px',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          borderLeft: '4px solid #3b82f6',
+                          borderRadius: '2px',
+                          fontFamily: 'Inter, sans-serif',
+                          fontSize: '14px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={buscarMando}
+                      style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}
+                    >
+                      {empMando.cargando ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                    </button>
+                  </div>
+                  {empMando.error && <span style={{ color: '#dc2626', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>{empMando.error}</span>}
+                </div>
 
-                {/* Este campo mapea a policiaCargo en la DB */}
-                <SentinelField label="Policía a Cargo (Mando)" name="policiaCargo" icon={Shield} placeholder="Nombre del mando responsable" />
+                {/* Campo de Nombre del Mando (Se llena solo) */}
+                <SentinelField
+                  label="Policía a Cargo (Mando)"
+                  name="policiaCargo"
+                  icon={Shield}
+                  placeholder="Nombre del mando responsable"
+                  value={nombreMando}
+                  onChange={(e: any) => setNombreMando(e.target.value)}
+                />
 
-                <SentinelField label="Personal que ingresó a CI" name="personalIngresoCi" icon={User} placeholder="Nombre del agente en fiscalía" />
+                {/* Campo Final */}
+                <SentinelField
+                  label="Personal que ingresó a CI"
+                  name="personalIngresoCi"
+                  icon={User}
+                  placeholder="Nombre del agente en fiscalía"
+                />
               </div>
             </section>
 

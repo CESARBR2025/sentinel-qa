@@ -160,13 +160,8 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
                                 label="Operador"
                                 icon={User}
                                 // Mostramos el nombre del usuario logueado
-                                defaultValue={user?.name || 'SISTEMA'}
-                                disabled
-                            />
-                            <RolField
-                                label="Unidad Asignada"
-                                icon={Shield}
-                                placeholder="CRP-XXX"
+                                value={`${user?.name || ''} ${user?.apellido || ''}`.trim()}
+                  disabled
                             />
                             <RolField
                                 label="Estatus Inicial"

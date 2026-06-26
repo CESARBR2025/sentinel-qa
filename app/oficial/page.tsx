@@ -1,0 +1,160 @@
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { ClipboardList } from 'lucide-react'
+import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
+import { ToastExito } from '@/components/oficial/ToastExito'
+import { db } from '@/lib/db/index'
+import { users, roles, incidentes, incidenteReporteCampo } from '@/lib/db/schema'
+import { eq, and, sql } from 'drizzle-orm'
+
+export default async function OficialDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (userRole?.rolNombre !== 'Oficial de Campo') redirect('/dashboard')
+
+  const user = session.user as { name: string; apellido?: string; email: string }
+
+  const hoy = new Date()
+  hoy.setHours(0, 0, 0, 0)
+  const hoyISO = hoy.toISOString()
+
+  const [pendientes] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(incidentes)
+    .where(eq(incidentes.estatus, 'en_despacho'))
+
+  const [completadosHoy] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(incidenteReporteCampo)
+    .where(sql`creado_en >= ${hoyISO}`)
+
+  const [totalHoy] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(incidentes)
+    .where(and(
+      eq(incidentes.estatus, 'atendido'),
+      sql`fecha_hora_inicio >= ${hoyISO}`
+    ))
+
+  const params = await searchParams
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+      <ToastExito show={params.exito === '1'} />
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+        .card-o {
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          padding: 32px;
+          text-decoration: none;
+          transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+          display: flex;
+          flex-direction: column;
+          min-height: 280px;
+          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          width: 100%;
+          max-width: 520px;
+        }
+        .card-o:hover {
+          border-color: #2563eb;
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px -12px rgba(37,99,235,0.15);
+        }
+        .card-o:hover .co-top { width: 100%; }
+        .card-o:hover .co-left { height: 100%; }
+        .card-o:hover .co-icon { color: #2563eb; transform: scale(1.1); }
+        .card-o:hover .co-arrow { transform: translateX(5px); }
+      `}</style>
+
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
+
+        {/* Header */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+          paddingBottom: 24, borderBottom: '1px solid #e2e8f0',
+          position: 'relative'
+        }}>
+          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#2563eb' }}></div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <img src="/logo_sentinel.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
+            <div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }}></span>
+                Oficial en Campo
+              </div>
+              <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 42, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
+                SENTINEL · OFICIAL
+              </h1>
+            </div>
+          </div>
+
+          <ProfileDropdown name={user.name} apellido={user.apellido} email={user.email} />
+
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40 }}>
+
+
+          {/* Card */}
+          <Link href="/oficial/nuevo" className="card-o" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#2563eb', transition: 'width 0.4s ease', width: 32 }}></div>
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#2563eb', transition: 'height 0.4s ease', height: 32 }}></div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <ClipboardList size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563eb' }}></span>
+                ACCIÓN RÁPIDA
+              </div>
+            </div>
+
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', letterSpacing: '0.02em', color: '#0f172a' }}>
+                Reporte en Campo
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Genera alta de reporte de incidecia en recorrido
+              </p>
+            </div>
+
+          </Link>
+
+        </div>
+
+        {/* Footer */}
+        <div style={{
+          marginTop: 'auto', paddingTop: 24,
+          borderTop: '1px solid #e2e8f0',
+          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8',
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}>
+          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span>SENTINEL v0.1 · OFICIAL</span>
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#2563eb' }}></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}
