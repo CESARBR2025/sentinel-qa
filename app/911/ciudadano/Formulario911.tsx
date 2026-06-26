@@ -48,7 +48,7 @@ export default function Formulario911({ user, catalogos }: {
     const [coords, setCoords] = useState({ lat: 20.3889, lng: -99.9961 });
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-    const [direccion, setDireccion] = useState({ calle: "", colonia: "" });
+    const [direccion, setDireccion] = useState({ calle: "", numeroExterior: "", colonia: "" });
 
     const buscarDireccion = (lat: number, lng: number) => {
         const geocoder = new google.maps.Geocoder();
@@ -65,7 +65,8 @@ export default function Formulario911({ user, catalogos }: {
                 });
 
                 setDireccion({
-                    calle: numero ? `${calle} ${numero}` : calle,
+                    calle: calle,
+                    numeroExterior: numero,
                     colonia: colonia
                 });
             }
@@ -74,33 +75,36 @@ export default function Formulario911({ user, catalogos }: {
 
     const onPlaceChanged = () => {
         const place = autocompleteRef.current?.getPlace();
-
-        // Verificamos que existan geometry y location para que desaparezca el rojo
         if (place && place.geometry && place.geometry.location) {
-            const location = place.geometry.location; // Guardamos en una constante
-
-            const newPos = {
-                lat: location.lat(), // Ahora ya no debería marcar error
-                lng: location.lng()
-            };
-
+            const location = place.geometry.location;
+            const newPos = { lat: location.lat(), lng: location.lng() };
             setCoords(newPos);
             map?.panTo(newPos);
 
-            // ... el resto de tu lógica de calle y colonia
             let calle = "";
             let numero = "";
             let colonia = "";
+            // No necesitamos municipio en el estado si es fijo, 
+            // pero lo extraemos para evitar que se meta en 'colonia'
 
             place.address_components?.forEach((comp) => {
                 const types = comp.types;
-                if (types.includes("route")) calle = comp.long_name;
-                if (types.includes("street_number")) numero = comp.long_name;
-                if (types.includes("sublocality") || types.includes("neighborhood")) colonia = comp.long_name;
+
+                if (types.includes("route")) {
+                    calle = comp.long_name;
+                } else if (types.includes("street_number")) {
+                    numero = comp.long_name;
+                } else if (types.includes("sublocality_level_1") || types.includes("neighborhood")) {
+                    // Priorizamos sublocalidad nivel 1 para la Colonia en México
+                    colonia = comp.long_name;
+                } else if (colonia === "" && types.includes("sublocality")) {
+                    colonia = comp.long_name;
+                }
             });
 
             setDireccion({
-                calle: numero ? `${calle} ${numero}` : calle,
+                calle: calle,
+                numeroExterior: numero,
                 colonia: colonia
             });
         }
@@ -287,29 +291,53 @@ export default function Formulario911({ user, catalogos }: {
                 )}
 
                 <div className="grid">
+                    {/* CALLE */}
                     <div>
-
-                        <label>Calle y número</label>
-
+                        <label>Calle / Vialidad</label>
                         <input
                             type="text"
-                            name="calle" // <--- Mantiene conexión con backend
-                            value={direccion.calle} // <--- Esto hace que se llene solo
-                            onChange={(e) => setDireccion({ ...direccion, calle: e.target.value })} // <--- Permite correcciones manuales
+                            name="calle"
+                            value={direccion.calle || ""}
+                            onChange={(e) => setDireccion({ ...direccion, calle: e.target.value })}
+                            placeholder="Nombre de la calle"
                         />
                     </div>
 
+                    {/* NÚMERO EXTERIOR (AUTORELLENABLE) */}
+                    <div>
+                        <label>Número Exterior</label>
+                        <input
+                            type="text"
+                            name="numero_exterior" // <--- Importante para el backend
+                            value={direccion.numeroExterior || ""}
+                            onChange={(e) => setDireccion({ ...direccion, numeroExterior: e.target.value })}
+                            placeholder="Ej. 104-B"
+                        />
+                    </div>
+
+                    {/* NÚMERO INTERIOR (MANUAL) */}
+                    <div>
+                        <label>Número Interior</label>
+                        <input
+                            type="text"
+                            name="numero_interior" // <--- Importante para el backend
+                            placeholder="Depto / Local"
+                        />
+                    </div>
+
+                    {/* COLONIA */}
                     <div>
                         <label>Colonia</label>
                         <input
                             type="text"
-                            name="colonia" // <--- Mantiene conexión con backend
-                            value={direccion.colonia} // <--- Esto hace que se llene solo
-                            onChange={(e) => setDireccion({ ...direccion, colonia: e.target.value })} // <--- Permite correcciones manuales
+                            name="colonia"
+                            value={direccion.colonia || ""}
+                            onChange={(e) => setDireccion({ ...direccion, colonia: e.target.value })}
+                            placeholder="Nombre de la colonia"
                         />
-
                     </div>
 
+                    {/* MUNICIPIO (Se queda igual) */}
                     <div>
                         <label>Municipio</label>
                         <input
