@@ -167,9 +167,9 @@ export async function obtenerEvidenciasDenuncia(denunciaId: string): Promise<Evi
     [denunciaId],
   )
   return result.rows.map((r) => {
-    // Extraer solicitud_id desde el UUID: últimos 12 hex chars = número
-    const sidHex = String(r.solicitud_id ?? '').replace(/-/g, '').slice(-12)
-    const sid = parseInt(sidHex.substring(0, 8), 16)
+    // Extraer solicitud_id desde el UUID: posición 3 (xxxx-xxxx-{solicitud_id}-xxxx-xxxxxxxxxxxx)
+    const parts = String(r.solicitud_id ?? '').split('-')
+    const sid = parseInt(parts[2] ?? '0', 16)
     return {
       id: Number(r.id),
       solicitudId: sid || 0,
@@ -180,10 +180,9 @@ export async function obtenerEvidenciasDenuncia(denunciaId: string): Promise<Evi
 }
 
 function solicitudIdToUuid(denunciaId: string, solicitudId: number): string {
-  // UUID determinista basado en denuncia + solicitud: 00000000-0000-{solicitud}-{denuncia8}-{denuncia8}{sol16}
   const d = denunciaId.replace(/-/g, '').substring(0, 16).padEnd(16, '0')
   const s = solicitudId.toString(16).padStart(4, '0').slice(-4)
-  return `00000000-0000-${s}-${d.substring(0, 4)}-${d.substring(4, 16)}${s}`
+  return `00000000-0000-${s}-${d.substring(0, 4)}-${d.substring(4, 16)}`
 }
 
 export async function subirEvidenciaDenuncia(
