@@ -20,6 +20,7 @@ async function main() {
     { nombre: 'Operador',          descripcion: 'Captura y gestión de incidentes' },
     { nombre: 'Operador Víctimas', descripcion: 'Captura y seguimiento de medidas y búsquedas' },
     { nombre: 'Jurídico',          descripcion: 'Bandeja legal, solicitudes a C4 y contestaciones' },
+    { nombre: 'Agente Fiscalía',  descripcion: 'Agente del ministerio público' },
   ]).onConflictDoNothing()
 
   // ── Módulos del sidebar ────────────────────────────────────────────────────
