@@ -1,17 +1,38 @@
 import { db } from "@/lib/db";
 import { incidentes, catTiposIncidente } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, ShieldAlert } from "lucide-react";
 import Link from "next/link";
+import { eq, desc, count } from "drizzle-orm"; // Importamos count
+import { Pagination } from "@/components/911/Pagination"; // Importa el nuevo componente
 
-export default async function ListadoWhatsAppPage() {
+export default async function ListadoWhatsAppPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ page?: string }>;
+}) {
+    // 1. Configuración de paginación
+    const params = await searchParams;
+    const page = Number(params.page) || 1;
+    const pageSize = 10; // Cantidad de registros por página
+    const offset = (page - 1) * pageSize;
+
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
 
+    // 2. Obtener el conteo total de registros con el mismo filtro (canal = whatsapp)
+    const [totalResult] = await db
+        .select({ value: count() })
+        .from(incidentes)
+        .where(eq(incidentes.canal, 'whatsapp'));
+
+    const totalCount = totalResult.value;
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    // 3. Consulta con Limit y Offset
     const listado = await db
         .select({
             id: incidentes.id,
@@ -24,7 +45,9 @@ export default async function ListadoWhatsAppPage() {
         .from(incidentes)
         .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
         .where(eq(incidentes.canal, 'whatsapp'))
-        .orderBy(desc(incidentes.fechaHoraInicio));
+        .orderBy(desc(incidentes.fechaHoraInicio))
+        .limit(pageSize) // LIMIT
+        .offset(offset); // OFFSET
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -34,7 +57,7 @@ export default async function ListadoWhatsAppPage() {
             <DashboardHeader user={session.user as any} />
 
             <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 48px' }}>
-                
+
                 {/* HEADER DE SECCIÓN */}
                 <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                     <div>
@@ -69,10 +92,10 @@ export default async function ListadoWhatsAppPage() {
                     <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
                         <thead>
                             <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
-                                <th style={thStyle}><div style={headerInnerStyle}><Hash size={12}/> FOLIO</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><Calendar size={12}/> FECHA / HORA</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><ShieldAlert size={12}/> TIPO</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><MapPin size={12}/> UBICACIÓN</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><Hash size={12} /> FOLIO</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><Calendar size={12} /> FECHA / HORA</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><ShieldAlert size={12} /> TIPO</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><MapPin size={12} /> UBICACIÓN</div></th>
                                 <th style={thStyle}>ESTATUS</th>
                                 <th style={{ ...thStyle, textAlign: 'right' }}>ACCIONES</th>
                             </tr>
@@ -91,9 +114,9 @@ export default async function ListadoWhatsAppPage() {
                                             {item.folio}
                                         </td>
                                         <td style={tdStyle}>
-                                            {new Date(item.fecha).toLocaleString('es-MX', { 
-                                                day: '2-digit', month: '2-digit', year: '2-digit', 
-                                                hour: '2-digit', minute: '2-digit' 
+                                            {new Date(item.fecha).toLocaleString('es-MX', {
+                                                day: '2-digit', month: '2-digit', year: '2-digit',
+                                                hour: '2-digit', minute: '2-digit'
                                             })}
                                         </td>
                                         <td style={{ ...tdStyle, fontWeight: 500 }}>
@@ -118,6 +141,13 @@ export default async function ListadoWhatsAppPage() {
                             )}
                         </tbody>
                     </table>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        totalCount={totalCount} // <-- Añade esto
+                        pageSize={pageSize}     // <-- Añade esto
+                        baseUrl="/911/whatsapp"
+                    />
                 </div>
             </main>
 
@@ -129,13 +159,13 @@ export default async function ListadoWhatsAppPage() {
 }
 
 // ESTILOS SENTINEL
-const cardStyle = { 
-    background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px', 
-    borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' 
+const cardStyle = {
+    background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px',
+    borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
 };
 
-const sectionTitleStyle: React.CSSProperties = { 
-    fontFamily: 'Barlow Condensed', fontSize: '18px', fontWeight: 700, 
+const sectionTitleStyle: React.CSSProperties = {
+    fontFamily: 'Barlow Condensed', fontSize: '18px', fontWeight: 700,
     textTransform: 'uppercase', color: '#1e293b', marginBottom: '24px',
     display: 'flex', alignItems: 'center', gap: '12px'
 };
@@ -155,14 +185,14 @@ const tdStyle: React.CSSProperties = {
 
 const btnNuevoStyle: React.CSSProperties = {
     background: '#0f172a', color: '#ffffff', padding: '12px 24px', borderRadius: '2px',
-    fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 600, 
+    fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 600,
     display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none',
     letterSpacing: '0.1em', transition: 'all 0.2s'
 };
 
 const btnViewStyle: React.CSSProperties = {
     display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#2563eb',
-    fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 600, 
+    fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 600,
     textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.05em'
 };
 
@@ -174,15 +204,15 @@ const footerStyle: React.CSSProperties = {
 // Badges Tácticos de Estatus
 function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     const base: React.CSSProperties = {
-        padding: '4px 10px', borderRadius: '2px', fontSize: '9px', 
+        padding: '4px 10px', borderRadius: '2px', fontSize: '9px',
         fontWeight: 700, fontFamily: 'JetBrains Mono', display: 'inline-block',
         border: '1px solid'
     };
 
     switch (estatus) {
-        case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
-        case 'en_despacho':   return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }; 
-        case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
-        default:              return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
+        case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' };
+        case 'en_despacho': return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' };
+        case 'atendido': return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' };
+        default: return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
     }
 }
