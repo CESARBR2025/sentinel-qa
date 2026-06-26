@@ -11,6 +11,7 @@ export interface VehiculoState {
 export interface OficialFormState {
   step: number
   isAnonimo: boolean
+  quiereDenuncia: boolean
   tipoIncidente: string
   tipoEmergenciaId: string
   prioridadId: string
@@ -58,6 +59,7 @@ export type OficialFormStore = OficialFormState & OficialFormActions
 const initialState: OficialFormState = {
   step: 0,
   isAnonimo: false,
+  quiereDenuncia: false,
   tipoIncidente: '',
   tipoEmergenciaId: '',
   prioridadId: '',

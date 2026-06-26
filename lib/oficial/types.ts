@@ -90,4 +90,45 @@ export interface CrearReporteCampoInput {
   ofiResultadoCateo: string | null
   ofiOficialId: string
   ofiOficialNombre: string
+  ofiQuiereDenuncia: boolean
+}
+
+export interface OfiReporteResumen {
+  id: string
+  ofiFolioCad: string
+  ofiTipoIncidente: string | null
+  ofiCalle: string | null
+  ofiColonia: string | null
+  ofiLatitud: number | null
+  ofiLongitud: number | null
+  quiereDenuncia: boolean
+  createdAt: string
+  d1Id: string | null
+  d1Folio: string | null
+}
+
+export interface OfiD1Vinculada {
+  id: string
+  folioDenuncia: string
+  iph: string | null
+  folioCu: string | null
+  fechaReporte: string | null
+  horaReporte: string | null
+  tipoEvento: string | null
+  delito: string | null
+  violencia: boolean
+  lugarHecho: string | null
+  coloniaHecho: string | null
+  latitud: number | null
+  longitud: number | null
+  policiaCargo: string | null
+  seGeneroD1: boolean
+  observaciones: string | null
+  ofendidoHombre: number
+  ofendidoMujer: number
+}
+
+export interface OfiReporteDetalle extends OfiReporteCampo {
+  quiereDenuncia: boolean
+  d1: OfiD1Vinculada | null
 }

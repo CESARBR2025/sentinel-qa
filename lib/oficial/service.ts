@@ -1,21 +1,28 @@
 import { obtenerOficialPorUserId, insertarReporteCampo } from './repository'
 import { CrearReporteCampoInput } from './types'
+import { obtenerReportesOficial, obtenerReporteDetalle } from './repository'
+import type { OfiReporteResumen, OfiReporteDetalle } from './types'
 
 function str(fd: FormData, key: string): string | null {
   const v = fd.get(key)
   return v && typeof v === 'string' && v.trim() ? v.trim() : null
 }
-
 function bool(fd: FormData, key: string): boolean {
   return fd.get(key) === 'true'
 }
-
 function num(fd: FormData, key: string): number | null {
   const v = str(fd, key)
   return v ? Number(v) : null
 }
 
-export async function crearReporte(userId: string, formData: FormData): Promise<string> {
+export async function crearReporte(userId: string, formData: FormData): Promise<{
+  reporteId: string
+  quiereDenuncia: boolean
+  calle: string | null
+  colonia: string | null
+  latitud: string | null
+  longitud: string | null
+}> {
   const oficial = await obtenerOficialPorUserId(userId)
   if (!oficial) throw new Error('Usuario no registrado como oficial de campo')
 
@@ -32,24 +39,23 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
           const [k, ...v] = p.split(':')
           if (k) partes[k.trim().toLowerCase()] = v.join(':').trim()
         })
-        return {
-          tipo: partes.tipo ?? '',
-          placas: partes.placas ?? '',
-          serie: partes.serie ?? '',
-          color: partes.color ?? '',
-          destino: partes.destino ?? '',
-        }
+        return { tipo: partes.tipo ?? '', placas: partes.placas ?? '', serie: partes.serie ?? '', color: partes.color ?? '', destino: partes.destino ?? '' }
       }).filter(v => v.placas || v.serie || v.color)
     : []
 
   const cateo = {
-    calle: str(formData, 'ofi_cateo_calle'),
+    calle:   str(formData, 'ofi_cateo_calle'),
     colonia: str(formData, 'ofi_cateo_colonia'),
-    numero: str(formData, 'ofi_cateo_numero'),
-    lat: num(formData, 'ofi_cateo_latitud'),
-    lng: num(formData, 'ofi_cateo_longitud'),
+    numero:  str(formData, 'ofi_cateo_numero'),
+    lat:     num(formData, 'ofi_cateo_latitud'),
+    lng:     num(formData, 'ofi_cateo_longitud'),
   }
   const hasCateo = !!(cateo.calle || cateo.colonia || cateo.numero)
+  const quiereDenuncia = bool(formData, 'ofi_quiere_denuncia')
+  const calle   = str(formData, 'ofi_calle')
+  const colonia = str(formData, 'ofi_colonia')
+  const latitud  = str(formData, 'ofi_latitud')
+  const longitud = str(formData, 'ofi_longitud')
 
   const input: CrearReporteCampoInput = {
     ofiFolioCad:          str(formData, 'ofi_folio_cad') ?? 'S/C',
@@ -60,8 +66,8 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiPrioridad:         str(formData, 'ofi_prioridad'),
     ofiDescripcion:       str(formData, 'ofi_descripcion'),
     ofiContenidoReporte:  str(formData, 'ofi_contenido_reporte'),
-    ofiCalle:             str(formData, 'ofi_calle'),
-    ofiColonia:           str(formData, 'ofi_colonia'),
+    ofiCalle:             calle,
+    ofiColonia:           colonia,
     ofiLatitud:           num(formData, 'ofi_latitud'),
     ofiLongitud:          num(formData, 'ofi_longitud'),
     ofiDatosPn:           str(formData, 'ofi_datos_pn'),
@@ -78,7 +84,20 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiResultadoCateo:    str(formData, 'ofi_resultado_cateo'),
     ofiOficialId:         oficial.id,
     ofiOficialNombre:     `${oficial.ofiNombre} ${oficial.ofiApPaterno}`.trim(),
+    ofiQuiereDenuncia:    quiereDenuncia,  // <-- NUEVO
   }
 
-  return await insertarReporteCampo(input)
+  const reporteId = await insertarReporteCampo(input)
+  return { reporteId, quiereDenuncia, calle, colonia, latitud, longitud }
+}
+
+export async function listarReportesOficial(userId: string): Promise<OfiReporteResumen[]> {
+  return obtenerReportesOficial(userId)
+}
+
+export async function verReporteDetalle(
+  id: string,
+  userId: string
+): Promise<OfiReporteDetalle | null> {
+  return obtenerReporteDetalle(id, userId)
 }
