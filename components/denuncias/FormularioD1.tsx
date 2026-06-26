@@ -7,7 +7,9 @@ import {
   FileText, Clock, Shield, MapPin, User, 
   CheckCircle, AlertCircle, Users, Save, 
   Navigation as NavigationIcon, Hash, Loader2, // <-- Añade estos
-  Search
+  Search,
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { useEmpleado } from '@/hooks/useEmpleado';
 
@@ -35,6 +37,7 @@ const SentinelField = ({ label, icon: Icon, name, type = "text", required = fals
 );
 
 
+<<<<<<< Updated upstream
 
 export default function FormularioD1({ user }: { user: any }) {
     const [coords, setCoords] = useState(center);
@@ -47,6 +50,29 @@ export default function FormularioD1({ user }: { user: any }) {
     const [buscandoMando, setBuscandoMando] = useState(false);
     const [errorMando, setErrorMando] = useState('');
     const empMando = useEmpleado();
+=======
+export default function FormularioD1({ user, prefill }: { user: any; prefill?: Prefill }) {
+  const [coords, setCoords] = useState(center);
+  const [step, setStep] = useState(1);
+  const [coordsHecho, setCoordsHecho] = useState({
+    lat: prefill?.lat ?? 20.3889,
+    lng: prefill?.lng ?? -99.9961,
+  })
+  const [dirHecho, setDirHecho] = useState({
+    calle: prefill?.lugarHecho ?? '',
+    colonia: prefill?.coloniaHecho ?? '',
+  })
+  const [coordsApoyo, setCoordsApoyo] = useState(centerDefault);
+  const [dirApoyo, setDirApoyo] = useState({ calle: '', colonia: '' });
+  const [nominaMando, setNominaMando] = useState('');
+  const [nombreMando, setNombreMando] = useState(prefill?.policiaCargo ?? '')
+  const [buscandoMando, setBuscandoMando] = useState(false);
+  const [errorMando, setErrorMando] = useState('');
+  const ahora = new Date();
+  const [fReporte, setFReporte] = useState(ahora.toISOString().split('T')[0]); // YYYY-MM-DD
+  const [hReporte, setHReporte] = useState(ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })); // HH:MM
+  const empMando = useEmpleado();
+>>>>>>> Stashed changes
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -116,7 +142,13 @@ export default function FormularioD1({ user }: { user: any }) {
       <input type="hidden" name="longitudHecho" value={coordsHecho.lng} />
       <input type="hidden" name="latitudApoyo" value={coordsApoyo.lat} />
       <input type="hidden" name="longitudApoyo" value={coordsApoyo.lng} />
+<<<<<<< Updated upstream
       
+=======
+      <input type="text" />
+{step === 1 && (
+  <>
+>>>>>>> Stashed changes
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><FileText size={18}/> IDENTIFICACIÓN LEGAL</h2>
@@ -166,7 +198,10 @@ export default function FormularioD1({ user }: { user: any }) {
           </div>
         </div>
       </section>
-
+   </>
+)}     
+{step === 2 && (
+  <>
       {/* 3. UBICACIÓN Y GEORREFERENCIACIÓN */}
 <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><NavigationIcon size={20}/> GEORREFERENCIACIÓN OPERATIVA</h2>
@@ -234,7 +269,10 @@ export default function FormularioD1({ user }: { user: any }) {
 
         </div>
       </section>
-
+  </>
+)}
+{step === 3 && (
+  <>
       {/* 4. CLASIFICACIÓN Y RESULTADOS */}
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><AlertCircle size={18}/> DETALLES DEL EVENTO</h2>
@@ -321,7 +359,10 @@ export default function FormularioD1({ user }: { user: any }) {
           </div>
         </div>
       </section>
-
+  </>
+)}
+{step === 4 && (
+  <>
       {/* 6. VICTIMOLOGÍA Y CUESTIONARIOS */}
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><Users size={18}/> VICTIMOLOGÍA</h2>
@@ -364,11 +405,28 @@ export default function FormularioD1({ user }: { user: any }) {
         </div>
       </section>
 
-      <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '100px' }}>
-        <button type="submit" style={btnSubmitStyle}>
-          <Save size={18} /> REGISTRAR REPORTE D1
-        </button>
-      </div>
+        </>
+)}
+
+<div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px', paddingBottom: '80px' }}>
+  {/* BOTÓN ATRÁS (No sale en el paso 1) */}
+  {step > 1 ? (
+    <button type="button" onClick={() => setStep(step - 1)} style={btnBackStyle}>
+      <ArrowLeft size={16} /> ANTERIOR
+    </button>
+  ) : <div />}
+
+  {/* BOTÓN SIGUIENTE O FINALIZAR */}
+  {step < 4 ? (
+    <button type="button" onClick={() => setStep(step + 1)} style={btnNextStyle}>
+      SIGUIENTE <ArrowRight size={16} />
+    </button>
+  ) : (
+    <button type="submit" style={btnSubmitStyle}>
+      <Save size={18} /> FINALIZAR REPORTE
+    </button>
+  )}
+</div>
 
       <style jsx>{`
         .sentinel-panel {
@@ -419,6 +477,7 @@ const mapWrapperStyle = {
     overflow: 'hidden'
 };
 
+<<<<<<< Updated upstream
 const loaderStyle = { 
     height: '280px', 
     display: 'flex', 
@@ -428,3 +487,18 @@ const loaderStyle = {
     fontSize: '12px', 
     color: '#64748b' 
 };
+=======
+const loaderStyle = {
+  height: '280px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontFamily: 'JetBrains Mono',
+  fontSize: '12px',
+  color: '#64748b'
+};
+
+const btnNextStyle = { background: '#2563eb', color: '#fff', padding: '14px 28px', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 700, fontFamily: 'JetBrains Mono', fontSize: '12px' };
+
+const btnBackStyle = { background: '#fff', color: '#64748b', padding: '14px 28px', border: '1px solid #e2e8f0', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 700, fontFamily: 'JetBrains Mono', fontSize: '12px' };
+>>>>>>> Stashed changes
