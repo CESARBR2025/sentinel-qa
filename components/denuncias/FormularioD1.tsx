@@ -3,9 +3,9 @@
 'use client';
 import React, { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import { 
-  FileText, Clock, Shield, MapPin, User, 
-  CheckCircle, AlertCircle, Users, Save, 
+import {
+  FileText, Clock, Shield, MapPin, User,
+  CheckCircle, AlertCircle, Users, Save,
   Navigation as NavigationIcon, Hash, Loader2, // <-- Añade estos
   Search
 } from 'lucide-react';
@@ -15,6 +15,10 @@ import { useEmpleado } from '@/hooks/useEmpleado';
 const mapContainerStyle = { width: '100%', height: '350px', borderRadius: '4px' };
 const center = { lat: 20.3889, lng: -99.9961 };
 const centerDefault = { lat: 20.3889, lng: -99.9961 };
+
+const ahora = new Date();
+const fechaActual = ahora.toISOString().split('T')[0]; // YYYY-MM-DD
+const horaActual = ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 
 const SentinelField = ({ label, icon: Icon, name, type = "text", required = false, ...props }: any) => (
   <div style={fieldContainerStyle}>
@@ -37,16 +41,19 @@ const SentinelField = ({ label, icon: Icon, name, type = "text", required = fals
 
 
 export default function FormularioD1({ user }: { user: any }) {
-    const [coords, setCoords] = useState(center);
-    const [coordsHecho, setCoordsHecho] = useState(centerDefault);
-    const [dirHecho, setDirHecho] = useState({ calle: '', colonia: '' });
-    const [coordsApoyo, setCoordsApoyo] = useState(centerDefault);
-    const [dirApoyo, setDirApoyo] = useState({ calle: '', colonia: '' });
-    const [nominaMando, setNominaMando] = useState('');
-    const [nombreMando, setNombreMando] = useState('');
-    const [buscandoMando, setBuscandoMando] = useState(false);
-    const [errorMando, setErrorMando] = useState('');
-    const empMando = useEmpleado();
+  const [coords, setCoords] = useState(center);
+  const [coordsHecho, setCoordsHecho] = useState(centerDefault);
+  const [dirHecho, setDirHecho] = useState({ calle: '', colonia: '' });
+  const [coordsApoyo, setCoordsApoyo] = useState(centerDefault);
+  const [dirApoyo, setDirApoyo] = useState({ calle: '', colonia: '' });
+  const [nominaMando, setNominaMando] = useState('');
+  const [nombreMando, setNombreMando] = useState('');
+  const [buscandoMando, setBuscandoMando] = useState(false);
+  const [errorMando, setErrorMando] = useState('');
+   const ahora = new Date();
+ const [fReporte, setFReporte] = useState(ahora.toISOString().split('T')[0]); // YYYY-MM-DD
+  const [hReporte, setHReporte] = useState(ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })); // HH:MM
+  const empMando = useEmpleado();
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -58,7 +65,7 @@ export default function FormularioD1({ user }: { user: any }) {
     if (e.latLng) setCoords({ lat: e.latLng.lat(), lng: e.latLng.lng() });
   }, []);
 
-    const reverseGeocode = (lat: number, lng: number, type: 'hecho' | 'apoyo') => {
+  const reverseGeocode = (lat: number, lng: number, type: 'hecho' | 'apoyo') => {
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ location: { lat, lng } }, (results, status) => {
       if (status === "OK" && results && results[0]) {
@@ -83,7 +90,7 @@ export default function FormularioD1({ user }: { user: any }) {
     await empMando.buscarPorNomina(nominaMando);
   };
 
-    useEffect(() => {
+  useEffect(() => {
     if (empMando.empleado) {
       setNombreMando(empMando.empleado.nombre);
     }
@@ -94,20 +101,20 @@ export default function FormularioD1({ user }: { user: any }) {
     const formData = new FormData(e.currentTarget);
     const body = Object.fromEntries(formData.entries());
     const res = await fetch("/api/reportes-d1", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     });
 
     const data = await res.json();
     if (!res.ok) {
-        alert(data.error);
-        return;
+      alert(data.error);
+      return;
     }
     alert("Reporte registrado correctamente.");
-};
+  };
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -116,10 +123,11 @@ export default function FormularioD1({ user }: { user: any }) {
       <input type="hidden" name="longitudHecho" value={coordsHecho.lng} />
       <input type="hidden" name="latitudApoyo" value={coordsApoyo.lat} />
       <input type="hidden" name="longitudApoyo" value={coordsApoyo.lng} />
-      
+      <input type="text" />
+
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}
       <section className="sentinel-panel">
-        <h2 style={sectionTitleStyle}><FileText size={18}/> IDENTIFICACIÓN LEGAL</h2>
+        <h2 style={sectionTitleStyle}><FileText size={18} /> IDENTIFICACIÓN LEGAL</h2>
         <div style={grid3Style}>
           <SentinelField label="Folio de Denuncia" name="folioDenuncia" required placeholder="D1-0000" />
           <SentinelField label="IPH" name="iph" placeholder="IPH-2026-..." />
@@ -132,13 +140,13 @@ export default function FormularioD1({ user }: { user: any }) {
 
       {/* 2. CRONOMETRÍA COMPLETA (EL TIMELINE) */}
       <section className="sentinel-panel" style={{ borderLeftColor: '#d4a43a' }}>
-        <h2 style={{ ...sectionTitleStyle, color: '#d4a43a' }}><Clock size={18}/> CRONOMETRÍA OPERATIVA</h2>
-        
+        <h2 style={{ ...sectionTitleStyle, color: '#d4a43a' }}><Clock size={18} /> CRONOMETRÍA OPERATIVA</h2>
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Fila: Reporte y Avistamiento */}
           <div style={grid4Style}>
-            <SentinelField label="Fecha Reporte" name="fechaReporte" type="date" required />
-            <SentinelField label="Hora Reporte" name="horaReporte" type="time" required />
+            <SentinelField readOnly label="Fecha Reporte" name="fechaReporte" type="date" required value={fReporte} onChange={(e: any) => setFReporte(e.target.value)} />
+            <SentinelField readOnly label="Hora Reporte" name="horaReporte" type="time" required value={hReporte} onChange={(e: any) => setHReporte(e.target.value)} />
             <SentinelField label="Fecha Avistamiento Ciudadano" name="fechaAvistamiento" type="date" />
             <SentinelField label="Hora Avistamiento Ciudadano" name="horaAvistamiento" type="time" />
           </div>
@@ -168,67 +176,67 @@ export default function FormularioD1({ user }: { user: any }) {
       </section>
 
       {/* 3. UBICACIÓN Y GEORREFERENCIACIÓN */}
-<section className="sentinel-panel">
-        <h2 style={sectionTitleStyle}><NavigationIcon size={20}/> GEORREFERENCIACIÓN OPERATIVA</h2>
-        
+      <section className="sentinel-panel">
+        <h2 style={sectionTitleStyle}><NavigationIcon size={20} /> GEORREFERENCIACIÓN OPERATIVA</h2>
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
-          
+
           {/* MAPA 1: LUGAR DEL HECHO */}
           <div style={subPanelStyle}>
-            <h3 style={subTitleStyle}><MapPin size={14} color="#ef4444"/> 1. LUGAR DEL HECHO</h3>
+            <h3 style={subTitleStyle}><MapPin size={14} color="#ef4444" /> 1. LUGAR DEL HECHO</h3>
             <div style={mapWrapperStyle}>
               {isLoaded ? (
-                <GoogleMap mapContainerStyle={mapContainerStyle} center={coordsHecho} zoom={15} 
+                <GoogleMap mapContainerStyle={mapContainerStyle} center={coordsHecho} zoom={15}
                   onClick={(e) => {
-                    if(e.latLng) {
-                        const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                        setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
+                    if (e.latLng) {
+                      const lat = e.latLng.lat(); const lng = e.latLng.lng();
+                      setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
                     }
                   }}>
                   <Marker position={coordsHecho} draggable onDragEnd={(e) => {
-                    if(e.latLng) {
-                        const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                        setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
+                    if (e.latLng) {
+                      const lat = e.latLng.lat(); const lng = e.latLng.lng();
+                      setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
                     }
                   }} />
                 </GoogleMap>
               ) : <div style={loaderStyle}>Cargando Mapa...</div>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
-                <SentinelField label="Calle y Número (Hecho)" name="lugarHecho" value={dirHecho.calle} 
-                  onChange={(e:any) => setDirHecho({...dirHecho, calle: e.target.value})} />
-                <SentinelField label="Colonia (Hecho)" name="coloniaHecho" value={dirHecho.colonia} 
-                  onChange={(e:any) => setDirHecho({...dirHecho, colonia: e.target.value})} />
+              <SentinelField label="Calle y Número (Hecho)" name="lugarHecho" value={dirHecho.calle}
+                onChange={(e: any) => setDirHecho({ ...dirHecho, calle: e.target.value })} />
+              <SentinelField label="Colonia (Hecho)" name="coloniaHecho" value={dirHecho.colonia}
+                onChange={(e: any) => setDirHecho({ ...dirHecho, colonia: e.target.value })} />
             </div>
           </div>
 
           {/* MAPA 2: LUGAR DE SOLICITUD DE APOYO */}
           <div style={subPanelStyle}>
-            <h3 style={subTitleStyle}><Shield size={14} color="#2563eb"/> 2. LUGAR DE SOLICITUD DE APOYO</h3>
+            <h3 style={subTitleStyle}><Shield size={14} color="#2563eb" /> 2. LUGAR DE SOLICITUD DE APOYO</h3>
             <div style={mapWrapperStyle}>
               {isLoaded ? (
                 <GoogleMap mapContainerStyle={mapContainerStyle} center={coordsApoyo} zoom={15}
                   onClick={(e) => {
-                    if(e.latLng) {
-                        const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                        setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
+                    if (e.latLng) {
+                      const lat = e.latLng.lat(); const lng = e.latLng.lng();
+                      setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
                     }
                   }}>
                   <Marker position={coordsApoyo} draggable icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                     onDragEnd={(e) => {
-                      if(e.latLng) {
-                          const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                          setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
+                      if (e.latLng) {
+                        const lat = e.latLng.lat(); const lng = e.latLng.lng();
+                        setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
                       }
                     }} />
                 </GoogleMap>
               ) : <div style={loaderStyle}>Cargando Mapa...</div>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
-                <SentinelField label="Calle y Número (Apoyo)" name="lugarApoyo" value={dirApoyo.calle} 
-                  onChange={(e:any) => setDirApoyo({...dirApoyo, calle: e.target.value})} />
-                <SentinelField label="Colonia (Apoyo)" name="coloniaApoyo" value={dirApoyo.colonia} 
-                  onChange={(e:any) => setDirApoyo({...dirApoyo, colonia: e.target.value})} />
+              <SentinelField label="Calle y Número (Apoyo)" name="lugarApoyo" value={dirApoyo.calle}
+                onChange={(e: any) => setDirApoyo({ ...dirApoyo, calle: e.target.value })} />
+              <SentinelField label="Colonia (Apoyo)" name="coloniaApoyo" value={dirApoyo.colonia}
+                onChange={(e: any) => setDirApoyo({ ...dirApoyo, colonia: e.target.value })} />
             </div>
           </div>
 
@@ -237,7 +245,7 @@ export default function FormularioD1({ user }: { user: any }) {
 
       {/* 4. CLASIFICACIÓN Y RESULTADOS */}
       <section className="sentinel-panel">
-        <h2 style={sectionTitleStyle}><AlertCircle size={18}/> DETALLES DEL EVENTO</h2>
+        <h2 style={sectionTitleStyle}><AlertCircle size={18} /> DETALLES DEL EVENTO</h2>
         <div style={grid3Style}>
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>Tipo de Evento</label>
@@ -260,18 +268,18 @@ export default function FormularioD1({ user }: { user: any }) {
 
       {/* 5. PERSONAL, EQUIPO Y D1 */}
       <section className="sentinel-panel">
-        <h2 style={sectionTitleStyle}><Shield size={18}/> PERSONAL Y EQUIPAMIENTO</h2>
+        <h2 style={sectionTitleStyle}><Shield size={18} /> PERSONAL Y EQUIPAMIENTO</h2>
         <div style={grid3Style}>
           <SentinelField label="CRP (Placa Patrulla)" name="crp" icon={Shield} />
 
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <label style={labelStyle}>Nómina del Mando</label>
             <div style={{ display: 'flex', gap: '4px' }}>
               <div style={{ position: 'relative', flex: 1 }}>
                 <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
                 <input
                   type="text"
-                  name="nominaMando" 
+                  name="nominaMando"
                   placeholder="Escriba nómina..."
                   value={nominaMando}
                   onChange={(e) => setNominaMando(e.target.value)}
@@ -294,7 +302,7 @@ export default function FormularioD1({ user }: { user: any }) {
           {/* Campo de Nombre (Se llena solo por el useEffect) */}
           <SentinelField
             label="Policía a Cargo (Mando)"
-            name="policiaCargo" 
+            name="policiaCargo"
             icon={Shield}
             placeholder="Nombre automático..."
             value={nombreMando}
@@ -302,21 +310,19 @@ export default function FormularioD1({ user }: { user: any }) {
             readOnly // Opcional: para que no lo editen manualmente si ya se buscó
           />
 
-          
+
           <SentinelField label="Nombre Firma D1" name="policiaFirmaD1" />
           <SentinelField label="Persona Ingresa CU" name="policiaIngresaCu" />
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Se requirió Tablet?</label>
-            <select name="requirioTablet" style={inputStyle}>
+            <select name="requirioTablet" style={inputStyle} defaultValue="true">
               <option value="true">SÍ</option>
-              <option value="false">NO</option>
             </select>
           </div>
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Funcionaba Tablet?</label>
-            <select name="funcionabaTablet" style={inputStyle}>
+            <select name="funcionabaTablet" style={inputStyle} defaultValue="true">
               <option value="true">SÍ</option>
-              <option value="false">NO</option>
             </select>
           </div>
         </div>
@@ -324,7 +330,7 @@ export default function FormularioD1({ user }: { user: any }) {
 
       {/* 6. VICTIMOLOGÍA Y CUESTIONARIOS */}
       <section className="sentinel-panel">
-        <h2 style={sectionTitleStyle}><Users size={18}/> VICTIMOLOGÍA</h2>
+        <h2 style={sectionTitleStyle}><Users size={18} /> VICTIMOLOGÍA</h2>
         <div style={grid4Style}>
           <SentinelField label="Ofendido Hombre" name="ofendidoHombre" type="number" defaultValue="0" />
           <SentinelField label="Ofendido Mujer" name="ofendidoMujer" type="number" defaultValue="0" />
@@ -341,7 +347,7 @@ export default function FormularioD1({ user }: { user: any }) {
 
       {/* 7. ESTATUS FINAL Y OBSERVACIONES */}
       <section className="sentinel-panel">
-        <h2 style={sectionTitleStyle}><CheckCircle size={18}/> CIERRE Y D1</h2>
+        <h2 style={sectionTitleStyle}><CheckCircle size={18} /> CIERRE Y D1</h2>
         <div style={grid2Style}>
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Se generó la D1?</label>
@@ -390,41 +396,41 @@ const inputStyle = { width: '100%', padding: '12px', border: '1px solid #e2e8f0'
 const iconStyle = { position: 'absolute' as const, left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' };
 const sectionTitleStyle = { fontFamily: 'Barlow Condensed', fontSize: '20px', fontWeight: 800, color: '#0f172a', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px', textTransform: 'uppercase' as const };
 const btnSubmitStyle = { background: '#0f172a', color: '#ffffff', padding: '20px 60px', border: 'none', borderRadius: '2px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '13px', letterSpacing: '0.2em', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' };
-const subPanelStyle = { 
-    background: '#f8fafc', 
-    padding: '24px', 
-    borderRadius: '4px', 
-    border: '1px solid #e2e8f0',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '16px'
+const subPanelStyle = {
+  background: '#f8fafc',
+  padding: '24px',
+  borderRadius: '4px',
+  border: '1px solid #e2e8f0',
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '16px'
 };
 
-const subTitleStyle = { 
-    fontFamily: 'JetBrains Mono', 
-    fontSize: '11px', 
-    fontWeight: 700, 
-    marginBottom: '8px', 
-    display: 'flex', 
-    alignItems: 'center', 
-    gap: '8px', 
-    textTransform: 'uppercase' as const 
+const subTitleStyle = {
+  fontFamily: 'JetBrains Mono',
+  fontSize: '11px',
+  fontWeight: 700,
+  marginBottom: '8px',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  textTransform: 'uppercase' as const
 };
 
-const mapWrapperStyle = { 
-    border: '1px solid #cbd5e1', 
-    padding: '4px', 
-    background: '#fff', 
-    borderRadius: '4px',
-    overflow: 'hidden'
+const mapWrapperStyle = {
+  border: '1px solid #cbd5e1',
+  padding: '4px',
+  background: '#fff',
+  borderRadius: '4px',
+  overflow: 'hidden'
 };
 
-const loaderStyle = { 
-    height: '280px', 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    fontFamily: 'JetBrains Mono', 
-    fontSize: '12px', 
-    color: '#64748b' 
+const loaderStyle = {
+  height: '280px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontFamily: 'JetBrains Mono',
+  fontSize: '12px',
+  color: '#64748b'
 };
