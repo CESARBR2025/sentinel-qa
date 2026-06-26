@@ -3,7 +3,10 @@
 
 import { useState } from "react";
 import { createIncidente } from "@/lib/incidentes/actions";
+import { useCallback, useRef } from "react"; // Ya tienes useState, añade estos
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 
+const libraries: ("places")[] = ["places"];
 
 export default function Formulario911({ user, catalogos }: {
     user: { name: string; apellido?: string }, catalogos: {
@@ -34,10 +37,85 @@ export default function Formulario911({ user, catalogos }: {
     const [esLlamadaAlarma, setEsLlamadaAlarma] = useState(false);
     const [nombreResponsable, setNombreResponsable] = useState(""); // Nuevo estado
 
+    // 1. Cargar la API
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
+        libraries
+    });
+
+    // 2. Estados para coordenadas (San Juan del Río por defecto)
+    const [coords, setCoords] = useState({ lat: 20.3889, lng: -99.9961 });
+    const [map, setMap] = useState<google.maps.Map | null>(null);
+    const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+    const [direccion, setDireccion] = useState({ calle: "", numeroExterior: "", colonia: "" });
+
+    const buscarDireccion = (lat: number, lng: number) => {
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+            if (status === "OK" && results?.[0]) {
+                let calle = "";
+                let numero = "";
+                let colonia = "";
+
+                results[0].address_components.forEach((comp) => {
+                    if (comp.types.includes("route")) calle = comp.long_name;
+                    if (comp.types.includes("street_number")) numero = comp.long_name;
+                    if (comp.types.includes("sublocality") || comp.types.includes("neighborhood")) colonia = comp.long_name;
+                });
+
+                setDireccion({
+                    calle: calle,
+                    numeroExterior: numero,
+                    colonia: colonia
+                });
+            }
+        });
+    };
+
+    const onPlaceChanged = () => {
+        const place = autocompleteRef.current?.getPlace();
+        if (place && place.geometry && place.geometry.location) {
+            const location = place.geometry.location;
+            const newPos = { lat: location.lat(), lng: location.lng() };
+            setCoords(newPos);
+            map?.panTo(newPos);
+
+            let calle = "";
+            let numero = "";
+            let colonia = "";
+            // No necesitamos municipio en el estado si es fijo, 
+            // pero lo extraemos para evitar que se meta en 'colonia'
+
+            place.address_components?.forEach((comp) => {
+                const types = comp.types;
+
+                if (types.includes("route")) {
+                    calle = comp.long_name;
+                } else if (types.includes("street_number")) {
+                    numero = comp.long_name;
+                } else if (types.includes("sublocality_level_1") || types.includes("neighborhood")) {
+                    // Priorizamos sublocalidad nivel 1 para la Colonia en México
+                    colonia = comp.long_name;
+                } else if (colonia === "" && types.includes("sublocality")) {
+                    colonia = comp.long_name;
+                }
+            });
+
+            setDireccion({
+                calle: calle,
+                numeroExterior: numero,
+                colonia: colonia
+            });
+        }
+    };
     return (
         <form action={async (fd) => {
+            // ESTO ES LO NUEVO:
+            fd.append("latitud", coords.lat.toString());
+            fd.append("longitud", coords.lng.toString());
+
             const inc = await createIncidente(fd);
-            // Como el 911 no lleva reporte de campo, redireccionamos aquí
             window.location.href = `/incidentes/${inc.id}`;
         }}>
             <input type="hidden" name="canal" value="911" />
@@ -174,24 +252,92 @@ export default function Formulario911({ user, catalogos }: {
 
             {/* SECCIÓN 04 */}
             <div className="panel">
-                <h2>Ubicación</h2>
+                <h2 className="sentinel-title">Ubicación</h2>
+
+                {isLoaded ? (
+                    <div style={{ marginBottom: '20px' }}>
+                        <label>Buscador de Dirección (Google Maps)</label>
+                        <Autocomplete
+                            onLoad={(ref) => (autocompleteRef.current = ref)}
+                            onPlaceChanged={onPlaceChanged}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Escribe una dirección para centrar el mapa..."
+                                style={{ marginBottom: '10px', borderLeft: '3px solid #3b82f6' }}
+                            />
+                        </Autocomplete>
+
+                        <GoogleMap
+                            mapContainerStyle={{ width: '100%', height: '300px', borderRadius: '4px' }}
+                            center={coords}
+                            zoom={15}
+                            onLoad={(map) => setMap(map)}
+                            onClick={(e) => e.latLng && setCoords({ lat: e.latLng.lat(), lng: e.latLng.lng() })}
+                            options={{ streetViewControl: false, mapTypeControl: false }}
+                        >
+                            <Marker
+                                position={coords}
+                                draggable={true}
+                                onDragEnd={(e) => e.latLng && setCoords({ lat: e.latLng.lat(), lng: e.latLng.lng() })}
+                            />
+                        </GoogleMap>
+                        <p style={{ fontSize: '10px', color: '#64748b', marginTop: '5px', fontFamily: 'monospace' }}>
+                            COORDENADAS SELECCIONADAS: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)}
+                        </p>
+                    </div>
+                ) : (
+                    <p>Cargando Mapa...</p>
+                )}
 
                 <div className="grid">
+                    {/* CALLE */}
                     <div>
-                        <label>Calle</label>
-                        <input type="text" name="calle" />
+                        <label>Calle / Vialidad</label>
+                        <input
+                            type="text"
+                            name="calle"
+                            value={direccion.calle || ""}
+                            onChange={(e) => setDireccion({ ...direccion, calle: e.target.value })}
+                            placeholder="Nombre de la calle"
+                        />
                     </div>
 
+                    {/* NÚMERO EXTERIOR (AUTORELLENABLE) */}
+                    <div>
+                        <label>Número Exterior</label>
+                        <input
+                            type="text"
+                            name="numero_exterior" // <--- Importante para el backend
+                            value={direccion.numeroExterior || ""}
+                            onChange={(e) => setDireccion({ ...direccion, numeroExterior: e.target.value })}
+                            placeholder="Ej. 104-B"
+                        />
+                    </div>
+
+                    {/* NÚMERO INTERIOR (MANUAL) */}
+                    <div>
+                        <label>Número Interior</label>
+                        <input
+                            type="text"
+                            name="numero_interior" // <--- Importante para el backend
+                            placeholder="Depto / Local"
+                        />
+                    </div>
+
+                    {/* COLONIA */}
                     <div>
                         <label>Colonia</label>
-                        <input type="text" name="colonia" />
+                        <input
+                            type="text"
+                            name="colonia"
+                            value={direccion.colonia || ""}
+                            onChange={(e) => setDireccion({ ...direccion, colonia: e.target.value })}
+                            placeholder="Nombre de la colonia"
+                        />
                     </div>
 
-                    <div>
-                        <label>Entre Calles</label>
-                        <input type="text" name="entreCalles" />
-                    </div>
-
+                    {/* MUNICIPIO (Se queda igual) */}
                     <div>
                         <label>Municipio</label>
                         <input

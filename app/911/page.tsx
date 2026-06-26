@@ -4,6 +4,13 @@ import { db } from '@/lib/db/index'
 import { incidentes } from '@/lib/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
 
+// --- NUEVOS IMPORTS PARA SESIÓN ---
+import { redirect } from 'next/navigation'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { DashboardHeader } from '@/components/partials/Header'
+// ----------------------------------
+
 async function getStats() {
   const hoy = new Date()
   hoy.setHours(0, 0, 0, 0)
@@ -37,6 +44,12 @@ async function getStats() {
 }
 
 export default async function SeleccionAtencionPage() {
+  // 1. VALIDACIÓN DE SESIÓN (Igual que en Despacho)
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const user = session.user as { name: string; apellido?: string; email: string }
+  
   const stats = await getStats()
 
   const modulos = [
@@ -45,7 +58,7 @@ export default async function SeleccionAtencionPage() {
       label: 'Ciudadano',
       sub: 'Base de datos de atención, registros de identidad y antecedentes de contacto.',
       icon: <Users size={28} />,
-      href: '/911/ciudadano',
+      href: '/911/ciudadano/incidentes',
       stats: [{ label: 'Canal 911 hoy', value: String(stats.hoy911) }, { label: 'Total', value: String(stats.total) }]
     },
     {
@@ -53,7 +66,7 @@ export default async function SeleccionAtencionPage() {
       label: 'WhatsApp',
       sub: 'Gestión de reportes entrantes vía mensajería instantánea y despacho digital.',
       icon: <MessageSquare size={28} />,
-      href: '/911/whatsapp',
+      href: '/911/whatsapp/incidentes',
       stats: [{ label: 'WhatsApp hoy', value: String(stats.hoyWA) }, { label: 'Total', value: String(stats.total) }]
     },
     {
@@ -61,7 +74,7 @@ export default async function SeleccionAtencionPage() {
       label: 'Rondín',
       sub: 'Control de patrullaje preventivo, puntos de firma y geolocalización de unidades.',
       icon: <MapPin size={28} />,
-      href: '/911/rondin',
+      href: '/911/rondin/incidentes',
       stats: [{ label: 'Radio hoy', value: String(stats.hoyRadio) }, { label: 'Total', value: String(stats.total) }]
     },
     {
@@ -85,6 +98,9 @@ export default async function SeleccionAtencionPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+
+      {/* 2. INSERTAR EL HEADER PASANDO EL USER */}
+      <DashboardHeader user={user} />
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 48px' }}>
         <section style={{ marginBottom: '64px' }}>

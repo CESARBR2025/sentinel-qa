@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react'; // Añadidos useCallback, useRef
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api"; // Nuevo
 import {
   MessageSquare, User, AlertTriangle, MapPin,
   ClipboardCheck, Clock, Shield, Send, Search, Check, Loader2, Plus, X,
@@ -107,6 +108,54 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
       setDetenidos(detenidos.filter((_, i) => i !== index));
     } else {
       setDetenidos([""]); // Si es el último, solo lo limpia
+    }
+  };
+
+  const libraries: ("places")[] = ["places"]; // Nuevo
+
+  // 1. Cargar API
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
+    libraries
+  });
+
+  // 2. Estados de Ubicación
+  const [coords, setCoords] = useState({ lat: 20.3889, lng: -99.9961 });
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const [direccion, setDireccion] = useState({ calle: "", numeroExterior: "", colonia: "" });
+
+  // 3. Funciones de Geocodificación
+  const buscarDireccion = (lat: number, lng: number) => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results?.[0]) {
+        let calle = "", numero = "", colonia = "";
+        results[0].address_components.forEach((comp) => {
+          if (comp.types.includes("route")) calle = comp.long_name;
+          if (comp.types.includes("street_number")) numero = comp.long_name;
+          if (comp.types.includes("sublocality") || comp.types.includes("neighborhood")) colonia = comp.long_name;
+        });
+        setDireccion({ calle, numeroExterior: numero, colonia });
+      }
+    });
+  };
+
+  const onPlaceChanged = () => {
+    const place = autocompleteRef.current?.getPlace();
+    if (place && place.geometry && place.geometry.location) {
+      const loc = place.geometry.location;
+      const newPos = { lat: loc.lat(), lng: loc.lng() };
+      setCoords(newPos);
+      map?.panTo(newPos);
+      let calle = "", numero = "", colonia = "";
+      place.address_components?.forEach((comp) => {
+        if (comp.types.includes("route")) calle = comp.long_name;
+        if (comp.types.includes("street_number")) numero = comp.long_name;
+        if (comp.types.includes("sublocality") || comp.types.includes("neighborhood")) colonia = comp.long_name;
+      });
+      setDireccion({ calle, numeroExterior: numero, colonia });
     }
   };
 
@@ -269,22 +318,60 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
               </div>
             </section>
 
-            {/* SECCIÓN 03: UBICACIÓN */}
+            {/* SECCIÓN 03: UBICACIÓN ACTUALIZADA */}
             <section className="sentinel-card">
               <h2 className="sentinel-section-title">Ubicación</h2>
+
+              {/* MAPA Y BUSCADOR */}
+              <div style={{ marginBottom: '24px', gridColumn: 'span 3' }}>
+                {isLoaded ? (
+                  <>
+                    <label style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#64748b', marginBottom: '8px', display: 'block' }}>Buscador de Dirección</label>
+                    <Autocomplete onLoad={(ref) => (autocompleteRef.current = ref)} onPlaceChanged={onPlaceChanged}>
+                      <input
+                        type="text"
+                        placeholder="Buscar dirección en el mapa..."
+                        style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', marginBottom: '12px' }}
+                      />
+                    </Autocomplete>
+                    <GoogleMap
+                      mapContainerStyle={{ width: '100%', height: '300px', borderRadius: '2px' }}
+                      center={coords}
+                      zoom={15}
+                      onLoad={(map) => setMap(map)}
+                      onClick={(e) => { if (e.latLng) { const p = { lat: e.latLng.lat(), lng: e.latLng.lng() }; setCoords(p); buscarDireccion(p.lat, p.lng); } }}
+                      options={{ streetViewControl: false, mapTypeControl: false }}
+                    >
+                      <Marker position={coords} draggable onDragEnd={(e) => { if (e.latLng) { const p = { lat: e.latLng.lat(), lng: e.latLng.lng() }; setCoords(p); buscarDireccion(p.lat, p.lng); } }} />
+                    </GoogleMap>
+                    <input type="hidden" name="latitud" value={coords.lat} />
+                    <input type="hidden" name="longitud" value={coords.lng} />
+                  </>
+                ) : <p>Cargando Mapa...</p>}
+              </div>
+
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
-                <SentinelField label="Calle" name="calle" icon={MapPin} placeholder="Nombre de la calle" />
-                <SentinelField label="Colonia" name="colonia" icon={MapPin} placeholder="Colonia o Fraccionamiento" />
+                <SentinelField
+                  label="Calle" name="calle" icon={MapPin}
+                  value={direccion.calle} onChange={(e: any) => setDireccion({ ...direccion, calle: e.target.value })}
+                />
+                <SentinelField
+                  label="Número Exterior" name="numero_exterior" icon={Hash}
+                  value={direccion.numeroExterior} onChange={(e: any) => setDireccion({ ...direccion, numeroExterior: e.target.value })}
+                  autoComplete="off"
+                />
+                <SentinelField
+                  label="Colonia" name="colonia" icon={MapPin}
+                  value={direccion.colonia} onChange={(e: any) => setDireccion({ ...direccion, colonia: e.target.value })}
+                />
+
+                <SentinelField label="Número Interior" name="numero_interior" placeholder="Depto / Local" autoComplete="address-level4" />
                 <SentinelField label="Entre Calles" name="entreCalles" icon={MapPin} placeholder="Calle A y Calle B" />
+                <SentinelField label="Referencia" name="referenciaUbicacion" icon={MapPin} placeholder="Ej. Frente a la tienda..." />
 
-                <div style={{ gridColumn: 'span 2' }}>
-                  <SentinelField label="Referencia de Ubicación" name="referenciaUbicacion" icon={MapPin} placeholder="Ej. Frente a la tienda, portón negro..." />
-                </div>
-
-                {/* SELECT DINÁMICO */}
+                {/* SELECT DINÁMICO POSITIVO/NEGATIVO */}
                 <SentinelField
                   label="Datos Positivos/Negativos"
-                  // Si es "otro", no le ponemos 'name' aquí para que no se duplique
                   name={datosPositivos !== "otro" ? "datosPositivosNegativos" : ""}
                   as="select"
                   icon={Search}
@@ -297,13 +384,12 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 </SentinelField>
 
                 {datosPositivos === "otro" && (
-                  <div style={{ gridColumn: 'span 3', marginTop: '-16px' }}>
+                  <div style={{ gridColumn: 'span 2' }}>
                     <SentinelField
                       label="Especifique el resultado"
-                      name="datosPositivosNegativos" // El backend recibirá este valor
+                      name="datosPositivosNegativos"
                       icon={FileText}
                       placeholder="Escriba aquí la observación..."
-                      fullWidth
                     />
                   </div>
                 )}

@@ -46,7 +46,7 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
             
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
                 
-                <Link href="/incidentes" style={btnBackStyle}>
+                <Link href="/911/whatsapp/incidentes" style={btnBackStyle}>
                     <ArrowLeft size={14} /> VOLVER AL LISTADO GENERAL
                 </Link>
 

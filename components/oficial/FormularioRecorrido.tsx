@@ -113,7 +113,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     const st = useOficialFormStore.getState()
 
     fd.set('ofi_folio_cad', st.folioCad)
-    fd.set('ofi_nombre_reportante',   st.isAnonimo ? '' : st.nombreReportante)
+    fd.set('ofi_nombre_reportante', st.isAnonimo ? '' : st.nombreReportante)
     fd.set('ofi_anonimo', String(st.isAnonimo))
     fd.set('ofi_tipo_incidente', st.tipoIncidente)
     fd.set('ofi_tipo_emergencia', st.tipoEmergenciaId)
@@ -130,6 +130,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     fd.set('ofi_hay_cateo', st.tieneCateo)
     fd.set('ofi_resultado_cateo', st.resultadoCateo)
     fd.set('ofi_oficial_nombre', `${user?.name || ''} ${user?.apellido || ''}`.trim())
+    fd.set('ofi_quiere_denuncia', String(st.quiereDenuncia))
 
     // Ubicación desde store (persiste aunque el mapa se desmonte)
     fd.set('ofi_calle', st.calle)
@@ -493,6 +494,23 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                     <div><span>Vehículos:</span> {tieneVehiculo === 'true' ? `SÍ (${numVehiculos})` : 'NO'}</div>
                     {tieneCateo === 'true' && <div><span>Cateo:</span> {domicilioCateado || 'SÍ'}</div>}
                   </div>
+                </div>
+              </div>
+              <div style={{ marginTop: 24, padding: '20px 24px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 2 }}>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#1d4ed8', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  ¿La víctima desea hacer la denuncia?
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button type="button"
+                    onClick={() => $('quiereDenuncia', true)}
+                    style={{ padding: '10px 28px', background: store.quiereDenuncia ? '#2563eb' : '#ffffff', color: store.quiereDenuncia ? '#ffffff' : '#2563eb', border: '1px solid #2563eb', borderRadius: 2, fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                    SÍ, DESEA DENUNCIAR
+                  </button>
+                  <button type="button"
+                    onClick={() => $('quiereDenuncia', false)}
+                    style={{ padding: '10px 28px', background: !store.quiereDenuncia ? '#0f172a' : '#ffffff', color: !store.quiereDenuncia ? '#ffffff' : '#64748b', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                    NO
+                  </button>
                 </div>
               </div>
             </section>

@@ -151,6 +151,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
       <input type="text" />
 {step === 1 && (
   <>
+
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><FileText size={18} /> IDENTIFICACIÓN LEGAL</h2>
@@ -490,3 +491,4 @@ const loaderStyle = {
 const btnNextStyle = { background: '#2563eb', color: '#fff', padding: '14px 28px', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 700, fontFamily: 'JetBrains Mono', fontSize: '12px' };
 
 const btnBackStyle = { background: '#fff', color: '#64748b', padding: '14px 28px', border: '1px solid #e2e8f0', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 700, fontFamily: 'JetBrains Mono', fontSize: '12px' };
+
