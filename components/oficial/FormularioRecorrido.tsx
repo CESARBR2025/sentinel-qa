@@ -113,7 +113,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     const st = useOficialFormStore.getState()
 
     fd.set('ofi_folio_cad', st.folioCad)
-    fd.set('ofi_nombre_reportante',   st.isAnonimo ? '' : st.nombreReportante)
+    fd.set('ofi_nombre_reportante', st.isAnonimo ? '' : st.nombreReportante)
     fd.set('ofi_anonimo', String(st.isAnonimo))
     fd.set('ofi_tipo_incidente', st.tipoIncidente)
     fd.set('ofi_tipo_emergencia', st.tipoEmergenciaId)
