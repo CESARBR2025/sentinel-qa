@@ -885,3 +885,50 @@ export const incidenteAlarmaEscolar = pgTable("incidente_alarma_escolar", {
   unique("incidente_alarma_escolar_incidente_uq").on(table.incidenteId), // 1:1
 ])
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// MÓDULO MONITORISTA — Tablas nuevas (no tocar existentes)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export const solicitudesEvidencia = pgTable("solicitudes_evidencia", {
+  id:                uuid().defaultRandom().primaryKey().notNull(),
+  incidenteId:       uuid("incidente_id").notNull(),
+  folioIncidente:    varchar("folio_incidente", { length: 60 }),
+  solicitadoPor:     text("solicitado_por").notNull(),
+  solicitadoNombre:  varchar("solicitado_nombre", { length: 200 }),
+  descripcion:       text().notNull(),
+  status:            varchar({ length: 20 }).default('pendiente').notNull(),
+  creadoEn:          timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+  completadoEn:      timestamp("completado_en", { withTimezone: true, mode: 'string' }),
+}, (table) => [
+  foreignKey({ columns: [table.solicitadoPor], foreignColumns: [users.id], name: "se_solicitado_por_fk" }),
+  check("se_status_ck", sql`status IN ('pendiente','completada','cancelada')`),
+])
+
+export const evidencias = pgTable("evidencias", {
+  id:               uuid().defaultRandom().primaryKey().notNull(),
+  solicitudId:      uuid("solicitud_id").notNull(),
+  incidenteId:      uuid("incidente_id").notNull(),
+  tipo:             varchar({ length: 20 }).notNull(),
+  nombreOriginal:   varchar("nombre_original", { length: 300 }),
+  urlExpediente:    varchar("url_expediente", { length: 500 }).notNull(),
+  subidoPor:        text("subido_por").notNull(),
+  creadoEn:         timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+  foreignKey({ columns: [table.solicitudId], foreignColumns: [solicitudesEvidencia.id], name: "ev_solicitud_fk" }).onDelete("cascade"),
+  foreignKey({ columns: [table.subidoPor], foreignColumns: [users.id], name: "ev_subido_por_fk" }),
+  check("ev_tipo_ck", sql`tipo IN ('foto','video','documento')`),
+])
+
+export const monitoristaHistorial = pgTable("monitorista_historial", {
+  id:              uuid().defaultRandom().primaryKey().notNull(),
+  monitoristaId:   text("monitorista_id").notNull(),
+  accion:          varchar({ length: 50 }).notNull(),
+  solicitudId:     uuid("solicitud_id"),
+  incidenteId:     uuid("incidente_id"),
+  creadoEn:        timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+  foreignKey({ columns: [table.monitoristaId], foreignColumns: [users.id], name: "mh_monitorista_fk" }),
+  foreignKey({ columns: [table.solicitudId], foreignColumns: [solicitudesEvidencia.id], name: "mh_solicitud_fk" }),
+  check("mh_accion_ck", sql`accion IN ('solicitud_vista','evidencia_subida','solicitud_completada','solicitud_cancelada')`),
+])
+
