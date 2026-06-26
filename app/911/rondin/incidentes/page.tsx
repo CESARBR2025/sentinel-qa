@@ -1,32 +1,56 @@
 import { db } from "@/lib/db";
 import { incidentes, catTiposIncidente } from "@/lib/db/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm"; // Importamos count
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, Shield, Car } from "lucide-react";
 import Link from "next/link";
+import { Pagination } from "@/components/911/Pagination"; // Importamos el componente
 
-export default async function ListadoRondinPage() {
+export default async function ListadoRondinPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ page?: string }>;
+}) {
+    // 1. Configuración de paginación
+    const params = await searchParams;
+    const page = Number(params.page) || 1;
+    const pageSize = 10;
+    const offset = (page - 1) * pageSize;
+
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
 
-    // Buscamos incidentes cuyo canal sea 'radio' (que es el que usas para recorridos/rondines)
-    const listado = await db
-        .select({
+    // 2. Ejecución de consultas en paralelo (Optimizado)
+    const [totalRes, dataRes] = await Promise.all([
+        // Conteo total para rondines (canal 'radio')
+        db.select({ value: count() })
+          .from(incidentes)
+          .where(eq(incidentes.canal, 'radio')),
+        
+        // Datos paginados
+        db.select({
             id: incidentes.id,
             folio: incidentes.folio,
             estatus: incidentes.estatus,
             fecha: incidentes.fechaHoraInicio,
             colonia: incidentes.colonia,
             tipo: catTiposIncidente.nombre,
-            oficial: incidentes.nombreOficial, // Añadimos el oficial que reporta
+            oficial: incidentes.nombreOficial,
         })
         .from(incidentes)
         .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
         .where(eq(incidentes.canal, 'radio')) 
-        .orderBy(desc(incidentes.fechaHoraInicio));
+        .orderBy(desc(incidentes.fechaHoraInicio))
+        .limit(pageSize)
+        .offset(offset)
+    ]);
+
+    const totalCount = totalRes[0].value;
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const listado = dataRes;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -118,6 +142,15 @@ export default async function ListadoRondinPage() {
                             )}
                         </tbody>
                     </table>
+
+                    {/* PAGINACIÓN INTEGRADA */}
+                    <Pagination 
+                        currentPage={page}
+                        totalPages={totalPages}
+                        totalCount={totalCount}
+                        pageSize={pageSize}
+                        baseUrl="/911/rondin/incidentes" // <-- Ajusta esta URL a la ruta real de este archivo
+                    />
                 </div>
             </main>
 
@@ -128,8 +161,7 @@ export default async function ListadoRondinPage() {
     );
 }
 
-// --- ESTILOS REUTILIZADOS DE TU SISTEMA SENTINEL ---
-
+// ... (El resto de tus estilos se mantienen igual)
 const cardStyle = { 
     background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px', 
     borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' 

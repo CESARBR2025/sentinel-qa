@@ -1,36 +1,58 @@
 import { db } from "@/lib/db";
 import { incidentes, catTiposIncidente, catPrioridades } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm"; // Importamos count
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
-import { Eye, Plus, Calendar, MapPin, Hash, PhoneCall, AlertTriangle, Clock } from "lucide-react";
+import { Eye, Plus, Calendar, MapPin, Hash, AlertTriangle, Clock } from "lucide-react";
 import Link from "next/link";
+import { Pagination } from "@/components/911/Pagination"; // Importamos el componente
 
-export default async function Listado911Page() {
+export default async function Listado911Page({
+    searchParams,
+}: {
+    searchParams: Promise<{ page?: string }>;
+}) {
+    // 1. Manejo seguro de paginación
+    const params = await searchParams;
+    const page = Math.max(1, Number(params?.page) || 1);
+    const pageSize = 10;
+    const offset = (page - 1) * pageSize;
+
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
 
-    const listado = await db
-        .select({
+    // 2. Consultas en paralelo (Optimizado para Central 911)
+    const [totalRes, dataRes] = await Promise.all([
+        db.select({ value: count() })
+          .from(incidentes)
+          .where(eq(incidentes.canal, '911')),
+        
+        db.select({
             id: incidentes.id,
             folio: incidentes.folio,
             estatus: incidentes.estatus,
             fecha: incidentes.fechaHoraInicio,
             colonia: incidentes.colonia,
             tipo: catTiposIncidente.nombre,
-            prioridad: catPrioridades.nombre, // Añadimos prioridad para 911
+            prioridad: catPrioridades.nombre,
         })
         .from(incidentes)
         .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
         .leftJoin(catPrioridades, eq(incidentes.prioridadId, catPrioridades.id))
         .where(eq(incidentes.canal, '911'))
-        .orderBy(desc(incidentes.fechaHoraInicio));
+        .orderBy(desc(incidentes.fechaHoraInicio))
+        .limit(pageSize)
+        .offset(offset)
+    ]);
+
+    const totalCount = totalRes[0].value;
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const listado = dataRes;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-            {/* Fuentes Sentinel */}
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
             <DashboardHeader user={session.user as any} />
@@ -61,7 +83,7 @@ export default async function Listado911Page() {
                 {/* TABLA DE INCIDENTES 911 */}
                 <div style={cardStyle}>
                     <div style={sectionTitleStyle}>
-                        <div style={decoratorStyle} /> LLAMADAS ENTRANTE 
+                        <div style={decoratorStyle} /> LLAMADAS ENTRANTES 
                     </div>
 
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -103,7 +125,7 @@ export default async function Listado911Page() {
                                         <td style={tdStyle}>
                                             <span style={{ 
                                                 fontSize: '10px', fontWeight: 800, 
-                                                color: item.prioridad === 'ALTA' ? '#3b82f6' : '#64748b' 
+                                                color: item.prioridad === 'ALTA' ? '#ef4444' : '#64748b' 
                                             }}>
                                                 {item.prioridad || 'MEDIA'}
                                             </span>
@@ -124,6 +146,15 @@ export default async function Listado911Page() {
                             )}
                         </tbody>
                     </table>
+
+                    {/* PAGINACIÓN TÁCTICA */}
+                    <Pagination 
+                        currentPage={page}
+                        totalPages={totalPages}
+                        totalCount={totalCount}
+                        pageSize={pageSize}
+                        baseUrl="/911/ciudadano/incidentes" // <-- REVISA QUE ESTA SEA LA RUTA REAL
+                    />
                 </div>
             </main>
 
@@ -134,8 +165,7 @@ export default async function Listado911Page() {
     );
 }
 
-// --- ESTILOS SENTINEL (Consistentes con WhatsApp y Rondín) ---
-
+// ... (Tus estilos se mantienen iguales)
 const cardStyle = { 
     background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px', 
     borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' 
@@ -147,7 +177,7 @@ const sectionTitleStyle: React.CSSProperties = {
     display: 'flex', alignItems: 'center', gap: '12px'
 };
 
-const decoratorStyle = { width: '4px', height: '18px', background: '#3b82f6' }; // ROJO PARA 911
+const decoratorStyle = { width: '4px', height: '18px', background: '#3b82f6' };
 
 const thStyle: React.CSSProperties = {
     padding: '16px 12px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: '10px',
