@@ -21,6 +21,8 @@ export default async function DashboardPage() {
     .limit(1)
 
   if (userRole?.rolNombre === 'Oficial de Campo') redirect('/oficial')
+  if (userRole?.rolNombre === 'agente_fiscalia') redirect('/fiscalia')
+  if (userRole?.rolNombre === 'agente_juzgado') redirect('/agente_juzgado')
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean
@@ -96,7 +98,7 @@ export default async function DashboardPage() {
           .dashboard-grid { grid-template-columns: 1fr; }
         }
       `}</style>
-      
+
       {/* Tactical Overlays */}
       <div className="shutter top-shutter"><div className="shutter-acc"></div></div>
       <div className="shutter bottom-shutter"><div className="shutter-acc"></div></div>
@@ -104,10 +106,10 @@ export default async function DashboardPage() {
 
       {/* Main Content Container */}
       <div style={{ position: 'relative', zIndex: 1, padding: '40px 64px', maxWidth: 1600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
-        
+
         {/* Header HUD */}
-        <div className="cyber-reveal delay-1" style={{ 
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', 
+        <div className="cyber-reveal delay-1" style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
           paddingBottom: 24, borderBottom: '1px solid rgba(212,164,58,0.15)',
           position: 'relative'
         }}>
@@ -139,84 +141,84 @@ export default async function DashboardPage() {
                 {user.email}
               </div>
             </div>
-            
+
             <div style={{ width: 1, height: 48, background: 'rgba(27, 39, 66, 0.8)' }}></div>
-            
+
             <SignOutButton />
           </div>
         </div>
 
         {/* Dashboard Content Grid */}
         <div className="dashboard-grid" style={{ flex: 1 }}>
-           
-           {/* Principal (ModuleCards) */}
-           <div className="cyber-reveal delay-2">
-             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-               <div style={{ width: 4, height: 16, background: '#d4a43a' }}></div>
-               <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 24, fontWeight: 700, letterSpacing: '0.08em', color: '#ffffff', margin: 0, textTransform: 'uppercase' }}>
-                 Módulos Operativos
-               </h2>
-             </div>
-             
-             <ModuleCards />
-           </div>
 
-           {/* Lateral (Status / Auth) */}
-           <div className="cyber-reveal delay-3" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-             
-             {/* Security Panel */}
-             <div style={{ 
-               background: 'rgba(11,18,32,0.6)', backdropFilter: 'blur(10px)', 
-               border: '1px solid rgba(27,39,66,0.8)', padding: 32, position: 'relative' 
-             }}>
-               {/* Decorators */}
-               <div style={{ position: 'absolute', top: 0, left: 0, width: 20, height: 20, borderTop: '2px solid rgba(212,164,58,0.5)', borderLeft: '2px solid rgba(212,164,58,0.5)' }}></div>
-               <div style={{ position: 'absolute', bottom: 0, right: 0, width: 20, height: 20, borderBottom: '2px solid rgba(212,164,58,0.5)', borderRight: '2px solid rgba(212,164,58,0.5)' }}></div>
-               
-               <h3 style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#8f9fbf', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
-                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                 Seguridad de la Cuenta
-               </h3>
-               
-               <Enable2FA enabled={!!user.twoFactorEnabled} />
-             </div>
+          {/* Principal (ModuleCards) */}
+          <div className="cyber-reveal delay-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+              <div style={{ width: 4, height: 16, background: '#d4a43a' }}></div>
+              <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 24, fontWeight: 700, letterSpacing: '0.08em', color: '#ffffff', margin: 0, textTransform: 'uppercase' }}>
+                Módulos Operativos
+              </h2>
+            </div>
 
-             {/* System Status Panel */}
-             <div style={{ 
-               background: 'rgba(11,18,32,0.6)', backdropFilter: 'blur(10px)', 
-               border: '1px solid rgba(27,39,66,0.8)', padding: 32, position: 'relative',
-               display: 'flex', flexDirection: 'column', gap: 16
-             }}>
-               <h3 style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#8f9fbf', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                 Estado del Sistema
-               </h3>
-               
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px dashed rgba(27,39,66,0.8)' }}>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#5c74a1' }}>NÚCLEO DB</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#4a9e6a', fontWeight: 600 }}>CONECTADO</span>
-               </div>
-               
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px dashed rgba(27,39,66,0.8)' }}>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#5c74a1' }}>LATENCIA RED</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#d8e0f0' }}>12ms</span>
-               </div>
-               
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#5c74a1' }}>ÚLTIMA SINCRONIZACIÓN</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#d8e0f0' }}>Hace 2 min</span>
-               </div>
-             </div>
+            <ModuleCards />
+          </div>
 
-           </div>
+          {/* Lateral (Status / Auth) */}
+          <div className="cyber-reveal delay-3" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+            {/* Security Panel */}
+            <div style={{
+              background: 'rgba(11,18,32,0.6)', backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(27,39,66,0.8)', padding: 32, position: 'relative'
+            }}>
+              {/* Decorators */}
+              <div style={{ position: 'absolute', top: 0, left: 0, width: 20, height: 20, borderTop: '2px solid rgba(212,164,58,0.5)', borderLeft: '2px solid rgba(212,164,58,0.5)' }}></div>
+              <div style={{ position: 'absolute', bottom: 0, right: 0, width: 20, height: 20, borderBottom: '2px solid rgba(212,164,58,0.5)', borderRight: '2px solid rgba(212,164,58,0.5)' }}></div>
+
+              <h3 style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#8f9fbf', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Seguridad de la Cuenta
+              </h3>
+
+              <Enable2FA enabled={!!user.twoFactorEnabled} />
+            </div>
+
+            {/* System Status Panel */}
+            <div style={{
+              background: 'rgba(11,18,32,0.6)', backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(27,39,66,0.8)', padding: 32, position: 'relative',
+              display: 'flex', flexDirection: 'column', gap: 16
+            }}>
+              <h3 style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#8f9fbf', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Estado del Sistema
+              </h3>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px dashed rgba(27,39,66,0.8)' }}>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#5c74a1' }}>NÚCLEO DB</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#4a9e6a', fontWeight: 600 }}>CONECTADO</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 12, borderBottom: '1px dashed rgba(27,39,66,0.8)' }}>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#5c74a1' }}>LATENCIA RED</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#d8e0f0' }}>12ms</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#5c74a1' }}>ÚLTIMA SINCRONIZACIÓN</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#d8e0f0' }}>Hace 2 min</span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="cyber-reveal delay-4" style={{ 
-          marginTop: 'auto', paddingTop: 24, 
+        <div className="cyber-reveal delay-4" style={{
+          marginTop: 'auto', paddingTop: 24,
           borderTop: '1px solid rgba(27, 39, 66, 0.5)',
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', 
-          letterSpacing: '0.18em', textTransform: 'uppercase', 
+          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878',
+          letterSpacing: '0.18em', textTransform: 'uppercase',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
