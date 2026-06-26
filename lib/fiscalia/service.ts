@@ -3,6 +3,7 @@ import {
   obtenerSolicitudesPendientes,
   obtenerSolicitudesEnProceso,
   obtenerSolicitudesConMonitorista,
+  obtenerSolicitudesCompletadas,
   actualizarEstadoSolicitud,
   actualizarSolicitudConEvidencias,
 } from './repository'
@@ -30,6 +31,11 @@ export async function tomarCaso(id: string): Promise<void> {
 
 export async function listarSolicitudesConMonitorista(): Promise<SolicitudEvidencia[]> {
   const rows = await obtenerSolicitudesConMonitorista()
+  return rows.map(rowToSolicitud)
+}
+
+export async function listarSolicitudesCompletadas(): Promise<SolicitudEvidencia[]> {
+  const rows = await obtenerSolicitudesCompletadas()
   return rows.map(rowToSolicitud)
 }
 

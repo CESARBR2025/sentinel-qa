@@ -9,20 +9,22 @@ interface Props {
   pendientes: SolicitudEvidencia[]
   enProceso: SolicitudEvidencia[]
   conMonitorista: SolicitudEvidencia[]
+  completadas: SolicitudEvidencia[]
 }
 
-type Tab = 'pendientes' | 'en_proceso' | 'con_monitorista'
+type Tab = 'pendientes' | 'en_proceso' | 'con_monitorista' | 'completadas'
 
 const tabs: { key: Tab; label: string; color: string }[] = [
   { key: 'pendientes',       label: 'Pendientes',         color: '#d97706' },
   { key: 'en_proceso',       label: 'En Proceso',         color: '#7c3aed' },
   { key: 'con_monitorista',  label: 'Con Monitorista',    color: '#0891b2' },
+  { key: 'completadas',      label: 'Completadas',        color: '#16a34a' },
 ]
 
-export function TabSolicitudes({ pendientes, enProceso, conMonitorista }: Props) {
+export function TabSolicitudes({ pendientes, enProceso, conMonitorista, completadas }: Props) {
   const [tab, setTab] = useState<Tab>('pendientes')
 
-  const map: Record<Tab, SolicitudEvidencia[]> = { pendientes, en_proceso: enProceso, con_monitorista: conMonitorista }
+  const map: Record<Tab, SolicitudEvidencia[]> = { pendientes, en_proceso: enProceso, con_monitorista: conMonitorista, completadas }
   const data = map[tab]
 
   return (
@@ -82,7 +84,7 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista }: Props)
             <line x1="12" y1="18" x2="12" y2="12" />
             <line x1="9" y1="15" x2="15" y2="15" />
           </svg>
-          <span>No hay solicitudes {tab === 'pendientes' ? 'pendientes' : tab === 'en_proceso' ? 'en proceso' : 'con monitorista'}</span>
+          <span>No hay solicitudes {tab === 'pendientes' ? 'pendientes' : tab === 'en_proceso' ? 'en proceso' : tab === 'con_monitorista' ? 'con monitorista' : 'completadas'}</span>
         </div>
       ) : (
         <div style={{ overflowX: 'auto', background: '#ffffff', border: '1px solid #e2e8f0' }}>
@@ -126,7 +128,7 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista }: Props)
                       <TomarCasoBoton solicitudId={s.id} />
                     ) : tab === 'en_proceso' ? (
                       <PedirEvidenciasBoton solicitudId={s.id} />
-                    ) : (
+                    ) : tab === 'con_monitorista' ? (
                       <PedirEvidenciasBoton
                         solicitudId={s.id}
                         existingEvidencias={(() => {
@@ -140,6 +142,16 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista }: Props)
                           }
                         })()}
                       />
+                    ) : (
+                      <span style={{
+                        fontFamily: 'JetBrains Mono,monospace',
+                        fontSize: 9,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        color: '#16a34a',
+                      }}>
+                        Completada
+                      </span>
                     )}
                   </td>
                 </tr>

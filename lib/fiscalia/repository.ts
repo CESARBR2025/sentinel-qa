@@ -84,6 +84,19 @@ export async function obtenerSolicitudesConMonitorista() {
   return result.rows;
 }
 
+export async function obtenerSolicitudesCompletadas() {
+  const result = await query<Record<string, unknown>>(
+    `SELECT rd.*
+     FROM ofi_reporte_denuncia rd
+     JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
+     WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
+       AND rd.estado_tramite = 'EN_ANALISIS'
+       AND rd.estado_evidencia = 'EVIDENCIA_ENVIADA'
+     ORDER BY rd.updated_at DESC`,
+  );
+  return result.rows;
+}
+
 export async function actualizarEstadoSolicitud(
   id: string,
   estadoTramite: string,

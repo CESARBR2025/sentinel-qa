@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { verificarRolFiscalia, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, tomarCaso, pedirEvidencias } from './service'
+import { verificarRolFiscalia, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, listarSolicitudesCompletadas, tomarCaso, pedirEvidencias } from './service'
 import type { UserInfo, SolicitudEvidencia } from './types'
 
 export async function obtenerDashboardFiscalia(): Promise<UserInfo> {
@@ -27,6 +27,7 @@ export interface SolicitudesData {
   pendientes: SolicitudEvidencia[]
   enProceso: SolicitudEvidencia[]
   conMonitorista: SolicitudEvidencia[]
+  completadas: SolicitudEvidencia[]
 }
 
 export async function obtenerSolicitudes(): Promise<SolicitudesData> {
@@ -36,13 +37,14 @@ export async function obtenerSolicitudes(): Promise<SolicitudesData> {
   const esValido = await verificarRolFiscalia(session.user.id)
   if (!esValido) redirect('/dashboard')
 
-  const [pendientes, enProceso, conMonitorista] = await Promise.all([
+  const [pendientes, enProceso, conMonitorista, completadas] = await Promise.all([
     listarSolicitudesPendientes(),
     listarSolicitudesEnProceso(),
     listarSolicitudesConMonitorista(),
+    listarSolicitudesCompletadas(),
   ])
 
-  return { pendientes, enProceso, conMonitorista }
+  return { pendientes, enProceso, conMonitorista, completadas }
 }
 
 export async function accionTomarCaso(formData: FormData): Promise<{ success: boolean; error?: string }> {
