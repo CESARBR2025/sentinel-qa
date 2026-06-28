@@ -18,6 +18,7 @@ const AlertIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="n
 const ChartIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>);
 const BookIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>);
 const SettingsIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>);
+const CameraIcon = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>);
 
 const MODULES: Module[] = [
   { 
@@ -29,6 +30,16 @@ const MODULES: Module[] = [
     size: 'large',
     status: 'active',
     stats: [{ label: 'Casos Activos', value: '14' }, { label: 'Prioridad Alta', value: '3' }]
+  },
+  { 
+    id: 'monitorista',
+    label: 'Monitorista', 
+    sub: 'Solicitudes de evidencias · Cámaras', 
+    icon: <CameraIcon />, 
+    href: '/monitorista',
+    size: 'large',
+    status: 'active',
+    stats: [{ label: 'Pendientes', value: '—' }, { label: 'Hoy', value: '—' }]
   },
    { 
     id: '911',
@@ -77,8 +88,8 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
   const isActive = status === 'active';
   const isAlert = status === 'alert';
 
-  const accentColor = isAlert ? '#c0223a' : '#d4a43a';
-  const iconColor = hover ? accentColor : (isActive ? '#5c74a1' : '#2a3a5e');
+  const accentColor = isAlert ? '#c0223a' : '#3b82f6';
+  const iconColor = hover ? accentColor : (isActive ? '#3b82f6' : '#94a3b8');
 
   const inner = (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
@@ -120,10 +131,10 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
             gap: 6,
             fontFamily: 'JetBrains Mono, monospace',
             fontSize: 10,
-            color: '#4a9e6a',
+            color: '#10b981',
             letterSpacing: '0.1em'
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4a9e6a', boxShadow: '0 0 8px rgba(74,158,106,0.8)' }}></span>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px rgba(16, 185, 129, 0.4)' }}></span>
             ONLINE
           </div>
         )}
@@ -137,7 +148,7 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
           fontSize:      isLarge ? 28 : 20,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          color:         hover ? '#ffffff' : '#d8e0f0',
+          color:         hover ? '#2563eb' : '#0f172a',
           marginBottom:  8,
           transition:    'color 0.3s ease',
         }}>
@@ -147,7 +158,7 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
         <div style={{
           fontFamily:    'JetBrains Mono,monospace',
           fontSize:      11,
-          color:         hover ? '#8f9fbf' : '#4a5878',
+          color:         hover ? '#475569' : '#64748b',
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
           transition:    'color 0.3s ease',
@@ -164,14 +175,14 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
           gap: 16, 
           marginTop: 24, 
           paddingTop: 16, 
-          borderTop: '1px solid rgba(27, 39, 66, 0.5)' 
+          borderTop: '1px solid #e2e8f0' 
         }}>
           {stats.map((stat, i) => (
             <div key={i}>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
                 {stat.label}
               </div>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#d8e0f0' }}>
+              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>
                 {stat.value}
               </div>
             </div>
@@ -185,7 +196,7 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
         fontFamily:    'JetBrains Mono,monospace',
         fontSize:      10,
         fontWeight:    600,
-        color:         hover ? (href ? accentColor : '#4a5878') : (href ? '#2a6a3e' : '#2a3a5e'),
+        color:         hover ? (href ? accentColor : '#64748b') : (href ? '#94a3b8' : '#2a3a5e'),
         letterSpacing: '0.15em',
         textTransform: 'uppercase',
         transition:    'all 0.3s ease',
@@ -201,16 +212,14 @@ function ModuleCard({ label, sub, icon, href, size, status, stats }: Module) {
   )
 
   const sharedStyle: React.CSSProperties = {
-    background:  hover 
-      ? `linear-gradient(135deg, rgba(212,164,58,0.05) 0%, rgba(11,18,32,0.8) 100%)` 
-      : 'rgba(11,18,32,0.6)',
+    background: hover ? '#f8faff' : '#ffffff',
     backdropFilter: 'blur(10px)',
-    border:      `1px solid ${hover ? 'rgba(212,164,58,0.3)' : 'rgba(27, 39, 66, 0.8)'}`,
+    border:      `1px solid ${hover ? 'rgba(59, 130, 246, 0.5)' : '#e2e8f0'}`,
     padding:     '24px',
     position:    'relative',
     cursor:      href ? 'pointer' : 'default',
     transition:  'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-    boxShadow:   hover ? `0 8px 32px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(212,164,58,0.1)` : '0 4px 16px rgba(0,0,0,0.2)',
+    boxShadow:   hover ? `0 4px 6px -1px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(212,164,58,0.1)` : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
     transform:   hover && href ? 'translateY(-4px)' : 'translateY(0)',
     textDecoration: 'none',
     gridColumn:  isLarge ? '1 / -1' : 'auto',

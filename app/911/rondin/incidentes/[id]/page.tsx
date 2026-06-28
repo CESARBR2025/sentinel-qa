@@ -47,7 +47,7 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
             <DashboardHeader user={session.user as any} />
             
             <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 48px' }}>
-                <Link href="/incidentes" style={btnBackStyle}><ArrowLeft size={14} /> BITÁCORA GENERAL</Link>
+                <Link href="/911/rondin/incidentes" style={btnBackStyle}><ArrowLeft size={14} /> BITÁCORA GENERAL</Link>
 
                 <div style={headerStyle}>
                     <div>

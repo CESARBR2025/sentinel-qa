@@ -15,6 +15,7 @@
     "db:create-admin": "tsx lib/db/create-admin.ts"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.8",
     "better-auth": "^1.6.7",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.2",
@@ -25,7 +26,8 @@
     "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-signature-canvas": "^1.1.0-alpha.2"
+    "react-signature-canvas": "^1.1.0-alpha.2",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

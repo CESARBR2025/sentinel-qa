@@ -1,0 +1,118 @@
+import { query } from '@/lib/db'
+import { rowToOficial } from './mapper'
+import type { OfiOficial, CrearReporteCampoInput } from './types'
+import { rowToReporteResumen, rowToReporteDetalle } from './mapper'
+import type { OfiReporteResumen, OfiReporteDetalle } from './types'
+
+export async function obtenerOficialPorUserId(userId: string): Promise<OfiOficial | null> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT * FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
+    [userId]
+  )
+  return result.rows.length ? rowToOficial(result.rows[0]) : null
+}
+
+export async function insertarReporteCampo(data: CrearReporteCampoInput): Promise<string> {
+  const result = await query<{ id: string }>(
+    `INSERT INTO ofi_reportes_campo (
+      ofi_folio_cad, ofi_nombre_reportante, ofi_anonimo,
+      ofi_tipo_incidente, ofi_tipo_emergencia, ofi_prioridad,
+      ofi_descripcion, ofi_contenido_reporte,
+      ofi_calle, ofi_colonia, ofi_latitud, ofi_longitud,
+      ofi_datos_pn, ofi_acciones,
+      ofi_hay_detencion, ofi_detenidos, ofi_autoridad_recibe, ofi_monto_robo,
+      ofi_objetos_recuperados, ofi_hay_vehiculo, ofi_vehiculos,
+      ofi_hay_cateo, ofi_cateo, ofi_resultado_cateo,
+      ofi_oficial_id, ofi_oficial_nombre,
+      quiere_denuncia
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8,
+      $9, $10, $11, $12, $13, $14,
+      $15, $16::jsonb, $17, $18,
+      $19, $20, $21::jsonb,
+      $22, $23::jsonb, $24,
+      $25, $26, $27
+    ) RETURNING id`,
+    [
+      data.ofiFolioCad, data.ofiNombreReportante, data.ofiAnonimo,
+      data.ofiTipoIncidente, data.ofiTipoEmergencia, data.ofiPrioridad,
+      data.ofiDescripcion, data.ofiContenidoReporte,
+      data.ofiCalle, data.ofiColonia, data.ofiLatitud, data.ofiLongitud,
+      data.ofiDatosPn, data.ofiAcciones,
+      data.ofiHayDetencion, JSON.stringify(data.ofiDetenidos),
+      data.ofiAutoridadRecibe, data.ofiMontoRobo,
+      data.ofiObjetosRecuperados, data.ofiHayVehiculo,
+      JSON.stringify(data.ofiVehiculos),
+      data.ofiHayCateo,
+      data.ofiCateo ? JSON.stringify(data.ofiCateo) : null,
+      data.ofiResultadoCateo,
+      data.ofiOficialId, data.ofiOficialNombre,
+      data.ofiQuiereDenuncia,
+    ]
+  )
+  return result.rows[0].id
+}
+
+export async function obtenerReportesOficial(userId: string): Promise<OfiReporteResumen[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       r.id,
+       r.ofi_folio_cad,
+       r.ofi_tipo_incidente,
+       r.ofi_calle,
+       r.ofi_colonia,
+       r.ofi_latitud,
+       r.ofi_longitud,
+       r.quiere_denuncia,
+       r.created_at,
+       d.id           AS d1_id,
+       d.folio_denuncia AS d1_folio
+     FROM ofi_reportes_campo r
+     LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
+     WHERE r.ofi_oficial_id = (
+       SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1
+     )
+     ORDER BY r.created_at DESC
+     LIMIT 50`,
+    [userId]
+  )
+  return result.rows.map(rowToReporteResumen)
+}
+
+export async function obtenerReporteDetalle(
+  id: string,
+  userId: string
+): Promise<OfiReporteDetalle | null> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       r.*,
+       r.quiere_denuncia,
+       d.id                  AS d1_id,
+       d.folio_denuncia      AS d1_folio,
+       d.iph                 AS d1_iph,
+       d.folio_cu            AS d1_folio_cu,
+       d.fecha_reporte       AS d1_fecha_reporte,
+       d.hora_reporte        AS d1_hora_reporte,
+       d.tipo_evento         AS d1_tipo_evento,
+       d.delito              AS d1_delito,
+       d.violencia           AS d1_violencia,
+       d.lugar_hecho         AS d1_lugar_hecho,
+       d.colonia_hecho       AS d1_colonia_hecho,
+       d.latitud             AS d1_latitud,
+       d.longitud            AS d1_longitud,
+       d.policia_a_cargo     AS d1_policia_cargo,
+       d.se_genero_d1        AS d1_se_genero,
+       d.observaciones       AS d1_observaciones,
+       d.ofendido_hombre     AS d1_ofendido_hombre,
+       d.ofendido_mujer      AS d1_ofendido_mujer
+     FROM ofi_reportes_campo r
+     LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
+     WHERE r.id = $1::uuid
+       AND r.ofi_oficial_id = (
+         SELECT id FROM ofi_oficiales WHERE user_id = $2 LIMIT 1
+       )
+     LIMIT 1`,
+    [id, userId]
+  )
+  return result.rows.length ? rowToReporteDetalle(result.rows[0]) : null
+}

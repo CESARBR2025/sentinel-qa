@@ -6,8 +6,8 @@ import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { 
-    Search, MapPin, Clock, Eye, Radio, MessageSquare, AlertTriangle, 
+import {
+    Search, MapPin, Clock, Eye, Radio, MessageSquare, AlertTriangle,
     Phone
 } from "lucide-react";
 import Link from "next/link";
@@ -37,16 +37,17 @@ export default async function BitacoraIncidentesPage() {
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-            <style dangerouslySetInnerHTML={{ __html: `
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
                 .sentinel-table tr { transition: background-color 0.2s; }
                 .sentinel-table tr:hover { background-color: #f1f5f9 !important; }
             `}} />
-            
+
             <DashboardHeader user={session.user as any} />
-            
+
             <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
-                
+
                 <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <span style={topLabelStyle}>CENTRO DE MANDO Y COMUNICACIONES</span>
@@ -70,7 +71,7 @@ export default async function BitacoraIncidentesPage() {
                         <tbody>
                             {listaIncidentes.map((item) => {
                                 let urlDetalle = "";
-                                
+
                                 if (item.canal === 'radio') {
                                     urlDetalle = `/911/rondin/incidentes/${item.id}`;
                                 } else if (item.canal === 'whatsapp') {
@@ -85,17 +86,17 @@ export default async function BitacoraIncidentesPage() {
                                         <td style={{ ...tdStyle, fontWeight: 700, fontFamily: 'JetBrains Mono' }}>
                                             {item.folio}
                                         </td>
- <td style={tdStyle}>
+                                        <td style={tdStyle}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 {/* ICONOS DINÁMICOS POR CANAL */}
-                                                {item.canal === 'radio' && <Radio size={14} color="#2563eb"/>}
-                                                {item.canal === 'whatsapp' && <MessageSquare size={14} color="#059669"/>}
-                                                {item.canal === '911' && <Phone size={14} color="#dc2626"/>}
-                                                
-                                                <span style={{ 
-                                                    fontSize: '11px', 
+                                                {item.canal === 'radio' && <Radio size={14} color="#2563eb" />}
+                                                {item.canal === 'whatsapp' && <MessageSquare size={14} color="#059669" />}
+                                                {item.canal === '911' && <Phone size={14} color="#dc2626" />}
+
+                                                <span style={{
+                                                    fontSize: '11px',
                                                     fontWeight: 600,
-                                                    color: item.canal === 'whatsapp' ? '#059669' : 'inherit' 
+                                                    color: item.canal === 'whatsapp' ? '#059669' : 'inherit'
                                                 }}>
                                                     {item.canal?.toUpperCase()}
                                                 </span>
@@ -153,9 +154,9 @@ const btnViewStyle: React.CSSProperties = { display: 'inline-flex', alignItems: 
 function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     const base: React.CSSProperties = { display: 'inline-block', padding: '4px 10px', borderRadius: '2px', fontSize: '10px', fontWeight: 700, fontFamily: 'JetBrains Mono', border: '1px solid' };
     switch (estatus) {
-        case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
-        case 'en_despacho':   return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }; 
-        case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
-        default:              return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
+        case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' };
+        case 'en_despacho': return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' };
+        case 'atendido': return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' };
+        default: return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
     }
 }

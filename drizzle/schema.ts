@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, unique, serial, text, integer, boolean, varchar, timestamp, time, uuid, date, check } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, unique, serial, text, integer, boolean, varchar, timestamp, time, uuid, date, check, numeric, jsonb } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -66,7 +66,7 @@ export const sessions = pgTable("sessions", {
 export const users = pgTable("users", {
 	id: text().primaryKey().notNull(),
 	name: varchar({ length: 100 }).notNull(),
-	apellido: varchar({ length: 100 }).default('').notNull(),
+	apellido: varchar({ length: 100 }).default(').notNull(),
 	email: varchar({ length: 255 }).notNull(),
 	emailVerified: boolean("email_verified").default(false).notNull(),
 	image: text(),
@@ -167,6 +167,27 @@ export const catTurnos = pgTable("cat_turnos", {
 	activo: boolean().default(true).notNull(),
 }, (table) => [
 	unique("cat_turnos_nombre_uq").on(table.nombre),
+]);
+
+export const catRadios = pgTable("cat_radios", {
+	id: serial().primaryKey().notNull(),
+	codigo: varchar({ length: 30 }).notNull(),
+	tipo: varchar({ length: 40 }),
+	estado: varchar({ length: 20 }).default('operativo').notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_radios_codigo_uq").on(table.codigo),
+]);
+
+export const catTiposObservacion = pgTable("cat_tipos_observacion", {
+	id: serial().primaryKey().notNull(),
+	nombre: varchar({ length: 100 }).notNull(),
+	codigo: varchar({ length: 40 }).notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_tipos_observacion_codigo_uq").on(table.codigo),
 ]);
 
 export const contestaciones = pgTable("contestaciones", {
@@ -340,6 +361,18 @@ export const medidasProteccion = pgTable("medidas_proteccion", {
 		}),
 ]);
 
+export const catEstadoFuerzaConceptos = pgTable("cat_estado_fuerza_conceptos", {
+	id: serial().primaryKey().notNull(),
+	nombre: varchar({ length: 100 }).notNull(),
+	codigo: varchar({ length: 40 }).notNull(),
+	grupo: varchar({ length: 40 }),
+	orden: integer().default(0).notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_estado_fuerza_conceptos_codigo_uq").on(table.codigo),
+]);
+
 export const medidaAutoridadesAdicionales = pgTable("medida_autoridades_adicionales", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	medidaId: uuid("medida_id").notNull(),
@@ -495,61 +528,6 @@ export const catTiposIncidente = pgTable("cat_tipos_incidente", {
 	unique("cat_tipos_incidente_clave_uq").on(table.clave),
 ]);
 
-// ─── Rol de Servicios — Catálogos ─────────────────────────────────────────────
-export const catSectores = pgTable("cat_sectores", {
-	id: serial().primaryKey().notNull(),
-	nombre: varchar({ length: 100 }).notNull(),
-	clave: varchar({ length: 30 }).notNull(),
-	activo: boolean().default(true).notNull(),
-	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("cat_sectores_clave_uq").on(table.clave),
-]);
-
-export const catRadios = pgTable("cat_radios", {
-	id: serial().primaryKey().notNull(),
-	codigo: varchar({ length: 30 }).notNull(),
-	tipo: varchar({ length: 40 }),
-	estado: varchar({ length: 20 }).default('operativo').notNull(),
-	activo: boolean().default(true).notNull(),
-	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("cat_radios_codigo_uq").on(table.codigo),
-]);
-
-export const catBodyCams = pgTable("cat_body_cams", {
-	id: serial().primaryKey().notNull(),
-	codigo: varchar({ length: 30 }).notNull(),
-	estado: varchar({ length: 20 }).default('operativo').notNull(),
-	activo: boolean().default(true).notNull(),
-	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("cat_body_cams_codigo_uq").on(table.codigo),
-]);
-
-export const catEstadoFuerzaConceptos = pgTable("cat_estado_fuerza_conceptos", {
-	id: serial().primaryKey().notNull(),
-	nombre: varchar({ length: 100 }).notNull(),
-	codigo: varchar({ length: 40 }).notNull(),
-	grupo: varchar({ length: 40 }),
-	orden: integer().default(0).notNull(),
-	activo: boolean().default(true).notNull(),
-	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("cat_estado_fuerza_conceptos_codigo_uq").on(table.codigo),
-]);
-
-export const catTiposObservacion = pgTable("cat_tipos_observacion", {
-	id: serial().primaryKey().notNull(),
-	nombre: varchar({ length: 100 }).notNull(),
-	codigo: varchar({ length: 40 }).notNull(),
-	activo: boolean().default(true).notNull(),
-	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("cat_tipos_observacion_codigo_uq").on(table.codigo),
-]);
-
-// ─── Rol de Servicios — Operativas ────────────────────────────────────────────
 export const rolesServicio = pgTable("roles_servicio", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	folio: varchar({ length: 100 }).notNull(),
@@ -621,6 +599,16 @@ export const rolAsignaciones = pgTable("rol_asignaciones", {
 		}),
 ]);
 
+export const catBodyCams = pgTable("cat_body_cams", {
+	id: serial().primaryKey().notNull(),
+	codigo: varchar({ length: 30 }).notNull(),
+	estado: varchar({ length: 20 }).default('operativo').notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_body_cams_codigo_uq").on(table.codigo),
+]);
+
 export const rolEstadoFuerza = pgTable("rol_estado_fuerza", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	rolId: uuid("rol_id").notNull(),
@@ -656,5 +644,384 @@ export const rolObservaciones = pgTable("rol_observaciones", {
 			columns: [table.tipoId],
 			foreignColumns: [catTiposObservacion.id],
 			name: "rol_observaciones_tipo_id_fk"
+		}),
+]);
+
+export const catSectores = pgTable("cat_sectores", {
+	id: serial().primaryKey().notNull(),
+	nombre: varchar({ length: 100 }).notNull(),
+	clave: varchar({ length: 30 }).notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_sectores_clave_uq").on(table.clave),
+]);
+
+export const incidenteAlarmaEscolar = pgTable("incidente_alarma_escolar", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	incidenteId: uuid("incidente_id").notNull(),
+	establecimiento: varchar({ length: 200 }),
+	direccion: varchar({ length: 300 }),
+	inmueble: varchar({ length: 200 }),
+	responsable: varchar({ length: 200 }),
+	reporteDescripcion: text("reporte_descripcion"),
+	horaCanalizacion: varchar("hora_canalizacion", { length: 10 }),
+	unidadArribo: varchar("unidad_arribo", { length: 100 }),
+	horaArribo: varchar("hora_arribo", { length: 10 }),
+	nombreResponsable: varchar("nombre_responsable", { length: 200 }),
+	nombreVerificador: varchar("nombre_verificador", { length: 200 }),
+	activaciones: integer().default(0).notNull(),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.incidenteId],
+			foreignColumns: [incidentes.id],
+			name: "iae_incidente_fk"
+		}).onDelete("cascade"),
+	unique("incidente_alarma_escolar_incidente_uq").on(table.incidenteId),
+]);
+
+export const incidenteDespacho = pgTable("incidente_despacho", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	incidenteId: uuid("incidente_id").notNull(),
+	fechaHoraDespacho: timestamp("fecha_hora_despacho", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	despachadoPor: text("despachado_por").notNull(),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.incidenteId],
+			foreignColumns: [incidentes.id],
+			name: "id_incidente_fk"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.despachadoPor],
+			foreignColumns: [users.id],
+			name: "id_despachado_por_fk"
+		}),
+	unique("incidente_despacho_incidente_uq").on(table.incidenteId),
+]);
+
+export const incidenteExtorsion = pgTable("incidente_extorsion", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	incidenteId: uuid("incidente_id").notNull(),
+	telefonoExtorsion: varchar("telefono_extorsion", { length: 30 }),
+	grupoDelictivo: varchar("grupo_delictivo", { length: 200 }),
+	modusOperandi: text("modus_operandi"),
+	unidadResultado: varchar("unidad_resultado", { length: 100 }),
+	folioReporte: varchar("folio_reporte", { length: 100 }),
+	fecha: date(),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.incidenteId],
+			foreignColumns: [incidentes.id],
+			name: "iext_incidente_fk"
+		}).onDelete("cascade"),
+	unique("incidente_extorsion_incidente_uq").on(table.incidenteId),
+]);
+
+export const incidentePersonasAfectadas = pgTable("incidente_personas_afectadas", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	incidenteId: uuid("incidente_id").notNull(),
+	nombre: varchar({ length: 300 }),
+	sexo: varchar({ length: 10 }),
+	edad: integer(),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.incidenteId],
+			foreignColumns: [incidentes.id],
+			name: "ipa_incidente_fk"
+		}).onDelete("cascade"),
+	check("ipa_sexo_ck", sql`((sexo)::text = ANY ((ARRAY['M'::character varying, 'F'::character varying, 'NE'::character varying])::text[])) OR (sexo IS NULL)`),
+]);
+
+export const catTiposEmergencia = pgTable("cat_tipos_emergencia", {
+	id: serial().primaryKey().notNull(),
+	clave: varchar({ length: 30 }).notNull(),
+	nombre: varchar({ length: 150 }).notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_tipos_emergencia_clave_uq").on(table.clave),
+]);
+
+export const auditLog = pgTable("audit_log", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	userId: text("user_id").notNull(),
+	accion: varchar({ length: 50 }).notNull(),
+	entidad: varchar({ length: 80 }).notNull(),
+	entidadId: text("entidad_id").notNull(),
+	payload: text(),
+	ip: varchar({ length: 45 }),
+	userAgent: text("user_agent"),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.userId],
+			foreignColumns: [users.id],
+			name: "audit_log_user_id_fk"
+		}),
+]);
+
+export const catMediosCanalizacion = pgTable("cat_medios_canalizacion", {
+	id: serial().primaryKey().notNull(),
+	clave: varchar({ length: 30 }).notNull(),
+	nombre: varchar({ length: 150 }).notNull(),
+	activo: boolean().default(true).notNull(),
+	creadoEn: timestamp("creado_en", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	unique("cat_medios_canalizacion_clave_uq").on(table.clave),
+]);
+
+export const incidentes = pgTable("incidentes", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	folio: varchar({ length: 60 }).notNull(),
+	folioConsecutivo: integer("folio_consecutivo").notNull(),
+	canal: varchar({ length: 20 }).notNull(),
+	tipoReporte: varchar("tipo_reporte", { length: 30 }).notNull(),
+	nombreReportante: varchar("nombre_reportante", { length: 300 }),
+	anonimo: boolean().default(false).notNull(),
+	sexo: varchar({ length: 10 }),
+	edad: integer(),
+	esUsuarioFrecuente: boolean("es_usuario_frecuente").default(false).notNull(),
+	esPersonaAfectada: boolean("es_persona_afectada").default(false).notNull(),
+	esMigrante: boolean("es_migrante").default(false).notNull(),
+	calle: varchar({ length: 200 }),
+	colonia: varchar({ length: 150 }),
+	entreCalles: varchar("entre_calles", { length: 200 }),
+	referenciaUbicacion: varchar("referencia_ubicacion", { length: 300 }),
+	municipio: varchar({ length: 100 }).default('San Juan del Río').notNull(),
+	tipoEmergenciaId: integer("tipo_emergencia_id"),
+	tipoIncidenteId: integer("tipo_incidente_id"),
+	prioridadId: integer("prioridad_id"),
+	descripcion: text(),
+	observaciones: text(),
+	fechaHoraInicio: timestamp("fecha_hora_inicio", { withTimezone: true, mode: 'string' }).notNull(),
+	fechaHoraFin: timestamp("fecha_hora_fin", { withTimezone: true, mode: 'string' }),
+	grupoWhatsapp: varchar("grupo_whatsapp", { length: 200 }),
+	nombreOficial: varchar("nombre_oficial", { length: 200 }),
+	medioCanalizacionId: integer("medio_canalizacion_id"),
+	requiereDespacho: boolean("requiere_despacho").default(false).notNull(),
+	estatus: varchar({ length: 20 }).default('sin_despachar').notNull(),
+	capturadoPor: text("capturado_por").notNull(),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	actualizadoEn: timestamp("actualizado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.tipoEmergenciaId],
+			foreignColumns: [catTiposEmergencia.id],
+			name: "inc_tipo_emergencia_fk"
+		}),
+	foreignKey({
+			columns: [table.tipoIncidenteId],
+			foreignColumns: [catTiposIncidente.id],
+			name: "inc_tipo_incidente_fk"
+		}),
+	foreignKey({
+			columns: [table.prioridadId],
+			foreignColumns: [catPrioridades.id],
+			name: "inc_prioridad_fk"
+		}),
+	foreignKey({
+			columns: [table.medioCanalizacionId],
+			foreignColumns: [catMediosCanalizacion.id],
+			name: "inc_medio_canalizacion_fk"
+		}),
+	foreignKey({
+			columns: [table.capturadoPor],
+			foreignColumns: [users.id],
+			name: "inc_capturado_por_fk"
+		}),
+	unique("incidentes_folio_uq").on(table.folio),
+	check("incidentes_canal_ck", sql`(canal)::text = ANY ((ARRAY['911'::character varying, 'whatsapp'::character varying, 'radio'::character varying])::text[])`),
+	check("incidentes_tipo_reporte_ck", sql`(tipo_reporte)::text = ANY ((ARRAY['normal'::character varying, 'extorsion'::character varying, 'alarma_escolar'::character varying])::text[])`),
+	check("incidentes_estatus_ck", sql`(estatus)::text = ANY ((ARRAY['sin_despachar'::character varying, 'en_despacho'::character varying, 'atendido'::character varying])::text[])`),
+	check("incidentes_sexo_ck", sql`((sexo)::text = ANY ((ARRAY['M'::character varying, 'F'::character varying, 'NE'::character varying])::text[])) OR (sexo IS NULL)`),
+]);
+
+export const incidenteReporteCampo = pgTable("incidente_reporte_campo", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	incidenteId: uuid("incidente_id").notNull(),
+	contenidoReporte: text("contenido_reporte"),
+	lugarCalle: varchar("lugar_calle", { length: 200 }),
+	lugarColonia: varchar("lugar_colonia", { length: 150 }),
+	lugarEntreCalles: varchar("lugar_entre_calles", { length: 200 }),
+	lugarReferencia: varchar("lugar_referencia", { length: 300 }),
+	datosPositivosNegativos: text("datos_positivos_negativos"),
+	accionesRealizadas: text("acciones_realizadas"),
+	hayDetencion: boolean("hay_detencion").default(false).notNull(),
+	nombreDetenidos: text("nombre_detenidos"),
+	autoridadRecibe: varchar("autoridad_recibe", { length: 200 }),
+	expedienteCi: varchar("expediente_ci", { length: 100 }),
+	delitoFalta: varchar("delito_falta", { length: 300 }),
+	montoRobo: integer("monto_robo"),
+	objetosRecuperados: text("objetos_recuperados"),
+	vehiculosRecuperados: text("vehiculos_recuperados"),
+	tipoVehiculo: varchar("tipo_vehiculo", { length: 100 }),
+	destinoVehiculo: varchar("destino_vehiculo", { length: 200 }),
+	hayCateo: boolean("hay_cateo").default(false).notNull(),
+	domicilioCateado: varchar("domicilio_cateado", { length: 300 }),
+	resultadoCateo: text("resultado_cateo"),
+	policiaACargo: varchar("policia_a_cargo", { length: 200 }),
+	personalIngresoCi: varchar("personal_ingreso_ci", { length: 200 }),
+	capturadoPor: text("capturado_por").notNull(),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.incidenteId],
+			foreignColumns: [incidentes.id],
+			name: "irc_incidente_fk"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.capturadoPor],
+			foreignColumns: [users.id],
+			name: "irc_capturado_por_fk"
+		}),
+	unique("incidente_reporte_campo_incidente_uq").on(table.incidenteId),
+]);
+
+export const incidenteDespachoElementos = pgTable("incidente_despacho_elementos", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	despachoId: uuid("despacho_id").notNull(),
+	elementoExtId: varchar("elemento_ext_id", { length: 100 }),
+	elementoNomina: varchar("elemento_nomina", { length: 40 }),
+	elementoNombre: varchar("elemento_nombre", { length: 200 }),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.despachoId],
+			foreignColumns: [incidenteDespacho.id],
+			name: "ide_despacho_fk"
+		}).onDelete("cascade"),
+]);
+
+export const incidenteDespachoUnidades = pgTable("incidente_despacho_unidades", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	despachoId: uuid("despacho_id").notNull(),
+	unidadExtId: varchar("unidad_ext_id", { length: 100 }),
+	unidadPlaca: varchar("unidad_placa", { length: 30 }),
+	creadoEn: timestamp("creado_en", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.despachoId],
+			foreignColumns: [incidenteDespacho.id],
+			name: "idu_despacho_fk"
+		}).onDelete("cascade"),
+]);
+
+export const reportesD1 = pgTable("reportes_d1", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	folioDenuncia: varchar("folio_denuncia", { length: 50 }).notNull(),
+	iph: varchar({ length: 100 }),
+	folioCu: varchar("folio_cu", { length: 100 }),
+	corporacion: varchar({ length: 100 }).default('SSPM'),
+	sector: varchar({ length: 50 }),
+	grupoAdscripcion: varchar("grupo_adscripcion", { length: 100 }),
+	fechaReporte: date("fecha_reporte").notNull(),
+	horaReporte: time("hora_reporte").notNull(),
+	fechaAvistamiento: date("fecha_avistamiento"),
+	horaAvistamiento: time("hora_avistamiento"),
+	fechaDespacho: date("fecha_despacho"),
+	horaDespacho: time("hora_despacho"),
+	fechaConfirmacion: date("fecha_confirmacion"),
+	horaConfirmacion: time("hora_confirmacion"),
+	fechaLlegada: date("fecha_llegada"),
+	horaLlegada: time("hora_llegada"),
+	horaInicioDenuncia: time("hora_inicio_denuncia"),
+	horaFinDenuncia: time("hora_fin_denuncia"),
+	horaTerminoAtencion: time("hora_termino_atencion"),
+	horaCuestionario: time("hora_cuestionario"),
+	lugarHecho: text("lugar_hecho"),
+	lugarApoio: text("lugar_apoio"),
+	municipio: varchar({ length: 100 }).default('San Juan del Río'),
+	colonia: varchar({ length: 100 }),
+	referencias: text(),
+	latitud: numeric({ precision: 10, scale:  8 }),
+	longitud: numeric({ precision: 11, scale:  8 }),
+	nominaMando: varchar("nomina_mando", { length: 50 }),
+	policiaACargo: varchar("policia_a_cargo", { length: 255 }),
+	tipoEvento: varchar("tipo_evento", { length: 10 }).notNull(),
+	delito: varchar({ length: 255 }).notNull(),
+	violencia: boolean().default(false),
+	crp: varchar({ length: 50 }),
+	policiaDenuncia: varchar("policia_denuncia", { length: 255 }),
+	policiaFirmaD1: varchar("policia_firma_d1", { length: 255 }),
+	policiaIngresaCu: varchar("policia_ingresa_cu", { length: 255 }),
+	requirioTablet: boolean("requirio_tablet").default(false),
+	funcionabaTablet: boolean("funcionaba_tablet").default(false),
+	ofendidoHombre: integer("ofendido_hombre").default(0),
+	ofendidoMujer: integer("ofendido_mujer").default(0),
+	numCuestionarios: integer("num_cuestionarios").default(0),
+	intervinoGs: boolean("intervino_gs").default(false),
+	seGeneroD1: boolean("se_genero_d1").default(false),
+	seVaAGenerarD1: boolean("se_va_a_generar_d1").default(false),
+	observaciones: text(),
+	capturadoPor: text("capturado_por").notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.capturadoPor],
+			foreignColumns: [users.id],
+			name: "reportes_d1_capturado_por_users_id_fk"
+		}).onDelete("restrict"),
+	unique("reportes_d1_folio_denuncia_unique").on(table.folioDenuncia),
+]);
+
+export const ofiOficiales = pgTable("ofi_oficiales", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	ofiNombre: varchar("ofi_nombre", { length: 100 }).notNull(),
+	ofiApPaterno: varchar("ofi_ap_paterno", { length: 100 }).notNull(),
+	ofiApMaterno: varchar("ofi_ap_materno", { length: 100 }),
+	ofiPlacaUnidadAsignada: varchar("ofi_placa_unidad_asignada", { length: 100 }),
+	ofiEstatus: varchar("ofi_estatus", { length: 20 }).default('activo'),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	userId: text("user_id"),
+}, (table) => [
+	foreignKey({
+			columns: [table.userId],
+			foreignColumns: [users.id],
+			name: "ofi_oficiales_user_id_fkey"
+		}),
+]);
+
+export const ofiReportesCampo = pgTable("ofi_reportes_campo", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	ofiFolioCad: varchar("ofi_folio_cad", { length: 60 }).default('S/C'),
+	ofiNombreReportante: varchar("ofi_nombre_reportante", { length: 300 }),
+	ofiAnonimo: boolean("ofi_anonimo").default(false),
+	ofiTipoIncidente: varchar("ofi_tipo_incidente", { length: 100 }),
+	ofiTipoEmergencia: varchar("ofi_tipo_emergencia", { length: 100 }),
+	ofiPrioridad: varchar("ofi_prioridad", { length: 50 }),
+	ofiDescripcion: text("ofi_descripcion"),
+	ofiContenidoReporte: text("ofi_contenido_reporte"),
+	ofiCalle: varchar("ofi_calle", { length: 200 }),
+	ofiColonia: varchar("ofi_colonia", { length: 150 }),
+	ofiLatitud: numeric("ofi_latitud", { precision: 10, scale:  7 }),
+	ofiLongitud: numeric("ofi_longitud", { precision: 10, scale:  7 }),
+	ofiDatosPn: text("ofi_datos_pn"),
+	ofiAcciones: text("ofi_acciones"),
+	ofiHayDetencion: boolean("ofi_hay_detencion").default(false),
+	ofiDetenidos: jsonb("ofi_detenidos").default([]),
+	ofiAutoridadRecibe: varchar("ofi_autoridad_recibe", { length: 50 }),
+	ofiMontoRobo: numeric("ofi_monto_robo", { precision: 12, scale:  2 }),
+	ofiObjetosRecuperados: text("ofi_objetos_recuperados"),
+	ofiHayVehiculo: boolean("ofi_hay_vehiculo").default(false),
+	ofiVehiculos: jsonb("ofi_vehiculos").default([]),
+	ofiHayCateo: boolean("ofi_hay_cateo").default(false),
+	ofiCateo: jsonb("ofi_cateo"),
+	ofiResultadoCateo: text("ofi_resultado_cateo"),
+	ofiOficialNombre: varchar("ofi_oficial_nombre", { length: 200 }),
+	ofiEstatus: varchar("ofi_estatus", { length: 30 }).default('registrado'),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	ofiOficialId: uuid("ofi_oficial_id"),
+}, (table) => [
+	foreignKey({
+			columns: [table.ofiOficialId],
+			foreignColumns: [ofiOficiales.id],
+			name: "ofi_reportes_campo_ofi_oficial_id_fkey"
 		}),
 ]);

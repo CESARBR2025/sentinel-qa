@@ -45,7 +45,7 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
             <DashboardHeader user={session.user as any} />
             
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
-                <Link href="/incidentes" style={btnBackStyle}><ArrowLeft size={14} /> BITÁCORA GENERAL</Link>
+                <Link href="/911/ciudadano/incidentes" style={btnBackStyle}><ArrowLeft size={14} /> BITÁCORA GENERAL</Link>
 
                 <div style={headerStyle}>
                     <div>

@@ -52,7 +52,7 @@ export async function PATCH(
 
   const [updated] = await db
     .update(medidasProteccion)
-    .set({ status: body.status, actualizadoEn: new Date() })
+    .set({ status: body.status, actualizadoEn: new Date().toISOString() })
     .where(eq(medidasProteccion.id, id))
     .returning()
 

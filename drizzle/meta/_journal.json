@@ -22,6 +22,27 @@
       "when": 1782226601497,
       "tag": "0002_rapid_wallow",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782409020837,
+      "tag": "0003_bouncy_hex",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782416605483,
+      "tag": "0004_futuristic_thunderbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782490000000,
+      "tag": "0005_monitorista",
+      "breakpoints": true
     }
   ]
 }

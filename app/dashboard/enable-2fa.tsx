@@ -33,7 +33,7 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
     const QRCode = (await import('qrcode')).default
     const url = await QRCode.toDataURL(data.totpURI, {
       width: 220, margin: 2,
-      color: { dark: '#ffffff', light: '#0b1220' },
+      color: { dark: '#0f172a', light: '#ffffff' },
     })
     setQrUrl(url)
     setStep('qr')
@@ -52,7 +52,7 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── idle ──────────────────────────────────────────────────────────────────
   if (step === 'idle') return (
-    <Card title="Verificación en dos pasos" tag="Inactivo" tagColor="#c0223a">
+    <Card title="Verificación en dos pasos" tag="Inactivo" tagColor="#ef4444">
       <p style={s.body}>Agrega una capa extra de seguridad. Al activarlo necesitarás tu app autenticadora en cada inicio de sesión.</p>
       <button onClick={() => setStep('confirm-pwd')} style={s.btn}>Activar 2FA →</button>
     </Card>
@@ -60,7 +60,7 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── confirm-pwd ───────────────────────────────────────────────────────────
   if (step === 'confirm-pwd') return (
-    <Card title="Confirmar contraseña" tag="Paso 1 / 3" tagColor="#d4a43a">
+    <Card title="Confirmar contraseña" tag="Paso 1 / 3" tagColor="#3b82f6">
       <p style={s.body}>Ingresa tu contraseña actual para continuar.</p>
       <div style={{ position:'relative' }}>
         <input
@@ -71,7 +71,7 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
           style={{ ...s.input, paddingRight:48 }}
         />
         <button type="button" onClick={() => setShowPwd(v => !v)}
-          style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'#7f8faf', cursor:'pointer', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.12em' }}>
+          style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'#94a3b8', cursor:'pointer', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.12em' }}>
           {showPwd ? 'OCULTAR' : 'VER'}
         </button>
       </div>
@@ -87,22 +87,22 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── qr ───────────────────────────────────────────────────────────────────
   if (step === 'qr') return (
-    <Card title="Escanea el código QR" tag="Paso 2 / 3" tagColor="#d4a43a">
-      <p style={s.body}>Abre <b style={{ color:'#d8e0f0' }}>Google Authenticator</b>, <b style={{ color:'#d8e0f0' }}>Authy</b> o cualquier app TOTP y escanea:</p>
+    <Card title="Escanea el código QR" tag="Paso 2 / 3" tagColor="#3b82f6">
+      <p style={s.body}>Abre <b style={{ color:'#0f172a' }}>Google Authenticator</b>, <b style={{ color:'#0f172a' }}>Authy</b> o cualquier app TOTP y escanea:</p>
       <div style={{ display:'flex', justifyContent:'center', margin:'16px 0' }}>
         {qrUrl
-          ? <div style={{ padding:8, background:'#0b1220', border:'1px solid #2a3a5e' }}>
+          ? <div style={{ padding:8, background:'#ffffff', border:'1px solid #e2e8f0' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qrUrl} alt="QR 2FA" width={200} height={200} />
             </div>
-          : <div style={{ width:200, height:200, background:'#0b1220', border:'1px solid #2a3a5e' }} />
+          : <div style={{ width:200, height:200, background:'#ffffff', border:'1px solid #e2e8f0' }} />
         }
       </div>
       <button type="button" onClick={() => setShowUri(v => !v)} style={{ ...s.ghost, fontSize:10, marginBottom:8 }}>
         {showUri ? 'Ocultar clave manual' : '¿No puedes escanear? Ver clave manual'}
       </button>
       {showUri && (
-        <div style={{ padding:'8px 10px', background:'#070b16', border:'1px solid #1b2742', marginBottom:12, wordBreak:'break-all', fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#d4a43a' }}>
+        <div style={{ padding:'8px 10px', background:'#f8fafc', border:'1px solid #e2e8f0', marginBottom:12, wordBreak:'break-all', fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#3b82f6' }}>
           {totpUri}
         </div>
       )}
@@ -112,7 +112,7 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── verify ────────────────────────────────────────────────────────────────
   if (step === 'verify') return (
-    <Card title="Confirma el código" tag="Paso 3 / 3" tagColor="#d4a43a">
+    <Card title="Confirma el código" tag="Paso 3 / 3" tagColor="#3b82f6">
       <p style={s.body}>Ingresa el código de 6 dígitos que muestra tu app para confirmar que está configurada.</p>
       <input
         ref={inputRef} type="text" inputMode="numeric" maxLength={6}
@@ -132,9 +132,9 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── done ──────────────────────────────────────────────────────────────────
   return (
-    <Card title="Verificación en dos pasos" tag="Activo" tagColor="#4a9e6a">
+    <Card title="Verificación en dos pasos" tag="Activo" tagColor="#10b981">
       <p style={s.body}>Tu cuenta está protegida con autenticación TOTP. Cada inicio de sesión pedirá el código de tu app autenticadora.</p>
-      <div style={{ display:'flex', alignItems:'center', gap:10, fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#4a9e6a', letterSpacing:'0.1em' }}>
+      <div style={{ display:'flex', alignItems:'center', gap:10, fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#10b981', letterSpacing:'0.1em' }}>
         <span style={{ fontSize:18 }}>✓</span> 2FA configurado correctamente
       </div>
     </Card>
@@ -144,10 +144,16 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 // ── helpers ───────────────────────────────────────────────────────────────────
 function Card({ title, tag, tagColor, children }: { title: string; tag: string; tagColor: string; children: React.ReactNode }) {
   return (
-    <div style={{ border:'1px solid #1b2742', background:'#0b1220', padding:'24px 20px', position:'relative' }}>
-      <div style={{ position:'absolute', top:-1, left:0, width:32, height:2, background:'#d4a43a' }}/>
+    <div style={{ 
+      border:'1px solid #e2e8f0', // Corregido
+      background:'#ffffff', 
+      padding:'24px 20px', 
+      position:'relative',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.05)' // Añadido
+    }}>
+      <div style={{ position:'absolute', top:-1, left:0, width:32, height:2, background:'#3b82f6' }}/>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
-        <span style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase', color:'#d8e0f0' }}>{title}</span>
+        <span style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase', color:'#0f172a' }}>{title}</span>
         <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', padding:'3px 8px', border:`1px solid ${tagColor}`, color:tagColor }}>{tag}</span>
       </div>
       {children}
@@ -156,9 +162,9 @@ function Card({ title, tag, tagColor, children }: { title: string; tag: string; 
 }
 
 const s = {
-  body:  { fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#7f8faf', letterSpacing:'0.06em', lineHeight:1.6, marginBottom:14 } as React.CSSProperties,
-  input: { width:'100%', padding:'10px 12px', background:'#070b16', border:'1px solid #2a3a5e', color:'#d8e0f0', fontFamily:'JetBrains Mono,monospace', fontSize:13, outline:'none', boxSizing:'border-box' } as React.CSSProperties,
-  btn:   { width:'100%', padding:'11px 14px', background:'#c0223a', color:'#fff', border:'1px solid #c0223a', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.18em', textTransform:'uppercase', cursor:'pointer' } as React.CSSProperties,
-  ghost: { padding:'9px 14px', background:'transparent', color:'#7f8faf', border:'1px solid #2a3a5e', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', cursor:'pointer' } as React.CSSProperties,
-  err:   { marginTop:8, padding:'8px 10px', borderLeft:'3px solid #c0223a', background:'rgba(192,34,58,.08)', color:'#c0223a', fontFamily:'JetBrains Mono,monospace', fontSize:11, letterSpacing:'0.08em' } as React.CSSProperties,
+  body:  { fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#64748b', letterSpacing:'0.06em', lineHeight:1.6, marginBottom:14 } as React.CSSProperties,
+  input: { width:'100%', padding:'10px 12px', background:'#f8fafc', border:'1px solid #e2e8f0', color:'#0f172a', fontFamily:'JetBrains Mono,monospace', fontSize:13, outline:'none', boxSizing:'border-box' } as React.CSSProperties,
+  btn:   { width:'100%', padding:'11px 14px', background:'#2563eb', color:'#fff', border:'1px solid #2563eb', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.18em', textTransform:'uppercase', cursor:'pointer' } as React.CSSProperties, // Azul
+  ghost: { padding:'9px 14px', background:'transparent', color:'#64748b', border:'1px solid #e2e8f0', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', cursor:'pointer' } as React.CSSProperties,
+  err:   { marginTop:8, padding:'8px 10px', borderLeft:'3px solid #ef4444', background:'#fef2f2', color:'#ef4444', fontFamily:'JetBrains Mono,monospace', fontSize:11, letterSpacing:'0.08em' } as React.CSSProperties, // Fondo limpio
 }

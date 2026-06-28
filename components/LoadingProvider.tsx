@@ -74,7 +74,7 @@ export default function LoadingProvider({ children }: { children: React.ReactNod
       {children}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 9999,
-        background: '#070b16',
+        background: '#f8fafc',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         pointerEvents: 'none',
@@ -88,7 +88,7 @@ export default function LoadingProvider({ children }: { children: React.ReactNod
           <div style={{ height: 3, background: '#1b2742', borderRadius: 2 }}>
             <div style={{
               height: '100%', width: `${progress}%`,
-              background: progress > 90 ? '#4a9e6a' : '#d4a43a',
+              background: progress > 90 ? '#4a9e6a' : '#2563eb',
               transition: 'width 0.25s ease-out',
             }}/>
           </div>
