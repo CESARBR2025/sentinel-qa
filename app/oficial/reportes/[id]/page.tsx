@@ -1,10 +1,7 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
-import { verReporteDetalle } from '@/lib/oficial/service'
+import { verificarRolOficial, verReporteDetalle } from '@/lib/oficial/service'
 import { ArrowLeft, AlertTriangle, CheckCircle2, MapPin, Clock, User, Shield, Car, Home } from 'lucide-react'
 import Link from 'next/link'
 import { MapaPinFijo } from '@/components/oficial/MapaPinFijo'
@@ -19,14 +16,8 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [userRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-
-  if (userRole?.rolNombre !== 'Oficial de Campo') redirect('/dashboard')
+  const esOficial = await verificarRolOficial(session.user.id)
+  if (!esOficial) redirect('/dashboard')
 
   const { id } = await params
   const r = await verReporteDetalle(id, session.user.id)
@@ -48,9 +39,12 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
         {/* Encabezado */}
         <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>REPORTE DE CAMPO</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, margin: '4px 0 8px', color: '#0f172a', textTransform: 'uppercase' }}>
-            Folio CAD: <span style={{ color: '#2563eb' }}>{r.ofiFolioCad || 'S/C'}</span>
+          <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, margin: '4px 0 0', color: '#0f172a', textTransform: 'uppercase' }}>
+            <span style={{ color: '#2563eb' }}>{r.folioReporteCampo || r.ofiFolioCad || 'S/C'}</span>
           </h1>
+          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', marginTop: 4 }}>
+            Folio CAD: {r.ofiFolioCad || 'S/C'}
+          </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
             <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
               <Clock size={11} />

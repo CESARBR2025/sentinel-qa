@@ -5,6 +5,29 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { sql } from "drizzle-orm";
 
+function generarFolioDenuncia(): string {
+  const hoy = new Date()
+  const y = hoy.getFullYear()
+  const m = String(hoy.getMonth() + 1).padStart(2, '0')
+  const d = String(hoy.getDate()).padStart(2, '0')
+  const fecha = `${y}${m}${d}`
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let codigo = ''
+  for (let i = 0; i < 6; i++) {
+    codigo += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return `SSPM/${fecha}/${codigo}`
+}
+
+async function generarFolioDenunciaUnico(): Promise<string> {
+  for (let i = 0; i < 10; i++) {
+    const folio = generarFolioDenuncia()
+    const result = await db.execute(sql`SELECT COUNT(*)::int AS count FROM ofi_reporte_denuncia WHERE folio_denuncia = ${folio}`)
+    if (Number(result.rows[0]?.count ?? 1) === 0) return folio
+  }
+  throw new Error('No se pudo generar un folio único después de 10 intentos')
+}
+
 export async function POST(request: Request) {
   // 1. Validar la sesión
   const session = await auth.api.getSession({ headers: await headers() });
@@ -15,6 +38,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
+    // 1b. Generar folio de denuncia automático
+    body.folioDenuncia = await generarFolioDenunciaUnico()
+
     // 2. Helper para limpiar datos: convierte "" en null para que el SP use sus COALESCE
     const clean = (val: any) => (val === "" || val === undefined ? null : val);
 
@@ -24,7 +50,6 @@ export async function POST(request: Request) {
       if (val === "false" || val === false) return false;
       return null;
     };
-    console.log(body);
     // 3. Ejecutar el procedimiento almacenado
     // Nota: Usamos una consulta directa para llamar al SP y capturar el OUT parameter
     await db.execute(sql`
@@ -80,7 +105,7 @@ export async function POST(request: Request) {
 `)
 
 return NextResponse.json(
-  { success: true, message: 'Reporte D1 registrado exitosamente.' },
+  { success: true, folioDenuncia: body.folioDenuncia, message: 'Reporte D1 registrado exitosamente.' },
   { status: 201 }
 )
   } catch (error: any) {

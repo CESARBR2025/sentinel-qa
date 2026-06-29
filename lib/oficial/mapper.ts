@@ -9,6 +9,7 @@ function parseJsonField<T>(val: unknown): T {
 export function rowToReporteCampo(row: Record<string, unknown>): OfiReporteCampo {
   return {
     id: String(row.id ?? ''),
+    folioReporteCampo: (row.folio_reporte_campo as string) ?? null,
     ofiFolioCad: String(row.ofi_folio_cad ?? ''),
     ofiNombreReportante: (row.ofi_nombre_reportante as string) ?? null,
     ofiAnonimo: Boolean(row.ofi_anonimo),
@@ -64,6 +65,7 @@ function toStr(val: unknown): string | null {
 export function rowToReporteResumen(row: Record<string, unknown>): OfiReporteResumen {
   return {
     id: String(row.id ?? ''),
+    folioReporteCampo: (row.folio_reporte_campo as string) ?? null,
     ofiFolioCad: String(row.ofi_folio_cad ?? ''),
     ofiTipoIncidente: (row.ofi_tipo_incidente as string) ?? null,
     ofiCalle: (row.ofi_calle as string) ?? null,

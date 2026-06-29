@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import {
   FileText, Clock, Shield, MapPin, User,
@@ -50,7 +50,22 @@ interface Prefill {
   policiaCargo: string
 }
 
+function generarFolioDenuncia(): string {
+  const hoy = new Date()
+  const y = hoy.getFullYear()
+  const m = String(hoy.getMonth() + 1).padStart(2, '0')
+  const d = String(hoy.getDate()).padStart(2, '0')
+  const fecha = `${y}${m}${d}`
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let codigo = ''
+  for (let i = 0; i < 6; i++) {
+    codigo += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return `SSPM/${fecha}/${codigo}`
+}
+
 export default function FormularioD1({ user, prefill }: { user: any; prefill?: Prefill }) {
+  const folioDenunciaAuto = useMemo(() => generarFolioDenuncia(), [])
   const [coords, setCoords] = useState(center);
   const [coordsHecho, setCoordsHecho] = useState({
     lat: prefill?.lat ?? 20.3889,
@@ -165,7 +180,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><FileText size={18} /> IDENTIFICACIÓN LEGAL</h2>
         <div style={grid3Style}>
-          <SentinelField label="Folio de Denuncia" name="folioDenuncia" required placeholder="D1-0000" />
+          <SentinelField label="Folio de Denuncia" name="folioDenuncia" required value={folioDenunciaAuto} readOnly />
           <SentinelField label="IPH" name="iph" placeholder="IPH-2026-..." />
           <SentinelField label="Folio de CU" name="folioCu" placeholder="CU-..." />
           <SentinelField label="Corporación" name="corporacion" defaultValue="SSPM" />

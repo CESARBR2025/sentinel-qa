@@ -5,37 +5,18 @@ import Link from 'next/link'
 import { ClipboardList, History, AlertTriangle } from 'lucide-react'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 import { ToastExito } from '@/components/oficial/ToastExito'
-import { db } from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq, sql } from 'drizzle-orm'
+import { verificarRolOficial, contarDenunciasPendientesOficial } from '@/lib/oficial/service'
 
 export default async function OficialDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [userRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-
-  if (userRole?.rolNombre !== 'Oficial de Campo') redirect('/dashboard')
+  const esOficial = await verificarRolOficial(session.user.id)
+  if (!esOficial) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
-  // Contar denuncias pendientes para el badge
-  const pendientesResult = await db.execute(sql`
-    SELECT COUNT(*)::int AS count
-    FROM ofi_reportes_campo r
-    LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
-    WHERE r.ofi_oficial_id = (
-      SELECT id FROM ofi_oficiales WHERE user_id = ${session.user.id} LIMIT 1
-    )
-    AND r.quiere_denuncia = true
-    AND d.id IS NULL
-  `)
-  const denunciasPendientes = (pendientesResult.rows[0] as any)?.count ?? 0
+  const denunciasPendientes = await contarDenunciasPendientesOficial(session.user.id)
 
   const params = await searchParams
 
