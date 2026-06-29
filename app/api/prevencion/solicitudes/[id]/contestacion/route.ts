@@ -21,7 +21,7 @@ export async function POST(
 
   await db
     .update(solicitudesInformacion)
-    .set({ status: 'completado', actualizadoEn: new Date() })
+    .set({ status: 'completado', actualizadoEn: new Date().toISOString() })
     .where(eq(solicitudesInformacion.id, id))
 
   return NextResponse.json(created, { status: 201 })

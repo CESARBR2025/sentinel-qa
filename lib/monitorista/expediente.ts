@@ -42,7 +42,8 @@ export async function subirArchivoExpediente(
   const formData = new FormData()
   // Sanitizar nombre: eliminar caracteres especiales que Windows no maneja
   const nombreLimpio = archivo.nombre.replace(/[^\w.\-() ]/g, '_').replace(/\s+/g, ' ')
-  formData.append('file', new File([archivo.buffer], nombreLimpio, { type: archivo.tipo || 'application/octet-stream' }))
+  const blob = new Blob([new Uint8Array(archivo.buffer)], { type: archivo.tipo || 'application/octet-stream' })
+  formData.append('file', blob, nombreLimpio)
 
   const params = new URLSearchParams({
     id_usuario_general: ID_USUARIO_GENERAL,

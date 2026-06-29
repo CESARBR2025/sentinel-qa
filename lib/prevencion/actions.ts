@@ -4,7 +4,7 @@ import { auth }           from '@/lib/auth'
 import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { eq }             from 'drizzle-orm'
+import { eq, sql }        from 'drizzle-orm'
 import { db }             from '@/lib/db/index'
 import { addDays, addMonths, isBefore, parseISO, format } from 'date-fns'
 import { promises as fs } from 'fs'
@@ -129,7 +129,7 @@ export async function createProrroga(formData: FormData) {
       fechaVencimiento:   format(newDate, 'yyyy-MM-dd'),
       prorrogada:         true,
       archivoProrrogaUrl: archivoPath,
-      actualizadoEn:      new Date(),
+      actualizadoEn:      sql`now()`,
     })
     .where(eq(medidasProteccion.id, medidaId))
 
@@ -154,11 +154,11 @@ export async function createFicha(formData: FormData) {
     tipo:                 (formData.get('tipo') as string).trim(),
     folio:                str('folio'),
     enlace:               str('enlace'),
-    fechaActivacion:      new Date(fechaActivacionRaw),
+    fechaActivacion:      fechaActivacionRaw,
     carpetaInvestigacion: str('carpetaInvestigacion'),
     nombreDesaparecida:   (formData.get('nombreDesaparecida') as string).trim(),
     edad:                 edadRaw ? parseInt(edadRaw) : null,
-    fechaAceptacion:      fechaAceptacionRaw ? new Date(fechaAceptacionRaw) : null,
+    fechaAceptacion:      fechaAceptacionRaw ?? null,
     rtAtiende:            str('rtAtiende'),
     elementoNovedades:    str('elementoNovedades'),
     creadoPor:            session.user.id,
@@ -189,7 +189,7 @@ export async function createSeguimiento(formData: FormData) {
   await db.insert(seguimientosBusqueda).values({
     fichaId,
     tipo,
-    fechaHoraEnvio: new Date(),
+    fechaHoraEnvio: sql`now()`,
     registradoPor:  session.user.id,
     archivoUrl,
   })
@@ -206,7 +206,7 @@ export async function cancelarFicha(formData: FormData) {
   await db.update(fichasBusqueda)
     .set({
       status:           'cancelada',
-      fechaCancelacion:  new Date((formData.get('fechaCancelacion') as string).trim()),
+      fechaCancelacion:  (formData.get('fechaCancelacion') as string).trim(),
       fiscalCancela:    (formData.get('fiscalCancela') as string).trim(),
       motivoCancelacion: (formData.get('motivoCancelacion') as string | null)?.trim() || null,
     })
@@ -233,13 +233,13 @@ export async function createSolicitud(formData: FormData) {
   const [row] = await db.insert(solicitudesInformacion).values({
     enlace:               str('enlace'),
     oficio:               req('oficio'),
-    fechaActivacion:      new Date(req('fechaActivacion')),
+    fechaActivacion:      req('fechaActivacion'),
     autoridad:            req('autoridad'),
     fiscalSolicita:       str('fiscalSolicita'),
     delito:               str('delito'),
     carpetaInvestigacion: str('carpetaInvestigacion'),
     solicitudTexto:       str('solicitudTexto'),
-    fechaAceptacion:      fechaAceptacionRaw ? new Date(fechaAceptacionRaw) : null,
+    fechaAceptacion:      fechaAceptacionRaw ?? null,
     status:               'en_juridico',
     creadoPor:            session.user.id,
   }).returning({ id: solicitudesInformacion.id })
@@ -282,7 +282,7 @@ export async function createContestacion(formData: FormData) {
   })
 
   await db.update(solicitudesInformacion)
-    .set({ status: 'completado', actualizadoEn: new Date() })
+    .set({ status: 'completado', actualizadoEn: sql`now()` })
     .where(eq(solicitudesInformacion.id, solicitudId))
 
   revalidatePath(`/prevencion/juridico/solicitudes/${solicitudId}`)
