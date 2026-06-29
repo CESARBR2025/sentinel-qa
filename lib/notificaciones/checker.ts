@@ -13,9 +13,7 @@ export async function generarAlertasBusquedas(userId: string, debug = false) {
     .where(eq(fichasBusqueda.status, 'activa'))
 
   for (const ficha of fichas) {
-    const fechaActivacion = ficha.fechaActivacion instanceof Date
-      ? ficha.fechaActivacion
-      : new Date(String(ficha.fechaActivacion))
+    const fechaActivacion = new Date(String(ficha.fechaActivacion))
 
     // In debug mode skip the registered-check so we alert for ALL hitos
     let registrados = new Set<string>()

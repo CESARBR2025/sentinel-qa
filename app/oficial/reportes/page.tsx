@@ -1,10 +1,7 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
-import { listarReportesOficial } from '@/lib/oficial/service'
+import { verificarRolOficial, listarReportesOficial } from '@/lib/oficial/service'
 import { AlertTriangle, ArrowLeft, CheckCircle2, FileText } from 'lucide-react'
 import Link from 'next/link'
 
@@ -12,14 +9,8 @@ export default async function MisReportesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [userRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-
-  if (userRole?.rolNombre !== 'Oficial de Campo') redirect('/dashboard')
+  const esOficial = await verificarRolOficial(session.user.id)
+  if (!esOficial) redirect('/dashboard')
 
   const reportes = await listarReportesOficial(session.user.id)
 
@@ -60,8 +51,8 @@ export default async function MisReportesPage() {
                 }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, fontWeight: 700, color: '#0f172a' }}>
-                        {r.ofiFolioCad || 'S/C'}
+                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, fontWeight: 700, color: '#2563eb' }}>
+                        {r.folioReporteCampo || r.ofiFolioCad || 'S/C'}
                       </span>
                       <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b' }}>
                         {r.ofiTipoIncidente || 'Sin clasificar'}

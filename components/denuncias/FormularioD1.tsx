@@ -1,27 +1,21 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import {
   FileText, Clock, Shield, MapPin, User,
   CheckCircle, AlertCircle, Users, Save,
-  Navigation as NavigationIcon, Hash, Loader2, // <-- Añade estos
-  Search,
+  Navigation as NavigationIcon,
   ArrowLeft,
   ArrowRight
 } from 'lucide-react';
-import { useEmpleado } from '@/hooks/useEmpleado';
 import { useRouter } from 'next/navigation'
 import { useOficialFormStore } from '@/lib/oficial/store'
+import { useD1FormStore } from '@/lib/denuncias/storeD1'
 
 const mapContainerStyle = { width: '100%', height: '350px', borderRadius: '4px' };
 const center = { lat: 20.3889, lng: -99.9961 };
-const centerDefault = { lat: 20.3889, lng: -99.9961 };
-
-const ahora = new Date();
-const fechaActual = ahora.toISOString().split('T')[0]; // YYYY-MM-DD
-const horaActual = ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 
 const SentinelField = ({ label, icon: Icon, name, type = "text", required = false, ...props }: any) => (
   <div style={fieldContainerStyle}>
@@ -47,41 +41,42 @@ interface Prefill {
   coloniaHecho: string
   lat: number | null
   lng: number | null
-  policiaCargo: string
+  oficialId: string | null
+  crp: string
+}
+
+function generarFolioDenuncia(): string {
+  const hoy = new Date()
+  const y = hoy.getFullYear()
+  const m = String(hoy.getMonth() + 1).padStart(2, '0')
+  const d = String(hoy.getDate()).padStart(2, '0')
+  const fecha = `${y}${m}${d}`
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let codigo = ''
+  for (let i = 0; i < 6; i++) {
+    codigo += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return `SSPM/${fecha}/${codigo}`
 }
 
 export default function FormularioD1({ user, prefill }: { user: any; prefill?: Prefill }) {
-  const [coords, setCoords] = useState(center);
-  const [coordsHecho, setCoordsHecho] = useState({
-    lat: prefill?.lat ?? 20.3889,
-    lng: prefill?.lng ?? -99.9961,
-  })
-  const [dirHecho, setDirHecho] = useState({
-    calle: prefill?.lugarHecho ?? '',
-    colonia: prefill?.coloniaHecho ?? '',
-  })
-  const [coordsApoyo, setCoordsApoyo] = useState(centerDefault);
-  const [dirApoyo, setDirApoyo] = useState({ calle: '', colonia: '' });
-  const [nominaMando, setNominaMando] = useState('');
-  const [nombreMando, setNombreMando] = useState(prefill?.policiaCargo ?? '')
-  const [buscandoMando, setBuscandoMando] = useState(false);
-  const [errorMando, setErrorMando] = useState('');
-  const ahora = new Date();
-  const [fReporte, setFReporte] = useState(ahora.toISOString().split('T')[0]); // YYYY-MM-DD
-  const [hReporte, setHReporte] = useState(ahora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })); // HH:MM
-  const [step, setStep] = useState(1);
+  const folioDenunciaAuto = useMemo(() => generarFolioDenuncia(), [])
+  const oficialId = prefill?.oficialId ?? ''
 
-  const empMando = useEmpleado();
+  const store = useD1FormStore()
+  const step = store.step
+  const coordsHecho = store.coordsHecho
+  const dirHecho = store.dirHecho
+  const coordsApoyo = store.coordsApoyo
+  const dirApoyo = store.dirApoyo
+  const fReporte = store.fechaReporte
+  const hReporte = store.horaReporte
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     libraries: ['places']
   });
-
-  const onMapClick = useCallback((e: google.maps.MapMouseEvent) => {
-    if (e.latLng) setCoords({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-  }, []);
 
   const reverseGeocode = (lat: number, lng: number, type: 'hecho' | 'apoyo') => {
     const geocoder = new window.google.maps.Geocoder();
@@ -97,26 +92,24 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
         });
 
         const fullCalle = `${calle} ${num}`.trim();
-        if (type === 'hecho') setDirHecho({ calle: fullCalle, colonia: col });
-        else setDirApoyo({ calle: fullCalle, colonia: col });
+        if (type === 'hecho') store.setDirHecho({ calle: fullCalle, colonia: col });
+        else store.setDirApoyo({ calle: fullCalle, colonia: col });
       }
     });
   };
 
-  const buscarMando = async () => {
-    if (!nominaMando) return;
-    await empMando.buscarPorNomina(nominaMando);
-  };
+  useEffect(() => {
+    console.log("STEP:", store.step);
+  }, [store.step]);
 
   useEffect(() => {
-    console.log("STEP:", step);
-}, [step]);
-
-  useEffect(() => {
-    if (empMando.empleado) {
-      setNombreMando(empMando.empleado.nombre);
+    if (prefill?.lat && prefill?.lng) {
+      store.setCoordsHecho({ lat: prefill.lat, lng: prefill.lng })
     }
-  }, [empMando.empleado]);
+    if (prefill?.lugarHecho || prefill?.coloniaHecho) {
+      store.setDirHecho({ calle: prefill?.lugarHecho ?? '', colonia: prefill?.coloniaHecho ?? '' })
+    }
+  }, [])
 
   const router = useRouter()
   const resetStore = useOficialFormStore(s => s.reset)
@@ -158,6 +151,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
       <input type="hidden" name="longitudHecho" value={coordsHecho.lng} />
       <input type="hidden" name="latitudApoyo" value={coordsApoyo.lat} />
       <input type="hidden" name="longitudApoyo" value={coordsApoyo.lng} />
+      <input type="hidden" name="oficialId" value={oficialId} />
       
 
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}
@@ -165,7 +159,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><FileText size={18} /> IDENTIFICACIÓN LEGAL</h2>
         <div style={grid3Style}>
-          <SentinelField label="Folio de Denuncia" name="folioDenuncia" required placeholder="D1-0000" />
+          <SentinelField label="Folio de Denuncia" name="folioDenuncia" required value={folioDenunciaAuto} readOnly />
           <SentinelField label="IPH" name="iph" placeholder="IPH-2026-..." />
           <SentinelField label="Folio de CU" name="folioCu" placeholder="CU-..." />
           <SentinelField label="Corporación" name="corporacion" defaultValue="SSPM" />
@@ -181,8 +175,8 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Fila: Reporte y Avistamiento */}
           <div style={grid4Style}>
-            <SentinelField readOnly label="Fecha Reporte" name="fechaReporte" type="date" required value={fReporte} onChange={(e: any) => setFReporte(e.target.value)} />
-            <SentinelField readOnly label="Hora Reporte" name="horaReporte" type="time" required value={hReporte} onChange={(e: any) => setHReporte(e.target.value)} />
+            <SentinelField readOnly label="Fecha Reporte" name="fechaReporte" type="date" required value={fReporte} onChange={(e: any) => store.setFechaReporte(e.target.value)} />
+            <SentinelField readOnly label="Hora Reporte" name="horaReporte" type="time" required value={hReporte} onChange={(e: any) => store.setHoraReporte(e.target.value)} />
             <SentinelField label="Fecha Avistamiento Ciudadano" name="fechaAvistamiento" type="date" />
             <SentinelField label="Hora Avistamiento Ciudadano" name="horaAvistamiento" type="time" />
           </div>
@@ -228,13 +222,13 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
                   onClick={(e) => {
                     if (e.latLng) {
                       const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                      setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
+                      store.setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
                     }
                   }}>
                   <Marker position={coordsHecho} draggable onDragEnd={(e) => {
                     if (e.latLng) {
                       const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                      setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
+                      store.setCoordsHecho({ lat, lng }); reverseGeocode(lat, lng, 'hecho');
                     }
                   }} />
                 </GoogleMap>
@@ -242,9 +236,9 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
               <SentinelField label="Calle y Número (Hecho)" name="lugarHecho" value={dirHecho.calle}
-                onChange={(e: any) => setDirHecho({ ...dirHecho, calle: e.target.value })} />
+                onChange={(e: any) => store.setDirHecho({ ...dirHecho, calle: e.target.value })} />
               <SentinelField label="Colonia (Hecho)" name="coloniaHecho" value={dirHecho.colonia}
-                onChange={(e: any) => setDirHecho({ ...dirHecho, colonia: e.target.value })} />
+                onChange={(e: any) => store.setDirHecho({ ...dirHecho, colonia: e.target.value })} />
             </div>
           </div>
 
@@ -257,14 +251,14 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
                   onClick={(e) => {
                     if (e.latLng) {
                       const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                      setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
+                      store.setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
                     }
                   }}>
                   <Marker position={coordsApoyo} draggable icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                     onDragEnd={(e) => {
                       if (e.latLng) {
                         const lat = e.latLng.lat(); const lng = e.latLng.lng();
-                        setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
+                        store.setCoordsApoyo({ lat, lng }); reverseGeocode(lat, lng, 'apoyo');
                       }
                     }} />
                 </GoogleMap>
@@ -272,9 +266,9 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
               <SentinelField label="Calle y Número (Apoyo)" name="lugarApoyo" value={dirApoyo.calle}
-                onChange={(e: any) => setDirApoyo({ ...dirApoyo, calle: e.target.value })} />
+                onChange={(e: any) => store.setDirApoyo({ ...dirApoyo, calle: e.target.value })} />
               <SentinelField label="Colonia (Apoyo)" name="coloniaApoyo" value={dirApoyo.colonia}
-                onChange={(e: any) => setDirApoyo({ ...dirApoyo, colonia: e.target.value })} />
+                onChange={(e: any) => store.setDirApoyo({ ...dirApoyo, colonia: e.target.value })} />
             </div>
           </div>
 
@@ -313,49 +307,15 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><Shield size={18} /> PERSONAL Y EQUIPAMIENTO</h2>
         <div style={grid3Style}>
-          <SentinelField label="CRP (Placa Patrulla)" name="crp" icon={Shield} />
+          <SentinelField label="CRP (Placa Patrulla)" name="crp" icon={Shield} value={prefill?.crp ?? ''} readOnly />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={labelStyle}>Nómina del Mando</label>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <div style={{ position: 'relative', flex: 1 }}>
-                <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
-                <input
-                  type="text"
-                  name="nominaMando"
-                  placeholder="Escriba nómina..."
-                  value={nominaMando}
-                  onChange={(e) => setNominaMando(e.target.value)}
-                  onBlur={buscarMando} // Dispara al salir del input
-                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarMando(); } }}
-                  style={{ ...inputStyle, paddingLeft: '40px', borderLeft: '4px solid #3b82f6' }}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={buscarMando}
-                style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}
-              >
-                {empMando.cargando ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
-              </button>
-            </div>
-            {empMando.error && <span style={{ color: '#dc2626', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>{empMando.error}</span>}
-          </div>
-
-          {/* Campo de Nombre (Se llena solo por el useEffect) */}
           <SentinelField
-            label="Policía a Cargo (Mando)"
-            name="policiaCargo"
+            label="Oficial ID"
+            name="oficialId"
             icon={Shield}
-            placeholder="Nombre automático..."
-            value={nombreMando}
-            onChange={(e: any) => setNombreMando(e.target.value)}
-            readOnly // Opcional: para que no lo editen manualmente si ya se buscó
+            value={oficialId}
+            readOnly
           />
-
-
-          <SentinelField label="Nombre Firma D1" name="policiaFirmaD1" />
-          <SentinelField label="Persona Ingresa CU" name="policiaIngresaCu" />
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Se requirió Tablet?</label>
             <select name="requirioTablet" style={inputStyle} defaultValue="true">
@@ -417,7 +377,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px', paddingBottom: '80px' }}>
   {/* BOTÓN ATRÁS */}
   {step > 1 ? (
-    <button type="button" onClick={() => setStep(step - 1)} style={btnBackStyle}>
+    <button type="button" onClick={() => store.setStep(step - 1)} style={btnBackStyle}>
       <ArrowLeft size={16} /> ANTERIOR
     </button>
   ) : <div />}
@@ -428,7 +388,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
   onClick={(e) => {
     if (step < 4) {
       e.preventDefault();
-      setStep((s) => s + 1);
+      store.setStep(step + 1);
     }
   }}
   style={step === 4 ? btnSubmitStyle : btnNextStyle}

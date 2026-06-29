@@ -6,9 +6,11 @@ import {
   obtenerSolicitudesCompletadas,
   actualizarEstadoSolicitud,
   actualizarSolicitudConEvidencias,
+  obtenerDetalleAsegurado,
+  actualizarDetallesAsegurado,
 } from './repository'
 import { rowToSolicitud } from './mapper'
-import type { SolicitudEvidencia } from './types'
+import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput } from './types'
 
 export async function verificarRolFiscalia(userId: string): Promise<boolean> {
   const rol = await obtenerRolUsuario(userId)
@@ -41,4 +43,12 @@ export async function listarSolicitudesCompletadas(): Promise<SolicitudEvidencia
 
 export async function pedirEvidencias(id: string, evidencias: string): Promise<void> {
   await actualizarSolicitudConEvidencias(id, 'EN_ANALISIS', 'PENDIENTE_MONITORISTA', evidencias)
+}
+
+export async function obtenerDatosAsegurado(solicitudId: string): Promise<DetalleAsegurado | null> {
+  return obtenerDetalleAsegurado(solicitudId)
+}
+
+export async function guardarDetallesAsegurado(id: string, datos: DatosAseguradoInput, evidenciasJson?: string | null): Promise<void> {
+  await actualizarDetallesAsegurado(id, datos, evidenciasJson)
 }
