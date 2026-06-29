@@ -79,6 +79,7 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   colonia: string | null
   latitud: string | null
   longitud: string | null
+  oficialId: string
 }> {
   const oficial = await obtenerOficialPorUserId(userId)
   if (!oficial) throw new Error('Usuario no registrado como oficial de campo')
@@ -148,7 +149,7 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   }
 
   const reporteId = await insertarReporteCampo(input)
-  return { reporteId, quiereDenuncia, calle, colonia, latitud, longitud }
+  return { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId: oficial.id }
 }
 
 export async function listarReportesOficial(userId: string): Promise<OfiReporteResumen[]> {

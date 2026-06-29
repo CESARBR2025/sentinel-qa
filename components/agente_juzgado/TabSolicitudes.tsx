@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { TomarCasoBoton } from './TomarCasoModal'
-import { CerrarCasoBoton } from './CerrarCasoModal'
 import { SharedPedirEvidenciasBoton } from '@/components/shared/PedirEvidenciasModal'
 import { accionPedirEvidencias } from '@/lib/agente_juzgado/actions'
 import type { SolicitudEvidencia } from '@/lib/agente_juzgado/types'
@@ -135,9 +135,11 @@ export function TabSolicitudes({ recepcionadas, enRevision, conMonitorista, comp
                   <td>
                     <span className="badge-estado" style={{
                       background: s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
+                                   s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#d1fae5' :
                                    s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#fef3c7' :
                                    '#f1f5f9',
                       color: s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
+                             s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#065f46' :
                              s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#92400e' :
                              '#475569',
                     }}>{s.estadoEvidencia ?? '—'}</span>
@@ -146,10 +148,30 @@ export function TabSolicitudes({ recepcionadas, enRevision, conMonitorista, comp
                     {tab === 'recepcionadas' ? (
                       <TomarCasoBoton solicitudId={s.id} />
                     ) : tab === 'en_revision' ? (
-                      <SharedPedirEvidenciasBoton
-                        solicitudId={s.id}
-                        accion={accionPedirEvidencias}
-                      />
+                      <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+                        <Link href={`/agente_juzgado/solicitudes/${s.id}`} style={{
+                          fontFamily: 'JetBrains Mono,monospace',
+                          fontSize: 9,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          padding: '5px 14px',
+                          border: `1px solid ${s.folioSija ? '#059669' : '#7c3aed'}`,
+                          background: '#ffffff',
+                          color: s.folioSija ? '#059669' : '#7c3aed',
+                          cursor: 'pointer',
+                          textDecoration: 'none',
+                          transition: 'all 0.15s ease',
+                        }}
+                          onMouseEnter={e => { e.currentTarget.style.background = s.folioSija ? '#059669' : '#7c3aed'; e.currentTarget.style.color = '#ffffff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = s.folioSija ? '#059669' : '#7c3aed'; }}
+                        >
+                          {s.folioSija ? 'Detalles' : 'Capturar'}
+                        </Link>
+                        <SharedPedirEvidenciasBoton
+                          solicitudId={s.id}
+                          accion={accionPedirEvidencias}
+                        />
+                      </div>
                     ) : tab === 'con_monitorista' ? (
                       <SharedPedirEvidenciasBoton
                         solicitudId={s.id}
@@ -157,7 +179,24 @@ export function TabSolicitudes({ recepcionadas, enRevision, conMonitorista, comp
                         accion={accionPedirEvidencias}
                       />
                     ) : (
-                      <CerrarCasoBoton solicitudId={s.id} />
+                      <Link href={`/agente_juzgado/solicitudes/${s.id}`} style={{
+                        fontFamily: 'JetBrains Mono,monospace',
+                        fontSize: 9,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        padding: '5px 14px',
+                        border: '1px solid #6b7280',
+                        background: '#ffffff',
+                        color: '#6b7280',
+                        cursor: 'pointer',
+                        textDecoration: 'none',
+                        transition: 'all 0.15s ease',
+                      }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#6b7280'; e.currentTarget.style.color = '#ffffff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#6b7280'; }}
+                      >
+                        Detalles
+                      </Link>
                     )}
                   </td>
                 </tr>
