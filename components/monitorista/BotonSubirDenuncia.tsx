@@ -31,7 +31,7 @@ export function BotonSubirDenuncia({
         style={{
           fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
           textTransform: 'uppercase', padding: '8px 16px',
-          background: '#d4a43a', color: '#050810', border: 'none', borderRadius: 2,
+          background: '#0f172a', color: '#ffffff', border: 'none', borderRadius: 2,
           cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
         }}
       >
@@ -42,7 +42,7 @@ export function BotonSubirDenuncia({
         style={{
           fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em',
           textTransform: 'uppercase', padding: '8px 16px',
-          background: '#4a9e6a', color: '#ffffff', border: 'none', borderRadius: 2,
+          background: '#059669', color: '#ffffff', border: 'none', borderRadius: 2,
           cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
         }}
       >

@@ -1,7 +1,22 @@
-import { obtenerOficialPorUserId, insertarReporteCampo } from './repository'
-import { CrearReporteCampoInput } from './types'
-import { obtenerReportesOficial, obtenerReporteDetalle } from './repository'
-import type { OfiReporteResumen, OfiReporteDetalle } from './types'
+import {
+  obtenerOficialPorUserId,
+  insertarReporteCampo,
+  verificarFolioExiste,
+  obtenerRolUsuario,
+  obtenerCatalogoIncidentes,
+  obtenerCatalogoEmergencias,
+  obtenerCatalogoPrioridades,
+  obtenerCatalogoCanalizaciones,
+  contarDenunciasPendientes,
+  obtenerReportesOficial,
+  obtenerReporteDetalle,
+} from './repository'
+import type {
+  CrearReporteCampoInput,
+  OfiReporteResumen,
+  OfiReporteDetalle,
+  CatalogoItem,
+} from './types'
 
 function str(fd: FormData, key: string): string | null {
   const v = fd.get(key)
@@ -15,6 +30,48 @@ function num(fd: FormData, key: string): number | null {
   return v ? Number(v) : null
 }
 
+function generarFolio(): string {
+  const hoy = new Date()
+  const y = hoy.getFullYear()
+  const m = String(hoy.getMonth() + 1).padStart(2, '0')
+  const d = String(hoy.getDate()).padStart(2, '0')
+  const fecha = `${y}${m}${d}`
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let codigo = ''
+  for (let i = 0; i < 6; i++) {
+    codigo += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return `SSPM/${fecha}/${codigo}`
+}
+
+async function generarFolioUnico(): Promise<string> {
+  for (let i = 0; i < 10; i++) {
+    const folio = generarFolio()
+    const existe = await verificarFolioExiste(folio)
+    if (!existe) return folio
+  }
+  throw new Error('No se pudo generar un folio único después de 10 intentos')
+}
+
+export async function verificarRolOficial(userId: string): Promise<boolean> {
+  const rol = await obtenerRolUsuario(userId)
+  return rol === 'Oficial de Campo'
+}
+
+export async function obtenerCatalogos() {
+  const [emergencias, incidentes, prioridades, canalizaciones] = await Promise.all([
+    obtenerCatalogoEmergencias(),
+    obtenerCatalogoIncidentes(),
+    obtenerCatalogoPrioridades(),
+    obtenerCatalogoCanalizaciones(),
+  ])
+  return { emergencias, incidentes, prioridades, canalizaciones }
+}
+
+export async function contarDenunciasPendientesOficial(userId: string): Promise<number> {
+  return contarDenunciasPendientes(userId)
+}
+
 export async function crearReporte(userId: string, formData: FormData): Promise<{
   reporteId: string
   quiereDenuncia: boolean
@@ -22,9 +79,12 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   colonia: string | null
   latitud: string | null
   longitud: string | null
+  oficialId: string
 }> {
   const oficial = await obtenerOficialPorUserId(userId)
   if (!oficial) throw new Error('Usuario no registrado como oficial de campo')
+
+  const folio = await generarFolioUnico()
 
   const detenidosRaw = str(formData, 'ofi_detenidos')
   const detenidosArr = detenidosRaw
@@ -58,6 +118,7 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   const longitud = str(formData, 'ofi_longitud')
 
   const input: CrearReporteCampoInput = {
+    folioReporteCampo:    folio,
     ofiFolioCad:          str(formData, 'ofi_folio_cad') ?? 'S/C',
     ofiNombreReportante:  str(formData, 'ofi_nombre_reportante'),
     ofiAnonimo:           bool(formData, 'ofi_anonimo'),
@@ -84,11 +145,11 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiResultadoCateo:    str(formData, 'ofi_resultado_cateo'),
     ofiOficialId:         oficial.id,
     ofiOficialNombre:     `${oficial.ofiNombre} ${oficial.ofiApPaterno}`.trim(),
-    ofiQuiereDenuncia:    quiereDenuncia,  // <-- NUEVO
+    ofiQuiereDenuncia:    quiereDenuncia,
   }
 
   const reporteId = await insertarReporteCampo(input)
-  return { reporteId, quiereDenuncia, calle, colonia, latitud, longitud }
+  return { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId: oficial.id }
 }
 
 export async function listarReportesOficial(userId: string): Promise<OfiReporteResumen[]> {

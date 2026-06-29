@@ -1,6 +1,7 @@
 import { auth }           from '@/lib/auth'
 import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
+import { query }          from '@/lib/db'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import FormularioD1        from '@/components/denuncias/FormularioD1'
@@ -10,7 +11,7 @@ import Link from 'next/link'
 export default async function NuevaDenunciaD1Page({
   searchParams,
 }: {
-  searchParams: Promise<{ reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficial?: string }>
+  searchParams: Promise<{ reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficialId?: string }>
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
@@ -19,13 +20,23 @@ export default async function NuevaDenunciaD1Page({
   const sp = await searchParams
 
   // Datos pre-llenados desde el reporte de recorrido
+  let placaPatrulla = ''
+  if (sp.oficialId) {
+    const result = await query<{ placa: string }>(
+      `SELECT ofi_placa_unidad_asignada AS placa FROM ofi_oficiales WHERE id = $1 LIMIT 1`,
+      [sp.oficialId]
+    )
+    placaPatrulla = result.rows[0]?.placa ?? ''
+  }
+
   const prefill = {
     reporteCampoId: sp.reporteCampoId ?? null,
     lugarHecho:     sp.calle          ?? '',
     coloniaHecho:   sp.colonia        ?? '',
     lat:            sp.lat            ? Number(sp.lat) : null,
     lng:            sp.lng            ? Number(sp.lng) : null,
-    policiaCargo:   sp.oficial        ?? '',
+    oficialId:      sp.oficialId      ?? null,
+    crp:            placaPatrulla,
   }
 
   return (

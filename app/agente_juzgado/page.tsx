@@ -72,7 +72,7 @@ export default async function JuzgadoDashboardPage({ searchParams }: { searchPar
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40 }}>
 
           {/* Card */}
-          <Link href="/agente_juzgado/nuevo" className="card-j" style={{ textDecoration: 'none' }}>
+          <Link href="/agente_juzgado/solicitudes" className="card-j" style={{ textDecoration: 'none' }}>
             <div className="cj-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#059669', transition: 'width 0.4s ease', width: 32 }}></div>
             <div className="cj-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#059669', transition: 'height 0.4s ease', height: 32 }}></div>
 
@@ -88,10 +88,10 @@ export default async function JuzgadoDashboardPage({ searchParams }: { searchPar
 
             <div style={{ flexGrow: 1 }}>
               <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', letterSpacing: '0.02em', color: '#0f172a' }}>
-                Nuevo Reporte
+                Reportes de Denuncias
               </h3>
               <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Genera alta de reporte de juzgado
+                Solicitudes de reportes de denuncias
               </p>
             </div>
 

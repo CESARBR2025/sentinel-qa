@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db } from '@/lib/db/index'
-import { solicitudesEvidencia, evidencias, monitoristaHistorial } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/monitorista/expediente'
 
 export async function POST(req: NextRequest) {
@@ -22,11 +20,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Datos insuficientes' }, { status: 400 })
   }
 
-  const [sol] = await db
-    .select({ id: solicitudesEvidencia.id, folioIncidente: solicitudesEvidencia.folioIncidente })
-    .from(solicitudesEvidencia)
-    .where(eq(solicitudesEvidencia.id, solicitudId))
-    .limit(1)
+  const solResult = await query<Record<string, unknown>>(
+    `SELECT id, folio_incidente AS "folioIncidente" FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`,
+    [solicitudId],
+  )
+  const sol = solResult.rows[0] as { id: string; folioIncidente: string } | undefined
 
   if (!sol) return NextResponse.json({ error: 'Solicitud no encontrada' }, { status: 404 })
 
@@ -35,13 +33,17 @@ export async function POST(req: NextRequest) {
   const token = await obtenerGuestToken(session.user.name || 'Monitorista')
   const url = await subirArchivoExpediente(token, { buffer, nombre: nombreOriginal, tipo: file.type }, folio, `EVIDENCIA_${tipo.toUpperCase()}`)
 
-  const [ev] = await db.insert(evidencias).values({
-    solicitudId, incidenteId, tipo, nombreOriginal, urlExpediente: url, subidoPor: session.user.id,
-  }).returning()
+  const evResult = await query<Record<string, unknown>>(
+    `INSERT INTO evidencias (solicitud_id, incidente_id, tipo, nombre_original, url_expediente, subido_por)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [solicitudId, incidenteId, tipo, nombreOriginal, url, session.user.id],
+  )
+  const ev = evResult.rows[0]
 
-  await db.insert(monitoristaHistorial).values({
-    monitoristaId: session.user.id, accion: 'evidencia_subida', solicitudId, incidenteId,
-  })
+  await query(
+    `INSERT INTO monitorista_historial (monitorista_id, accion, solicitud_id, incidente_id) VALUES ($1, $2, $3, $4)`,
+    [session.user.id, 'evidencia_subida', solicitudId, incidenteId],
+  )
 
   return NextResponse.json(ev, { status: 201 })
 }

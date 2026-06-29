@@ -42,3 +42,11 @@ next-env.d.ts
 
 # Claude Code local config
 .claude/
+doc/Analisis_Algoritmos_C4.html
+*.xlsx
+*.docx
+doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Descripcion - UDAI.jpeg
+doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Diagrama de Flujo - UDAI.jpeg
+doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Formatos UDAI/FORMATO FICHA DE DETENIDOS.pptx
+doc/flujo_prevencion_delito.html
+doc/tutorial_prevencion_delito.html

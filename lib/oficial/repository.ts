@@ -1,8 +1,6 @@
 import { query } from '@/lib/db'
-import { rowToOficial } from './mapper'
-import type { OfiOficial, CrearReporteCampoInput } from './types'
-import { rowToReporteResumen, rowToReporteDetalle } from './mapper'
-import type { OfiReporteResumen, OfiReporteDetalle } from './types'
+import { rowToOficial, rowToReporteResumen, rowToReporteDetalle } from './mapper'
+import type { OfiOficial, CrearReporteCampoInput, OfiReporteResumen, OfiReporteDetalle, CatalogoItem } from './types'
 
 export async function obtenerOficialPorUserId(userId: string): Promise<OfiOficial | null> {
   const result = await query<Record<string, unknown>>(
@@ -12,9 +10,18 @@ export async function obtenerOficialPorUserId(userId: string): Promise<OfiOficia
   return result.rows.length ? rowToOficial(result.rows[0]) : null
 }
 
+export async function verificarFolioExiste(folio: string): Promise<boolean> {
+  const result = await query<{ count: string }>(
+    `SELECT COUNT(*)::int AS count FROM ofi_reportes_campo WHERE folio_reporte_campo = $1`,
+    [folio]
+  )
+  return parseInt(result.rows[0].count, 10) > 0
+}
+
 export async function insertarReporteCampo(data: CrearReporteCampoInput): Promise<string> {
   const result = await query<{ id: string }>(
     `INSERT INTO ofi_reportes_campo (
+      folio_reporte_campo,
       ofi_folio_cad, ofi_nombre_reportante, ofi_anonimo,
       ofi_tipo_incidente, ofi_tipo_emergencia, ofi_prioridad,
       ofi_descripcion, ofi_contenido_reporte,
@@ -26,14 +33,13 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
       ofi_oficial_id, ofi_oficial_nombre,
       quiere_denuncia
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8,
-      $9, $10, $11, $12, $13, $14,
-      $15, $16::jsonb, $17, $18,
-      $19, $20, $21::jsonb,
-      $22, $23::jsonb, $24,
-      $25, $26, $27
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+      $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+      $21, $22::jsonb, $23, $24, $25,
+      $26, $27, $28
     ) RETURNING id`,
     [
+      data.folioReporteCampo,
       data.ofiFolioCad, data.ofiNombreReportante, data.ofiAnonimo,
       data.ofiTipoIncidente, data.ofiTipoEmergencia, data.ofiPrioridad,
       data.ofiDescripcion, data.ofiContenidoReporte,
@@ -53,10 +59,66 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
   return result.rows[0].id
 }
 
+export async function obtenerRolUsuario(userId: string): Promise<string | null> {
+  const result = await query<{ nombre: string }>(
+    `SELECT roles.nombre
+     FROM users
+     LEFT JOIN roles ON roles.id = users.rol_id
+     WHERE users.id = $1
+     LIMIT 1`,
+    [userId]
+  )
+  return result.rows.length ? result.rows[0].nombre : null
+}
+
+export async function obtenerCatalogoIncidentes(): Promise<CatalogoItem[]> {
+  const result = await query<CatalogoItem>(
+    `SELECT id, nombre FROM cat_tipos_incidente WHERE activo = true ORDER BY nombre`
+  )
+  return result.rows
+}
+
+export async function obtenerCatalogoEmergencias(): Promise<CatalogoItem[]> {
+  const result = await query<CatalogoItem>(
+    `SELECT id, nombre FROM cat_tipos_emergencia WHERE activo = true ORDER BY nombre`
+  )
+  return result.rows
+}
+
+export async function obtenerCatalogoPrioridades(): Promise<CatalogoItem[]> {
+  const result = await query<CatalogoItem>(
+    `SELECT id, nombre FROM cat_prioridades WHERE activo = true ORDER BY orden`
+  )
+  return result.rows
+}
+
+export async function obtenerCatalogoCanalizaciones(): Promise<CatalogoItem[]> {
+  const result = await query<CatalogoItem>(
+    `SELECT id, nombre FROM cat_medios_canalizacion WHERE activo = true ORDER BY nombre`
+  )
+  return result.rows
+}
+
+export async function contarDenunciasPendientes(userId: string): Promise<number> {
+  const result = await query<{ count: string }>(
+    `SELECT COUNT(*)::int AS count
+     FROM ofi_reportes_campo r
+     LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
+     WHERE r.ofi_oficial_id = (
+       SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1
+     )
+     AND r.quiere_denuncia = true
+     AND d.id IS NULL`,
+    [userId]
+  )
+  return parseInt(result.rows[0].count, 10)
+}
+
 export async function obtenerReportesOficial(userId: string): Promise<OfiReporteResumen[]> {
   const result = await query<Record<string, unknown>>(
     `SELECT
        r.id,
+       r.folio_reporte_campo,
        r.ofi_folio_cad,
        r.ofi_tipo_incidente,
        r.ofi_calle,

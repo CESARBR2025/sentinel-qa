@@ -1,9 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import { solicitudesEvidencia, evidencias, users } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { ArrowLeft, Clock, User, FileText } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -14,36 +12,27 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [sol] = await db
-    .select({
-      id: solicitudesEvidencia.id,
-      incidenteId: solicitudesEvidencia.incidenteId,
-      folioIncidente: solicitudesEvidencia.folioIncidente,
-      solicitadoNombre: solicitudesEvidencia.solicitadoNombre,
-      descripcion: solicitudesEvidencia.descripcion,
-      status: solicitudesEvidencia.status,
-      creadoEn: solicitudesEvidencia.creadoEn,
-      completadoEn: solicitudesEvidencia.completadoEn,
-    })
-    .from(solicitudesEvidencia)
-    .where(eq(solicitudesEvidencia.id, id))
-    .limit(1)
+  const solResult = await query<Record<string, unknown>>(
+    `SELECT id, incidente_id AS "incidenteId", folio_incidente AS "folioIncidente",
+            solicitado_nombre AS "solicitadoNombre", descripcion, status,
+            creado_en AS "creadoEn", completado_en AS "completadoEn"
+     FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`,
+    [id],
+  )
+  const sol = solResult.rows[0] as Record<string, unknown> | undefined
 
   if (!sol) notFound()
 
-  const evs = await db
-    .select({
-      id: evidencias.id,
-      tipo: evidencias.tipo,
-      nombreOriginal: evidencias.nombreOriginal,
-      urlExpediente: evidencias.urlExpediente,
-      subidoPorNombre: users.name,
-      creadoEn: evidencias.creadoEn,
-    })
-    .from(evidencias)
-    .leftJoin(users, eq(evidencias.subidoPor, users.id))
-    .where(eq(evidencias.solicitudId, id))
-    .orderBy(evidencias.creadoEn)
+  const evsResult = await query<Record<string, unknown>>(
+    `SELECT e.id, e.tipo, e.nombre_original AS "nombreOriginal", e.url_expediente AS "urlExpediente",
+            u.name AS "subidoPorNombre", e.creado_en AS "creadoEn"
+     FROM evidencias e
+     LEFT JOIN users u ON e.subido_por = u.id
+     WHERE e.solicitud_id = $1
+     ORDER BY e.creado_en`,
+    [id],
+  )
+  const evs = evsResult.rows
 
   const statusBadge = getStatusBadge(sol.status)
 
@@ -54,7 +43,7 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
       `}</style>
 
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 64px' }}>
-        <Link href="/monitorista" style={{
+        <Link href="/monitorista/solicitudes" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8, color: '#5c74a1',
           fontFamily: 'JetBrains Mono', fontSize: 11, textDecoration: 'none',
           marginBottom: 32, textTransform: 'uppercase', letterSpacing: '0.1em',

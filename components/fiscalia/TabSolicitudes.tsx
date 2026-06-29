@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { TomarCasoBoton } from './TomarCasoModal'
 import { PedirEvidenciasBoton } from './PedirEvidenciasModal'
 import type { SolicitudEvidencia } from '@/lib/fiscalia/types'
@@ -119,15 +120,38 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista, completa
                   </td>
                   <td>
                     <span className="badge-estado" style={{
-                      background: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#cffafe' : '#f1f5f9',
-                      color: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#155e75' : '#475569',
+                      background: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#cffafe' :
+                                   s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
+                                   s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#d1fae5' :
+                                   '#f1f5f9',
+                      color: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#155e75' :
+                             s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
+                             s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#065f46' :
+                             '#475569',
                     }}>{s.estadoEvidencia ?? '—'}</span>
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     {tab === 'pendientes' ? (
                       <TomarCasoBoton solicitudId={s.id} />
                     ) : tab === 'en_proceso' ? (
-                      <PedirEvidenciasBoton solicitudId={s.id} />
+                      <Link href={`/fiscalia/solicitudes/${s.id}`} style={{
+                        fontFamily: 'JetBrains Mono,monospace',
+                        fontSize: 9,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        padding: '5px 14px',
+                        border: `1px solid ${s.folioSija ? '#059669' : '#7c3aed'}`,
+                        background: '#ffffff',
+                        color: s.folioSija ? '#059669' : '#7c3aed',
+                        cursor: 'pointer',
+                        textDecoration: 'none',
+                        transition: 'all 0.15s ease',
+                      }}
+                        onMouseEnter={e => { e.currentTarget.style.background = s.folioSija ? '#059669' : '#7c3aed'; e.currentTarget.style.color = '#ffffff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = s.folioSija ? '#059669' : '#7c3aed'; }}
+                      >
+                        {s.folioSija ? 'Detalles' : 'Capturar'}
+                      </Link>
                     ) : tab === 'con_monitorista' ? (
                       <PedirEvidenciasBoton
                         solicitudId={s.id}
@@ -143,15 +167,24 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista, completa
                         })()}
                       />
                     ) : (
-                      <span style={{
+                      <Link href={`/fiscalia/solicitudes/${s.id}`} style={{
                         fontFamily: 'JetBrains Mono,monospace',
                         fontSize: 9,
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase',
+                        padding: '5px 14px',
+                        border: '1px solid #16a34a',
+                        background: '#ffffff',
                         color: '#16a34a',
-                      }}>
-                        Completada
-                      </span>
+                        cursor: 'pointer',
+                        textDecoration: 'none',
+                        transition: 'all 0.15s ease',
+                      }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#16a34a'; e.currentTarget.style.color = '#ffffff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#16a34a'; }}
+                      >
+                        Detalles
+                      </Link>
                     )}
                   </td>
                 </tr>
