@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db } from '@/lib/db/index'
-import { solicitudesEvidencia, monitoristaHistorial } from '@/lib/db/schema'
-import { eq, sql } from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 export async function POST(
   req: NextRequest,
@@ -20,11 +18,11 @@ export async function POST(
     return NextResponse.json({ error: 'Acción inválida' }, { status: 400 })
   }
 
-  const [sol] = await db
-    .select({ id: solicitudesEvidencia.id, status: solicitudesEvidencia.status, incidenteId: solicitudesEvidencia.incidenteId })
-    .from(solicitudesEvidencia)
-    .where(eq(solicitudesEvidencia.id, id))
-    .limit(1)
+  const solResult = await query<Record<string, unknown>>(
+    `SELECT id, status, incidente_id AS "incidenteId" FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`,
+    [id],
+  )
+  const sol = solResult.rows[0] as { id: string; status: string; incidenteId: string } | undefined
 
   if (!sol) return NextResponse.json({ error: 'Solicitud no encontrada' }, { status: 404 })
   if (sol.status !== 'pendiente') return NextResponse.json({ error: 'La solicitud no está pendiente' }, { status: 400 })
@@ -32,16 +30,22 @@ export async function POST(
   const newStatus = action === 'completar' ? 'completada' : 'cancelada'
   const historialAccion = action === 'completar' ? 'solicitud_completada' : 'solicitud_cancelada'
 
-  await db.update(solicitudesEvidencia)
-    .set({ status: newStatus, completadoEn: action === 'completar' ? sql`now()` : null })
-    .where(eq(solicitudesEvidencia.id, id))
+  if (action === 'completar') {
+    await query(
+      `UPDATE solicitudes_evidencia SET status = $1, completado_en = NOW() WHERE id = $2`,
+      [newStatus, id],
+    )
+  } else {
+    await query(
+      `UPDATE solicitudes_evidencia SET status = $1, completado_en = NULL WHERE id = $2`,
+      [newStatus, id],
+    )
+  }
 
-  await db.insert(monitoristaHistorial).values({
-    monitoristaId: session.user.id,
-    accion: historialAccion,
-    solicitudId: id,
-    incidenteId: sol.incidenteId,
-  })
+  await query(
+    `INSERT INTO monitorista_historial (monitorista_id, accion, solicitud_id, incidente_id) VALUES ($1, $2, $3, $4)`,
+    [session.user.id, historialAccion, id, sol.incidenteId],
+  )
 
   return NextResponse.json({ status: newStatus })
 }
