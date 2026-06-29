@@ -8,9 +8,49 @@ export interface RolRow {
   rol: string
 }
 
+export interface EvidenciaMonitorista {
+  id: number
+  urlArchivo: string
+  nombreArchivo: string | null
+}
+
+export interface DatosAseguradoInput {
+  folioSija: string
+  calle: string
+  numero: string
+  colonia: string
+  municipio: string
+  folioRemision: string
+  marcoLegal: string
+  registroTableta: string
+}
+
+export interface DetalleAsegurado {
+  folioDenuncia: string | null
+  folioReporteCampo: string | null
+  iph: string | null
+  fechaReporte: string | null
+  horaReporte: string | null
+  nombreDetenido: string | null
+  placaUnidad: string | null
+  nombrePolicia: string | null
+  nominaPolicia: string | null
+  lugarDetencion: string | null
+  capturadoPorNombre: string | null
+  folioSija: string | null
+  folioRemision: string | null
+  marcoLegal: string | null
+  registroTableta: string | null
+  domicilioCalle: string | null
+  domicilioNumero: string | null
+  domicilioColonia: string | null
+  domicilioMunicipio: string | null
+}
+
 export interface SolicitudEvidencia {
   id: string
   folioDenuncia: string | null
+  folioSija: string | null
   iph: string | null
   folioCu: string | null
   corporacion: string | null

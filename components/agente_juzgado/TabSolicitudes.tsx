@@ -167,10 +167,6 @@ export function TabSolicitudes({ recepcionadas, enRevision, conMonitorista, comp
                         >
                           {s.folioSija ? 'Detalles' : 'Capturar'}
                         </Link>
-                        <SharedPedirEvidenciasBoton
-                          solicitudId={s.id}
-                          accion={accionPedirEvidencias}
-                        />
                       </div>
                     ) : tab === 'con_monitorista' ? (
                       <SharedPedirEvidenciasBoton

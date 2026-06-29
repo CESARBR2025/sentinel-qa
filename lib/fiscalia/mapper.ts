@@ -22,6 +22,7 @@ export function rowToSolicitud(row: Record<string, unknown>): SolicitudEvidencia
   return {
     id:                       str(row.id) ?? '',
     folioDenuncia:            str(row.folio_denuncia),
+    folioSija:                str(row.folio_sija),
     iph:                      str(row.iph),
     folioCu:                  str(row.folio_cu),
     corporacion:              str(row.corporacion),
