@@ -3,26 +3,39 @@
 import { useState } from 'react'
 import { TomarCasoBoton } from './TomarCasoModal'
 import { CerrarCasoBoton } from './CerrarCasoModal'
+import { SharedPedirEvidenciasBoton } from '@/components/shared/PedirEvidenciasModal'
+import { accionPedirEvidencias } from '@/lib/agente_juzgado/actions'
 import type { SolicitudEvidencia } from '@/lib/agente_juzgado/types'
 
 interface Props {
   recepcionadas: SolicitudEvidencia[]
   enRevision: SolicitudEvidencia[]
-  cerradas: SolicitudEvidencia[]
+  conMonitorista: SolicitudEvidencia[]
+  completadas: SolicitudEvidencia[]
 }
 
-type Tab = 'recepcionadas' | 'en_revision' | 'cerradas'
+type Tab = 'recepcionadas' | 'en_revision' | 'con_monitorista' | 'completadas'
 
 const tabs: { key: Tab; label: string; color: string }[] = [
-  { key: 'recepcionadas', label: 'Recepcionadas',    color: '#d97706' },
-  { key: 'en_revision',   label: 'En Revisión',      color: '#059669' },
-  { key: 'cerradas',      label: 'Cerradas',         color: '#6b7280' },
+  { key: 'recepcionadas',    label: 'Recepcionadas',    color: '#d97706' },
+  { key: 'en_revision',      label: 'En Revisión',      color: '#059669' },
+  { key: 'con_monitorista',  label: 'Con Monitorista',  color: '#0891b2' },
+  { key: 'completadas',      label: 'Completadas',      color: '#6b7280' },
 ]
 
-export function TabSolicitudes({ recepcionadas, enRevision, cerradas }: Props) {
+function parseEvidencias(raw: string | null): { solicitud_id: number; fecha_peticion: string; colonia: string; calle: string; numero: string; hora_inicio: string; hora_fin: string; atendida: boolean }[] {
+  if (!raw) return []
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return []
+  }
+}
+
+export function TabSolicitudes({ recepcionadas, enRevision, conMonitorista, completadas }: Props) {
   const [tab, setTab] = useState<Tab>('recepcionadas')
 
-  const map: Record<Tab, SolicitudEvidencia[]> = { recepcionadas, en_revision: enRevision, cerradas }
+  const map: Record<Tab, SolicitudEvidencia[]> = { recepcionadas, en_revision: enRevision, con_monitorista: conMonitorista, completadas }
   const data = map[tab]
 
   return (
@@ -80,7 +93,7 @@ export function TabSolicitudes({ recepcionadas, enRevision, cerradas }: Props) {
             <line x1="12" y1="18" x2="12" y2="12" />
             <line x1="9" y1="15" x2="15" y2="15" />
           </svg>
-          <span>No hay solicitudes {tab === 'recepcionadas' ? 'recepcionadas' : tab === 'en_revision' ? 'en revisión' : 'cerradas'}</span>
+          <span>No hay solicitudes {tab === 'recepcionadas' ? 'recepcionadas' : tab === 'en_revision' ? 'en revisión' : tab === 'con_monitorista' ? 'con monitorista' : 'completadas'}</span>
         </div>
       ) : (
         <div style={{ overflowX: 'auto', background: '#ffffff', border: '1px solid #e2e8f0' }}>
@@ -110,34 +123,41 @@ export function TabSolicitudes({ recepcionadas, enRevision, cerradas }: Props) {
                   <td>
                     <span className="badge-estado" style={{
                       background: s.estadoTramite === 'EN_ANALISIS' ? '#fef3c7' :
-                                   s.estadoTramite === 'EN_REVISION' ? '#d1fae5' :
+                                   s.estadoTramite === 'EN_REVISION_JUZGADO' ? '#d1fae5' :
+                                   s.estadoTramite === 'CERRADO' ? '#f1f5f9' :
                                    '#f1f5f9',
                       color: s.estadoTramite === 'EN_ANALISIS' ? '#92400e' :
-                             s.estadoTramite === 'EN_REVISION' ? '#065f46' :
+                             s.estadoTramite === 'EN_REVISION_JUZGADO' ? '#065f46' :
+                             s.estadoTramite === 'CERRADO' ? '#475569' :
                              '#475569',
                     }}>{s.estadoTramite ?? '—'}</span>
                   </td>
                   <td>
                     <span className="badge-estado" style={{
-                      background: s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' : '#f1f5f9',
-                      color: s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' : '#475569',
+                      background: s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
+                                   s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#fef3c7' :
+                                   '#f1f5f9',
+                      color: s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
+                             s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#92400e' :
+                             '#475569',
                     }}>{s.estadoEvidencia ?? '—'}</span>
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     {tab === 'recepcionadas' ? (
                       <TomarCasoBoton solicitudId={s.id} />
                     ) : tab === 'en_revision' ? (
-                      <CerrarCasoBoton solicitudId={s.id} />
+                      <SharedPedirEvidenciasBoton
+                        solicitudId={s.id}
+                        accion={accionPedirEvidencias}
+                      />
+                    ) : tab === 'con_monitorista' ? (
+                      <SharedPedirEvidenciasBoton
+                        solicitudId={s.id}
+                        existingEvidencias={parseEvidencias(s.monitoristaFechasRequeridas)}
+                        accion={accionPedirEvidencias}
+                      />
                     ) : (
-                      <span style={{
-                        fontFamily: 'JetBrains Mono,monospace',
-                        fontSize: 9,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        color: '#6b7280',
-                      }}>
-                        Cerrado
-                      </span>
+                      <CerrarCasoBoton solicitudId={s.id} />
                     )}
                   </td>
                 </tr>

@@ -4,7 +4,7 @@ import { obtenerDashboardJuzgado, obtenerSolicitudes } from '@/lib/agente_juzgad
 
 export default async function SolicitudesPage() {
   const user = await obtenerDashboardJuzgado()
-  const { recepcionadas, enRevision, cerradas } = await obtenerSolicitudes()
+  const { recepcionadas, enRevision, conMonitorista, completadas } = await obtenerSolicitudes()
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
@@ -42,7 +42,7 @@ export default async function SolicitudesPage() {
           <ProfileDropdown name={user.name} apellido={user.apellido} email={user.email} />
         </div>
 
-        <TabSolicitudes recepcionadas={recepcionadas} enRevision={enRevision} cerradas={cerradas} />
+        <TabSolicitudes recepcionadas={recepcionadas} enRevision={enRevision} conMonitorista={conMonitorista} completadas={completadas} />
 
         <div style={{
           marginTop: 'auto', paddingTop: 20,
