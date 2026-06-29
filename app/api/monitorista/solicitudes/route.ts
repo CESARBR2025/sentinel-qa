@@ -1,42 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db } from '@/lib/db/index'
-import { solicitudesEvidencia, evidencias, users } from '@/lib/db/schema'
-import { eq, desc, sql } from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
   const status = req.nextUrl.searchParams.get('status')
+  const statuses = ['pendiente', 'completada', 'cancelada']
+  const filtro = status && statuses.includes(status) ? `WHERE status = '${status}'` : ''
 
-  const statusesPermitidos = ['pendiente', 'completada', 'cancelada']
-  if (status && !statusesPermitidos.includes(status)) {
-    return NextResponse.json({ error: 'status inválido' }, { status: 400 })
-  }
-
-  const filtro = status ? eq(solicitudesEvidencia.status, status) : undefined
-
-  const lista = await db
-    .select({
-      id: solicitudesEvidencia.id,
-      incidenteId: solicitudesEvidencia.incidenteId,
-      folioIncidente: solicitudesEvidencia.folioIncidente,
-      solicitadoPor: solicitudesEvidencia.solicitadoPor,
-      solicitadoNombre: solicitudesEvidencia.solicitadoNombre,
-      descripcion: solicitudesEvidencia.descripcion,
-      status: solicitudesEvidencia.status,
-      creadoEn: solicitudesEvidencia.creadoEn,
-      completadoEn: solicitudesEvidencia.completadoEn,
-      totalEvidencias: sql<number>`(SELECT count(*)::int FROM evidencias WHERE evidencias.solicitud_id = solicitudes_evidencia.id)`,
-    })
-    .from(solicitudesEvidencia)
-    .where(filtro)
-    .orderBy(desc(solicitudesEvidencia.creadoEn))
-    .limit(100)
-
-  return NextResponse.json(lista)
+  const lista = await query<Record<string, unknown>>(
+    `SELECT id, incidente_id, folio_incidente, solicitado_nombre, descripcion, status, creado_en, completado_en,
+     (SELECT count(*)::int FROM evidencias WHERE evidencias.solicitud_id = solicitudes_evidencia.id) as total_evidencias
+     FROM solicitudes_evidencia ${filtro} ORDER BY creado_en DESC LIMIT 100`,
+  )
+  return NextResponse.json(lista.rows)
 }
 
 export async function POST(req: NextRequest) {
@@ -44,14 +24,10 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
   const body = await req.json()
-
-  const [created] = await db.insert(solicitudesEvidencia).values({
-    incidenteId: body.incidenteId,
-    folioIncidente: body.folioIncidente || null,
-    solicitadoPor: session.user.id,
-    solicitadoNombre: session.user.name || 'Usuario',
-    descripcion: body.descripcion,
-  }).returning()
-
-  return NextResponse.json(created, { status: 201 })
+  const r = await query<{ id: string }>(
+    `INSERT INTO solicitudes_evidencia (incidente_id, folio_incidente, solicitado_por, solicitado_nombre, descripcion)
+     VALUES ($1,$2,$3,$4,$5) RETURNING id`,
+    [body.incidenteId, body.folioIncidente || null, session.user.id, session.user.name || 'Usuario', body.descripcion],
+  )
+  return NextResponse.json({ id: r.rows[0].id }, { status: 201 })
 }

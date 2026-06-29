@@ -1,220 +1,127 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import {
-  solicitudesEvidencia,
-  evidencias,
-  monitoristaHistorial,
-  users,
-  roles,
-} from '@/lib/db/schema'
-import { eq, desc, sql, and, gte } from 'drizzle-orm'
-import { Camera, ClipboardList, CheckCircle2, Clock, Shield } from 'lucide-react'
+import { query } from '@/lib/db'
+import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
+import { Camera, ClipboardList, Clock, History, Shield, User, Video } from 'lucide-react'
 import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
-import { BandejaSolicitudes } from '@/components/monitorista/BandejaSolicitudes'
-import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
 
-export default async function MonitoristaPage() {
+export default async function MonitoristaHubPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const hoy = new Date()
-  hoy.setHours(0, 0, 0, 0)
+  const r = await query<{ nombre: string }>(
+    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
+  )
+  const esAdmin = r.rows[0]?.nombre === 'Administrador'
 
-  const [userData] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-
-  const esAdmin = userData?.rolNombre === 'Administrador'
-
-  const [gralPendientes, gralCompletadas, historialHoy, denunciasPendientes, denunciasAtendidas] = await Promise.all([
-    db
-      .select({
-        id: solicitudesEvidencia.id,
-        incidenteId: solicitudesEvidencia.incidenteId,
-        folio: solicitudesEvidencia.folioIncidente,
-        solicitadoNombre: solicitudesEvidencia.solicitadoNombre,
-        descripcion: solicitudesEvidencia.descripcion,
-        status: solicitudesEvidencia.status,
-        creadoEn: solicitudesEvidencia.creadoEn,
-        completadoEn: solicitudesEvidencia.completadoEn,
-        totalEvidencias: sql<number>`(SELECT count(*)::int FROM evidencias WHERE evidencias.solicitud_id = solicitudes_evidencia.id)`,
-      })
-      .from(solicitudesEvidencia)
-      .where(eq(solicitudesEvidencia.status, 'pendiente'))
-      .orderBy(desc(solicitudesEvidencia.creadoEn))
-      .limit(50),
-    db
-      .select({
-        id: solicitudesEvidencia.id,
-        incidenteId: solicitudesEvidencia.incidenteId,
-        folio: solicitudesEvidencia.folioIncidente,
-        solicitadoNombre: solicitudesEvidencia.solicitadoNombre,
-        descripcion: solicitudesEvidencia.descripcion,
-        status: solicitudesEvidencia.status,
-        creadoEn: solicitudesEvidencia.creadoEn,
-        completadoEn: solicitudesEvidencia.completadoEn,
-        totalEvidencias: sql<number>`(SELECT count(*)::int FROM evidencias WHERE evidencias.solicitud_id = solicitudes_evidencia.id)`,
-      })
-      .from(solicitudesEvidencia)
-      .where(eq(solicitudesEvidencia.status, 'completada'))
-      .orderBy(desc(solicitudesEvidencia.completadoEn))
-      .limit(50),
-    db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(monitoristaHistorial)
-      .where(
-        and(
-          eq(monitoristaHistorial.monitoristaId, session.user.id),
-          gte(monitoristaHistorial.creadoEn, hoy.toISOString()),
-        ),
-      ),
+  const [solsPend, solsComp, histCount, d1Pend, d1Comp, detPend, detComp] = await Promise.all([
+    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'pendiente'"),
+    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'completada'"),
+    query<{ c: number }>("SELECT count(*)::int as c FROM monitorista_historial WHERE monitorista_id = $1", [session.user.id]),
     obtenerDenunciasPendientes(),
     obtenerDenunciasAtendidas(),
+    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_detenido WHERE id IN (SELECT DISTINCT solicitud_id FROM solicitud_fotos WHERE estado IN ('pendiente','enviado','rechazado'))"),
+    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_detenido WHERE id IN (SELECT DISTINCT solicitud_id FROM solicitud_fotos WHERE estado NOT IN ('pendiente','enviado','rechazado'))"),
   ])
-
-  const denunciaItemsPendientes = denunciasPendientes.flatMap((d) =>
-    d.monitoristaFechasRequeridas.map((s) => ({
-      id: `${d.id}_${s.solicitud_id}`,
-      origen: 'denuncia' as const,
-      entidadId: d.id,
-      solicitudId: s.solicitud_id,
-      folio: d.folioDenuncia,
-      solicitadoNombre: 'Fiscalía',
-      descripcion: `${s.calle} ${s.numero}, Col. ${s.colonia} (${s.hora_inicio} - ${s.hora_fin})`,
-      status: s.atendida ? 'completada' as const : 'pendiente' as const,
-      creadoEn: s.fecha_peticion,
-      completadoEn: null as string | null,
-      totalEvidencias: 0,
-    })),
-  )
-
-  const denunciaItemsAtendidas = denunciasAtendidas.map((d) => {
-    const total = d.monitoristaFechasRequeridas.length
-    const atendidas = d.monitoristaFechasRequeridas.filter(s => s.atendida).length
-    const calles = [...new Set(d.monitoristaFechasRequeridas.map(s => `${s.calle} ${s.numero}, Col. ${s.colonia}`))]
-    return {
-      id: d.id,
-      origen: 'denuncia' as const,
-      entidadId: d.id,
-      solicitudId: null as number | null,
-      folio: d.folioDenuncia,
-      solicitadoNombre: 'Fiscalía',
-      descripcion: `${total} solicitud${total > 1 ? 'es' : ''} · ${atendidas}/${total} atendidas · ${calles.join(' | ')}`,
-      status: 'completada' as const,
-      creadoEn: d.createdAt,
-      completadoEn: d.createdAt,
-      totalEvidencias: total,
-    }
-  })
-
-  const itemsPendientesGral = gralPendientes.map((r) => ({
-    id: r.id, origen: 'general' as const,
-    entidadId: r.incidenteId, solicitudId: null as number | null,
-    folio: r.folio ?? '', solicitadoNombre: r.solicitadoNombre ?? '',
-    descripcion: r.descripcion, status: r.status,
-    creadoEn: r.creadoEn, completadoEn: r.completadoEn,
-    totalEvidencias: r.totalEvidencias,
-  }))
-  const itemsCompletadasGral = gralCompletadas.map((r) => ({
-    id: r.id, origen: 'general' as const,
-    entidadId: r.incidenteId, solicitudId: null as number | null,
-    folio: r.folio ?? '', solicitadoNombre: r.solicitadoNombre ?? '',
-    descripcion: r.descripcion, status: r.status,
-    creadoEn: r.creadoEn, completadoEn: r.completadoEn,
-    totalEvidencias: r.totalEvidencias,
-  }))
-
-  const pendientes = [...denunciaItemsPendientes, ...itemsPendientesGral]
-  const completadas = [...denunciaItemsAtendidas, ...itemsCompletadasGral]
 
   const user = session.user as { name: string; apellido?: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050810', color: '#d8e0f0', fontFamily: 'Inter, system-ui, sans-serif', position: 'relative' }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-      `}</style>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
+        {esAdmin && <Link href="/dashboard" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}>← Dashboard</Link>}
+        {!esAdmin && <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase' }}>Monitorista</div>}
+        <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
+        <div style={{ flexGrow: 1 }}>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>Seguridad Pública Municipal</span>
+          <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, letterSpacing: '0.05em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>Monitorista</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div><span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span><span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#1e40af' }}>{user.name}</span></div>
+          <SignOutButton />
+        </div>
+      </header>
 
-      <main style={{ maxWidth: 1400, margin: '0 auto', padding: '48px 64px' }}>
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-          paddingBottom: 24, borderBottom: '1px solid rgba(212,164,58,0.15)', marginBottom: 40,
-          position: 'relative',
-        }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#d4a43a' }}></div>
-          <div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#c0223a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 8, height: 8, background: '#c0223a', display: 'inline-block' }}></span>
-              Centro de Monitoreo
-            </div>
-            <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 48, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#ffffff', lineHeight: 1 }}>
-              MONITORISTA
-            </h1>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#4a5878', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>
-              Operador Identificado
-            </div>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 13, color: '#d4a43a', letterSpacing: '0.12em', fontWeight: 600 }}>
-              {user.name} {user.apellido ?? ''}
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {esAdmin && (
-              <Link href="/dashboard" style={{
-                fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.15em',
-                color: '#5c74a1', textDecoration: 'none', textTransform: 'uppercase',
-                padding: '8px 16px', border: '1px solid rgba(27,39,66,0.8)', borderRadius: 2
-              }}>← Dashboard</Link>
-            )}
-            <SignOutButton />
-          </div>
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
+        <div style={{ marginBottom: 40 }}>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Centro de Monitoreo</span>
+          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Monitorista</h1>
+          <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 40 }}>
-          <div style={statCardStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Clock size={20} color="#d4a43a" />
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#4a5878', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Pendientes</div>
-                <div style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 700, color: '#ffffff' }}>{pendientes.length}</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
+          <Link href="/monitorista/solicitudes" style={{ textDecoration: 'none' }}>
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <Camera size={28} color="#2563eb" />
+                <span style={onlineStyle}>ONLINE</span>
               </div>
-            </div>
-          </div>
-          <div style={statCardStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <CheckCircle2 size={20} color="#4a9e6a" />
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#4a5878', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Completadas</div>
-                <div style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 700, color: '#ffffff' }}>{completadas.length}</div>
+              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Solicitudes de Evidencia</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Denuncias D1 · Incidentes</div>
+              <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Pendientes</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{d1Pend.length + solsPend.rows[0]?.c}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{d1Comp.length + solsComp.rows[0]?.c}</div></div>
               </div>
+              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
-          </div>
-          <div style={statCardStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <ClipboardList size={20} color="#5c74a1" />
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#4a5878', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Acciones Hoy</div>
-                <div style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 700, color: '#ffffff' }}>{historialHoy[0]?.count ?? 0}</div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </Link>
 
-        <BandejaSolicitudes pendientes={pendientes as any} completadas={completadas as any} />
+          <Link href="/monitorista/detenidos" style={{ textDecoration: 'none' }}>
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <User size={28} color="#059669" />
+                <span style={onlineStyle}>ONLINE</span>
+              </div>
+              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Reporte de Detenidos</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Solicitar evidencias a Fiscalía/Juzgado</div>
+              <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Enviados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{detPend.rows[0]?.c ?? 0}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{detComp.rows[0]?.c ?? 0}</div></div>
+              </div>
+              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
+            </div>
+          </Link>
+
+          <Link href="/monitorista/incidentes-camara" style={{ textDecoration: 'none' }}>
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <Video size={28} color="#7c3aed" />
+                <span style={onlineStyle}>ONLINE</span>
+              </div>
+              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Incidentes por Cámara</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Registro de novedades por turno</div>
+              <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>—</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>—</div></div>
+              </div>
+              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
+            </div>
+          </Link>
+
+          <Link href="/monitorista/historial" style={{ textDecoration: 'none' }}>
+            <div style={cardStyle}>
+              <div style={{ marginBottom: 20 }}><History size={28} color="#64748b" /></div>
+              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Historial</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Actividad registrada</div>
+              <div style={{ paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Registros</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#0f172a' }}>{histCount.rows[0]?.c ?? 0}</div></div>
+              </div>
+              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>VER →</div>
+            </div>
+          </Link>
+        </div>
       </main>
+
+      <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
+        SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
+      </footer>
     </div>
   )
 }
 
-const statCardStyle: React.CSSProperties = {
-  background: 'rgba(11,18,32,0.6)', backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(27,39,66,0.8)', padding: 24, borderRadius: 2,
-}
+const cardStyle: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, cursor: 'pointer', borderRadius: 2 }
+const onlineStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#059669', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db } from '@/lib/db/index'
-import { monitoristaHistorial, solicitudesEvidencia, users } from '@/lib/db/schema'
-import { eq, desc, gte, lte, and } from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -14,26 +12,34 @@ export async function GET(req: NextRequest) {
   const desde = p.get('desde')
   const hasta = p.get('hasta')
 
-  const filtros = [eq(monitoristaHistorial.monitoristaId, monitoristaId)]
-  if (desde) filtros.push(gte(monitoristaHistorial.creadoEn, desde))
-  if (hasta) filtros.push(lte(monitoristaHistorial.creadoEn, hasta))
+  const filtros: string[] = []
+  const params: unknown[] = []
+  let idx = 1
 
-  const lista = await db
-    .select({
-      id: monitoristaHistorial.id,
-      accion: monitoristaHistorial.accion,
-      solicitudId: monitoristaHistorial.solicitudId,
-      incidenteId: monitoristaHistorial.incidenteId,
-      creadoEn: monitoristaHistorial.creadoEn,
-      monitoristaNombre: users.name,
-      folioIncidente: solicitudesEvidencia.folioIncidente,
-    })
-    .from(monitoristaHistorial)
-    .leftJoin(users, eq(monitoristaHistorial.monitoristaId, users.id))
-    .leftJoin(solicitudesEvidencia, eq(monitoristaHistorial.solicitudId, solicitudesEvidencia.id))
-    .where(and(...filtros))
-    .orderBy(desc(monitoristaHistorial.creadoEn))
-    .limit(200)
+  filtros.push(`mh.monitorista_id = $${idx++}`)
+  params.push(monitoristaId)
 
-  return NextResponse.json(lista)
+  if (desde) {
+    filtros.push(`mh.creado_en >= $${idx++}`)
+    params.push(desde)
+  }
+  if (hasta) {
+    filtros.push(`mh.creado_en <= $${idx++}`)
+    params.push(hasta)
+  }
+
+  const result = await query<Record<string, unknown>>(
+    `SELECT mh.id, mh.accion, mh.solicitud_id AS "solicitudId", mh.incidente_id AS "incidenteId",
+            mh.creado_en AS "creadoEn", u.name AS "monitoristaNombre",
+            se.folio_incidente AS "folioIncidente"
+     FROM monitorista_historial mh
+     LEFT JOIN users u ON mh.monitorista_id = u.id
+     LEFT JOIN solicitudes_evidencia se ON mh.solicitud_id = se.id
+     WHERE ${filtros.join(' AND ')}
+     ORDER BY mh.creado_en DESC
+     LIMIT 200`,
+    params,
+  )
+
+  return NextResponse.json(result.rows)
 }

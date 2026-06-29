@@ -4,162 +4,106 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { eq, desc, sql } from 'drizzle-orm'
-import { db } from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import {
-  solicitudesEvidencia,
-  evidencias,
-  monitoristaHistorial,
-} from '@/lib/db/schema'
-import { obtenerGuestToken, subirArchivoExpediente } from './expediente'
+import { query } from '@/lib/db'
+import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/expediente/client'
 
 async function requireMonitorista() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  const [u] = await db
-    .select({ rolNombre: roles.nombre, userName: users.name })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-  if (u?.rolNombre !== 'Monitorista') redirect('/dashboard')
-  return { id: session.user.id, name: u?.userName ?? '' }
+  const r = await query<{ nombre: string }>(
+    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
+  )
+  if (!r.rows[0] || r.rows[0].nombre !== 'Monitorista') redirect('/dashboard')
+  return session
 }
-
-const str = (fd: FormData, k: string): string | null =>
-  (fd.get(k) as string | null)?.trim() || null
-const req = (fd: FormData, k: string): string => (fd.get(k) as string).trim()
 
 export async function solicitarEvidencia(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) throw new Error('No autenticado')
 
-  const incidenteId = req(formData, 'incidenteId')
-  const folioIncidente = str(formData, 'folioIncidente')
-  const descripcion = req(formData, 'descripcion')
-
-  const userName = session.user.name || 'Usuario'
-
-  await db.insert(solicitudesEvidencia).values({
-    incidenteId,
-    folioIncidente,
-    solicitadoPor: session.user.id,
-    solicitadoNombre: userName,
-    descripcion,
-  })
-
+  await query(
+    `INSERT INTO solicitudes_evidencia (incidente_id, folio_incidente, solicitado_por, solicitado_nombre, descripcion)
+     VALUES ($1,$2,$3,$4,$5)`,
+    [
+      formData.get('incidenteId') as string,
+      (formData.get('folioIncidente') as string) || null,
+      session.user.id,
+      session.user.name || 'Usuario',
+      formData.get('descripcion') as string,
+    ],
+  )
   revalidatePath('/monitorista')
 }
 
 export async function subirEvidencia(formData: FormData) {
-  const monitorista = await requireMonitorista()
+  const session = await requireMonitorista()
 
-  const solicitudId = req(formData, 'solicitudId')
-  const incidenteId = req(formData, 'incidenteId')
+  const solicitudId = formData.get('solicitudId') as string
+  const incidenteId = formData.get('incidenteId') as string
   const archivo = formData.get('archivo') as File
+  const tipo = (formData.get('tipo') as string) ?? 'foto'
 
   if (!archivo || archivo.size === 0) throw new Error('Archivo requerido')
 
-  const tipo = (str(formData, 'tipo') ?? 'foto') as 'foto' | 'video' | 'documento'
-  const nombreOriginal = archivo.name
+  const r = await query<{ folio_incidente: string | null }>(
+    `SELECT folio_incidente FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`, [solicitudId],
+  )
+  if (!r.rows[0]) throw new Error('Solicitud no encontrada')
 
-  const [sol] = await db
-    .select({ id: solicitudesEvidencia.id, folioIncidente: solicitudesEvidencia.folioIncidente })
-    .from(solicitudesEvidencia)
-    .where(eq(solicitudesEvidencia.id, solicitudId))
-    .limit(1)
-
-  if (!sol) throw new Error('Solicitud no encontrada')
-
-  const token = await obtenerGuestToken(monitorista.name)
-  const folio = sol.folioIncidente ?? incidenteId.substring(0, 8)
-
-  const tipoDoc = `EVIDENCIA_${tipo.toUpperCase()}`
+  const buffer = Buffer.from(await archivo.arrayBuffer())
+  const token = await obtenerGuestToken(session.user.name || 'Monitorista')
   const url = await subirArchivoExpediente(
-    token,
-    {
-      buffer: Buffer.from(await archivo.arrayBuffer()),
-      nombre: nombreOriginal,
-      tipo: archivo.type,
-    },
-    folio,
-    tipoDoc,
+    token, { buffer, nombre: archivo.name, tipo: archivo.type },
+    r.rows[0].folio_incidente ?? incidenteId.substring(0, 8),
+    `EVIDENCIA_${tipo.toUpperCase()}`,
   )
 
-  await db.insert(evidencias).values({
-    solicitudId,
-    incidenteId,
-    tipo,
-    nombreOriginal,
-    urlExpediente: url,
-    subidoPor: monitorista.id,
-  })
+  await query(
+    `INSERT INTO evidencias (solicitud_id, incidente_id, tipo, nombre_original, url_expediente, subido_por)
+     VALUES ($1,$2,$3,$4,$5,$6)`,
+    [solicitudId, incidenteId, tipo, archivo.name, url, session.user.id],
+  )
 
-  await db.insert(monitoristaHistorial).values({
-    monitoristaId: monitorista.id,
-    accion: 'evidencia_subida',
-    solicitudId,
-    incidenteId,
-  })
+  await query(
+    `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1,'evidencia_subida',$2)`,
+    [session.user.id, incidenteId],
+  )
 
   revalidatePath('/monitorista')
 }
 
 export async function completarSolicitud(formData: FormData) {
-  const monitorista = await requireMonitorista()
+  const session = await requireMonitorista()
+  const solicitudId = formData.get('solicitudId') as string
+  const incidenteId = formData.get('incidenteId') as string
 
-  const solicitudId = req(formData, 'solicitudId')
-  const incidenteId = req(formData, 'incidenteId')
+  await query(
+    `UPDATE solicitudes_evidencia SET status = 'completada', completado_en = NOW() WHERE id = $1 AND status = 'pendiente'`,
+    [solicitudId],
+  )
 
-  const [sol] = await db
-    .select({ id: solicitudesEvidencia.id, status: solicitudesEvidencia.status })
-    .from(solicitudesEvidencia)
-    .where(eq(solicitudesEvidencia.id, solicitudId))
-    .limit(1)
-
-  if (!sol) throw new Error('Solicitud no encontrada')
-  if (sol.status !== 'pendiente') throw new Error('La solicitud no está pendiente')
-
-  await db.update(solicitudesEvidencia)
-    .set({ status: 'completada', completadoEn: sql`now()` })
-    .where(eq(solicitudesEvidencia.id, solicitudId))
-
-  await db.insert(monitoristaHistorial).values({
-    monitoristaId: monitorista.id,
-    accion: 'solicitud_completada',
-    solicitudId,
-    incidenteId,
-  })
+  await query(
+    `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1,'solicitud_completada',$2)`,
+    [session.user.id, incidenteId],
+  )
 
   revalidatePath('/monitorista')
 }
 
 export async function cancelarSolicitud(formData: FormData) {
-  const monitorista = await requireMonitorista()
+  const session = await requireMonitorista()
+  const solicitudId = formData.get('solicitudId') as string
+  const incidenteId = formData.get('incidenteId') as string
 
-  const solicitudId = req(formData, 'solicitudId')
-  const incidenteId = req(formData, 'incidenteId')
+  await query(
+    `UPDATE solicitudes_evidencia SET status = 'cancelada' WHERE id = $1 AND status = 'pendiente'`,
+    [solicitudId],
+  )
 
-  const [sol] = await db
-    .select({ id: solicitudesEvidencia.id, status: solicitudesEvidencia.status })
-    .from(solicitudesEvidencia)
-    .where(eq(solicitudesEvidencia.id, solicitudId))
-    .limit(1)
-
-  if (!sol) throw new Error('Solicitud no encontrada')
-  if (sol.status !== 'pendiente') throw new Error('La solicitud no está pendiente')
-
-  await db.update(solicitudesEvidencia)
-    .set({ status: 'cancelada' })
-    .where(eq(solicitudesEvidencia.id, solicitudId))
-
-  await db.insert(monitoristaHistorial).values({
-    monitoristaId: monitorista.id,
-    accion: 'solicitud_cancelada',
-    solicitudId,
-    incidenteId,
-  })
+  await query(
+    `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1,'solicitud_cancelada',$2)`,
+    [session.user.id, incidenteId],
+  )
 
   revalidatePath('/monitorista')
 }
