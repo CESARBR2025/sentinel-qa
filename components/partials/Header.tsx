@@ -103,7 +103,7 @@ export function DashboardHeader({
                 lineHeight: 1,
               }}
             >
-              SENTINEL<span style={{ color: '#3b82f6' }}>.V1</span>
+              CENTINELA
             </h1>
           </div>
         </div>
