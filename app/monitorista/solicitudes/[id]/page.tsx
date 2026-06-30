@@ -34,7 +34,7 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
   )
   const evs = evsResult.rows
 
-  const statusBadge = getStatusBadge(sol.status)
+  const statusBadge = getStatusBadge(String(sol.status ?? 'desconocido'))
 
   return (
     <div style={{ minHeight: '100vh', background: '#050810', color: '#d8e0f0', fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -60,7 +60,7 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
               Solicitud de Evidencias
             </div>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 700, color: '#ffffff', margin: 0 }}>
-              {sol.folioIncidente || sol.incidenteId.substring(0, 12)}
+              {String(sol.folioIncidente || sol.incidenteId || '').substring(0, 12)}
             </h1>
           </div>
           <span style={statusBadge.style}>{statusBadge.label}</span>
@@ -70,7 +70,7 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <section style={cardStyle}>
               <h2 style={sectionTitle}><FileText size={18} /> DESCRIPCIÓN DE LA SOLICITUD</h2>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: '#8f9fbf', whiteSpace: 'pre-wrap', margin: 0 }}>{sol.descripcion}</p>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: '#8f9fbf', whiteSpace: 'pre-wrap', margin: 0 }}>{String(sol.descripcion ?? '')}</p>
             </section>
 
             <GaleriaEvidencias evidencias={evs as any} />
@@ -79,7 +79,7 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div style={cardStyle}>
               <h2 style={sectionTitle}><User size={18} /> SOLICITANTE</h2>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 14, color: '#d8e0f0' }}>{sol.solicitadoNombre}</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 14, color: '#d8e0f0' }}>{String(sol.solicitadoNombre ?? '')}</div>
             </div>
             <div style={cardStyle}>
               <h2 style={sectionTitle}><Clock size={18} /> FECHAS</h2>
@@ -87,14 +87,14 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
                 <div>
                   <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#4a5878', textTransform: 'uppercase' }}>Creada</div>
                   <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: '#d8e0f0' }}>
-                    {new Date(sol.creadoEn).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {new Date(String(sol.creadoEn)).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
-                {sol.completadoEn && (
+                {!!sol.completadoEn && (
                   <div>
                     <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#4a5878', textTransform: 'uppercase' }}>Completada</div>
                     <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: '#d8e0f0' }}>
-                      {new Date(sol.completadoEn).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(String(sol.completadoEn)).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                 )}

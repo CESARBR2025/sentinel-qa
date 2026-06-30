@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
     // ── PDF: HTML imprimible ──────────────────────────────────────────────────
     if (formato === 'pdf') {
-        const { jsPDF } = await import('jspdf')
+        const jsPDF = (await import('jspdf')).default
 
         const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' })
         const W = doc.internal.pageSize.getWidth()

@@ -60,7 +60,7 @@ export default async function HistorialPage() {
                 {registros.rows.map((r) => {
                   const info = accionLabel[String(r.accion)] ?? { label: String(r.accion), icon: null }
                   return (
-                    <tr key={r.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <tr key={String(r.id)} style={{ borderBottom: '1px solid #f1f5f9' }}>
                       <td style={tdStyle}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{info.icon}<span style={{ fontFamily: 'JetBrains Mono', fontSize: 11 }}>{info.label}</span></div></td>
                       <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{String(r.folio_incidente ?? r.incidente_id ?? '').substring(0, 20) || '—'}</td>
                       <td style={{ ...tdStyle, fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>{String(r.monitorista_nombre ?? '—')}</td>
