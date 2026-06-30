@@ -4,7 +4,18 @@ import { useState, useEffect, useRef, useTransition } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { marcarLeida, marcarTodasLeidas, generarAlertasDebug } from '@/lib/notificaciones/actions'
-import type { Notificacion } from '@/lib/db/schema'
+interface Notificacion {
+  id: string
+  userId: string
+  tipo: string
+  titulo: string
+  mensaje: string
+  href: string | null
+  leida: boolean
+  fichaId: string | null
+  hito: string | null
+  creadoEn: string
+}
 
 const BellIcon = ({ hasUnread }: { hasUnread: boolean }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"

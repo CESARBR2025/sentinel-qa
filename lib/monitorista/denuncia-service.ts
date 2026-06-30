@@ -96,7 +96,7 @@ export async function marcarSolicitudAtendida(
   if (todasAtendidas) {
     await query(
       `UPDATE ofi_reporte_denuncia
-       SET estado_evidencia = 'EVIDENCIA_ENVIADA', estado_tramite = 'EN_ANALISIS', updated_at = NOW()
+       SET estado_evidencia = 'EVIDENCIA_ENVIADA', updated_at = NOW()
        WHERE id = $1`,
       [denunciaId],
     )

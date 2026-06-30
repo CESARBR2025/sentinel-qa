@@ -70,9 +70,7 @@ export default async function BusquedasPage() {
             <tbody>
               {fichas.map((f, i) => {
                 const cfg = TIPO_CFG[f.tipo] ?? { label: f.tipo, color: '#4a5878' }
-                const fechaStr = f.fechaActivacion instanceof Date
-                  ? format(f.fechaActivacion, 'dd/MM/yy HH:mm')
-                  : format(new Date(String(f.fechaActivacion)), 'dd/MM/yy HH:mm')
+                const fechaStr = format(new Date(String(f.fechaActivacion)), 'dd/MM/yy HH:mm')
 
                 return (
                   <tr key={f.id} style={{ borderBottom: '1px solid #0f1826', background: i % 2 === 0 ? 'transparent' : 'rgba(27,39,66,0.2)' }}>
