@@ -23,8 +23,8 @@ export default async function MonitoristaHubPage() {
     query<{ c: number }>("SELECT count(*)::int as c FROM monitorista_historial WHERE monitorista_id = $1", [session.user.id]),
     obtenerDenunciasPendientes(),
     obtenerDenunciasAtendidas(),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_detenido WHERE id IN (SELECT DISTINCT solicitud_id FROM solicitud_fotos WHERE estado IN ('pendiente','enviado','rechazado'))"),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_detenido WHERE id IN (SELECT DISTINCT solicitud_id FROM solicitud_fotos WHERE estado NOT IN ('pendiente','enviado','rechazado'))"),
+    query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado IN ('pendiente','enviado','rechazado')"),
+    query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado NOT IN ('pendiente','enviado','rechazado')"),
   ])
 
   const user = session.user as { name: string; apellido?: string }

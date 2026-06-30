@@ -4,12 +4,6 @@ import { useState } from 'react'
 import { FileText, ChevronDown } from 'lucide-react'
 import React from 'react'
 
-const PERIODOS = [
-  { value: 'diario', label: 'Diario (hoy)' },
-  { value: 'semanal', label: 'Semanal (esta semana)' },
-  { value: 'mensual', label: 'Mensual (este mes)' },
-]
-
 export function BotonGenerarPpt({
   pendientes = 0,
   completados = 0,
@@ -17,7 +11,8 @@ export function BotonGenerarPpt({
   pendientes?: number
   completados?: number
 }) {
-  const [periodo, setPeriodo] = useState('diario')
+  const [desde, setDesde] = useState('')
+  const [hasta, setHasta] = useState('')
   const [filtro, setFiltro] = useState('todos')
   const [pending, setPending] = useState(false)
   const [open, setOpen] = useState(false)
@@ -30,17 +25,19 @@ export function BotonGenerarPpt({
   const handleGenerate = async () => {
     setPending(true)
     try {
+      const desdeISO = desde ? new Date(desde + 'T00:00:00').toISOString() : ''
+      const hastaISO = hasta ? new Date(hasta + 'T23:59:59').toISOString() : ''
       const res = await fetch('/api/monitorista/detenidos/generar-ppt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ periodo, filtro }),
+        body: JSON.stringify({ desde: desdeISO, hasta: hastaISO, filtro }),
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error) }
       const blob = await res.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `detenidos_${periodo}_${filtro}_${new Date().toISOString().split('T')[0]}.pptx`
+      a.download = `detenidos_${desde || 'todos'}_${filtro}_${new Date().toISOString().split('T')[0]}.pptx`
       a.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {
@@ -76,30 +73,48 @@ export function BotonGenerarPpt({
               Generar Reporte PPT
             </div>
 
-            <div style={{ marginBottom: 16 }}>
-              <Label>Período</Label>
-              <select value={periodo} onChange={(e) => setPeriodo(e.target.value)}
-                style={inputStyle}>
-                {PERIODOS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
-              </select>
+            <div style={{ marginBottom: 20 }}>
+              <Label>Desde</Label>
+              <input type="date" value={desde} onChange={(e) => setDesde(e.target.value)}
+                style={inputStyle} max={hasta || undefined} />
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <Label>Hasta</Label>
+              <input type="date" value={hasta} onChange={(e) => setHasta(e.target.value)}
+                style={inputStyle} min={desde || undefined} />
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <Label>Incluir</Label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, fontFamily: 'Inter', color: '#64748b' }}>
+                <input type="checkbox" checked={!desde && !hasta} onChange={(e) => { if (e.target.checked) { setDesde(''); setHasta('') } }} style={{ accentColor: '#0f172a' }} />
+                Todas las fechas
+              </label>
+            </div>
+
+            <div style={{ height: 1, background: '#e2e8f0', marginBottom: 20 }} />
+
+            <div style={{ marginBottom: 20 }}>
+              <Label>Estado de fotos</Label>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {(['todos', 'pendientes', 'completados'] as const).map((f) => (
-                  <label key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px 8px', borderRadius: 2, background: filtro === f ? '#f1f5f9' : 'transparent' }}>
-                    <input type="radio" name="filtro" value={f} checked={filtro === f} onChange={() => setFiltro(f)} style={{ accentColor: '#0f172a' }} />
-                    <span style={{ fontFamily: 'Inter', fontSize: 13, color: '#1e293b' }}>
-                      {f === 'todos' ? `Todos (${pendientes + completados})` : f === 'pendientes' ? `Pendientes (${pendientes})` : `Completados (${completados})`}
-                    </span>
-                  </label>
+                  <button key={f} onClick={() => setFiltro(f)}
+                    style={{
+                      fontFamily: 'Inter', fontSize: 12, padding: '6px 14px',
+                      border: filtro === f ? '1px solid #0f172a' : '1px solid #e2e8f0',
+                      borderRadius: 2, cursor: 'pointer',
+                      background: filtro === f ? '#0f172a' : '#ffffff',
+                      color: filtro === f ? '#ffffff' : '#475569',
+                      fontWeight: filtro === f ? 600 : 400,
+                    }}>
+                    {f === 'todos' ? `Todos (${pendientes + completados})` : f === 'pendientes' ? `Pendientes (${pendientes})` : `Completados (${completados})`}
+                  </button>
                 ))}
               </div>
             </div>
 
-            <div style={{ marginBottom: 16, padding: 12, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter', fontSize: 11, color: '#64748b', lineHeight: 1.5 }}>
-              Se incluirán <strong>{filtro === 'todos' ? pendientes + completados : filtro === 'pendientes' ? pendientes : completados}</strong> detenido{filtro === 'todos' && pendientes + completados !== 1 ? 's' : filtro === 'pendientes' && pendientes !== 1 ? 's' : filtro === 'completados' && completados !== 1 ? 's' : ''} del período <strong>{PERIODOS.find(p => p.value === periodo)?.label}</strong>.
+            <div style={{ padding: 12, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter', fontSize: 11, color: '#64748b', lineHeight: 1.5, marginBottom: 16 }}>
+              Se incluirán <strong>{filtro === 'todos' ? pendientes + completados : filtro === 'pendientes' ? pendientes : completados}</strong> detenido{filtro === 'todos' && pendientes + completados !== 1 ? 's' : filtro === 'pendientes' && pendientes !== 1 ? 's' : filtro === 'completados' && completados !== 1 ? 's' : ''}{(desde && hasta) ? ` del ${desde} al ${hasta}` : ' de todas las fechas'}.
             </div>
 
             <button onClick={handleGenerate} disabled={pending}
@@ -120,4 +135,5 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2,
   fontFamily: 'Inter', fontSize: 13, color: '#1e293b', outline: 'none',
+  background: '#ffffff',
 }
