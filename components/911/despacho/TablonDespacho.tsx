@@ -1,0 +1,247 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useDespacho }  from '@/hooks/useDespacho'
+import { usePolling }   from '@/hooks/usePolling'
+import { DespachoForm } from '@/components/911/despacho/DespachoForm'
+import { MapPin, Clock, Phone, MessageSquare, AlertTriangle, Radio, RefreshCw, ChevronDown, ChevronUp, Shield, CheckCircle2 } from 'lucide-react'
+import Link  from 'next/link'
+import React from 'react'
+
+const INTERVALO_MS = 20_000
+
+type Tab = 'pendientes' | 'en_despacho' | 'atendidos'
+
+interface IncRow {
+  id: string; folio: string; canal: string; estatus: string
+  fechaHoraInicio: string; calle: string | null; colonia: string | null
+  descripcion: string | null; tipoIncidente: string | null
+  prioridad: string | null; capturadoPor: string | null
+  despachoId: string | null; fechaHoraDespacho: string | null
+  unidades: { placa: string | null }[]
+  elementos: { nombre: string | null; nomina: string | null }[]
+  accionesRealizadas?: string | null
+  hayDetencion?: boolean | null
+}
+
+export function TablonDespacho() {
+  const { pendientes, cargando, error, cargarPendientes } = useDespacho()
+  const [tab,        setTab]        = useState<Tab>('pendientes')
+  const [enDespacho, setEnDespacho] = useState<IncRow[]>([])
+  const [atendidos,  setAtendidos]  = useState<IncRow[]>([])
+  const [cargandoTab, setCargandoTab] = useState(false)
+  const [expandido,  setExpandido]  = useState<string | null>(null)
+
+  useEffect(() => { cargarPendientes() }, [cargarPendientes])
+  usePolling(cargarPendientes, INTERVALO_MS, tab === 'pendientes')
+
+  const cargarTab = async (t: Tab) => {
+    if (t === 'pendientes') { cargarPendientes(); return }
+    setCargandoTab(true)
+    try {
+      const url = t === 'en_despacho' ? '/api/incidentes/en-despacho' : '/api/incidentes/atendidos'
+      const res = await fetch(url)
+      const data = await res.json()
+      if (t === 'en_despacho') setEnDespacho(data)
+      else setAtendidos(data)
+    } finally { setCargandoTab(false) }
+  }
+
+  const cambiarTab = (t: Tab) => { setTab(t); setExpandido(null); cargarTab(t) }
+
+  const lista: IncRow[] = tab === 'pendientes'
+    ? (pendientes as unknown as IncRow[])
+    : tab === 'en_despacho' ? enDespacho : atendidos
+
+  return (
+    <div>
+      {/* ENCABEZADO */}
+      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #e2e8f0', paddingBottom: 24 }}>
+        <div>
+          <span style={labelTopStyle}>CENTRO DE MANDO Y COMUNICACIONES</span>
+          <h1 style={titleStyle}>MÓDULO DE <span style={{ color: '#2563eb' }}>DESPACHO</span></h1>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {tab === 'pendientes' && (
+            <>
+              <div style={{ background: pendientes.length > 0 ? '#fef3c7' : '#f0fdf4', border: `1px solid ${pendientes.length > 0 ? '#fde68a' : '#bbf7d0'}`, borderRadius: 4, padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: pendientes.length > 0 ? '#d97706' : '#16a34a' }} />
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, fontWeight: 700, color: pendientes.length > 0 ? '#b45309' : '#15803d' }}>
+                  {pendientes.length} PENDIENTE{pendientes.length !== 1 ? 'S' : ''}
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8' }}>
+                <RefreshCw size={11} style={{ animation: cargando ? 'spin 1s linear infinite' : 'none' }} />
+                ACTUALIZA CADA 20s
+              </div>
+            </>
+          )}
+          <Link href="/incidentes" style={btnBackStyle}>← BITÁCORA GENERAL</Link>
+        </div>
+      </div>
+
+      {/* PESTAÑAS */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 24 }}>
+        {([
+          { key: 'pendientes',  label: 'Pendientes',   icon: <AlertTriangle size={13} />, color: '#b45309', bg: '#fef3c7', border: '#fde68a' },
+          { key: 'en_despacho', label: 'En despacho',  icon: <Shield size={13} />,        color: '#1d4ed8', bg: '#eff6ff', border: '#bfdbfe' },
+          { key: 'atendidos',   label: 'Atendidos',    icon: <CheckCircle2 size={13} />,  color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
+        ] as const).map(t => (
+          <button key={t.key} onClick={() => cambiarTab(t.key as Tab)}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 18px', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase', border: '1px solid', cursor: 'pointer', borderRadius: 2, transition: 'all .15s',
+              background: tab === t.key ? t.bg    : '#ffffff',
+              color:      tab === t.key ? t.color : '#64748b',
+              borderColor: tab === t.key ? t.border : '#e2e8f0',
+            }}>
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
+
+      {error && <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626', marginBottom: 16 }}>Error: {error}</div>}
+
+      {/* ESTADO VACÍO */}
+      {!cargando && !cargandoTab && lista.length === 0 && (
+        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '64px 32px', textAlign: 'center' }}>
+          <div style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: 8 }}>Sin registros</div>
+          <p style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8', letterSpacing: '0.1em' }}>NO HAY INCIDENTES EN ESTE ESTADO</p>
+        </div>
+      )}
+
+      {/* LISTA */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {lista.map(inc => {
+          const abierto = expandido === inc.id
+          return (
+            <div key={inc.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden' }}>
+
+              {/* FILA PRINCIPAL — clickeable */}
+              <div onClick={() => setExpandido(abierto ? null : inc.id)}
+                style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', background: abierto ? '#f8fafc' : '#ffffff', borderBottom: abierto ? '1px solid #e2e8f0' : 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{inc.folio}</span>
+                  <CanalBadge canal={inc.canal} />
+                  {inc.prioridad && (
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
+                      {inc.prioridad.toUpperCase()}
+                    </span>
+                  )}
+                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b' }}>{inc.tipoIncidente || 'Sin clasificar'}</span>
+                  {inc.calle && <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{inc.calle}{inc.colonia ? `, ${inc.colonia}` : ''}</span>}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <Clock size={11} />
+                    {new Date(inc.fechaHoraInicio).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  {abierto ? <ChevronUp size={16} color="#64748b" /> : <ChevronDown size={16} color="#64748b" />}
+                </div>
+              </div>
+
+              {/* DETALLE EXPANDIBLE */}
+              {abierto && (
+                <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                  {/* Descripción */}
+                  {inc.descripcion && (
+                    <div>
+                      <label style={labelStyle}>DESCRIPCIÓN</label>
+                      <div style={{ fontFamily: 'Inter', fontSize: 13, color: '#334155', lineHeight: 1.6, padding: '10px 14px', background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 2 }}>
+                        {inc.descripcion}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Unidades y Elementos */}
+                  {(inc.unidades?.length > 0 || inc.elementos?.length > 0) && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                      <div>
+                        <label style={labelStyle}>UNIDADES ASIGNADAS</label>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                          {inc.unidades.map((u, i) => (
+                            <span key={i} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: '#eff6ff', border: '1px solid #bfdbfe', color: '#1d4ed8', borderRadius: 2 }}>
+                              {u.placa || '—'}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label style={labelStyle}>ELEMENTOS ASIGNADOS</label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                          {inc.elementos.map((e, i) => (
+                            <div key={i} style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>
+                              {e.nombre || '—'} <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b' }}>({e.nomina})</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Despacho info */}
+                  {inc.fechaHoraDespacho && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b' }}>
+                      <Clock size={11} /> DESPACHADO: {new Date(inc.fechaHoraDespacho).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  )}
+
+                  {/* Reporte de campo (solo atendidos) */}
+                  {tab === 'atendidos' && (
+                    <div style={{ display: 'flex', gap: 12 }}>
+                      {inc.hayDetencion && (
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 2 }}>
+                          CON DETENCIÓN
+                        </span>
+                      )}
+                      {inc.accionesRealizadas && (
+                        <div style={{ flex: 1 }}>
+                          <label style={labelStyle}>ACCIONES REALIZADAS</label>
+                          <div style={{ fontFamily: 'Inter', fontSize: 12, color: '#334155' }}>{inc.accionesRealizadas}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Link a ficha completa */}
+                  <div>
+                    <Link href={inc.canal === 'whatsapp' ? `/911/whatsapp/incidentes/${inc.id}` : inc.canal === 'radio' ? `/911/rondin/incidentes/${inc.id}` : `/911/ciudadano/incidentes/${inc.id}`}
+                      style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.1em' }}>
+                      VER FICHA COMPLETA →
+                    </Link>
+                  </div>
+
+                  {/* Formulario de despacho solo en pestaña pendientes */}
+                  {tab === 'pendientes' && (
+                    <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 16 }}>
+                      <label style={{ ...labelStyle, marginBottom: 12 }}>ASIGNAR UNIDADES Y ELEMENTOS</label>
+                      <DespachoForm incidenteId={inc.id} onDespachado={cargarPendientes} />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function CanalBadge({ canal }: { canal: string }) {
+  const config: Record<string, { icon: React.ReactNode; color: string; bg: string; border: string }> = {
+    '911':      { icon: <Phone size={11} />,         color: '#dc2626', bg: '#fef2f2', border: '#fecaca' },
+    'whatsapp': { icon: <MessageSquare size={11} />, color: '#059669', bg: '#f0fdf4', border: '#bbf7d0' },
+    'radio':    { icon: <Radio size={11} />,         color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
+  }
+  const c = config[canal] ?? { icon: null, color: '#64748b', bg: '#f8fafc', border: '#e2e8f0' }
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: c.bg, color: c.color, border: `1px solid ${c.border}`, borderRadius: 2 }}>
+      {c.icon} {canal.toUpperCase()}
+    </span>
+  )
+}
+
+const labelTopStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }
+const titleStyle: React.CSSProperties    = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 36, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' }
+const btnBackStyle: React.CSSProperties  = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textDecoration: 'none', letterSpacing: '0.1em' }
+const labelStyle: React.CSSProperties   = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }

@@ -68,9 +68,7 @@ export default async function JuridicoPage() {
             </thead>
             <tbody>
               {solicitudes.map(s => {
-                const fechaAct = s.fechaActivacion instanceof Date
-                  ? s.fechaActivacion
-                  : new Date(String(s.fechaActivacion))
+                const fechaAct = new Date(String(s.fechaActivacion))
                 return (
                   <tr key={s.id} style={{ borderBottom: '1px solid #0f1a2e' }}>
                     <td style={{ padding: '12px 16px', color: '#d8e0f0', fontWeight: 600 }}>{s.oficio}</td>

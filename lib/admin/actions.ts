@@ -6,7 +6,7 @@ import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { db }             from '@/lib/db/index'
 import { users, roles, sessions } from '@/lib/db/schema'
-import { eq }             from 'drizzle-orm'
+import { eq, sql }             from 'drizzle-orm'
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -69,7 +69,7 @@ export async function updateUser(formData: FormData) {
   const activo   = formData.get('activo') === 'true'
 
   await db.update(users)
-    .set({ name: nombre, apellido, rolId, activo, updatedAt: new Date() })
+    .set({ name: nombre, apellido, rolId, activo, updatedAt: sql`now()` })
     .where(eq(users.id, userId))
 
   revalidatePath('/admin/usuarios')

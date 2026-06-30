@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { medidasProteccion, visitasDomiciliarias } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export async function GET(
   request: NextRequest,
@@ -36,7 +36,7 @@ export async function PUT(
 
   const [updated] = await db
     .update(medidasProteccion)
-    .set({ ...body, actualizadoEn: new Date() })
+    .set({ ...body, actualizadoEn: sql`now()` })
     .where(eq(medidasProteccion.id, id))
     .returning()
 
@@ -52,7 +52,7 @@ export async function PATCH(
 
   const [updated] = await db
     .update(medidasProteccion)
-    .set({ status: body.status, actualizadoEn: new Date() })
+    .set({ status: body.status, actualizadoEn: new Date().toISOString() })
     .where(eq(medidasProteccion.id, id))
     .returning()
 

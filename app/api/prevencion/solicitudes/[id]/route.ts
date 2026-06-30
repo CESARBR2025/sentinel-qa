@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { solicitudesInformacion, solicitudesC4Internas, contestaciones } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export async function GET(
   request: NextRequest,
@@ -42,7 +42,7 @@ export async function PUT(
 
   const [updated] = await db
     .update(solicitudesInformacion)
-    .set({ ...body, actualizadoEn: new Date() })
+    .set({ ...body, actualizadoEn: sql`now()` })
     .where(eq(solicitudesInformacion.id, id))
     .returning()
 
