@@ -29,40 +29,33 @@ export default async function GestionPage() {
 
   const opciones = [
     {
-      titulo: 'Incidentes',
-      subtitulo: 'Incidentes captados en cámara.',
+      titulo: 'Incidentes captados en cámara',
+      subtitulo: 'Reporte de incidentes por turno, de forma diaria, semanal y mensual.',
       icono: <Users size={28} />,
       enlace: '/911/gestion/usuarios',
       estadisticas: [{ label: 'Total', value: '24' }, { label: 'Activos', value: '8' }]
     },
     {
-      titulo: 'Turnos',
-      subtitulo: 'Concentrado mensual total de turnos.',
+      titulo: 'Incidentes diarios',
+      subtitulo: 'Concentrado diario de total de incidentes.',
       icono: <Database size={28} />,
       enlace: '/911/gestion/catalogos',
       estadisticas: [{ label: 'Versión', value: '1.0.4' }, { label: 'Tablas', value: '12' }]
     },
     {
-      titulo: 'Reportes de incidentes',
-      subtitulo: 'Reportes diarios, semanales y mensuales.',
+      titulo: 'Incidentes semanal',
+      subtitulo: 'Concentrado semanal de total de incidentes.',
       icono: <FileText size={28} />,
       enlace: '/911/gestion/reportes',
       // AQUÍ USAMOS EL TOTAL CORREGIDO
       estadisticas: [{ label: 'Incidentes', value: String(stats.total) }, { label: 'Corte', value: 'Hoy' }]
     },
     {
-      titulo: 'Auditoría',
-      subtitulo: 'Registro detallado de acciones por usuario y logs de movimientos críticos.',
+      titulo: 'Módulo de resumen de incidentes',
+      subtitulo: 'Registro detallado de incidentes, separado por clasifiaciones.',
       icono: <ShieldCheck size={28} />,
       enlace: '/911/gestion/auditoria',
       estadisticas: [{ label: 'Logs hoy', value: '156' }, { label: 'Alertas', value: '0' }]
-    },
-    {
-      titulo: 'Sistema',
-      subtitulo: 'Parámetros técnicos, conexión de base de datos y configuración de APIs externas.',
-      icono: <Settings size={28} />,
-      enlace: '/911/gestion/configuracion',
-      estadisticas: [{ label: 'Status', value: 'Online' }, { label: 'DB', value: 'v14' }]
     }
   ]
 
