@@ -6,6 +6,26 @@ import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
+const TURNOS = [
+  { value: 'MATUTINO', label: 'Primer Turno (07:00 - 15:00 HRS)' },
+  { value: 'VESPERTINO', label: 'Segundo Turno (15:00 - 22:00 HRS)' },
+  { value: 'NOCTURNO', label: 'Tercer Turno (22:00 - 07:00 HRS)' },
+]
+
+const CAMPOS: { label: string; name: string }[] = [
+  { label: 'PERSONAS CAPTADAS POR CÁMARA SIN NOVEDAD', name: 'personas_sin_novedad' },
+  { label: 'PERSONAS CAPTADAS POR CÁMARA CON ANTECEDENTES', name: 'personas_con_antecedentes' },
+  { label: 'VEHÍCULOS CAPTADOS POR CÁMARA MANDADOS A REVISAR', name: 'vehiculos_revisar' },
+  { label: 'VEHÍCULOS CAPTADOS POR CÁMARA REVISADOS EN REPUVE', name: 'vehiculos_repuve' },
+  { label: 'PERSECUCIONES CAPTADAS POR CÁMARA', name: 'persecuciones' },
+  { label: 'ASEGURADOS CAPTADOS VÍA CÁMARA', name: 'asegurados_camara' },
+  { label: 'VEHÍCULOS RECUPERADOS POR CÁMARA', name: 'vehiculos_recuperados' },
+  { label: 'INCENDIOS CAPTADOS POR CÁMARA', name: 'incendios' },
+  { label: 'HECHOS DE TRÁNSITO CAPTADOS POR CÁMARAS', name: 'hechos_transito' },
+  { label: 'MOTOS REVISADAS', name: 'motos_revisadas' },
+  { label: 'TOTAL PERSONAS REVISADAS', name: 'total_personas_revisadas' },
+]
+
 export default function NuevoIncidenteCamaraPage() {
   const router = useRouter()
   const [pending, setPending] = useState(false)
@@ -19,12 +39,11 @@ export default function NuevoIncidenteCamaraPage() {
     const fd = new FormData(e.currentTarget)
     const data = Object.fromEntries(fd.entries())
 
-    const numerics = [
-      'personas_sin_novedad', 'personas_con_antecedentes', 'total_personas_revisadas',
-      'vehiculos_revisar', 'vehiculos_repuve', 'motos_revisadas',
-      'persecuciones', 'asegurados_camara', 'vehiculos_recuperados', 'incendios', 'hechos_transito',
-    ] as const
-    const payload: Record<string, string | number> = { fecha: data.fecha }
+    const numerics = CAMPOS.map(c => c.name)
+    const payload: Record<string, string | number> = {
+      fecha: data.fecha as string,
+      turno: data.turno as string,
+    }
     for (const k of numerics) {
       payload[k] = data[k] ? Number(data[k]) : 0
     }
@@ -52,45 +71,55 @@ export default function NuevoIncidenteCamaraPage() {
         <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, marginLeft: 24, color: '#0f172a', textTransform: 'uppercase' }}>Nuevo Registro</span>
       </header>
 
-      <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 48px' }}>
+      <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Captura de Datos</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Nuevo Incidente por Cámara</h1>
+          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Incidentes por Cámara</h1>
           <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
         </div>
 
-        <form onSubmit={handleSubmit} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}>
-          {error && <div style={{ padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626' }}>⚠ {error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, marginBottom: 24 }}>
+            <div style={{ borderBottom: '1px solid #e2e8f0', padding: '20px 24px' }}>
+              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Registro de Otros Incidentes que se Captan en Cámara
+              </div>
+            </div>
 
-          <div>
-            <Label>Fecha</Label>
-            <input name="fecha" type="date" required style={inputStyle} defaultValue={new Date().toISOString().slice(0, 10)} />
+            {error && (
+              <div style={{ margin: '16px 24px 0', padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626' }}>
+                ⚠ {error}
+              </div>
+            )}
+
+            <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                <div>
+                  <Label>Fecha</Label>
+                  <input name="fecha" type="date" required style={inputStyle} defaultValue={new Date().toISOString().slice(0, 10)} />
+                </div>
+                <div>
+                  <Label>Turno</Label>
+                  <select name="turno" required style={inputStyle} defaultValue="MATUTINO">
+                    {TURNOS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ height: 1, background: '#e2e8f0' }} />
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                {CAMPOS.map(c => (
+                  <div key={c.name}>
+                    <Label>{c.label}</Label>
+                    <input name={c.name} type="number" min={0} defaultValue={0} style={inputStyle} />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <SectionTitle>Personas</SectionTitle>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
-            <NumField label="Personas Captadas por Cámara Sin Novedad" name="personas_sin_novedad" />
-            <NumField label="Personas Captadas por Cámara con Antecedentes" name="personas_con_antecedentes" />
-            <NumField label="Total Personas Revisadas" name="total_personas_revisadas" />
-          </div>
-
-          <SectionTitle>Vehículos</SectionTitle>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
-            <NumField label="Vehículos Capturados por Cámara Mandados a Revisar" name="vehiculos_revisar" />
-            <NumField label="Vehículos Captados por Cámara Revisados en REPUVE" name="vehiculos_repuve" />
-            <NumField label="Motos Revisadas" name="motos_revisadas" />
-          </div>
-
-          <SectionTitle>Eventos</SectionTitle>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 20 }}>
-            <NumField label="Persecuciones Captadas por Cámara" name="persecuciones" />
-            <NumField label="Asegurados Captados vía Cámara" name="asegurados_camara" />
-            <NumField label="Vehículos Recuperados por Cámara" name="vehiculos_recuperados" />
-            <NumField label="Incendios Capturados por Cámara" name="incendios" />
-            <NumField label="Hechos de Tránsito Captados por Cámaras" name="hechos_transito" />
-          </div>
-
-          <div style={{ marginTop: 16, display: 'flex', gap: 16, justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'flex-end' }}>
             <Link href="/monitorista/incidentes-camara" style={btnSecundario}>Cancelar</Link>
             <button type="submit" disabled={pending} style={btnPrimario(pending)}>
               <Save size={14} /> {pending ? 'GUARDANDO...' : 'GUARDAR REGISTRO'}
@@ -104,19 +133,6 @@ export default function NuevoIncidenteCamaraPage() {
 
 function Label({ children }: { children: React.ReactNode }) {
   return <label style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }}>{children}</label>
-}
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <div style={{ fontFamily: 'Barlow Condensed', fontSize: 18, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0', paddingBottom: 8 }}>{children}</div>
-}
-
-function NumField({ label, name }: { label: string; name: string }) {
-  return (
-    <div>
-      <Label>{label}</Label>
-      <input name={name} type="number" min={0} defaultValue={0} style={inputStyle} />
-    </div>
-  )
 }
 
 const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter', fontSize: 13, color: '#1e293b', boxSizing: 'border-box', outline: 'none', background: '#ffffff' }

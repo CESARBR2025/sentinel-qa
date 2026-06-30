@@ -1,24 +1,37 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { listarRegistros } from '@/lib/monitorista/incidentes-camara-service'
+import { listarRegistros, TURNOS } from '@/lib/monitorista/incidentes-camara-service'
 import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
-import { Plus, Camera, BarChart3 } from 'lucide-react'
+import { Plus, Camera, BarChart3, Filter } from 'lucide-react'
 
-export default async function IncidentesCamaraPage() {
+export default async function IncidentesCamaraPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ turno?: string }>
+}) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const registros = await listarRegistros()
-  const user = session.user as { name: string }
+  const { turno: turnoFilter } = await searchParams
+  const turnoValido = turnoFilter && TURNOS.includes(turnoFilter as typeof TURNOS[number])
+    ? turnoFilter as typeof TURNOS[number]
+    : undefined
 
-  const hoy = new Date().toISOString().slice(0, 10)
-  const registrosHoy = registros.filter(r => r.fecha.slice(0, 10) === hoy)
+  const registros = await listarRegistros(turnoValido)
+  const user = session.user as { name: string }
 
   const totalPersonas = registros.reduce((s, r) => s + r.total_personas_revisadas, 0)
   const totalVehiculos = registros.reduce((s, r) => s + r.vehiculos_revisar, 0)
+  const totalMotos = registros.reduce((s, r) => s + r.motos_revisadas, 0)
+
+  const turnoLabel: Record<string, string> = {
+    MATUTINO: '07-15 HRS',
+    VESPERTINO: '15-22 HRS',
+    NOCTURNO: '22-07 HRS',
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
@@ -57,20 +70,31 @@ export default async function IncidentesCamaraPage() {
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <Camera size={20} color="#059669" />
-              <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Registros Hoy</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{registrosHoy.length}</div></div>
-            </div>
-          </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Camera size={20} color="#b45309" />
               <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Personas Revisadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{totalPersonas}</div></div>
             </div>
           </div>
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Camera size={20} color="#7c3aed" />
+              <Camera size={20} color="#b45309" />
               <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Vehículos Revisados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{totalVehiculos}</div></div>
             </div>
+          </div>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Camera size={20} color="#7c3aed" />
+              <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Motos Revisadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{totalMotos}</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center' }}>
+          <Filter size={14} color="#64748b" />
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>Filtrar por turno:</span>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <Link href="/monitorista/incidentes-camara" style={filtroBtn(!turnoFilter)}>TODOS</Link>
+            <Link href="/monitorista/incidentes-camara?turno=MATUTINO" style={filtroBtn(turnoFilter === 'MATUTINO')}>07-15 HRS</Link>
+            <Link href="/monitorista/incidentes-camara?turno=VESPERTINO" style={filtroBtn(turnoFilter === 'VESPERTINO')}>15-22 HRS</Link>
+            <Link href="/monitorista/incidentes-camara?turno=NOCTURNO" style={filtroBtn(turnoFilter === 'NOCTURNO')}>22-07 HRS</Link>
           </div>
         </div>
 
@@ -79,39 +103,63 @@ export default async function IncidentesCamaraPage() {
             <thead>
               <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
                 <Th>Fecha</Th>
-                <Th>Personas</Th>
-                <Th>Vehículos</Th>
-                <Th>Eventos</Th>
+                <Th>Turno</Th>
+                <Th>Sin Novedad</Th>
+                <Th>Con Antec.</Th>
+                <Th>Veh. Revisar</Th>
+                <Th>Veh. REPUVE</Th>
+                <Th>Motos</Th>
+                <Th>Persec.</Th>
+                <Th>Aseg.</Th>
+                <Th>Recup.</Th>
+                <Th>Incendios</Th>
+                <Th>Tránsito</Th>
+                <Th>Total Personas</Th>
               </tr>
             </thead>
             <tbody>
               {registros.length === 0 && (
-                <tr><td colSpan={4} style={{ padding: 32, textAlign: 'center', fontFamily: 'Inter', fontSize: 13, color: '#94a3b8' }}>No hay registros</td></tr>
+                <tr><td colSpan={13} style={{ padding: 32, textAlign: 'center', fontFamily: 'Inter', fontSize: 13, color: '#94a3b8' }}>No hay registros</td></tr>
               )}
               {registros.map(r => (
                 <tr key={r.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <Td>{new Date(r.fecha).toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' })}</Td>
-                  <Td>{r.total_personas_revisadas}</Td>
+                  <Td>{new Date(r.fecha + 'T00:00:00').toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' })}</Td>
+                  <Td><span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, background: '#f1f5f9', padding: '2px 8px', borderRadius: 2, color: '#475569' }}>{turnoLabel[r.turno] || r.turno}</span></Td>
+                  <Td>{r.personas_sin_novedad}</Td>
+                  <Td>{r.personas_con_antecedentes}</Td>
                   <Td>{r.vehiculos_revisar}</Td>
-                  <Td>{(r.persecuciones + r.asegurados_camara + r.vehiculos_recuperados + r.incendios + r.hechos_transito)}</Td>
+                  <Td>{r.vehiculos_repuve}</Td>
+                  <Td>{r.motos_revisadas}</Td>
+                  <Td>{r.persecuciones}</Td>
+                  <Td>{r.asegurados_camara}</Td>
+                  <Td>{r.vehiculos_recuperados}</Td>
+                  <Td>{r.incendios}</Td>
+                  <Td>{r.hechos_transito}</Td>
+                  <Td><strong>{r.total_personas_revisadas}</strong></Td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </main>
-
-      <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
-      </footer>
     </div>
   )
 }
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.1em', color: '#64748b', textTransform: 'uppercase', textAlign: 'left', padding: '12px 16px', fontWeight: 600 }}>{children}</th>
+  return <th style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.1em', color: '#64748b', textTransform: 'uppercase', textAlign: 'left', padding: '10px 12px', fontWeight: 600 }}>{children}</th>
 }
 
 function Td({ children }: { children: React.ReactNode }) {
-  return <td style={{ fontFamily: 'Inter', fontSize: 13, color: '#1e293b', padding: '12px 16px' }}>{children}</td>
+  return <td style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b', padding: '10px 12px' }}>{children}</td>
+}
+
+function filtroBtn(active: boolean): React.CSSProperties {
+  return {
+    fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 600, textTransform: 'uppercase',
+    letterSpacing: '0.1em', padding: '4px 12px', textDecoration: 'none', borderRadius: 2,
+    background: active ? '#0f172a' : '#f1f5f9',
+    color: active ? '#ffffff' : '#475569',
+    border: active ? '1px solid #0f172a' : '1px solid #e2e8f0',
+  }
 }
