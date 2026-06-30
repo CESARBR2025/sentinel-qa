@@ -6,6 +6,7 @@ import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
 import { Plus, Camera, BarChart3, Filter } from 'lucide-react'
+import { FilaIncidenteCamara } from '@/components/monitorista/FilaIncidenteCamara'
 
 export default async function IncidentesCamaraPage({
   searchParams,
@@ -26,12 +27,6 @@ export default async function IncidentesCamaraPage({
   const totalPersonas = registros.reduce((s, r) => s + r.total_personas_revisadas, 0)
   const totalVehiculos = registros.reduce((s, r) => s + r.vehiculos_revisar, 0)
   const totalMotos = registros.reduce((s, r) => s + r.motos_revisadas, 0)
-
-  const turnoLabel: Record<string, string> = {
-    MATUTINO: '07-15 HRS',
-    VESPERTINO: '15-22 HRS',
-    NOCTURNO: '22-07 HRS',
-  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
@@ -122,21 +117,7 @@ export default async function IncidentesCamaraPage({
                 <tr><td colSpan={13} style={{ padding: 32, textAlign: 'center', fontFamily: 'Inter', fontSize: 13, color: '#94a3b8' }}>No hay registros</td></tr>
               )}
               {registros.map(r => (
-                <tr key={r.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <Td>{new Date(r.fecha + 'T00:00:00').toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' })}</Td>
-                  <Td><span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, background: '#f1f5f9', padding: '2px 8px', borderRadius: 2, color: '#475569' }}>{turnoLabel[r.turno] || r.turno}</span></Td>
-                  <Td>{r.personas_sin_novedad}</Td>
-                  <Td>{r.personas_con_antecedentes}</Td>
-                  <Td>{r.vehiculos_revisar}</Td>
-                  <Td>{r.vehiculos_repuve}</Td>
-                  <Td>{r.motos_revisadas}</Td>
-                  <Td>{r.persecuciones}</Td>
-                  <Td>{r.asegurados_camara}</Td>
-                  <Td>{r.vehiculos_recuperados}</Td>
-                  <Td>{r.incendios}</Td>
-                  <Td>{r.hechos_transito}</Td>
-                  <Td><strong>{r.total_personas_revisadas}</strong></Td>
-                </tr>
+                <FilaIncidenteCamara key={r.id} registro={r} />
               ))}
             </tbody>
           </table>
@@ -148,10 +129,6 @@ export default async function IncidentesCamaraPage({
 
 function Th({ children }: { children: React.ReactNode }) {
   return <th style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.1em', color: '#64748b', textTransform: 'uppercase', textAlign: 'left', padding: '10px 12px', fontWeight: 600 }}>{children}</th>
-}
-
-function Td({ children }: { children: React.ReactNode }) {
-  return <td style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b', padding: '10px 12px' }}>{children}</td>
 }
 
 function filtroBtn(active: boolean): React.CSSProperties {
