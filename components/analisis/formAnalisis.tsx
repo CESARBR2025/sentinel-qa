@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import React from 'react';
-import { Navigation, Activity, User, MapPin, Calendar, Hash, ChevronRight, Fingerprint, Gavel, FileText, Shield, LocateFixed, ChevronLeft, Save, MessageSquare, Hand, Zap, AlertOctagon, Clock, AlertTriangle, Search, Car, Phone } from 'lucide-react';
+import { Navigation, Activity, User, MapPin, Calendar, Hash, ChevronRight, Fingerprint, Gavel, FileText, Shield, LocateFixed, ChevronLeft, Save, MessageSquare, Hand, Zap, AlertOctagon, Clock, AlertTriangle, Search, Car, Phone, Home } from 'lucide-react';
 import { useDetenidoForm } from '@/hooks/useAnalistaForm';
 import { analistaService } from '@/services/analistaService';
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
@@ -194,7 +194,7 @@ export default function RegistroDetenidoStepper() {
                 <div style={{ height: '1px', flexGrow: 1, background: '#e2e8f0' }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div className={`step-dot ${step >= 6}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 6 ? '#0f172a' : '#94a3b8' }}>06. PASO 6</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 6 ? '#0f172a' : '#94a3b8' }}>06. AFECTADOS Y CIERRE JUDICIAL</span>
                 </div>
             </div>
 
@@ -630,23 +630,24 @@ export default function RegistroDetenidoStepper() {
 
             {step === 6 && (
                 <section style={cardStyle}>
-                    <h2 style={titleStyle}>06. AFECTADOS Y CIERRE JUDICIAL<span style={{ color: '#3b82f6' }}>CIERRE</span></h2>
+                    <h2 style={titleStyle}>06. AFECTADOS Y CIERRE <span style={{ color: '#3b82f6' }}>JUDICIAL</span></h2>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px', padding: '15px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
-                            <SentinelField label="Afectado" name="nombreAfectado" icon={User} value={formData.nombreAfectado} onChange={handleChange} />
-                            <SentinelField label="Teléfono" name="telefonoAfectado" icon={Phone} value={formData.telefonoAfectado} onChange={handleChange} />
-                            <SentinelField label="Afectado" name="calleAfectado" icon={User} value={formData.calleAfectado} onChange={handleChange} />
-                            <SentinelField label="Afectado" name="numeroAfectado" icon={User} value={formData.numeroAfectado} onChange={handleChange} />
-                            <SentinelField label="Colonia" name="coloniaAfectado" value={formData.coloniaAfectado} onChange={handleChange} />
+                            <SentinelField label="Nombre del Afectado" name="nombreAfectado" icon={User} value={formData.nombreAfectado} onChange={handleChange} />
+                            <SentinelField label="Teléfono de Afectado" name="telefonoAfectado" icon={Phone} value={formData.telefonoAfectado} onChange={handleChange} />
+                            <SentinelField label="Calle del Afectado" name="calleAfectado" icon={Home} value={formData.calleAfectado} onChange={handleChange} />
+                            <SentinelField label="Numero de domicilio" name="numeroAfectado" icon={Home} value={formData.numeroAfectado} onChange={handleChange} />
+                            <SentinelField label="Colonia del afectado" name="coloniaAfectado" icon={Home} value={formData.coloniaAfectado} onChange={handleChange} />
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', padding: '15px', border: '1px solid #e2e8f0' }}>
                             <SentinelField label="Marca" name="marcaVehiculo" icon={Car} value={formData.marcaVehiculo} onChange={handleChange} />
                             <SentinelField label="Submarca" name="submarcaVehiculo" value={formData.submarcaVehiculo} onChange={handleChange} />
-                            <SentinelField label="Submarca" name="colorVehiculo" value={formData.colorVehiculo} onChange={handleChange} />
+                            <SentinelField label="Tipo de Vehiculo" name="tipoVehiculo" value={formData.tipoVehiculo} onChange={handleChange} />
+                            <SentinelField label="Color del Vehiculo" name="colorVehiculo" value={formData.colorVehiculo} onChange={handleChange} />
                             <SentinelField label="Placas" name="placasVehiculo" value={formData.placasVehiculo} onChange={handleChange} />
-                            <SentinelField label="Submarca" name="estadoVehiculo" value={formData.estadoVehiculo} onChange={handleChange} />
-                            <SentinelField label="Submarca" name="nivVehiculo" value={formData.nivVehiculo} onChange={handleChange} />
-                            <SentinelField label="Submarca" name="motorVehiculo" value={formData.motorVehiculo} onChange={handleChange} />
+                            <SentinelField label="Estado del vehiculo" name="estadoVehiculo" value={formData.estadoVehiculo} onChange={handleChange} />
+                            <SentinelField label="Niv Vehiculo" name="nivVehiculo" value={formData.nivVehiculo} onChange={handleChange} />
+                            <SentinelField label="Motor del Vehiculo" name="motorVehiculo" value={formData.motorVehiculo} onChange={handleChange} />
                             <SentinelField label="Modelo" name="modeloVehiculo" value={formData.modeloVehiculo} onChange={handleChange} />
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px' }}>
@@ -654,7 +655,7 @@ export default function RegistroDetenidoStepper() {
                             <SentinelField label="Fuero" name="fuero" as="select" value={formData.fuero} onChange={handleChange}>
                                 <option value="">SELECCIONAR</option><option value="COMUN">COMÚN</option><option value="FEDERAL">FEDERAL</option>
                             </SentinelField>
-                            <SentinelField label="Agente" name="agenteAprehensor" icon={Shield} value={formData.agenteAprehensor} onChange={handleChange} />
+                            <SentinelField label="Agente Aprehensor" name="agenteAprehensor" icon={Shield} value={formData.agenteAprehensor} onChange={handleChange} />
                         </div>
                     </div>
                     <div style={footerActions}><button onClick={handleBack} style={btnBackStyle}><ChevronLeft size={16} /> ANTERIOR</button><button onClick={finalizarRegistro} style={btnFinishStyle} disabled={loading}>{loading ? 'GUARDANDO...' : <><Save size={16} /> FINALIZAR IPH</>}</button></div>

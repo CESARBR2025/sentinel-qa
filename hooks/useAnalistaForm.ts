@@ -62,6 +62,8 @@ export function useDetenidoForm() {
   calleHecho: '',
   numeroHecho: '',
   coloniaHecho: '',
+  latitudHecho:'',
+  longitudHecho:'',
   sectorHecho: '',
   rtResponsable: '',
   turnoResponsable: '',
