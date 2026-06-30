@@ -8,37 +8,16 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
   const body = await req.json()
-  const periodo = body.periodo ?? 'diario'
+  const desde = body.desde ?? ''
+  const hasta = body.hasta ?? ''
   const filtro = body.filtro ?? 'todos'
 
-  const ahora = new Date()
-  let desde: Date, hasta: Date
-
-  if (periodo === 'diario') {
-    desde = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate())
-    hasta = new Date(desde.getTime() + 86400000)
-  } else if (periodo === 'semanal') {
-    const dia = ahora.getDay()
-    desde = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() - (dia === 0 ? 6 : dia - 1))
-    hasta = new Date(desde.getTime() + 7 * 86400000)
-  } else if (periodo === 'mensual') {
-    desde = new Date(ahora.getFullYear(), ahora.getMonth(), 1)
-    hasta = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 1)
-  } else {
-    return NextResponse.json({ error: 'Periodo inválido' }, { status: 400 })
-  }
-
   try {
-    const buf = await generarPpt(
-      session.user.name || 'Monitorista',
-      desde.toISOString(),
-      hasta.toISOString(),
-      filtro,
-    )
-    return new NextResponse(buf, {
+    const buf = await generarPpt(session.user.name || 'Monitorista', desde, hasta, filtro)
+    return new NextResponse(new Uint8Array(buf), {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'Content-Disposition': `attachment; filename="detenidos_${periodo}_${ahora.toISOString().split('T')[0]}.pptx"`,
+        'Content-Disposition': `attachment; filename="detenidos_${new Date().toISOString().split('T')[0]}.pptx"`,
       },
     })
   } catch (err) {
