@@ -1,5 +1,11 @@
-import { query } from "@/lib/db";
-import type { RolRow, DetalleAsegurado, DatosAseguradoInput, EvidenciaMonitorista } from "./types";
+import { query, queryVia } from "@/lib/db";
+import type {
+  RolRow,
+  DetalleAsegurado,
+  DatosAseguradoInput,
+  EvidenciaMonitorista,
+  LiberacionRow,
+} from "./types";
 
 export async function obtenerRolUsuario(userId: string): Promise<string> {
   const result = await query<RolRow>(
@@ -110,7 +116,9 @@ export async function actualizarEstadoSolicitud(
   );
 }
 
-export async function obtenerDetalleAsegurado(solicitudId: string): Promise<DetalleAsegurado | null> {
+export async function obtenerDetalleAsegurado(
+  solicitudId: string,
+): Promise<DetalleAsegurado | null> {
   const result = await query<Record<string, unknown>>(
     `SELECT
        rd.folio_denuncia,
@@ -141,51 +149,65 @@ export async function obtenerDetalleAsegurado(solicitudId: string): Promise<Deta
      WHERE rd.id = $1
      LIMIT 1`,
     [solicitudId],
-  )
+  );
 
-  if (!result.rows.length) return null
+  if (!result.rows.length) return null;
 
-  const row = result.rows[0]
+  const row = result.rows[0];
 
-  let nombreDetenido: string | null = null
+  let nombreDetenido: string | null = null;
   try {
-    const detenidos = typeof row.ofi_detenidos === 'string'
-      ? JSON.parse(row.ofi_detenidos)
-      : row.ofi_detenidos
+    const detenidos =
+      typeof row.ofi_detenidos === "string"
+        ? JSON.parse(row.ofi_detenidos)
+        : row.ofi_detenidos;
     if (Array.isArray(detenidos) && detenidos.length > 0) {
-      nombreDetenido = detenidos[0]?.nombre ?? null
+      nombreDetenido = detenidos[0]?.nombre ?? null;
     }
-  } catch { /* ignore parse errors */ }
+  } catch {
+    /* ignore parse errors */
+  }
 
-  const calle = row.ofi_calle ? String(row.ofi_calle) : ''
-  const colonia = row.ofi_colonia ? String(row.ofi_colonia) : ''
-  const lugarDetencion = [calle, colonia].filter(Boolean).join(', ') || null
+  const calle = row.ofi_calle ? String(row.ofi_calle) : "";
+  const colonia = row.ofi_colonia ? String(row.ofi_colonia) : "";
+  const lugarDetencion = [calle, colonia].filter(Boolean).join(", ") || null;
 
-  const ofiNombre = row.ofi_nombre ? String(row.ofi_nombre) : ''
-  const ofiApPaterno = row.ofi_ap_paterno ? String(row.ofi_ap_paterno) : ''
-  const nombrePolicia = [ofiNombre, ofiApPaterno].filter(Boolean).join(' ') || null
+  const ofiNombre = row.ofi_nombre ? String(row.ofi_nombre) : "";
+  const ofiApPaterno = row.ofi_ap_paterno ? String(row.ofi_ap_paterno) : "";
+  const nombrePolicia =
+    [ofiNombre, ofiApPaterno].filter(Boolean).join(" ") || null;
 
   return {
-    folioDenuncia:        row.folio_denuncia ? String(row.folio_denuncia) : null,
-    folioReporteCampo:    row.folio_reporte_campo ? String(row.folio_reporte_campo) : null,
-    iph:                  row.iph ? String(row.iph) : null,
-    fechaReporte:         row.fecha_reporte ? String(row.fecha_reporte) : null,
-    horaReporte:          row.hora_reporte ? String(row.hora_reporte) : null,
+    folioDenuncia: row.folio_denuncia ? String(row.folio_denuncia) : null,
+    folioReporteCampo: row.folio_reporte_campo
+      ? String(row.folio_reporte_campo)
+      : null,
+    iph: row.iph ? String(row.iph) : null,
+    fechaReporte: row.fecha_reporte ? String(row.fecha_reporte) : null,
+    horaReporte: row.hora_reporte ? String(row.hora_reporte) : null,
     nombreDetenido,
-    placaUnidad:          row.ofi_placa_unidad_asignada ? String(row.ofi_placa_unidad_asignada) : null,
+    placaUnidad: row.ofi_placa_unidad_asignada
+      ? String(row.ofi_placa_unidad_asignada)
+      : null,
     nombrePolicia,
-    nominaPolicia:        row.no_nomina ? String(row.no_nomina) : null,
+    nominaPolicia: row.no_nomina ? String(row.no_nomina) : null,
     lugarDetencion,
-    capturadoPorNombre:   row.capturado_por_nombre ? String(row.capturado_por_nombre) : null,
-    folioSija:            row.folio_sija ? String(row.folio_sija) : null,
-    folioRemision:        row.folio_remision ? String(row.folio_remision) : null,
-    marcoLegal:           row.marco_legal ? String(row.marco_legal) : null,
-    registroTableta:      row.registro_tableta ? String(row.registro_tableta) : null,
-    domicilioCalle:       row.domicilio_calle ? String(row.domicilio_calle) : null,
-    domicilioNumero:      row.domicilio_numero ? String(row.domicilio_numero) : null,
-    domicilioColonia:     row.domicilio_colonia ? String(row.domicilio_colonia) : null,
-    domicilioMunicipio:   row.domicilio_municipio ? String(row.domicilio_municipio) : null,
-  }
+    capturadoPorNombre: row.capturado_por_nombre
+      ? String(row.capturado_por_nombre)
+      : null,
+    folioSija: row.folio_sija ? String(row.folio_sija) : null,
+    folioRemision: row.folio_remision ? String(row.folio_remision) : null,
+    marcoLegal: row.marco_legal ? String(row.marco_legal) : null,
+    registroTableta: row.registro_tableta ? String(row.registro_tableta) : null,
+    domicilioCalle: row.domicilio_calle ? String(row.domicilio_calle) : null,
+    domicilioNumero: row.domicilio_numero ? String(row.domicilio_numero) : null,
+    domicilioColonia: row.domicilio_colonia
+      ? String(row.domicilio_colonia)
+      : null,
+    domicilioMunicipio: row.domicilio_municipio
+      ? String(row.domicilio_municipio)
+      : null,
+  };
 }
 
 export async function actualizarDetallesAsegurado(
@@ -193,7 +215,9 @@ export async function actualizarDetallesAsegurado(
   datos: DatosAseguradoInput,
   evidenciasJson?: string | null,
 ): Promise<void> {
-  const estadoEvidencia = evidenciasJson ? 'PENDIENTE_MONITORISTA' : 'SIN_EVIDENCIA_REQUERIDA'
+  const estadoEvidencia = evidenciasJson
+    ? "PENDIENTE_MONITORISTA"
+    : "SIN_EVIDENCIA_REQUERIDA";
 
   await query(
     `UPDATE ofi_reporte_denuncia
@@ -218,27 +242,29 @@ export async function actualizarDetallesAsegurado(
       datos.municipio || null,
       datos.folioRemision || null,
       datos.marcoLegal || null,
-      datos.registroTableta || 'false',
+      datos.registroTableta || "false",
       estadoEvidencia,
       evidenciasJson ?? null,
       id,
     ],
-  )
+  );
 }
 
-export async function obtenerEvidenciasMonitorista(denunciaId: string): Promise<EvidenciaMonitorista[]> {
+export async function obtenerEvidenciasMonitorista(
+  denunciaId: string,
+): Promise<EvidenciaMonitorista[]> {
   const result = await query<Record<string, unknown>>(
     `SELECT id, url_archivo, nombre_archivo
      FROM moni_evidencias_denuncia
      WHERE ofi_reporte_denuncia_id = $1
      ORDER BY id`,
     [denunciaId],
-  )
-  return result.rows.map(r => ({
+  );
+  return result.rows.map((r) => ({
     id: Number(r.id),
-    urlArchivo: String(r.url_archivo ?? ''),
+    urlArchivo: String(r.url_archivo ?? ""),
     nombreArchivo: r.nombre_archivo ? String(r.nombre_archivo) : null,
-  }))
+  }));
 }
 
 export async function actualizarSolicitudConEvidencias(
@@ -254,4 +280,117 @@ export async function actualizarSolicitudConEvidencias(
      WHERE id = $4`,
     [estadoTramite, estadoEvidencia, evidenciasJson, id],
   );
+}
+
+export async function obtenerDetalleInfraccionVia(
+  id: string,
+): Promise<Record<string, unknown> | null> {
+  const result = await queryVia<Record<string, unknown>>(
+    `SELECT
+       i.evidencias,
+       i.url_inapam,
+       i.url_ine,
+       i.url_tarjeta_circulacion,
+       i.id,
+       i.folio,
+       i.estatus,
+       i.created_at,
+       i.articulo_id,
+       a.numero as articulo_numero,
+       a.descripcion as articulo_descripcion,
+       i.fraccion_id,
+       f.numero as fraccion_numero,
+       f.descripcion as fraccion_descripcion,
+       i.nombre_infractor,
+       i.apellido_paterno_infractor,
+       i.apellido_materno_infractor,
+       i.curp_infractor,
+       i.nombre_titular_liberacion,
+       i.appaterno_titular_liberacion,
+       i.apmaterno_titular_liberacion,
+       i.marca,
+       i.modelo,
+       i.color,
+       i.placa,
+       i.correo_infractor,
+       i.latitud,
+       i.longitud,
+       i.codigo_postal,
+       i.calle,
+       i.numero,
+       i.municipio,
+       i.estado,
+       i.tipo_garantia,
+       i.garantia_entregada,
+       o.total_umas,
+       o.total_pesos,
+       i.oficial_id,
+       i.es_titular,
+       i.no_oficio_fiscalia,
+       i.url_oficio_fiscalia,
+       i.estatus_dependencia,
+       i.no_carpeta_investigacion,
+       i.url_oficio_pago_corralon,
+       i.url_orden_salida_liberaciones,
+       o.estatus as estatus_orden_pago,
+       off.numero_empleado as oficial_numero_empleado,
+       u.nombres as oficial_nombres,
+       u.apellido_p as oficial_apellido_p,
+       u.apellido_m as oficial_apellido_m,
+       pat.numero_unidad as patrulla_nombre,
+       off.activo as oficial_activo
+     FROM v2_infracciones i
+     LEFT JOIN v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
+     JOIN v2_articulos_ley a on i.articulo_id = a.id
+     JOIN v2_fracciones_ley f on i.fraccion_id = f.id
+     
+     LEFT JOIN v2_oficiales off ON off.id = i.oficial_id
+     LEFT JOIN v2_usuarios u ON off.usuario_id = u.id
+     LEFT JOIN v2_patrullas pat ON off.patrulla_id = pat.id
+     WHERE i.id = $1
+     ORDER BY o.created_at DESC
+     LIMIT 1`,
+    [id],
+  );
+
+  return result.rows[0] ?? null;
+}
+
+export async function listarLiberaciones(): Promise<LiberacionRow[]> {
+  const result = await queryVia<Record<string, unknown>>(
+    `SELECT
+       id,
+       folio,
+       estatus,
+       placa,
+       created_at,
+       correo_infractor,
+       nombre_infractor,
+       estatus_dependencia,
+       no_carpeta_investigacion
+     FROM v2_infracciones
+     WHERE tipo_garantia = 'VEHICULO'
+       AND estatus_dependencia IN (
+         'RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO',
+         'RETENIDO_POR_DELITO_PENDIENTE_OFICIO',
+         'MESA_DE_CONTROL_PENDIENTE_DOCS',
+         'LIBERADA_POR_ACCIDENTE',
+         'LIBERADA_POR_DELITO'
+       )
+       AND dependencia_receptora = $1
+     ORDER BY created_at DESC`,
+    ["FISCALIA"],
+  );
+
+  return result.rows.map((r) => ({
+    id: String(r.id ?? ""),
+    folio: String(r.folio ?? ""),
+    estatus: String(r.estatus ?? ""),
+    placa: String(r.placa ?? ""),
+    created_at: String(r.created_at ?? ""),
+    correo_infractor: String(r.correo_infractor ?? ""),
+    nombre_infractor: String(r.nombre_infractor ?? ""),
+    estatus_dependencia: String(r.estatus_dependencia ?? ""),
+    no_carpeta_investigacion: String(r.no_carpeta_investigacion ?? ""),
+  }));
 }

@@ -8,6 +8,8 @@ import {
   actualizarSolicitudConEvidencias,
   obtenerDetalleAsegurado,
   actualizarDetallesAsegurado,
+  listarLiberaciones,
+  obtenerDetalleInfraccionVia,
 } from './repository'
 import { rowToSolicitud } from './mapper'
 import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput } from './types'
@@ -51,4 +53,12 @@ export async function obtenerDatosAsegurado(solicitudId: string): Promise<Detall
 
 export async function guardarDetallesAsegurado(id: string, datos: DatosAseguradoInput, evidenciasJson?: string | null): Promise<void> {
   await actualizarDetallesAsegurado(id, datos, evidenciasJson)
+}
+
+export async function obtenerLiberaciones() {
+  return listarLiberaciones()
+}
+
+export async function obtenerDetalleInfraccionViaService(id: string) {
+  return obtenerDetalleInfraccionVia(id)
 }
