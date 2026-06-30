@@ -84,12 +84,57 @@ export async function crearRegistro(data: {
   return r.rows[0].id
 }
 
+export async function actualizarRegistro(id: string, data: {
+  fecha?: string
+  turno?: Turno
+  personas_sin_novedad?: number
+  personas_con_antecedentes?: number
+  total_personas_revisadas?: number
+  vehiculos_revisar?: number
+  vehiculos_repuve?: number
+  motos_revisadas?: number
+  persecuciones?: number
+  asegurados_camara?: number
+  vehiculos_recuperados?: number
+  incendios?: number
+  hechos_transito?: number
+}): Promise<void> {
+  const cols: string[] = []
+  const params: unknown[] = []
+  let idx = 1
+  for (const [k, v] of Object.entries(data)) {
+    if (v !== undefined) {
+      cols.push(`${k} = $${idx++}`)
+      params.push(v)
+    }
+  }
+  if (cols.length === 0) return
+  params.push(id)
+  await query(
+    `UPDATE incidentes_camara SET ${cols.join(', ')} WHERE id = $${idx}`, params,
+  )
+}
+
+export async function obtenerRegistroPorFechaTurno(fecha: string, turno: Turno): Promise<IncidenteCamara | null> {
+  const r = await query<Record<string, unknown>>(
+    `SELECT * FROM incidentes_camara WHERE fecha = $1 AND turno = $2 LIMIT 1`,
+    [fecha, turno],
+  )
+  if (!r.rows.length) return null
+  return rowToIncidente(r.rows[0])
+}
+
 export { TURNOS }
 
 function rowToIncidente(r: Record<string, unknown>): IncidenteCamara {
+  function formatFecha(v: unknown): string {
+    if (v instanceof Date) return v.toISOString().slice(0, 10)
+    if (typeof v === 'string') return v.slice(0, 10)
+    return String(v).slice(0, 10)
+  }
   return {
     id: String(r.id),
-    fecha: String(r.fecha),
+    fecha: formatFecha(r.fecha),
     turno: parseTurno(String(r.turno)),
     registrado_por: String(r.registrado_por),
     personas_sin_novedad: Number(r.personas_sin_novedad),
