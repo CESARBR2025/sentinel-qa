@@ -6,17 +6,21 @@ export interface Dependencia {
   nombre: string
 }
 
-export interface SolicitudDetenido {
+export interface ReporteDetenido {
   id: string
+  folio_detenido: string
   nombre_detenido: string
-  folio: string
-  tipo_evento: string | null
-  delitos: string | null
-  falta_admin: string | null
+  tipo_incidente: string | null
+  delito_denuncia: string | null
+  marco_legal: string | null
+  falta_administrativa: string | null
   modus_operandi: string | null
-  solicitado_por: string
-  creado_en: string
-  completado_en: string | null
+  autoridad_recibe: string | null
+  oficial_nombre: string | null
+  hay_detencion: boolean
+  hay_vehiculo: boolean
+  hay_cateo: boolean
+  created_at: string
   fotos: SolicitudFoto[]
 }
 
@@ -27,6 +31,29 @@ export interface SolicitudFoto {
   estado: string
 }
 
+function parseDetenidos(raw: unknown): string {
+  if (typeof raw === 'string') {
+    try {
+      const arr = JSON.parse(raw)
+      return Array.isArray(arr) && arr.length > 0 ? (arr[0].nombre || 'Sin nombre') : 'Sin nombre'
+    } catch {
+      return String(raw || 'Sin nombre')
+    }
+  }
+  if (Array.isArray(raw) && raw.length > 0) return raw[0].nombre || 'Sin nombre'
+  return 'Sin nombre'
+}
+
+const QUERY_BASE = `SELECT rc.id, rc.ofi_folio_cad, rc.folio_reporte_campo, rc.ofi_tipo_incidente,
+  rc.modus_operandi, rc.falta_administrativa, rc.delito, rc.marco_legal,
+  rc.ofi_autoridad_recibe, rc.ofi_oficial_nombre,
+  rc.ofi_hay_detencion, rc.ofi_hay_vehiculo, rc.ofi_hay_cateo,
+  rc.ofi_detenidos, rc.created_at,
+  COALESCE(rc.delito, ord.delito) as delito_denuncia,
+  COALESCE(rc.marco_legal, ord.marco_legal) as marco_legal_mostrar
+FROM ofi_reportes_campo rc
+LEFT JOIN ofi_reporte_denuncia ord ON ord.reporte_campo_id = rc.id`
+
 export async function getDestinos(): Promise<Dependencia[]> {
   const r = await query<Record<string, unknown>>(
     `SELECT id, clave, nombre FROM cat_dependencias WHERE tipo = 'externa' AND activo = true AND clave IN ('FISCALIA','JUZGADO_CIVICO') ORDER BY nombre`,
@@ -34,29 +61,85 @@ export async function getDestinos(): Promise<Dependencia[]> {
   return r.rows.map((d) => ({ id: Number(d.id), clave: String(d.clave), nombre: String(d.nombre) }))
 }
 
-export async function crearSolicitud(data: {
-  nombre_detenido: string
-  folio: string
-  tipo_evento: string | null
-  delitos: string | null
-  falta_admin: string | null
-  modus_operandi: string | null
-  solicitado_por: string
-}): Promise<string> {
-  const r = await query<{ id: string }>(
-    `INSERT INTO solicitudes_detenido (nombre_detenido, folio, tipo_evento, delitos, falta_admin, modus_operandi, solicitado_por)
-     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`,
-    [data.nombre_detenido, data.folio, data.tipo_evento, data.delitos, data.falta_admin, data.modus_operandi, data.solicitado_por],
+export async function listarReportesConDetenidos(): Promise<ReporteDetenido[]> {
+  const r = await query<Record<string, unknown>>(
+    `${QUERY_BASE}
+     WHERE rc.ofi_detenidos IS NOT NULL
+       AND rc.ofi_detenidos::text NOT IN ('[]', '1')
+     ORDER BY rc.created_at DESC LIMIT 100`,
   )
-  const id = r.rows[0].id
-  // Crear 3 filas de fotos automáticamente
+  const result: ReporteDetenido[] = []
+  for (const row of r.rows) {
+    const id = String(row.id)
+    const fotos = await query<Record<string, unknown>>(
+      `SELECT id, tipo_foto, enviado_a, estado FROM solicitud_fotos WHERE reporte_campo_id = $1 ORDER BY tipo_foto`, [id],
+    )
+    const nombre = parseDetenidos(row.ofi_detenidos)
+    if (nombre === 'Sin nombre' && fotos.rows.length === 0) continue
+    result.push(rowToReporte(row, fotos))
+  }
+  return result
+}
+
+export async function obtenerReportePorId(id: string): Promise<ReporteDetenido | null> {
+  const r = await query<Record<string, unknown>>(
+    `${QUERY_BASE} WHERE rc.id = $1 LIMIT 1`, [id],
+  )
+  if (!r.rows.length) return null
+  const fotos = await query<Record<string, unknown>>(
+    `SELECT id, tipo_foto, enviado_a, estado FROM solicitud_fotos WHERE reporte_campo_id = $1 ORDER BY tipo_foto`, [id],
+  )
+  return rowToReporte(r.rows[0], fotos)
+}
+
+function rowToReporte(row: Record<string, unknown>, fotosQ: { rows: Record<string, unknown>[] }): ReporteDetenido {
+  const id = String(row.id)
+  return {
+    id,
+    folio_detenido: row.folio_reporte_campo ? String(row.folio_reporte_campo) : 'Sin folio',
+    nombre_detenido: parseDetenidos(row.ofi_detenidos),
+    tipo_incidente: row.ofi_tipo_incidente ? String(row.ofi_tipo_incidente) : null,
+    delito_denuncia: row.delito_denuncia ? String(row.delito_denuncia) : null,
+    marco_legal: row.marco_legal_mostrar ? String(row.marco_legal_mostrar) : null,
+    falta_administrativa: row.falta_administrativa ? String(row.falta_administrativa) : null,
+    modus_operandi: row.modus_operandi ? String(row.modus_operandi) : null,
+    autoridad_recibe: row.ofi_autoridad_recibe ? String(row.ofi_autoridad_recibe) : null,
+    oficial_nombre: row.ofi_oficial_nombre ? String(row.ofi_oficial_nombre) : null,
+    hay_detencion: Boolean(row.ofi_hay_detencion),
+    hay_vehiculo: Boolean(row.ofi_hay_vehiculo),
+    hay_cateo: Boolean(row.ofi_hay_cateo),
+    created_at: String(row.created_at),
+    fotos: fotosQ.rows.map(f => ({
+      id: String(f.id),
+      tipo_foto: String(f.tipo_foto),
+      enviado_a: f.enviado_a ? String(f.enviado_a) : null,
+      estado: String(f.estado),
+    })),
+  }
+}
+
+export async function actualizarCampo(id: string, campo: string, valor: string): Promise<void> {
+  if (!['modus_operandi', 'falta_administrativa', 'delito', 'marco_legal'].includes(campo)) {
+    throw new Error('Campo no válido para edición')
+  }
+  await query(
+    `UPDATE ofi_reportes_campo SET ${campo} = $1 WHERE id = $2`,
+    [valor || null, id],
+  )
+}
+
+export async function crearSolicitudFotos(reporteCampoId: string): Promise<boolean> {
+  const existentes = await query<{ c: number }>(
+    `SELECT count(*)::int as c FROM solicitud_fotos WHERE reporte_campo_id = $1`, [reporteCampoId],
+  )
+  if (existentes.rows[0].c > 0) return false
   for (const tipo of ['frontal', 'derecho', 'izquierdo']) {
     await query(
-      `INSERT INTO solicitud_fotos (solicitud_id, tipo_foto, estado) VALUES ($1, $2, 'pendiente') ON CONFLICT (solicitud_id, tipo_foto) DO NOTHING`,
-      [id, tipo],
+      `INSERT INTO solicitud_fotos (reporte_campo_id, tipo_foto, estado) VALUES ($1, $2, 'pendiente')`,
+      [reporteCampoId, tipo],
     )
   }
-  return id
+  return true
 }
 
 export async function enviarFoto(fotoId: string, destino: string): Promise<void> {
@@ -71,59 +154,4 @@ export async function rechazarFoto(fotoId: string): Promise<void> {
     `UPDATE solicitud_fotos SET estado = 'rechazado' WHERE id = $1 AND estado = 'enviado'`,
     [fotoId],
   )
-}
-
-export async function listarPendientes(): Promise<SolicitudDetenido[]> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT DISTINCT sd.* FROM solicitudes_detenido sd
-     INNER JOIN solicitud_fotos sf ON sf.solicitud_id = sd.id
-     WHERE sf.estado IN ('pendiente','enviado','rechazado')
-     ORDER BY sd.creado_en DESC LIMIT 50`,
-  )
-  return await Promise.all(r.rows.map(r => rowToDetenidoConFotos(r)))
-}
-
-export async function listarCompletadas(): Promise<SolicitudDetenido[]> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT DISTINCT sd.* FROM solicitudes_detenido sd
-     WHERE NOT EXISTS (
-       SELECT 1 FROM solicitud_fotos sf WHERE sf.solicitud_id = sd.id AND sf.estado IN ('pendiente','enviado','rechazado')
-     )
-     ORDER BY sd.creado_en DESC LIMIT 50`,
-  )
-  return await Promise.all(r.rows.map(r => rowToDetenidoConFotos(r)))
-}
-
-export async function obtenerDetenidoPorId(id: string): Promise<SolicitudDetenido | null> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT * FROM solicitudes_detenido WHERE id = $1`, [id],
-  )
-  if (!r.rows.length) return null
-  return await rowToDetenidoConFotos(r.rows[0])
-}
-
-async function rowToDetenidoConFotos(r: Record<string, unknown>): Promise<SolicitudDetenido> {
-  const id = String(r.id)
-  const fotos = await query<Record<string, unknown>>(
-    `SELECT id, tipo_foto, enviado_a, estado FROM solicitud_fotos WHERE solicitud_id = $1 ORDER BY tipo_foto`,
-    [id],
-  )
-  return {
-    id,
-    nombre_detenido: String(r.nombre_detenido),
-    folio: String(r.folio),
-    tipo_evento: r.tipo_evento ? String(r.tipo_evento) : null,
-    delitos: r.delitos ? String(r.delitos) : null,
-    falta_admin: r.falta_admin ? String(r.falta_admin) : null,
-    modus_operandi: r.modus_operandi ? String(r.modus_operandi) : null,
-    solicitado_por: String(r.solicitado_por),
-    creado_en: String(r.creado_en),
-    completado_en: r.completado_en ? String(r.completado_en) : null,
-    fotos: fotos.rows.map(f => ({
-      id: String(f.id),
-      tipo_foto: String(f.tipo_foto),
-      enviado_a: f.enviado_a ? String(f.enviado_a) : null,
-      estado: String(f.estado),
-    })),
-  }
 }
