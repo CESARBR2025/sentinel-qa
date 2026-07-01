@@ -21,8 +21,13 @@ export default async function DetenidoDetailPage({ params }: { params: Promise<{
 
   const [fotos, destinos] = await Promise.all([
     query<Record<string, unknown>>(
-      `SELECT ed.id, ed.tipo_foto, ed.url_archivo, ed.nombre_archivo
-       FROM evidencias_detenido ed WHERE ed.reporte_campo_id = $1 ORDER BY ed.tipo_foto`, [id],
+      `SELECT DISTINCT ON (ed.tipo_foto) ed.id, ed.tipo_foto, ed.url_archivo, ed.nombre_archivo, ed.subido_por,
+              COALESCE(r.nombre, 'Monitorista') as rol_subio
+       FROM evidencias_detenido ed
+       LEFT JOIN users u ON ed.subido_por = u.id
+       LEFT JOIN roles r ON u.rol_id = r.id
+       WHERE ed.reporte_campo_id = $1
+       ORDER BY ed.tipo_foto, ed.creado_en DESC`, [id],
     ),
     getDestinos(),
   ])
@@ -81,7 +86,7 @@ export default async function DetenidoDetailPage({ params }: { params: Promise<{
                     tipo={f.tipo_foto}
                     foto={f}
                     destinos={destinos}
-                    evidencias={(fotosPorTipo.get(f.tipo_foto) ?? []).map(e => ({ id: String(e.id), url: String(e.url_archivo), nombre: String(e.nombre_archivo ?? '') }))}
+                    evidencias={(fotosPorTipo.get(f.tipo_foto) ?? []).map(e => ({ id: String(e.id), url: String(e.url_archivo), nombre: String(e.nombre_archivo ?? ''), subidoPor: e.rol_subio ? String(e.rol_subio) : null }))}
                   />
                 ))}
               </div>
