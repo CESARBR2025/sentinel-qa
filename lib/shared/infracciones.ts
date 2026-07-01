@@ -1,5 +1,45 @@
 import { queryVia } from "@/lib/db";
 
+const GUEST_TOKEN_URL = "https://sanjuandelrio.sytes.net:3044/api/auth/guest-token";
+
+export async function obtenerTokenGuest(): Promise<string> {
+  const year = new Date().getFullYear();
+  const fecha = new Date();
+  const yy = String(fecha.getFullYear()).slice(-2);
+  const mm = String(fecha.getMonth() + 1).padStart(2, "0");
+  const dd = String(fecha.getDate()).padStart(2, "0");
+  const fechaCompacta = `${yy}${mm}${dd}`;
+  const codigoFinal = `INV-${year}-${fechaCompacta}`;
+
+  const response = await fetch(GUEST_TOKEN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      codigo_invitacion: codigoFinal,
+      nombre_invitado: codigoFinal,
+    }),
+  });
+
+  const rawResponse = await response.text();
+  let sa7Response: Record<string, unknown>;
+  try {
+    sa7Response = JSON.parse(rawResponse);
+  } catch {
+    sa7Response = { raw: rawResponse };
+  }
+
+  if (!response.ok) {
+    throw new Error(String(sa7Response?.message ?? "Error al obtener token guest"));
+  }
+
+  const token = sa7Response?.token as string | undefined;
+  if (!token) {
+    throw new Error("Token inválido");
+  }
+
+  return token;
+}
+
 function str(val: unknown): string | null {
   if (val === null || val === undefined) return null;
   return String(val);

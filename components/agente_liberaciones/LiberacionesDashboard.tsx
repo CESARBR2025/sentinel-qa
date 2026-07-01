@@ -3,7 +3,8 @@
 import { BotonVerDetalle } from '@/features/compartido/components/ButtonVerDetalles'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Clock, RefreshCw, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar } from 'lucide-react'
+import { Clock, RefreshCw, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X } from 'lucide-react'
+import CapturarInfractorSection from '@/features/liberaciones/components/CapturarInfractorSection'
 
 const AVATAR_COLORS = [
     { bg: '#EFF6FF', text: '#2563EB' },
@@ -83,6 +84,7 @@ export default function LiberacionesDashboard({
     const [fechaInicio, setFechaInicio] = useState('')
     const [fechaFin, setFechaFin] = useState('')
     const [tipoLiberacion, setTipoLiberacion] = useState('')
+    const [capturarInfractorId, setCapturarInfractorId] = useState<string | null>(null)
 
     function handleFiltroChange(key: EstatusLiberaciones) {
         setFiltro(key)
@@ -360,12 +362,22 @@ export default function LiberacionesDashboard({
                                         >
                                             {visibleColumns.map(column => {
                                                 if (column.key === 'acciones') {
+                                                    const estatusDep = row.estatusDependencia ?? ''
                                                     return (
                                                         <td key={column.key} className="px-4 py-2.5">
                                                             <div className="flex items-center gap-2">
                                                                 <BotonVerDetalle
                                                                     idInfraccion={row.id}
                                                                 />
+                                                                {estatusDep === 'VEHICULO_EN_CORRALON' && (
+                                                                    <button
+                                                                        onClick={() => setCapturarInfractorId(row.id)}
+                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 active:scale-[0.99] transition-colors duration-150"
+                                                                    >
+                                                                        <User size={11} strokeWidth={2.5} />
+                                                                        Capturar datos
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         </td>
                                                     )
@@ -468,6 +480,37 @@ export default function LiberacionesDashboard({
                             </div>
                         </div>
                     )}
+                </div>
+            )}
+
+            {/* ─── Capturar Infractor Modal ─── */}
+            {capturarInfractorId && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) setCapturarInfractorId(null) }}
+                >
+                    <div className="w-full max-w-lg">
+                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-200 bg-orange-50 rounded-t-xl">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-6 h-6 rounded-md flex items-center justify-center bg-orange-500">
+                                    <User size={12} strokeWidth={2.5} className="text-white" />
+                                </div>
+                                <h3 className="text-sm font-medium tracking-wider uppercase text-orange-800">Liberación por infracción</h3>
+                            </div>
+                            <button
+                                onClick={() => setCapturarInfractorId(null)}
+                                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors bg-slate-100 text-slate-500 hover:text-slate-600"
+                            >
+                                <X size={14} strokeWidth={2.5} />
+                            </button>
+                        </div>
+                        <div className="p-5 bg-white border-x border-b border-slate-200 rounded-b-xl">
+                            <CapturarInfractorSection
+                                infraccionId={capturarInfractorId}
+                                onSuccess={() => { setCapturarInfractorId(null); router.refresh() }}
+                            />
+                        </div>
+                    </div>
                 </div>
             )}
         </>
