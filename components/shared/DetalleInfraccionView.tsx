@@ -23,6 +23,7 @@ export interface InfraccionHeader {
   url_evidencias: string[]
   no_oficio_fiscalia?: string
   url_oficio_fiscalia?: string
+  url_orden_salida_liberaciones?: string
 }
 
 export interface InfraccionLegal {
@@ -657,6 +658,10 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
     ? { nombre: 'Oficio Fiscalía', ruta: detalle.Header.url_oficio_fiscalia, ext: detalle.Header.url_oficio_fiscalia.split('.').pop()?.toLowerCase() ?? '' }
     : null
 
+  const liberacionesDoc = detalle.Header.url_orden_salida_liberaciones && detalle.Header.url_orden_salida_liberaciones !== 'NO_DATA'
+    ? { nombre: 'Orden de Salida (Liberaciones)', ruta: detalle.Header.url_orden_salida_liberaciones, ext: detalle.Header.url_orden_salida_liberaciones.split('.').pop()?.toLowerCase() ?? '' }
+    : null
+
   const evidencias = (detalle.Header.url_evidencias ?? []).map((ruta: string, i: number) => ({
     nombre: `Evidencia ${i + 1}`,
     ruta,
@@ -665,8 +670,9 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
 
   const viaItems = [...documentos, ...evidencias]
   const fiscaliaItems = fiscaliaDoc ? [fiscaliaDoc] : []
+  const liberacionesItems = liberacionesDoc ? [liberacionesDoc] : []
 
-  const totalItems = viaItems.length + fiscaliaItems.length
+  const totalItems = viaItems.length + fiscaliaItems.length + liberacionesItems.length
   if (totalItems === 0) return null
 
   const fecha = formatDate(detalle.Header.fecha_de_registro_de_infraccion)
@@ -679,6 +685,9 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
         )}
         {fiscaliaItems.length > 0 && (
           <TimelineNode nombre="Fiscalía" fecha={fecha} items={fiscaliaItems} />
+        )}
+        {liberacionesItems.length > 0 && (
+          <TimelineNode nombre="Liberaciones" fecha={fecha} items={liberacionesItems} />
         )}
       </div>
     </Section>

@@ -130,6 +130,7 @@ export interface ViaInfraccionHeader {
   no_oficio_fiscalia?: string
   url_oficio_fiscalia?: string
   no_carpeta_investigacion?: string
+  url_orden_salida_liberaciones?: string
 }
 
 export interface ViaInfraccionLegal {

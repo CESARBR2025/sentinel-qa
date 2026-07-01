@@ -7,8 +7,8 @@ import { revalidatePath } from 'next/cache'
 import { viaPool } from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
-import { verificarRolFiscalia, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, listarSolicitudesCompletadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, obtenerLiberaciones, obtenerDetalleInfraccionViaService } from './service'
-import { rowToInfraccionDetalle } from './mapper'
+import { verificarRolFiscalia, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, listarSolicitudesCompletadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, obtenerLiberaciones } from './service'
+import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import type { ViaInfraccionDetalle } from './types'
 import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow } from './types'
 
@@ -183,10 +183,9 @@ export async function obtenerDetalleInfraccionViaAction(id: string): Promise<{ d
     const esValido = await verificarRolFiscalia(session.user.id)
     if (!esValido) return { data: null, error: 'Acceso no autorizado' }
 
-    const raw = await obtenerDetalleInfraccionViaService(id)
-    if (!raw) return { data: null, error: 'No se encontró la infracción' }
+    const data = await obtenerDetalleInfraccionVia(id)
+    if (!data) return { data: null, error: 'No se encontró la infracción' }
 
-    const data = rowToInfraccionDetalle(raw)
     return { data }
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error inesperado al obtener detalle de infracción'
