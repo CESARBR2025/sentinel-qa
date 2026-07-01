@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import { FileText, Upload, User, ArrowRight, CheckCircle2 } from "lucide-react"
 import { useToastStore } from "@/lib/fiscalia/useToastStore"
+import { guardarOficioAction } from "@/lib/fiscalia/actions"
 
 const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-700/10"
 
@@ -16,7 +17,6 @@ interface CargarOficioSectionProps {
     apmaternoInfractor?: string
     correoInfractor?: string
     curpInfractor?: string
-    guardarOficioEndpoint?: string
     onSuccess?: () => void
     onClose?: () => void
 }
@@ -31,7 +31,6 @@ export default function CargarOficioSection({
     apmaternoInfractor,
     correoInfractor,
     curpInfractor,
-    guardarOficioEndpoint = '/api/fiscalia/guardarOficio',
     onSuccess,
     onClose,
 }: CargarOficioSectionProps) {
@@ -162,14 +161,8 @@ export default function CargarOficioSection({
                 fd.append('curp_infractor', infractorCurp.trim().toUpperCase())
             }
 
-            const res = await fetch(guardarOficioEndpoint, {
-                method: 'POST',
-                body: fd,
-            })
-            if (!res.ok) {
-                const body = await res.json().catch(() => ({}))
-                throw new Error(body.message || 'Error al guardar')
-            }
+            const result = await guardarOficioAction(fd)
+            if (!result.success) throw new Error(result.error)
 
             addToast('Oficio registrado correctamente', 'success')
             onSuccess?.()
