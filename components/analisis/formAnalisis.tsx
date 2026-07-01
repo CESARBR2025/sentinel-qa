@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React from 'react';
+import React, { useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Navigation, Activity, User, MapPin, Calendar, Hash, ChevronRight, Fingerprint, Gavel, FileText, Shield, LocateFixed, ChevronLeft, Save, MessageSquare, Hand, Zap, AlertOctagon, Clock, AlertTriangle, Search, Car, Phone, Home } from 'lucide-react';
 import { useDetenidoForm } from '@/hooks/useAnalistaForm';
 import { analistaService } from '@/services/analistaService';
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
+import { analisisService } from '@/services/analisisService';
 
 
 
@@ -18,7 +20,7 @@ const SentinelField = ({ label, icon: Icon, name, value, onChange, as = 'input',
                 {Icon && <Icon size={14} style={{ position: 'absolute', left: '12px', color: '#94a3b8', zIndex: 1 }} />}
                 <Component
                     name={name}
-                    value={value}
+                    value={value ?? ''}
                     onChange={onChange}
                     {...props}
                     style={{
@@ -79,6 +81,82 @@ const ForceLevelToggle = ({ label, icon: Icon, name, checked, onChange, danger =
 
 export default function RegistroDetenidoStepper() {
     const { step, formData, setFormData, handleChange, handleNext, handleBack, loading, setLoading } = useDetenidoForm();
+
+    const searchParams = useSearchParams();
+    const incidenteId = searchParams.get('id');
+
+useEffect(() => {
+    if (incidenteId) {
+        const cargarDatos = async () => {
+            setLoading(true);
+            try {
+                const d = await analisisService.getPrellenado(incidenteId);
+                
+                if (d && !d.error) {
+                    // --- FUNCIONES DE LIMPIEZA PARA INPUTS HTML5 ---
+                    
+                    // 1. Limpia fechas (de "2026-06-25T..." a "2026-06-25")
+                    const cleanDate = (val: any) => {
+                        if (!val) return '';
+                        return val.toString().split('T')[0];
+                    };
+
+                    // 2. Limpia horas (de "15:36:00" a "15:36")
+                    const cleanTime = (val: any) => {
+                        if (!val) return '';
+                        const partes = val.toString().split(':');
+                        return partes.length >= 2 ? `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}` : '';
+                    };
+
+                    // 3. Evita que los nulos rompan React
+                    const cleanNull = (val: any) => val === null ? '' : val;
+
+                    setFormData((prev: any) => ({
+                        ...prev,
+                        // PASO 1 & 2 & 5 (Ubicaciones base)
+                        calleDetenido: cleanNull(d.calleArresto),
+                        coloniaDetenido: cleanNull(d.coloniaArresto),
+                        calleArresto: cleanNull(d.calleArresto),
+                        coloniaArresto: cleanNull(d.coloniaArresto),
+                        latitudArresto: cleanNull(d.latitudArresto),
+                        longitudArresto: cleanNull(d.longitudArresto),
+                        
+                        // PASO 4 - FOLIOS Y TIEMPOS (Nombres exactos de tu Hook)
+                        folioIPH: cleanNull(d.folioIPH),
+                        folio911: cleanNull(d.folio911),
+                        fechaEvento: cleanDate(d.fechaEvento),
+                        fechaReporte: cleanDate(d.fechaReporte),
+                        horaReporte: cleanTime(d.horaReporte),
+                        horaInicioEvento: cleanTime(d.horaInicioEvento),
+                        horaFinalEvento: cleanTime(d.horaFinalEvento),
+                        horaPromedio: cleanTime(d.horaPromedio),
+
+                        // PASO 5 - HECHO
+                        delito: cleanNull(d.delito),
+                        articulosObjetos: cleanNull(d.articulosObjetos),
+                        calleHecho: cleanNull(d.calleHecho),
+                        numeroHecho: cleanNull(d.numeroHecho),
+                        coloniaHecho: cleanNull(d.coloniaHecho),
+                        sectorHecho: cleanNull(d.sectorHecho),
+                        crpUnidad: cleanNull(d.crpUnidad),
+
+                        // PASO 6 - AFECTADO
+                        nombreAfectado: cleanNull(d.nombreAfectado),
+                        marcaVehiculo: cleanNull(d.marcaVehiculo),
+                        tipoVehiculo: cleanNull(d.tipoVehiculo),
+                        agenteAprehensor: cleanNull(d.agenteAprehensor),
+                    }));
+                }
+            } catch (e) {
+                console.error("Error en prellenado:", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        cargarDatos();
+    }
+}, [incidenteId, setFormData, setLoading]);
+
 
     const handleLocationFromMap = (data: any) => {
         setFormData((prev: any) => ({
@@ -157,7 +235,10 @@ export default function RegistroDetenidoStepper() {
         }, () => alert("Error al capturar GPS"));
     };
 
+
+
     return (
+
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px' }}>
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap');

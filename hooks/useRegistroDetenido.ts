@@ -43,7 +43,7 @@ export function useRegistroDetenido() {
   });
 
   // --- MANEJADOR DE CAMBIOS EN TEXTO / SELECTS ---
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -62,6 +62,11 @@ export function useRegistroDetenido() {
     }
   };
 
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   // --- NAVEGACIÓN DEL STEPPER ---
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () => setStep((prev) => prev - 1);
@@ -70,10 +75,11 @@ export function useRegistroDetenido() {
     step,
     setStep,
     formData,
-    setFormData, // Se exporta para actualizaciones directas (como desde mapas)
+    setFormData,
     fotos,
     setFotos,
     handleTextChange,
+    handleChange,
     handleFileChange,
     handleNext,
     handleBack,
