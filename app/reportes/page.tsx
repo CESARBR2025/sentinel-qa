@@ -57,21 +57,21 @@ export default async function GestionPage() {
       titulo: 'Análisis Estadístico',
       subtitulo: 'Generación automática de concentrados diarios, semanales y mensuales para mando.',
       icono: <BarChart3 size={28} />,
-      enlace: '/',
+      enlace: '/estadisticos',
       estadisticas: [{ label: 'Corte', value: 'Semanal' }, { label: 'Eficiencia', value: '92%' }]
     },
     {
       titulo: 'Sistema Cosmos',
       subtitulo: 'Integración y seguimiento de carpetas de investigación con fiscalía y justicia penal.',
       icono: <Globe size={28} />,
-      enlace: '/',
+      enlace: '/d1',
       estadisticas: [{ label: 'Sincro', value: 'Activa' }, { label: 'Folios', value: '412' }]
     },
     {
       titulo: 'D1 no iniciada',
       subtitulo: 'Control de registros pendientes de inicio de carpeta o seguimiento administrativo.',
       icono: <FolderClock size={28} />,
-      enlace: '/',
+      enlace: '/d1_noiniciada',
       estadisticas: [{ label: 'Pendientes', value: '12' }, { label: 'Vencidas', value: '0' }]
     },
     {

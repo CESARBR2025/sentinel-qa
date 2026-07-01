@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { OfiOrdenAprehension, OfiHidrocarburo, OfiArmaFuego, OfiDroga } from './types'
 
 export interface VehiculoState {
   placas: string
@@ -32,6 +33,7 @@ export interface OficialFormState {
   folioCad: string
   nombreReportante: string
   montoRobo: string
+  hayRobo: string
   calle: string
   colonia: string
   latitud: string
@@ -41,6 +43,14 @@ export interface OficialFormState {
   cateoNumero: string
   cateoLat: string
   cateoLng: string
+  hayOrdenAprehension: boolean
+  ordenesAprehension: OfiOrdenAprehension[]
+  hayHidrocarburo: boolean
+  hidrocarburos: OfiHidrocarburo[]
+  hayArmaFuego: boolean
+  armasFuego: OfiArmaFuego[]
+  hayDroga: boolean
+  drogas: OfiDroga[]
 }
 
 export interface OficialFormActions {
@@ -51,6 +61,10 @@ export interface OficialFormActions {
   setNumVehiculos: (n: number) => void
   setLocation: (data: { calle: string; colonia: string; lat: string; lng: string }) => void
   setCateoLocation: (data: { calle: string; colonia: string; numero: string; lat: string; lng: string }) => void
+  setOrdenesAprehension: (v: OfiOrdenAprehension[]) => void
+  setHidrocarburos: (v: OfiHidrocarburo[]) => void
+  setArmasFuego: (v: OfiArmaFuego[]) => void
+  setDrogas: (v: OfiDroga[]) => void
   reset: () => void
 }
 
@@ -80,6 +94,7 @@ const initialState: OficialFormState = {
   folioCad: 'S/C',
   nombreReportante: '',
   montoRobo: '0',
+  hayRobo: 'false',
   calle: '',
   colonia: '',
   latitud: '',
@@ -89,6 +104,14 @@ const initialState: OficialFormState = {
   cateoNumero: '',
   cateoLat: '',
   cateoLng: '',
+  hayOrdenAprehension: false,
+  ordenesAprehension: [],
+  hayHidrocarburo: false,
+  hidrocarburos: [],
+  hayArmaFuego: false,
+  armasFuego: [],
+  hayDroga: false,
+  drogas: [],
 }
 
 export const useOficialFormStore = create<OficialFormStore>((set) => ({
@@ -111,5 +134,9 @@ export const useOficialFormStore = create<OficialFormStore>((set) => ({
     cateoLat: data.lat,
     cateoLng: data.lng,
   }),
+  setOrdenesAprehension: (v: OfiOrdenAprehension[]) => set({ ordenesAprehension: v }),
+  setHidrocarburos: (v: OfiHidrocarburo[]) => set({ hidrocarburos: v }),
+  setArmasFuego: (v: OfiArmaFuego[]) => set({ armasFuego: v }),
+  setDrogas: (v: OfiDroga[]) => set({ drogas: v }),
   reset: () => set(initialState),
 }))
