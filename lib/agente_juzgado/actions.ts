@@ -16,11 +16,10 @@ import {
   obtenerDatosAsegurado,
   guardarDetallesAsegurado,
   obtenerLiberacionesJuzgado,
-  obtenerDetalleInfraccionViaServiceJuzgado,
   iniciarProcesoJuzgadoSvc,
   finalizarProcesoJuzgadoSvc,
 } from "./service";
-import { rowToInfraccionDetalle } from "./mapper";
+import { obtenerDetalleInfraccionVia } from "@/lib/shared/infracciones";
 import type {
   UserInfo,
   SolicitudEvidencia,
@@ -271,10 +270,9 @@ export async function obtenerDetalleInfraccionViaActionJuzgado(
     const esValido = await verificarRolJuzgado(session.user.id);
     if (!esValido) return { data: null, error: "Acceso no autorizado" };
 
-    const raw = await obtenerDetalleInfraccionViaServiceJuzgado(id);
-    if (!raw) return { data: null, error: "No se encontró la infracción" };
+    const data = await obtenerDetalleInfraccionVia(id);
+    if (!data) return { data: null, error: "No se encontró la infracción" };
 
-    const data = rowToInfraccionDetalle(raw);
     return { data };
   } catch (err) {
     const msg =
