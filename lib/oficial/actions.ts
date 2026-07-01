@@ -10,7 +10,7 @@ export async function crearReporteCampoOficial(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId } =
+  const { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId, hayDetenidos } =
     await crearReporte(session.user.id, formData)
 
   revalidatePath('/oficial')
@@ -25,6 +25,10 @@ export async function crearReporteCampoOficial(formData: FormData) {
       oficialId: oficialId,
     })
     redirect(`/denuncia/nuevo?${params}`)
+  }
+
+  if (hayDetenidos) {
+    redirect(`/oficial/reportes/${reporteId}/fotos`)
   }
 
   redirect('/oficial?exito=1')

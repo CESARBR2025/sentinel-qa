@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
+import { query } from '@/lib/db'
 import { generarPpt } from '@/lib/monitorista/ppt-service'
 
 export async function POST(req: NextRequest) {
@@ -14,6 +15,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const buf = await generarPpt(session.user.name || 'Monitorista', desde, hasta, filtro)
+
+    await query(
+      `INSERT INTO monitorista_historial (monitorista_id, accion) VALUES ($1, 'ppt_generado')`,
+      [session.user.id],
+    )
+
     return new NextResponse(new Uint8Array(buf), {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',

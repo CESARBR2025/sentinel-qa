@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ClipboardList } from 'lucide-react'
+import { ClipboardList, Camera } from 'lucide-react'
 import { ProfileDropdown } from '@/components/agente_juzgado/ProfileDropdown'
 import { ToastExito } from '@/components/agente_juzgado/ToastExito'
 import { obtenerDashboardJuzgado } from '@/lib/agente_juzgado/actions'
@@ -92,6 +92,32 @@ export default async function JuzgadoDashboardPage({ searchParams }: { searchPar
               </h3>
               <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
                 Solicitudes de reportes de denuncias
+              </p>
+            </div>
+
+          </Link>
+
+          {/* Card - Fotos de Detenidos */}
+          <Link href="/agente_juzgado/detenidos" className="card-j" style={{ textDecoration: 'none' }}>
+            <div className="cj-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#059669', transition: 'width 0.4s ease', width: 32 }}></div>
+            <div className="cj-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#059669', transition: 'height 0.4s ease', height: 32 }}></div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="cj-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <Camera size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#059669' }}></span>
+                ACCIÓN RÁPIDA
+              </div>
+            </div>
+
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', letterSpacing: '0.02em', color: '#0f172a' }}>
+                Fotos de Detenidos
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Subir fotografías de detenidos solicitadas por Monitorista
               </p>
             </div>
 

@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { query } from '@/lib/db'
-import { ArrowLeft, Camera, CheckCircle2, XCircle } from 'lucide-react'
+import { ArrowLeft, Camera, CheckCircle2, XCircle, FileText, Edit, Plus, PenBox } from 'lucide-react'
 import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
@@ -12,10 +12,16 @@ export default async function HistorialPage() {
   if (!session) redirect('/login')
 
   const registros = await query<Record<string, unknown>>(
-    `SELECT mh.id, mh.accion, mh.incidente_id, mh.creado_en, se.folio_incidente, u.name as monitorista_nombre
+    `SELECT mh.id, mh.accion, mh.incidente_id, mh.creado_en,
+            u.name as monitorista_nombre,
+            se.folio_incidente as folio_solicitud,
+            rc.folio_reporte_campo as folio_detenido,
+            ic.fecha as ic_fecha, ic.turno as ic_turno
      FROM monitorista_historial mh
-     LEFT JOIN solicitudes_evidencia se ON mh.solicitud_id = se.id
      LEFT JOIN users u ON mh.monitorista_id = u.id
+     LEFT JOIN solicitudes_evidencia se ON mh.solicitud_id = se.id
+     LEFT JOIN ofi_reportes_campo rc ON mh.incidente_id = rc.id
+     LEFT JOIN incidentes_camara ic ON mh.incidente_id = ic.id
      ORDER BY mh.creado_en DESC LIMIT 200`,
   )
 
@@ -25,6 +31,18 @@ export default async function HistorialPage() {
     evidencia_subida: { label: 'Evidencia subida', icon: <Camera size={14} color="#2563eb" /> },
     solicitud_completada: { label: 'Solicitud completada', icon: <CheckCircle2 size={14} color="#059669" /> },
     solicitud_cancelada: { label: 'Solicitud cancelada', icon: <XCircle size={14} color="#dc2626" /> },
+    incidente_creado: { label: 'Incidente por cámara creado', icon: <Plus size={14} color="#2563eb" /> },
+    incidente_editado: { label: 'Incidente por cámara editado', icon: <Edit size={14} color="#b45309" /> },
+    campo_editado: { label: 'Campo de detenido editado', icon: <PenBox size={14} color="#7c3aed" /> },
+    ppt_generado: { label: 'PPT de detenidos generado', icon: <FileText size={14} color="#059669" /> },
+  }
+
+  function formatearDetalle(r: Record<string, unknown>): string {
+    if (r.folio_solicitud) return String(r.folio_solicitud)
+    if (r.folio_detenido) return String(r.folio_detenido)
+    if (r.ic_fecha) return `${String(r.ic_fecha)} ${String(r.ic_turno ?? '')}`
+    if (r.incidente_id) return String(r.incidente_id).substring(0, 8)
+    return '—'
   }
 
   return (
@@ -60,9 +78,9 @@ export default async function HistorialPage() {
                 {registros.rows.map((r) => {
                   const info = accionLabel[String(r.accion)] ?? { label: String(r.accion), icon: null }
                   return (
-                    <tr key={r.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <tr key={String(r.id)} style={{ borderBottom: '1px solid #f1f5f9' }}>
                       <td style={tdStyle}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{info.icon}<span style={{ fontFamily: 'JetBrains Mono', fontSize: 11 }}>{info.label}</span></div></td>
-                      <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{String(r.folio_incidente ?? r.incidente_id ?? '').substring(0, 20) || '—'}</td>
+                      <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{formatearDetalle(r)}</td>
                       <td style={{ ...tdStyle, fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>{String(r.monitorista_nombre ?? '—')}</td>
                       <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{new Date(String(r.creado_en)).toLocaleString('es-MX')}</td>
                     </tr>
@@ -73,10 +91,6 @@ export default async function HistorialPage() {
           )}
         </div>
       </main>
-
-      <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
-      </footer>
     </div>
   )
 }

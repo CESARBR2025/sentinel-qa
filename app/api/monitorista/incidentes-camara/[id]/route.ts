@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
+import { query } from '@/lib/db'
 import { obtenerRegistro, actualizarRegistro } from '@/lib/monitorista/incidentes-camara-service'
 
 export async function GET(
@@ -37,6 +38,12 @@ export async function PATCH(
 
   try {
     await actualizarRegistro(id, data)
+
+    await query(
+      `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1, 'incidente_editado', $2)`,
+      [session.user.id, id],
+    )
+
     return NextResponse.json({ success: true })
   } catch (err: unknown) {
     const pgErr = err as { code?: string; message?: string }

@@ -17,7 +17,7 @@ export default async function MonitoristaHubPage() {
   )
   const esAdmin = r.rows[0]?.nombre === 'Administrador'
 
-  const [solsPend, solsComp, histCount, d1Pend, d1Comp, detPend, detComp] = await Promise.all([
+  const [solsPend, solsComp, histCount, d1Pend, d1Comp, detPend, detComp, icStats] = await Promise.all([
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'pendiente'"),
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'completada'"),
     query<{ c: number }>("SELECT count(*)::int as c FROM monitorista_historial WHERE monitorista_id = $1", [session.user.id]),
@@ -25,6 +25,7 @@ export default async function MonitoristaHubPage() {
     obtenerDenunciasAtendidas(),
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado IN ('pendiente','enviado','rechazado')"),
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado NOT IN ('pendiente','enviado','rechazado')"),
+    query<{ personas: number; vehiculos: number }>("SELECT COALESCE(SUM(total_personas_revisadas),0)::int as personas, COALESCE(SUM(vehiculos_revisar),0)::int as vehiculos FROM incidentes_camara"),
   ])
 
   const user = session.user as { name: string; apellido?: string }
@@ -95,8 +96,8 @@ export default async function MonitoristaHubPage() {
               <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Incidentes por Cámara</div>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Registro de novedades por turno</div>
               <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>—</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>—</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{icStats.rows[0]?.personas ?? 0}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{icStats.rows[0]?.vehiculos ?? 0}</div></div>
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
