@@ -18,8 +18,6 @@ async function getPhoneData() {
     ]
 }
 
-// ... tus imports previos
-
 export default async function ReportesTelefonicosPage() {
     const session = await auth.api.getSession({ headers: await headers() })
     
@@ -41,13 +39,11 @@ export default async function ReportesTelefonicosPage() {
             <DashboardHeader user={user} />
 
             <main style={styles.main}>
-                {/* ... resto del código igual */}
                 <div style={styles.headerContainer}>
                     <div>
                         <span style={styles.tag}>SSPM · INTELIGENCIA DE COMUNICACIONES</span>
                         <h1 style={styles.title}>REPORTES <span style={{ color: '#2563EB' }}>TELEFÓNICOS</span></h1>
                     </div>
-                    {/* ... */}
                 </div>
 
                 <ReportFilters />
