@@ -9,9 +9,13 @@ import {
   actualizarSolicitudConEvidencias,
   obtenerDetalleAsegurado,
   actualizarDetallesAsegurado,
+  listarLiberacionesJuzgado,
+  obtenerDetalleInfraccionViaJuzgado,
+  iniciarProcesoJuzgado,
+  finalizarProcesoJuzgado,
 } from './repository'
-import { rowToSolicitud } from './mapper'
-import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput } from './types'
+import { rowToSolicitud, rowToInfraccionDetalle } from './mapper'
+import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, ViaInfraccionDetalle } from './types'
 
 export async function verificarRolJuzgado(userId: string): Promise<boolean> {
   const rol = await obtenerRolUsuario(userId)
@@ -62,3 +66,25 @@ export async function obtenerDatosAsegurado(solicitudId: string): Promise<Detall
 export async function guardarDetallesAsegurado(id: string, datos: DatosAseguradoInput, evidenciasJson?: string | null): Promise<void> {
   await actualizarDetallesAsegurado(id, datos, evidenciasJson)
 }
+
+/* ═══════════════════════════════════════
+   LIBERACIONES
+   ═══════════════════════════════════════ */
+
+export async function obtenerLiberacionesJuzgado() {
+  return listarLiberacionesJuzgado()
+}
+
+export async function obtenerDetalleInfraccionViaServiceJuzgado(id: string) {
+  return obtenerDetalleInfraccionViaJuzgado(id)
+}
+
+export async function iniciarProcesoJuzgadoSvc(id: string): Promise<void> {
+  await iniciarProcesoJuzgado(id)
+}
+
+export async function finalizarProcesoJuzgadoSvc(id: string): Promise<void> {
+  await finalizarProcesoJuzgado(id)
+}
+
+export type { LiberacionRow, ViaInfraccionDetalle }

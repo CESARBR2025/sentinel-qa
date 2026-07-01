@@ -141,6 +141,7 @@ interface Props {
 }
 
 export function DetalleInfraccionView({ detalle, error }: Props) {
+  console.log(detalle)
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-28 gap-4">
@@ -187,7 +188,7 @@ export function DetalleInfraccionView({ detalle, error }: Props) {
           <OficialSection detalle={detalle} />
         )}
 
-        <MapSection ubicacion={detalle.ubicacion} />
+        <MapSection ubicacion={detalle.ubicacion} evidencias={detalle.Header.url_evidencias} />
 
         <DocumentacionSection detalle={detalle} />
       </div>
@@ -199,7 +200,7 @@ export function DetalleInfraccionView({ detalle, error }: Props) {
 
 const GMAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
-function MapSection({ ubicacion }: { ubicacion: InfraccionUbicacion }) {
+function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbicacion; evidencias?: string[] }) {
   const [view, setView] = useState<'map' | 'street'>('map')
   const [svStatus, setSvStatus] = useState<'unknown' | 'ok' | 'unavailable'>('unknown')
 
@@ -228,8 +229,7 @@ function MapSection({ ubicacion }: { ubicacion: InfraccionUbicacion }) {
   }
 
   const tabClass = (v: 'map' | 'street') =>
-    `px-3 py-1 text-xs font-medium transition-colors duration-150 ${
-      view === v ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+    `px-3 py-1 text-xs font-medium transition-colors duration-150 ${view === v ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'
     }`
 
   return (
@@ -338,9 +338,55 @@ function MapSection({ ubicacion }: { ubicacion: InfraccionUbicacion }) {
               </a>
             )}
           </div>
-          </div>
         </div>
+
+        {evidencias.length > 0 && (
+          <div className="border-t border-slate-100 p-4">
+            <h4 className="text-xs text-slate-500 st-label flex items-center gap-1.5 mb-3">
+              <FileText size={12} className="text-slate-400" strokeWidth={1.5} />
+              Evidencias ({evidencias.length})
+            </h4>
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+              {evidencias.map((url, i) => {
+                const fullUrl = `${process.env.NEXT_PUBLIC_EXPEDIENTE_HOST ?? ''}${url}`
+                const ext = url.split('.').pop()?.toLowerCase() ?? ''
+                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)
+                return (
+                  <div
+                    key={url}
+                    onClick={() => abrirDocumento(fullUrl)}
+                    className="group cursor-pointer rounded-lg border border-slate-200 bg-white overflow-hidden hover:scale-[1.04] hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="h-16 sm:h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
+                      {isImage ? (
+                        <img
+                          src={`/api/expediente/proxy?url=${encodeURIComponent(fullUrl)}`}
+                          alt={`Evidencia ${i + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          onError={(e) => {
+                            const t = e.currentTarget
+                            t.style.display = 'none'
+                            t.parentElement!.innerHTML = `<div class="w-full h-full flex items-center justify-center text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="2.5"/></svg></div>`
+                          }}
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-0.5 text-slate-400">
+                          <FileText size={16} strokeWidth={1.5} />
+                          <span className="text-[8px] font-medium st-label">{ext.toUpperCase()}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="px-1.5 py-1 border-t border-slate-100">
+                      <p className="text-[10px] font-medium text-slate-600 truncate text-center">Evidencia {i + 1}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
+    </div>
   )
 }
 
@@ -580,11 +626,10 @@ function OficialSection({ detalle }: { detalle: InfraccionDetalle }) {
             {detalle.oficial.activo !== 'NO_DATA' && (
               <div>
                 <p className="text-xs text-slate-500 st-label">Estado</p>
-                <span className={`inline-block mt-0.5 text-xs font-medium px-2.5 py-0.5 rounded-full leading-none st-label ${
-                  String(detalle.oficial.activo) === 'true'
+                <span className={`inline-block mt-0.5 text-xs font-medium px-2.5 py-0.5 rounded-full leading-none st-label ${String(detalle.oficial.activo) === 'true'
                     ? 'bg-green-100 text-green-700'
                     : 'bg-red-100 text-red-700'
-                }`}>
+                  }`}>
                   {String(detalle.oficial.activo) === 'true' ? 'En servicio' : 'Con baja'}
                 </span>
               </div>

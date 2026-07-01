@@ -1,16 +1,16 @@
-import { obtenerDetalleInfraccionViaAction } from '@/lib/fiscalia/actions'
+import { obtenerDetalleInfraccionViaActionJuzgado } from '@/lib/agente_juzgado/actions'
 import { DetalleInfraccionView } from '@/components/shared/DetalleInfraccionView'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-export default async function DetalleInfraccionPage({
+export default async function DetalleInfraccionJuzgadoPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
 
-  const result = await obtenerDetalleInfraccionViaAction(id)
+  const result = await obtenerDetalleInfraccionViaActionJuzgado(id)
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
@@ -26,23 +26,23 @@ export default async function DetalleInfraccionPage({
           paddingBottom: 20, borderBottom: '1px solid #e2e8f0',
           position: 'relative',
         }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#7c3aed' }} />
+          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#059669' }} />
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <img src="/logo_sentinel.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
             <div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#7c3aed', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: '#7c3aed', display: 'inline-block' }} />
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#059669', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 8, height: 8, background: '#059669', display: 'inline-block' }} />
                 Detalle de Infracción
               </div>
               <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                FISCALÍA · LIBERACIONES · DETALLE
+                JUZGADO · LIBERACIONES · DETALLE
               </h1>
             </div>
           </div>
 
           <Link
-            href="/fiscalia/liberaciones"
+            href="/agente_juzgado/liberaciones"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '10px 20px', borderRadius: 8,
@@ -72,8 +72,8 @@ export default async function DetalleInfraccionPage({
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · FISCALÍA · DETALLE</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }} />
+            <span>SENTINEL v0.1 · JUZGADO · DETALLE</span>
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }} />
           </div>
         </div>
 

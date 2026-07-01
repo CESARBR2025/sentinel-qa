@@ -87,6 +87,7 @@ export function rowToSolicitud(row: Record<string, unknown>): SolicitudEvidencia
 export function rowToInfraccionDetalle(row: Record<string, unknown>): ViaInfraccionDetalle {
   const parseEvidencias = (val: unknown): string[] => {
     if (!val || val === 'NO_DATA') return []
+    if (Array.isArray(val)) return val.map(String)
     if (typeof val === 'string') {
       try {
         const parsed = JSON.parse(val)
