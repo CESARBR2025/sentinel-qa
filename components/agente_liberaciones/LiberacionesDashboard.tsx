@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Clock, RefreshCw, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X } from 'lucide-react'
 import CapturarInfractorSection from '@/features/liberaciones/components/CapturarInfractorSection'
+import RevisionDocumentosSection from '@/features/liberaciones/components/RevisionDocumentosSection'
 
 const AVATAR_COLORS = [
     { bg: '#EFF6FF', text: '#2563EB' },
@@ -85,6 +86,7 @@ export default function LiberacionesDashboard({
     const [fechaFin, setFechaFin] = useState('')
     const [tipoLiberacion, setTipoLiberacion] = useState('')
     const [capturarInfractorId, setCapturarInfractorId] = useState<string | null>(null)
+    const [revisionModalId, setRevisionModalId] = useState<string | null>(null)
 
     function handleFiltroChange(key: EstatusLiberaciones) {
         setFiltro(key)
@@ -378,6 +380,15 @@ export default function LiberacionesDashboard({
                                                                         Capturar datos
                                                                     </button>
                                                                 )}
+                                                                {estatusDep === 'MESA_DE_CONTROL_REVISION' && (
+                                                                    <button
+                                                                        onClick={() => setRevisionModalId(row.id)}
+                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
+                                                                    >
+                                                                        <Search size={11} strokeWidth={2.5} />
+                                                                        Revisar documentos
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         </td>
                                                     )
@@ -480,6 +491,24 @@ export default function LiberacionesDashboard({
                             </div>
                         </div>
                     )}
+                </div>
+            )}
+
+            {/* ─── Revisión Documentos Modal ─── */}
+            {revisionModalId && (
+                <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/70 backdrop-blur-sm pt-12 pb-8 overflow-y-auto">
+                    <div className="relative w-full max-w-4xl animate-in fade-in zoom-in-95 duration-200">
+                        <button
+                            onClick={() => { setRevisionModalId(null); router.refresh() }}
+                            className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center hover:bg-slate-50 transition-colors"
+                        >
+                            <X size={14} strokeWidth={2.5} />
+                        </button>
+                        <RevisionDocumentosSection
+                            infraccionId={revisionModalId}
+                            onValidated={() => { setRevisionModalId(null); router.refresh() }}
+                        />
+                    </div>
                 </div>
             )}
 

@@ -115,6 +115,7 @@ export function rowToInfraccionDetalle(row: Record<string, unknown>): ViaInfracc
       no_oficio_fiscalia:           str(row.no_oficio_fiscalia) ?? undefined,
       url_oficio_fiscalia:          str(row.url_oficio_fiscalia) ?? undefined,
       no_carpeta_investigacion:     str(row.no_carpeta_investigacion) ?? undefined,
+      url_orden_salida_liberaciones: str(row.url_orden_salida_liberaciones) ?? undefined,
     },
     Infraccion: {
       articulo_numero:              str(row.articulo_numero) ?? '',

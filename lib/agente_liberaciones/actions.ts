@@ -122,6 +122,214 @@ export async function capturarInfractorAction(body: {
   }
 }
 
+export async function obtenerDocumentosLiberacion(infraccionId: string): Promise<{
+  solicitud?: Record<string, unknown>;
+  documentos: { id: string; tipo: string; url: string; estatusRevision: string | null; observaciones: string | null }[];
+  error?: string;
+}> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { documentos: [], error: 'Sesión no válida' }
+
+    const esValido = await verificarRolLiberaciones(session.user.id)
+    if (!esValido) return { documentos: [], error: 'Acceso no autorizado' }
+
+    const solicitudRes = await viaPool.query(
+      `SELECT id, tipo_liberacion, es_empresa, nombre_empresa, rfc_empresa, estatus
+       FROM v2_solicitudes_liberacion
+       WHERE infraccion_id = $1`,
+      [infraccionId],
+    )
+
+    if (solicitudRes.rows.length === 0) {
+      return { documentos: [], error: 'No se encontró solicitud de liberación para esta infracción' }
+    }
+
+    const solicitud = solicitudRes.rows[0]
+
+    const docsRes = await viaPool.query(
+      `SELECT id, tipo_documento, url_documento, estatus_revision, observaciones, created_at
+       FROM v2_documentos_liberacion
+       WHERE solicitud_id = $1
+       ORDER BY created_at`,
+      [solicitud.id],
+    )
+
+    return {
+      solicitud: {
+        id: solicitud.id,
+        tipoLiberacion: solicitud.tipo_liberacion,
+        esEmpresa: solicitud.es_empresa,
+        nombreEmpresa: solicitud.nombre_empresa,
+        rfcEmpresa: solicitud.rfc_empresa,
+        estatus: solicitud.estatus,
+      },
+      documentos: docsRes.rows.map((d) => ({
+        id: d.id,
+        tipo: d.tipo_documento,
+        url: d.url_documento,
+        estatusRevision: d.estatus_revision,
+        observaciones: d.observaciones,
+      })),
+    }
+  } catch (error) {
+    console.error('[obtenerDocumentosLiberacion]', error)
+    return { documentos: [], error: 'Error interno del servidor' }
+  }
+}
+
+export async function revisarDocumentoAction(body: {
+  documentoId: string;
+  accion: 'ACEPTADO' | 'RECHAZADO';
+  observaciones?: string;
+}): Promise<{ message?: string; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Sesión no válida' }
+
+    const esValido = await verificarRolLiberaciones(session.user.id)
+    if (!esValido) return { error: 'Acceso no autorizado' }
+
+    const { documentoId, accion, observaciones } = body
+
+    if (!documentoId) return { error: 'documentoId es requerido' }
+    if (accion !== 'ACEPTADO' && accion !== 'RECHAZADO') return { error: 'accion debe ser ACEPTADO o RECHAZADO' }
+    if (accion === 'RECHAZADO' && !observaciones?.trim()) return { error: 'Se requieren observaciones para rechazar un documento' }
+
+    const result = await viaPool.query(
+      `UPDATE v2_documentos_liberacion
+       SET estatus_revision = $1, observaciones = $2, fecha_revision = NOW()
+       WHERE id = $3
+       RETURNING id, estatus_revision, observaciones`,
+      [accion, observaciones?.trim() || null, documentoId],
+    )
+
+    if (result.rows.length === 0) return { error: 'No se encontró el documento' }
+
+    return { message: `Documento ${accion === 'ACEPTADO' ? 'aceptado' : 'rechazado'} correctamente` }
+  } catch (error) {
+    console.error('[revisarDocumentoAction]', error)
+    return { error: 'Error interno del servidor' }
+  }
+}
+
+export async function finalizarRevisionAction(infraccionId: string): Promise<{
+  message?: string;
+  error?: string;
+  estatus?: string;
+  estatusDependencia?: string;
+  folio?: string | null;
+  concepto_id?: number | null;
+  descuento_aplicado?: number | null;
+  nombre_usuario?: string;
+  apellidos_usuario?: string;
+  correo_infractor?: string;
+}> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { error: 'Sesión no válida' }
+
+    const esValido = await verificarRolLiberaciones(session.user.id)
+    if (!esValido) return { error: 'Acceso no autorizado' }
+
+    if (!infraccionId) return { error: 'infraccionId es requerido' }
+
+    const solicitudRes = await viaPool.query(
+      `SELECT id FROM v2_solicitudes_liberacion
+       WHERE infraccion_id = $1
+       ORDER BY created_at DESC LIMIT 1`,
+      [infraccionId],
+    )
+
+    if (solicitudRes.rows.length === 0) return { error: 'No se encontró solicitud de liberación' }
+
+    const solicitudId = solicitudRes.rows[0].id
+
+    const docsRes = await viaPool.query(
+      `SELECT estatus_revision FROM v2_documentos_liberacion WHERE solicitud_id = $1`,
+      [solicitudId],
+    )
+
+    if (docsRes.rows.length === 0) return { error: 'No hay documentos asociados a la solicitud' }
+
+    const tienePendientes = docsRes.rows.some(
+      (d: Record<string, unknown>) => !d.estatus_revision || d.estatus_revision === 'PENDIENTE',
+    )
+    if (tienePendientes) return { error: 'No se puede finalizar: hay documentos pendientes de revisión' }
+
+    const tieneRechazados = docsRes.rows.some(
+      (d: Record<string, unknown>) => d.estatus_revision === 'RECHAZADO',
+    )
+
+    const nuevoEstatusDep = tieneRechazados ? 'MESA_DE_CONTROL_RECHAZADA' : 'PENDIENTE_PAGO_LIBERACION'
+    const nuevoEstatus = tieneRechazados ? 'REGISTRADA' : 'PENDIENTE_PAGO'
+
+    let folio: string | null = null
+    let concepto_id: number | null = null
+    let descuento_aplicado: number | null = null
+    let nombre_usuario = ''
+    let apellidos_usuario = ''
+    let correo_infractor = ''
+
+    if (nuevoEstatus === 'PENDIENTE_PAGO') {
+      const infraRes = await viaPool.query(
+        `SELECT i.folio, i.descuento_aplicado, i.fraccion_id,
+                i.nombre_infractor, i.apellido_paterno_infractor, i.apellido_materno_infractor,
+                i.nombre_titular_liberacion, i.appaterno_titular_liberacion, i.apmaterno_titular_liberacion,
+                i.correo_titular_liberacion, i.correo_infractor
+         FROM v2_infracciones i WHERE i.id = $1`,
+        [infraccionId],
+      )
+
+      if (infraRes.rows.length > 0) {
+        const row = infraRes.rows[0] as Record<string, unknown>
+        folio = row.folio as string | null
+        descuento_aplicado = row.descuento_aplicado as number | null
+
+        nombre_usuario = (row.nombre_titular_liberacion || row.nombre_infractor || '') as string
+        apellidos_usuario = [row.appaterno_titular_liberacion || row.apellido_paterno_infractor || '', row.apmaterno_titular_liberacion || row.apellido_materno_infractor || ''].filter(Boolean).join(' ').trim() || 'SIN APELLIDO'
+        correo_infractor = (row.correo_titular_liberacion || row.correo_infractor || '') as string
+
+        const conceptoRes = await viaPool.query(
+          `SELECT ccs.concept_id
+           FROM v2_fracciones_ley fl
+           JOIN v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
+           WHERE fl.id = $1`,
+          [row.fraccion_id],
+        )
+        concepto_id = (conceptoRes.rows[0]?.concept_id as number) ?? null
+      }
+    }
+
+    await viaPool.query(
+      `UPDATE v2_infracciones SET estatus = $1, estatus_dependencia = $2, updated_at = NOW() WHERE id = $3`,
+      [nuevoEstatus, nuevoEstatusDep, infraccionId],
+    )
+
+    await viaPool.query(
+      `UPDATE v2_solicitudes_liberacion SET estatus = $1, updated_at = NOW() WHERE id = $2`,
+      [nuevoEstatusDep, solicitudId],
+    )
+
+    return {
+      message: nuevoEstatus === 'PENDIENTE_PAGO'
+        ? 'Documentos aprobados, pendiente de pago'
+        : 'Documentos rechazados, se notificará al ciudadano',
+      estatus: nuevoEstatus,
+      estatusDependencia: nuevoEstatusDep,
+      folio,
+      concepto_id,
+      descuento_aplicado,
+      nombre_usuario,
+      apellidos_usuario,
+      correo_infractor,
+    }
+  } catch (error) {
+    console.error('[finalizarRevisionAction]', error)
+    return { error: 'Error interno del servidor' }
+  }
+}
+
 export async function obtenerDetalleInfraccionLiberaciones(
   id: string,
 ): Promise<{ data: ViaInfraccionDetalle | null; error?: string }> {
