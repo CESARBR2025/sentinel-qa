@@ -47,7 +47,6 @@ export function OperationalTable({ title, columns, data }: OperationalTableProps
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <button style={styles.secondaryButton}><TableIcon size={14} /> EXCEL</button>
                     </div>
                 </div>
 
