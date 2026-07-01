@@ -69,7 +69,7 @@ export default async function FiscaliaDashboardPage({ searchParams }: { searchPa
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40 }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
 
           {/* Card */}
           <Link href="/fiscalia/solicitudes" className="card-f" style={{ textDecoration: 'none' }}>

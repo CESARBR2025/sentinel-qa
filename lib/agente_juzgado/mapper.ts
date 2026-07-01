@@ -1,4 +1,4 @@
-import type { SolicitudEvidencia } from './types'
+import type { SolicitudEvidencia, ViaInfraccionDetalle } from './types'
 
 function str(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -81,5 +81,81 @@ export function rowToSolicitud(row: Record<string, unknown>): SolicitudEvidencia
     })(),
     numCarpetaInvestigacion:  str(row.num_carpeta_investigacion),
     fechaCierre:              str(row.fecha_cierre),
+  }
+}
+
+export function rowToInfraccionDetalle(row: Record<string, unknown>): ViaInfraccionDetalle {
+  const parseEvidencias = (val: unknown): string[] => {
+    if (!val || val === 'NO_DATA') return []
+    if (Array.isArray(val)) return val.map(String)
+    if (typeof val === 'string') {
+      try {
+        const parsed = JSON.parse(val)
+        return Array.isArray(parsed) ? parsed.map(String) : [val]
+      } catch {
+        return val ? [val] : []
+      }
+    }
+    return []
+  }
+
+  const concatName = (...parts: (unknown)[]): string =>
+    parts.map(p => String(p ?? '')).filter(Boolean).join(' ') || '—'
+
+  return {
+    Header: {
+      id_infraccion:                str(row.id) ?? '',
+      folio_de_infraccion:          str(row.folio) ?? '',
+      fecha_de_registro_de_infraccion: str(row.created_at) ?? '',
+      estatus_de_infraccion:        str(row.estatus) ?? '',
+      url_ine:                      str(row.url_ine) ?? '',
+      url_tarjeta_circulacion:      str(row.url_tarjeta_circulacion) ?? '',
+      url_inapam:                   str(row.url_inapam) ?? '',
+      url_evidencias:               parseEvidencias(row.evidencias),
+      no_oficio_fiscalia:           str(row.no_oficio_fiscalia) ?? undefined,
+      url_oficio_fiscalia:          str(row.url_oficio_fiscalia) ?? undefined,
+      no_carpeta_investigacion:     str(row.no_carpeta_investigacion) ?? undefined,
+    },
+    Infraccion: {
+      articulo_numero:              str(row.articulo_numero) ?? '',
+      articulo_descripcion:         str(row.articulo_descripcion) ?? '',
+      fraccion_numero:              str(row.fraccion_numero) ?? '',
+      fraccion_descripcion:         str(row.fraccion_descripcion) ?? '',
+      total_umas:                   str(row.total_umas) ?? '0',
+      total_pesos:                  str(row.total_pesos) ?? '0',
+    },
+    datos_infractor: {
+      nombre_infractor: concatName(row.nombre_infractor, row.apellido_paterno_infractor, row.apellido_materno_infractor),
+      appaterno_infractor:          str(row.apellido_paterno_infractor) ?? undefined,
+      apmaterno_infractor:          str(row.apellido_materno_infractor) ?? undefined,
+      correo_infractor:             str(row.correo_infractor) ?? '',
+      curp_infractor:               str(row.curp_infractor) ?? '',
+    },
+    vehiculo: {
+      placa:                        str(row.placa) ?? '',
+      tipo:                         str(row.tipo_garantia) ?? '',
+      marca:                        str(row.marca) ?? '',
+      modelo:                       str(row.modelo) ?? '',
+      anio:                         str(row.anio) ?? '',
+      color:                        str(row.color) ?? '',
+    },
+    garantia: {
+      garantia_retenida:            str(row.garantia_entregada) ?? '',
+    },
+    ubicacion: {
+      latitud:                      str(row.latitud) ?? '',
+      longitud:                     str(row.longitud) ?? '',
+      calle:                        str(row.calle) ?? '',
+      cod_postal:                   str(row.codigo_postal) ?? '',
+      numero:                       str(row.numero) ?? '',
+      municipio:                    str(row.municipio) ?? '',
+      estado:                       str(row.estado) ?? '',
+    },
+    oficial: {
+      numero_empleado:              str(row.oficial_numero_empleado) ?? '',
+      nombre_completo:              concatName(row.oficial_nombres, row.oficial_apellido_p, row.oficial_apellido_m),
+      patrulla_nombre:              str(row.patrulla_nombre) ?? '',
+      activo:                       str(row.oficial_activo) ?? '',
+    },
   }
 }

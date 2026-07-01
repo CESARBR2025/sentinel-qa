@@ -47,6 +47,89 @@ export interface RolRow {
   rol: string
 }
 
+export interface LiberacionRow {
+  id: string
+  folio: string
+  estatus: string
+  placa: string
+  created_at: string
+  correo_infractor: string
+  nombre_infractor: string
+  estatus_dependencia: string
+  no_carpeta_investigacion: string
+}
+
+export interface ViaInfraccionHeader {
+  id_infraccion: string
+  folio_de_infraccion: string
+  fecha_de_registro_de_infraccion: string
+  estatus_de_infraccion: string
+  url_ine: string
+  url_tarjeta_circulacion: string
+  url_inapam: string
+  url_evidencias: string[]
+  no_oficio_fiscalia?: string
+  url_oficio_fiscalia?: string
+  no_carpeta_investigacion?: string
+}
+
+export interface ViaInfraccionLegal {
+  articulo_numero: string
+  articulo_descripcion: string
+  fraccion_numero: string
+  fraccion_descripcion: string
+  total_umas: string
+  total_pesos: string
+}
+
+export interface ViaInfraccionInfractor {
+  nombre_infractor: string
+  appaterno_infractor?: string
+  apmaterno_infractor?: string
+  correo_infractor: string
+  curp_infractor: string
+}
+
+export interface ViaInfraccionOficial {
+  numero_empleado: string
+  nombre_completo: string
+  patrulla_nombre: string
+  activo: string | boolean
+}
+
+export interface ViaInfraccionVehiculo {
+  placa: string
+  tipo: string
+  marca: string
+  modelo: string
+  anio: string
+  color: string
+}
+
+export interface ViaInfraccionGarantia {
+  garantia_retenida: string
+}
+
+export interface ViaInfraccionUbicacion {
+  latitud: string
+  longitud: string
+  calle: string
+  cod_postal: string
+  numero: string
+  municipio: string
+  estado: string
+}
+
+export interface ViaInfraccionDetalle {
+  Header: ViaInfraccionHeader
+  Infraccion: ViaInfraccionLegal
+  datos_infractor: ViaInfraccionInfractor
+  vehiculo: ViaInfraccionVehiculo
+  garantia: ViaInfraccionGarantia
+  ubicacion: ViaInfraccionUbicacion
+  oficial: ViaInfraccionOficial
+}
+
 export interface SolicitudEvidencia {
   id: string
   folioDenuncia: string | null
