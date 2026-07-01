@@ -84,6 +84,7 @@ export interface CrearReporteCampoInput {
   ofiDetenidos: OfiDetenido[];
   ofiAutoridadRecibe: string | null;
   ofiMontoRobo: number | null;
+  ofiHayRobo: boolean
   ofiObjetosRecuperados: string | null;
   ofiHayVehiculo: boolean;
   ofiVehiculos: OfiVehiculo[];
@@ -93,6 +94,14 @@ export interface CrearReporteCampoInput {
   ofiOficialId: string;
   ofiOficialNombre: string;
   ofiQuiereDenuncia: boolean;
+  ofiHayOrdenAprehension: boolean
+  ofiOrdenesAprehension: OfiOrdenAprehension[]
+  ofiHayHidrocarburo: boolean
+  ofiHidrocarburos: OfiHidrocarburo[]
+  ofiHayArmaFuego: boolean
+  ofiArmasFuego: OfiArmaFuego[]
+  ofiHayDroga: boolean
+  ofiDrogas: OfiDroga[]
 }
 
 export interface OfiReporteResumen {
@@ -139,4 +148,38 @@ export interface OfiReporteDetalle extends OfiReporteCampo {
 export interface CatalogoItem {
   id: number;
   nombre: string;
+}
+
+export interface OfiOrdenAprehension {
+  fecha: string
+  nombrePersona: string
+  observaciones: string
+  estatus: string
+  nombreSeguimiento: string
+}
+
+export interface OfiHidrocarburo {
+  fecha: string
+  nombrePersona: string
+  datosVehiculo: string
+  litrosExtraccion: string
+  nombreToma: string
+  observaciones: string
+  nombreSeguimiento: string
+}
+
+export interface OfiArmaFuego {
+  fecha: string
+  datos: string
+  cartuchos: string
+  observaciones: string
+  nombreSeguimiento: string
+}
+
+export interface OfiDroga {
+  fecha: string
+  cantidad: string
+  nombre: string
+  observaciones: string
+  nombreSeguimiento: string
 }
