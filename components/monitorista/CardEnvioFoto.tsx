@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Send, RefreshCw, ExternalLink, CheckCircle, XCircle } from 'lucide-react'
 import React from 'react'
+import { SubirFotoDetenido } from './SubirFotoDetenido'
 
 const ETIQUETAS: Record<string, string> = {
   frontal: 'Foto Frontal',
@@ -21,13 +22,14 @@ export function CardEnvioFoto({
   tipo: string
   foto: { id: string; tipo_foto: string; enviado_a: string | null; estado: string } | undefined
   destinos: { clave: string; nombre: string }[]
-  evidencias: { id: string; url: string; nombre: string }[]
+  evidencias: { id: string; url: string; nombre: string; subidoPor: string | null }[]
 }) {
   const [destino, setDestino] = useState(foto?.enviado_a || destinos[0]?.clave || '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const puedeEnviar = !foto || foto.estado === 'pendiente' || foto.estado === 'rechazado'
+  const puedeSubirDirecto = !foto || foto.estado !== 'completado'
   const estaRechazado = foto?.estado === 'rechazado'
 
   const handleSend = async () => {
@@ -57,9 +59,14 @@ export function CardEnvioFoto({
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 600, color: '#1e40af', textTransform: 'uppercase' }}>{label}</span>
           <span style={estadoBadge(estado)}>{estado.toUpperCase()}</span>
         </div>
-        {foto?.enviado_a && (
+        {foto?.enviado_a && estado !== 'completado' && (
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b' }}>
             Enviado a: {destinos.find(d => d.clave === foto.enviado_a)?.nombre || foto.enviado_a}
+          </span>
+        )}
+        {estado === 'completado' && evidencias.length > 0 && evidencias[0]?.subidoPor && (
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#059669', fontWeight: 600 }}>
+            Subida por: {evidencias[0].subidoPor === 'agente_fiscalia' ? 'Fiscalía' : evidencias[0].subidoPor === 'agente_juzgado' ? 'Juzgado' : evidencias[0].subidoPor === 'Monitorista' ? 'Monitorista' : evidencias[0].subidoPor === 'Oficial de Campo' ? 'Oficial' : evidencias[0].subidoPor}
           </span>
         )}
       </div>
@@ -87,6 +94,12 @@ export function CardEnvioFoto({
             </div>
           )}
         </>
+      )}
+
+      {puedeSubirDirecto && (
+        <div style={{ marginTop: 8 }}>
+          <SubirFotoDetenido reporteCampoId={solicitudId} tipoFoto={tipo} label={label} />
+        </div>
       )}
 
       {estado === 'enviado' && (
