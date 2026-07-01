@@ -16,6 +16,7 @@ const STEPS = [
   'Ubicación',
   'Intervención',
   'Aseguramientos',
+  'Seguimientos',
   'Resumen',
 ]
 
@@ -125,6 +126,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     fd.set('ofi_hay_detencion', st.tieneDetencion)
     fd.set('ofi_autoridad_recibe', st.autoridadRecibe)
     fd.set('ofi_monto_robo', st.montoRobo)
+    fd.set('ofi_hay_robo', st.hayRobo)
     fd.set('ofi_objetos_recuperados', st.objetosRecuperados)
     fd.set('ofi_hay_vehiculo', st.tieneVehiculo)
     fd.set('ofi_hay_cateo', st.tieneCateo)
@@ -147,6 +149,15 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
 
     // Detenidos desde store
     fd.set('ofi_detenidos', st.detenidos.filter(Boolean).join(','))
+
+    fd.set('ofi_hay_orden_aprehension', String(st.hayOrdenAprehension))
+    fd.set('ofi_ordenes_aprehension', JSON.stringify(st.ordenesAprehension))
+    fd.set('ofi_hay_hidrocarburo', String(st.hayHidrocarburo))
+    fd.set('ofi_hidrocarburos', JSON.stringify(st.hidrocarburos))
+    fd.set('ofi_hay_arma_fuego', String(st.hayArmaFuego))
+    fd.set('ofi_armas_fuego', JSON.stringify(st.armasFuego))
+    fd.set('ofi_hay_droga', String(st.hayDroga))
+    fd.set('ofi_drogas', JSON.stringify(st.drogas))
 
     // Vehiculos desde store
     const partes: string[] = []
@@ -362,94 +373,320 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
             <section className="of-card">
               <h2 className="of-section-title">Aseguramientos y Cateos</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+
+                {/* Objetos recuperados */}
                 <div style={{ gridColumn: 'span 3' }}>
-                  <SentinelField label="Objetos Recuperados" name="ofi_objetos_recuperados" as="textarea" placeholder="Descripción de bienes asegurados..." value={objetosRecuperados} onChange={(e: any) => $('objetosRecuperados', e.target.value)} />
+                  <SentinelField label="Objetos Recuperados" name="ofi_objetos_recuperados" as="textarea"
+                    placeholder="Descripción de bienes asegurados..."
+                    value={objetosRecuperados} onChange={(e: any) => $('objetosRecuperados', e.target.value)} />
                 </div>
 
-                <SentinelField label="¿Aseguró Vehículo?" name="ofi_hay_vehiculo" as="select" value={tieneVehiculo} onChange={(e: any) => $('tieneVehiculo', e.target.value)}>
+                {/* ¿Hubo Robo? */}
+                <SentinelField label="¿Hubo Robo?" name="ofi_hay_robo" as="select"
+                  value={store.hayRobo} onChange={(e: any) => $('hayRobo', e.target.value)}>
                   <option value="false">NO</option>
                   <option value="true">SÍ</option>
                 </SentinelField>
 
-                {tieneVehiculo === "true" && (
-                  <>
-                    <div style={{ gridColumn: 'span 3' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                          Cantidad de Vehículos Asegurados
-                        </span>
-                        <select
-                          value={numVehiculos}
-                          onChange={(e) => {
-                            const n = Number(e.target.value)
-                            store.setNumVehiculos(n)
-                            store.setVehiculos(Array.from({ length: n }, (_, i) => vehiculos[i] ?? { placas: '', serie: '', color: '', tipo: '', destino: '' }))
-                          }}
-                          style={{
-                            padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
-                            borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12,
-                            background: '#ffffff', outline: 'none', minWidth: 60,
-                          }}
-                        >
-                          <option value={0}>0</option>
-                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
-                        </select>
+                {store.hayRobo === 'true' && (
+                  <SentinelField label="Monto de lo Robado (Solo números)" name="ofi_monto_robo"
+                    type="number" placeholder="0"
+                    value={montoRobo} onChange={(e: any) => $('montoRobo', e.target.value)} />
+                )}
+
+                {/* ¿Aseguró Vehículo? */}
+                <SentinelField label="¿Aseguró Vehículo?" name="ofi_hay_vehiculo" as="select"
+                  value={tieneVehiculo} onChange={(e: any) => $('tieneVehiculo', e.target.value)}>
+                  <option value="false">NO</option>
+                  <option value="true">SÍ</option>
+                </SentinelField>
+
+                {tieneVehiculo === 'true' && (
+                  <div style={{ gridColumn: 'span 3' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Cantidad de Vehículos Asegurados
+                      </span>
+                      <select
+                        value={numVehiculos}
+                        onChange={(e) => {
+                          const n = Number(e.target.value)
+                          store.setNumVehiculos(n)
+                          store.setVehiculos(Array.from({ length: n }, (_, i) => vehiculos[i] ?? { placas: '', serie: '', color: '', tipo: '', destino: '' }))
+                        }}
+                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
+                      >
+                        <option value={0}>0</option>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
+                      </select>
+                    </div>
+                    {vehiculos.length > 0 && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        {vehiculos.map((v, i) => (
+                          <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 12, border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
+                            <select value={v.tipo} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], tipo: e.target.value }; store.setVehiculos(next) }}
+                              style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
+                              <option value="">Tipo</option>
+                              <option value="automovil">Automóvil</option>
+                              <option value="camioneta">Camioneta</option>
+                              <option value="trans. publico">Trans. Público</option>
+                              <option value="trans. carga">Trans. Carga</option>
+                              <option value="motocicleta">Motocicleta</option>
+                            </select>
+                            <input value={v.placas} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], placas: e.target.value }; store.setVehiculos(next) }}
+                              placeholder="Placas" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                            <input value={v.serie} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], serie: e.target.value }; store.setVehiculos(next) }}
+                              placeholder="Núm. Serie" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                            <input value={v.color} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], color: e.target.value }; store.setVehiculos(next) }}
+                              placeholder="Color" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                            <select value={v.destino} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], destino: e.target.value }; store.setVehiculos(next) }}
+                              style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
+                              <option value="">Destino</option>
+                              <option value="CORRALON MW">CORRALON MW</option>
+                              <option value="CORRALON MEJIA">CORRALON MEJIA</option>
+                            </select>
+                          </div>
+                        ))}
                       </div>
-                      {vehiculos.length > 0 && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                          {vehiculos.map((v, i) => (
-                            <div key={i} data-veh-row style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 12, border: '1px solid #e2e8f0', borderRadius: 2 }}>
-                              <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, minWidth: 20 }}>
-                                #{i + 1}
-                              </span>
-                              <select data-veh-tipo value={v.tipo} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], tipo: e.target.value }; store.setVehiculos(next) }} style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
-                                <option value="">Tipo</option>
-                                <option value="automovil">Automóvil</option>
-                                <option value="camioneta">Camioneta</option>
-                                <option value="trans. publico">Trans. Público</option>
-                                <option value="trans. carga">Trans. Carga</option>
-                                <option value="motocicleta">Motocicleta</option>
-                              </select>
-                              <input data-veh-placas value={v.placas} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], placas: e.target.value }; store.setVehiculos(next) }} placeholder="Placas" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
-                              <input data-veh-serie value={v.serie} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], serie: e.target.value }; store.setVehiculos(next) }} placeholder="Número de Serie" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
-                              <input data-veh-color value={v.color} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], color: e.target.value }; store.setVehiculos(next) }} placeholder="Color" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
-                              <select data-veh-destino value={v.destino} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], destino: e.target.value }; store.setVehiculos(next) }} style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
-                                <option value="">Destino</option>
-                                <option value="CORRALON MW">CORRALON MW</option>
-                                <option value="CORRALON MEJIA">CORRALON MEJIA</option>
-                              </select>
-                            </div>
-                          ))}
-                          <input type="hidden" name="ofi_vehiculos" value="" />
-                        </div>
-                      )}
-                    </div>
-                  </>
+                    )}
+                  </div>
                 )}
 
-                <SentinelField label="¿Hubo Cateo?" name="ofi_hay_cateo" as="select" value={tieneCateo} onChange={(e: any) => $('tieneCateo', e.target.value)}>
+                {/* ¿Hubo Cateo? */}
+                <SentinelField label="¿Hubo Cateo?" name="ofi_hay_cateo" as="select"
+                  value={tieneCateo} onChange={(e: any) => $('tieneCateo', e.target.value)}>
                   <option value="false">NO</option>
                   <option value="true">SÍ</option>
                 </SentinelField>
 
-                {tieneCateo === "true" && (
-                  <>
-                    <div style={{ gridColumn: 'span 3' }}>
-                      <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 8 }}>
-                        Domicilio Cateado
-                      </label>
-                      <MapaUbicacion namePrefix="ofi_cateo" onLocationSelect={(loc) => { $('domicilioCateado', loc.referenciaUbicacion); store.setCateoLocation({ calle: loc.calle, colonia: loc.colonia, numero: loc.numero, lat: String(loc.lat), lng: String(loc.lng) }) }} />
-                      <input type="hidden" name="ofi_cateo_numero" value="" />
-                      <SentinelField label="Resultado del Cateo" name="ofi_resultado_cateo" placeholder="¿Qué se encontró?" value={resultadoCateo} onChange={(e: any) => $('resultadoCateo', e.target.value)} />
+                {tieneCateo === 'true' && (
+                  <div style={{ gridColumn: 'span 3' }}>
+                    <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 8 }}>
+                      Domicilio Cateado — Marcar en el mapa
+                    </label>
+                    <MapaUbicacion namePrefix="ofi_cateo" onLocationSelect={(loc) => {
+                      $('domicilioCateado', loc.referenciaUbicacion)
+                      store.setCateoLocation({ calle: loc.calle, colonia: loc.colonia, numero: loc.numero, lat: String(loc.lat), lng: String(loc.lng) })
+                    }} />
+                    <div style={{ marginTop: 16 }}>
+                      <SentinelField label="Resultado del Cateo" name="ofi_resultado_cateo"
+                        placeholder="¿Qué se encontró?"
+                        value={resultadoCateo} onChange={(e: any) => $('resultadoCateo', e.target.value)} />
                     </div>
-                  </>
+                  </div>
                 )}
+
               </div>
             </section>
           )}
 
-          {/* STEP 5: RESUMEN */}
+          {/* STEP 5: SEGUIMIENTOS */}
           {step === 5 && (
+            <section className="of-card">
+              <h2 className="of-section-title">Seguimientos</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+                {/* ÓRDENES DE APREHENSIÓN */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Órdenes de Aprehensión?
+                    </span>
+                    <button type="button" onClick={() => $('hayOrdenAprehension', !store.hayOrdenAprehension)} className="of-btn-toggle"
+                      style={{ background: store.hayOrdenAprehension ? '#2563eb' : '#ffffff', color: store.hayOrdenAprehension ? '#ffffff' : '#64748b', borderColor: store.hayOrdenAprehension ? '#2563eb' : '#e2e8f0' }}>
+                      {store.hayOrdenAprehension ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {store.hayOrdenAprehension && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {store.ordenesAprehension.map((o, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'nombrePersona', 'estatus', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'nombrePersona' ? 'Nombre Persona' : campo === 'estatus' ? 'Estatus' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={o[campo]}
+                                onChange={(e) => { const next = [...store.ordenesAprehension]; next[i][campo] = e.target.value; store.setOrdenesAprehension(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={o.observaciones} onChange={(e) => { const next = [...store.ordenesAprehension]; next[i].observaciones = e.target.value; store.setOrdenesAprehension(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => store.setOrdenesAprehension(store.ordenesAprehension.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => store.setOrdenesAprehension([...store.ordenesAprehension, { fecha: '', nombrePersona: '', observaciones: '', estatus: '', nombreSeguimiento: '' }])}
+                        className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR ORDEN
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+
+                {/* HIDROCARBUROS */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Detención Delito Hidrocarburo?
+                    </span>
+                    <button type="button" onClick={() => $('hayHidrocarburo', !store.hayHidrocarburo)} className="of-btn-toggle"
+                      style={{ background: store.hayHidrocarburo ? '#2563eb' : '#ffffff', color: store.hayHidrocarburo ? '#ffffff' : '#64748b', borderColor: store.hayHidrocarburo ? '#2563eb' : '#e2e8f0' }}>
+                      {store.hayHidrocarburo ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {store.hayHidrocarburo && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {store.hidrocarburos.map((h, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'nombrePersona', 'datosVehiculo', 'litrosExtraccion', 'nombreToma', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'nombrePersona' ? 'Nombre Persona' : campo === 'datosVehiculo' ? 'Datos Vehículo' : campo === 'litrosExtraccion' ? 'Litros Extracción' : campo === 'nombreToma' ? 'Nombre Toma Clandestina' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={h[campo]}
+                                onChange={(e) => { const next = [...store.hidrocarburos]; next[i][campo] = e.target.value; store.setHidrocarburos(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={h.observaciones} onChange={(e) => { const next = [...store.hidrocarburos]; next[i].observaciones = e.target.value; store.setHidrocarburos(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => store.setHidrocarburos(store.hidrocarburos.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => store.setHidrocarburos([...store.hidrocarburos, { fecha: '', nombrePersona: '', datosVehiculo: '', litrosExtraccion: '', nombreToma: '', observaciones: '', nombreSeguimiento: '' }])}
+                        className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR REGISTRO
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+
+                {/* ARMAS DE FUEGO */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Armas de Fuego?
+                    </span>
+                    <button type="button" onClick={() => $('hayArmaFuego', !store.hayArmaFuego)} className="of-btn-toggle"
+                      style={{ background: store.hayArmaFuego ? '#2563eb' : '#ffffff', color: store.hayArmaFuego ? '#ffffff' : '#64748b', borderColor: store.hayArmaFuego ? '#2563eb' : '#e2e8f0' }}>
+                      {store.hayArmaFuego ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {store.hayArmaFuego && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {store.armasFuego.map((a, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'datos', 'cartuchos', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'datos' ? 'Datos del Arma' : campo === 'cartuchos' ? 'Cartuchos' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={a[campo]}
+                                onChange={(e) => { const next = [...store.armasFuego]; next[i][campo] = e.target.value; store.setArmasFuego(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={a.observaciones} onChange={(e) => { const next = [...store.armasFuego]; next[i].observaciones = e.target.value; store.setArmasFuego(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => store.setArmasFuego(store.armasFuego.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => store.setArmasFuego([...store.armasFuego, { fecha: '', datos: '', cartuchos: '', observaciones: '', nombreSeguimiento: '' }])}
+                        className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR ARMA
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+
+                {/* DOSIS DE DROGA */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Dosis de Droga?
+                    </span>
+                    <button type="button" onClick={() => $('hayDroga', !store.hayDroga)} className="of-btn-toggle"
+                      style={{ background: store.hayDroga ? '#2563eb' : '#ffffff', color: store.hayDroga ? '#ffffff' : '#64748b', borderColor: store.hayDroga ? '#2563eb' : '#e2e8f0' }}>
+                      {store.hayDroga ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {store.hayDroga && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {store.drogas.map((d, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'cantidad', 'nombre', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'cantidad' ? 'Cantidad' : campo === 'nombre' ? 'Nombre Droga' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={d[campo]}
+                                onChange={(e) => { const next = [...store.drogas]; next[i][campo] = e.target.value; store.setDrogas(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={d.observaciones} onChange={(e) => { const next = [...store.drogas]; next[i].observaciones = e.target.value; store.setDrogas(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => store.setDrogas(store.drogas.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => store.setDrogas([...store.drogas, { fecha: '', cantidad: '', nombre: '', observaciones: '', nombreSeguimiento: '' }])}
+                        className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR DOSIS
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </section>
+          )}
+
+          {/* STEP 6: RESUMEN */}
+          {step === 6 && (
             <section className="of-card">
               <h2 className="of-section-title">Resumen del Reporte</h2>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#334155', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -491,6 +728,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                   <span className="of-resumen-label">Aseguramientos</span>
                   <div className="of-resumen-grid">
                     <div style={{ gridColumn: '1 / -1' }}><span>Objetos:</span> {objetosRecuperados}</div>
+                    <div><span>Robo:</span> {store.hayRobo === 'true' ? `SÍ — $${montoRobo}` : 'NO'}</div>
                     <div><span>Vehículos:</span> {tieneVehiculo === 'true' ? `SÍ (${numVehiculos})` : 'NO'}</div>
                     {tieneCateo === 'true' && <div><span>Cateo:</span> {domicilioCateado || 'SÍ'}</div>}
                   </div>
