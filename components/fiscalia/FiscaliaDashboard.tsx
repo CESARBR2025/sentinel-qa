@@ -37,7 +37,6 @@ function hashColor(str: string, palette: typeof AVATAR_COLORS) {
 interface Props {
     data: any[]
     visibleColumns: any[]
-    onOpenDetalle: (id: string) => void
     loading?: boolean
 }
 
@@ -71,7 +70,6 @@ const SORTABLE_KEYS = new Set(['folio', 'nombre_infractor', 'placa'])
 export default function FiscaliaDashboard({
     data,
     visibleColumns,
-    onOpenDetalle,
     loading = false,
 }: Props) {
     console.log(data
@@ -275,125 +273,56 @@ export default function FiscaliaDashboard({
 
     return (
         <div className="space-y-6">
-            {/* ─── HEADER ─── */}
-            <div className="flex items-center justify-between gap-4">
-                <div>
-                    <h2 className="text-[22px] font-medium leading-tight text-slate-900">Panel Fiscalía</h2>
-                    <p className="text-sm text-slate-500 mt-0.5">
-                        {total} infracción{total !== 1 ? 'es' : ''} asignada{total !== 1 ? 's' : ''}
-                    </p>
-                </div>
-            </div>
 
             {loading ? (
-                <div className="space-y-4 animate-pulse">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Array.from({ length: 2 }).map((_, i) => (
-                            <div key={i} className="rounded-xl border border-slate-200 bg-white p-5 space-y-3">
-                                <div className="flex items-start justify-between">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-100" />
-                                    <div className="h-3 w-12 rounded bg-slate-100" />
-                                </div>
-                                <div className="h-3 w-32 rounded bg-slate-100" />
-                                <div className="h-8 w-20 rounded bg-slate-100" />
-                                <div className="h-1.5 w-full rounded-full bg-slate-100" />
+                <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-hidden animate-pulse">
+                    <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50">
+                        <div className="h-5 w-48 rounded bg-slate-200" />
+                    </div>
+                    <div className="divide-y divide-slate-100">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <div key={i} className="flex items-center gap-4 px-5 py-3.5">
+                                <div className="h-3.5 w-16 rounded bg-slate-200" />
+                                <div className="h-3.5 w-32 rounded bg-slate-200" />
+                                <div className="h-3.5 w-28 rounded bg-slate-200" />
+                                <div className="h-5 w-14 rounded-full bg-slate-200" />
+                                <div className="h-7 w-20 rounded-md bg-slate-200 ml-auto" />
                             </div>
                         ))}
-                    </div>
-                    <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-hidden">
-                        <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50">
-                            <div className="h-4 w-44 rounded bg-slate-200" />
-                        </div>
-                        <div className="divide-y divide-slate-100">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <div key={i} className="flex items-center gap-4 px-5 py-3.5">
-                                    <div className="h-3.5 w-16 rounded bg-slate-100" />
-                                    <div className="h-3.5 w-32 rounded bg-slate-100" />
-                                    <div className="h-3.5 w-28 rounded bg-slate-100" />
-                                    <div className="h-5 w-14 rounded-full bg-slate-100" />
-                                    <div className="h-7 w-20 rounded-md bg-slate-100 ml-auto" />
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
             ) : (
                 <>
 
-                    {/* ─── STATS CARDS ─── */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {STATUS_TABS.map(tab => {
-                            const count = estadisticas[tab.key === 'REGISTRADA' ? 'pendientes' : 'liberadas']
-                            const activo = filtro === tab.key
-                            const Icon = tab.icon
-
-                            return (
-                                <button
-                                    key={tab.key}
-                                    onClick={() => handleFiltroChange(tab.key)}
-                                    className="relative rounded-xl border p-5 text-left transition-all duration-200"
-                                    style={{
-                                        background: activo ? tab.bg : '#FFFFFF',
-                                        borderColor: activo ? tab.color : '#E2E8F0',
-                                        boxShadow: activo
-                                            ? `0 4px 12px ${tab.color}22, 0 1px 2px rgba(0,0,0,0.04)`
-                                            : '0 1px 2px rgba(0,0,0,0.04)',
-                                    }}
-                                >
-                                    {activo && (
-                                        <span
-                                            className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full"
-                                            style={{ background: tab.color }}
-                                        />
-                                    )}
-
-                                    <div className="flex items-start justify-between mb-3">
-                                        <div
-                                            className="w-10 h-10 rounded-xl flex items-center justify-center"
-                                            style={{ background: tab.bg }}
-                                        >
-                                            <Icon size={18} strokeWidth={2} style={{ color: tab.color }} />
-                                        </div>
-                                        <span className="text-[11px] font-medium tracking-wider" style={{ color: tab.color }}>
-                                            {activo ? 'ACTIVO' : ''}
-                                        </span>
-                                    </div>
-
-                                    <p className="text-xs font-medium tracking-wider uppercase text-slate-500">
-                                        {tab.label}
-                                    </p>
-                                    <div className="flex items-baseline gap-2 mt-0.5">
-                                        <span className="text-[30px] font-medium tracking-tight text-slate-900">
-                                            {count}
-                                        </span>
-                                        <span className="text-sm font-medium text-slate-400">
-                                            / {total}
-                                        </span>
-                                    </div>
-
-                                    {count > 0 && (
-                                        <div className="mt-3 h-1.5 rounded-full overflow-hidden bg-slate-200">
-                                            <div
-                                                className="h-full rounded-full transition-all duration-500"
-                                                style={{ width: `${(count / total) * 100}%`, background: tab.color }}
-                                            />
-                                        </div>
-                                    )}
-                                </button>
-                            )
-                        })}
-                    </div>
-
-                    {/* ─── TABLA ─── */}
+                    {/* ─── TABLA (with segment control) ─── */}
                     <div className="rounded-xl border overflow-hidden bg-white border-slate-200 shadow-card">
-                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-100 bg-slate-50">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-6 h-6 rounded-md flex items-center justify-center bg-blue-700">
-                                    <AlertCircle size={12} strokeWidth={2.5} className="text-white" />
-                                </div>
-                                <h3 className="text-sm font-medium tracking-wider uppercase text-blue-700">
-                                    {STATUS_TABS.find(t => t.key === filtro)?.label ?? 'Infracciones'}
-                                </h3>
+                        <div className="px-5 py-3 border-b flex items-center justify-between border-slate-100 bg-slate-50">
+                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-200/60">
+                                {STATUS_TABS.map(tab => {
+                                    const count = estadisticas[tab.key === 'REGISTRADA' ? 'pendientes' : 'liberadas']
+                                    const activo = filtro === tab.key
+                                    return (
+                                        <button
+                                            key={tab.key}
+                                            onClick={() => handleFiltroChange(tab.key)}
+                                            className={`relative flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                                                activo
+                                                    ? 'bg-white text-slate-900 shadow-sm'
+                                                    : 'text-slate-500 hover:text-slate-700'
+                                            }`}
+                                            style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                        >
+                                            <span
+                                                className={`w-1.5 h-1.5 rounded-full ${activo ? '' : 'opacity-40'}`}
+                                                style={{ background: tab.color }}
+                                            />
+                                            {tab.label}
+                                            <span className={`tabular-nums ${activo ? 'text-slate-900' : 'text-slate-400'}`}>
+                                                {count}
+                                            </span>
+                                        </button>
+                                    )
+                                })}
                             </div>
                             <div className="flex items-center gap-3">
                                 <button
@@ -462,7 +391,8 @@ export default function FiscaliaDashboard({
                                         {visibleColumns.map(column => (
                                             <th
                                                 key={column.key}
-                                                className={`px-4 py-3 text-left text-[11px] font-medium uppercase tracking-wider ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b border-slate-100`}
+                                                className={`px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b border-slate-100`}
+                                                    style={{ fontFamily: "'JetBrains Mono',monospace" }}
                                                 onClick={SORTABLE_KEYS.has(column.key) ? () => handleSort(column.key) : undefined}
                                             >
                                                 <span className="inline-flex items-center gap-1">
@@ -504,7 +434,6 @@ export default function FiscaliaDashboard({
                                                                 <div className="flex items-center gap-2">
                                                                     <BotonVerDetalle
                                                                         idInfraccion={row.id}
-                                                                        onOpenDetalle={onOpenDetalle}
                                                                     />
 
                                                                     {['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO', 'EN_REVISION_MW'].includes(estatusDep) && (
@@ -551,8 +480,8 @@ export default function FiscaliaDashboard({
                                                         return (
                                                             <td key={column.key} className="px-4 py-2.5">
                                                                 <span
-                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium"
-                                                                    style={{ background: badge.bg, color: badge.text }}
+                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
+                                                                    style={{ background: badge.bg, color: badge.text, fontFamily: "'JetBrains Mono',monospace" }}
                                                                 >
                                                                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: badge.dot }} />
                                                                     {badge.label}

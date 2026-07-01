@@ -82,7 +82,7 @@ function createViaPool(): Pool {
   return newPool
 }
 
-const viaPool: Pool = globalThis._viaPool ?? createViaPool()
+export const viaPool: Pool = globalThis._viaPool ?? createViaPool()
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis._viaPool = viaPool
