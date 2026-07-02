@@ -43,7 +43,7 @@ export default async function GestionPage() {
       titulo: 'Reporte de incidentes',
       subtitulo: 'Registro operativo de sucesos captados por unidades en campo y reportes de cabina.',
       icono: <Zap size={28} />,
-      enlace: '/',
+      enlace: '/reportes_incidentes',
       estadisticas: [{ label: 'Hoy', value: String(stats.total) }, { label: 'Prioridad', value: 'Alta' }]
     },
     {
