@@ -109,7 +109,7 @@ export default function FiscaliaDashboard({
         const pendientes = data.filter(
             x =>
                 x.estatus === 'REGISTRADA' &&
-                ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_ACCIDENTE_DELITO_OFICIO'].includes(x.estatus_dependencia)
+                ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO'].includes(x.estatus_dependencia)
         ).length
 
         const liberadas = data.filter(
@@ -130,7 +130,7 @@ export default function FiscaliaDashboard({
                 return data.filter(
                     x =>
                         x.estatus === 'REGISTRADA' &&
-                        ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_ACCIDENTE_DELITO_OFICIO'].includes(x.estatus_dependencia))
+                        ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO'].includes(x.estatus_dependencia))
             case 'LIBERADO_POR_FISCALIA':
                 return data.filter(
                     x =>

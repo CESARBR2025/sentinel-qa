@@ -24,6 +24,7 @@ export default async function DashboardPage() {
   if (userRole?.rolNombre === 'agente_fiscalia') redirect('/fiscalia')
   if (userRole?.rolNombre === 'agente_juzgado') redirect('/agente_juzgado')
   if (userRole?.rolNombre === 'agente_liberaciones') redirect('/agente_liberaciones')
+  if (userRole?.rolNombre === 'agente_infracciones') redirect('/agente_infracciones')
   if (userRole?.rolNombre === 'Monitorista') redirect('/monitorista')
   if (userRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
 

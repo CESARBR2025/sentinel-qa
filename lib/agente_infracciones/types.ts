@@ -29,3 +29,29 @@ export interface LiberacionesResponse {
 import type { ViaInfraccionDetalle } from '@/lib/shared/infracciones'
 
 export type { ViaInfraccionDetalle }
+
+export interface CapturaInfractorInput {
+  id: string
+  es_titular: boolean
+  nombre_infractor: string
+  appaterno_infractor: string
+  apmaterno_infractor: string
+  curp_infractor: string
+  correo_infractor: string
+  nombre_titular: string
+  appaterno_titular: string
+  apmaterno_titular: string
+  curp_titular: string
+  correo_titular: string
+}
+
+export interface CapturaInfractorResult {
+  success: boolean
+  error?: string
+  data?: {
+    id: string
+    folio: string
+    orden_pago_id?: string | null
+    url_pago?: string | null
+  }
+}

@@ -24,6 +24,8 @@ export interface InfraccionHeader {
   no_oficio_fiscalia?: string
   url_oficio_fiscalia?: string
   url_orden_salida_liberaciones?: string
+  url_oficio_pago_corralon?: string
+  grua_nombre?: string
 }
 
 export interface InfraccionLegal {
@@ -236,7 +238,7 @@ function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbica
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm text-slate-900 flex items-center gap-2 st-title">
+        <h3 className="text-base text-slate-900 flex items-center gap-2 st-title">
           <span className="w-6 h-6 rounded-md bg-emerald-50 flex items-center justify-center">
             <MapPin size={13} className="text-emerald-700" strokeWidth={1.5} />
           </span>
@@ -444,7 +446,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="text-sm text-slate-800 mb-3 flex items-center gap-2 st-title">
+      <h3 className="text-base text-slate-800 mb-3 flex items-center gap-2 st-title">
         <span className={`w-6 h-6 rounded-md ${iconBg} flex items-center justify-center`}>
           <Icon size={13} className={iconColor} strokeWidth={1.5} />
         </span>
@@ -507,7 +509,7 @@ function SummaryBar({ detalle }: { detalle: InfraccionDetalle }) {
 function InfractorVehiculoSection({ detalle }: { detalle: InfraccionDetalle }) {
   return (
     <div>
-      <h3 className="text-sm text-slate-800 mb-3 flex items-center gap-2 st-title">
+      <h3 className="text-base text-slate-800 mb-3 flex items-center gap-2 st-title">
         <span className="w-6 h-6 rounded-md bg-slate-50 flex items-center justify-center">
           <User size={13} className="text-slate-700" strokeWidth={1.5} />
         </span>
@@ -566,7 +568,7 @@ function InfractorVehiculoSection({ detalle }: { detalle: InfraccionDetalle }) {
 function FundamentoLegalSection({ detalle }: { detalle: InfraccionDetalle }) {
   return (
     <div>
-      <h3 className="text-sm text-slate-800 mb-3 flex items-center gap-2 st-title">
+      <h3 className="text-base text-slate-800 mb-3 flex items-center gap-2 st-title">
         <span className="w-6 h-6 rounded-md bg-slate-50 flex items-center justify-center">
           <Gavel size={13} className="text-slate-700" strokeWidth={1.5} />
         </span>
@@ -603,7 +605,7 @@ function FundamentoLegalSection({ detalle }: { detalle: InfraccionDetalle }) {
 function OficialSection({ detalle }: { detalle: InfraccionDetalle }) {
   return (
     <div>
-      <h3 className="text-sm text-slate-800 mb-3 flex items-center gap-2 st-title">
+      <h3 className="text-base text-slate-800 mb-3 flex items-center gap-2 st-title">
         <span className="w-6 h-6 rounded-md bg-emerald-50 flex items-center justify-center">
           <BadgeCheck size={13} className="text-emerald-700" strokeWidth={1.5} />
         </span>
@@ -662,6 +664,10 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
     ? { nombre: 'Orden de Salida (Liberaciones)', ruta: detalle.Header.url_orden_salida_liberaciones, ext: detalle.Header.url_orden_salida_liberaciones.split('.').pop()?.toLowerCase() ?? '' }
     : null
 
+  const oficioCorralonDoc = detalle.Header.url_oficio_pago_corralon && detalle.Header.url_oficio_pago_corralon !== 'NO_DATA'
+    ? { nombre: 'Oficio de Corralón', ruta: detalle.Header.url_oficio_pago_corralon, ext: detalle.Header.url_oficio_pago_corralon.split('.').pop()?.toLowerCase() ?? '' }
+    : null
+
   const evidencias = (detalle.Header.url_evidencias ?? []).map((ruta: string, i: number) => ({
     nombre: `Evidencia ${i + 1}`,
     ruta,
@@ -670,9 +676,10 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
 
   const viaItems = [...documentos, ...evidencias]
   const fiscaliaItems = fiscaliaDoc ? [fiscaliaDoc] : []
+  const corralonItems = oficioCorralonDoc ? [oficioCorralonDoc] : []
   const liberacionesItems = liberacionesDoc ? [liberacionesDoc] : []
 
-  const totalItems = viaItems.length + fiscaliaItems.length + liberacionesItems.length
+  const totalItems = viaItems.length + fiscaliaItems.length + corralonItems.length + liberacionesItems.length
   if (totalItems === 0) return null
 
   const fecha = formatDate(detalle.Header.fecha_de_registro_de_infraccion)
@@ -681,14 +688,27 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
     <Section icon={FileText} title={`Documentación (${totalItems})`} iconBg="bg-slate-50" iconColor="text-slate-700">
       <div className="space-y-6">
         {viaItems.length > 0 && (
-          <TimelineNode nombre="Vía Pública" fecha={fecha} items={viaItems} />
+          <TimelineNode nombre="Documentación del Ciudadano" fecha={fecha} items={viaItems} />
         )}
         {fiscaliaItems.length > 0 && (
-          <TimelineNode nombre="Fiscalía" fecha={fecha} items={fiscaliaItems} />
+          <TimelineNode nombre="Departamento de Fiscalía" fecha={fecha} items={fiscaliaItems} />
         )}
         {liberacionesItems.length > 0 && (
-          <TimelineNode nombre="Liberaciones" fecha={fecha} items={liberacionesItems} />
+          <TimelineNode nombre="Departamento de Liberaciones" fecha={fecha} items={liberacionesItems} />
         )}
+        {corralonItems.length > 0 && (
+          <TimelineNode nombre={`Resguardo Corralón${detalle.Header.grua_nombre ? ` — ${detalle.Header.grua_nombre}` : ''}`} fecha={fecha} items={corralonItems} />
+        )}
+        {/* ─── Finalizado ─── */}
+        <div className="relative pl-9">
+          <div className="absolute left-0 top-0 w-6 h-6 rounded-full bg-emerald-100 border-2 border-emerald-400 flex items-center justify-center">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm st-title text-emerald-700">Finalizado</h4>
+            <span className="text-xs text-slate-400">{fecha}</span>
+          </div>
+        </div>
       </div>
     </Section>
   )
