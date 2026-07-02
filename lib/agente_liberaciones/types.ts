@@ -18,6 +18,7 @@ export interface LiberacionRow {
   nombre_infractor: string;
   estatusDependencia: string;
   no_carpeta_investigacion: string;
+  url_orden_salida_liberaciones?: string;
 }
 
 export interface LiberacionesResponse {

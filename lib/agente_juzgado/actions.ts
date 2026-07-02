@@ -260,6 +260,8 @@ export async function obtenerLiberacionesAction(): Promise<LiberacionesData> {
   return { data, total: data.length };
 }
 
+
+
 export async function obtenerDetalleInfraccionViaActionJuzgado(
   id: string,
 ): Promise<{ data: ViaInfraccionDetalle | null; error?: string }> {

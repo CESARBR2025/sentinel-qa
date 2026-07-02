@@ -39,18 +39,24 @@ interface Props {
 
 type EstatusLiberaciones =
     | 'VEHICULO_EN_CORRALON'
+    | 'MESA_DE_CONTROL_PENDIENTE_DOCS'
     | 'MESA_DE_CONTROL_REVISION'
+    | 'PENDIENTE_PAGO'
     | 'LIBERADA_POR_INFRACCION'
 
 const STATUS_TABS: { key: EstatusLiberaciones; label: string; icon: typeof Clock; color: string }[] = [
     { key: 'VEHICULO_EN_CORRALON', label: 'Captura de datos', icon: Clock, color: '#F59E0B' },
+    { key: 'MESA_DE_CONTROL_PENDIENTE_DOCS', label: 'En espera de documentos', icon: Clock, color: '#8B5CF6' },
     { key: 'MESA_DE_CONTROL_REVISION', label: 'Revisión documentos', icon: RefreshCw, color: '#2563EB' },
+    { key: 'PENDIENTE_PAGO', label: 'Pendiente pago', icon: Clock, color: '#F97316' },
     { key: 'LIBERADA_POR_INFRACCION', label: 'Liberadas', icon: CheckCircle2, color: '#22C55E' },
 ]
 
 const STATUS_BADGE: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     VEHICULO_EN_CORRALON: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Sin datos' },
+    MESA_DE_CONTROL_PENDIENTE_DOCS: { bg: '#F3E8FF', text: '#6B21A8', dot: '#8B5CF6', label: 'Espera docs' },
     MESA_DE_CONTROL_REVISION: { bg: '#DBEAFE', text: '#1E40AF', dot: '#3B82F6', label: 'En revisión' },
+    PENDIENTE_PAGO_LIBERACION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
     LIBERADA_POR_INFRACCION: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_DELITO: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_ACCIDENTE: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
@@ -96,9 +102,11 @@ export default function LiberacionesDashboard({
 
     const estadisticas = useMemo(() => {
         const capturarDatos = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'VEHICULO_EN_CORRALON').length
+        const pendientesDocs = data.filter(x => x.estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS').length
+        const pendientesPago = data.filter(x => x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_LIBERACION').length
         const revision = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'MESA_DE_CONTROL_REVISION').length
         const liberadas = data.filter(x => x.estatusInfraccion === 'CERRADA' && ['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO'].includes(x.estatusDependencia)).length
-        return { capturarDatos, revision, liberadas }
+        return { capturarDatos, pendientesDocs, pendientesPago, revision, liberadas }
     }, [data])
 
     const registrosFiltrados = useMemo(
@@ -106,8 +114,12 @@ export default function LiberacionesDashboard({
             switch (filtro) {
                 case 'VEHICULO_EN_CORRALON':
                     return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'VEHICULO_EN_CORRALON'
+                case 'MESA_DE_CONTROL_PENDIENTE_DOCS':
+                    return x.estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'
                 case 'MESA_DE_CONTROL_REVISION':
                     return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'MESA_DE_CONTROL_REVISION'
+                case 'PENDIENTE_PAGO':
+                    return x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_LIBERACION'
                 case 'LIBERADA_POR_INFRACCION':
                     if (x.estatusInfraccion !== 'CERRADA') return false
                     if (!['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO'].includes(x.estatusDependencia)) return false
@@ -158,7 +170,9 @@ export default function LiberacionesDashboard({
 
     const STATS_KEY: Record<EstatusLiberaciones, keyof typeof estadisticas> = {
         VEHICULO_EN_CORRALON: 'capturarDatos',
+        MESA_DE_CONTROL_PENDIENTE_DOCS: 'pendientesDocs',
         MESA_DE_CONTROL_REVISION: 'revision',
+        PENDIENTE_PAGO: 'pendientesPago',
         LIBERADA_POR_INFRACCION: 'liberadas',
     }
 
@@ -243,23 +257,6 @@ export default function LiberacionesDashboard({
                             })}
                         </div>
                         <div className="flex items-center gap-3">
-                            {filtro === 'LIBERADA_POR_INFRACCION' && (
-                                <div className="flex items-center gap-1.5">
-                                    {TIPO_LIBERACION_OPTS.map(opt => (
-                                        <button
-                                            key={opt.key}
-                                            onClick={() => { setTipoLiberacion(opt.key); setPagina(1) }}
-                                            className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
-                                                tipoLiberacion === opt.key
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'text-slate-400 hover:text-slate-600'
-                                            }`}
-                                        >
-                                            {opt.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
                             <button
                                 onClick={exportarCSV}
                                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-cyan-700 bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 transition-colors"
@@ -272,6 +269,28 @@ export default function LiberacionesDashboard({
                             </span>
                         </div>
                     </div>
+
+                    {/* ─── Sub-segment: tipo liberación ─── */}
+                    {filtro === 'LIBERADA_POR_INFRACCION' && (
+                        <div className="px-5 py-2 border-b border-slate-100 bg-white">
+                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-green-100/60 w-fit">
+                                {TIPO_LIBERACION_OPTS.map(opt => (
+                                    <button
+                                        key={opt.key}
+                                        onClick={() => { setTipoLiberacion(opt.key); setPagina(1) }}
+                                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                                            tipoLiberacion === opt.key
+                                                ? 'bg-white text-green-800 shadow-sm'
+                                                : 'text-green-600 hover:text-green-700'
+                                        }`}
+                                        style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* ─── Search + Date filter ─── */}
                     <div className="px-5 py-2.5 border-b flex items-center gap-3 border-slate-100 bg-white flex-wrap">
