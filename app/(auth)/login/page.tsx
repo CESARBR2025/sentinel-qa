@@ -298,7 +298,7 @@ function LoginContent() {
           --text-mute:#4a5878;
           --navy:     #14224a;
           --red:      #2563eb;
-          --red-hi:   #e03349;
+          --red-hi:   #447df9;
           --gold:     #2563eb;
           --gold-hi:  #f0be4c;
           --ok:       #2563eb;
