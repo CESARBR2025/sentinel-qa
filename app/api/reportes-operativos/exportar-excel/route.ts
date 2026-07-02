@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
                 cell.alignment = LEFT
             })
             const maxLen = Math.max(...columnas.map(col => String((fila[col.key] as any) ?? '').length))
-            ws.getRow(rowNum).height = maxLen > 50 ? 30 : maxLen > 25 ? 22 : 15
+            ws.getRow(rowNum).height = maxLen > 50 ? 40 : maxLen > 25 ? 22 : 15
         })
 
         // Fila total

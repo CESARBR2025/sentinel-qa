@@ -194,3 +194,18 @@ export async function obtenerDrogas(desde: string, hasta: string) {
 
   return [...ofi.rows, ...inc.rows]
 }
+
+export async function obtenerExtorsiones(desde: string, hasta: string) {
+  const result = await query<Record<string, unknown>>(`
+    SELECT
+      i.folio                AS folio,
+      e.telefono_extorsion   AS telefono,
+      e.creado_en::date      AS fecha,
+      e.modus_operandi       AS incidencia
+    FROM incidente_extorsion e
+    JOIN incidentes i ON i.id = e.incidente_id
+    WHERE e.creado_en::date BETWEEN $1 AND $2
+    ORDER BY e.creado_en DESC
+  `, [desde, hasta])
+  return result.rows
+}

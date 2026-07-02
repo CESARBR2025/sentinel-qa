@@ -2,6 +2,7 @@ import {
     obtenerVehiculos, obtenerCateos, obtenerDetenidos,
     obtenerOrdenesAprehension, obtenerHidrocarburos,
     obtenerArmas, obtenerDrogas,
+    obtenerExtorsiones,
 } from './repository'
 
 function parseJsonb(val: unknown): any[] {
@@ -267,4 +268,18 @@ export async function obtenerDatosExcel(desde: string, hasta: string) {
     ].sort((a, b) => b.fecha.localeCompare(a.fecha))
 
     return { general, ...datos }
+}
+
+export async function obtenerDatosTelefonicos(desde?: string, hasta?: string) {
+    const d = desde ?? '2000-01-01'
+    const h = hasta ?? new Date().toISOString().split('T')[0]
+    const rows = await obtenerExtorsiones(d, h)
+    return rows.map(r => ({
+        folio: toStr(r.folio),
+        telefono: toStr(r.telefono),
+        fecha: r.fecha instanceof Date
+            ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            : toStr(r.fecha),
+        incidencia: toStr(r.incidencia) || '—',
+    }))
 }

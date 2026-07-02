@@ -8,7 +8,6 @@ interface PhoneReport {
     telefono: string;
     fecha: string;
     incidencia: string;
-    estatus: string;
 }
 
 export function PhoneReportsTable({ data }: { data: PhoneReport[] }) {
@@ -47,7 +46,6 @@ export function PhoneReportsTable({ data }: { data: PhoneReport[] }) {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <button style={styles.secondaryButton}><TableIcon size={14} /> EXCEL</button>
                     </div>
                 </div>
 
@@ -60,7 +58,6 @@ export function PhoneReportsTable({ data }: { data: PhoneReport[] }) {
                                 <th style={styles.th}>Número Telefónico Reportado</th>
                                 <th style={styles.th}>Fecha de Reporte</th>
                                 <th style={styles.th}>Tipo de Incidencia</th>
-                                <th style={styles.th}>Estatus</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,14 +68,6 @@ export function PhoneReportsTable({ data }: { data: PhoneReport[] }) {
                                         <td style={{...styles.td, fontWeight: 700, color: '#2563EB', fontSize: '15px'}}>{row.telefono}</td>
                                         <td style={styles.td}>{row.fecha}</td>
                                         <td style={{...styles.td, fontWeight: 600, textTransform: 'uppercase'}}>{row.incidencia}</td>
-                                        <td style={styles.td}>
-                                            <span style={styles.badge(
-                                                row.estatus === 'CRÍTICO' ? '#FEE2E2' : '#F1F5F9', 
-                                                row.estatus === 'CRÍTICO' ? '#991B1B' : '#475569'
-                                            )}>
-                                                {row.estatus}
-                                            </span>
-                                        </td>
                                     </tr>
                                 ))
                             ) : (
