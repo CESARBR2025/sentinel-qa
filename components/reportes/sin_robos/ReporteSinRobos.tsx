@@ -32,14 +32,13 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                             <th style={styles.th}>REPORTANTE</th>
                             <th style={styles.th}>TELÉFONO</th>
                             <th style={styles.th}>CONCLUSIÓN</th>
-                            <th style={styles.th}>ACCIÓN</th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentData.map((item, i) => (
                             <tr key={i}>
                                 <td style={styles.td}>
-                                    <span style={styles.monoDataBlue}>#{item.folio}</span>
+                                    <span style={styles.monoDataBlue}>#{item.reporte}</span>
                                 </td>
                                 <td style={{ ...styles.td, fontFamily: "'JetBrains Mono', monospace" }}>{item.fecha}</td>
                                 <td style={styles.td}>
@@ -51,7 +50,7 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                                 <td style={styles.td}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <Smartphone size={14} color="#2563EB" />
-                                        <span style={styles.monoDataBlue}>{item.telefono}</span>
+                                        <span style={styles.monoDataBlue}>{item.telefonoReportante}</span>
                                     </div>
                                 </td>
                                 <td style={{ ...styles.td, maxWidth: '280px' }}>
@@ -61,11 +60,6 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                                             {item.conclusion.substring(0, 50)}...
                                         </span>
                                     </div>
-                                </td>
-                                <td style={styles.td}>
-                                    <button style={styles.secondaryButtonBlue}>
-                                        <FileDown size={14} /> EXPORTAR
-                                    </button>
                                 </td>
                             </tr>
                         ))}

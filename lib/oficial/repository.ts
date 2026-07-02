@@ -35,13 +35,14 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
     ofi_hay_orden_aprehension, ofi_ordenes_aprehension,
     ofi_hay_hidrocarburo,      ofi_hidrocarburos,
     ofi_hay_arma_fuego,        ofi_armas_fuego,
-    ofi_hay_droga,             ofi_drogas
+    ofi_hay_droga,             ofi_drogas,
+    ofi_telefono_reportante, ofi_observaciones
   ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
     $11, $12, $13, $14, $15, $16, $17::jsonb, $18, $19, $20,
     $21, $22, $23::jsonb,
     $24, $25::jsonb, $26,
-    $27, $28, $29, $30, $31::jsonb, $32, $33::jsonb, $34, $35::jsonb, $36, $37::jsonb
+    $27, $28, $29, $30, $31::jsonb, $32, $33::jsonb, $34, $35::jsonb, $36, $37::jsonb, $38, $39
   ) RETURNING id`,
     [
       data.folioReporteCampo,
@@ -77,6 +78,7 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
       data.ofiHayHidrocarburo, JSON.stringify(data.ofiHidrocarburos),
       data.ofiHayArmaFuego, JSON.stringify(data.ofiArmasFuego),
       data.ofiHayDroga, JSON.stringify(data.ofiDrogas),
+      data.ofiTelefonoReportante, data.ofiObservaciones,
     ]
   )
   return result.rows[0].id

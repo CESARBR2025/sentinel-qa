@@ -156,6 +156,8 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiArmasFuego: JSON.parse(str(formData, 'ofi_armas_fuego') ?? '[]'),
     ofiHayDroga: bool(formData, 'ofi_hay_droga'),
     ofiDrogas: JSON.parse(str(formData, 'ofi_drogas') ?? '[]'),
+    ofiTelefonoReportante: str(formData, 'ofi_telefono_reportante'),
+    ofiObservaciones: str(formData, 'ofi_observaciones'),
   }
 
   const reporteId = await insertarReporteCampo(input)

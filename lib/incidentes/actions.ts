@@ -260,6 +260,7 @@ export async function createRecorridoCompleto(formData: FormData) {
     armasFuego: JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
     hayDroga: bool(formData, 'hay_droga'),
     drogas: JSON.parse(str(formData, 'drogas') ?? '[]'),
+    observaciones: str(formData, 'observaciones'),
   })
 
   revalidatePath('/911/rondin')
@@ -357,6 +358,7 @@ export async function createReporteCampo(formData: FormData) {
     armasFuego:          JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
     hayDroga:            bool(formData, 'hay_droga'),
     drogas:              JSON.parse(str(formData, 'drogas') ?? '[]'),
+    observaciones: str(formData, 'observaciones'),
   })
 
   const incidenteId = req(formData, 'incidenteId')
