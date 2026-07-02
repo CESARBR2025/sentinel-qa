@@ -51,6 +51,8 @@ export interface OficialFormState {
   armasFuego: OfiArmaFuego[]
   hayDroga: boolean
   drogas: OfiDroga[]
+  telefonoReportante: string
+  observaciones: string
 }
 
 export interface OficialFormActions {
@@ -112,6 +114,8 @@ const initialState: OficialFormState = {
   armasFuego: [],
   hayDroga: false,
   drogas: [],
+  telefonoReportante: '',
+  observaciones: '',
 }
 
 export const useOficialFormStore = create<OficialFormStore>((set) => ({

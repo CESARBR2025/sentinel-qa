@@ -159,6 +159,9 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     fd.set('ofi_hay_droga', String(st.hayDroga))
     fd.set('ofi_drogas', JSON.stringify(st.drogas))
 
+    fd.set('ofi_telefono_reportante', st.telefonoReportante)
+    fd.set('ofi_observaciones', st.observaciones)
+
     // Vehiculos desde store
     const partes: string[] = []
     st.vehiculos.forEach(v => {
@@ -253,6 +256,12 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                       disabled={isAnonimo}
                     />
                   </div>
+                  {!isAnonimo && (
+                    <SentinelField label="Teléfono del Reportante" name="ofi_telefono_reportante"
+                      value={store.telefonoReportante}
+                      onChange={(e: any) => $('telefonoReportante', e.target.value)}
+                      placeholder="10 dígitos" type="tel" />
+                  )}
                   <input type="hidden" name="ofi_anonimo" value={isAnonimo ? "true" : "false"} />
                   <button type="button" onClick={() => $('isAnonimo', !isAnonimo)} className="of-btn-toggle">
                     {isAnonimo ? '[ ANÓNIMO: ON ]' : '[ ANÓNIMO: OFF ]'}
@@ -734,6 +743,11 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                   </div>
                 </div>
               </div>
+              <SentinelField label="Observaciones / Conclusión" name="ofi_observaciones"
+                as="textarea"
+                value={store.observaciones}
+                onChange={(e: any) => $('observaciones', e.target.value)}
+                placeholder="Observaciones finales..." />
               <div style={{ marginTop: 24, padding: '20px 24px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 2 }}>
                 <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#1d4ed8', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   ¿La víctima desea hacer la denuncia?

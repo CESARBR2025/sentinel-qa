@@ -37,6 +37,7 @@ export async function crearReporteCampo(params: {
     armasFuego: object[]
     hayDroga: boolean
     drogas: object[]
+    observaciones: string | null
 }) {
     const { inc, existe } = await verificarReporteCampo(params.incidenteId)
 

@@ -36,14 +36,14 @@ export default async function GestionPage() {
       titulo: 'Incidentes captados en cámara',
       subtitulo: 'Monitoreo y detección de anomalías mediante sistemas de videovigilancia y analíticos.',
       icono: <Camera size={28} />,
-      enlace: '/incidentes_camara', // Ajusta a tu ruta real
+      enlace: '/incidentes_camaras', // Ajusta a tu ruta real
       estadisticas: [{ label: 'Alertas', value: '24' }, { label: 'Cámaras', value: '156' }]
     },
     {
       titulo: 'Reporte de incidentes',
       subtitulo: 'Registro operativo de sucesos captados por unidades en campo y reportes de cabina.',
       icono: <Zap size={28} />,
-      enlace: '/',
+      enlace: '/reportes_incidentes',
       estadisticas: [{ label: 'Hoy', value: String(stats.total) }, { label: 'Prioridad', value: 'Alta' }]
     },
     {
@@ -78,7 +78,7 @@ export default async function GestionPage() {
       titulo: 'Sin robos confirmados',
       subtitulo: 'Análisis de eventos descartados o con falta de indicios de robo en el lugar.',
       icono: <PackageX size={28} />,
-      enlace: '/',
+      enlace: '/sin_robos',
       estadisticas: [{ label: 'Descartes', value: '45' }, { label: 'Falsos', value: '8' }]
     }
   ]
