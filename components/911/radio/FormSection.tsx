@@ -318,6 +318,10 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       disabled={isAnonimo}
                     />
                   </div>
+                  {!isAnonimo && (
+                    <SentinelField label="Teléfono del Reportante" name="telefonoReportante"
+                      placeholder="10 dígitos" type="tel" />
+                  )}
                   <input type="hidden" name="anonimo" value={isAnonimo ? "true" : "false"} />
                   <button type="button" onClick={() => setIsAnonimo(!isAnonimo)} className="sentinel-btn-toggle">
                     {isAnonimo ? '[ ANÓNIMO: ON ]' : '[ ANÓNIMO: OFF ]'}
@@ -882,7 +886,8 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                     </div>
                   )}
                 </div>
-
+                <SentinelField label="Observaciones / Conclusión" name="observaciones" as="textarea"
+                  placeholder="Observaciones finales del reporte..." />
               </div>
             </section>
           </div>

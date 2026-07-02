@@ -102,6 +102,8 @@ export interface CrearReporteCampoInput {
   ofiArmasFuego: OfiArmaFuego[]
   ofiHayDroga: boolean
   ofiDrogas: OfiDroga[]
+  ofiTelefonoReportante: string | null
+  ofiObservaciones: string | null
 }
 
 export interface OfiReporteResumen {

@@ -36,7 +36,7 @@ export const DescargaTable = ({ data }: { data: any[] }) => {
                                 <td style={styles.td}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <User size={14} color="#64748B" />
-                                        <span style={{ fontWeight: 600, textTransform: 'uppercase' }}>{item.nombre_afectado}</span>
+                                        <span style={{ fontWeight: 600, textTransform: 'uppercase' }}>{item.nombreAfectado}</span>
                                     </div>
                                 </td>
                                 <td style={styles.td}>
