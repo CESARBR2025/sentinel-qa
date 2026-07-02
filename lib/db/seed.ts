@@ -22,6 +22,7 @@ async function main() {
     { nombre: 'Jurídico',          descripcion: 'Bandeja legal, solicitudes a C4 y contestaciones' },
     { nombre: 'Agente Fiscalía',  descripcion: 'Agente del ministerio público' },
     { nombre: 'Agente Liberaciones', descripcion: 'Gestión de liberaciones de vehículos' },
+    { nombre: 'Agente Infracciones', descripcion: 'Gestión de infracciones de tránsito' },
   ]).onConflictDoNothing()
 
   // ── Módulos del sidebar ────────────────────────────────────────────────────

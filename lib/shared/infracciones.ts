@@ -73,6 +73,8 @@ export interface ViaInfraccionHeader {
   url_oficio_fiscalia?: string;
   no_carpeta_investigacion?: string;
   url_orden_salida_liberaciones?: string;
+  url_oficio_pago_corralon?: string;
+  grua_nombre?: string;
 }
 
 export interface ViaInfraccionLegal {
@@ -169,6 +171,10 @@ export function rowToInfraccionDetalle(
         str(row.no_carpeta_investigacion) ?? undefined,
       url_orden_salida_liberaciones:
         str(row.url_orden_salida_liberaciones) ?? undefined,
+      url_oficio_pago_corralon:
+        str(row.url_oficio_pago_corralon) ?? undefined,
+      grua_nombre:
+        str(row.grua_nombre) ?? undefined,
     },
     Infraccion: {
       articulo_numero: str(row.articulo_numero) ?? "",
@@ -281,15 +287,17 @@ export async function obtenerDetalleInfraccionVia(
        u.nombres as oficial_nombres,
        u.apellido_p as oficial_apellido_p,
        u.apellido_m as oficial_apellido_m,
-       pat.numero_unidad as patrulla_nombre,
-       off.activo as oficial_activo
-     FROM v2_infracciones i
-     LEFT JOIN v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
-     JOIN v2_articulos_ley a on i.articulo_id = a.id
-     JOIN v2_fracciones_ley f on i.fraccion_id = f.id
-     LEFT JOIN v2_oficiales off ON off.id = i.oficial_id
-     LEFT JOIN v2_usuarios u ON off.usuario_id = u.id
-     LEFT JOIN v2_patrullas pat ON off.patrulla_id = pat.id
+        pat.numero_unidad as patrulla_nombre,
+        off.activo as oficial_activo,
+        g.nombre as grua_nombre
+      FROM v2_infracciones i
+      LEFT JOIN v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
+      JOIN v2_articulos_ley a on i.articulo_id = a.id
+      JOIN v2_fracciones_ley f on i.fraccion_id = f.id
+      LEFT JOIN v2_oficiales off ON off.id = i.oficial_id
+      LEFT JOIN v2_usuarios u ON off.usuario_id = u.id
+      LEFT JOIN v2_patrullas pat ON off.patrulla_id = pat.id
+      LEFT JOIN v2_gruas g ON g.id = i.grua_id
      WHERE i.id = $1
      ORDER BY o.created_at DESC
      LIMIT 1`,

@@ -1,11 +1,11 @@
 'use client'
 
 import { BotonVerDetalle } from '@/features/compartido/components/ButtonVerDetalles'
+import CapturarDatosInfractorModal from './CapturarDatosInfractorModal'
+import ModalEntregarGarantia from './ModalEntregarGarantia'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Clock, RefreshCw, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X } from 'lucide-react'
-import CapturarInfractorSection from '@/features/liberaciones/components/CapturarInfractorSection'
-import RevisionDocumentosSection from '@/features/liberaciones/components/RevisionDocumentosSection'
+import { Clock, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X, Shield } from 'lucide-react'
 
 const AVATAR_COLORS = [
     { bg: '#EFF6FF', text: '#2563EB' },
@@ -37,26 +37,28 @@ interface Props {
     loading?: boolean
 }
 
-type EstatusLiberaciones =
-    | 'VEHICULO_EN_CORRALON'
-    | 'MESA_DE_CONTROL_PENDIENTE_DOCS'
-    | 'MESA_DE_CONTROL_REVISION'
+type EstatusInfracciones =
+    | 'PENDIENTE_DATOS_INFRACTOR'
     | 'PENDIENTE_PAGO'
+    | 'PENDIENTE_DEVOLUCION_GARANTIA'
     | 'LIBERADA_POR_INFRACCION'
+    | 'LIBERADO_INFRACCIONES_INSTANTE'
 
-const STATUS_TABS: { key: EstatusLiberaciones; label: string; icon: typeof Clock; color: string }[] = [
-    { key: 'VEHICULO_EN_CORRALON', label: 'Captura de datos', icon: Clock, color: '#F59E0B' },
-    { key: 'MESA_DE_CONTROL_PENDIENTE_DOCS', label: 'En espera de documentos', icon: Clock, color: '#8B5CF6' },
-    { key: 'MESA_DE_CONTROL_REVISION', label: 'Revisión documentos', icon: RefreshCw, color: '#2563EB' },
+const STATUS_TABS: { key: EstatusInfracciones; label: string; icon: typeof Clock; color: string }[] = [
+    { key: 'PENDIENTE_DATOS_INFRACTOR', label: 'Pendiente datos', icon: Clock, color: '#F59E0B' },
     { key: 'PENDIENTE_PAGO', label: 'Pendiente pago', icon: Clock, color: '#F97316' },
+    { key: 'PENDIENTE_DEVOLUCION_GARANTIA', label: 'Pendiente devolución', icon: Clock, color: '#EC4899' },
     { key: 'LIBERADA_POR_INFRACCION', label: 'Liberadas', icon: CheckCircle2, color: '#22C55E' },
+    { key: 'LIBERADO_INFRACCIONES_INSTANTE', label: 'Pagadas instante', icon: CheckCircle2, color: '#10B981' },
 ]
 
 const STATUS_BADGE: Record<string, { bg: string; text: string; dot: string; label: string }> = {
-    VEHICULO_EN_CORRALON: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Sin datos' },
-    MESA_DE_CONTROL_PENDIENTE_DOCS: { bg: '#F3E8FF', text: '#6B21A8', dot: '#8B5CF6', label: 'Espera docs' },
-    MESA_DE_CONTROL_REVISION: { bg: '#DBEAFE', text: '#1E40AF', dot: '#3B82F6', label: 'En revisión' },
+    PENDIENTE_DATOS_INFRACTOR: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Pendiente datos' },
+    LIBERADO_POR_INFRACCIONES: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
+    LIBERADO_INFRACCIONES_INSTANTE: { bg: '#D1FAE5', text: '#065F46', dot: '#10B981', label: 'Pagada instante' },
     PENDIENTE_PAGO_LIBERACION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
+    PENDIENTE_PAGO_INFRACCION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
+    PENDIENTE_DEVOLUCION_GARANTIA: { bg: '#FCE7F3', text: '#9D174D', dot: '#EC4899', label: 'Pendiente devolución' },
     LIBERADA_POR_INFRACCION: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_DELITO: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_ACCIDENTE: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
@@ -69,23 +71,15 @@ function getBadge(status: string) {
     return STATUS_BADGE[status] ?? { bg: '#F1F5F9', text: '#475569', dot: '#94A3B8', label: status }
 }
 
-const TIPO_LIBERACION_OPTS = [
-    { key: '', label: 'Todas' },
-    { key: 'LIBERADA_POR_INFRACCION', label: 'Por infracción' },
-    { key: 'LIBERADA_POR_DELITO', label: 'Por delito' },
-    { key: 'LIBERADA_POR_ACCIDENTE', label: 'Por accidente' },
-]
-
 const SORTABLE_KEYS = new Set(['folio', 'nombre_infractor', 'correo_infractor', 'placa'])
 
-export default function LiberacionesDashboard({
+export default function InfraccionesDashboard({
     data,
     visibleColumns,
     loading = false,
 }: Props) {
     const router = useRouter()
-
-    const [filtro, setFiltro] = useState<EstatusLiberaciones>('VEHICULO_EN_CORRALON')
+    const [filtro, setFiltro] = useState<EstatusInfracciones>('PENDIENTE_DATOS_INFRACTOR')
     const [busqueda, setBusqueda] = useState('')
     const [pagina, setPagina] = useState(1)
     const limite = 10
@@ -93,49 +87,41 @@ export default function LiberacionesDashboard({
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
     const [fechaInicio, setFechaInicio] = useState('')
     const [fechaFin, setFechaFin] = useState('')
-    const [tipoLiberacion, setTipoLiberacion] = useState('')
-    const [capturarInfractorId, setCapturarInfractorId] = useState<string | null>(null)
-    const [revisionModalId, setRevisionModalId] = useState<string | null>(null)
+    const [capturarDatosId, setCapturarDatosId] = useState<string | null>(null)
+    const [garantiaId, setGarantiaId] = useState<string | null>(null)
 
-    function handleFiltroChange(key: EstatusLiberaciones) {
+    function handleFiltroChange(key: EstatusInfracciones) {
         setFiltro(key)
         setPagina(1)
-        setTipoLiberacion('')
     }
 
     const estadisticas = useMemo(() => {
-        const capturarDatos = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'VEHICULO_EN_CORRALON').length
-        const pendientesDocs = data.filter(x => x.estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS').length
-        const pendientesPago = data.filter(x => x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_LIBERACION').length
-        const revision = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'MESA_DE_CONTROL_REVISION').length
-        const liberadas = data.filter(x => (['CERRADA', 'FINALIZADA'].includes(x.estatusInfraccion)) && ['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'].includes(x.estatusDependencia)).length
-        return { capturarDatos, pendientesDocs, pendientesPago, revision, liberadas }
-    }, [data])
+        const capturarDatos = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'PENDIENTE_DATOS_INFRACTOR').length
+        const pendientesPago = data.filter(x => x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_INFRACCION').length
+        const pendientesDevolucion = data.filter(x => x.estatusInfraccion === 'PAGADA' && x.estatusDependencia === 'PENDIENTE_DEVOLUCION_GARANTIA').length
+        const liberadas = data.filter(x => x.estatusInfraccion === 'CERRADA' && x.estatusDependencia === 'LIBERADO_POR_INFRACCIONES').length
+        const pagadasInstante = data.filter(x => x.estatusInfraccion === 'CERRADA' && x.estatusDependencia === 'LIBERADO_INFRACCIONES_INSTANTE').length
+    return { capturarDatos, pendientesPago, pendientesDevolucion, liberadas, pagadasInstante }
+  }, [data])
 
     const registrosFiltrados = useMemo(
         () => data.filter(x => {
             switch (filtro) {
-                case 'VEHICULO_EN_CORRALON':
-                    return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'VEHICULO_EN_CORRALON'
-                case 'MESA_DE_CONTROL_PENDIENTE_DOCS':
-                    return x.estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'
-                case 'MESA_DE_CONTROL_REVISION':
-                    return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'MESA_DE_CONTROL_REVISION'
+                case 'PENDIENTE_DATOS_INFRACTOR':
+                    return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'PENDIENTE_DATOS_INFRACTOR'
                 case 'PENDIENTE_PAGO':
-                    return x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_LIBERACION'
+                    return x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_INFRACCION'
+                case 'PENDIENTE_DEVOLUCION_GARANTIA':
+                    return x.estatusInfraccion === 'PAGADA' && x.estatusDependencia === 'PENDIENTE_DEVOLUCION_GARANTIA'
                 case 'LIBERADA_POR_INFRACCION':
-                    if (!['CERRADA', 'FINALIZADA'].includes(x.estatusInfraccion)) return false
-                    if (!['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'].includes(x.estatusDependencia)) return false
-                    if (tipoLiberacion) {
-                        const suffix = tipoLiberacion.replace('LIBERADA_', '')
-                        if (!x.estatusDependencia.endsWith(suffix)) return false
-                    }
-                    return true
+                    return x.estatusInfraccion === 'CERRADA' && x.estatusDependencia === 'LIBERADO_POR_INFRACCIONES'
+                case 'LIBERADO_INFRACCIONES_INSTANTE':
+                    return x.estatusInfraccion === 'CERRADA' && x.estatusDependencia === 'LIBERADO_INFRACCIONES_INSTANTE'
                 default:
                     return false
             }
         }),
-        [data, filtro, tipoLiberacion],
+        [data, filtro],
     )
 
     const busquedaLower = busqueda.toLowerCase().trim()
@@ -174,12 +160,12 @@ export default function LiberacionesDashboard({
     const paginaSegura = Math.min(pagina, totalPaginas)
     const registrosPaginados = registrosOrdenados.slice((paginaSegura - 1) * limite, paginaSegura * limite)
 
-    const STATS_KEY: Record<EstatusLiberaciones, keyof typeof estadisticas> = {
-        VEHICULO_EN_CORRALON: 'capturarDatos',
-        MESA_DE_CONTROL_PENDIENTE_DOCS: 'pendientesDocs',
-        MESA_DE_CONTROL_REVISION: 'revision',
+    const STATS_KEY: Record<EstatusInfracciones, keyof typeof estadisticas> = {
+        PENDIENTE_DATOS_INFRACTOR: 'capturarDatos',
         PENDIENTE_PAGO: 'pendientesPago',
+        PENDIENTE_DEVOLUCION_GARANTIA: 'pendientesDevolucion',
         LIBERADA_POR_INFRACCION: 'liberadas',
+        LIBERADO_INFRACCIONES_INSTANTE: 'pagadasInstante',
     }
 
     function handleSort(key: string) {
@@ -208,7 +194,7 @@ export default function LiberacionesDashboard({
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `liberaciones-${filtro}-${new Date().toISOString().split('T')[0]}.csv`
+        a.download = `infracciones-${filtro}-${new Date().toISOString().split('T')[0]}.csv`
         a.click()
         URL.revokeObjectURL(url)
     }
@@ -275,28 +261,6 @@ export default function LiberacionesDashboard({
                             </span>
                         </div>
                     </div>
-
-                    {/* ─── Sub-segment: tipo liberación ─── */}
-                    {filtro === 'LIBERADA_POR_INFRACCION' && (
-                        <div className="px-5 py-2 border-b border-slate-100 bg-white">
-                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-green-100/60 w-fit">
-                                {TIPO_LIBERACION_OPTS.map(opt => (
-                                    <button
-                                        key={opt.key}
-                                        onClick={() => { setTipoLiberacion(opt.key); setPagina(1) }}
-                                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
-                                            tipoLiberacion === opt.key
-                                                ? 'bg-white text-green-800 shadow-sm'
-                                                : 'text-green-600 hover:text-green-700'
-                                        }`}
-                                        style={{ fontFamily: "'JetBrains Mono',monospace" }}
-                                    >
-                                        {opt.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
 
                     {/* ─── Search + Date filter ─── */}
                     <div className="px-5 py-2.5 border-b flex items-center gap-3 border-slate-100 bg-white flex-wrap">
@@ -389,29 +353,35 @@ export default function LiberacionesDashboard({
                                         >
                                             {visibleColumns.map(column => {
                                                 if (column.key === 'acciones') {
-                                                    const estatusDep = row.estatusDependencia ?? ''
                                                     return (
                                                         <td key={column.key} className="px-4 py-2.5">
                                                             <div className="flex items-center gap-2">
                                                                 <BotonVerDetalle
                                                                     idInfraccion={row.id}
+                                                                    basePath="/agente_infracciones/revision-documental"
                                                                 />
-                                                                {estatusDep === 'VEHICULO_EN_CORRALON' && (
+                                                                {row.estatusDependencia === 'PENDIENTE_DATOS_INFRACTOR' && (
                                                                     <button
-                                                                        onClick={() => setCapturarInfractorId(row.id)}
-                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 active:scale-[0.99] transition-colors duration-150"
+                                                                        onClick={() => setCapturarDatosId(row.id)}
+                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-colors duration-150 active:scale-[0.99]"
+                                                                        style={{ background: '#0891b2' }}
+                                                                        onMouseEnter={e => { e.currentTarget.style.background = '#0e7490' }}
+                                                                        onMouseLeave={e => { e.currentTarget.style.background = '#0891b2' }}
                                                                     >
                                                                         <User size={11} strokeWidth={2.5} />
                                                                         Capturar datos
                                                                     </button>
                                                                 )}
-                                                                {estatusDep === 'MESA_DE_CONTROL_REVISION' && (
+                                                                {row.estatusDependencia === 'PENDIENTE_DEVOLUCION_GARANTIA' && (
                                                                     <button
-                                                                        onClick={() => setRevisionModalId(row.id)}
-                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
+                                                                        onClick={() => setGarantiaId(row.id)}
+                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-colors duration-150 active:scale-[0.99]"
+                                                                        style={{ background: '#22c55e' }}
+                                                                        onMouseEnter={e => { e.currentTarget.style.background = '#16a34a' }}
+                                                                        onMouseLeave={e => { e.currentTarget.style.background = '#22c55e' }}
                                                                     >
-                                                                        <Search size={11} strokeWidth={2.5} />
-                                                                        Revisar documentos
+                                                                        <Shield size={11} strokeWidth={2.5} />
+                                                                        Devolver garantía
                                                                     </button>
                                                                 )}
                                                             </div>
@@ -519,53 +489,22 @@ export default function LiberacionesDashboard({
                 </div>
             )}
 
-            {/* ─── Revisión Documentos Modal ─── */}
-            {revisionModalId && (
-                <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/70 backdrop-blur-sm pt-12 pb-8 overflow-y-auto">
-                    <div className="relative w-full max-w-4xl animate-in fade-in zoom-in-95 duration-200">
-                        <button
-                            onClick={() => { setRevisionModalId(null); router.refresh() }}
-                            className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center hover:bg-slate-50 transition-colors"
-                        >
-                            <X size={14} strokeWidth={2.5} />
-                        </button>
-                        <RevisionDocumentosSection
-                            infraccionId={revisionModalId}
-                            onValidated={() => { setRevisionModalId(null); router.refresh() }}
-                        />
-                    </div>
-                </div>
+            {/* ─── Capturar Datos Infractor Modal ─── */}
+            {capturarDatosId && (
+                <CapturarDatosInfractorModal
+                    infraccionId={capturarDatosId}
+                    onSuccess={() => { setCapturarDatosId(null); router.refresh() }}
+                    onClose={() => setCapturarDatosId(null)}
+                />
             )}
 
-            {/* ─── Capturar Infractor Modal ─── */}
-            {capturarInfractorId && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm"
-                    onClick={(e) => { if (e.target === e.currentTarget) setCapturarInfractorId(null) }}
-                >
-                    <div className="w-full max-w-lg">
-                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-200 bg-orange-50 rounded-t-xl">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-6 h-6 rounded-md flex items-center justify-center bg-orange-500">
-                                    <User size={12} strokeWidth={2.5} className="text-white" />
-                                </div>
-                                <h3 className="text-sm font-medium tracking-wider uppercase text-orange-800">Liberación por infracción</h3>
-                            </div>
-                            <button
-                                onClick={() => setCapturarInfractorId(null)}
-                                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors bg-slate-100 text-slate-500 hover:text-slate-600"
-                            >
-                                <X size={14} strokeWidth={2.5} />
-                            </button>
-                        </div>
-                        <div className="p-5 bg-white border-x border-b border-slate-200 rounded-b-xl">
-                            <CapturarInfractorSection
-                                infraccionId={capturarInfractorId}
-                                onSuccess={() => { setCapturarInfractorId(null); router.refresh() }}
-                            />
-                        </div>
-                    </div>
-                </div>
+            {/* ─── Entregar Garantía Modal ─── */}
+            {garantiaId && (
+                <ModalEntregarGarantia
+                    infraccionId={garantiaId}
+                    onSuccess={() => { setGarantiaId(null); router.refresh() }}
+                    onClose={() => setGarantiaId(null)}
+                />
             )}
         </>
     )
