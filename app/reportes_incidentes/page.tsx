@@ -105,7 +105,7 @@ export default async function ReportesIncidentesPage({
                     )}
                 </div>
 
-                <div style={{ marginTop: '40px' }}>
+                <div key={tipo} style={{ marginTop: '40px' }}> 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
                         <div style={{ width: '4px', height: '24px', background: '#2563EB' }} />
                         <h2 style={{

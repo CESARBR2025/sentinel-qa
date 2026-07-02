@@ -1,5 +1,5 @@
 'use client'
-import { Search, X, Calendar } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { styles } from './styles'
@@ -16,12 +16,17 @@ export function FiltrosIncidencias() {
     const params = new URLSearchParams()
     if (from) params.set('from', from)
     if (to)   params.set('to',   to)
-    params.set('tipo', tipo)
+    
+    // CORRECCIÓN: Usamos 'tipo' que es el nombre de tu estado arriba
+    params.set('tipo', tipo) 
+    
     router.push(`?${params.toString()}`)
   }
 
   const handleLimpiar = () => {
-    setFrom(''); setTo(''); setTipo('diario')
+    setFrom('')
+    setTo('')
+    setTipo('diario')
     router.push('?')
   }
 
