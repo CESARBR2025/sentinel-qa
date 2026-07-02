@@ -6,39 +6,44 @@ export const DescargaFilters = () => {
         <div style={styles.filterCard}>
             <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', 
                 gap: '16px', 
                 alignItems: 'end' 
             }}>
-                {/* Nombre */}
+                {/* 1. Nombre */}
                 <div>
                     <label style={styles.label}>Nombre del Afectado</label>
                     <input style={styles.input} placeholder="Ej. Juan Pérez..." />
                 </div>
 
-                {/* Documentación */}
+                {/* 2. Documentación */}
                 <div>
                     <label style={styles.label}>Documentación</label>
                     <input style={styles.input} placeholder="INE, Pasaporte, etc..." />
                 </div>
 
-                {/* Fecha */}
+                {/* 3. Fecha Inicio */}
                 <div>
-                    <label style={styles.label}>Rango de Fecha</label>
+                    <label style={styles.label}>Fecha Inicio</label>
                     <input type="date" style={styles.input} />
                 </div>
 
-                {/* Acciones */}
+                {/* 4. Fecha Fin */}
+                <div>
+                    <label style={styles.label}>Fecha Fin</label>
+                    <input type="date" style={styles.input} />
+                </div>
+
+                {/* 5. Acciones de Búsqueda y Descarga */}
                 <div style={{ display: 'flex', gap: '8px' }}>
-                    <button style={{ ...styles.primaryButton, flex: 1, justifyContent: 'center' }}>
-                        <Search size={16} /> BUSCAR
+                    <button title="Filtrar" style={{ ...styles.primaryButton, flex: 1, justifyContent: 'center' }}>
+                        <Search size={16} />
                     </button>
                     
-                    {/* BOTÓN DE DESCARGA EXCEL */}
-                    <button style={{ 
+                    <button title="Descargar Reporte Excel" style={{ 
                         ...styles.primaryButton, 
-                        background: '#166534', // Verde Excel para que se note
-                        flex: 1, 
+                        background: '#166534', // Verde Excel
+                        flex: 2, 
                         justifyContent: 'center' 
                     }}>
                         <FileSpreadsheet size={16} /> DESCARGAR EXCEL
