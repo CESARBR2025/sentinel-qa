@@ -3,19 +3,12 @@ import pptxgen from "pptxgenjs";
 
 export const generateDetenidoPPT = async (formData: any, fotos: any) => {
   const pptx = new pptxgen();
+  pptx.layout = "LAYOUT_WIDE"; // 13.33 x 7.5 pulgadas
 
-  // 1. Configuración de la Presentación
-  pptx.layout = "LAYOUT_WIDE";
-  pptx.defineSlideMaster({
-    title: "SENTINEL_MASTER",
-    background: { color: "F8FAFC" },
-    objects: [
-      { rect: { x: 0, y: 0, w: "100%", h: 0.6, fill: { color: "0F172A" } } },
-      { text: { text: "SISTEMA SENTINEL - INFORME TÁCTICO", options: { x: 0.4, y: 0.15, color: "FFFFFF", fontSize: 14, fontFace: "Arial" } } },
-    ],
-  });
+  const slide = pptx.addSlide();
+  const MAGENTA = "B042B4"; 
+  const GRAY_BG = "D9D9D9"; 
 
-  // Función para convertir File a Base64 (necesario para PPTX)
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -24,59 +17,90 @@ export const generateDetenidoPPT = async (formData: any, fotos: any) => {
     });
   };
 
-  // --- DIAPOSITIVA 1: FICHA DE IDENTIFICACIÓN ---
-  const slide1 = pptx.addSlide({ masterName: "SENTINEL_MASTER" });
-  
-  // Foto Frontal
+  // --- 1. ENCABEZADO ---
+  // Caja de Nombre
+  slide.addShape(pptx.ShapeType.rect, { x: 2.0, y: 0.2, w: 7.0, h: 0.5, fill: { color: GRAY_BG }, line: { color: MAGENTA, width: 1 } });
+  slide.addText(formData.nombreDetenido || "NOMBRE NO REGISTRADO", { x: 2.0, y: 0.25, w: 7.0, align: "center", fontSize: 14, bold: true });
+  slide.addText("NOMBRE COMPLETO", { x: 2.0, y: 0.55, w: 7.0, align: "center", fontSize: 7 });
+
+  // Apodo
+  slide.addText(`APODO: ${formData.alias || ""}`, { x: 7.5, y: 0.35, w: 1.5, fontSize: 8, italic: true });
+
+  // Caja de Folio
+  slide.addShape(pptx.ShapeType.rect, { x: 9.2, y: 0.2, w: 1.5, h: 0.5, line: { color: MAGENTA, width: 1 } });
+  slide.addText("FOLIO", { x: 9.2, y: 0.22, w: 1.5, align: "center", fontSize: 9, bold: true, fill: { color: GRAY_BG } });
+  slide.addText(formData.folio || "000", { x: 9.2, y: 0.45, w: 1.5, align: "center", fontSize: 12, bold: true, color: "FF0000" });
+
+  // Título del Delito
+  slide.addText(formData.delito || "DELITO NO ESPECIFICADO", { x: 0, y: 0.75, w: "100%", align: "center", fontSize: 11, bold: true });
+
+  // --- 2. FOTOGRAFÍAS (Ajustadas en tamaño) ---
   if (fotos.fotoFrontal) {
-    const imgBase64 = await fileToBase64(fotos.fotoFrontal);
-    slide1.addImage({ data: imgBase64, x: 0.5, y: 0.8, w: 3.5, h: 4.5 });
+    const imgDetenido = await fileToBase64(fotos.fotoFrontal);
+    slide.addImage({ data: imgDetenido, x: 2.1, y: 1.0, w: 2.8, h: 3.5 });
   }
 
-  // Datos Personales
-  slide1.addText("DATOS DEL DETENIDO", { x: 4.2, y: 0.8, fontSize: 20, bold: true, color: "2563EB" });
-  slide1.addTable([
-    [{ text: "NOMBRE:", options: { bold: true } }, formData.nombreDetenido],
-    [{ text: "FOLIO:", options: { bold: true } }, formData.folio],
-    [{ text: "FECHA NAC:", options: { bold: true } }, formData.fechaNacimiento],
-    [{ text: "GÉNERO:", options: { bold: true } }, formData.genero],
-    [{ text: "OCUPACIÓN:", options: { bold: true } }, formData.ocupacion],
-    [{ text: "DOMICILIO:", options: { bold: true } }, formData.domicilio],
-  ], { x: 4.2, y: 1.3, w: 8, fontSize: 12, border: { type: "none" }, fill: { color: "FFFFFF" } });
-
-  // --- DIAPOSITIVA 2: EVIDENCIA Y OPERATIVOS ---
-  const slide2 = pptx.addSlide({ masterName: "SENTINEL_MASTER" });
-  
-  slide2.addText("EVIDENCIA Y DATOS OPERATIVOS", { x: 0.5, y: 0.8, fontSize: 20, bold: true, color: "2563EB" });
-
-  // Foto de Objetos/Armas
   if (fotos.fotoObjetos) {
-    const imgObjBase64 = await fileToBase64(fotos.fotoObjetos);
-    slide2.addImage({ data: imgObjBase64, x: 0.5, y: 1.3, w: 5, h: 3.5 });
+    const imgEvidencia = await fileToBase64(fotos.fotoObjetos);
+    slide.addImage({ data: imgEvidencia, x: 5.2, y: 1.0, w: 4.5, h: 2.5 });
   }
 
-  // Tabla Operativa
-  slide2.addTable([
-    [{ text: "FOLIO RND:", options: { bold: true } }, formData.rnd],
-    [{ text: "FOLIO IPH:", options: { bold: true } }, formData.iph],
-    [{ text: "UBICACIÓN EVENTO:", options: { bold: true } }, formData.lugarEvento],
-    [{ text: "PUESTA A DISPOSICIÓN:", options: { bold: true } }, formData.puestaDisposicion],
-  ], { x: 6, y: 1.3, w: 6, fontSize: 11 });
-
-  // Modus Operandi
-  slide2.addText("MODUS OPERANDI:", { x: 0.5, y: 5, fontSize: 12, bold: true });
-  slide2.addText(formData.modusOperandi || "No registrado", { x: 0.5, y: 5.3, w: 12, fontSize: 11, italic: true });
-
-  // --- DIAPOSITIVA 3: INTELIGENCIA ---
-  const slide3 = pptx.addSlide({ masterName: "SENTINEL_MASTER" });
-  slide3.addText("ANTECEDENTES Y NEXOS", { x: 0.5, y: 0.8, fontSize: 20, bold: true, color: "2563EB" });
+  // --- 3. TABLA: DATOS GENERALES ---
+  slide.addText("DATOS GENERALES DETENIDO", { x: 0.5, y: 4.6, w: 12.3, align: "center", fontSize: 9, bold: true, fill: { color: GRAY_BG } });
   
-  slide3.addText("ANTECEDENTES DELICTIVOS:", { x: 0.5, y: 1.5, bold: true });
-  slide3.addText(formData.antecedentes || "Sin antecedentes registrados", { x: 0.5, y: 1.8, w: 12, h: 1.5, fontSize: 11, fill: { color: "F1F5F9" } });
+  slide.addTable([
+    [
+      { text: `FEC. NAC: ${formData.fechaNacimiento || ""}`, options: { fill: { color: "FFFFFF" } } },
+      { text: `GÉNERO: ${formData.genero || ""}`, options: { fill: { color: "FFFFFF" } } }
+    ],
+    [
+      { text: `ORIGINARIO: ${formData.origen || ""}` },
+      { text: `ESTADO CIVIL: ${formData.estadoCivil || ""}` }
+    ],
+    [
+      { text: `ESCOLARIDAD: ${formData.escolaridad || ""}` },
+      { text: `OCUPACIÓN: ${formData.ocupacion || ""}` }
+    ]
+  ], { x: 0.5, y: 4.85, w: 12.3, colW: [6.15, 6.15], rowH: 0.25, fontSize: 8, border: { type: "solid", color: MAGENTA, pt: 0.5 } });
 
-  slide3.addText("NEXOS Y BANDAS:", { x: 0.5, y: 3.5, bold: true });
-  slide3.addText(formData.nexosDelictivos || "No se identifican nexos", { x: 0.5, y: 3.8, w: 12, h: 1.5, fontSize: 11, fill: { color: "F1F5F9" } });
+  slide.addTable([
+    [{ text: `DOMICILIO: ${formData.domicilio || ""}` }],
+    [{ text: `RASGOS PARTICULARES: ${formData.rasgosParticulares || ""}` }]
+  ], { x: 0.5, y: 5.6, w: 12.3, rowH: 0.25, fontSize: 8, border: { type: "solid", color: MAGENTA, pt: 0.5 } });
 
-  // 4. Guardar el archivo
-  pptx.writeFile({ fileName: `INFORME_${formData.folio || "DETENIDO"}.pptx` });
+  // --- 4. TABLA: EVENTO DELICTIVO ---
+  slide.addText("EVENTO DELICTIVO", { x: 0.5, y: 6.15, w: 12.3, align: "center", fontSize: 9, bold: true, fill: { color: GRAY_BG } });
+
+  slide.addTable([
+    [
+        { text: `FECHA Y HORA: ${formData.fechaHora || ""}` }, 
+        { text: `RND: ${formData.rnd || ""}` }, 
+        { text: `EXPEDIENTE: ${formData.expediente || ""}` }
+    ],
+    [
+        { text: `LUGAR DEL EVENTO: ${formData.lugarEvento || ""}` }, 
+        { text: `LUGAR DE DETENCIÓN: ${formData.lugarDetencion || ""}` }, 
+        { text: `IPH: ${formData.iph || ""}` }
+    ],
+    [
+        { text: `NEXOS DELICTIVOS: ${formData.nexosDelictivos || ""}` }, 
+        { text: `ZONA DE OPERACIÓN: ${formData.zonaOperacion || ""}` }, 
+        { text: `PUESTA A DISPOSICIÓN: ${formData.puestaDisposicion || ""}` }
+    ]
+  ], { x: 0.5, y: 6.4, w: 12.3, colW: [4.1, 4.1, 4.1], rowH: 0.3, fontSize: 7, border: { type: "solid", color: MAGENTA, pt: 0.5 } });
+
+  // --- 5. ANTECEDENTES (Ajustado para que no se salga de la hoja) ---
+  slide.addTable([
+    [
+      { text: "DELITOS ( ANTECEDENTES )", options: { fill: { color: GRAY_BG }, bold: true, align: "center" } },
+      { text: "FALTAS ADMINISTRATIVAS ( ANTECEDENTES )", options: { fill: { color: GRAY_BG }, bold: true, align: "center" } }
+    ],
+    [
+      { text: formData.antecedentes || "Sin antecedentes", options: { valign: "top" } },
+      { text: formData.faltasAdmin || "Sin faltas", options: { valign: "top" } }
+    ]
+  ], { x: 0.5, y: 7.3, w: 12.3, rowH: [0.2, 1.0], fontSize: 7, border: { type: "solid", color: MAGENTA, pt: 0.5 } });
+
+  // Guardar
+  pptx.writeFile({ fileName: `FICHA_TACTICA_${formData.folio || "DETENIDO"}.pptx` });
 };
