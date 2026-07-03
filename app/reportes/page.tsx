@@ -12,6 +12,8 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 async function getStats() {
   // Ejecutamos la consulta
@@ -25,6 +27,15 @@ async function getStats() {
 export default async function GestionPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 

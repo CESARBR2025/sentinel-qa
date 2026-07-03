@@ -12,6 +12,9 @@ import { FiltrosIncidencias } from '@/components/reportes/incidentes/FiltrosInci
 import { IncidenteStat } from '@/components/reportes/incidentes/StatIncidencia'
 import { TablaIncidentes } from '@/components/reportes/incidentes/TablaIncidentes'
 import { Pagination } from '@/components/reportes/incidentes/Paginacion'
+import { db } from '@/lib/db/index'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 export default async function ReportesIncidentesPage({
     searchParams,
@@ -22,6 +25,16 @@ export default async function ReportesIncidentesPage({
     // 1. Autenticación y sesión
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) redirect('/login')
+
+    const [userRole] = await db
+        .select({ rolNombre: roles.nombre })
+        .from(users)
+        .leftJoin(roles, eq(users.rolId, roles.id))
+        .where(eq(users.id, session.user.id))
+        .limit(1)
+
+    if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+
 
     // 2. Preparación de datos de usuario y filtros
     const user = session.user as { name: string; email: string; image?: string }
@@ -105,7 +118,7 @@ export default async function ReportesIncidentesPage({
                     )}
                 </div>
 
-                <div key={tipo} style={{ marginTop: '40px' }}> 
+                <div key={tipo} style={{ marginTop: '40px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
                         <div style={{ width: '4px', height: '24px', background: '#2563EB' }} />
                         <h2 style={{
@@ -121,8 +134,8 @@ export default async function ReportesIncidentesPage({
                     </div>
 
                     <TablaIncidentes tipo={tipo} data={tablaData} />
-                    
-                    <Pagination 
+
+                    <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
                         totalRecords={totalRecords}

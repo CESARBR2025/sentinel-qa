@@ -9,6 +9,9 @@ import { ReportStat } from '@/components/reportes/deteccion_camara/ReportStat'
 import { ReportFilters } from '@/components/reportes/deteccion_camara/ReportFilters'
 import { ReportTable } from '@/components/reportes/deteccion_camara/ReportTables'
 import { styles } from '@/components/reportes/deteccion_camara/styles'
+import { db } from '@/lib/db/index'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 async function getReportData(from?: string, to?: string) {
     return {
@@ -26,18 +29,27 @@ async function getReportData(from?: string, to?: string) {
     }
 }
 
-export default async function ReportesCamarasPage({ 
-    searchParams 
-}: { 
-    searchParams: Promise<{ from?: string, to?: string }> | { from?: string, to?: string } 
+export default async function ReportesCamarasPage({
+    searchParams
+}: {
+    searchParams: Promise<{ from?: string, to?: string }> | { from?: string, to?: string }
 }) {
     // 1. VALIDACIÓN DE SESIÓN (Tal cual como en tu código del 911)
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) redirect('/login')
 
+    const [userRole] = await db
+        .select({ rolNombre: roles.nombre })
+        .from(users)
+        .leftJoin(roles, eq(users.rolId, roles.id))
+        .where(eq(users.id, session.user.id))
+        .limit(1)
+
+    if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+
     // 2. CASTING DEL USER PARA EVITAR EL ERROR EN ROJO
     const user = session.user as { name: string; email: string; image?: string }
-    
+
     // Resolvemos params por si usas Next.js 15
     const params = await searchParams
     const stats = await getReportData(params.from, params.to)
@@ -45,12 +57,12 @@ export default async function ReportesCamarasPage({
     return (
         <div style={styles.container}>
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-            
+
             {/* 3. PASAMOS EL USER AL HEADER */}
             <DashboardHeader user={user} />
 
             <main style={styles.main}>
-                
+
                 {/* TITULOS */}
                 <div style={styles.headerContainer}>
                     <div>
@@ -58,7 +70,7 @@ export default async function ReportesCamarasPage({
                         <h1 style={styles.title}>CONCENTRADO <span style={{ color: '#2563EB' }}>MENSUAL TOTAL</span></h1>
                     </div>
                     <div style={{ display: 'flex', gap: '10px' }}>
-                        <button style={{...styles.primaryButton, background: 'white', color: '#0F172A', border: '1px solid #CBD5E1'}}>
+                        <button style={{ ...styles.primaryButton, background: 'white', color: '#0F172A', border: '1px solid #CBD5E1' }}>
                             <FileDown size={16} /> PDF
                         </button>
                         <button style={styles.primaryButton}>
@@ -80,7 +92,7 @@ export default async function ReportesCamarasPage({
                 </div>
 
                 <ReportTable data={stats} />
-                
+
             </main>
         </div>
     )

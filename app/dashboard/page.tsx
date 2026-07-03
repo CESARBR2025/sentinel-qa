@@ -26,6 +26,7 @@ export default async function DashboardPage() {
   if (userRole?.rolNombre === 'agente_liberaciones') redirect('/agente_liberaciones')
   if (userRole?.rolNombre === 'Monitorista') redirect('/monitorista')
   if (userRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
+  if (userRole?.rolNombre === 'Reportante') redirect('/reportes')
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean
@@ -126,7 +127,7 @@ export default async function DashboardPage() {
                 <span style={{ width: 8, height: 8, background: '#3b82f6', display: 'inline-block' }}></span>
                 Sistema Táctico
               </div>
-              <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 56, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1}}>
+              <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 56, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
                 SENTINEL
               </h1>
             </div>
