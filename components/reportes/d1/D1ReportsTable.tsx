@@ -10,7 +10,7 @@ export function D1ReportsTable({ data }: { data: any[] }) {
     const itemsPerPage = 10
 
     // Lógica de filtrado
-    const filteredData = data.filter(row => 
+    const filteredData = data.filter(row =>
         Object.values(row).some(val => String(val).toLowerCase().includes(searchTerm.toLowerCase()))
     )
 
@@ -26,7 +26,7 @@ export function D1ReportsTable({ data }: { data: any[] }) {
     return (
         <div style={styles.tableSection}>
             <div style={styles.tableContainer}>
-                
+
                 {/* ENCABEZADO DE TABLA (Igual a tu ejemplo de teléfonos) */}
                 <div style={styles.tableHeader}>
                     <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '22px', fontWeight: 700 }}>
@@ -35,12 +35,11 @@ export function D1ReportsTable({ data }: { data: any[] }) {
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ position: 'relative' }}>
                             <Search size={14} style={{ position: 'absolute', left: '10px', top: '9px', color: '#94A3B8' }} />
-                            <input 
+                            <input
                                 type="text" placeholder="Buscar..." style={styles.searchInput}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <button style={styles.secondaryButton}><FileDown size={14} /> EXCEL</button>
                     </div>
                 </div>
 
@@ -48,43 +47,55 @@ export function D1ReportsTable({ data }: { data: any[] }) {
                     <table style={styles.table}>
                         <thead>
                             <tr>
-                                <th style={styles.th}>Folio D1 / CU</th>
-                                <th style={styles.th}>Evento y Delito</th>
-                                <th style={styles.th}>Tiempos</th>
+                                <th style={styles.th}>Folio / IPH</th>
+                                <th style={styles.th}>Incidente / Delito</th>
+                                <th style={styles.th}>Fecha y Hora</th>
                                 <th style={styles.th}>Ubicación</th>
-                                <th style={styles.th}>Unidad y Personal</th>
-                                <th style={styles.th}>Estatus</th>
+                                <th style={styles.th}>Personal</th>
+                                <th style={styles.th}>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
                             {paginatedData.map((item, i) => (
                                 <tr key={i} style={{ background: i % 2 === 0 ? 'white' : '#F8FAFC' }}>
                                     <td style={styles.td}>
-                                        <div style={styles.monoData}>{item.folio_denuncia}</div>
-                                        <div style={{fontSize: '10px', color: '#64748B'}}>CU: {item.folio_cu}</div>
+                                        <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: 13 }}>{item.folioDenuncia}</div>
+                                        {item.iph !== '—' && <div style={{ fontSize: 10, color: '#64748B' }}>IPH: {item.iph}</div>}
+                                        {item.folioCu !== '—' && <div style={{ fontSize: 10, color: '#64748B' }}>CU: {item.folioCu}</div>}
+                                        {item.folioSija !== '—' && <div style={{ fontSize: 10, color: '#64748B' }}>SIJA: {item.folioSija}</div>}
                                     </td>
                                     <td style={styles.td}>
-                                        <div style={{fontWeight: 700}}>{item.delito}</div>
-                                        <span style={styles.badge(item.violencia === 'SI' ? 'danger' : 'neutral')}>
-                                            {item.violencia}
+                                        <div style={{ fontWeight: 600, fontSize: 12 }}>{item.tipoIncidente !== '—' ? item.tipoIncidente : item.tipoEvento}</div>
+                                        <div style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>{item.delito}</div>
+                                        {item.violencia && (
+                                            <span style={{ background: '#FEE2E2', color: '#991B1B', padding: '2px 6px', borderRadius: 2, fontSize: 9, fontFamily: 'JetBrains Mono', fontWeight: 700 }}>
+                                                CON VIOLENCIA
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td style={styles.td}>
+                                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11 }}>{item.fechaReporte}</div>
+                                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748B' }}>{item.horaReporte}</div>
+                                    </td>
+                                    <td style={styles.td}>
+                                        <div style={{ fontWeight: 600, fontSize: 12 }}>{item.coloniaHecho}</div>
+                                        <div style={{ fontSize: 11, color: '#64748B' }}>{item.lugarHecho}</div>
+                                        <div style={{ fontSize: 10, color: '#94A3B8' }}>{item.municipio}</div>
+                                    </td>
+                                    <td style={styles.td}>
+                                        <div style={{ fontWeight: 600, fontSize: 12 }}>{item.policiaACargo}</div>
+                                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748B' }}>CRP: {item.crp}</div>
+                                        {item.oficialNombre !== '—' && <div style={{ fontSize: 10, color: '#94A3B8' }}>{item.oficialNombre}</div>}
+                                    </td>
+                                    <td style={styles.td}>
+                                        <span style={{ background: item.estadoTramite === 'RECIBIDA' ? '#DBEAFE' : item.estadoTramite === 'EN_PROCESO' ? '#FEF3C7' : '#DCFCE7', color: item.estadoTramite === 'RECIBIDA' ? '#1D4ED8' : item.estadoTramite === 'EN_PROCESO' ? '#B45309' : '#15803D', padding: '3px 8px', borderRadius: 2, fontSize: 9, fontFamily: 'JetBrains Mono', fontWeight: 700, display: 'inline-block', marginBottom: 4 }}>
+                                            {item.estadoTramite}
                                         </span>
-                                    </td>
-                                    <td style={styles.td}>
-                                        <div style={styles.monoData}>{item.fecha_reporte}</div>
-                                        <div style={{fontSize: '11px'}}>{item.hora_reporte}</div>
-                                    </td>
-                                    <td style={styles.td}>
-                                        <div style={{fontWeight: 600}}>{item.colonia}</div>
-                                        <div style={{fontSize: '11px'}}>{item.municipio}</div>
-                                    </td>
-                                    <td style={styles.td}>
-                                        <div style={{fontWeight: 600}}>{item.nombre_policia}</div>
-                                        <div style={styles.monoData}>CRP: {item.crp}</div>
-                                    </td>
-                                    <td style={styles.td}>
-                                        <span style={styles.badge(item.genero_d1 === 'SI' ? 'success' : 'warning')}>
-                                            {item.genero_d1}
-                                        </span>
+                                        {item.seGeneroD1 && (
+                                            <span style={{ background: '#DCFCE7', color: '#15803D', padding: '2px 6px', borderRadius: 2, fontSize: 9, fontFamily: 'JetBrains Mono', fontWeight: 700 }}>
+                                                D1 GENERADA
+                                            </span>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -93,7 +104,7 @@ export function D1ReportsTable({ data }: { data: any[] }) {
                 </div>
 
                 {/* Llamamos a la paginación pasándole las props que definimos */}
-                <D1Pagination 
+                <D1Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
                     totalRecords={filteredData.length}

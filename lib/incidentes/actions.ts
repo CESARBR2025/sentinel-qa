@@ -9,6 +9,7 @@ import { db } from '@/lib/db/index'
 import { users, roles, incidentes, incidentePersonasAfectadas, incidenteDespacho, incidenteReporteCampo, incidenteExtorsion, incidenteAlarmaEscolar, incidenteDespachoUnidades, incidenteDespachoElementos } from '@/lib/db/schema'
 import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
+import { crearReporteCampo } from './service'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 async function requireOperador() {
@@ -212,20 +213,61 @@ export async function deletePersonaAfectada(formData: FormData) {
 
 
 export async function createRecorridoCompleto(formData: FormData) {
-  // 1. Ejecutamos tu función createIncidente (que ya devuelve el objeto 'inc')
-  // Como el canal es 'radio', el estatus quedará en 'en_despacho'
-  const inc = await createIncidente(formData);
+  const session = await requireOperador()
 
-  // 2. Inyectamos el ID generado al formData para que el reporte de campo sepa a qué incidente pertenece
-  formData.set('incidenteId', inc.id);
+  // Insertar incidente sin redirect
+  const inc = await insertarIncidente(formData, session)
 
-  // 3. Ejecutamos la creación del reporte de campo
-  // Esto llenará la tabla 'incidente_reporte_campo' y pasará el estatus a 'atendido'
-  await createReporteCampo(formData);
+  // Insertar reporte de campo
+  const vehiculosRaw = str(formData, 'vehiculos')
+  const vehiculos = vehiculosRaw ? JSON.parse(vehiculosRaw) : []
+  const montoRaw = num(formData, 'montoRobo')
 
-  // 4. Redirección final al detalle del incidente
-  redirect(`/incidentes/${inc.id}`);
+  await crearReporteCampo({
+    incidenteId: inc.id,
+    contenidoReporte: str(formData, 'contenidoReporte'),
+    lugarCalle: str(formData, 'calle'),
+    lugarColonia: str(formData, 'colonia'),
+    lugarEntreCalles: str(formData, 'entreCalles'),
+    lugarReferencia: str(formData, 'referenciaUbicacion'),
+    datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
+    accionesRealizadas: str(formData, 'accionesRealizadas'),
+    hayDetencion: bool(formData, 'hayDetencion'),
+    nombreDetenidos: str(formData, 'nombreDetenidos'),
+    autoridadRecibe: str(formData, 'autoridadRecibe'),
+    expedienteCi: str(formData, 'expedienteCi'),
+    delitoFalta: str(formData, 'delitoFalta'),
+    hayRobo: bool(formData, 'hayRobo'),
+    montoRobo: montoRaw,
+    objetosRecuperados: str(formData, 'objetosRecuperados'),
+    hayVehiculo: bool(formData, 'hayVehiculo'),
+    vehiculos,
+    hayCateo: bool(formData, 'hayCateo'),
+    domicilioCateado: str(formData, 'domicilioCateado'),
+    cateoCalle: str(formData, 'cateoCalle'),
+    cateoColonia: str(formData, 'cateoColonia'),
+    cateoLatitud: str(formData, 'cateoLatitud'),
+    cateoLongitud: str(formData, 'cateoLongitud'),
+    resultadoCateo: str(formData, 'resultadoCateo'),
+    policiaACargo: str(formData, 'policiaCargo'),
+    personalIngresoCi: str(formData, 'personalIngresoCi'),
+    capturadoPor: session.user.id,
+    hayOrdenAprehension: bool(formData, 'hay_orden_aprehension'),
+    ordenesAprehension: JSON.parse(str(formData, 'ordenes_aprehension') ?? '[]'),
+    hayHidrocarburo: bool(formData, 'hay_hidrocarburo'),
+    hidrocarburos: JSON.parse(str(formData, 'hidrocarburos') ?? '[]'),
+    hayArmaFuego: bool(formData, 'hay_arma_fuego'),
+    armasFuego: JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
+    hayDroga: bool(formData, 'hay_droga'),
+    drogas: JSON.parse(str(formData, 'drogas') ?? '[]'),
+    observaciones: str(formData, 'observaciones'),
+  })
+
+  revalidatePath('/911/rondin')
+  revalidatePath('/incidentes')
+  redirect(`/911/rondin/incidentes/${inc.id}`)
 }
+
 // ─── Despacho ─────────────────────────────────────────────────────────────────
 export async function createDespacho(formData: FormData) {
   const session = await requireOperador()
@@ -274,58 +316,117 @@ export async function createDespacho(formData: FormData) {
 export async function createReporteCampo(formData: FormData) {
   const session = await requireOperador()
 
-  const incidenteId = req(formData, 'incidenteId')
-
-  const [inc] = await db.select({ estatus: incidentes.estatus }).from(incidentes).where(eq(incidentes.id, incidenteId)).limit(1)
-  if (!inc) throw new Error('Incidente no encontrado')
-  if (inc.estatus === 'atendido') throw new Error('El incidente ya está atendido')
-  if (inc.estatus === 'sin_despachar') throw new Error('El incidente debe estar en_despacho antes de reportar')
-
-  const [reporteExistente] = await db.select({ id: incidenteReporteCampo.id }).from(incidenteReporteCampo).where(eq(incidenteReporteCampo.incidenteId, incidenteId)).limit(1)
-  if (reporteExistente) throw new Error('El incidente ya tiene un reporte de campo')
+  const vehiculosRaw = str(formData, 'vehiculos')
+  const vehiculos = vehiculosRaw ? JSON.parse(vehiculosRaw) : []
 
   const montoRaw = num(formData, 'montoRobo')
-  if (montoRaw !== null && (montoRaw < 0 || !Number.isInteger(montoRaw)))
-    throw new Error('montoRobo debe ser un entero positivo')
 
-  await db.transaction(async tx => {
-    await tx.insert(incidenteReporteCampo).values({
-      incidenteId,
-      contenidoReporte: str(formData, 'contenidoReporte'),
-      lugarCalle: str(formData, 'lugarCalle'),
-      lugarColonia: str(formData, 'lugarColonia'),
-      lugarEntreCalles: str(formData, 'lugarEntreCalles'),
-      lugarReferencia: str(formData, 'lugarReferencia'),
-      datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
-      accionesRealizadas: str(formData, 'accionesRealizadas'),
-      hayDetencion: bool(formData, 'hayDetencion'),
-      nombreDetenidos: str(formData, 'nombreDetenidos'),
-      autoridadRecibe: str(formData, 'autoridadRecibe'),
-      expedienteCi: str(formData, 'expedienteCi'),
-      delitoFalta: str(formData, 'delitoFalta'),
-      montoRobo: montoRaw,
-      objetosRecuperados: str(formData, 'objetosRecuperados'),
-      vehiculosRecuperados: str(formData, 'vehiculosRecuperados'),
-      tipoVehiculo: str(formData, 'tipoVehiculo'),
-      destinoVehiculo: str(formData, 'destinoVehiculo'),
-      hayCateo: bool(formData, 'hayCateo'),
-      domicilioCateado: str(formData, 'domicilioCateado'),
-      resultadoCateo: str(formData, 'resultadoCateo'),
-      policiaCargo: str(formData, 'policiaCargo'),
-      personalIngresoCi: str(formData, 'personalIngresoCi'),
-      capturadoPor: session.user.id,
-    })
-
-    await tx.update(incidentes)
-      .set({ estatus: 'atendido', actualizadoEn: sql`now()` })
-      .where(eq(incidentes.id, incidenteId))
+  const { estatusAnterior } = await crearReporteCampo({
+    incidenteId: req(formData, 'incidenteId'),
+    contenidoReporte: str(formData, 'contenidoReporte'),
+    lugarCalle: str(formData, 'lugarCalle'),
+    lugarColonia: str(formData, 'lugarColonia'),
+    lugarEntreCalles: str(formData, 'lugarEntreCalles'),
+    lugarReferencia: str(formData, 'lugarReferencia'),
+    datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
+    accionesRealizadas: str(formData, 'accionesRealizadas'),
+    hayDetencion: bool(formData, 'hayDetencion'),
+    nombreDetenidos: str(formData, 'nombreDetenidos'),
+    autoridadRecibe: str(formData, 'autoridadRecibe'),
+    expedienteCi: str(formData, 'expedienteCi'),
+    delitoFalta: str(formData, 'delitoFalta'),
+    hayRobo: bool(formData, 'hayRobo'),
+    montoRobo: montoRaw,
+    objetosRecuperados: str(formData, 'objetosRecuperados'),
+    hayVehiculo: bool(formData, 'hayVehiculo'),
+    vehiculos,
+    hayCateo: bool(formData, 'hayCateo'),
+    domicilioCateado: str(formData, 'domicilioCateado'),
+    cateoCalle: str(formData, 'cateoCalle'),
+    cateoColonia: str(formData, 'cateoColonia'),
+    cateoLatitud: str(formData, 'cateoLatitud'),
+    cateoLongitud: str(formData, 'cateoLongitud'),
+    resultadoCateo: str(formData, 'resultadoCateo'),
+    policiaACargo: str(formData, 'policiaCargo'),
+    personalIngresoCi: str(formData, 'personalIngresoCi'),
+    capturadoPor: session.user.id,
+    hayOrdenAprehension: bool(formData, 'hay_orden_aprehension'),
+    ordenesAprehension:  JSON.parse(str(formData, 'ordenes_aprehension') ?? '[]'),
+    hayHidrocarburo:     bool(formData, 'hay_hidrocarburo'),
+    hidrocarburos:       JSON.parse(str(formData, 'hidrocarburos') ?? '[]'),
+    hayArmaFuego:        bool(formData, 'hay_arma_fuego'),
+    armasFuego:          JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
+    hayDroga:            bool(formData, 'hay_droga'),
+    drogas:              JSON.parse(str(formData, 'drogas') ?? '[]'),
+    observaciones: str(formData, 'observaciones'),
   })
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_reporte_campo', entidadId: incidenteId, payload: { estatus_anterior: inc.estatus, estatus_nuevo: 'atendido' } })
+  const incidenteId = req(formData, 'incidenteId')
+  await registrarAudit({
+    userId: session.user.id, accion: 'CREATE',
+    entidad: 'incidente_reporte_campo', entidadId: incidenteId,
+    payload: { estatus_anterior: estatusAnterior, estatus_nuevo: 'atendido' }
+  })
+
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
+// Versión sin redirect — para uso interno
+async function insertarIncidente(formData: FormData, session: Awaited<ReturnType<typeof requireOperador>>) {
+  const canal = validarEnum(str(formData, 'canal'), CANALES, 'canal')
+  const tipoReporte = validarEnum(str(formData, 'tipoReporte'), TIPOS_REPORTE, 'tipoReporte')
 
+  const anonimo = bool(formData, 'anonimo')
+  const nombreReportante = anonimo ? null : str(formData, 'nombreReportante')
+
+  const sexoRaw = str(formData, 'sexo')
+  const sexo = sexoRaw ? validarEnum(sexoRaw, SEXOS, 'sexo') : null
+
+  const fechaHoraInicio = req(formData, 'fechaHoraInicio')
+  const fechaHoraFin = str(formData, 'fechaHoraFin')
+
+  if (fechaHoraFin && new Date(fechaHoraFin) < new Date(fechaHoraInicio))
+    throw new Error('fechaHoraFin no puede ser anterior a fechaHoraInicio')
+
+  const estatus = canal === 'radio' ? 'en_despacho' : 'sin_despachar'
+  const { folio, consecutivo } = await generarFolioIncidente()
+
+  const lat = formData.get('latitud') ? String(formData.get('latitud')) : null
+  const lng = formData.get('longitud') ? String(formData.get('longitud')) : null
+
+  const [inc] = await db.insert(incidentes).values({
+    folio, folioConsecutivo: consecutivo, canal, tipoReporte,
+    nombreReportante, anonimo, sexo,
+    edad: num(formData, 'edad'),
+    esUsuarioFrecuente: bool(formData, 'esUsuarioFrecuente'),
+    esPersonaAfectada: bool(formData, 'esPersonaAfectada'),
+    esMigrante: bool(formData, 'esMigrante'),
+    calle: str(formData, 'calle'),
+    numeroExterior: str(formData, 'numero_exterior'),
+    numeroInterior: str(formData, 'numero_interior'),
+    colonia: str(formData, 'colonia'),
+    entreCalles: str(formData, 'entreCalles'),
+    referenciaUbicacion: str(formData, 'referenciaUbicacion'),
+    municipio: str(formData, 'municipio') ?? 'San Juan del Río',
+    latitud: lat, longitud: lng,
+    tipoEmergenciaId: num(formData, 'tipoEmergenciaId'),
+    tipoIncidenteId: num(formData, 'tipoIncidenteId'),
+    prioridadId: num(formData, 'prioridadId'),
+    descripcion: str(formData, 'descripcion'),
+    observaciones: str(formData, 'observaciones'),
+    fechaHoraInicio, fechaHoraFin,
+    grupoWhatsapp: canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
+    nombreOficial: canal === 'radio' ? str(formData, 'nombreOficial') : null,
+    medioCanalizacionId: num(formData, 'medioCanalizacionId'),
+    requiereDespacho: bool(formData, 'requiereDespacho'),
+    estatus,
+    capturadoPor: session.user.id,
+  }).returning()
+
+  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: inc.id })
+
+  return inc
+}
 
 // ─── Extorsión ────────────────────────────────────────────────────────────────
 export async function createExtorsion(formData: FormData) {

@@ -16,11 +16,10 @@ import {
   obtenerDatosAsegurado,
   guardarDetallesAsegurado,
   obtenerLiberacionesJuzgado,
-  obtenerDetalleInfraccionViaServiceJuzgado,
   iniciarProcesoJuzgadoSvc,
   finalizarProcesoJuzgadoSvc,
 } from "./service";
-import { rowToInfraccionDetalle } from "./mapper";
+import { obtenerDetalleInfraccionVia } from "@/lib/shared/infracciones";
 import type {
   UserInfo,
   SolicitudEvidencia,
@@ -261,6 +260,8 @@ export async function obtenerLiberacionesAction(): Promise<LiberacionesData> {
   return { data, total: data.length };
 }
 
+
+
 export async function obtenerDetalleInfraccionViaActionJuzgado(
   id: string,
 ): Promise<{ data: ViaInfraccionDetalle | null; error?: string }> {
@@ -271,10 +272,9 @@ export async function obtenerDetalleInfraccionViaActionJuzgado(
     const esValido = await verificarRolJuzgado(session.user.id);
     if (!esValido) return { data: null, error: "Acceso no autorizado" };
 
-    const raw = await obtenerDetalleInfraccionViaServiceJuzgado(id);
-    if (!raw) return { data: null, error: "No se encontró la infracción" };
+    const data = await obtenerDetalleInfraccionVia(id);
+    if (!data) return { data: null, error: "No se encontró la infracción" };
 
-    const data = rowToInfraccionDetalle(raw);
     return { data };
   } catch (err) {
     const msg =

@@ -36,14 +36,14 @@ export default async function GestionPage() {
       titulo: 'Incidentes captados en cámara',
       subtitulo: 'Monitoreo y detección de anomalías mediante sistemas de videovigilancia y analíticos.',
       icono: <Camera size={28} />,
-      enlace: '/incidentes_camara', // Ajusta a tu ruta real
+      enlace: '/incidentes_camaras', // Ajusta a tu ruta real
       estadisticas: [{ label: 'Alertas', value: '24' }, { label: 'Cámaras', value: '156' }]
     },
     {
       titulo: 'Reporte de incidentes',
       subtitulo: 'Registro operativo de sucesos captados por unidades en campo y reportes de cabina.',
       icono: <Zap size={28} />,
-      enlace: '/',
+      enlace: '/reportes_incidentes',
       estadisticas: [{ label: 'Hoy', value: String(stats.total) }, { label: 'Prioridad', value: 'Alta' }]
     },
     {
@@ -57,28 +57,28 @@ export default async function GestionPage() {
       titulo: 'Análisis Estadístico',
       subtitulo: 'Generación automática de concentrados diarios, semanales y mensuales para mando.',
       icono: <BarChart3 size={28} />,
-      enlace: '/',
+      enlace: '/estadisticos',
       estadisticas: [{ label: 'Corte', value: 'Semanal' }, { label: 'Eficiencia', value: '92%' }]
     },
     {
       titulo: 'Sistema Cosmos',
       subtitulo: 'Integración y seguimiento de carpetas de investigación con fiscalía y justicia penal.',
       icono: <Globe size={28} />,
-      enlace: '/',
+      enlace: '/d1',
       estadisticas: [{ label: 'Sincro', value: 'Activa' }, { label: 'Folios', value: '412' }]
     },
     {
       titulo: 'D1 no iniciada',
       subtitulo: 'Control de registros pendientes de inicio de carpeta o seguimiento administrativo.',
       icono: <FolderClock size={28} />,
-      enlace: '/',
+      enlace: '/d1_noiniciada',
       estadisticas: [{ label: 'Pendientes', value: '12' }, { label: 'Vencidas', value: '0' }]
     },
     {
       titulo: 'Sin robos confirmados',
       subtitulo: 'Análisis de eventos descartados o con falta de indicios de robo en el lugar.',
       icono: <PackageX size={28} />,
-      enlace: '/',
+      enlace: '/sin_robos',
       estadisticas: [{ label: 'Descartes', value: '45' }, { label: 'Falsos', value: '8' }]
     }
   ]

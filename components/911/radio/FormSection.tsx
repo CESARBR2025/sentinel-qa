@@ -57,6 +57,19 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
   const [nominaOficial, setNominaOficial] = useState("");
   const [nombreOficial, setNombreOficial] = useState("");
 
+  // Estados seguimientos
+  const [hayOrdenAprehension, setHayOrdenAprehension] = useState(false)
+  const [ordenesAprehension, setOrdenesAprehension] = useState<{ fecha: string; nombrePersona: string; observaciones: string; estatus: string; nombreSeguimiento: string }[]>([])
+
+  const [hayHidrocarburo, setHayHidrocarburo] = useState(false)
+  const [hidrocarburos, setHidrocarburos] = useState<{ fecha: string; nombrePersona: string; datosVehiculo: string; litrosExtraccion: string; nombreToma: string; observaciones: string; nombreSeguimiento: string }[]>([])
+
+  const [hayArmaFuego, setHayArmaFuego] = useState(false)
+  const [armasFuego, setArmasFuego] = useState<{ fecha: string; datos: string; cartuchos: string; observaciones: string; nombreSeguimiento: string }[]>([])
+
+  const [hayDroga, setHayDroga] = useState(false)
+  const [drogas, setDrogas] = useState<{ fecha: string; cantidad: string; nombre: string; observaciones: string; nombreSeguimiento: string }[]>([])
+
   // Función para buscar al Oficial
   const buscarOficial = async () => {
     if (!nominaOficial) return;
@@ -125,6 +138,13 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [direccion, setDireccion] = useState({ calle: "", numeroExterior: "", colonia: "" });
+  // Estados nuevos
+  const [hayRobo, setHayRobo] = useState("false")
+  const [numVehiculos, setNumVehiculos] = useState(0)
+  const [vehiculos, setVehiculos] = useState<{ tipo: string; placas: string; serie: string; color: string; destino: string }[]>([])
+  const [cateoCoords, setCateoCoords] = useState({ lat: 20.3889, lng: -99.9961 })
+  const [cateoDireccion, setCateoDireccion] = useState({ calle: '', colonia: '' })
+  const cateAutoRef = useRef<google.maps.places.Autocomplete | null>(null)
 
   // 3. Funciones de Geocodificación
   const buscarDireccion = (lat: number, lng: number) => {
@@ -158,6 +178,35 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
       setDireccion({ calle, numeroExterior: numero, colonia });
     }
   };
+
+  const buscarDireccionCateo = (lat: number, lng: number) => {
+    const geocoder = new google.maps.Geocoder()
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === 'OK' && results?.[0]) {
+        let calle = '', colonia = ''
+        results[0].address_components.forEach((comp) => {
+          if (comp.types.includes('route')) calle = comp.long_name
+          if (comp.types.includes('sublocality') || comp.types.includes('neighborhood')) colonia = comp.long_name
+        })
+        setCateoDireccion({ calle, colonia })
+      }
+    })
+  }
+
+  const onCateoPlaceChanged = () => {
+    const place = cateAutoRef.current?.getPlace()
+    if (place && place.geometry && place.geometry.location) {
+      const loc = place.geometry.location
+      const p = { lat: loc.lat(), lng: loc.lng() }
+      setCateoCoords(p)
+      let calle = '', colonia = ''
+      place.address_components?.forEach((comp) => {
+        if (comp.types.includes('route')) calle = comp.long_name
+        if (comp.types.includes('sublocality') || comp.types.includes('neighborhood')) colonia = comp.long_name
+      })
+      setCateoDireccion({ calle, colonia })
+    }
+  }
 
   const [autoridadSeleccionada, setAutoridadSeleccionada] = useState("MINISTERIO PÚBLICO");
 
@@ -269,6 +318,10 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       disabled={isAnonimo}
                     />
                   </div>
+                  {!isAnonimo && (
+                    <SentinelField label="Teléfono del Reportante" name="telefonoReportante"
+                      placeholder="10 dígitos" type="tel" />
+                  )}
                   <input type="hidden" name="anonimo" value={isAnonimo ? "true" : "false"} />
                   <button type="button" onClick={() => setIsAnonimo(!isAnonimo)} className="sentinel-btn-toggle">
                     {isAnonimo ? '[ ANÓNIMO: ON ]' : '[ ANÓNIMO: OFF ]'}
@@ -473,15 +526,6 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                     </div>
                   </>
                 )}
-
-                {tipoIncidente === "1" && (
-                  <SentinelField
-                    label="Monto de lo Robado (Solo números)"
-                    name="montoRobo"
-                    type="number"
-                    placeholder="0"
-                  />
-                )}
               </div>
             </section>
 
@@ -490,60 +534,127 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
               <h2 className="sentinel-section-title">Aseguramientos y Cateos</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
 
-                {/* Campo de Objetos (Ocupa todo el ancho) */}
+                {/* Objetos recuperados */}
                 <div style={{ gridColumn: 'span 3' }}>
-                  <SentinelField
-                    label="Objetos Recuperados"
-                    name="objetosRecuperados"
-                    as="textarea"
-                    placeholder="Descripción de bienes asegurados..."
-                  />
+                  <SentinelField label="Objetos Recuperados" name="objetosRecuperados" as="textarea" placeholder="Descripción de bienes asegurados..." />
                 </div>
 
-                {/* Selector de Vehículo */}
-                <SentinelField
-                  label="¿Aseguró Vehículo?"
-                  name="aseguroVehiculo" // Asegúrate de poner el name para el form
-                  as="select"
-                  value={tieneVehiculo}
-                  onChange={(e: any) => setTieneVehiculo(e.target.value)}
-                >
+                {/* ¿Hubo robo? */}
+                <SentinelField label="¿Hubo Robo?" name="hayRobo" as="select" value={hayRobo} onChange={(e: any) => setHayRobo(e.target.value)}>
                   <option value="false">NO</option>
                   <option value="true">SÍ</option>
                 </SentinelField>
 
-                {/* CAMPOS CONDICIONALES DE VEHÍCULO */}
+                {hayRobo === "true" && (
+                  <SentinelField label="Monto de lo Robado (Solo números)" name="montoRobo" type="number" placeholder="0" />
+                )}
+
+                {/* ¿Aseguró Vehículo? */}
+                <SentinelField label="¿Aseguró Vehículo?" name="hayVehiculo" as="select" value={tieneVehiculo} onChange={(e: any) => setTieneVehiculo(e.target.value)}>
+                  <option value="false">NO</option>
+                  <option value="true">SÍ</option>
+                </SentinelField>
+
                 {tieneVehiculo === "true" && (
-                  <>
-                    <SentinelField label="Vehículos Recuperados" name="vehiculosRecuperados" icon={Car} placeholder="Placas, Serie, Color..." />
-                    <SentinelField label="Tipo de Vehículo" name="tipoVehiculo" placeholder="Ej: Camioneta PickUp" />
-                    <SentinelField label="Destino de Vehículo" name="destinoVehiculo" placeholder="Ej: Pensión Municipal" />
-                  </>
+                  <div style={{ gridColumn: 'span 3', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Cantidad de Vehículos Asegurados
+                      </span>
+                      <select
+                        value={numVehiculos}
+                        onChange={(e) => {
+                          const n = Number(e.target.value)
+                          setNumVehiculos(n)
+                          setVehiculos(Array.from({ length: n }, (_, i) => vehiculos[i] ?? { tipo: '', placas: '', serie: '', color: '', destino: '' }))
+                        }}
+                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
+                      >
+                        <option value={0}>0</option>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
+                      </select>
+                    </div>
+
+                    {vehiculos.map((v, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 12, border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
+                        <select value={v.tipo} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], tipo: e.target.value }; setVehiculos(next) }}
+                          style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
+                          <option value="">Tipo</option>
+                          <option value="automovil">Automóvil</option>
+                          <option value="camioneta">Camioneta</option>
+                          <option value="trans. publico">Trans. Público</option>
+                          <option value="trans. carga">Trans. Carga</option>
+                          <option value="motocicleta">Motocicleta</option>
+                        </select>
+                        <input value={v.placas} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], placas: e.target.value }; setVehiculos(next) }}
+                          placeholder="Placas" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                        <input value={v.serie} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], serie: e.target.value }; setVehiculos(next) }}
+                          placeholder="Núm. Serie" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                        <input value={v.color} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], color: e.target.value }; setVehiculos(next) }}
+                          placeholder="Color" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                        <select value={v.destino} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], destino: e.target.value }; setVehiculos(next) }}
+                          style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
+                          <option value="">Destino</option>
+                          <option value="CORRALON MW">CORRALON MW</option>
+                          <option value="CORRALON MEJIA">CORRALON MEJIA</option>
+                        </select>
+                      </div>
+                    ))}
+
+                    {/* Campo oculto con JSON de vehículos */}
+                    <input type="hidden" name="vehiculos" value={JSON.stringify(vehiculos)} />
+                  </div>
                 )}
 
-                {/* Selector de Cateo */}
-                <SentinelField
-                  label="¿Hubo Cateo?"
-                  name="hayCateo"
-                  as="select"
-                  value={tieneCateo}
-                  onChange={(e: any) => setTieneCateo(e.target.value)}
-                >
+                {/* ¿Hubo Cateo? */}
+                <SentinelField label="¿Hubo Cateo?" name="hayCateo" as="select" value={tieneCateo} onChange={(e: any) => setTieneCateo(e.target.value)}>
                   <option value="false">NO</option>
                   <option value="true">SÍ</option>
                 </SentinelField>
 
-                {/* CAMPOS CONDICIONALES DE CATEO */}
                 {tieneCateo === "true" && (
-                  <>
-                    <div style={{ gridColumn: 'span 2' }}>
-                      <SentinelField label="Domicilio Cateado" name="domicilioCateado" icon={MapPin} placeholder="Dirección exacta del cateo" />
+                  <div style={{ gridColumn: 'span 3', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div>
+                      <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 8 }}>
+                        Domicilio Cateado — Marcar en el mapa
+                      </label>
+                      {isLoaded ? (
+                        <>
+                          <Autocomplete onLoad={(ref) => (cateAutoRef.current = ref)} onPlaceChanged={onCateoPlaceChanged}>
+                            <input
+                              type="text"
+                              placeholder="Buscar domicilio cateado..."
+                              style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', marginBottom: 12, fontFamily: 'Inter,sans-serif', fontSize: 14, outline: 'none' }}
+                            />
+                          </Autocomplete>
+                          <GoogleMap
+                            mapContainerStyle={{ width: '100%', height: '250px', borderRadius: 2 }}
+                            center={cateoCoords}
+                            zoom={15}
+                            onClick={(e) => { if (e.latLng) { const p = { lat: e.latLng.lat(), lng: e.latLng.lng() }; setCateoCoords(p); buscarDireccionCateo(p.lat, p.lng) } }}
+                            options={{ streetViewControl: false, mapTypeControl: false }}
+                          >
+                            <Marker position={cateoCoords} draggable
+                              onDragEnd={(e) => { if (e.latLng) { const p = { lat: e.latLng.lat(), lng: e.latLng.lng() }; setCateoCoords(p); buscarDireccionCateo(p.lat, p.lng) } }} />
+                          </GoogleMap>
+                          <input type="hidden" name="cateoCalle" value={cateoDireccion.calle} />
+                          <input type="hidden" name="cateoColonia" value={cateoDireccion.colonia} />
+                          <input type="hidden" name="cateoLatitud" value={cateoCoords.lat} />
+                          <input type="hidden" name="cateoLongitud" value={cateoCoords.lng} />
+                          <input type="hidden" name="domicilioCateado" value={`${cateoDireccion.calle}${cateoDireccion.colonia ? `, ${cateoDireccion.colonia}` : ''}`} />
+                        </>
+                      ) : <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#94a3b8' }}>Cargando mapa...</p>}
                     </div>
-                    <SentinelField label="Resultado del Cateo" name="resultadoCateo" placeholder="¿Qué se encontró?" />
-                  </>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+                      <SentinelField label="Calle (Cateo)" value={cateoDireccion.calle} onChange={(e: any) => setCateoDireccion({ ...cateoDireccion, calle: e.target.value })} />
+                      <SentinelField label="Colonia (Cateo)" value={cateoDireccion.colonia} onChange={(e: any) => setCateoDireccion({ ...cateoDireccion, colonia: e.target.value })} />
+                      <SentinelField label="Resultado del Cateo" name="resultadoCateo" placeholder="¿Qué se encontró?" />
+                    </div>
+                  </div>
                 )}
 
-                {/* --- BUSCADOR DE NÓMINA PARA EL MANDO --- */}
+                {/* Buscador Mando */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                     Nómina del Mando
@@ -551,59 +662,235 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                   <div style={{ display: 'flex', gap: '4px' }}>
                     <div style={{ position: 'relative', flex: 1 }}>
                       <Hash size={14} style={{ position: 'absolute', left: '12px', top: '15px', color: '#94a3b8', zIndex: 1 }} />
-                      <input
-                        type="text"
-                        placeholder="Escriba nómina..."
-                        value={nominaMando}
+                      <input type="text" placeholder="Escriba nómina..." value={nominaMando}
                         onChange={(e) => setNominaMando(e.target.value)}
                         onBlur={buscarMando}
-                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarMando(); } }}
-                        style={{
-                          width: '100%',
-                          padding: '12px 12px 12px 40px',
-                          background: '#ffffff',
-                          border: '1px solid #e2e8f0',
-                          borderLeft: '4px solid #3b82f6',
-                          borderRadius: '2px',
-                          fontFamily: 'Inter, sans-serif',
-                          fontSize: '14px',
-                          outline: 'none'
-                        }}
-                      />
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarMando() } }}
+                        style={{ width: '100%', padding: '12px 12px 12px 40px', background: '#ffffff', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', borderRadius: '2px', fontFamily: 'Inter,sans-serif', fontSize: '14px', outline: 'none' }} />
                     </div>
-                    <button
-                      type="button"
-                      onClick={buscarMando}
-                      style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}
-                    >
-                      {empMando.cargando ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                    <button type="button" onClick={buscarMando} style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}>
+                      {empMando.cargando ? <Loader2 size={16} /> : <Search size={16} />}
                     </button>
                   </div>
                   {empMando.error && <span style={{ color: '#dc2626', fontSize: '10px', fontFamily: 'JetBrains Mono' }}>{empMando.error}</span>}
                 </div>
 
-                {/* Campo de Nombre del Mando (Se llena solo) */}
-                <SentinelField
-                  label="Policía a Cargo (Mando)"
-                  name="policiaCargo"
-                  icon={Shield}
-                  placeholder="Nombre del mando responsable"
-                  value={nombreMando}
-                  onChange={(e: any) => setNombreMando(e.target.value)}
-                />
+                <SentinelField label="Policía a Cargo (Mando)" name="policiaCargo" icon={Shield} placeholder="Nombre del mando responsable" value={nombreMando} onChange={(e: any) => setNombreMando(e.target.value)} />
+                <SentinelField label="Personal que ingresó a CI" name="personalIngresoCi" icon={User} placeholder="Nombre del agente en fiscalía" />
 
-                {/* Campo Final */}
-                <SentinelField
-                  label="Personal que ingresó a CI"
-                  name="personalIngresoCi"
-                  icon={User}
-                  placeholder="Nombre del agente en fiscalía"
-                />
               </div>
             </section>
 
-          </div>
+            {/* SECCIÓN 06: SEGUIMIENTOS */}
+            <section className="sentinel-card">
+              <h2 className="sentinel-section-title">Seguimientos</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                <input type="hidden" name="hay_orden_aprehension" value={String(hayOrdenAprehension)} />
+                <input type="hidden" name="ordenes_aprehension" value={JSON.stringify(ordenesAprehension)} />
+                <input type="hidden" name="hay_hidrocarburo" value={String(hayHidrocarburo)} />
+                <input type="hidden" name="hidrocarburos" value={JSON.stringify(hidrocarburos)} />
+                <input type="hidden" name="hay_arma_fuego" value={String(hayArmaFuego)} />
+                <input type="hidden" name="armas_fuego" value={JSON.stringify(armasFuego)} />
+                <input type="hidden" name="hay_droga" value={String(hayDroga)} />
+                <input type="hidden" name="drogas" value={JSON.stringify(drogas)} />
+                {/* ÓRDENES DE APREHENSIÓN */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Órdenes de Aprehensión?
+                    </span>
+                    <button type="button" onClick={() => setHayOrdenAprehension(!hayOrdenAprehension)} className="sentinel-btn-toggle"
+                      style={{ background: hayOrdenAprehension ? '#3b82f6' : '#ffffff', color: hayOrdenAprehension ? '#ffffff' : '#64748b', borderColor: hayOrdenAprehension ? '#3b82f6' : '#e2e8f0' }}>
+                      {hayOrdenAprehension ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {hayOrdenAprehension && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {ordenesAprehension.map((o, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'nombrePersona', 'estatus', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'nombrePersona' ? 'Nombre Persona' : campo === 'estatus' ? 'Estatus' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={o[campo]}
+                                onChange={(e) => { const next = [...ordenesAprehension]; next[i][campo] = e.target.value; setOrdenesAprehension(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={o.observaciones} onChange={(e) => { const next = [...ordenesAprehension]; next[i].observaciones = e.target.value; setOrdenesAprehension(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => setOrdenesAprehension(ordenesAprehension.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => setOrdenesAprehension([...ordenesAprehension, { fecha: '', nombrePersona: '', observaciones: '', estatus: '', nombreSeguimiento: '' }])}
+                        className="sentinel-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR ORDEN
+                      </button>
+                    </div>
+                  )}
+                </div>
 
+                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+
+                {/* HIDROCARBUROS */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Detención Delito Hidrocarburo?
+                    </span>
+                    <button type="button" onClick={() => setHayHidrocarburo(!hayHidrocarburo)} className="sentinel-btn-toggle"
+                      style={{ background: hayHidrocarburo ? '#3b82f6' : '#ffffff', color: hayHidrocarburo ? '#ffffff' : '#64748b', borderColor: hayHidrocarburo ? '#3b82f6' : '#e2e8f0' }}>
+                      {hayHidrocarburo ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {hayHidrocarburo && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {hidrocarburos.map((h, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'nombrePersona', 'datosVehiculo', 'litrosExtraccion', 'nombreToma', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'nombrePersona' ? 'Nombre Persona' : campo === 'datosVehiculo' ? 'Datos Vehículo' : campo === 'litrosExtraccion' ? 'Litros Extracción' : campo === 'nombreToma' ? 'Nombre Toma Clandestina' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={h[campo]}
+                                onChange={(e) => { const next = [...hidrocarburos]; next[i][campo] = e.target.value; setHidrocarburos(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={h.observaciones} onChange={(e) => { const next = [...hidrocarburos]; next[i].observaciones = e.target.value; setHidrocarburos(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => setHidrocarburos(hidrocarburos.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => setHidrocarburos([...hidrocarburos, { fecha: '', nombrePersona: '', datosVehiculo: '', litrosExtraccion: '', nombreToma: '', observaciones: '', nombreSeguimiento: '' }])}
+                        className="sentinel-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR REGISTRO
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+
+                {/* ARMAS DE FUEGO */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Armas de Fuego?
+                    </span>
+                    <button type="button" onClick={() => setHayArmaFuego(!hayArmaFuego)} className="sentinel-btn-toggle"
+                      style={{ background: hayArmaFuego ? '#3b82f6' : '#ffffff', color: hayArmaFuego ? '#ffffff' : '#64748b', borderColor: hayArmaFuego ? '#3b82f6' : '#e2e8f0' }}>
+                      {hayArmaFuego ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {hayArmaFuego && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {armasFuego.map((a, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'datos', 'cartuchos', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'datos' ? 'Datos del Arma' : campo === 'cartuchos' ? 'Cartuchos' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={a[campo]}
+                                onChange={(e) => { const next = [...armasFuego]; next[i][campo] = e.target.value; setArmasFuego(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={a.observaciones} onChange={(e) => { const next = [...armasFuego]; next[i].observaciones = e.target.value; setArmasFuego(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => setArmasFuego(armasFuego.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => setArmasFuego([...armasFuego, { fecha: '', datos: '', cartuchos: '', observaciones: '', nombreSeguimiento: '' }])}
+                        className="sentinel-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR ARMA
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ borderTop: '1px solid #e2e8f0' }} />
+
+                {/* DOSIS DE DROGA */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      ¿Dosis de Droga?
+                    </span>
+                    <button type="button" onClick={() => setHayDroga(!hayDroga)} className="sentinel-btn-toggle"
+                      style={{ background: hayDroga ? '#3b82f6' : '#ffffff', color: hayDroga ? '#ffffff' : '#64748b', borderColor: hayDroga ? '#3b82f6' : '#e2e8f0' }}>
+                      {hayDroga ? '[ SÍ ]' : '[ NO ]'}
+                    </button>
+                  </div>
+                  {hayDroga && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {drogas.map((d, i) => (
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                          {(['fecha', 'cantidad', 'nombre', 'nombreSeguimiento'] as const).map(campo => (
+                            <div key={campo}>
+                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                                {campo === 'fecha' ? 'Fecha' : campo === 'cantidad' ? 'Cantidad' : campo === 'nombre' ? 'Nombre Droga' : 'Nombre Seguimiento'}
+                              </label>
+                              <input type={campo === 'fecha' ? 'date' : 'text'}
+                                value={d[campo]}
+                                onChange={(e) => { const next = [...drogas]; next[i][campo] = e.target.value; setDrogas(next) }}
+                                style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none' }} />
+                            </div>
+                          ))}
+                          <div style={{ gridColumn: 'span 3' }}>
+                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <textarea value={d.observaciones} onChange={(e) => { const next = [...drogas]; next[i].observaciones = e.target.value; setDrogas(next) }}
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                          </div>
+                          <button type="button" onClick={() => setDrogas(drogas.filter((_, j) => j !== i))}
+                            style={{ gridColumn: 'span 3', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            ✕ ELIMINAR
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => setDrogas([...drogas, { fecha: '', cantidad: '', nombre: '', observaciones: '', nombreSeguimiento: '' }])}
+                        className="sentinel-btn-toggle" style={{ alignSelf: 'flex-start' }}>
+                        + AGREGAR DOSIS
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <SentinelField label="Observaciones / Conclusión" name="observaciones" as="textarea"
+                  placeholder="Observaciones finales del reporte..." />
+              </div>
+            </section>
+          </div>
           {/* ACCIONES FINALES */}
           <div style={{ marginTop: '64px', paddingTop: '32px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'center' }}>
             <button style={{

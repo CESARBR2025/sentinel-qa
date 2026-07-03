@@ -95,58 +95,69 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   const vehiculosRaw = str(formData, 'ofi_vehiculos')
   const vehiculosArr = vehiculosRaw
     ? vehiculosRaw.split('|').map(bloque => {
-        const partes: Record<string, string> = {}
-        bloque.split(',').forEach(p => {
-          const [k, ...v] = p.split(':')
-          if (k) partes[k.trim().toLowerCase()] = v.join(':').trim()
-        })
-        return { tipo: partes.tipo ?? '', placas: partes.placas ?? '', serie: partes.serie ?? '', color: partes.color ?? '', destino: partes.destino ?? '' }
-      }).filter(v => v.placas || v.serie || v.color)
+      const partes: Record<string, string> = {}
+      bloque.split(',').forEach(p => {
+        const [k, ...v] = p.split(':')
+        if (k) partes[k.trim().toLowerCase()] = v.join(':').trim()
+      })
+      return { tipo: partes.tipo ?? '', placas: partes.placas ?? '', serie: partes.serie ?? '', color: partes.color ?? '', destino: partes.destino ?? '' }
+    }).filter(v => v.placas || v.serie || v.color)
     : []
 
   const cateo = {
-    calle:   str(formData, 'ofi_cateo_calle'),
+    calle: str(formData, 'ofi_cateo_calle'),
     colonia: str(formData, 'ofi_cateo_colonia'),
-    numero:  str(formData, 'ofi_cateo_numero'),
-    lat:     num(formData, 'ofi_cateo_latitud'),
-    lng:     num(formData, 'ofi_cateo_longitud'),
+    numero: str(formData, 'ofi_cateo_numero'),
+    lat: num(formData, 'ofi_cateo_latitud'),
+    lng: num(formData, 'ofi_cateo_longitud'),
   }
   const hasCateo = !!(cateo.calle || cateo.colonia || cateo.numero)
   const quiereDenuncia = bool(formData, 'ofi_quiere_denuncia')
-  const calle   = str(formData, 'ofi_calle')
+  const calle = str(formData, 'ofi_calle')
   const colonia = str(formData, 'ofi_colonia')
-  const latitud  = str(formData, 'ofi_latitud')
+  const latitud = str(formData, 'ofi_latitud')
   const longitud = str(formData, 'ofi_longitud')
 
   const input: CrearReporteCampoInput = {
-    folioReporteCampo:    folio,
-    ofiFolioCad:          str(formData, 'ofi_folio_cad') ?? 'S/C',
-    ofiNombreReportante:  str(formData, 'ofi_nombre_reportante'),
-    ofiAnonimo:           bool(formData, 'ofi_anonimo'),
-    ofiTipoIncidente:     str(formData, 'ofi_tipo_incidente'),
-    ofiTipoEmergencia:    str(formData, 'ofi_tipo_emergencia'),
-    ofiPrioridad:         str(formData, 'ofi_prioridad'),
-    ofiDescripcion:       str(formData, 'ofi_descripcion'),
-    ofiContenidoReporte:  str(formData, 'ofi_contenido_reporte'),
-    ofiCalle:             calle,
-    ofiColonia:           colonia,
-    ofiLatitud:           num(formData, 'ofi_latitud'),
-    ofiLongitud:          num(formData, 'ofi_longitud'),
-    ofiDatosPn:           str(formData, 'ofi_datos_pn'),
-    ofiAcciones:          str(formData, 'ofi_acciones'),
-    ofiHayDetencion:      bool(formData, 'ofi_hay_detencion'),
-    ofiDetenidos:         detenidosArr,
-    ofiAutoridadRecibe:   str(formData, 'ofi_autoridad_recibe'),
-    ofiMontoRobo:         num(formData, 'ofi_monto_robo'),
+    folioReporteCampo: folio,
+    ofiFolioCad: str(formData, 'ofi_folio_cad') ?? 'S/C',
+    ofiNombreReportante: str(formData, 'ofi_nombre_reportante'),
+    ofiAnonimo: bool(formData, 'ofi_anonimo'),
+    ofiTipoIncidente: str(formData, 'ofi_tipo_incidente'),
+    ofiTipoEmergencia: str(formData, 'ofi_tipo_emergencia'),
+    ofiPrioridad: str(formData, 'ofi_prioridad'),
+    ofiDescripcion: str(formData, 'ofi_descripcion'),
+    ofiContenidoReporte: str(formData, 'ofi_contenido_reporte'),
+    ofiCalle: calle,
+    ofiColonia: colonia,
+    ofiLatitud: num(formData, 'ofi_latitud'),
+    ofiLongitud: num(formData, 'ofi_longitud'),
+    ofiDatosPn: str(formData, 'ofi_datos_pn'),
+    ofiAcciones: str(formData, 'ofi_acciones'),
+    ofiHayDetencion: bool(formData, 'ofi_hay_detencion'),
+    ofiDetenidos: detenidosArr,
+    ofiAutoridadRecibe: str(formData, 'ofi_autoridad_recibe'),
+    ofiMontoRobo: num(formData, 'ofi_monto_robo'),
+    ofiHayRobo: bool(formData, 'ofi_hay_robo'),
     ofiObjetosRecuperados: str(formData, 'ofi_objetos_recuperados'),
-    ofiHayVehiculo:       bool(formData, 'ofi_hay_vehiculo'),
-    ofiVehiculos:         vehiculosArr,
-    ofiHayCateo:          bool(formData, 'ofi_hay_cateo'),
-    ofiCateo:             hasCateo ? cateo : null,
-    ofiResultadoCateo:    str(formData, 'ofi_resultado_cateo'),
-    ofiOficialId:         oficial.id,
-    ofiOficialNombre:     `${oficial.ofiNombre} ${oficial.ofiApPaterno}`.trim(),
-    ofiQuiereDenuncia:    quiereDenuncia,
+    ofiHayVehiculo: bool(formData, 'ofi_hay_vehiculo'),
+    ofiVehiculos: vehiculosArr,
+    ofiHayCateo: bool(formData, 'ofi_hay_cateo'),
+    ofiCateo: hasCateo ? cateo : null,
+    ofiResultadoCateo: str(formData, 'ofi_resultado_cateo'),
+    ofiOficialId: oficial.id,
+    ofiOficialNombre: `${oficial.ofiNombre} ${oficial.ofiApPaterno}`.trim(),
+    ofiQuiereDenuncia: quiereDenuncia,
+    ofiHayOrdenAprehension: bool(formData, 'ofi_hay_orden_aprehension'),
+    ofiOrdenesAprehension: JSON.parse(str(formData, 'ofi_ordenes_aprehension') ?? '[]'),
+    ofiHayHidrocarburo: bool(formData, 'ofi_hay_hidrocarburo'),
+    ofiHidrocarburos: JSON.parse(str(formData, 'ofi_hidrocarburos') ?? '[]'),
+    ofiHayArmaFuego: bool(formData, 'ofi_hay_arma_fuego'),
+    ofiArmasFuego: JSON.parse(str(formData, 'ofi_armas_fuego') ?? '[]'),
+    ofiHayDroga: bool(formData, 'ofi_hay_droga'),
+    ofiDrogas: JSON.parse(str(formData, 'ofi_drogas') ?? '[]'),
+    ofiTelefonoReportante: str(formData, 'ofi_telefono_reportante'),
+    ofiObservaciones: str(formData, 'ofi_observaciones'),
   }
 
   const reporteId = await insertarReporteCampo(input)
