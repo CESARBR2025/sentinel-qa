@@ -60,7 +60,7 @@ export default function PrevencionNav() {
   const totalAlertas = alertas.pendientes24h + alertas.vencidos
 
   return (
-    <nav style={{ borderBottom: '1px solid #1b2742', padding: '0 48px', display: 'flex', gap: 0 }}>
+    <nav style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '0 48px', display: 'flex', gap: 0 }}>
       {NAV.map(({ href, label }, i) => {
         const isActive = pathname.startsWith(href)
         const showBadge = href === '/prevencion/busquedas' && totalAlertas > 0
@@ -78,14 +78,14 @@ export default function PrevencionNav() {
               fontSize: 11,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              color: isActive ? '#d4a43a' : '#8a9bc0',
+              color: isActive ? '#2563eb' : '#64748b',
               textDecoration: 'none',
-              borderBottom: isActive ? '2px solid #d4a43a' : '2px solid transparent',
+              borderBottom: isActive ? '2px solid #2563eb' : '2px solid transparent',
               transition: 'color 0.15s, border-color 0.15s',
               position: 'relative',
             }}
           >
-            <span style={{ fontSize: 14, color: isActive ? '#d4a43a' : '#8a9bc0' }}>
+            <span style={{ fontSize: 14, color: isActive ? '#2563eb' : '#94a3b8' }}>
               {ICONS[i]}
             </span>
             {label}
@@ -97,8 +97,9 @@ export default function PrevencionNav() {
                 minWidth: 18,
                 height: 18,
                 borderRadius: 9,
-                background: alertas.vencidos > 0 ? '#c0223a' : '#d4a43a',
+                background: alertas.vencidos > 0 ? '#991b1b' : '#854d0e',
                 color: '#fff',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 fontFamily: 'JetBrains Mono,monospace',
                 fontSize: 9,
                 fontWeight: 600,

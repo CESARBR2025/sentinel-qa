@@ -57,12 +57,13 @@ const MODULES: Module[] = [
     icon: <AlertIcon />,
     status: 'building'
   },
-  { 
+  {
     id: 'reportes',
-    label: 'Reportes',              
-    sub: 'Diario y estadístico',            
+    label: 'Reportes',
+    sub: 'Diario y estadístico · Formato N',
     icon: <ChartIcon />,
-    status: 'building'
+    href: '/reportes',
+    status: 'active'
   },
   { 
     id: 'catalogos',

@@ -1,16 +1,73 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { User, FileText, Camera, Calendar, MapPin, Briefcase, GraduationCap, Heart, Fingerprint, AlertCircle, ChevronRight, Gavel, Clock, Map, Link as LinkIcon, Zap, History, Info, ChevronLeft, Check, Shield, Hash } from 'lucide-react';
 import { useRegistroDetenido } from '@/hooks/useRegistroDetenido';
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
 import { registroDetenidoService } from '@/services/registroDetenidoService';
 import { generateDetenidoPPT } from '@/lib/utils/generatePPT';
+import { analisisService } from '@/services/analisisService';
 
 
 
 export default function RegistroDetenidoForm() {
-    const { step, formData, setFormData, fotos, handleTextChange, handleFileChange, handleNext, handleBack, loading, setLoading } = useRegistroDetenido();
+    
+    const { step, formData, setFormData, fotos, handleTextChange, handleChange, handleFileChange, handleNext, handleBack, loading, setLoading } = useRegistroDetenido();
+
+    useEffect(() => {
+  const cargarDatos = async () => {
+    // Supongamos que pasas el id del incidente por props o lo sacas de la URL
+    const incidenteId = window.location.pathname.split('/').pop(); 
+    
+    if (incidenteId && incidenteId.length > 30) { // Validar que sea un UUID
+      setLoading(true);
+      try {
+        const d = await analisisService.getPrellenado(incidenteId);
+        
+        // MAPEAMOS LOS DATOS DE LA DB A LOS NOMBRES DE TU HOOK
+        setFormData((prev: any) => ({
+          ...prev,
+          // PASO 2
+          calleArresto: d.calle_incidente || '',
+          coloniaArresto: d.colonia_incidente || '',
+          latitudArresto: d.latitud_incidente || '',
+          longitudArresto: d.longitud_incidente || '',
+          
+          // PASO 4
+          folioIPH: d.folio_iph || '',
+          folio911: d.folio_911 || '',
+          fechaEvento: d.fecha_avistamiento ? d.fecha_avistamiento.split('T')[0] : '',
+          fechaReporte: d.fecha_reporte ? d.fecha_reporte.split('T')[0] : '',
+          horaReporte: d.hora_reporte || '',
+          horaInicioEvento: d.hora_avistamiento || '',
+          
+          // PASO 5
+          delito: d.delito_falta || '',
+          articulosObjetos: d.objetos_recuperados || '',
+          calleHecho: d.calle_incidente || '',
+          numeroHecho: d.num_ext_incidente || '',
+          coloniaHecho: d.colonia_incidente || '',
+          latitudHecho: d.latitud_incidente || '',
+          longitudHecho: d.longitud_incidente || '',
+          sectorHecho: d.sector || '',
+          crpUnidad: d.crp || '',
+          
+          // PASO 6
+          nombreAfectado: d.afectado_nombre || '',
+          marcaVehiculo: d.vehiculos_recuperados || '',
+          tipoVehiculo: d.tipo_vehiculo || '',
+          agenteAprehensor: d.policia_a_cargo || '',
+        }));
+      } catch (e) {
+        console.error("No se pudo prellenar:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  cargarDatos();
+}, []);
 
     const handleMapUpdate = (data: any, field: string) => {
         setFormData((prev: any) => ({

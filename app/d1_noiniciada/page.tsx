@@ -8,6 +8,9 @@ import { styles } from '@/components/reportes/d1_noiniciada/styles';
 import { DescargaFilters } from '@/components/reportes/d1_noiniciada/DescargaFilters';
 import { DescargaTable } from '@/components/reportes/d1_noiniciada/DescargaTable';
 import { listarSinD1 } from '@/lib/reportes-sin-d1/service'
+import { db } from '@/lib/db/index'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 export default async function DescargasPage({
   searchParams,
@@ -17,8 +20,18 @@ export default async function DescargasPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+
+
   const user = session.user as { name: string; email: string; image?: string }
-  const sp   = await searchParams
+  const sp = await searchParams
   const data = await listarSinD1(sp.from || undefined, sp.to || undefined, sp.nombre || undefined)
 
   return (

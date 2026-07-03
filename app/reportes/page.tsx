@@ -3,7 +3,7 @@ import { SentinelHero } from '@/components/reportes/welcomeBanner'
 import {
   Settings, ShieldCheck, Database, FileText, Users,
   Camera, Zap, BarChart3, Globe, FolderClock, PackageX,
-  ShieldAlert, Activity
+  ShieldAlert, Send
 } from 'lucide-react'
 import { db } from '@/lib/db/index'
 import { incidentes } from '@/lib/db/schema'
@@ -12,6 +12,9 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 async function getStats() {
   // Ejecutamos la consulta
@@ -22,14 +25,30 @@ async function getStats() {
   }
 }
 
+async function getEnvioFormatosCount() {
+  const tablas = ['formato_n_eventos', 'formato_n_fge', 'formato_n_fgr', 'formato_n_rnd', 'formato_n_medios_alternativos', 'formato_n_atencion_victimas', 'formato_n_armas_aseguradas']
+  const counts = await Promise.all(tablas.map(t => query<{ c: number }>(`SELECT count(*)::int as c FROM ${t}`)))
+  return counts.reduce((sum, r) => sum + (r.rows[0]?.c ?? 0), 0)
+}
+
 export default async function GestionPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
   // Obtenemos las estadísticas
   const stats = await getStats()
+  const envioFormatosCount = await getEnvioFormatosCount()
 
   const opciones = [
     {
@@ -80,6 +99,13 @@ export default async function GestionPage() {
       icono: <PackageX size={28} />,
       enlace: '/sin_robos',
       estadisticas: [{ label: 'Descartes', value: '45' }, { label: 'Falsos', value: '8' }]
+    },
+    {
+      titulo: 'Envío de Formatos',
+      subtitulo: 'Formato N a Coordinación: eventos, FGE/FGR, RND, medios alternativos, atención a víctimas y armas aseguradas.',
+      icono: <Send size={28} />,
+      enlace: '/envio-de-formatos',
+      estadisticas: [{ label: 'Registros', value: String(envioFormatosCount) }]
     }
   ]
 
