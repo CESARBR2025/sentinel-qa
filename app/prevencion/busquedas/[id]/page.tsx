@@ -1,11 +1,14 @@
+import { auth }      from '@/lib/auth'
+import { headers }   from 'next/headers'
 import { db } from '@/lib/db/index'
 import { fichasBusqueda, seguimientosBusqueda, users } from '@/lib/db/schema'
 import { eq, asc } from 'drizzle-orm'
 import Link         from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
 import { SeguimientoTimeline } from '@/components/prevencion/SeguimientoTimeline'
 import { CancelacionModal }    from '@/components/prevencion/CancelacionModal'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#991b1b' },
@@ -23,6 +26,11 @@ function fmtDT(v: Date | string | null): string {
 }
 
 export default async function FichaDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
+
   const { id } = await params
 
   const [ficha] = await db

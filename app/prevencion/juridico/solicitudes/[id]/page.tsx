@@ -1,12 +1,15 @@
+import { auth }     from '@/lib/auth'
+import { headers }  from 'next/headers'
 import { db }       from '@/lib/db/index'
 import { solicitudesInformacion, solicitudesC4Internas, contestaciones } from '@/lib/db/schema'
 import { eq, asc }  from 'drizzle-orm'
 import Link          from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
 import { AutoridadBadge }    from '@/components/prevencion/AutoridadBadge'
 import { SolicitudC4Form }   from '@/components/prevencion/SolicitudC4Form'
 import { ContestacionForm }  from '@/components/prevencion/ContestacionForm'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 function toDate(v: Date | string): Date {
   return v instanceof Date ? v : new Date(String(v))
@@ -18,6 +21,11 @@ function fmtDT(v: Date | string | null): string {
 }
 
 export default async function SolicitudDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'solicitudes'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/dashboard')
+
   const { id } = await params
 
   const [solicitud] = await db

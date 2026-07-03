@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { query } from '@/lib/db'
 import { actualizarCampo } from '@/lib/monitorista/detenido-service'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export async function POST(
   req: NextRequest,
@@ -10,6 +11,7 @@ export async function POST(
 ) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'detenidos', 'editar'))) return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
 
   const { id } = await params
   const body = await req.json()

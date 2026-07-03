@@ -63,7 +63,7 @@ export default function NuevoIncidenteCamaraPage() {
         }
         return
       }
-      router.push('/monitorista/incidentes-camara')
+      router.push('/monitorista/incidentes-camara?exito=creado')
     } catch (err) {
       setError({ msg: err instanceof Error ? err.message : 'Error al crear' })
     } finally {

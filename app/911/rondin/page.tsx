@@ -11,6 +11,7 @@ import {
   catMediosCanalizacion 
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ReporteRecorridoPage() {
   const session = await auth.api.getSession({
@@ -19,6 +20,9 @@ export default async function ReporteRecorridoPage() {
 
   if (!session) {
     redirect("/login");
+  }
+  if (!(await tieneAccesoSeccion(session.user.id, "911_rondin"))) {
+    redirect("/dashboard");
   }
 
    const [emergencias, incidentes, prioridades, canalizaciones] = await Promise.all([

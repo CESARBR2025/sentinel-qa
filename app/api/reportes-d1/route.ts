@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { sql } from "drizzle-orm";
+import { verificarRolOficial } from "@/lib/oficial/service";
 
 function generarFolioDenuncia(): string {
   const hoy = new Date()
@@ -32,6 +33,9 @@ export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+  if (!(await verificarRolOficial(session.user.id))) {
+    return NextResponse.json({ error: "Sin permiso" }, { status: 403 });
   }
 
   try {

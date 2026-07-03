@@ -1,10 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { db } from '@/lib/db/index'
 import { fichasBusqueda, seguimientosBusqueda } from '@/lib/db/schema'
 import { eq, isNotNull } from 'drizzle-orm'
 import { addHours } from 'date-fns'
+import { verificarAccesoPrevencionApi } from '@/lib/prevencion/permisos'
 
 export async function GET() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoPrevencionApi(session.user.id, 'busquedas', 'ver')
+  if (chequeo) return chequeo
+
   const busquedas = await db
     .select()
     .from(fichasBusqueda)

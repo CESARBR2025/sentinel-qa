@@ -8,6 +8,10 @@ import { ReportFilters }   from '@/components/reportes/deteccion_camara/ReportFi
 import { ReportTable }     from '@/components/reportes/deteccion_camara/ReportTables'
 import { styles }          from '@/components/reportes/deteccion_camara/styles'
 import { listarIncidentesCamara } from '@/lib/camara/service'
+import { db } from '@/lib/db/index'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
+import { tienePermiso } from '@/lib/incidentes/permisos'
 
 export default async function ReportesDeteccionCamaraPage({
   searchParams,
@@ -16,6 +20,16 @@ export default async function ReportesDeteccionCamaraPage({
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'incidentes_camaras', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }
   const sp   = await searchParams

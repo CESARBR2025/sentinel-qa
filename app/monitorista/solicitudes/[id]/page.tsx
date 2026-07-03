@@ -6,11 +6,13 @@ import { ArrowLeft, Clock, User, FileText } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { GaleriaEvidencias } from '@/components/monitorista/GaleriaEvidencias'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export default async function DetalleSolicitudPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/monitorista')
 
   const solResult = await query<Record<string, unknown>>(
     `SELECT id, incidente_id AS "incidenteId", folio_incidente AS "folioIncidente",

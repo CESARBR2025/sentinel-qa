@@ -124,8 +124,8 @@ export default function FormularioRol({ user }: { user: any }) {
       </section>
 
       {/* 2. SECCIÓN DE AUDITORÍA (Visual) */}
-      <section className="sentinel-panel" style={{ borderLeftColor: '#d4a43a' }}>
-        <h2 style={{ ...sectionTitleStyle, color: '#d4a43a' }}>
+      <section className="sentinel-panel" style={{ borderLeftColor: '#b45309' }}>
+        <h2 style={{ ...sectionTitleStyle, color: '#b45309' }}>
           <AlertCircle size={18} /> TRAZABILIDAD DE REGISTRO
         </h2>
         <div style={grid2Style}>

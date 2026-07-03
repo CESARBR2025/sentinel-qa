@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { query } from '@/lib/db'
 import { obtenerRegistro, actualizarRegistro } from '@/lib/monitorista/incidentes-camara-service'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export async function GET(
   _req: NextRequest,
@@ -10,6 +11,7 @@ export async function GET(
 ) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'incidentes_camara', 'ver'))) return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
   const { id } = await params
   const registro = await obtenerRegistro(id)
   if (!registro) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
@@ -22,6 +24,7 @@ export async function PATCH(
 ) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'incidentes_camara', 'editar'))) return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
   const { id } = await params
   const body = await req.json()
 

@@ -5,10 +5,13 @@ import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import BitacoraIPH from '@/components/analisis/iph/BitacoraIPH'
+import { tieneAccesoAnalisis, tienePermiso } from '@/lib/analisis/permisos'
 
 export default async function IPHPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoAnalisis(session.user.id))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'analisis', 'ver'))) redirect('/dashboard')
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
