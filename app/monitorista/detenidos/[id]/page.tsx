@@ -21,13 +21,18 @@ export default async function DetenidoDetailPage({ params }: { params: Promise<{
 
   const [fotos, destinos] = await Promise.all([
     query<Record<string, unknown>>(
-      `SELECT DISTINCT ON (ed.tipo_foto) ed.id, ed.tipo_foto, ed.url_archivo, ed.nombre_archivo, ed.subido_por,
+      `SELECT sub.id, sub.tipo_foto, sub.url_archivo, sub.nombre_archivo, sub.subido_por,
               COALESCE(r.nombre, 'Monitorista') as rol_subio
-       FROM evidencias_detenido ed
-       LEFT JOIN users u ON ed.subido_por = u.id
+       FROM (
+         SELECT ed.id, ed.tipo_foto, ed.url_archivo, ed.nombre_archivo, ed.subido_por,
+                ROW_NUMBER() OVER (PARTITION BY ed.tipo_foto ORDER BY ed.creado_en DESC) as rn
+         FROM evidencias_detenido ed
+         WHERE ed.reporte_campo_id = $1
+       ) sub
+       LEFT JOIN users u ON sub.subido_por = u.id
        LEFT JOIN roles r ON u.rol_id = r.id
-       WHERE ed.reporte_campo_id = $1
-       ORDER BY ed.tipo_foto, ed.creado_en DESC`, [id],
+       WHERE sub.rn = 1
+       ORDER BY sub.tipo_foto`, [id],
     ),
     getDestinos(),
   ])
