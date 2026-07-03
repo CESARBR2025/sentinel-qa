@@ -11,7 +11,7 @@ import Link from 'next/link'
 export default async function NuevaDenunciaD1Page({
   searchParams,
 }: {
-  searchParams: Promise<{ reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficialId?: string }>
+  searchParams: Promise<{ incidenteId?: string;reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficialId?: string }>
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
@@ -30,6 +30,7 @@ export default async function NuevaDenunciaD1Page({
   }
 
   const prefill = {
+    incidenteId:     sp.incidenteId ?? null,
     reporteCampoId: sp.reporteCampoId ?? null,
     lugarHecho:     sp.calle          ?? '',
     coloniaHecho:   sp.colonia        ?? '',

@@ -22,6 +22,7 @@ export function useDetenidoForm() {
   // ===========================
   articulo: '',
   tipoFalta: '',
+  esRND: false,
   rnd: '',
   calleArresto: '',
   coloniaArresto: '',

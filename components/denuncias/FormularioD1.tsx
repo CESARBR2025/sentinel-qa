@@ -36,6 +36,7 @@ const SentinelField = ({ label, icon: Icon, name, type = "text", required = fals
 );
 
 interface Prefill {
+  incidenteId: string | null;
   reporteCampoId: string | null
   lugarHecho: string
   coloniaHecho: string
@@ -124,7 +125,7 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
     const formData = new FormData(e.currentTarget)
     const body = {
       ...Object.fromEntries(formData.entries()),
-      reporteCampoId: prefill?.reporteCampoId ?? null,
+      incidenteId: prefill?.incidenteId ?? null,reporteCampoId: prefill?.reporteCampoId ?? null,
     }
 
     const res = await fetch('/api/reportes-d1', {
