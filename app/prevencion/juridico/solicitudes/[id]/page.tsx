@@ -45,10 +45,10 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
   return (
     <div>
       {/* Breadcrumb */}
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/juridico" style={{ color: '#4a5878', textDecoration: 'none' }}>Área Jurídica</Link>
+      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>
+        <Link href="/prevencion/juridico" style={{ color: '#2563eb', textDecoration: 'none' }}>Área Jurídica</Link>
         <span>›</span>
-        <span style={{ color: '#8a9bc0' }}>{solicitud.oficio}</span>
+        <span style={{ color: '#0f172a', fontWeight: 600 }}>{solicitud.oficio}</span>
       </div>
 
       {/* Header */}
@@ -56,15 +56,15 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 6 }}>
             <AutoridadBadge autoridad={solicitud.autoridad} />
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: completado ? '#4a9e6a' : '#d4a43a' }}>
+            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: completado ? '#166534' : '#2563eb', fontWeight: 600 }}>
               {completado ? '✓ Completado' : '● En Jurídico'}
             </span>
           </div>
-          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#d8e0f0', margin: '0 0 4px' }}>
+          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 4px' }}>
             {solicitud.oficio}
           </h2>
           {solicitud.delito && (
-            <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#8a9bc0', margin: 0 }}>
+            <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', margin: 0 }}>
               {solicitud.delito}
             </p>
           )}
@@ -89,7 +89,7 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
       {/* Solicitudes a C4 */}
       <div style={{ marginBottom: 40 }}>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
           › Solicitudes a C4 ({solicitudesC4.length} registrada{solicitudesC4.length !== 1 ? 's' : ''})
         </div>
 
@@ -98,20 +98,20 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
         {solicitudesC4.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {solicitudesC4.map(c4 => (
-              <div key={c4.id} style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '12px 16px' }}>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>
+              <div key={c4.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '12px 16px' }}>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {format(toDate(c4.creadoEn), 'dd/MM/yyyy HH:mm')}
                   {' · '}
-                  <span style={{ color: c4.status === 'completada' ? '#4a9e6a' : '#d4a43a' }}>{c4.status}</span>
+                  <span style={{ color: c4.status === 'completada' ? '#166534' : '#854d0e' }}>{c4.status}</span>
                 </div>
-                <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#d8e0f0', margin: 0 }}>
+                <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a', margin: 0 }}>
                   {c4.descripcionEvidencias}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <div style={{ padding: '16px 0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2a3a5e', letterSpacing: '0.15em' }}>
+          <div style={{ padding: '16px 0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.15em' }}>
             › Sin solicitudes a C4 registradas
           </div>
         )}
@@ -119,12 +119,12 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
       {/* Contestación */}
       <div>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
           › Contestación y Acuse de Entrega
         </div>
 
         {completado && contestacion ? (
-          <div style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
               <Field label="Fecha contestación" value={contestacion.fechaContestacion} />
               <Field label="Archivo PDF"         value={contestacion.archivoPdfUrl} />
@@ -132,12 +132,12 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
               <Field label="Hora de entrega"     value={contestacion.horaEntrega} />
               <Field label="Recibió"             value={contestacion.nombreQuienRecibio} />
             </div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a9e6a', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#166534', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
               ✓ Expediente completado — campos en solo lectura
             </div>
           </div>
         ) : !completado ? (
-          <div style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '20px' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
             <ContestacionForm solicitudId={id} />
           </div>
         ) : null}
@@ -150,8 +150,8 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '20px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+    <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -165,10 +165,10 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
   if (!value) return null
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', minWidth: 110, paddingTop: 2, flexShrink: 0 }}>
+      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', minWidth: 110, paddingTop: 2, flexShrink: 0 }}>
         {label}
       </span>
-      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#d8e0f0', flex: 1 }}>
+      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#0f172a', flex: 1 }}>
         {value}
       </span>
     </div>
