@@ -7,10 +7,11 @@ import { revalidatePath } from 'next/cache'
 import { viaPool } from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
-import { verificarRolFiscalia, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, listarSolicitudesCompletadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, obtenerLiberaciones } from './service'
+import { generarFolioAsegurados } from './repository'
+import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, listarSolicitudesCompletadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, listarAseguradosCompletados, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import type { ViaInfraccionDetalle } from './types'
-import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow } from './types'
+import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow } from './types'
 
 export async function obtenerDashboardFiscalia(): Promise<UserInfo> {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -175,6 +176,112 @@ export async function obtenerLiberacionesAction(): Promise<LiberacionesData> {
   return { data, total: data.length }
 }
 
+export interface AseguradosData {
+  pendientes: AseguradoRow[]
+  completados: (AseguradoRow & { puestaDisposicionId: string | null })[]
+}
+
+export async function obtenerAseguradosAction(): Promise<AseguradosData> {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const esValido = await verificarRolFiscalia(session.user.id)
+  if (!esValido) redirect('/dashboard')
+
+  const [pendientes, completados] = await Promise.all([
+    listarAseguradosPendientes(),
+    listarAseguradosConDisposicionService(),
+  ])
+
+  return { pendientes, completados }
+}
+
+export async function obtenerDetalleAseguradoCompletoAction(
+  reporteCampoId: string,
+): Promise<{ data: DetalleAseguradoCompleto | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await obtenerDetalleAseguradoCompletoService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado al obtener detalle'
+    console.error('[obtenerDetalleAseguradoCompletoAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function guardarDetallesAseguradosAction(
+  reporteCampoId: string,
+  detenidos: DetenidoDireccionInput[],
+  folioAsegurados?: string,
+): Promise<{ success: boolean; folio?: string; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    if (!detenidos.length) return { success: false, error: 'Debe capturar al menos un detenido' }
+
+    const folio = folioAsegurados ?? await generarFolioAsegurados()
+    const folioFinal = await guardarDetallesAseguradosService(reporteCampoId, detenidos, folio)
+
+    revalidatePath('/fiscalia/asegurados')
+    return { success: true, folio }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado al guardar'
+    console.error('[guardarDetallesAseguradosAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function obtenerPuestaDisposicionAction(
+  reporteCampoId: string,
+): Promise<{ data: PuestaDisposicionRow | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await obtenerPuestaDisposicionService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado'
+    console.error('[obtenerPuestaDisposicionAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function guardarPuestaDisposicionAction(
+  reporteCampoId: string,
+  datos: PuestaDisposicionInput,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await guardarPuestaDisposicionService(reporteCampoId, datos, session.user.id)
+
+    revalidatePath('/fiscalia/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado al guardar'
+    console.error('[guardarPuestaDisposicionAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
 export async function obtenerDetalleInfraccionViaAction(id: string): Promise<{ data: ViaInfraccionDetalle | null; error?: string }> {
   try {
     const session = await auth.api.getSession({ headers: await headers() })
@@ -312,6 +419,97 @@ export async function guardarOficioAction(
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error inesperado al guardar documentos'
     console.error('[guardarOficioAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function obtenerDashboardJuzgado(): Promise<UserInfo> {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const esValido = await verificarRolJuzgado(session.user.id)
+  if (!esValido) redirect('/dashboard')
+
+  const user = session.user as { name: string; apellido?: string; email: string }
+
+  return {
+    name: user.name,
+    apellido: user.apellido,
+    email: user.email,
+  }
+}
+
+export async function obtenerAseguradosJuzgadoAction(): Promise<AseguradosData> {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const esValido = await verificarRolJuzgado(session.user.id)
+  if (!esValido) redirect('/dashboard')
+
+  const [pendientes, completados] = await Promise.all([
+    listarAseguradosPendientes('JUZGADO'),
+    listarAseguradosConDisposicionService('JUZGADO'),
+  ])
+
+  return { pendientes, completados }
+}
+
+export async function obtenerDetalleAseguradoCompletoJuzgadoAction(
+  reporteCampoId: string,
+): Promise<{ data: DetalleAseguradoCompleto | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await obtenerDetalleAseguradoCompletoService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado'
+    console.error('[obtenerDetalleAseguradoCompletoJuzgadoAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function obtenerPuestaDisposicionJuzgadoAction(
+  reporteCampoId: string,
+): Promise<{ data: PuestaDisposicionRow | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await obtenerPuestaDisposicionService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado'
+    console.error('[obtenerPuestaDisposicionJuzgadoAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function guardarPuestaDisposicionJuzgadoAction(
+  reporteCampoId: string,
+  datos: PuestaDisposicionInput,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await guardarPuestaDisposicionService(reporteCampoId, datos, session.user.id)
+
+    revalidatePath('/fiscalia/juzgado/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado al guardar'
+    console.error('[guardarPuestaDisposicionJuzgadoAction]', msg)
     return { success: false, error: msg }
   }
 }
