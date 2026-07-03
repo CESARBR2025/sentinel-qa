@@ -1,0 +1,124 @@
+import { OptionSquare } from '@/components/reportes/menuOption'
+import { SentinelHero } from '@/components/reportes/welcomeBanner'
+import {
+  Activity, Building2, Landmark, Fingerprint, Handshake, HeartPulse, Crosshair,
+} from 'lucide-react'
+import { redirect } from 'next/navigation'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { DashboardHeader } from '@/components/partials/Header'
+import { query } from '@/lib/db'
+
+async function getFormatoNStats() {
+  const [eventos, fge, fgr, rnd, medios, victimas, armas] = await Promise.all([
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_eventos'),
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_fge'),
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_fgr'),
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_rnd'),
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_medios_alternativos'),
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_atencion_victimas'),
+    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_armas_aseguradas'),
+  ])
+  return {
+    eventos: eventos.rows[0]?.c ?? 0,
+    fge: fge.rows[0]?.c ?? 0,
+    fgr: fgr.rows[0]?.c ?? 0,
+    rnd: rnd.rows[0]?.c ?? 0,
+    medios: medios.rows[0]?.c ?? 0,
+    victimas: victimas.rows[0]?.c ?? 0,
+    armas: armas.rows[0]?.c ?? 0,
+  }
+}
+
+export default async function EnvioDeFormatosPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const user = session.user as { name: string; apellido?: string; email: string }
+  const fn = await getFormatoNStats()
+
+  const opciones = [
+    {
+      titulo: 'Eventos Informados',
+      subtitulo: 'Bitácora de eventos reportados a Coordinación: hora, región, evento y atenciones.',
+      icono: <Activity size={28} />,
+      enlace: '/formato-n-eventos',
+      estadisticas: [{ label: 'Registrados', value: String(fn.eventos) }]
+    },
+    {
+      titulo: 'Fiscalía General del Estado',
+      subtitulo: 'Conteos periódicos informados por la FGE: carpetas, cateos, aprehensiones y audiencias.',
+      icono: <Building2 size={28} />,
+      enlace: '/formato-n-fge',
+      estadisticas: [{ label: 'Reportes', value: String(fn.fge) }]
+    },
+    {
+      titulo: 'Fiscalía General de la República',
+      subtitulo: 'Conteos periódicos informados por la FGR: carpetas, cateos, aprehensiones y audiencias.',
+      icono: <Landmark size={28} />,
+      enlace: '/formato-n-fgr',
+      estadisticas: [{ label: 'Reportes', value: String(fn.fgr) }]
+    },
+    {
+      titulo: 'Registro Nacional de Detenciones',
+      subtitulo: 'Inscripciones al RND: hora de detención, delito, autoridad y folio.',
+      icono: <Fingerprint size={28} />,
+      enlace: '/formato-n-rnd',
+      estadisticas: [{ label: 'Inscripciones', value: String(fn.rnd) }]
+    },
+    {
+      titulo: 'Medios Alternativos',
+      subtitulo: 'Asuntos canalizados por fiscalía, acuerdos alcanzados y monto de reparación de daños.',
+      icono: <Handshake size={28} />,
+      enlace: '/formato-n-medios-alternativos',
+      estadisticas: [{ label: 'Reportes', value: String(fn.medios) }]
+    },
+    {
+      titulo: 'Atención a Víctimas',
+      subtitulo: 'Atenciones médicas, psicológicas y asesorías jurídicas brindadas a víctimas.',
+      icono: <HeartPulse size={28} />,
+      enlace: '/formato-n-atencion-victimas',
+      estadisticas: [{ label: 'Reportes', value: String(fn.victimas) }]
+    },
+    {
+      titulo: 'Armas de Fuego Aseguradas',
+      subtitulo: 'Registro de armas aseguradas: carpeta, tipo, matrícula y calibre.',
+      icono: <Crosshair size={28} />,
+      enlace: '/formato-n-armas-aseguradas',
+      estadisticas: [{ label: 'Registradas', value: String(fn.armas) }]
+    },
+  ]
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+
+      <DashboardHeader user={user} />
+
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 48px' }}>
+        <SentinelHero
+          tag="Formato N · Coordinación"
+          principal="Envío de"
+          secundario="Formatos"
+        />
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
+          {opciones.map((opt, idx) => (
+            <OptionSquare
+              key={idx}
+              titulo={opt.titulo}
+              subtitulo={opt.subtitulo}
+              icono={opt.icono}
+              enlace={opt.enlace}
+              estadisticas={opt.estadisticas}
+            />
+          ))}
+        </div>
+      </main>
+
+      <footer style={{ padding: '48px', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#94a3b8', letterSpacing: '0.2em', borderTop: '1px solid #e2e8f0', marginTop: '80px', background: '#ffffff' }}>
+        SSPM · SAN JUAN DEL RÍO · ADMIN CORE v0.1
+      </footer>
+    </div>
+  )
+}

@@ -8,9 +8,9 @@ import { SeguimientoTimeline } from '@/components/prevencion/SeguimientoTimeline
 import { CancelacionModal }    from '@/components/prevencion/CancelacionModal'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
-  PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#c0223a' },
-  PROTOCOLO_AMBAR:  { label: 'Protocolo Ambar',     color: '#d4a43a' },
-  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#5a8fd4' },
+  PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#991b1b' },
+  PROTOCOLO_AMBAR:  { label: 'Protocolo Ambar',     color: '#854d0e' },
+  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#2563eb' },
 }
 
 function toISO(v: Date | string): string {
@@ -48,16 +48,16 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
     .where(eq(seguimientosBusqueda.fichaId, id))
     .orderBy(asc(seguimientosBusqueda.creadoEn))
 
-  const cfg        = TIPO_CFG[ficha.tipo] ?? { label: ficha.tipo, color: '#4a5878' }
+  const cfg        = TIPO_CFG[ficha.tipo] ?? { label: ficha.tipo, color: '#64748b' }
   const fichaActiva = ficha.status === 'activa'
 
   return (
     <div>
       {/* Breadcrumb */}
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/busquedas" style={{ color: '#4a5878', textDecoration: 'none' }}>Búsquedas</Link>
+      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>
+        <Link href="/prevencion/busquedas" style={{ color: '#2563eb', textDecoration: 'none' }}>Búsquedas</Link>
         <span>›</span>
-        <span style={{ color: '#8a9bc0' }}>{ficha.folio ?? ficha.id.slice(0, 8)}</span>
+        <span style={{ color: '#0f172a', fontWeight: 600 }}>{ficha.folio ?? ficha.id.slice(0, 8)}</span>
       </div>
 
       {/* Header */}
@@ -71,7 +71,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
               {fichaActiva ? '● Activa' : '✓ Cerrada'}
             </span>
           </div>
-          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#d8e0f0', margin: '0 0 4px' }}>
+          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#1e293b', margin: '0 0 4px' }}>
             {ficha.nombreDesaparecida}
           </h2>
           {ficha.edad != null && (
@@ -83,7 +83,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link
             href={`/prevencion/busquedas/${id}/imprimir`}
-            style={{ padding: '9px 16px', background: 'transparent', color: '#d4a43a', border: '1px solid #d4a43a50', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}
+            style={{ padding: '9px 16px', background: '#ffffff', color: '#2563eb', border: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none', fontWeight: 600 }}
           >
             Imprimir ficha →
           </Link>
@@ -117,7 +117,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
       {/* Timeline de seguimientos */}
       <div>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
           › Seguimientos de Tiempo ({seguimientos.length}/{24} registrados)
         </div>
 
@@ -141,8 +141,8 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '20px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+    <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -156,10 +156,10 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
   if (!value) return null
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', minWidth: 110, paddingTop: 2, flexShrink: 0 }}>
+      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', minWidth: 110, paddingTop: 2, flexShrink: 0 }}>
         {label}
       </span>
-      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#d8e0f0', flex: 1 }}>
+      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#1e293b', flex: 1 }}>
         {value}
       </span>
     </div>

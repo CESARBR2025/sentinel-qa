@@ -94,10 +94,12 @@ export async function generarPpt(
 
     // Cargar fotos (solo la última por tipo)
     const evs = await query<Record<string, unknown>>(
-      `SELECT DISTINCT ON (tipo_foto) url_archivo, tipo_foto
-       FROM evidencias_detenido
-       WHERE reporte_campo_id = $1
-       ORDER BY tipo_foto, creado_en DESC`, [id],
+      `SELECT url_archivo, tipo_foto FROM (
+         SELECT url_archivo, tipo_foto, ROW_NUMBER() OVER (PARTITION BY tipo_foto ORDER BY creado_en DESC) as rn
+         FROM evidencias_detenido
+         WHERE reporte_campo_id = $1
+       ) sub WHERE rn = 1
+       ORDER BY tipo_foto`, [id],
     )
     const buffers = await Promise.all(
       evs.rows.map(e => String(e.url_archivo).startsWith('http') ? descargarFoto(String(e.url_archivo), token) : Promise.resolve(null)),
@@ -151,7 +153,7 @@ export async function generarPpt(
 
       let xOff = 0
       for (let i = 0; i < imgCount; i++) {
-        try { slide.addImage({ data: `${valids[i].mime};base64,${valids[i].base64}`, x: imgStartX + xOff, y: imgY, w: anchos[i], h: imgH }) } catch { /* skip */ }
+        try { slide.addImage({ data: `data:${valids[i].mime};base64,${valids[i].base64}`, x: imgStartX + xOff, y: imgY, w: anchos[i], h: imgH }) } catch { /* skip */ }
         xOff += anchos[i] + imgGap
       }
       const etiquetas: Record<number, string> = { 0: 'Frontal', 1: 'Derecho', 2: 'Izquierdo' }

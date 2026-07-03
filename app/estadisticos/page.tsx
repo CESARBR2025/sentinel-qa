@@ -9,6 +9,9 @@ import { styles } from '@/components/reportes/modulo_incidentes/styles'
 import { PhoneStatsCards } from '@/components/reportes/estadisticos/PhoneStatsCards'
 import { PhoneReportsTable } from '@/components/reportes/estadisticos/PhoneReportsTable'
 import { obtenerDatosTelefonicos } from '@/lib/reportes-operativos/service'
+import { db } from '@/lib/db/index'
+import { users, roles } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 export default async function ReportesTelefonicosPage({
   searchParams,
@@ -18,8 +21,17 @@ export default async function ReportesTelefonicosPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
+  const [userRole] = await db
+    .select({ rolNombre: roles.nombre })
+    .from(users)
+    .leftJoin(roles, eq(users.rolId, roles.id))
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+
+  if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+
   const user = session.user as { name: string; email: string; image?: string }
-  const sp   = await searchParams
+  const sp = await searchParams
   const data = await obtenerDatosTelefonicos(sp.from, sp.to)
 
   return (

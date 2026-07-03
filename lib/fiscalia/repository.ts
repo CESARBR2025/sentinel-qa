@@ -1,11 +1,14 @@
-import { query, queryVia } from "@/lib/db";
+import pool, { query, queryVia } from "@/lib/db";
 import type {
   RolRow,
   DetalleAsegurado,
   DatosAseguradoInput,
   EvidenciaMonitorista,
   LiberacionRow,
+  DetenidoDireccionInput,
 } from "./types";
+import { rowToAsegurado, rowToDetalleDetenidoGuardado, rowToPuestaDisposicion } from "./mapper";
+import type { AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, PuestaDisposicionInput } from "./types";
 
 export async function obtenerRolUsuario(userId: string): Promise<string> {
   const result = await query<RolRow>(
@@ -356,6 +359,149 @@ export async function obtenerDetalleInfraccionVia(
   return result.rows[0] ?? null;
 }
 
+export async function listarAsegurados(soloPendientes: boolean, autoridad: string = 'FISCALIA'): Promise<AseguradoRow[]> {
+  const pendientesFilter = soloPendientes
+    ? "AND rc.folio_reporte_asegurados IS NULL"
+    : "AND rc.folio_reporte_asegurados IS NOT NULL";
+
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       rc.id,
+       rc.folio_reporte_campo,
+       rd.folio_denuncia,
+       rc.created_at,
+       rc.ofi_detenidos,
+       rc.folio_reporte_asegurados,
+       rc.ofi_oficial_nombre,
+       o.ofi_placa_unidad_asignada
+      FROM ofi_reportes_campo rc
+      JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
+      LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      WHERE rc.ofi_hay_detencion = true
+         AND rc.ofi_autoridad_recibe = $1
+        ${pendientesFilter}
+     ORDER BY rc.created_at DESC`,
+    [autoridad],
+  );
+  return result.rows.map(rowToAsegurado);
+}
+
+export async function obtenerDetalleAseguradoCompleto(reporteCampoId: string): Promise<Record<string, unknown> | null> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       rc.id AS reporte_campo_id,
+       rc.folio_reporte_campo,
+       rc.ofi_detenidos,
+       rc.ofi_calle AS lugar_calle,
+       rc.ofi_colonia AS lugar_colonia,
+       rc.ofi_oficial_nombre,
+       rc.ofi_latitud,
+       rc.ofi_longitud,
+       rc.folio_reporte_asegurados,
+       rd.folio_denuncia,
+       rd.iph,
+       rd.folio_sija,
+       rd.folio_remision,
+       rd.marco_legal,
+       rd.registro_tableta,
+       o.ofi_nombre,
+       o.ofi_ap_paterno,
+       o.ofi_ap_materno,
+       o.ofi_placa_unidad_asignada,
+       o.no_nomina,
+       u.name AS capturado_por_nombre
+      FROM ofi_reportes_campo rc
+      JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
+      LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+     LEFT JOIN users u ON rd.capturado_por = u.id
+     WHERE rc.id = $1
+     LIMIT 1`,
+    [reporteCampoId],
+  );
+  return result.rows[0] ?? null;
+}
+
+export async function obtenerDetenidosGuardados(reporteCampoId: string): Promise<DetalleDetenidoGuardado[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT *
+     FROM ofi_detalles_asegurados
+     WHERE reporte_campo_id = $1
+     ORDER BY created_at`,
+    [reporteCampoId],
+  );
+  return result.rows.map(rowToDetalleDetenidoGuardado);
+}
+
+export async function guardarDetenidosDirecciones(
+  reporteCampoId: string,
+  detenidos: DetenidoDireccionInput[],
+  folioAsegurados: string,
+): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    await client.query(
+      `DELETE FROM ofi_detalles_asegurados WHERE reporte_campo_id = $1`,
+      [reporteCampoId],
+    );
+
+    for (const d of detenidos) {
+      await client.query(
+        `INSERT INTO ofi_detalles_asegurados
+         (reporte_campo_id, nombre_detenido, ap_paterno_detenido, ap_materno_detenido,
+          calle, colonia, numero, cod_postal, latitud, longitud)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        [
+          reporteCampoId,
+          d.nombreDetenido,
+          d.apPaterno || null,
+          d.apMaterno || null,
+          d.calle || null,
+          d.colonia || null,
+          d.numero || null,
+          d.codPostal || null,
+          d.latitud,
+          d.longitud,
+        ],
+      );
+    }
+
+    await client.query(
+      `UPDATE ofi_reportes_campo
+       SET folio_reporte_asegurados = $1, updated_at = NOW()
+       WHERE id = $2`,
+      [folioAsegurados, reporteCampoId],
+    );
+
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function generarFolioAsegurados(): Promise<string> {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const prefix = `SSPM/${y}${m}${d}/FAS/`;
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const nums = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+    const folio = `${prefix}${nums}`;
+    const exists = await query(
+      `SELECT 1 FROM ofi_reportes_campo WHERE folio_reporte_asegurados = $1 LIMIT 1`,
+      [folio],
+    );
+    if (exists.rows.length === 0) return folio;
+  }
+  throw new Error('No se pudo generar un folio único de asegurados');
+}
+
 export async function listarLiberaciones(): Promise<LiberacionRow[]> {
   const result = await queryVia<Record<string, unknown>>(
     `SELECT
@@ -393,4 +539,76 @@ export async function listarLiberaciones(): Promise<LiberacionRow[]> {
     estatus_dependencia: String(r.estatus_dependencia ?? ""),
     no_carpeta_investigacion: String(r.no_carpeta_investigacion ?? ""),
   }));
+}
+
+export async function listarAseguradosConDisposicion(autoridad: string = 'FISCALIA'): Promise<(AseguradoRow & { puestaDisposicionId: string | null })[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       rc.id,
+       rc.folio_reporte_campo,
+       rd.folio_denuncia,
+       rc.created_at,
+       rc.ofi_detenidos,
+       rc.folio_reporte_asegurados,
+       rc.ofi_oficial_nombre,
+       o.ofi_placa_unidad_asignada,
+       pd.id AS puesta_disposicion_id
+      FROM ofi_reportes_campo rc
+      JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
+      LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN ofi_puesta_disposicion pd ON pd.reporte_campo_id = rc.id
+      WHERE rc.ofi_hay_detencion = true
+        AND rc.ofi_autoridad_recibe = $1
+        AND rc.folio_reporte_asegurados IS NOT NULL
+      ORDER BY rc.created_at DESC`,
+    [autoridad],
+  );
+  return result.rows.map(r => ({
+    ...rowToAsegurado(r),
+    puestaDisposicionId: r.puesta_disposicion_id ? String(r.puesta_disposicion_id) : null,
+  }));
+}
+
+export async function obtenerPuestaDisposicionPorReporte(reporteCampoId: string): Promise<PuestaDisposicionRow | null> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT * FROM ofi_puesta_disposicion WHERE reporte_campo_id = $1 LIMIT 1`,
+    [reporteCampoId],
+  );
+  return result.rows[0] ? rowToPuestaDisposicion(result.rows[0]) : null;
+}
+
+export async function guardarPuestaDisposicion(
+  reporteCampoId: string,
+  datos: PuestaDisposicionInput,
+  creadoPor: string,
+): Promise<void> {
+  await query(
+    `INSERT INTO ofi_puesta_disposicion
+     (reporte_campo_id, gestion_interna, dependencia_externa, actas, otros_actos,
+      hora_inicio_traslado, hora_llegada_sede, tiempo_traslado_total, hora_puesta_disposicion, creado_por, completado_en)
+     VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7, $8, $9, $10, NOW())
+     ON CONFLICT (reporte_campo_id)
+     DO UPDATE SET
+       gestion_interna = $2,
+       dependencia_externa = $3,
+       actas = $4::jsonb,
+       otros_actos = $5,
+       hora_inicio_traslado = $6,
+       hora_llegada_sede = $7,
+       tiempo_traslado_total = $8,
+       hora_puesta_disposicion = $9,
+       completado_en = NOW()`,
+    [
+      reporteCampoId,
+      datos.gestionInterna,
+      datos.dependenciaExterna,
+      JSON.stringify(datos.actas),
+      datos.otrosActos,
+      datos.horaInicioTraslado,
+      datos.horaLlegadaSede,
+      datos.tiempoTrasladoTotal,
+      datos.horaPuestaDisposicion,
+      creadoPor,
+    ],
+  );
 }

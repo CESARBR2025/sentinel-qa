@@ -33,7 +33,7 @@ export function ContestacionForm({ solicitudId }: { solicitudId: string }) {
         </FormField>
       </div>
 
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginTop: 4 }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginTop: 4 }}>
         › Acuse de Entrega
       </div>
 
@@ -60,8 +60,8 @@ export function ContestacionForm({ solicitudId }: { solicitudId: string }) {
           disabled={pending}
           style={{
             padding: '10px 24px',
-            background: pending ? '#1b2742' : '#4a9e6a',
-            color: pending ? '#4a5878' : '#070b16',
+            background: pending ? '#f1f5f9' : '#2563eb',
+            color: pending ? '#94a3b8' : '#ffffff',
             border: 'none',
             fontFamily: 'Barlow Condensed,sans-serif',
             fontWeight: 700,
@@ -69,6 +69,7 @@ export function ContestacionForm({ solicitudId }: { solicitudId: string }) {
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
             cursor: pending ? 'not-allowed' : 'pointer',
+            borderRadius: '2px',
           }}
         >
           {pending ? 'Guardando...' : 'Registrar Contestación y Acuse'}
@@ -79,9 +80,9 @@ export function ContestacionForm({ solicitudId }: { solicitudId: string }) {
 }
 
 const inputStyle: React.CSSProperties = {
-  background: '#0b1220',
-  border: '1px solid #1b2742',
-  color: '#d8e0f0',
+  background: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  color: '#1e293b',
   fontFamily: 'Inter,sans-serif',
   fontSize: 13,
   padding: '9px 12px',
@@ -92,7 +93,7 @@ const inputStyle: React.CSSProperties = {
 function FormField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+      <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
         {label}
       </label>
       {children}
