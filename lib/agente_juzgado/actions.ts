@@ -18,7 +18,10 @@ import {
   obtenerLiberacionesJuzgado,
   iniciarProcesoJuzgadoSvc,
   finalizarProcesoJuzgadoSvc,
+  listarAseguradosJuzgadoSvc,
 } from "./service";
+import { listarAseguradosConDisposicionService, obtenerDetalleAseguradoCompletoService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService, guardarDetallesAseguradosService } from "../fiscalia/service"
+import { generarFolioAsegurados } from "../fiscalia/repository"
 import { obtenerDetalleInfraccionVia } from "@/lib/shared/infracciones";
 import type {
   UserInfo,
@@ -28,6 +31,7 @@ import type {
   LiberacionRow,
   ViaInfraccionDetalle,
 } from "./types";
+import type { AseguradoRow, DetalleAseguradoCompleto, PuestaDisposicionRow, PuestaDisposicionInput, DetenidoDireccionInput } from "../fiscalia/types"
 
 export async function obtenerDashboardJuzgado(): Promise<UserInfo> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -350,6 +354,116 @@ export async function guardarOficioJuzgadoAction(
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error inesperado al guardar documentos'
     console.error('[guardarOficioJuzgadoAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+/* ═══════════════════════════════════════
+   ASEGURADOS + PUESTA A DISPOSICIÓN
+   ═══════════════════════════════════════ */
+
+export interface AseguradosJuzgadoData {
+  pendientes: AseguradoRow[]
+  completados: (AseguradoRow & { puestaDisposicionId: string | null })[]
+}
+
+export async function obtenerAseguradosJuzgadoAction(): Promise<AseguradosJuzgadoData> {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const esValido = await verificarRolJuzgado(session.user.id)
+  if (!esValido) redirect('/dashboard')
+
+  const [pendientes, completados] = await Promise.all([
+    listarAseguradosJuzgadoSvc(),
+    listarAseguradosConDisposicionService('JUZGADO CIVICO'),
+  ])
+
+  return { pendientes, completados }
+}
+
+export async function obtenerDetalleAseguradoCompletoJuzgadoAction(
+  reporteCampoId: string,
+): Promise<{ data: DetalleAseguradoCompleto | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await obtenerDetalleAseguradoCompletoService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado'
+    console.error('[obtenerDetalleAseguradoCompletoJuzgadoAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function obtenerPuestaDisposicionJuzgadoAction(
+  reporteCampoId: string,
+): Promise<{ data: PuestaDisposicionRow | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await obtenerPuestaDisposicionService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado'
+    console.error('[obtenerPuestaDisposicionJuzgadoAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function guardarDetallesAseguradosJuzgadoAction(
+  reporteCampoId: string,
+  detenidos: DetenidoDireccionInput[],
+  folioAsegurados?: string,
+): Promise<{ success: boolean; folio?: string; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    if (!detenidos.length) return { success: false, error: 'Debe capturar al menos un detenido' }
+
+    const folio = folioAsegurados ?? await generarFolioAsegurados()
+    const folioFinal = await guardarDetallesAseguradosService(reporteCampoId, detenidos, folio)
+
+    revalidatePath('/agente_juzgado/asegurados')
+    return { success: true, folio }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado al guardar'
+    console.error('[guardarDetallesAseguradosJuzgadoAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function guardarPuestaDisposicionJuzgadoAction(
+  reporteCampoId: string,
+  datos: PuestaDisposicionInput,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolJuzgado(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await guardarPuestaDisposicionService(reporteCampoId, datos, session.user.id)
+
+    revalidatePath('/agente_juzgado/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error inesperado al guardar'
+    console.error('[guardarPuestaDisposicionJuzgadoAction]', msg)
     return { success: false, error: msg }
   }
 }

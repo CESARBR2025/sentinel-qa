@@ -25,9 +25,9 @@ export function SolicitudC4Form({ solicitudId }: { solicitudId: string }) {
         rows={3}
         placeholder="Describir evidencias o información a solicitar al C4..."
         style={{
-          background: '#0b1220',
-          border: '1px solid #1b2742',
-          color: '#d8e0f0',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          color: '#1e293b',
           fontFamily: 'Inter,sans-serif',
           fontSize: 13,
           padding: '10px 12px',
@@ -42,8 +42,8 @@ export function SolicitudC4Form({ solicitudId }: { solicitudId: string }) {
           disabled={pending}
           style={{
             padding: '9px 20px',
-            background: pending ? '#1b2742' : '#d4a43a',
-            color: pending ? '#4a5878' : '#070b16',
+            background: pending ? '#f1f5f9' : '#2563eb',
+            color: pending ? '#94a3b8' : '#ffffff',
             border: 'none',
             fontFamily: 'Barlow Condensed,sans-serif',
             fontWeight: 700,
@@ -51,6 +51,7 @@ export function SolicitudC4Form({ solicitudId }: { solicitudId: string }) {
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
             cursor: pending ? 'not-allowed' : 'pointer',
+            borderRadius: '2px',
           }}
         >
           {pending ? 'Registrando...' : 'Registrar petición a C4'}

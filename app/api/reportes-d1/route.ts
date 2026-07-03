@@ -67,7 +67,7 @@ export async function POST(request: Request) {
         requirio_tablet, funcionaba_tablet,
         ofendido_hombre, ofendido_mujer, num_cuestionarios,
         intervino_gs, se_genero_d1, se_va_a_generar_d1,
-        observaciones, capturado_por, reporte_campo_id,
+        observaciones, capturado_por, incidente_id, reporte_campo_id,
         oficial_id, estado_tramite, estado_evidencia
       ) VALUES (
         ${clean(body.folioDenuncia)},
@@ -116,6 +116,7 @@ export async function POST(request: Request) {
         ${toBool(body.seVaAGenerarD1)},
         ${clean(body.observaciones)},
         ${session.user.id},
+        ${clean(body.incidenteId)}::uuid,
         ${clean(body.reporteCampoId)}::uuid,
         ${clean(body.oficialId)}::uuid,
         'EN_REVISION_JUZGADO',

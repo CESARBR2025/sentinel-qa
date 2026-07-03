@@ -1,4 +1,4 @@
-import type { SolicitudEvidencia, ViaInfraccionDetalle } from './types'
+import type { SolicitudEvidencia, ViaInfraccionDetalle, AseguradoRow, DetalleAseguradoCompleto, DetalleDetenidoGuardado, PuestaDisposicionRow } from './types'
 
 function str(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -158,5 +158,66 @@ export function rowToInfraccionDetalle(row: Record<string, unknown>): ViaInfracc
       patrulla_nombre:              str(row.patrulla_nombre) ?? '',
       activo:                       str(row.oficial_activo) ?? '',
     },
+  }
+}
+
+export function rowToAsegurado(row: Record<string, unknown>): AseguradoRow {
+  const rawDetenidos = row.ofi_detenidos
+  let detenidosArr: unknown[] = []
+  if (typeof rawDetenidos === 'string') {
+    try { detenidosArr = JSON.parse(rawDetenidos) } catch { detenidosArr = [] }
+  } else if (Array.isArray(rawDetenidos)) {
+    detenidosArr = rawDetenidos
+  }
+
+  return {
+    id: str(row.id) ?? '',
+    folioReporteCampo: str(row.folio_reporte_campo) ?? 'S/C',
+    folioDenuncia: str(row.folio_denuncia),
+    createdAt: str(row.created_at) ?? '',
+    cantidadDetenidos: detenidosArr.length,
+    folioReporteAsegurados: str(row.folio_reporte_asegurados),
+    oficialNombre: str(row.ofi_oficial_nombre),
+    oficialPlaca: str(row.ofi_placa_unidad_asignada),
+  }
+}
+
+export function rowToDetalleDetenidoGuardado(row: Record<string, unknown>): DetalleDetenidoGuardado {
+  return {
+    id: str(row.id) ?? '',
+    nombreDetenido: str(row.nombre_detenido) ?? '',
+    apPaterno: str(row.ap_paterno_detenido),
+    apMaterno: str(row.ap_materno_detenido),
+    calle: str(row.calle),
+    colonia: str(row.colonia),
+    numero: str(row.numero),
+    codPostal: str(row.cod_postal),
+    latitud: row.latitud != null ? Number(row.latitud) : null,
+    longitud: row.longitud != null ? Number(row.longitud) : null,
+  }
+}
+
+export function rowToPuestaDisposicion(row: Record<string, unknown>): PuestaDisposicionRow {
+  let actas: Record<string, boolean> = {}
+  if (typeof row.actas === 'string') {
+    try { actas = JSON.parse(row.actas) } catch { actas = {} }
+  } else if (row.actas && typeof row.actas === 'object') {
+    actas = row.actas as Record<string, boolean>
+  }
+
+  return {
+    id: str(row.id) ?? '',
+    reporteCampoId: str(row.reporte_campo_id) ?? '',
+    gestionInterna: row.gestion_interna === true || row.gestion_interna === 'true',
+    dependenciaExterna: str(row.dependencia_externa),
+    actas,
+    otrosActos: str(row.otros_actos),
+    horaInicioTraslado: str(row.hora_inicio_traslado) ?? '',
+    horaLlegadaSede: str(row.hora_llegada_sede) ?? '',
+    tiempoTrasladoTotal: row.tiempo_traslado_total != null ? Number(row.tiempo_traslado_total) : 0,
+    horaPuestaDisposicion: str(row.hora_puesta_disposicion) ?? '',
+    creadoPor: str(row.creado_por) ?? '',
+    creadoEn: str(row.creado_en) ?? '',
+    completadoEn: str(row.completado_en),
   }
 }
