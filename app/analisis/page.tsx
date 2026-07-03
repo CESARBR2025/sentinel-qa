@@ -3,9 +3,9 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import RegistroDetenidoStepper from '@/components/analisis/formAnalisis'
+import TablonAnalisis from '@/components/analisis/TablonAnalisis'
 
-export default async function DespachoPage() {
+export default async function AnalisisPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
@@ -13,33 +13,27 @@ export default async function DespachoPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-      {/* Inyección de fuentes y animaciones tácticas */}
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-tactical { animation: fadeIn 0.4s ease-out forwards; }
+        .analisis-row:hover { background-color: #f1f5f9 !important; }
       `}} />
-
+      
       <DashboardHeader user={user} />
-
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 48px' }}>
-        {/* Encabezado de la sección */}
-        <div style={{ marginBottom: '32px' }}>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em' }}>
-                MÓDULO DE INTELIGENCIA Y ANÁLISIS
+      
+      <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
+        <div style={{ marginBottom: 32 }}>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em' }}>
+                INTELIGENCIA Y ESTADÍSTICA
             </span>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: '42px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-                REGISTRO NACIONAL DE <span style={{ color: '#3b82f6' }}>DETENIDOS (IPH)</span>
+            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 42, fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
+                BITÁCORA DE <span style={{ color: '#3b82f6' }}>RESULTADOS OPERATIVOS</span>
             </h1>
-            <div style={{ width: '40px', height: '4px', background: '#3b82f6' }}></div>
+            <div style={{ width: 40, height: 4, background: '#3b82f6' }}></div>
         </div>
 
-        {/* El componente Stepper */}
-        <div className="animate-tactical">
-            <RegistroDetenidoStepper />
-        </div>
-
-        <div style={{ marginTop: 60 }}>
+        <TablonAnalisis />
+        
+        <div style={{ marginTop: 40 }}>
             <DashboardFooter />
         </div>
       </main>

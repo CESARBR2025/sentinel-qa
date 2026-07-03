@@ -34,16 +34,16 @@ export default async function JuridicoPage() {
       {/* Header */}
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
-          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#d8e0f0', margin: '0 0 4px' }}>
-            Bandeja <span style={{ color: '#d4a43a' }}>Jurídica</span>
+          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 4px' }}>
+            Bandeja <span style={{ color: '#2563eb' }}>Jurídica</span>
           </h2>
-          <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
+          <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             {solicitudes.length} solicitud{solicitudes.length !== 1 ? 'es' : ''} activa{solicitudes.length !== 1 ? 's' : ''}
           </p>
         </div>
         <Link
           href="/prevencion/juridico/solicitudes/nueva"
-          style={{ padding: '10px 20px', background: '#c0223a', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none' }}
+          style={{ padding: '10px 20px', background: '#2563eb', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
         >
           + Nueva Solicitud
         </Link>
@@ -51,16 +51,16 @@ export default async function JuridicoPage() {
 
       {/* Table */}
       {solicitudes.length === 0 ? (
-        <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2a3a5e', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+        <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
           › No hay solicitudes activas en la bandeja
         </div>
       ) : (
-        <div style={{ border: '1px solid #1b2742', overflow: 'hidden' }}>
+        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Inter,sans-serif', fontSize: 13 }}>
             <thead>
-              <tr style={{ background: '#0b1220', borderBottom: '1px solid #1b2742' }}>
+              <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #e2e8f0' }}>
                 {['Oficio', 'Autoridad', 'Delito', 'Carpeta', 'Fecha Activación', ''].map(h => (
-                  <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 400 }}>
+                  <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#475569', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
                     {h}
                   </th>
                 ))}
@@ -70,20 +70,20 @@ export default async function JuridicoPage() {
               {solicitudes.map(s => {
                 const fechaAct = new Date(String(s.fechaActivacion))
                 return (
-                  <tr key={s.id} style={{ borderBottom: '1px solid #0f1a2e' }}>
-                    <td style={{ padding: '12px 16px', color: '#d8e0f0', fontWeight: 600 }}>{s.oficio}</td>
+                  <tr key={s.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td style={{ padding: '12px 16px', color: '#1e293b', fontWeight: 600 }}>{s.oficio}</td>
                     <td style={{ padding: '12px 16px' }}><AutoridadBadge autoridad={s.autoridad} /></td>
-                    <td style={{ padding: '12px 16px', color: '#8a9bc0' }}>{s.delito ?? '—'}</td>
-                    <td style={{ padding: '12px 16px', color: '#8a9bc0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10 }}>
+                    <td style={{ padding: '12px 16px', color: '#64748b' }}>{s.delito ?? '—'}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 10 }}>
                       {s.carpetaInvestigacion ?? '—'}
                     </td>
-                    <td style={{ padding: '12px 16px', color: '#8a9bc0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10 }}>
+                    <td style={{ padding: '12px 16px', color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 10 }}>
                       {format(fechaAct, 'dd/MM/yy HH:mm')}
                     </td>
                     <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                       <Link
                         href={`/prevencion/juridico/solicitudes/${s.id}`}
-                        style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#d4a43a', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
+                        style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
                       >
                         Ver →
                       </Link>

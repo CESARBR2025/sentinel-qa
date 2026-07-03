@@ -24,10 +24,13 @@ export async function obtenerLiberaciones() {
       correo_infractor,
       nombre_infractor,
       estatus_dependencia,
-      no_carpeta_investigacion
+      no_carpeta_investigacion,
+      url_orden_salida_liberaciones
     FROM v2_infracciones
-    WHERE estatus_dependencia IN ('ESPERA_REVISION', 'EN_PROCESO_LIBERACIONES', 'LIBERADA_POR_INFRACCION', 'VEHICULO_EN_CORRALON', 'LIBERADA_POR_DELITO', 'LIBERADA_POR_ACCIDENTE')
-       OR (estatus = 'REGISTRADA' AND estatus_dependencia = 'MESA_DE_CONTROL_REVISION')
+    WHERE estatus_dependencia IN ('ESPERA_REVISION', 'EN_PROCESO_LIBERACIONES', 'LIBERADA_POR_INFRACCION', 'VEHICULO_EN_CORRALON', 'LIBERADA_POR_DELITO', 'LIBERADA_POR_ACCIDENTE', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO')
+       OR (estatus = 'REGISTRADA' AND estatus_dependencia IN ('MESA_DE_CONTROL_REVISION', 'MESA_DE_CONTROL_PENDIENTE_DOCS'))
+       OR (estatus = 'PENDIENTE_PAGO' AND estatus_dependencia = 'PENDIENTE_PAGO_LIBERACION')
+       OR (estatus = 'FINALIZADA' AND estatus_dependencia IN ('FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'))
   `);
 }
 
