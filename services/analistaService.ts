@@ -9,9 +9,10 @@ export const analistaService = {
     if (!response.ok) throw new Error('Error al guardar el registro IPH');
     return response.json();
   },
-   async getListaIPH() {
-    const res = await fetch('/api/detenidos/listar', { cache: 'no-store' });
-    return res.json();
+     async getListaIPH() {
+    const response = await fetch('/api/detenidos/listar', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Error en el servidor');
+    return response.json();
   },
   // Obtener uno solo con todos los campos para el PPT
   async getDetalleIPH(id: string) {

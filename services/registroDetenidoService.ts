@@ -25,5 +25,11 @@ export const registroDetenidoService = {
     }
 
     return response.json();
-  }
+  },
+async getPrellenadoInteligencia(id: string) {
+  const response = await fetch(`/api/analisis/prellenado-completo/${id}`);
+  if (!response.ok) throw new Error('Error al obtener datos de inteligencia');
+  return response.json();
+}
+  
 };

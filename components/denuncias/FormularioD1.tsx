@@ -115,35 +115,48 @@ export default function FormularioD1({ user, prefill }: { user: any; prefill?: P
   const router = useRouter()
   const resetStore = useOficialFormStore(s => s.reset)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("SUBMIT", step);
-    e.preventDefault()
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  console.log("SUBMIT", step);
 
-    if (step < 4) return;
+  if (step < 4) return;
 
+  const formData = new FormData(e.currentTarget);
+  const data = Object.fromEntries(formData.entries());
+
+  // --- CONSTRUCCIÓN DEL CUERPO ---
+  const body = {
+    ...data,
+    // El incidente_id es el ID del suceso principal
+    incidenteId: prefill?.incidenteId ?? null, 
     
-    const formData = new FormData(e.currentTarget)
-    const body = {
-      ...Object.fromEntries(formData.entries()),
-      incidenteId: prefill?.incidenteId ?? null,reporteCampoId: prefill?.reporteCampoId ?? null,
-    }
+    // El reporte_campo_id es el ID de la tabla azul (Rondín)
+    reporteCampoId: prefill?.reporteCampoId ?? null,
+    
+    // El oficialId es el ID del policía (El que tenía 35 caracteres y fallaba)
+    // Asegúrate de que prefill.oficialId sea el UUID completo de 36 caracteres
+    oficialId: prefill?.oficialId ?? null,
+    
+    capturadoPor: user?.id // ID del usuario en sesión
+  };
 
-    const res = await fetch('/api/reportes-d1', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
+  const res = await fetch('/api/reportes-d1', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
 
-    const data = await res.json()
-    if (!res.ok) {
-      alert(data.error)
-      return
-    }
-
-    // Limpiar store y redirigir
-    resetStore()
-    router.push('/oficial?exito=1')
+  const result = await res.json();
+  if (!res.ok) {
+    alert("ERROR: " + result.error);
+    return;
   }
+
+  // Limpiar store y redirigir
+  resetStore();
+  router.push('/oficial?exito=1');
+};
+
 
   return (
     <form onSubmit={handleSubmit} onKeyDown={(e) => { if (e.key === 'Enter' && step < 4) e.preventDefault(); }} style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>

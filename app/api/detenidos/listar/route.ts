@@ -1,26 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { sql } from 'drizzle-orm';
+import { db } from '@/lib/db'; 
 
 export async function GET() {
   try {
-    const query = sql`
+    // Cambiamos 'creado_en' por 'id' para el ordenamiento
+    const result = await db.$client.query(`
       SELECT 
         id, 
         folio_iph as "folioIPH", 
         alias, 
         delito, 
         fecha_evento as "fechaEvento", 
-        capturado_por as "capturo"
+        genero
       FROM iph_detenidos
-      ORDER BY creado_en DESC
-    `;
+      ORDER BY id DESC 
+      LIMIT 100
+    `);
 
-    const result = await db.execute(query);
-    const rows = Array.isArray(result) ? result : (result as any).rows || [];
-    return NextResponse.json(rows);
+    return NextResponse.json(result.rows);
+
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("ERROR_SQL_NATIVO:", error.message);
+    return NextResponse.json({ 
+      error: "Error en la base de datos", 
+      details: error.message 
+    }, { status: 500 });
   }
 }
