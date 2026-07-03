@@ -13,9 +13,11 @@ import {
   obtenerDetalleInfraccionViaJuzgado,
   iniciarProcesoJuzgado,
   finalizarProcesoJuzgado,
+  listarAseguradosJuzgado,
 } from './repository'
 import { rowToSolicitud, rowToInfraccionDetalle } from './mapper'
 import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, ViaInfraccionDetalle } from './types'
+import type { AseguradoRow } from '@/lib/fiscalia/types'
 
 export async function verificarRolJuzgado(userId: string): Promise<boolean> {
   const rol = await obtenerRolUsuario(userId)
@@ -85,6 +87,10 @@ export async function iniciarProcesoJuzgadoSvc(id: string): Promise<void> {
 
 export async function finalizarProcesoJuzgadoSvc(id: string): Promise<void> {
   await finalizarProcesoJuzgado(id)
+}
+
+export async function listarAseguradosJuzgadoSvc(): Promise<AseguradoRow[]> {
+  return listarAseguradosJuzgado()
 }
 
 export type { LiberacionRow, ViaInfraccionDetalle }

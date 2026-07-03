@@ -1,4 +1,5 @@
 import { query, queryVia, viaPool } from "@/lib/db";
+import { rowToAsegurado } from "@/lib/fiscalia/mapper";
 import type {
   RolRow,
   DetalleAsegurado,
@@ -6,6 +7,7 @@ import type {
   EvidenciaMonitorista,
   LiberacionRow,
 } from "./types";
+import type { AseguradoRow } from "@/lib/fiscalia/types";
 
 export async function obtenerRolUsuario(userId: string): Promise<string> {
   const result = await query<RolRow>(
@@ -452,4 +454,26 @@ export async function actualizarOficioJuzgado(
   } finally {
     client.release();
   }
+}
+
+export async function listarAseguradosJuzgado(): Promise<AseguradoRow[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       rc.id,
+       rc.folio_reporte_campo,
+       rd.folio_denuncia,
+       rc.created_at,
+       rc.ofi_detenidos,
+       rc.folio_reporte_asegurados,
+       rc.ofi_oficial_nombre,
+       o.ofi_placa_unidad_asignada
+      FROM ofi_reportes_campo rc
+      JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
+      LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      WHERE rc.ofi_hay_detencion = true
+        AND rc.ofi_autoridad_recibe = 'JUZGADO CIVICO'
+        AND rc.folio_reporte_asegurados IS NULL
+      ORDER BY rc.created_at DESC`,
+  );
+  return result.rows.map(rowToAsegurado);
 }

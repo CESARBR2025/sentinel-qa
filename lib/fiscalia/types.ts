@@ -25,6 +25,103 @@ export interface DatosAseguradoInput {
   registroTableta: string;
 }
 
+export interface AseguradoRow {
+  id: string
+  folioReporteCampo: string
+  folioDenuncia: string | null
+  createdAt: string
+  cantidadDetenidos: number
+  folioReporteAsegurados: string | null
+  oficialNombre: string | null
+  oficialPlaca: string | null
+}
+
+export interface DetenidoBase {
+  nombre?: string
+}
+
+export interface DetenidoDireccionInput {
+  nombreDetenido: string
+  apPaterno: string
+  apMaterno: string
+  calle: string
+  colonia: string
+  numero: string
+  codPostal: string
+  latitud: number | null
+  longitud: number | null
+}
+
+export interface DetalleAseguradoCompleto {
+  reporteCampoId: string
+  folioReporteAsegurados: string
+  folioReporteCampo: string | null
+  folioDenuncia: string | null
+  iph: string | null
+  folioSija: string | null
+  folioRemision: string | null
+  marcoLegal: string | null
+  registroTableta: string | null
+  fechaHoy: string
+  horaAhora: string
+  lugarDetencionCalle: string | null
+  lugarDetencionColonia: string | null
+  lugarLatitud: number | null
+  lugarLongitud: number | null
+  oficialNombre: string | null
+  oficialApPaterno: string | null
+  oficialApMaterno: string | null
+  oficialPlaca: string | null
+  oficialNomina: string | null
+  capturadoPorNombre: string | null
+  detenidos: DetenidoBase[]
+  detenidosDirecciones: DetalleDetenidoGuardado[]
+}
+
+export interface DetalleDetenidoGuardado {
+  id: string
+  nombreDetenido: string
+  apPaterno: string | null
+  apMaterno: string | null
+  calle: string | null
+  colonia: string | null
+  numero: string | null
+  codPostal: string | null
+  latitud: number | null
+  longitud: number | null
+}
+
+export interface PuestaDisposicionRow {
+  id: string
+  reporteCampoId: string
+  gestionInterna: boolean
+  dependenciaExterna: string | null
+  actas: Record<string, boolean>
+  otrosActos: string | null
+  horaInicioTraslado: string
+  horaLlegadaSede: string
+  tiempoTrasladoTotal: number
+  horaPuestaDisposicion: string
+  creadoPor: string
+  creadoEn: string
+  completadoEn: string | null
+}
+
+export interface PuestaDisposicionInput {
+  gestionInterna: boolean
+  dependenciaExterna: string | null
+  actas: Record<string, boolean>
+  otrosActos: string | null
+  horaInicioTraslado: string
+  horaLlegadaSede: string
+  tiempoTrasladoTotal: number
+  horaPuestaDisposicion: string
+}
+
+export type AseguradoConDisposicion = AseguradoRow & {
+  puestaDisposicionId: string | null
+}
+
 export interface DetalleAsegurado {
   folioDenuncia: string | null;
   folioReporteCampo: string | null;
@@ -259,3 +356,14 @@ export type DetalleCompleto = {
   garantia: DetalleGarantia;
   ubicacion: DetalleUbicacion;
 };
+
+export const ACTAS_CHECKLIST = [
+  { key: 'inspeccion_persona', label: 'Inspección de Persona' },
+  { key: 'lectura_derechos', label: 'Lectura de Derechos' },
+  { key: 'inspeccion_lugar', label: 'Inspección de lugar' },
+  { key: 'inspeccion_vehiculo', label: 'Inspección de Vehículo' },
+  { key: 'embalaje_etiquetado', label: 'Embalaje y etiquetado' },
+  { key: 'cadena_custodia', label: 'Cadena de Custodia' },
+  { key: 'preservacion_lugar', label: 'Preservación del lugar' },
+  { key: 'entrevistas', label: 'Entrevistas' },
+] as const
