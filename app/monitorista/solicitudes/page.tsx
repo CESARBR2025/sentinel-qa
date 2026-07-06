@@ -8,10 +8,12 @@ import Link from 'next/link'
 import React from 'react'
 import { BandejaSolicitudes } from '@/components/monitorista/BandejaSolicitudes'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export default async function SolicitudesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/monitorista')
 
   const hoy = new Date(); hoy.setHours(0, 0, 0, 0)
 

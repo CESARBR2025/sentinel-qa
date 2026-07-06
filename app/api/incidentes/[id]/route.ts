@@ -5,10 +5,13 @@ import { db }      from '@/lib/db/index'
 import { eq }      from 'drizzle-orm'
 import { incidentes, incidentePersonasAfectadas, incidenteDespacho, incidenteReporteCampo, incidenteExtorsion, incidenteAlarmaEscolar, catTiposIncidente, catTiposEmergencia, catPrioridades, catMediosCanalizacion, users } from '@/lib/db/schema'
 import { registrarAudit } from '@/lib/incidentes/audit'
+import { verificarAccesoIncidentesApi } from '@/lib/incidentes/permisos'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoIncidentesApi(session.user.id, 'ver')
+  if (chequeo) return chequeo
 
   const { id } = await params
 

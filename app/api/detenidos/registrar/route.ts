@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { db } from "@/lib/db";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: Request) {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+
     try {
 
         const body = await req.json();

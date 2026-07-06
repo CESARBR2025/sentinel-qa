@@ -6,6 +6,7 @@ import RegistroIncidenteForm from "@/components/911/whatsapp/RegistroIncidenteFo
 import { db } from "@/lib/db"; // IMPORTANTE: Revisa que esta ruta a tu DB sea correcta
 import { catTiposIncidente } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function RegistroIncidentePage() {
   const session = await auth.api.getSession({
@@ -14,6 +15,9 @@ export default async function RegistroIncidentePage() {
 
   if (!session) {
     redirect("/login");
+  }
+  if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) {
+    redirect("/dashboard");
   }
 
   // 1. Traemos los datos

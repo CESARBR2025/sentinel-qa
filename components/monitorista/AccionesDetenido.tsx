@@ -1,13 +1,17 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Send, ArrowLeft, RefreshCw } from 'lucide-react'
 import React from 'react'
+import { Toast } from '@/components/ui/Toast'
 
 export function AccionesDetenido({ id, estado, enviadoA, destinos }: { id: string; estado: string; enviadoA: string; destinos: { clave: string; nombre: string }[] }) {
+  const router = useRouter()
   const [destino, setDestino] = useState(enviadoA || destinos[0]?.clave || '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState(false)
 
   const puedeEnviar = estado === 'pendiente' || estado === 'rechazado'
   const estaRechazado = estado === 'rechazado'
@@ -22,7 +26,8 @@ export function AccionesDetenido({ id, estado, enviadoA, destinos }: { id: strin
         body: JSON.stringify({ destino }),
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error) }
-      window.location.reload()
+      setToast(true)
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error')
     } finally { setPending(false) }
@@ -30,6 +35,7 @@ export function AccionesDetenido({ id, estado, enviadoA, destinos }: { id: strin
 
   return (
     <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
+      <Toast show={toast} mensaje="Solicitud enviada" onClose={() => setToast(false)} />
       <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>
         <Send size={18} /> ENVIAR SOLICITUD
       </h3>

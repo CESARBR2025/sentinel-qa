@@ -4,10 +4,13 @@ import { headers } from 'next/headers'
 import { db }      from '@/lib/db/index'
 import { eq }      from 'drizzle-orm'
 import { incidentes, incidenteDespacho, incidenteDespachoUnidades, incidenteDespachoElementos, users } from '@/lib/db/schema'
+import { verificarAccesoIncidentesApi } from '@/lib/incidentes/permisos'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoIncidentesApi(session.user.id, 'ver')
+  if (chequeo) return chequeo
 
   const { id } = await params
 

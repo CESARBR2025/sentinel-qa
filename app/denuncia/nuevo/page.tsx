@@ -7,6 +7,7 @@ import { DashboardFooter } from '@/components/partials/Footer'
 import FormularioD1        from '@/components/denuncias/FormularioD1'
 import { FileText, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { verificarRolOficial } from '@/lib/oficial/service'
 
 export default async function NuevaDenunciaD1Page({
   searchParams,
@@ -15,6 +16,7 @@ export default async function NuevaDenunciaD1Page({
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await verificarRolOficial(session.user.id))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
   const sp = await searchParams

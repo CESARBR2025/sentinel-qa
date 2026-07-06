@@ -68,7 +68,7 @@ export default function EditarIncidenteCamaraPage() {
         body: JSON.stringify(payload),
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error) }
-      router.push('/monitorista/incidentes-camara')
+      router.push('/monitorista/incidentes-camara?exito=actualizado')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al guardar')
     } finally {

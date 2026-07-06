@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Send } from 'lucide-react'
 import React from 'react'
+import { Toast } from '@/components/ui/Toast'
 
 export function BatchEnvioFotos({
   fotos,
@@ -13,12 +15,14 @@ export function BatchEnvioFotos({
   destinos: { clave: string; nombre: string }[]
   solicitudId: string
 }) {
-  const pendientes = fotos.filter(f => f.estado === 'pendiente')
-  if (pendientes.length === 0) return null
-
+  const router = useRouter()
   const [destino, setDestino] = useState(destinos[0]?.clave || '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState(false)
+
+  const pendientes = fotos.filter(f => f.estado === 'pendiente')
+  if (pendientes.length === 0) return null
 
   const handleSendAll = async () => {
     if (!destino) return
@@ -36,7 +40,8 @@ export function BatchEnvioFotos({
           if (err.error) throw new Error(err.error)
         }
       }
-      window.location.reload()
+      setToast(true)
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error')
     } finally {
@@ -46,6 +51,7 @@ export function BatchEnvioFotos({
 
   return (
     <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: 20, borderRadius: 2, marginBottom: 16 }}>
+      <Toast show={toast} mensaje={`${pendientes.length} foto${pendientes.length > 1 ? 's' : ''} enviada${pendientes.length > 1 ? 's' : ''}`} onClose={() => setToast(false)} />
       <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, fontWeight: 600, color: '#15803d', textTransform: 'uppercase', marginBottom: 12 }}>
         Enviar todas las fotos pendientes
       </div>

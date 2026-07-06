@@ -10,6 +10,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 // ----------------------------------
+import { tieneAccesoHub } from '@/lib/911/permisos'
 
 async function getStats() {
   const hoy = new Date()
@@ -47,9 +48,10 @@ export default async function SeleccionAtencionPage() {
   // 1. VALIDACIÓN DE SESIÓN (Igual que en Despacho)
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoHub(session.user.id))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
-  
+
   const stats = await getStats()
 
   const modulos = [

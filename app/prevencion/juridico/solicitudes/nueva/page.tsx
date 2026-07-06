@@ -1,5 +1,9 @@
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createSolicitud } from '@/lib/prevencion/actions'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const AUTORIDADES = [
   { value: 'FISCALIA',  label: 'Fiscalía' },
@@ -8,7 +12,12 @@ const AUTORIDADES = [
   { value: 'SEC_MUJER', label: 'Secretaría de la Mujer' },
 ]
 
-export default function NuevaSolicitudPage() {
+export default async function NuevaSolicitudPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'solicitudes'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'crear'))) redirect('/dashboard')
+
   return (
     <div>
       <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>

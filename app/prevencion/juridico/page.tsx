@@ -7,6 +7,7 @@ import { eq, desc } from 'drizzle-orm'
 import Link          from 'next/link'
 import { format }    from 'date-fns'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
+import { tienePermiso } from '@/lib/prevencion/permisos'
 
 export default async function JuridicoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -22,6 +23,7 @@ export default async function JuridicoPage() {
   const isJuridico = userWithRole?.rolNombre === 'Jurídico'
   const isAdmin = userWithRole?.rolNombre === 'Administrador'
   if (!isJuridico && !isAdmin) redirect('/prevencion/medidas')
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/prevencion/medidas')
 
   const solicitudes = await db
     .select()

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Pencil } from 'lucide-react'
 import React from 'react'
+import { Toast } from '@/components/ui/Toast'
 
 export function EditarCampoDetenido({
   reporteId,
@@ -15,10 +17,12 @@ export function EditarCampoDetenido({
   label: string
   valor: string | null
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [texto, setTexto] = useState(valor || '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState(false)
 
   const handleSave = async () => {
     setPending(true)
@@ -31,7 +35,8 @@ export function EditarCampoDetenido({
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error) }
       setOpen(false)
-      window.location.reload()
+      setToast(true)
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error')
     } finally { setPending(false) }
@@ -39,6 +44,7 @@ export function EditarCampoDetenido({
 
   return (
     <div>
+      <Toast show={toast} mensaje={`${label} actualizado`} onClose={() => setToast(false)} />
       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, marginBottom: 4 }}>{label}</div>

@@ -1,5 +1,9 @@
+import { auth }         from '@/lib/auth'
+import { headers }      from 'next/headers'
+import { redirect }     from 'next/navigation'
 import Link            from 'next/link'
 import { createFicha } from '@/lib/prevencion/actions'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const TIPOS = [
   { value: 'PROTOCOLO_ALBA',   label: 'Protocolo Alba' },
@@ -7,7 +11,12 @@ const TIPOS = [
   { value: 'BUSQUEDA_PERSONA',  label: 'Búsqueda de Persona' },
 ]
 
-export default function NuevaFichaPage() {
+export default async function NuevaFichaPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'busquedas', 'crear'))) redirect('/dashboard')
+
   return (
     <div style={{ maxWidth: 760 }}>
       <div style={{ marginBottom: 32 }}>

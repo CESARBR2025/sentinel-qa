@@ -8,6 +8,7 @@ import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, Shield, Car } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/911/Pagination"; // Importamos el componente
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ListadoRondinPage({
     searchParams,
@@ -22,6 +23,7 @@ export default async function ListadoRondinPage({
 
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
+    if (!(await tieneAccesoSeccion(session.user.id, "911_rondin"))) redirect("/dashboard");
 
     // 2. Ejecución de consultas en paralelo (Optimizado)
     const [totalRes, dataRes] = await Promise.all([

@@ -8,6 +8,7 @@ import { Eye, Plus, Calendar, MapPin, Hash, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { eq, desc, count } from "drizzle-orm"; // Importamos count
 import { Pagination } from "@/components/911/Pagination"; // Importa el nuevo componente
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ListadoWhatsAppPage({
     searchParams,
@@ -22,6 +23,7 @@ export default async function ListadoWhatsAppPage({
 
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
+    if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
 
     // 2. Obtener el conteo total de registros con el mismo filtro (canal = whatsapp)
     const [totalResult] = await db

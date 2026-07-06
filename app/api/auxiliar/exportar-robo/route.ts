@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { listarCuestionariosRobo } from '@/lib/auxiliar/service'
+import { verificarAccesoAuxiliarApi } from '@/lib/auxiliar/permisos'
 import ExcelJS from 'exceljs'
 
 export async function GET(req: NextRequest) {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    const chequeo = await verificarAccesoAuxiliarApi(session.user.id, 'auxiliar_cuestionario_robo', 'ver')
+    if (chequeo) return chequeo
 
     const formato = req.nextUrl.searchParams.get('formato') ?? 'xlsx'
     const datos = await listarCuestionariosRobo()

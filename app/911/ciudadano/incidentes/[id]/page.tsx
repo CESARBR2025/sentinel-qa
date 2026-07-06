@@ -12,11 +12,13 @@ import { headers } from "next/headers";
 import { MapPin, User, Clock, AlertTriangle, ArrowLeft, Phone, School, Info } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function DetalleCiudadanoCompletoPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
+    if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
 
     const [data] = await db
         .select({

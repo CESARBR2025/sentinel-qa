@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache'
 import { db }             from '@/lib/db/index'
 import { users, roles, sessions } from '@/lib/db/schema'
 import { eq, sql }             from 'drizzle-orm'
+import { aplicarPlantillaRol } from '@/lib/monitorista/permisos'
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -42,6 +43,7 @@ export async function createUser(formData: FormData) {
       await db.update(users)
         .set({ rolId })
         .where(eq(users.id, result.user.id))
+      await aplicarPlantillaRol(result.user.id, rolId)
     }
 
     // Clean up auto-created session (admin creating user ≠ logging in as that user)
@@ -55,7 +57,7 @@ export async function createUser(formData: FormData) {
   }
 
   revalidatePath('/admin/usuarios')
-  redirect('/admin/usuarios')
+  redirect('/admin/usuarios?exito=creado')
 }
 
 export async function updateUser(formData: FormData) {
@@ -68,10 +70,16 @@ export async function updateUser(formData: FormData) {
   const rolId    = rolIdStr ? Number(rolIdStr) : null
   const activo   = formData.get('activo') === 'true'
 
+  const [antes] = await db.select({ rolId: users.rolId }).from(users).where(eq(users.id, userId)).limit(1)
+
   await db.update(users)
     .set({ name: nombre, apellido, rolId, activo, updatedAt: sql`now()` })
     .where(eq(users.id, userId))
 
+  if (rolId && rolId !== antes?.rolId) {
+    await aplicarPlantillaRol(userId, rolId)
+  }
+
   revalidatePath('/admin/usuarios')
-  redirect('/admin/usuarios')
+  redirect('/admin/usuarios?exito=actualizado')
 }

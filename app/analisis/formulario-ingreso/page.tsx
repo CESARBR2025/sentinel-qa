@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import RegistroDetenidoStepper from '@/components/analisis/formAnalisis'
+import { tieneAccesoAnalisis, tienePermiso } from '@/lib/analisis/permisos'
 
 export default async function DespachoPage({ 
   searchParams 
@@ -13,6 +14,8 @@ export default async function DespachoPage({
   
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoAnalisis(session.user.id))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'analisis', 'crear'))) redirect('/dashboard')
 
     const { id } = await searchParams;
 
