@@ -7,10 +7,13 @@ import Link from 'next/link'
 import React from 'react'
 import { Plus } from 'lucide-react'
 import { pageWrap, fontsImport } from '@/components/reportes/form-styles'
+import { tieneAccesoFormatoN, tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function FormatoNArmasAseguradasPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoFormatoN(session.user.id))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'formato_n_coordinacion', 'ver'))) redirect('/dashboard')
 
   const registros = await listarArmasAseguradas()
   const user = session.user as { name: string; apellido?: string; email: string }

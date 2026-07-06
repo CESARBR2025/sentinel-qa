@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from "@/lib/db";
+import { db, query } from "@/lib/db";
 import { incidentes, catTiposIncidente, catPrioridades } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { tienePermiso } from "@/lib/incidentes/permisos";
 import {
     Search, MapPin, Clock, Eye, Radio, MessageSquare, AlertTriangle,
     Phone
@@ -13,9 +14,17 @@ import {
 import Link from "next/link";
 import React from "react";
 
+const ROLES_PERMITIDOS = ['Administrador', 'Operador', 'Oficial de Campo']
+
 export default async function BitacoraIncidentesPage() {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
+
+    const rolResult = await query<{ nombre: string }>(
+        `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
+    )
+    if (!ROLES_PERMITIDOS.includes(rolResult.rows[0]?.nombre ?? '')) redirect('/dashboard')
+    if (!(await tienePermiso(session.user.id, 'incidentes', 'ver'))) redirect('/dashboard')
 
     // CAMBIAMOS A SELECT ESTÁNDAR CON JOINS (Evita el error de referencedTable)
     const listaIncidentes = await db

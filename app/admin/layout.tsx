@@ -20,22 +20,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (u?.rolNombre !== 'Administrador') redirect('/dashboard')
 
   return (
-    <div style={{ minHeight: '100vh', background: '#070b16', color: '#d8e0f0', fontFamily: 'Inter,system-ui,sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <header style={{ borderBottom: '1px solid #1b2742', padding: '16px 48px', display: 'flex', alignItems: 'center', gap: 24 }}>
+      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '16px 48px', display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
         <Link
           href="/dashboard"
-          style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em', color: '#4a5878', textTransform: 'uppercase', textDecoration: 'none' }}
+          style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}
         >
           ← Dashboard
         </Link>
-        <div style={{ width: 1, height: 16, background: '#1b2742' }} />
+        <div style={{ width: 1, height: 16, background: '#e2e8f0' }} />
         <div>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#c0223a', textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
             Sistema
           </span>
-          <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#d8e0f0' }}>
+          <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>
             ADMINISTRACIÓN
           </span>
         </div>
@@ -46,9 +46,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             { label: 'Roles',    href: '/admin/roles'    },
           ].map(({ label, href }) => (
             <Link
-              key={href}
+              key={label}
               href={href}
-              style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.18em', color: '#8a9bc0', textTransform: 'uppercase', textDecoration: 'none' }}
+              style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.18em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}
             >
               {label}
             </Link>
@@ -60,7 +60,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         {children}
       </main>
 
-      <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2a3a5e', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #1b2742' }}>
+      <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
         SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
       </footer>
     </div>

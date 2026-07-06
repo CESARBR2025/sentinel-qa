@@ -1,3 +1,6 @@
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { db } from '@/lib/db/index'
 import { medidasProteccion, visitasDomiciliarias } from '@/lib/db/schema'
 import { desc, eq, and } from 'drizzle-orm'
@@ -7,6 +10,7 @@ import { SemaforoVigencia } from '@/components/prevencion/SemaforoVigencia'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
 import { MedidasFiltros } from '@/components/prevencion/MedidasFiltros'
 import { Suspense } from 'react'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const COLOR_MAP: Record<string, string> = {
   vigentes: 'verde',
@@ -25,6 +29,11 @@ export default async function MedidasPage({
     prorrogadas?: string
   }>
 }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'medidas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'medidas', 'ver'))) redirect('/dashboard')
+
   const { estado, autoridad, sinVisita, prorrogadas } = await searchParams
 
   // Build DB conditions

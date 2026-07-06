@@ -7,16 +7,19 @@ import Link from 'next/link'
 import React from 'react'
 import { Plus, Camera, BarChart3, Filter } from 'lucide-react'
 import { FilaIncidenteCamara } from '@/components/monitorista/FilaIncidenteCamara'
+import { tienePermiso } from '@/lib/monitorista/permisos'
+import { ToastAuto } from '@/components/ui/ToastAuto'
 
 export default async function IncidentesCamaraPage({
   searchParams,
 }: {
-  searchParams: Promise<{ turno?: string }>
+  searchParams: Promise<{ turno?: string; exito?: string }>
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tienePermiso(session.user.id, 'incidentes_camara', 'ver'))) redirect('/monitorista')
 
-  const { turno: turnoFilter } = await searchParams
+  const { turno: turnoFilter, exito } = await searchParams
   const turnoValido = turnoFilter && TURNOS.includes(turnoFilter as typeof TURNOS[number])
     ? turnoFilter as typeof TURNOS[number]
     : undefined
@@ -31,6 +34,8 @@ export default async function IncidentesCamaraPage({
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+      <ToastAuto show={exito === 'creado'} mensaje="Registro creado exitosamente" />
+      <ToastAuto show={exito === 'actualizado'} mensaje="Registro actualizado exitosamente" />
       <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
         <Link href="/monitorista" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}>← Monitorista</Link>
         <div style={{ flexGrow: 1 }}>

@@ -15,6 +15,7 @@ import {
 import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
 import Formulario911 from "./Formulario911";
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 
 
@@ -26,6 +27,9 @@ export default async function Ciudadano911Page() {
 
   if (!session) {
     redirect("/login");
+  }
+  if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) {
+    redirect("/dashboard");
   }
 
   const user = session.user as {

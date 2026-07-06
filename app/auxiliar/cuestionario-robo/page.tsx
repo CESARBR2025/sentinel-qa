@@ -7,6 +7,7 @@ import { eq }      from 'drizzle-orm'
 import { listarCuestionariosRobo } from '@/lib/auxiliar/service'
 import { ArrowLeft, Download } from 'lucide-react'
 import Link from 'next/link'
+import { tienePermiso } from '@/lib/auxiliar/permisos'
 
 const TH: React.CSSProperties = { padding:'10px 14px', textAlign:'left', fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#64748b', letterSpacing:'0.15em', textTransform:'uppercase', fontWeight:600, background:'#f8fafc', borderBottom:'1px solid #e2e8f0', whiteSpace:'nowrap' }
 const TD: React.CSSProperties = { padding:'10px 14px', fontFamily:'Inter,sans-serif', fontSize:12, color:'#1e293b', borderBottom:'1px solid #f1f5f9' }
@@ -23,6 +24,7 @@ export default async function CuestionarioRoboPage() {
     .limit(1)
 
   if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'auxiliar_cuestionario_robo', 'ver'))) redirect('/dashboard')
 
   const datos = await listarCuestionariosRobo()
 

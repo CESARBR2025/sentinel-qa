@@ -15,10 +15,18 @@ import {
   solicitudesInformacion, solicitudesC4Internas, contestaciones,
   medidaAutoridadesAdicionales,
 } from '@/lib/db/schema'
+import { tieneAccesoSeccion, tienePermiso, Seccion, Accion } from '@/lib/prevencion/permisos'
 
-export async function createMedida(formData: FormData) {
+async function requireAcceso(seccion: Seccion, accion: Accion) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) throw new Error('No autenticado')
+  if (!(await tieneAccesoSeccion(session.user.id, seccion))) throw new Error('Sin permiso')
+  if (!(await tienePermiso(session.user.id, seccion, accion))) throw new Error('Sin permiso')
+  return session
+}
+
+export async function createMedida(formData: FormData) {
+  const session = await requireAcceso('medidas', 'crear')
 
   const str = (k: string): string | null =>
     (formData.get(k) as string | null)?.trim() || null
@@ -54,8 +62,7 @@ export async function createMedida(formData: FormData) {
 }
 
 export async function createVisita(medidaId: string, formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('medidas', 'editar')
 
   await db.insert(visitasDomiciliarias).values({
     medidaId,
@@ -70,8 +77,7 @@ export async function createVisita(medidaId: string, formData: FormData) {
 }
 
 export async function addAutoridadMedida(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('medidas', 'editar')
 
   const medidaId   = (formData.get('medidaId')   as string).trim()
   const autoridad  = (formData.get('autoridad')  as string).trim()
@@ -90,8 +96,7 @@ export async function addAutoridadMedida(formData: FormData) {
 }
 
 export async function createProrroga(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  await requireAcceso('medidas', 'editar')
 
   const medidaId = (formData.get('medidaId') as string).trim()
   const cantidad = Number(formData.get('cantidad'))
@@ -140,8 +145,7 @@ export async function createProrroga(formData: FormData) {
 // ── Búsquedas / Protocolo Alba ────────────────────────────────────────────────
 
 export async function createFicha(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('busquedas', 'crear')
 
   const str = (k: string): string | null =>
     (formData.get(k) as string | null)?.trim() || null
@@ -169,8 +173,7 @@ export async function createFicha(formData: FormData) {
 }
 
 export async function createSeguimiento(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('busquedas', 'editar')
 
   const fichaId = (formData.get('fichaId') as string).trim()
   const tipo    = (formData.get('tipo') as string).trim()
@@ -198,8 +201,7 @@ export async function createSeguimiento(formData: FormData) {
 }
 
 export async function cancelarFicha(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  await requireAcceso('busquedas', 'editar')
 
   const fichaId = (formData.get('fichaId') as string).trim()
 
@@ -219,8 +221,7 @@ export async function cancelarFicha(formData: FormData) {
 // ── Área Jurídica ─────────────────────────────────────────────────────────────
 
 export async function createSolicitud(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('solicitudes', 'crear')
 
   const str = (k: string): string | null =>
     (formData.get(k) as string | null)?.trim() || null
@@ -249,8 +250,7 @@ export async function createSolicitud(formData: FormData) {
 }
 
 export async function createSolicitudC4(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('solicitudes', 'editar')
 
   const solicitudId = (formData.get('solicitudId') as string).trim()
 
@@ -264,8 +264,7 @@ export async function createSolicitudC4(formData: FormData) {
 }
 
 export async function createContestacion(formData: FormData) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) throw new Error('No autenticado')
+  const session = await requireAcceso('solicitudes', 'editar')
 
   const solicitudId = (formData.get('solicitudId') as string).trim()
   const str = (k: string): string | null =>

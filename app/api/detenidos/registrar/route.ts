@@ -1,11 +1,27 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { db } from "@/lib/db";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: Request) {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+
     try {
 
         const body = await req.json();
+
+        const cleanData = Object.fromEntries(
+            Object.entries(body).map(([key, value]) => {
+                if (value === "" || value === undefined || value === null) {
+                    return [key, null];
+                }
+                if (value === "true") return [key, true];
+                if (value === "false") return [key, false];
+                return [key, value];
+            })
+        );
 
         const result = await db.execute(sql`
 
@@ -23,6 +39,7 @@ export async function POST(req: Request) {
 
                 articulo,
                 tipo_falta,
+                es_rnd,
                 rnd,
 
                 calle_arresto,
@@ -92,82 +109,83 @@ export async function POST(req: Request) {
 
             VALUES(
 
-                ${body.fechaNacimiento},
-                ${body.edad},
-                ${body.genero},
-                ${body.alias},
-                ${body.ciudadOrigen},
+                ${cleanData.fechaNacimiento},
+                ${cleanData.edad},
+                ${cleanData.genero},
+                ${cleanData.alias},
+                ${cleanData.ciudadOrigen},
 
-                ${body.calleDetenido},
-                ${body.numeroDetenido},
-                ${body.coloniaDetenido},
+                ${cleanData.calleDetenido},
+                ${cleanData.numeroDetenido},
+                ${cleanData.coloniaDetenido},
 
-                ${body.articulo},
-                ${body.tipoFalta},
-                ${body.rnd},
+                ${cleanData.articulo},
+                ${cleanData.tipoFalta},
+                ${cleanData.esRND},
+                ${cleanData.rnd},
 
-                ${body.calleArresto},
-                ${body.coloniaArresto},
-                ${body.sectorArresto},
-                ${body.agrupamientoArresto},
+                ${cleanData.calleArresto},
+                ${cleanData.coloniaArresto},
+                ${cleanData.sectorArresto},
+                ${cleanData.agrupamientoArresto},
 
-                ${body.latitudArresto},
-                ${body.longitudArresto},
+                ${cleanData.latitudArresto},
+                ${cleanData.longitudArresto},
 
-                ${body.presencia},
-                ${body.verbalizacion},
-                ${body.controlContacto},
-                ${body.controlFisico},
-                ${body.tecnicasNoLetales},
-                ${body.fuerzaLetal},
+                ${cleanData.presencia},
+                ${cleanData.verbalizacion},
+                ${cleanData.controlContacto},
+                ${cleanData.controlFisico},
+                ${cleanData.tecnicasNoLetales},
+                ${cleanData.fuerzaLetal},
 
-                ${body.folioIPH},
-                ${body.folio911},
+                ${cleanData.folioIPH},
+                ${cleanData.folio911},
 
-                ${body.diaEvento},
-                ${body.fechaEvento},
-                ${body.fechaReporte},
+                ${cleanData.diaEvento},
+                ${cleanData.fechaEvento},
+                ${cleanData.fechaReporte},
 
-                ${body.horaReporte},
-                ${body.horaInicioEvento},
-                ${body.horaFinalEvento},
-                ${body.horaPromedio},
+                ${cleanData.horaReporte},
+                ${cleanData.horaInicioEvento},
+                ${cleanData.horaFinalEvento},
+                ${cleanData.horaPromedio},
 
-                ${body.delito},
-                ${body.modusOperandi},
-                ${body.articulosObjetos},
+                ${cleanData.delito},
+                ${cleanData.modusOperandi},
+                ${cleanData.articulosObjetos},
 
-                ${body.calleHecho},
-                ${body.numeroHecho},
-                ${body.coloniaHecho},
+                ${cleanData.calleHecho},
+                ${cleanData.numeroHecho},
+                ${cleanData.coloniaHecho},
 
-                ${body.latitudHecho},
-                ${body.longitudHecho},
+                ${cleanData.latitudHecho},
+                ${cleanData.longitudHecho},
 
-                ${body.sectorHecho},
-                ${body.rtResponsable},
-                ${body.turnoResponsable},
-                ${body.crpUnidad},
+                ${cleanData.sectorHecho},
+                ${cleanData.rtResponsable},
+                ${cleanData.turnoResponsable},
+                ${cleanData.crpUnidad},
 
-                ${body.nombreAfectado},
-                ${body.telefonoAfectado},
-                ${body.calleAfectado},
-                ${body.numeroAfectado},
-                ${body.coloniaAfectado},
+                ${cleanData.nombreAfectado},
+                ${cleanData.telefonoAfectado},
+                ${cleanData.calleAfectado},
+                ${cleanData.numeroAfectado},
+                ${cleanData.coloniaAfectado},
 
-                ${body.marcaVehiculo},
-                ${body.submarcaVehiculo},
-                ${body.tipoVehiculo},
-                ${body.colorVehiculo},
-                ${body.placasVehiculo},
-                ${body.estadoVehiculo},
-                ${body.nivVehiculo},
-                ${body.motorVehiculo},
-                ${body.modeloVehiculo},
+                ${cleanData.marcaVehiculo},
+                ${cleanData.submarcaVehiculo},
+                ${cleanData.tipoVehiculo},
+                ${cleanData.colorVehiculo},
+                ${cleanData.placasVehiculo},
+                ${cleanData.estadoVehiculo},
+                ${cleanData.nivVehiculo},
+                ${cleanData.motorVehiculo},
+                ${cleanData.modeloVehiculo},
 
-                ${body.apNuc},
-                ${body.fuero},
-                ${body.agenteAprehensor}
+                ${cleanData.apNuc},
+                ${cleanData.fuero},
+                ${cleanData.agenteAprehensor}
 
             )
 

@@ -4,10 +4,13 @@ import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import TablonAnalisis from '@/components/analisis/TablonAnalisis'
+import { tieneAccesoAnalisis, tienePermiso } from '@/lib/analisis/permisos'
 
 export default async function AnalisisPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoAnalisis(session.user.id))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'analisis', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 

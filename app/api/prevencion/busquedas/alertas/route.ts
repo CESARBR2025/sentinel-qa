@@ -1,12 +1,3 @@
-<<<<<<< Updated upstream
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db/index'
-import { fichasBusqueda, seguimientosBusqueda } from '@/lib/db/schema'
-import { eq, isNotNull } from 'drizzle-orm'
-import { addHours } from 'date-fns'
-
-export async function GET() {
-=======
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -27,7 +18,6 @@ export async function GET() {
   );
   if (chequeo) return chequeo;
 
->>>>>>> Stashed changes
   const busquedas = await db
     .select()
     .from(fichasBusqueda)

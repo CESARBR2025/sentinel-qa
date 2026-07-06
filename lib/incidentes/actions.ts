@@ -10,9 +10,10 @@ import { users, roles, incidentes, incidentePersonasAfectadas, incidenteDespacho
 import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
 import { crearReporteCampo } from './service'
+import { tienePermiso, Accion } from '@/lib/incidentes/permisos'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-async function requireOperador() {
+async function requireOperador(accion: Accion = 'crear') {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
@@ -25,6 +26,7 @@ async function requireOperador() {
 
   const rolesPermitidos = ['Administrador', 'Operador', 'Oficial de Campo']
   if (!u?.rolNombre || !rolesPermitidos.includes(u.rolNombre)) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'incidentes', accion))) redirect('/dashboard')
 
   return session
 }
@@ -197,7 +199,7 @@ export async function addPersonaAfectada(formData: FormData) {
 }
 
 export async function deletePersonaAfectada(formData: FormData) {
-  const session = await requireOperador()
+  const session = await requireOperador('eliminar')
 
   const id = req(formData, 'id')
   const incidenteId = req(formData, 'incidenteId')

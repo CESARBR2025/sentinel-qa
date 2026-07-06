@@ -8,6 +8,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { query } from '@/lib/db'
+import { tieneAccesoFormatoN, tienePermiso } from '@/lib/reportes/permisos'
 
 async function getFormatoNStats() {
   const [eventos, fge, fgr, rnd, medios, victimas, armas] = await Promise.all([
@@ -33,6 +34,8 @@ async function getFormatoNStats() {
 export default async function EnvioDeFormatosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoFormatoN(session.user.id))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'formato_n_coordinacion', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
   const fn = await getFormatoNStats()

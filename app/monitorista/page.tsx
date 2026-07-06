@@ -7,6 +7,7 @@ import { Camera, ClipboardList, Clock, History, Shield, User, Video } from 'luci
 import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
+import { obtenerPermisosUsuario } from '@/lib/monitorista/permisos'
 
 export default async function MonitoristaHubPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -16,6 +17,7 @@ export default async function MonitoristaHubPage() {
     `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
   )
   const esAdmin = r.rows[0]?.nombre === 'Administrador'
+  const permisos = await obtenerPermisosUsuario(session.user.id)
 
   const [solsPend, solsComp, histCount, d1Pend, d1Comp, detPend, detComp, icStats] = await Promise.all([
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'pendiente'"),
@@ -55,7 +57,7 @@ export default async function MonitoristaHubPage() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
-          <Link href="/monitorista/solicitudes" style={{ textDecoration: 'none' }}>
+          {permisos.solicitudes.puede_ver && <Link href="/monitorista/solicitudes" style={{ textDecoration: 'none' }}>
             <div style={cardStyle}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <Camera size={28} color="#2563eb" />
@@ -69,9 +71,9 @@ export default async function MonitoristaHubPage() {
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
-          </Link>
+          </Link>}
 
-          <Link href="/monitorista/detenidos" style={{ textDecoration: 'none' }}>
+          {permisos.detenidos.puede_ver && <Link href="/monitorista/detenidos" style={{ textDecoration: 'none' }}>
             <div style={cardStyle}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <User size={28} color="#059669" />
@@ -85,9 +87,9 @@ export default async function MonitoristaHubPage() {
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
-          </Link>
+          </Link>}
 
-          <Link href="/monitorista/incidentes-camara" style={{ textDecoration: 'none' }}>
+          {permisos.incidentes_camara.puede_ver && <Link href="/monitorista/incidentes-camara" style={{ textDecoration: 'none' }}>
             <div style={cardStyle}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <Video size={28} color="#7c3aed" />
@@ -101,9 +103,9 @@ export default async function MonitoristaHubPage() {
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
-          </Link>
+          </Link>}
 
-          <Link href="/monitorista/historial" style={{ textDecoration: 'none' }}>
+          {permisos.historial.puede_ver && <Link href="/monitorista/historial" style={{ textDecoration: 'none' }}>
             <div style={cardStyle}>
               <div style={{ marginBottom: 20 }}><History size={28} color="#64748b" /></div>
               <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Historial</div>
@@ -113,7 +115,7 @@ export default async function MonitoristaHubPage() {
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>VER →</div>
             </div>
-          </Link>
+          </Link>}
         </div>
       </main>
 

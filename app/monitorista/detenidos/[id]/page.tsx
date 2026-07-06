@@ -10,11 +10,15 @@ import React from 'react'
 import { CardEnvioFoto } from '@/components/monitorista/CardEnvioFoto'
 import { BatchEnvioFotos } from '@/components/monitorista/BatchEnvioFotos'
 import { EditarCampoDetenido } from '@/components/monitorista/EditarCampoDetenido'
+import { tienePermiso } from '@/lib/monitorista/permisos'
+import { ToastAuto } from '@/components/ui/ToastAuto'
 
-export default async function DetenidoDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function DetenidoDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ exito?: string }> }) {
   const { id } = await params
+  const { exito } = await searchParams
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tienePermiso(session.user.id, 'detenidos', 'ver'))) redirect('/monitorista')
 
   const reporte = await obtenerReportePorId(id)
   if (!reporte) notFound()
@@ -39,7 +43,7 @@ export default async function DetenidoDetailPage({ params }: { params: Promise<{
 
   if (reporte.fotos.length === 0) {
     await crearSolicitudFotos(id)
-    return redirect(`/monitorista/detenidos/${id}`)
+    return redirect(`/monitorista/detenidos/${id}${exito ? `?exito=${exito}` : ''}`)
   }
 
   const fotosPorTipo = new Map<string, typeof fotos.rows>()
@@ -52,6 +56,7 @@ export default async function DetenidoDetailPage({ params }: { params: Promise<{
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+      <ToastAuto show={exito === '1'} mensaje="Reporte creado exitosamente" />
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 48px' }}>
         <Link href="/monitorista/detenidos" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b', fontFamily: 'JetBrains Mono', fontSize: 11, textDecoration: 'none', marginBottom: 24, textTransform: 'uppercase', letterSpacing: '0.1em' }}><ArrowLeft size={14} /> Detenidos</Link>
 

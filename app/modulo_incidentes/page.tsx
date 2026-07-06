@@ -11,6 +11,7 @@ import { obtenerDatosOperativos } from '@/lib/reportes-operativos/service'
 import { db } from '@/lib/db/index'
 import { users, roles } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { tienePermiso } from '@/lib/incidentes/permisos'
 
 export default async function ReportesOperativosPage({
   searchParams,
@@ -28,6 +29,7 @@ export default async function ReportesOperativosPage({
     .limit(1)
 
   if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'modulo_incidentes', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }
   const sp = await searchParams

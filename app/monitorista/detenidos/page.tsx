@@ -7,10 +7,12 @@ import Link from 'next/link'
 import React from 'react'
 import { BotonGenerarPpt } from '@/components/monitorista/BotonGenerarPpt'
 import { Clock, CheckCircle2, Eye, Camera } from 'lucide-react'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export default async function DetenidosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tienePermiso(session.user.id, 'detenidos', 'ver'))) redirect('/monitorista')
 
   const reportes = await listarReportesConDetenidos()
   const user = session.user as { name: string }

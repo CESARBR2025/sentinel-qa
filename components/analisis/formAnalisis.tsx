@@ -85,77 +85,77 @@ export default function RegistroDetenidoStepper() {
     const searchParams = useSearchParams();
     const incidenteId = searchParams.get('id');
 
-useEffect(() => {
-    if (incidenteId) {
-        const cargarDatos = async () => {
-            setLoading(true);
-            try {
-                const d = await analisisService.getPrellenado(incidenteId);
-                
-                if (d && !d.error) {
-                    // --- FUNCIONES DE LIMPIEZA PARA INPUTS HTML5 ---
-                    
-                    // 1. Limpia fechas (de "2026-06-25T..." a "2026-06-25")
-                    const cleanDate = (val: any) => {
-                        if (!val) return '';
-                        return val.toString().split('T')[0];
-                    };
+    useEffect(() => {
+        if (incidenteId) {
+            const cargarDatos = async () => {
+                setLoading(true);
+                try {
+                    const d = await analisisService.getPrellenado(incidenteId);
 
-                    // 2. Limpia horas (de "15:36:00" a "15:36")
-                    const cleanTime = (val: any) => {
-                        if (!val) return '';
-                        const partes = val.toString().split(':');
-                        return partes.length >= 2 ? `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}` : '';
-                    };
+                    if (d && !d.error) {
+                        // --- FUNCIONES DE LIMPIEZA PARA INPUTS HTML5 ---
 
-                    // 3. Evita que los nulos rompan React
-                    const cleanNull = (val: any) => val === null ? '' : val;
+                        // 1. Limpia fechas (de "2026-06-25T..." a "2026-06-25")
+                        const cleanDate = (val: any) => {
+                            if (!val) return '';
+                            return val.toString().split('T')[0];
+                        };
 
-                    setFormData((prev: any) => ({
-                        ...prev,
-                        // PASO 1 & 2 & 5 (Ubicaciones base)
-                        calleDetenido: cleanNull(d.calleArresto),
-                        coloniaDetenido: cleanNull(d.coloniaArresto),
-                        calleArresto: cleanNull(d.calleArresto),
-                        coloniaArresto: cleanNull(d.coloniaArresto),
-                        latitudArresto: cleanNull(d.latitudArresto),
-                        longitudArresto: cleanNull(d.longitudArresto),
-                        
-                        // PASO 4 - FOLIOS Y TIEMPOS (Nombres exactos de tu Hook)
-                        folioIPH: cleanNull(d.folioIPH),
-                        folio911: cleanNull(d.folio911),
-                        fechaEvento: cleanDate(d.fechaEvento),
-                        fechaReporte: cleanDate(d.fechaReporte),
-                        horaReporte: cleanTime(d.horaReporte),
-                        horaInicioEvento: cleanTime(d.horaInicioEvento),
-                        horaFinalEvento: cleanTime(d.horaFinalEvento),
-                        horaPromedio: cleanTime(d.horaPromedio),
+                        // 2. Limpia horas (de "15:36:00" a "15:36")
+                        const cleanTime = (val: any) => {
+                            if (!val) return '';
+                            const partes = val.toString().split(':');
+                            return partes.length >= 2 ? `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}` : '';
+                        };
 
-                        // PASO 5 - HECHO
-                        delito: cleanNull(d.delito),
-                        articulosObjetos: cleanNull(d.articulosObjetos),
-                        calleHecho: cleanNull(d.calleHecho),
-                        numeroHecho: cleanNull(d.numeroHecho),
-                        coloniaHecho: cleanNull(d.coloniaHecho),
-                        sectorHecho: cleanNull(d.sectorHecho),
-                        crpUnidad: cleanNull(d.crpUnidad),
+                        // 3. Evita que los nulos rompan React
+                        const cleanNull = (val: any) => val === null ? '' : val;
 
-                        // PASO 6 - AFECTADO
-                        nombreAfectado: cleanNull(d.nombreAfectado),
-                        marcaVehiculo: cleanNull(d.marcaVehiculo),
-                        tipoVehiculo: cleanNull(d.tipoVehiculo),
-                        agenteAprehensor: cleanNull(d.agenteAprehensor),
-                    }));
+                        setFormData((prev: any) => ({
+                            ...prev,
+                            // PASO 1 & 2 & 5 (Ubicaciones base)
+                            calleDetenido: cleanNull(d.calleArresto),
+                            coloniaDetenido: cleanNull(d.coloniaArresto),
+                            calleArresto: cleanNull(d.calleArresto),
+                            coloniaArresto: cleanNull(d.coloniaArresto),
+                            latitudArresto: cleanNull(d.latitudArresto),
+                            longitudArresto: cleanNull(d.longitudArresto),
+
+                            // PASO 4 - FOLIOS Y TIEMPOS (Nombres exactos de tu Hook)
+                            folioIPH: cleanNull(d.folioIPH),
+                            folio911: cleanNull(d.folio911),
+                            fechaEvento: cleanDate(d.fechaEvento),
+                            fechaReporte: cleanDate(d.fechaReporte),
+                            horaReporte: cleanTime(d.horaReporte),
+                            horaInicioEvento: cleanTime(d.horaInicioEvento),
+                            horaFinalEvento: cleanTime(d.horaFinalEvento),
+                            horaPromedio: cleanTime(d.horaPromedio),
+
+                            // PASO 5 - HECHO
+                            delito: cleanNull(d.delito),
+                            articulosObjetos: cleanNull(d.articulosObjetos),
+                            calleHecho: cleanNull(d.calleHecho),
+                            numeroHecho: cleanNull(d.numeroHecho),
+                            coloniaHecho: cleanNull(d.coloniaHecho),
+                            sectorHecho: cleanNull(d.sectorHecho),
+                            crpUnidad: cleanNull(d.crpUnidad),
+
+                            // PASO 6 - AFECTADO
+                            nombreAfectado: cleanNull(d.nombreAfectado),
+                            marcaVehiculo: cleanNull(d.marcaVehiculo),
+                            tipoVehiculo: cleanNull(d.tipoVehiculo),
+                            agenteAprehensor: cleanNull(d.agenteAprehensor),
+                        }));
+                    }
+                } catch (e) {
+                    console.error("Error en prellenado:", e);
+                } finally {
+                    setLoading(false);
                 }
-            } catch (e) {
-                console.error("Error en prellenado:", e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        cargarDatos();
-    }
-}, [incidenteId, setFormData, setLoading]);
+            };
+            cargarDatos();
+        }
+    }, [incidenteId, setFormData, setLoading]);
 
 
     const handleLocationFromMap = (data: any) => {
@@ -347,8 +347,33 @@ useEffect(() => {
                         <div style={{ gridColumn: 'span 2' }}>
                             <SentinelField label="Tipo de Falta Administrativa" name="tipoFalta" icon={FileText} placeholder="Descripción de la infracción..." value={formData.tipoFalta} onChange={handleChange} />
                         </div>
-                        <div style={{ gridColumn: 'span 3' }}>
-                            <SentinelField label="Registro Nacional de Detenidos (RND)" name="rnd" icon={Hash} placeholder="Folio oficial RND..." value={formData.rnd} onChange={handleChange} />
+                        <div style={{ ...subCard, marginBottom: '20px', borderLeft: '4px solid #d4a43a', gridColumn: 'span 3' }}>
+                            <div style={grid3}>
+                                <SentinelField
+                                    label="¿Cuenta con Registro Nacional (RND)?"
+                                    name="esRND"
+                                    as="select"
+                                    value={String(formData.esRND)} // <--- Esto asegura que el select marque la opción correcta
+                                    onChange={handleChange}
+                                >
+                                    <option value="false">NO (SIN REGISTRO)</option>
+                                    <option value="true">SÍ (CON REGISTRO)</option>
+                                </SentinelField>
+
+                                {/* Esta es la parte que controla si se ve o no el folio */}
+                                {String(formData.esRND) === "true" && (
+                                    <div style={{ gridColumn: 'span 2' }} className="animate-tactical">
+                                        <SentinelField
+                                            label="Folio RND Oficial"
+                                            name="rnd"
+                                            icon={Hash}
+                                            placeholder="Ingrese el folio alfanumérico..."
+                                            value={formData.rnd}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* SECCIÓN UBICACIÓN DEL ARRESTO */}
@@ -790,3 +815,15 @@ const btnFinishStyle = {
     boxShadow: '0 4px 14px rgba(5, 150, 105, 0.3)'
 };
 const footerActions = { marginTop: '32px', display: 'flex', justifyContent: 'space-between', gap: '15px' };
+const grid3 = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '24px'
+};
+
+const subCard = {
+    padding: '24px',
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    borderRadius: '4px'
+};

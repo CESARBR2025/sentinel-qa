@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Upload, CheckCircle2 } from 'lucide-react'
 import { SubirEvidenciaModal } from './SubirEvidenciaModal'
 import React from 'react'
+import { Toast } from '@/components/ui/Toast'
 
 export function BotonSubirDenuncia({
   denunciaId,
@@ -12,7 +14,9 @@ export function BotonSubirDenuncia({
   denunciaId: string
   solicitudId: number
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
 
   const completar = async () => {
     if (!window.confirm(`¿Estás seguro de completar la Solicitud #${solicitudId}? Será marcada como atendida y se notificará a Fiscalía.`)) return
@@ -21,11 +25,13 @@ export function BotonSubirDenuncia({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ solicitudId }),
     })
-    window.location.reload()
+    setToast('Solicitud completada')
+    router.refresh()
   }
 
   return (
     <>
+      <Toast show={!!toast} mensaje={toast ?? ''} onClose={() => setToast(null)} />
       <button
         onClick={() => setOpen(true)}
         style={{
@@ -55,7 +61,8 @@ export function BotonSubirDenuncia({
           incidenteId={denunciaId}
           origen="denuncia"
           denunciaSolicitudId={solicitudId}
-          onClose={() => { setOpen(false); window.location.reload() }}
+          onClose={() => setOpen(false)}
+          onExito={() => { setToast('Evidencia subida'); router.refresh() }}
         />
       )}
     </>
