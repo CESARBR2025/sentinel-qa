@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { SA7Repository } from "@/features/via/saSiete/repository";
 
 const SA7_URL =
-  "https://sanjuandelrio.sytes.net:3044/api/sasiete/qas/generar-orden-completa";
+  "https://sanjuandelrio.sytes.net:3044/api/sasiete/generar-orden-completa";
 
 export async function POST(req: NextRequest) {
   try {

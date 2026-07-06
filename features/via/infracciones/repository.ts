@@ -117,8 +117,9 @@ export class InfraccionesRepository {
   }
 
   static async obtenerDatosInfraccionCiudadanoRP(id: string) {
-    const result = await queryVia(
-      `SELECT
+    try {
+      const result = await queryVia(
+        `SELECT
         i.*,
         vfl.clasificacion,
         val.numero AS articulo_numero,
@@ -157,7 +158,7 @@ export class InfraccionesRepository {
             (SELECT 'Acta constitutiva' WHERE dl.tipo_documento = 'acta_constitutiva'),
             (SELECT 'Constancia de situación fiscal' WHERE dl.tipo_documento = 'constancia_situacion_fiscal'),
             dl.tipo_documento
-          ))) ORDER BY dl.created_at
+          )) ORDER BY dl.created_at)
         END AS documentos_liberacion_json
       FROM via.v2_infracciones i
       JOIN via.v2_articulos_ley val ON i.articulo_id = val.id
@@ -171,8 +172,22 @@ export class InfraccionesRepository {
                ops.fecha_vencimiento, ops.total_pesos, ops.total_umas, ops.created_at, ops.concepto_id,
                sl.id, sl.tipo_liberacion, sl.es_empresa, sl.nombre_empresa, sl.rfc_empresa, sl.estatus
       ORDER BY ops.created_at DESC NULLS LAST, sl.id DESC NULLS LAST`,
-      [id],
-    );
-    return result.rows[0] || null;
+        [id],
+      );
+      return result.rows[0] || null;
+    } catch (err) {
+      console.error("[VIA][REPOSITORY][obtenerDatosInfraccionCiudadanoRP] Error:", err);
+      if (err && typeof err === "object") {
+        const e = err as Record<string, unknown>;
+        console.error("  message:", e.message);
+        console.error("  detail:", e.detail);
+        console.error("  code:", e.code);
+        console.error("  schema:", e.schema);
+        console.error("  table:", e.table);
+        console.error("  column:", e.column);
+        console.error("  constraint:", e.constraint);
+      }
+      throw err;
+    }
   }
 }
