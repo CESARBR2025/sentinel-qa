@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getExpedienteToken } from "@/lib/via/expediente";
+import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
 import { queryVia } from "@/lib/via/db";
 
 export async function POST(req: NextRequest) {
@@ -26,6 +26,12 @@ export async function POST(req: NextRequest) {
     const now = new Date();
     const anio = now.getFullYear().toString();
     const mes = String(now.getMonth() + 1).padStart(2, "0");
+    const sistema = process.env.EXPEDIENTE_SISTEMA ?? "sspm";
+    const host = getExpedienteHost();
+    const uploadUrl = `${host}/api/upload-custom`;
+
+    console.log(`[VIA][EXP-DIGITAL][EVIDENCIAS] Iniciando subida de ${evidencias.length} evidencia(s). host=${host} sistema=${sistema}`);
+
     const rutas: string[] = [];
 
     for (const [index, evidencia] of evidencias.entries()) {
@@ -35,6 +41,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           message: "Tipo de archivo no permitido",
           archivo: evidencia.name,
+          mimeType: evidencia.type,
         }, { status: 400 });
       }
 
@@ -45,22 +52,24 @@ export async function POST(req: NextRequest) {
         { type: evidencia.type },
       );
 
+      console.log(`[VIA][EXP-DIGITAL][EVIDENCIAS] Subiendo evidencia ${index + 1}/${evidencias.length}: ${archivoRenombrado.name}`);
+
       const expedienteForm = new FormData();
       expedienteForm.append("file", archivoRenombrado);
       expedienteForm.append("ruta_personalizada", `${anio}/${mes}/${idInfraccion}`);
-      expedienteForm.append("sistema", process.env.EXPEDIENTE_SISTEMA ?? "sspm");
+      expedienteForm.append("sistema", sistema);
 
-      const expedienteRes = await fetch(
-        `${process.env.EXPEDIENTE_HOST}/api/upload-custom`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: expedienteForm,
-        },
-      );
+      const expedienteRes = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: expedienteForm,
+      });
 
       if (!expedienteRes.ok) {
         const errorBody = await expedienteRes.text();
+        console.error(
+          `[VIA][EXP-DIGITAL][EVIDENCIAS] Error subiendo evidencia ${index + 1}. Status: ${expedienteRes.status}. Response: ${errorBody}. URL: ${uploadUrl}`,
+        );
         return NextResponse.json({
           message: "Error al subir evidencia",
           debug: { archivoOriginal: evidencia.name, archivoRenombrado: archivoRenombrado.name, errorBody },
@@ -69,8 +78,10 @@ export async function POST(req: NextRequest) {
 
       const responseJson = await expedienteRes.json();
       rutas.push(responseJson.data.ruta_relativa);
+      console.log(`[VIA][EXP-DIGITAL][EVIDENCIAS] Evidencia ${index + 1} subida. Ruta: ${responseJson.data.ruta_relativa}`);
     }
 
+    console.log(`[VIA][EXP-DIGITAL][EVIDENCIAS] Guardando ${rutas.length} ruta(s) en BD para infracción ${idInfraccion}`);
     await queryVia(
       `UPDATE via.v2_infracciones
        SET evidencias = $1::jsonb,

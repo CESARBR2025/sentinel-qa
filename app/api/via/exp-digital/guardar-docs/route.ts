@@ -1,38 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getExpedienteToken } from "@/lib/via/expediente";
+import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
 import { queryVia } from "@/lib/via/db";
 
 async function subirArchivo(
   archivo: File,
   idInfraccion: string,
   token: string,
+  tipo: string,
 ): Promise<string> {
   const now = new Date();
   const anio = now.getFullYear().toString();
   const mes = String(now.getMonth() + 1).padStart(2, "0");
+  const sistema = process.env.EXPEDIENTE_SISTEMA ?? "sspm";
+  const host = getExpedienteHost();
+  const uploadUrl = `${host}/api/upload-custom`;
+  const ruta = `${anio}/${mes}/${idInfraccion}`;
+
+  console.log(`[VIA][EXP-DIGITAL] Subiendo ${tipo}... host=${host} sistema=${sistema} ruta=${ruta}`);
+
   const form = new FormData();
   form.append("file", archivo);
-  form.append("ruta_personalizada", `${anio}/${mes}/${idInfraccion}`);
-  form.append("sistema", process.env.EXPEDIENTE_SISTEMA ?? "sspm");
+  form.append("ruta_personalizada", ruta);
+  form.append("sistema", sistema);
 
-  const response = await fetch(
-    `${process.env.EXPEDIENTE_HOST}/api/upload-custom`,
-    {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: form,
-    },
-  );
+  const response = await fetch(uploadUrl, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
 
   if (!response.ok) {
-    const error = await response.json();
-    console.error("[EXPEDIENTE VIA] Error subiendo archivo:", error);
-    throw new Error("Error al subir archivo al expediente digital");
+    const errorText = await response.text();
+    console.error(`[VIA][EXP-DIGITAL] Error subiendo ${tipo}. Status: ${response.status}. Response: ${errorText}. URL: ${uploadUrl}`);
+    throw new Error(`Error al subir ${tipo} al expediente digital (HTTP ${response.status})`);
   }
 
   const { data } = await response.json();
+  console.log(`[VIA][EXP-DIGITAL] ${tipo} subido correctamente. Ruta: ${data.ruta_relativa}`);
   return data.ruta_relativa;
 }
 
@@ -78,14 +84,16 @@ export async function POST(req: NextRequest) {
     let urlTarjetaCirculacion: string | null = null;
 
     if (archivoIne) {
-      urlIne = await subirArchivo(archivoIne, idInfraccion, token);
+      urlIne = await subirArchivo(archivoIne, idInfraccion, token, "INE");
     }
     if (archivoInapam) {
-      urlInapam = await subirArchivo(archivoInapam, idInfraccion, token);
+      urlInapam = await subirArchivo(archivoInapam, idInfraccion, token, "INAPAM");
     }
     if (archivoTarjetaCirculacion) {
-      urlTarjetaCirculacion = await subirArchivo(archivoTarjetaCirculacion, idInfraccion, token);
+      urlTarjetaCirculacion = await subirArchivo(archivoTarjetaCirculacion, idInfraccion, token, "TARJETA_CIRCULACION");
     }
+
+    console.log(`[VIA][EXP-DIGITAL] Guardando rutas en BD para infracción ${idInfraccion}:`, { urlIne, urlInapam, urlTarjetaCirculacion });
 
     await queryVia(
       `UPDATE via.v2_infracciones
