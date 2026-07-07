@@ -147,10 +147,11 @@ export async function obtenerDocumentosLiberacion(infraccionId: string): Promise
     const solicitud = solicitudRes.rows[0]
 
     const docsRes = await query<any>(
-      `SELECT id, tipo_documento, url_documento, estatus_revision, observaciones, created_at
-       FROM via.v2_documentos_liberacion
-       WHERE solicitud_id = $1
-       ORDER BY created_at`,
+      `SELECT DISTINCT ON (dl.tipo_documento)
+              dl.id, dl.tipo_documento, dl.url_documento, dl.estatus_revision, dl.observaciones, dl.created_at
+       FROM via.v2_documentos_liberacion dl
+       WHERE dl.solicitud_id = $1
+       ORDER BY dl.tipo_documento, dl.created_at DESC`,
       [solicitud.id],
     )
 
@@ -245,7 +246,10 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
     const solicitudId = solicitudRes.rows[0].id
 
     const docsRes = await query(
-      `SELECT estatus_revision FROM via.v2_documentos_liberacion WHERE solicitud_id = $1`,
+      `SELECT DISTINCT ON (dl.tipo_documento) dl.estatus_revision
+       FROM via.v2_documentos_liberacion dl
+       WHERE dl.solicitud_id = $1
+       ORDER BY dl.tipo_documento, dl.created_at DESC`,
       [solicitudId],
     )
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { abrirDocumento } from '@/features/via/expediente/helpers/abrirDocumento';
+import { abrirDocumento } from '@/lib/shared/abrirDocumento';
 import {
     Scale,
     FileText,
@@ -81,6 +81,7 @@ type Props = {
     infraccionId: string;
     documentosLiberacion: Record<string, { url: string; label: string }>;
     esTitular: boolean | null;
+    urlOrdenSalida?: string | null;
 };
 
 function getEstatusConfig(estatus: string) {
@@ -146,6 +147,7 @@ export default function SeccionLiberacion({
     infraccionId,
     documentosLiberacion,
     esTitular,
+    urlOrdenSalida,
 }: Props) {
 
     const [selectedType, setSelectedType] = useState<'empresa' | 'titular' | null>(null);
@@ -176,10 +178,12 @@ export default function SeccionLiberacion({
         fetch(`/api/via/liberaciones/documentos/${infraccionId}`)
             .then((r) => r.ok ? r.json() : null)
             .then((data) => {
-                if (data?.documentos) {
+                const docs = data?.documentos;
+                if (docs && Array.isArray(docs)) {
                     const map: Record<string, { estatus: string | null; observaciones: string | null }> = {};
-                    data.documentos.forEach((d: any) => {
-                        map[d.tipo] = { estatus: d.estatusRevision, observaciones: d.observaciones };
+                    docs.forEach((d: any) => {
+                        const tipo = d.tipo_documento ?? d.tipo;
+                        map[tipo] = { estatus: d.estatus_revision ?? d.estatusRevision, observaciones: d.observaciones };
                     });
                     setRevisionStatuses(map);
                 }
@@ -187,6 +191,8 @@ export default function SeccionLiberacion({
             .catch(() => { })
             .finally(() => setLoadingStatus(false));
     }, [tieneDocs, infraccionId]);
+
+    const esLiberada = ['LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO', 'LIBERADA_POR_INFRACCION', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'].includes(estatusDependencia);
 
     const estatusConfig = getEstatusConfig(estatusDependencia);
 
@@ -211,8 +217,6 @@ export default function SeccionLiberacion({
         : null;
 
     const allSelected = currentDocs.length > 0 && currentDocs.every(d => selectedFiles[d.id]);
-
-    const oficioDisponible = urlOficio && urlOficio.trim() !== '';
 
     const handleFileSelect = (docId: string, file: File | null) => {
         setError(null);
@@ -284,7 +288,7 @@ export default function SeccionLiberacion({
             });
 
             const solicitudData = await solicitudRes.json();
-            if (!solicitudRes.ok) throw new Error(solicitudData.message);
+            if (!solicitudRes.ok) throw new Error(solicitudData.error);
             const { solicitudId } = solicitudData;
 
             // 2. Subir cada archivo uno por uno
@@ -304,30 +308,14 @@ export default function SeccionLiberacion({
 
                 const fileData = await fileRes.json();
                 if (!fileRes.ok) {
-                    throw new Error(`Error al subir ${doc.label}: ${fileData.message}`);
+                    throw new Error(`Error al subir ${doc.label}: ${fileData.error}`);
                 }
             }
 
             // 3. Completar solicitud (actualizar estatus de infracción)
             const completarBody: Record<string, unknown> = {
                 infraccionId,
-                estatusDependencia:
-                    estatusInfraccion === 'REGISTRADA' && estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'
-                        ? 'MESA_DE_CONTROL_REVISION'
-                        : 'ESPERA_REVISION',
             };
-
-            if (estatusInfraccion === 'REGISTRADA') {
-                completarBody.estatus = 'REGISTRADA';
-            }
-
-            if (selectedType === 'titular' && esTitular === false) {
-                completarBody.nombreTitular = titularNombre.trim();
-                completarBody.appaternoTitular = titularAppaterno.trim();
-                completarBody.apmaternoTitular = titularApmaterno.trim() || undefined;
-                completarBody.curpTitular = titularCurp.trim();
-                completarBody.correoTitular = titularCorreo.trim() || undefined;
-            }
 
             const finalRes = await fetch('/api/via/ciudadano/completar-solicitud', {
                 method: 'POST',
@@ -336,7 +324,7 @@ export default function SeccionLiberacion({
             });
 
             const finalData = await finalRes.json();
-            if (!finalRes.ok) throw new Error(finalData.message);
+            if (!finalRes.ok) throw new Error(finalData.error);
 
             setSubmitted(true);
         } catch (err) {
@@ -374,7 +362,7 @@ export default function SeccionLiberacion({
 
                 const data = await res.json();
                 if (!res.ok) {
-                    throw new Error(`Error al subir ${tipo}: ${data.message}`);
+                    throw new Error(`Error al subir ${tipo}: ${data.error}`);
                 }
             }
 
@@ -382,29 +370,14 @@ export default function SeccionLiberacion({
             const finalRes = await fetch('/api/via/ciudadano/completar-solicitud', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    infraccionId,
-                    estatus: 'REGISTRADA',
-                    estatusDependencia: 'MESA_DE_CONTROL_REVISION',
-                }),
+                body: JSON.stringify({ infraccionId }),
             });
 
             const finalData = await finalRes.json();
-            if (!finalRes.ok) throw new Error(finalData.message);
+            if (!finalRes.ok) throw new Error(finalData.error);
 
             setReuploadFiles({});
-            // Refrescar estatus
-            const r = await fetch(`/api/via/liberaciones/documentos/${infraccionId}`);
-            if (r.ok) {
-                const d = await r.json();
-                if (d?.documentos) {
-                    const map: Record<string, { estatus: string | null; observaciones: string | null }> = {};
-                    d.documentos.forEach((doc: any) => {
-                        map[doc.tipo] = { estatus: doc.estatusRevision, observaciones: doc.observaciones };
-                    });
-                    setRevisionStatuses(map);
-                }
-            }
+            window.location.reload();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error al reenviar documentos');
         } finally {
@@ -459,32 +432,11 @@ export default function SeccionLiberacion({
                     )}
                 </div>
 
-                {/* OFICIO DISPONIBLE */}
-                {oficioDisponible && (
-                    <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-blue-600/10 flex items-center justify-center shrink-0">
-                            <FileText size={16} className="text-blue-600" strokeWidth={1.5} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-slate-900">
-                                Oficio de liberación disponible
-                            </p>
-
-                        </div>
-                        <button
-                            onClick={() => abrirDocumento(urlOficio)}
-                            className="shrink-0 w-9 h-9 rounded-lg hover:bg-blue-100 flex items-center justify-center transition"
-                        >
-                            <ExternalLink size={16} className="text-blue-600" strokeWidth={1.5} />
-                        </button>
-                    </div>
-                )}
-
                 {/* SEPARADOR */}
                 {!tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && <div className="h-px bg-slate-200" />}
 
                 {/* FORMULARIO (solo si no hay docs) */}
-                {!tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && (
+                {!esLiberada && !tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && (
                     <>
                         {/* SELECCIÓN TIPO */}
                         <div className="space-y-3">
@@ -736,8 +688,25 @@ export default function SeccionLiberacion({
                 )}
 
                 {/* DOCUMENTOS SUBIDOS */}
-                {(tieneDocs || submitted || estatusDependencia === 'ESPERA_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
+                {!esLiberada && (tieneDocs || submitted || estatusDependencia === 'ESPERA_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
                     <div className="space-y-4">
+                        {(tieneDocs && estatusDependencia !== 'ESPERA_REVISION' && estatusDependencia !== 'MESA_DE_CONTROL_RECHAZADA') && (
+                            <div className="rounded-xl border border-blue-500/30 bg-blue-50 p-6 text-center space-y-3">
+                                <div className="w-16 h-16 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto">
+                                    <FileText size={32} className="text-blue-600" strokeWidth={1.5} />
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-medium text-slate-900">
+                                        Documentos enviados para validación
+                                    </h4>
+                                    <p className="text-sm text-slate-500 mt-1">
+                                        Los documentos fueron recibidos correctamente y están pendientes
+                                        de revisión por la autoridad. Recibirás una notificación cuando
+                                        sean revisados.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                         {estatusDependencia === 'ESPERA_REVISION' && (
                             <div className="rounded-xl border border-green-500/30 bg-green-50 p-6 text-center space-y-3">
                                 <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
@@ -945,9 +914,20 @@ export default function SeccionLiberacion({
                                         <p className="text-sm text-red-600">{error}</p>
                                     </div>
                                 )}
+
                             </div>
                         )}
                     </div>
+                )}
+
+                {urlOrdenSalida && urlOrdenSalida !== 'NO_DATA' && (
+                    <button
+                        onClick={() => abrirDocumento(urlOrdenSalida)}
+                        className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium flex items-center justify-center gap-2 transition active:scale-[0.99]"
+                    >
+                        <FileText size={16} strokeWidth={1.5} />
+                        DESCARGAR ORDEN DE LIBERACIÓN
+                    </button>
                 )}
             </div>
         </section>

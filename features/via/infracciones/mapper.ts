@@ -96,6 +96,7 @@ export const mapInfraccionDetalle = (row: any): InfraccionDetalleDTO => {
     tipoGarantia: row.tipo_garantia,
     garantiaEntregada: row.garantia_entregada,
     motivoRetencion: row.motivo_retencion,
+    urlOrdenSalida: row.url_orden_salida_liberaciones,
     latitud: row.latitud,
     longitud: row.longitud,
     calle: row.calle,

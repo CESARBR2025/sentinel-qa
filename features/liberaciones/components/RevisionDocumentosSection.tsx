@@ -56,11 +56,14 @@ export default function RevisionDocumentosSection({
     const [rechazoDoc, setRechazoDoc] = useState<string | null>(null);
     const [motivoRechazo, setMotivoRechazo] = useState('');
     const [mostrarObs, setMostrarObs] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const fetchDocs = useCallback(async () => {
         setLoading(true);
+        setError(null);
         const result = await obtenerDocumentosLiberacion(infraccionId);
-        if (!result.error && result.documentos) setDocumentos(result.documentos);
+        if (result.error) setError(result.error);
+        else if (result.documentos) setDocumentos(result.documentos);
         setLoading(false);
     }, [infraccionId]);
     useEffect(() => { fetchDocs(); }, [fetchDocs]);
@@ -110,7 +113,7 @@ export default function RevisionDocumentosSection({
     };
 
     const stats = {
-        pendientes: documentos.filter((d) => !d.estatusRevision || d.estatusRevision === 'PENDIENTE').length,
+        pendientes: documentos.filter((d) => !d.estatusRevision || d.estatusRevision === 'PENDIENTE' || d.estatusRevision === 'ENVIADO').length,
         aceptados: documentos.filter((d) => d.estatusRevision === 'ACEPTADO').length,
         rechazados: documentos.filter((d) => d.estatusRevision === 'RECHAZADO').length,
     };
@@ -128,7 +131,21 @@ export default function RevisionDocumentosSection({
         );
     }
 
-    if (documentos.length === 0) return null;
+    if (documentos.length === 0) {
+        return (
+            <div style={{
+                border: '1px solid #e2e8f0', background: '#ffffff', padding: 32,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'Inter,sans-serif', fontSize: 13,
+            }}>
+                {error ? (
+                    <p style={{ color: '#dc2626' }}>{error}</p>
+                ) : (
+                    <p style={{ color: '#64748b' }}>No hay documentos para revisar</p>
+                )}
+            </div>
+        );
+    }
 
     const styles = {
         card: {
@@ -238,7 +255,7 @@ export default function RevisionDocumentosSection({
                     </thead>
                     <tbody>
                         {documentos.map((doc, idx) => {
-                            const pendiente = !doc.estatusRevision || doc.estatusRevision === 'PENDIENTE';
+                            const pendiente = !doc.estatusRevision || doc.estatusRevision === 'PENDIENTE' || doc.estatusRevision === 'ENVIADO';
                             const aceptado = doc.estatusRevision === 'ACEPTADO';
                             const rechazado = doc.estatusRevision === 'RECHAZADO';
                             const rowBg = aceptado ? 'rgba(34,197,94,0.03)' : rechazado ? 'rgba(239,68,68,0.03)' : undefined;

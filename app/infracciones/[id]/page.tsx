@@ -314,6 +314,7 @@ export default async function InfraccionCiudadanoPage({
                         infraccionId={infraccion.id}
                         documentosLiberacion={infraccion.documentosLiberacion || {}}
                         esTitular={infraccion.esTitular}
+                        urlOrdenSalida={infraccion.urlOrdenSalida}
                     />
                 )}
 
@@ -351,20 +352,6 @@ export default async function InfraccionCiudadanoPage({
                             <FieldWithIcon icon={Car} label="Tipo" value={sanitize(infraccion.tipoVehiculo)} />
                             <FieldWithIcon icon={Barcode} label="VIN (Número de serie)" value={sanitize(infraccion.noSerieVehiculo)} />
                         </div>
-                        {infraccion.tipoGarantia && (
-                            <>
-                                <div className="h-px bg-slate-200 my-4" />
-                                <div className="flex items-center gap-3 p-3.5 rounded-lg bg-amber-50 border border-amber-200">
-                                    <div className="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center shrink-0">
-                                        <ShieldCheck size={16} className="text-white" strokeWidth={1.5} />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-amber-900">{infraccion.garantiaEntregada ? 'Entregada' : 'No entregada'} — {infraccion.tipoGarantia}</p>
-                                        <p className="text-xs text-amber-700/70 mt-0.5">{infraccion.garantiaEntregada ? 'Documento resguardado en delegación' : 'No se retuvo garantía'}</p>
-                                    </div>
-                                </div>
-                            </>
-                        )}
                     </Section>
                 </Card>
 

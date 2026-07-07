@@ -4,19 +4,19 @@ import { queryVia } from "@/lib/via/db";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { solicitudId, infraccionId } = body;
+    const { infraccionId } = body;
 
-    if (!solicitudId || !infraccionId) {
-      return NextResponse.json({ error: "solicitudId e infraccionId son requeridos" }, { status: 400 });
+    if (!infraccionId) {
+      return NextResponse.json({ error: "infraccionId es requerido" }, { status: 400 });
     }
 
     await queryVia(
-      `UPDATE via.v2_solicitudes_liberacion SET estatus = 'ESPERA_REVISION', updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
-      [solicitudId],
+      `UPDATE via.v2_solicitudes_liberacion SET estatus = 'EN_PROCESO_LIBERACIONES', updated_at = CURRENT_TIMESTAMP WHERE infraccion_id = $1`,
+      [infraccionId],
     );
 
     await queryVia(
-      `UPDATE via.v2_infracciones SET estatus_dependencia = 'ESPERA_REVISION', updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
+      `UPDATE via.v2_infracciones SET estatus_dependencia = 'MESA_DE_CONTROL_REVISION', updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
       [infraccionId],
     );
 
