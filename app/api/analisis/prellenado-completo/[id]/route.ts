@@ -65,30 +65,6 @@ export async function GET(
 
         rc.delito                     AS "eventosDelictivos",
 
-        iph.edad                         AS "edad",
-iph.alias                        AS "alias",
-iph.tipo_falta                   AS "tipoFalta",
-iph.articulo                     AS "articulo",
-
-iph.calle_detenido               AS "calleDetenido",
-iph.numero_detenido              AS "numeroDetenido",
-iph.colonia_detenido             AS "coloniaDetenido",
-
-iph.nombre_afectado              AS "nombreAfectado",
-iph.telefono_afectado            AS "telefonoAfectado",
-
-iph.marca_vehiculo               AS "marcaVehiculo",
-iph.submarca_vehiculo            AS "submarcaVehiculo",
-iph.tipo_vehiculo                AS "tipoVehiculo",
-iph.color_vehiculo               AS "colorVehiculo",
-iph.placas_vehiculo              AS "placasVehiculo",
-iph.estado_vehiculo              AS "estadoVehiculo",
-iph.modelo_vehiculo              AS "modeloVehiculo",
-
-iph.ap_nuc                       AS "apNuc",
-iph.fuero                        AS "fuero",
-iph.agente_aprehensor            AS "agenteAprehensor",
-
         -- =====================================
         -- PASO 2
         -- =====================================
@@ -128,36 +104,10 @@ iph.agente_aprehensor            AS "agenteAprehensor",
 
         ''                            AS "antecedentes",
 
-        rc.falta_administrativa       AS "faltasAdmin",
-        iph.calle_hecho             AS "calleHechoIPH",
-iph.numero_hecho            AS "numeroHechoIPH",
-iph.colonia_hecho           AS "coloniaHechoIPH",
-
-iph.calle_arresto           AS "calleArrestoIPH",
-iph.colonia_arresto         AS "coloniaArrestoIPH",
-
-iph.latitud_hecho           AS "latitudHecho",
-iph.longitud_hecho          AS "longitudHecho",
-
-iph.latitud_arresto         AS "latitudArresto",
-iph.longitud_arresto        AS "longitudArresto",
-
-iph.rt_responsable          AS "responsableTurno",
-iph.turno_responsable       AS "turnoResponsable",
-
-iph.crp_unidad              AS "crpUnidad",
-
-iph.articulos_objetos       AS "articulosObjetos",
-
-iph.presencia               AS "presencia",
-iph.verbalizacion           AS "verbalizacion",
-iph.control_contacto        AS "controlContacto",
-iph.control_fisico          AS "controlFisico",
-iph.tecnicas_no_letales     AS "tecnicasNoLetales",
-iph.fuerza_letal            AS "fuerzaLetal"
+        rc.falta_administrativa       AS "faltasAdmin"
 FROM iph_detenidos iph
 LEFT JOIN ofi_reporte_denuncia rd
-ON rd.id = iph.reporte_denuncia_id
+    ON rd.folio_denuncia = iph.folio_911
 LEFT JOIN ofi_reportes_campo rc
     ON rc.id = rd.reporte_campo_id
 LEFT JOIN ofi_detalles_asegurados da

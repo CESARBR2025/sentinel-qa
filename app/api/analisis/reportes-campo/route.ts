@@ -18,6 +18,8 @@ export async function GET() {
         'N/D' as "oficial",
         rc.created_at as "fecha", 
         rc.delito as "tipo_incidente",
+                rd.folio_denuncia as "folio_denuncia", 
+
         rc.ofi_calle as "calle", 
         rc.ofi_colonia as "colonia", 
         -- Usamos COALESCE para que si no hay denuncia, el valor sea false y no null
