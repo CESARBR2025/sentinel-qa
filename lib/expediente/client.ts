@@ -33,7 +33,7 @@ export async function subirArchivoExpediente(
 ): Promise<string> {
   const nombreLimpio = archivo.nombre.replace(/[^\w.\-() ]/g, '_').replace(/\s+/g, ' ')
   const formData = new FormData()
-  formData.append('file', new File([archivo.buffer], nombreLimpio, { type: archivo.tipo || 'application/octet-stream' }))
+  formData.append('file', new File([archivo.buffer as BlobPart], nombreLimpio, { type: archivo.tipo || 'application/octet-stream' }))
 
   const params = new URLSearchParams({
     id_usuario_general: ID_USUARIO_GENERAL,

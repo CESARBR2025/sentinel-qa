@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerAtencionVictimas, actualizarAtencionVictimas } from '@/lib/reportes/formato-n-atencion-victimas-service'
+import { verificarAccesoFormatoNApi } from '@/lib/reportes/permisos'
 
 export async function GET(
   _req: NextRequest,
@@ -9,6 +10,8 @@ export async function GET(
 ) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoFormatoNApi(session.user.id, 'ver')
+  if (chequeo) return chequeo
   const { id } = await params
   const registro = await obtenerAtencionVictimas(id)
   if (!registro) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
@@ -21,6 +24,8 @@ export async function PATCH(
 ) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoFormatoNApi(session.user.id, 'editar')
+  if (chequeo) return chequeo
   const { id } = await params
   const body = await req.json()
 

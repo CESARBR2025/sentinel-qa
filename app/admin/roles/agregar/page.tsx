@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
 import FormularioRol from "@/components/admin/roles/FormularioRol"; // Importas tu formulario de roles
 import { Shield, ArrowLeft } from "lucide-react"; // Usamos Shield para diferenciarlo de D1 visualmente
@@ -98,7 +97,7 @@ export default async function AgregarRolPage() {
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div
               style={{
-                color: "#d4a43a", // Dorado Sentinel
+                color: "#2563eb",
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "11px",
                 fontWeight: 700,
@@ -109,7 +108,7 @@ export default async function AgregarRolPage() {
                 gap: '8px'
               }}
             >
-              <span style={{ width: '12px', height: '2px', background: '#d4a43a' }}></span>
+              <span style={{ width: '12px', height: '2px', background: '#2563eb' }}></span>
               Administración del Sistema y Seguridad
             </div>
 

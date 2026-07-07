@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ClipboardList, History, AlertTriangle } from 'lucide-react'
+import { ClipboardList, History, AlertTriangle, FileBadge2 } from 'lucide-react'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { verificarRolOficial, contarDenunciasPendientesOficial } from '@/lib/oficial/service'
@@ -113,6 +113,29 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
                 </span>
               </div>
             )}
+          </Link>
+
+          {/* Card: Captura de Infracciones */}
+          <Link href="/infracciones/captura" className="card-o" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#2563eb', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#2563eb', transition: 'height 0.4s ease', height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <FileBadge2 size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563eb' }} />
+                VÍA · MÓDULO
+              </div>
+            </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Captura de Infracciones
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Registra una nueva infracción de tránsito con datos del vehículo, infractor y ubicación
+              </p>
+            </div>
           </Link>
 
         </div>

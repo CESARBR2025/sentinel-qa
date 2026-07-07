@@ -7,6 +7,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Plus, Filter } from 'lucide-react'
 import { pageWrap, fontsImport } from '@/components/reportes/form-styles'
+import { tieneAccesoFormatoN, tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function FormatoNMediosAlternativosPage({
   searchParams,
@@ -15,6 +16,8 @@ export default async function FormatoNMediosAlternativosPage({
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoFormatoN(session.user.id))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'formato_n_coordinacion', 'ver'))) redirect('/dashboard')
 
   const { periodo: periodoFilter } = await searchParams
   const periodoValido = periodoFilter && PERIODOS.includes(periodoFilter as Periodo)

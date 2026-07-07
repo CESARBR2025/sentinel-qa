@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Upload } from 'lucide-react'
+import { Toast } from '@/components/ui/Toast'
 
 function compressImage(file: File, maxW = 1920, quality = 0.7): Promise<File> {
   return new Promise((resolve, reject) => {
@@ -37,8 +39,10 @@ export function SubirFotoDetenido({
   label: string
   onSuccess?: () => void
 }) {
+  const router = useRouter()
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -61,7 +65,8 @@ export function SubirFotoDetenido({
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Error al subir') }
       onSuccess?.()
-      window.location.reload()
+      setToast(true)
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al subir')
     } finally { setUploading(false) }
@@ -69,6 +74,7 @@ export function SubirFotoDetenido({
 
   return (
     <div>
+      <Toast show={toast} mensaje={`${label} subida exitosamente`} onClose={() => setToast(false)} />
       <input ref={fileRef} type="file" accept="image/*,.pdf" onChange={handleFileChange} style={{ display: 'none' }} />
       <button
         onClick={() => fileRef.current?.click()}

@@ -9,6 +9,7 @@ import { upsertChecklistAction } from '@/lib/auxiliar/actions'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { tienePermiso } from '@/lib/auxiliar/permisos'
 
 const LBL: React.CSSProperties = { fontFamily:'JetBrains Mono,monospace', fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.1em', display:'block', marginBottom:6 }
 const SEL: React.CSSProperties = { padding:'10px 12px', border:'1px solid #e2e8f0', borderLeft:'3px solid #2563eb', borderRadius:2, fontFamily:'Inter,sans-serif', fontSize:13, outline:'none', background:'#ffffff', width:'100%' }
@@ -44,6 +45,7 @@ export default async function ChecklistFormPage({
     .limit(1)
 
   if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const { id }    = await params
   const { d1, exito } = await searchParams

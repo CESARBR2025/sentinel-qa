@@ -1,8 +1,12 @@
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { db } from '@/lib/db/index'
 import { fichasBusqueda } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',     color: '#991b1b' },
@@ -10,6 +14,11 @@ const TIPO_CFG: Record<string, { label: string; color: string }> = {
 }
 
 export default async function BusquedasPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
+
   const fichas = await db
     .select()
     .from(fichasBusqueda)

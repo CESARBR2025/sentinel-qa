@@ -1,5 +1,9 @@
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createMedida } from '@/lib/prevencion/actions'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const AUTORIDADES = [
   { value: 'FISCALIA', label: 'Fiscalía' },
@@ -8,7 +12,12 @@ const AUTORIDADES = [
   { value: 'SEC_MUJER', label: 'Secretaría de la Mujer' },
 ]
 
-export default function NuevaMedidaPage() {
+export default async function NuevaMedidaPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'medidas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'medidas', 'crear'))) redirect('/dashboard')
+
   return (
     <div style={{ maxWidth: 860 }}>
       {/* Header */}

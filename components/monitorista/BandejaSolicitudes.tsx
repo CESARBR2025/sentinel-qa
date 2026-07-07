@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Camera, CheckCircle2, Clock, Eye, Upload } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { SubirEvidenciaModal } from './SubirEvidenciaModal'
+import { Toast } from '@/components/ui/Toast'
 
 interface SolicitudRow {
   id: string
@@ -27,13 +29,16 @@ export function BandejaSolicitudes({
   pendientes: SolicitudRow[]
   completadas: SolicitudRow[]
 }) {
+  const router = useRouter()
   const [tab, setTab] = useState<'pendientes' | 'completadas'>('pendientes')
   const [modalAbierto, setModalAbierto] = useState<SolicitudRow | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
 
   const lista = tab === 'pendientes' ? pendientes : completadas
 
   return (
     <>
+      <Toast show={!!toast} mensaje={toast ?? ''} onClose={() => setToast(null)} />
       <div style={{ display: 'flex', gap: 0, marginBottom: 0, borderBottom: '2px solid #e2e8f0' }}>
         <button onClick={() => setTab('pendientes')} style={tabStyle(tab === 'pendientes')}>
           <Clock size={14} /> PENDIENTES ({pendientes.length})
@@ -85,7 +90,8 @@ export function BandejaSolicitudes({
                           method: 'POST', headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ solicitudId: s.solicitudId }),
                         })
-                        window.location.reload()
+                        setToast('Solicitud completada')
+                        router.refresh()
                       }} style={btnSuccess}>
                         <CheckCircle2 size={14} /> COMPLETAR
                       </button>
@@ -113,7 +119,8 @@ export function BandejaSolicitudes({
           incidenteId={modalAbierto.entidadId}
           origen={modalAbierto.origen}
           denunciaSolicitudId={modalAbierto.solicitudId}
-          onClose={() => { setModalAbierto(null); window.location.reload() }}
+          onClose={() => setModalAbierto(null)}
+          onExito={() => { setToast('Evidencia subida'); router.refresh() }}
         />
       )}
     </>

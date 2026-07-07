@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { db } from '@/lib/db'
 import { medidasProteccion, visitasDomiciliarias } from '@/lib/db/schema'
 import { eq, sql } from 'drizzle-orm'
+import { verificarAccesoPrevencionApi } from '@/lib/prevencion/permisos'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoPrevencionApi(session.user.id, 'medidas', 'ver')
+  if (chequeo) return chequeo
+
   const { id } = await params
   const medida = await db
     .select()
@@ -31,6 +39,11 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoPrevencionApi(session.user.id, 'medidas', 'editar')
+  if (chequeo) return chequeo
+
   const { id } = await params
   const body = await request.json()
 
@@ -47,6 +60,11 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const chequeo = await verificarAccesoPrevencionApi(session.user.id, 'medidas', 'editar')
+  if (chequeo) return chequeo
+
   const { id } = await params
   const body = await request.json()
 

@@ -53,12 +53,14 @@ export function SubirEvidenciaModal({
   origen = 'general',
   denunciaSolicitudId = null,
   onClose,
+  onExito,
 }: {
   solicitudId: string
   incidenteId: string
   origen?: 'denuncia' | 'general'
   denunciaSolicitudId?: number | null
   onClose: () => void
+  onExito?: () => void
 }) {
   const [tipo, setTipo] = useState<'foto' | 'documento'>('foto')
   const [archivos, setArchivos] = useState<{ nombre: string; base64: string; mime: string; originalSize: number; compressedSize: number; file?: File }[]>([])
@@ -132,6 +134,7 @@ export function SubirEvidenciaModal({
         if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Error') }
       }
       setProgreso(100)
+      onExito?.()
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al subir')

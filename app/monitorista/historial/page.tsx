@@ -6,10 +6,12 @@ import { ArrowLeft, Camera, CheckCircle2, XCircle, FileText, Edit, Plus, PenBox 
 import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export default async function HistorialPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tienePermiso(session.user.id, 'historial', 'ver'))) redirect('/monitorista')
 
   const registros = await query<Record<string, unknown>>(
     `SELECT mh.id, mh.accion, mh.incidente_id, mh.creado_en,

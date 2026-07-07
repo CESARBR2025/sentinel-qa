@@ -1,8 +1,10 @@
+import { auth }    from '@/lib/auth'
+import { headers } from 'next/headers'
 import { db }  from '@/lib/db/index'
 import { medidasProteccion, visitasDomiciliarias, medidaAutoridadesAdicionales } from '@/lib/db/schema'
 import { eq, desc, asc } from 'drizzle-orm'
 import Link         from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
 import { SemaforoVigencia }         from '@/components/prevencion/SemaforoVigencia'
 import { AutoridadBadge }           from '@/components/prevencion/AutoridadBadge'
@@ -10,8 +12,14 @@ import { VisitaModal }              from '@/components/prevencion/VisitaModal'
 import { ProrrogaViewerModal }  from '@/components/prevencion/ProrrogaViewerModal'
 import { ProrrogaModal }        from '@/components/prevencion/ProrrogaModal'
 import { AgregarAutoridadForm } from '@/components/prevencion/AgregarAutoridadForm'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 export default async function MedidaDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'medidas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'medidas', 'ver'))) redirect('/dashboard')
+
   const { id } = await params
 
   const [medida] = await db

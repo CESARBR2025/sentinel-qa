@@ -30,7 +30,7 @@ export default function NuevaDetenidoPage() {
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error) }
       const json = await res.json()
-      router.push(`/monitorista/detenidos/${json.id}`)
+      router.push(`/monitorista/detenidos/${json.id}?exito=1`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al crear')
     } finally {

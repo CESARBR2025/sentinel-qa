@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { sql } from "drizzle-orm";
@@ -15,6 +15,14 @@ export async function POST(request: Request) {
       { error: "No autorizado" },
       { status: 401 }
     );
+  }
+
+  const rolCheck = await query<{ nombre: string }>(
+    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`,
+    [session.user.id],
+  );
+  if (rolCheck.rows[0]?.nombre !== "Administrador") {
+    return NextResponse.json({ error: "Sin permiso" }, { status: 403 });
   }
 
   try {

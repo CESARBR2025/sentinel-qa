@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { queryVia } from '@/lib/db'
 
 export async function PATCH(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+
   try {
     const { id } = await req.json()
     if (!id || typeof id !== 'string') {

@@ -4,10 +4,12 @@ import { headers }         from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import { TablonDespacho }  from '@/components/911/despacho/TablonDespacho'
+import { tieneAccesoSeccion } from '@/lib/911/permisos'
 
 export default async function DespachoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, '911_despacho'))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 

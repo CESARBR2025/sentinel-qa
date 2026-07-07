@@ -7,6 +7,7 @@ import { eq }      from 'drizzle-orm'
 import { listarParesReporte } from '@/lib/auxiliar/service'
 import { ArrowLeft, CheckCircle2, Circle } from 'lucide-react'
 import Link from 'next/link'
+import { tienePermiso } from '@/lib/auxiliar/permisos'
 
 export default async function ChecklistPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -20,6 +21,7 @@ export default async function ChecklistPage() {
     .limit(1)
 
   if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const pares = await listarParesReporte()
 

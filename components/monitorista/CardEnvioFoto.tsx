@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Send, RefreshCw, ExternalLink, CheckCircle, XCircle } from 'lucide-react'
 import React from 'react'
 import { SubirFotoDetenido } from './SubirFotoDetenido'
+import { Toast } from '@/components/ui/Toast'
 
 const ETIQUETAS: Record<string, string> = {
   frontal: 'Foto Frontal',
@@ -24,9 +26,11 @@ export function CardEnvioFoto({
   destinos: { clave: string; nombre: string }[]
   evidencias: { id: string; url: string; nombre: string; subidoPor: string | null }[]
 }) {
+  const router = useRouter()
   const [destino, setDestino] = useState(foto?.enviado_a || destinos[0]?.clave || '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState(false)
 
   const puedeEnviar = !foto || foto.estado === 'pendiente' || foto.estado === 'rechazado'
   const puedeSubirDirecto = !foto || foto.estado !== 'completado'
@@ -43,7 +47,8 @@ export function CardEnvioFoto({
         body: JSON.stringify({ fotoId: foto.id, destino }),
       })
       if (!res.ok) { const err = await res.json(); throw new Error(err.error) }
-      window.location.reload()
+      setToast(true)
+      router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error')
     } finally { setPending(false) }
@@ -54,6 +59,7 @@ export function CardEnvioFoto({
 
   return (
       <div style={{ background: '#f8fafc', border: `1px solid ${estado === 'completado' ? '#bbf7d0' : estado === 'rechazado' ? '#fecaca' : '#e2e8f0'}`, padding: 20, borderRadius: 2 }}>
+      <Toast show={toast} mensaje={`Solicitud de ${label} enviada`} onClose={() => setToast(false)} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 600, color: '#1e40af', textTransform: 'uppercase' }}>{label}</span>

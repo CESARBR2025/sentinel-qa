@@ -3,23 +3,7 @@ import { roles }  from '@/lib/db/schema'
 import { eq }     from 'drizzle-orm'
 import Link       from 'next/link'
 import { createUser } from '@/lib/admin/actions'
-
-const L: React.CSSProperties = {
-  display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
-  color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 8,
-}
-const I: React.CSSProperties = {
-  width: '100%', padding: '10px 14px', background: '#0b1220',
-  border: '1px solid #1b2742', color: '#d8e0f0', fontFamily: 'Inter,sans-serif',
-  fontSize: 13, outline: 'none', boxSizing: 'border-box',
-}
-const S: React.CSSProperties = { ...I, cursor: 'pointer' }
-const BTN: React.CSSProperties = {
-  padding: '10px 24px', background: '#c0223a', color: '#fff',
-  fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700,
-  fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase',
-  border: 'none', cursor: 'pointer',
-}
+import { labelStyle as L, inputStyle as I, selectStyle as S, btnPrimario as BTN, btnSecundario } from '../../admin-styles'
 
 export default async function NuevoUsuarioPage({
   searchParams,
@@ -32,16 +16,16 @@ export default async function NuevoUsuarioPage({
   return (
     <div style={{ maxWidth: 600 }}>
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#d8e0f0', margin: 0 }}>
-          Nuevo <span style={{ color: '#d4a43a' }}>Usuario</span>
+        <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: 0 }}>
+          Nuevo <span style={{ color: '#2563eb' }}>Usuario</span>
         </h2>
-        <Link href="/admin/usuarios" style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}>
+        <Link href="/admin/usuarios" style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}>
           ← Volver
         </Link>
       </div>
 
       {error === 'email_en_uso' && (
-        <div style={{ padding: '12px 16px', background: 'rgba(192,34,58,0.1)', border: '1px solid #c0223a', marginBottom: 24, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#c0223a', letterSpacing: '0.1em' }}>
+        <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', marginBottom: 24, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#dc2626', letterSpacing: '0.1em' }}>
           ✕ El correo electrónico ya está registrado en el sistema
         </div>
       )}
@@ -80,10 +64,7 @@ export default async function NuevoUsuarioPage({
 
         <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
           <button type="submit" style={BTN}>Crear usuario</button>
-          <Link
-            href="/admin/usuarios"
-            style={{ padding: '10px 20px', background: 'transparent', color: '#8a9bc0', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', border: '1px solid #1b2742' }}
-          >
+          <Link href="/admin/usuarios" style={btnSecundario}>
             Cancelar
           </Link>
         </div>

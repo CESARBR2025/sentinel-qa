@@ -82,10 +82,10 @@ export default function TablonAnalisis() {
                             {/* COLUMNA 5: ACCIÓN */}
                             <td style={tdStyle}>
                                 <Link
-                                     href={`/analisis/formulario-ingreso?id=${r.id}`} // <--- Enviamos el ID por la URL
+                                    href={`/analisis/formulario-ingreso?id=${r.id}`}
                                     style={btnStyle}
                                 >
-                                    <Search size={14} /> ANALIZAR
+                                    <Search size={14} /> VER FICHA
                                 </Link>
                             </td>
                         </tr>
