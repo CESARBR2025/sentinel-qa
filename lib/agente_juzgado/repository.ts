@@ -1,4 +1,4 @@
-import { query, queryVia, viaPool } from "@/lib/db";
+import pool, { query } from "@/lib/db";
 import { rowToAsegurado } from "@/lib/fiscalia/mapper";
 import type {
   RolRow,
@@ -273,7 +273,7 @@ export async function obtenerDetalleAsegurado(
    ═══════════════════════════════════════ */
 
 export async function listarLiberacionesJuzgado(): Promise<LiberacionRow[]> {
-  const result = await queryVia<Record<string, unknown>>(
+  const result = await query<Record<string, unknown>>(
     `SELECT
        id,
        folio,
@@ -284,7 +284,7 @@ export async function listarLiberacionesJuzgado(): Promise<LiberacionRow[]> {
        nombre_infractor,
        estatus_dependencia,
        no_carpeta_investigacion
-     FROM v2_infracciones
+     FROM via.v2_infracciones
      WHERE tipo_garantia = 'VEHICULO'
        AND estatus_dependencia IN (
          'RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO',
@@ -314,7 +314,7 @@ export async function listarLiberacionesJuzgado(): Promise<LiberacionRow[]> {
 export async function obtenerDetalleInfraccionViaJuzgado(
   id: string,
 ): Promise<Record<string, unknown> | null> {
-  const result = await queryVia<Record<string, unknown>>(
+  const result = await query<Record<string, unknown>>(
     `SELECT
        i.evidencias,
        i.url_inapam,
@@ -351,9 +351,10 @@ export async function obtenerDetalleInfraccionViaJuzgado(
        i.estado,
        i.tipo_garantia,
        i.garantia_entregada,
-       o.total_umas,
-       o.total_pesos,
-       i.oficial_id,
+        o.total_umas,
+        o.total_pesos,
+        CASE WHEN o.id IS NOT NULL THEN true ELSE false END as tiene_orden_pago,
+        i.oficial_id,
        i.es_titular,
        i.no_oficio_fiscalia,
        i.url_oficio_fiscalia,
@@ -362,19 +363,19 @@ export async function obtenerDetalleInfraccionViaJuzgado(
        i.url_oficio_pago_corralon,
        i.url_orden_salida_liberaciones,
        o.estatus as estatus_orden_pago,
-       off.numero_empleado as oficial_numero_empleado,
-       u.nombres as oficial_nombres,
-       u.apellido_p as oficial_apellido_p,
-       u.apellido_m as oficial_apellido_m,
-       pat.numero_unidad as patrulla_nombre,
-       off.activo as oficial_activo
-     FROM v2_infracciones i
-     LEFT JOIN v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
-     JOIN v2_articulos_ley a on i.articulo_id = a.id
-     JOIN v2_fracciones_ley f on i.fraccion_id = f.id
-     LEFT JOIN v2_oficiales off ON off.id = i.oficial_id
-     LEFT JOIN v2_usuarios u ON off.usuario_id = u.id
-     LEFT JOIN v2_patrullas pat ON off.patrulla_id = pat.id
+        off.no_nomina as oficial_numero_empleado,
+        u.name as oficial_nombres,
+        u.apellido as oficial_apellido_p,
+        '' as oficial_apellido_m,
+        pat.numero_unidad as patrulla_nombre,
+        CASE WHEN off.ofi_estatus = 'activo' THEN true ELSE false END as oficial_activo
+      FROM via.v2_infracciones i
+      LEFT JOIN via.v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
+      JOIN via.v2_articulos_ley a on i.articulo_id = a.id
+      JOIN via.v2_fracciones_ley f on i.fraccion_id = f.id
+      LEFT JOIN ofi_oficiales off ON off.id = i.oficial_id
+      LEFT JOIN users u ON u.id = off.user_id
+      LEFT JOIN via.v2_patrullas pat ON off.patrulla_id = pat.id
      WHERE i.id = $1
      ORDER BY o.created_at DESC
      LIMIT 1`,
@@ -385,8 +386,8 @@ export async function obtenerDetalleInfraccionViaJuzgado(
 }
 
 export async function iniciarProcesoJuzgado(id: string): Promise<void> {
-  await queryVia(
-    `UPDATE v2_infracciones
+  await query(
+    `UPDATE via.v2_infracciones
      SET estatus_dependencia = 'EN_PROCESO_JUZGADO', updated_at = CURRENT_TIMESTAMP
      WHERE id = $1`,
     [id],
@@ -394,8 +395,8 @@ export async function iniciarProcesoJuzgado(id: string): Promise<void> {
 }
 
 export async function finalizarProcesoJuzgado(id: string): Promise<void> {
-  await queryVia(
-    `UPDATE v2_infracciones
+  await query(
+    `UPDATE via.v2_infracciones
      SET estatus_dependencia = 'LIBERADA_POR_JUZGADO', updated_at = CURRENT_TIMESTAMP
      WHERE id = $1`,
     [id],
@@ -415,12 +416,12 @@ export async function actualizarOficioJuzgado(
     curp_infractor?: string | null;
   },
 ): Promise<void> {
-  const client = await viaPool.connect();
+  const client = await pool.connect();
   try {
     await client.query("BEGIN");
 
     await client.query(
-      `UPDATE v2_infracciones
+      `UPDATE via.v2_infracciones
        SET
          no_oficio_fiscalia = $2,
          url_oficio_fiscalia = COALESCE($3, url_oficio_fiscalia),

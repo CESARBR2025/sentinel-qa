@@ -28,10 +28,11 @@ export async function obtenerReportesD1(desde?: string, hasta?: string, folio?: 
       d.ofendido_hombre,
       d.ofendido_mujer,
       r.ofi_tipo_incidente,
-      r.ofi_oficial_nombre,
+      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS ofi_oficial_nombre,
       r.ofi_folio_cad
     FROM ofi_reporte_denuncia d
     LEFT JOIN ofi_reportes_campo r ON r.id = d.reporte_campo_id
+    LEFT JOIN ofi_oficiales o ON o.id = r.ofi_oficial_id
         WHERE d.fecha_reporte BETWEEN $1 AND $2
         ${folio ? `AND (d.folio_denuncia ILIKE $3 OR d.iph ILIKE $3)` : ''}
         ORDER BY d.fecha_reporte DESC, d.hora_reporte DESC

@@ -8,7 +8,7 @@ export async function obtenerParesReporte(): Promise<AuxParReporte[]> {
       r.id                  AS reporte_campo_id,
       r.ofi_folio_cad       AS folio_cad,
       r.ofi_tipo_incidente  AS tipo_incidente,
-      r.ofi_oficial_nombre  AS oficial_nombre,
+      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS oficial_nombre,
       r.ofi_hay_detencion,
       r.ofi_autoridad_recibe,
       r.created_at          AS fecha_reporte,
@@ -32,6 +32,7 @@ export async function obtenerParesReporte(): Promise<AuxParReporte[]> {
       cl.created_at         AS cl_created_at,
       cl.updated_at         AS cl_updated_at
     FROM ofi_reportes_campo r
+    LEFT JOIN ofi_oficiales o ON o.id = r.ofi_oficial_id
     INNER JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
     LEFT JOIN auxiliar_checklist cl
       ON cl.reporte_campo_id = r.id
@@ -48,7 +49,7 @@ export async function obtenerCuestionariosRobo(): Promise<AuxCuestionarioRobo[]>
       r.id                  AS reporte_campo_id,
       r.ofi_folio_cad       AS folio_cad,
       r.created_at          AS fecha,
-      r.ofi_oficial_nombre  AS nombre_policia,
+      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS nombre_policia,
       d.folio_denuncia,
       d.delito,
       d.nomina_mando        AS nomina_policia,
@@ -56,6 +57,7 @@ export async function obtenerCuestionariosRobo(): Promise<AuxCuestionarioRobo[]>
       d.sector,
       d.policia_ingresa_cu  AS nombre_ingreso
     FROM ofi_reportes_campo r
+    LEFT JOIN ofi_oficiales o ON o.id = r.ofi_oficial_id
     INNER JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
     WHERE
       LOWER(r.ofi_tipo_incidente) LIKE '%robo%'

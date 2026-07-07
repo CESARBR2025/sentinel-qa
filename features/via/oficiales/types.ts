@@ -4,7 +4,6 @@ export interface OfiOficialViaDTO {
   nombre: string;
   apellidoPaterno: string;
   apellidoMaterno: string | null;
-  placaUnidad: string | null;
   telefono: string | null;
   departamento: string | null;
   rango: string | null;

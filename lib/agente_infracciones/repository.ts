@@ -1,4 +1,4 @@
-import { query, queryVia, viaPool } from "@/lib/db";
+import { query } from "@/lib/db";
 import type { RolRow, CapturaInfractorInput } from "./types";
 import { inputToDbParams } from './mapper'
 
@@ -15,7 +15,7 @@ export async function obtenerRolUsuario(userId: string): Promise<string> {
 }
 
 export async function obtenerLiberaciones() {
-  return queryVia<Record<string, unknown>>(`
+  return query<Record<string, unknown>>(`
     SELECT
       id,
       folio,
@@ -27,7 +27,7 @@ export async function obtenerLiberaciones() {
       estatus_dependencia,
       no_carpeta_investigacion,
       url_orden_salida_liberaciones
-    FROM v2_infracciones
+    FROM via.v2_infracciones
     WHERE estatus_dependencia IN ('LIBERADO_POR_INFRACCIONES', 'LIBERADO_INFRACCIONES_INSTANTE')
        OR (estatus = 'REGISTRADA' AND estatus_dependencia = 'PENDIENTE_DATOS_INFRACTOR')
        OR (estatus = 'PENDIENTE_PAGO' AND estatus_dependencia IN ('PENDIENTE_PAGO_LIBERACION', 'PENDIENTE_PAGO_INFRACCION'))
@@ -45,8 +45,8 @@ export interface InfraccionUpdateRow {
 
 export async function actualizarDatosInfractor(input: CapturaInfractorInput) {
   const p = inputToDbParams(input)
-  return viaPool.query<InfraccionUpdateRow>(
-    `UPDATE public.v2_infracciones
+  return query<InfraccionUpdateRow>(
+    `UPDATE via.v2_infracciones
      SET es_titular = $2,
          nombre_infractor = COALESCE($3, nombre_infractor),
          apellido_paterno_infractor = COALESCE($4, apellido_paterno_infractor),
@@ -81,10 +81,10 @@ export async function actualizarDatosInfractor(input: CapturaInfractorInput) {
 }
 
 export async function obtenerConceptoId(fraccionId: string) {
-  const result = await viaPool.query<{ concept_id: number }>(
+  const result = await query<{ concept_id: number }>(
     `SELECT ccs.concept_id
-     FROM v2_fracciones_ley fl
-     JOIN v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
+     FROM via.v2_fracciones_ley fl
+     JOIN via.v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
      WHERE fl.id = $1`,
     [fraccionId],
   )
@@ -92,8 +92,8 @@ export async function obtenerConceptoId(fraccionId: string) {
 }
 
 export async function liberarGarantia(id: string) {
-  return viaPool.query<{ id: string; folio: string }>(
-    `UPDATE public.v2_infracciones
+  return query<{ id: string; folio: string }>(
+    `UPDATE via.v2_infracciones
      SET estatus = 'CERRADA',
          estatus_dependencia = 'LIBERADO_POR_INFRACCIONES',
          updated_at = NOW()
@@ -119,8 +119,8 @@ export async function insertarOrdenPagoSa7(params: {
   total_umas: string | null
   request_payload: string
 }) {
-  await viaPool.query(
-    `INSERT INTO v2_ordenes_pago_sa7 (
+  await query(
+    `INSERT INTO via.v2_ordenes_pago_sa7 (
       infraccion_id, folio_infraccion, nombre_usuario, apellidos_usuario, concepto_id,
       orden_pago_id, estatus, url_pago, url_guardado, folio_orden,
       fecha_vencimiento, total_pesos, total_umas, request_payload
@@ -133,4 +133,3 @@ export async function insertarOrdenPagoSa7(params: {
     ],
   )
 }
-

@@ -35,6 +35,7 @@ export interface InfraccionLegal {
   fraccion_descripcion: string
   total_umas: string
   total_pesos: string
+  tieneOrdenPago: boolean
 }
 
 export interface InfraccionInfractor {
@@ -489,12 +490,22 @@ function SummaryBar({ detalle }: { detalle: InfraccionDetalle }) {
           </p>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-3xl text-slate-900 st-title">
-            {formatCurrency(detalle.Infraccion.total_pesos)}
-          </p>
-          <p className="text-xs text-slate-500 mt-1">
-            {detalle.Infraccion.total_umas} UMAs
-          </p>
+          {detalle.Infraccion.tieneOrdenPago ? (
+            <>
+              <p className="text-3xl text-slate-900 st-title">
+                {formatCurrency(detalle.Infraccion.total_pesos)}
+              </p>
+              <p className="text-xs text-slate-500 mt-1">
+                {detalle.Infraccion.total_umas} UMAs
+              </p>
+            </>
+          ) : (
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1.5 border border-amber-200">
+                ORDEN DE PAGO PENDIENTE DE CREACIÓN
+              </span>
+            </div>
+          )}
           <p className="text-[10px] text-slate-400 font-mono mt-2">
             ID: {h.id_infraccion}
           </p>

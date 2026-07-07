@@ -63,7 +63,7 @@ function TitularForm({ detalle, onSuccess, onClose }: Props) {
   const [infrCurp, setInfrCurp] = useState('')
   const [infrCorreo, setInfrCorreo] = useState('')
 
-  const getInfractorNombre = () => infrNombre || (d?.nombre_infractor ?? '')
+  const getInfractorNombre = () => infrNombre || ''
   const getInfractorAppaterno = () => infrAppaterno || (d?.appaterno_infractor ?? '')
   const getInfractorApmaterno = () => infrApmaterno || (d?.apmaterno_infractor ?? '')
   const getInfractorCurp = () => infrCurp || (d?.curp_infractor ?? '')

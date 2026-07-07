@@ -100,7 +100,7 @@ export class InfraccionesRepository {
         data.descuento_aplicado,
         data.fecha_limite_descuento ?? "",
         data.monto_final,
-        "11564675-0e54-49ec-8f73-8ea24a1556c4",
+        data.grua_id,
         data.dependenciaRemisora ?? null,
         data.anioVehiculo,
         data.tipoVehiculo,

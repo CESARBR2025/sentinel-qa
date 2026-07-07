@@ -34,7 +34,7 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
     ofi_hay_detencion, ofi_detenidos, ofi_autoridad_recibe, ofi_monto_robo, ofi_hay_robo,
     ofi_objetos_recuperados, ofi_hay_vehiculo, ofi_vehiculos,
     ofi_hay_cateo, ofi_cateo, ofi_resultado_cateo,
-    ofi_oficial_id, ofi_oficial_nombre,
+    ofi_oficial_id,
     quiere_denuncia,
     ofi_hay_orden_aprehension, ofi_ordenes_aprehension,
     ofi_hay_hidrocarburo,      ofi_hidrocarburos,
@@ -46,7 +46,7 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
     $11, $12, $13, $14, $15, $16, $17::jsonb, $18, $19, $20,
     $21, $22, $23::jsonb,
     $24, $25::jsonb, $26,
-    $27, $28, $29, $30, $31::jsonb, $32, $33::jsonb, $34, $35::jsonb, $36, $37::jsonb, $38, $39
+    $27, $28, $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37, $38
   ) RETURNING id`,
     [
       data.folioReporteCampo,
@@ -76,9 +76,9 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
       data.ofiCateo ? JSON.stringify(data.ofiCateo) : null,
       data.ofiResultadoCateo,
       data.ofiOficialId,
-      data.ofiOficialNombre,
       data.ofiQuiereDenuncia,
-      data.ofiHayOrdenAprehension, JSON.stringify(data.ofiOrdenesAprehension),
+      data.ofiHayOrdenAprehension,
+      JSON.stringify(data.ofiOrdenesAprehension),
       data.ofiHayHidrocarburo, JSON.stringify(data.ofiHidrocarburos),
       data.ofiHayArmaFuego, JSON.stringify(data.ofiArmasFuego),
       data.ofiHayDroga, JSON.stringify(data.ofiDrogas),
@@ -178,6 +178,7 @@ export async function obtenerReporteDetalle(
     `SELECT
        r.*,
        r.quiere_denuncia,
+       CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS ofi_oficial_nombre,
        d.id                  AS d1_id,
        d.folio_denuncia      AS d1_folio,
        d.iph                 AS d1_iph,
@@ -197,6 +198,7 @@ export async function obtenerReporteDetalle(
        d.ofendido_hombre     AS d1_ofendido_hombre,
        d.ofendido_mujer      AS d1_ofendido_mujer
      FROM ofi_reportes_campo r
+     LEFT JOIN ofi_oficiales o ON o.id = r.ofi_oficial_id
      LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
      WHERE r.id = $1::uuid
        AND r.ofi_oficial_id = (

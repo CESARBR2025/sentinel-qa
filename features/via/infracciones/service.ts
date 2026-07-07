@@ -129,7 +129,13 @@ export const sanitizeCrearInfraccionPayload = (
 
   if (body.garantiaSeleccionada === "VEHICULO") {
     payload.estatus = "REGISTRADA";
-    payload.estatusDependencia = "VEHICULO_EN_CORRALON";
+    if (body.motivoRetencionVehiculo === "ACCIDENTE") {
+      payload.estatusDependencia = "RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO";
+    } else if (body.motivoRetencionVehiculo === "DELITO") {
+      payload.estatusDependencia = "RETENIDO_POR_DELITO_PENDIENTE_OFICIO";
+    } else {
+      payload.estatusDependencia = "VEHICULO_EN_CORRALON";
+    }
   }
 
   return payload;

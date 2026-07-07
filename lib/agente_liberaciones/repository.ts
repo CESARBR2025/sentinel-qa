@@ -1,4 +1,4 @@
-import { query, queryVia } from "@/lib/db";
+import { query } from "@/lib/db";
 import type { RolRow } from "./types";
 
 export async function obtenerRolUsuario(userId: string): Promise<string> {
@@ -14,7 +14,7 @@ export async function obtenerRolUsuario(userId: string): Promise<string> {
 }
 
 export async function obtenerLiberaciones() {
-  return queryVia<Record<string, unknown>>(`
+  return query<Record<string, unknown>>(`
     SELECT
       id,
       folio,
@@ -26,7 +26,7 @@ export async function obtenerLiberaciones() {
       estatus_dependencia,
       no_carpeta_investigacion,
       url_orden_salida_liberaciones
-    FROM v2_infracciones
+    FROM via.v2_infracciones
     WHERE estatus_dependencia IN ('ESPERA_REVISION', 'EN_PROCESO_LIBERACIONES', 'LIBERADA_POR_INFRACCION', 'VEHICULO_EN_CORRALON', 'LIBERADA_POR_DELITO', 'LIBERADA_POR_ACCIDENTE', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO')
        OR (estatus = 'REGISTRADA' AND estatus_dependencia IN ('MESA_DE_CONTROL_REVISION', 'MESA_DE_CONTROL_PENDIENTE_DOCS'))
        OR (estatus = 'PENDIENTE_PAGO' AND estatus_dependencia = 'PENDIENTE_PAGO_LIBERACION')

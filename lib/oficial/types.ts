@@ -3,7 +3,6 @@ export interface OfiOficial {
   ofiNombre: string;
   ofiApPaterno: string;
   ofiApMaterno: string | null;
-  ofiPlacaUnidadAsignada: string | null;
   noNomina: string | null;
   numeroEmpleado: string | null;
   telefono: string | null;
@@ -98,7 +97,6 @@ export interface CrearReporteCampoInput {
   ofiCateo: OfiCateo | null;
   ofiResultadoCateo: string | null;
   ofiOficialId: string;
-  ofiOficialNombre: string;
   ofiQuiereDenuncia: boolean;
   ofiHayOrdenAprehension: boolean
   ofiOrdenesAprehension: OfiOrdenAprehension[]

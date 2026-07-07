@@ -151,7 +151,6 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiCateo: hasCateo ? cateo : null,
     ofiResultadoCateo: str(formData, 'ofi_resultado_cateo'),
     ofiOficialId: oficial.id,
-    ofiOficialNombre: `${oficial.ofiNombre} ${oficial.ofiApPaterno}`.trim(),
     ofiQuiereDenuncia: quiereDenuncia,
     ofiHayOrdenAprehension: bool(formData, 'ofi_hay_orden_aprehension'),
     ofiOrdenesAprehension: JSON.parse(str(formData, 'ofi_ordenes_aprehension') ?? '[]'),
