@@ -11,37 +11,49 @@ import { analisisService } from '@/services/analisisService';
 
 
 export default function RegistroDetenidoForm() {
-    
+
     const { step, formData, setFormData, fotos, handleTextChange, handleChange, handleFileChange, handleNext, handleBack, loading, setLoading } = useRegistroDetenido();
 
-useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
 
-    if (id) {
-        const cargar = async () => {
-            setLoading(true);
-            try {
-                // Llamamos al servicio que ya tienes
-                const d = await registroDetenidoService.getPrellenadoInteligencia(id);
-                
-                if (d && !d.error) {
-                    setFormData((prev: any) => ({
-                        ...prev,
-                        ...d, // Inyecta folio, domicilio, iph, etc.
-                        // Formateo para input datetime-local
-                        fechaHora: d.fechaHora ? d.fechaHora.substring(0, 16).replace(' ', 'T') : ''
-                    }));
+        console.log("ID =", id);
+        console.log("URL =", window.location.href);
+
+        if (id) {
+            const cargar = async () => {
+                setLoading(true);
+                try {
+                    // Llamamos al servicio que ya tienes
+                    const d = await registroDetenidoService.getPrellenadoInteligencia(id);
+                    console.log(d);
+
+                    if (d && !d.error) {
+
+                        const clean = (obj: any) =>
+                            Object.fromEntries(
+                                Object.entries(obj).map(([k, v]) => [
+                                    k,
+                                    v === null || v === undefined ? "" : v,
+                                ])
+                            );
+                        setFormData(prev => ({
+                            ...prev,
+                            ...clean(d),
+                            // Formateo para input datetime-local
+                            fechaHora: d.fechaHora ? d.fechaHora.substring(0, 16).replace(' ', 'T') : ''
+                        }));
+                    }
+                } catch (e) {
+                    console.error("Error en prellenado:", e);
+                } finally {
+                    setLoading(false);
                 }
-            } catch (e) {
-                console.error("Error en prellenado:", e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        cargar();
-    }
-}, [setFormData, setLoading]);
+            };
+            cargar();
+        }
+    }, [setFormData, setLoading]);
 
     const handleMapUpdate = (data: any, field: string) => {
         setFormData((prev: any) => ({
@@ -109,7 +121,7 @@ useEffect(() => {
                             <div style={{ gridColumn: 'span 2' }}>
                                 <SentinelField label="Nombre Completo del Detenido" name="nombreDetenido" icon={User} value={formData.nombreDetenido} onChange={handleTextChange} />
                             </div>
-                            <SentinelField label="Folio de Registro" name="folio" icon={FileText} value={formData.folio} onChange={handleTextChange} placeholder="REG-000" />
+                            <SentinelField label="Folio de Registro" name="folio" icon={FileText} value={formData.folio ?? ""} onChange={handleTextChange} placeholder="REG-000" />
                             <SentinelField label="Fecha de Nacimiento" name="fechaNacimiento" icon={Calendar} type="date" value={formData.fechaNacimiento} onChange={handleTextChange} />
 
                             <SentinelField label="Origen (Ciudad/Edo)" name="origen" icon={MapPin} value={formData.origen} onChange={handleTextChange} />

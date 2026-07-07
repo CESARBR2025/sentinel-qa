@@ -44,6 +44,7 @@ export function useDetenidoForm() {
   // ===========================
   // PASO 4 - FOLIOS Y TIEMPOS
   // ===========================
+  reporteDenunciaId: '',
   folioIPH: '',
   folio911: '',
   diaEvento: '',

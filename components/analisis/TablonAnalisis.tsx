@@ -40,8 +40,8 @@ export default function TablonAnalisis() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((r) => (
-                        <tr key={r.id} className="analisis-row" style={trStyle}>
+                    {data.map((r, index) => (
+                        <tr key={`${r.id}-${index}`} className="analisis-row" style={trStyle}>
                             {/* COLUMNA 1: FOLIO Y OFICIAL */}
                             <td style={tdStyle}>
                                 <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', fontSize: '14px', color: '#0f172a' }}>{r.folio}</div>

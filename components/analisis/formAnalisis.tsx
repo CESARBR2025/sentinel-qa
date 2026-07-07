@@ -7,6 +7,7 @@ import { useDetenidoForm } from '@/hooks/useAnalistaForm';
 import { analistaService } from '@/services/analistaService';
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
 import { analisisService } from '@/services/analisisService';
+import { useRouter } from "next/navigation";
 
 
 
@@ -84,6 +85,7 @@ export default function RegistroDetenidoStepper() {
 
     const searchParams = useSearchParams();
     const incidenteId = searchParams.get('id');
+    const router = useRouter();
 
     useEffect(() => {
     if (incidenteId) {
@@ -130,6 +132,8 @@ console.log("RESPUESTA API:", d);
                         horaReporte: cleanTime(d.horaReporte),
                         horaInicioEvento: cleanTime(d.horaInicioEvento),
                         horaFinalEvento: cleanTime(d.horaFinalEvento),
+
+                        reporteDenunciaId: d.reporteDenunciaId || '', 
                         
                     }));
                 }
@@ -157,16 +161,22 @@ console.log("RESPUESTA API:", d);
     };
 
     const finalizarRegistro = async () => {
-        setLoading(true);
-        try {
-            await analistaService.registrarIPH(formData);
-            alert("Registro IPH guardado con éxito.");
-        } catch (e) {
-            alert("Error al guardar.");
-        } finally {
-            setLoading(false);
-        }
-    };
+    setLoading(true);
+
+    try {
+        await analistaService.registrarIPH(formData);
+
+        alert("El registro IPH se guardó correctamente.");
+
+        router.push("/analisis");
+
+    } catch (e) {
+        console.error(e);
+        alert("Ocurrió un error al guardar el registro.");
+    } finally {
+        setLoading(false);
+    }
+};
 
     const handleArrestoMapSelect = (data: any) => {
         setFormData((prev: any) => ({
@@ -543,6 +553,13 @@ console.log("RESPUESTA API:", d);
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                         <SentinelField 
+                label="ID Técnico Denuncia (Vínculo DB)" 
+                name="reporteDenunciaId" 
+                value={formData.reporteDenunciaId} 
+                readOnly 
+                style={{ background: 'transparent', border: 'none', fontWeight: 'bold', color: '#475569' }}
+            />
 
                         {/* SECCIÓN FOLIOS */}
                         <SentinelField

@@ -70,7 +70,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         rd.domicilio_calle             AS "calleAfectado",
         rd.domicilio_numero            AS "numeroAfectado",
         rd.domicilio_colonia           AS "coloniaAfectado",
-        rd.domicilio_municipio         AS "municipioAfectado"
+        rd.domicilio_municipio         AS "municipioAfectado",
+        rd.id as "reporteDenunciaId"
 
       FROM ofi_reportes_campo rc
 
