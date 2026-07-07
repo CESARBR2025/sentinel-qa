@@ -4,6 +4,12 @@ export interface OfiOficial {
   ofiApPaterno: string;
   ofiApMaterno: string | null;
   ofiPlacaUnidadAsignada: string | null;
+  noNomina: string | null;
+  numeroEmpleado: string | null;
+  telefono: string | null;
+  departamentoId: string | null;
+  departamentoNombre: string | null;
+  patrullaId: string | null;
   userId: string | null;
   ofiEstatus: string;
   createdAt: string;

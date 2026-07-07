@@ -5,6 +5,7 @@ import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { crearReporte }   from './service'
 import { revalidatePath } from 'next/cache'
+import { actualizarPatrullaOficial } from './repository'
 
 export async function crearReporteCampoOficial(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -32,4 +33,16 @@ export async function crearReporteCampoOficial(formData: FormData) {
   }
 
   redirect('/oficial?exito=1')
+}
+
+export async function asignarPatrulla(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const patrullaId = formData.get('patrullaId') as string | null
+
+  await actualizarPatrullaOficial(session.user.id, patrullaId || null)
+
+  revalidatePath('/oficial/configuracion')
+  revalidatePath('/oficial')
 }

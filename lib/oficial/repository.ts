@@ -4,7 +4,11 @@ import type { OfiOficial, CrearReporteCampoInput, OfiReporteResumen, OfiReporteD
 
 export async function obtenerOficialPorUserId(userId: string): Promise<OfiOficial | null> {
   const result = await query<Record<string, unknown>>(
-    `SELECT * FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
+    `SELECT o.*, d.nombre AS departamento_nombre
+     FROM ofi_oficiales o
+     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
+     WHERE o.user_id = $1 AND o.ofi_estatus = 'activo'
+     LIMIT 1`,
     [userId]
   )
   return result.rows.length ? rowToOficial(result.rows[0]) : null
@@ -202,4 +206,16 @@ export async function obtenerReporteDetalle(
     [id, userId]
   )
   return result.rows.length ? rowToReporteDetalle(result.rows[0]) : null
+}
+
+export async function actualizarPatrullaOficial(
+  userId: string,
+  patrullaId: string | null,
+): Promise<void> {
+  await query(
+    `UPDATE ofi_oficiales
+     SET patrulla_id = $1
+     WHERE user_id = $2`,
+    [patrullaId, userId],
+  )
 }

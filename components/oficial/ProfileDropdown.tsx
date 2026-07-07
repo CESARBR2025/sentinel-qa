@@ -9,9 +9,11 @@ interface Props {
   name: string
   apellido?: string
   email: string
+  mostrarPerfil?: boolean
+  rolLabel?: string
 }
 
-export function ProfileDropdown({ name, apellido, email }: Props) {
+export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, rolLabel = 'Oficial de Campo' }: Props) {
   const [open, setOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -69,7 +71,7 @@ export function ProfileDropdown({ name, apellido, email }: Props) {
             {fullName}
           </div>
           <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b' }}>
-            Oficial de Campo
+            {rolLabel}
           </div>
         </div>
 
@@ -106,6 +108,34 @@ export function ProfileDropdown({ name, apellido, email }: Props) {
               {email}
             </div>
           </div>
+
+          {mostrarPerfil && (
+            <>
+              <button
+                onClick={() => { setOpen(false); router.push('/oficial/configuracion') }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: 'none',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  fontFamily: 'Inter,sans-serif',
+                  fontSize: 12,
+                  color: '#475569',
+                  transition: 'background 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#f8fafc'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+              >
+                <User size={14} />
+                Mi Perfil
+              </button>
+              <div style={{ height: 1, background: '#f1f5f9' }} />
+            </>
+          )}
 
           {/* Sign out */}
           <button

@@ -12,6 +12,7 @@ import {
   obtenerReporteDetalle,
 } from './repository'
 import type {
+  OfiOficial,
   CrearReporteCampoInput,
   OfiReporteResumen,
   OfiReporteDetalle,
@@ -56,6 +57,10 @@ async function generarFolioUnico(): Promise<string> {
 export async function verificarRolOficial(userId: string): Promise<boolean> {
   const rol = await obtenerRolUsuario(userId)
   return rol === 'Oficial de Campo'
+}
+
+export async function obtenerMiPerfil(userId: string): Promise<OfiOficial | null> {
+  return obtenerOficialPorUserId(userId)
 }
 
 export async function obtenerCatalogos() {
