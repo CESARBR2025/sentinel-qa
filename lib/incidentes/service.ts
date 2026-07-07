@@ -38,6 +38,14 @@ export async function crearReporteCampo(params: {
     hayDroga: boolean
     drogas: object[]
     observaciones: string | null
+    apoyoFiestasPatronales: boolean
+    operativosMetropolitano: boolean
+    eco8: boolean
+    alcoholimetria: boolean
+    motocicletas: boolean
+    apoyoActuarios: boolean
+    apoyoCateosFgr: boolean
+    apoyoCateosFge: boolean
 }) {
     const { inc, existe } = await verificarReporteCampo(params.incidenteId)
 
