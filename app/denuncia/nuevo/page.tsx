@@ -25,7 +25,10 @@ export default async function NuevaDenunciaD1Page({
   let placaPatrulla = ''
   if (sp.oficialId) {
     const result = await query<{ placa: string }>(
-      `SELECT ofi_placa_unidad_asignada AS placa FROM ofi_oficiales WHERE id = $1 LIMIT 1`,
+      `SELECT p.numero_unidad AS placa
+       FROM ofi_oficiales o
+       LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+       WHERE o.id = $1 LIMIT 1`,
       [sp.oficialId]
     )
     placaPatrulla = result.rows[0]?.placa ?? ''

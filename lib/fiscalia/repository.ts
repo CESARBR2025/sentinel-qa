@@ -130,25 +130,25 @@ export async function obtenerDetalleAsegurado(
        rd.fecha_reporte,
        rd.hora_reporte,
        rc.ofi_detenidos,
-       o.ofi_placa_unidad_asignada,
-       o.ofi_nombre,
-       o.ofi_ap_paterno,
-       o.no_nomina,
-       rc.ofi_calle,
-       rc.ofi_colonia,
-       u.name AS capturado_por_nombre,
-       rd.folio_sija,
-       rd.folio_remision,
-       rd.marco_legal,
-       rd.registro_tableta,
-       rd.domicilio_calle,
-       rd.domicilio_numero,
-       rd.domicilio_colonia,
-       rd.domicilio_municipio
-     FROM ofi_reporte_denuncia rd
-     JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
-     LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
-     LEFT JOIN users u ON rd.capturado_por = u.id
+        p.numero_unidad AS ofi_placa_unidad_asignada,
+        rc.ofi_oficial_nombre,
+        o.no_nomina,
+        rc.ofi_calle,
+        rc.ofi_colonia,
+        u.name AS capturado_por_nombre,
+        rd.folio_sija,
+        rd.folio_remision,
+        rd.marco_legal,
+        rd.registro_tableta,
+        rd.domicilio_calle,
+        rd.domicilio_numero,
+        rd.domicilio_colonia,
+        rd.domicilio_municipio
+      FROM ofi_reporte_denuncia rd
+      JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
+      LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+      LEFT JOIN users u ON rd.capturado_por = u.id
      WHERE rd.id = $1
      LIMIT 1`,
     [solicitudId],
@@ -175,10 +175,7 @@ export async function obtenerDetalleAsegurado(
   const colonia = row.ofi_colonia ? String(row.ofi_colonia) : "";
   const lugarDetencion = [calle, colonia].filter(Boolean).join(", ") || null;
 
-  const ofiNombre = row.ofi_nombre ? String(row.ofi_nombre) : "";
-  const ofiApPaterno = row.ofi_ap_paterno ? String(row.ofi_ap_paterno) : "";
-  const nombrePolicia =
-    [ofiNombre, ofiApPaterno].filter(Boolean).join(" ") || null;
+  const nombrePolicia = row.ofi_oficial_nombre ? String(row.ofi_oficial_nombre) : null;
 
   return {
     folioDenuncia: row.folio_denuncia ? String(row.folio_denuncia) : null,
@@ -325,9 +322,10 @@ export async function obtenerDetalleInfraccionVia(
        i.estado,
        i.tipo_garantia,
        i.garantia_entregada,
-       o.total_umas,
-       o.total_pesos,
-       i.oficial_id,
+        o.total_umas,
+        o.total_pesos,
+        CASE WHEN o.id IS NOT NULL THEN true ELSE false END as tiene_orden_pago,
+        i.oficial_id,
        i.es_titular,
        i.no_oficio_fiscalia,
        i.url_oficio_fiscalia,
@@ -336,20 +334,20 @@ export async function obtenerDetalleInfraccionVia(
        i.url_oficio_pago_corralon,
        i.url_orden_salida_liberaciones,
        o.estatus as estatus_orden_pago,
-       off.numero_empleado as oficial_numero_empleado,
-       u.nombres as oficial_nombres,
-       u.apellido_p as oficial_apellido_p,
-       u.apellido_m as oficial_apellido_m,
-       pat.numero_unidad as patrulla_nombre,
-       off.activo as oficial_activo
-     FROM v2_infracciones i
-     LEFT JOIN v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
-     JOIN v2_articulos_ley a on i.articulo_id = a.id
-     JOIN v2_fracciones_ley f on i.fraccion_id = f.id
-     
-     LEFT JOIN v2_oficiales off ON off.id = i.oficial_id
-     LEFT JOIN v2_usuarios u ON off.usuario_id = u.id
-     LEFT JOIN v2_patrullas pat ON off.patrulla_id = pat.id
+        off.no_nomina as oficial_numero_empleado,
+        u.name as oficial_nombres,
+        u.apellido as oficial_apellido_p,
+        '' as oficial_apellido_m,
+        pat.numero_unidad as patrulla_nombre,
+        CASE WHEN off.ofi_estatus = 'activo' THEN true ELSE false END as oficial_activo
+      FROM via.v2_infracciones i
+      LEFT JOIN via.v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
+      JOIN via.v2_articulos_ley a on i.articulo_id = a.id
+      JOIN via.v2_fracciones_ley f on i.fraccion_id = f.id
+      
+      LEFT JOIN ofi_oficiales off ON off.id = i.oficial_id
+      LEFT JOIN users u ON u.id = off.user_id
+      LEFT JOIN via.v2_patrullas pat ON off.patrulla_id = pat.id
      WHERE i.id = $1
      ORDER BY o.created_at DESC
      LIMIT 1`,
@@ -372,11 +370,12 @@ export async function listarAsegurados(soloPendientes: boolean, autoridad: strin
        rc.created_at,
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
-       rc.ofi_oficial_nombre,
-       o.ofi_placa_unidad_asignada
+        rc.ofi_oficial_nombre,
+        p.numero_unidad AS ofi_placa_unidad_asignada
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       WHERE rc.ofi_hay_detencion = true
          AND rc.ofi_autoridad_recibe = $1
         ${pendientesFilter}
@@ -394,26 +393,24 @@ export async function obtenerDetalleAseguradoCompleto(reporteCampoId: string): P
        rc.ofi_detenidos,
        rc.ofi_calle AS lugar_calle,
        rc.ofi_colonia AS lugar_colonia,
-       rc.ofi_oficial_nombre,
-       rc.ofi_latitud,
-       rc.ofi_longitud,
-       rc.folio_reporte_asegurados,
-       rd.folio_denuncia,
-       rd.iph,
-       rd.folio_sija,
-       rd.folio_remision,
-       rd.marco_legal,
-       rd.registro_tableta,
-       o.ofi_nombre,
-       o.ofi_ap_paterno,
-       o.ofi_ap_materno,
-       o.ofi_placa_unidad_asignada,
-       o.no_nomina,
-       u.name AS capturado_por_nombre
+        rc.ofi_oficial_nombre,
+        rc.ofi_latitud,
+        rc.ofi_longitud,
+        rc.folio_reporte_asegurados,
+        rd.folio_denuncia,
+        rd.iph,
+        rd.folio_sija,
+        rd.folio_remision,
+        rd.marco_legal,
+        rd.registro_tableta,
+        p.numero_unidad AS ofi_placa_unidad_asignada,
+        o.no_nomina,
+        u.name AS capturado_por_nombre
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
-     LEFT JOIN users u ON rd.capturado_por = u.id
+      LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+      LEFT JOIN users u ON rd.capturado_por = u.id
      WHERE rc.id = $1
      LIMIT 1`,
     [reporteCampoId],
@@ -503,7 +500,7 @@ export async function generarFolioAsegurados(): Promise<string> {
 }
 
 export async function listarLiberaciones(): Promise<LiberacionRow[]> {
-  const result = await queryVia<Record<string, unknown>>(
+  const result = await query<Record<string, unknown>>(
     `SELECT
        id,
        folio,
@@ -514,7 +511,7 @@ export async function listarLiberaciones(): Promise<LiberacionRow[]> {
        nombre_infractor,
        estatus_dependencia,
        no_carpeta_investigacion
-     FROM v2_infracciones
+     FROM via.v2_infracciones
      WHERE tipo_garantia = 'VEHICULO'
        AND estatus_dependencia IN (
          'RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO',
@@ -550,12 +547,13 @@ export async function listarAseguradosConDisposicion(autoridad: string = 'FISCAL
        rc.created_at,
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
-       rc.ofi_oficial_nombre,
-       o.ofi_placa_unidad_asignada,
-       pd.id AS puesta_disposicion_id
+        rc.ofi_oficial_nombre,
+        p.numero_unidad AS ofi_placa_unidad_asignada,
+        pd.id AS puesta_disposicion_id
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       LEFT JOIN ofi_puesta_disposicion pd ON pd.reporte_campo_id = rc.id
       WHERE rc.ofi_hay_detencion = true
         AND rc.ofi_autoridad_recibe = $1

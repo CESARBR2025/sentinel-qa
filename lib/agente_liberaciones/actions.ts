@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verificarRolLiberaciones, listarLiberaciones } from './service'
-import { queryVia, viaPool } from '@/lib/db'
+import { query } from '@/lib/db'
 import { obtenerDetalleInfraccionVia, obtenerTokenGuest } from '@/lib/shared/infracciones'
 import type { UserInfo, LiberacionesResponse, ViaInfraccionDetalle } from './types'
 
@@ -54,8 +54,8 @@ export async function capturarInfractorAction(body: {
 
     if (!id) return { success: false, error: 'El campo id es requerido' }
 
-    const updateResult = await viaPool.query(
-      `UPDATE public.v2_infracciones
+    const updateResult = await query<any>(
+      `UPDATE via.v2_infracciones
        SET nombre_infractor = COALESCE($2, nombre_infractor),
            apellido_paterno_infractor = COALESCE($3, apellido_paterno_infractor),
            apellido_materno_infractor = COALESCE($4, apellido_materno_infractor),
@@ -79,10 +79,10 @@ export async function capturarInfractorAction(body: {
 
     const infraccion = updateResult.rows[0]
 
-    const conceptoResult = await viaPool.query(
+    const conceptoResult = await query<any>(
       `SELECT ccs.concept_id
-       FROM v2_fracciones_ley fl
-       JOIN v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
+       FROM via.v2_fracciones_ley fl
+       JOIN via.v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
        WHERE fl.id = $1`,
       [infraccion.fraccion_id],
     )
@@ -98,7 +98,6 @@ export async function capturarInfractorAction(body: {
             idInfraccion: infraccion.id,
             correoInfractor: correo,
             nombreInfractor: nombreUsuario,
-            folio: infraccion.folio,
           }).catch((e: unknown) => console.error('Error enviando correo captura infractor:', e))
         }
       } catch {
@@ -134,9 +133,9 @@ export async function obtenerDocumentosLiberacion(infraccionId: string): Promise
     const esValido = await verificarRolLiberaciones(session.user.id)
     if (!esValido) return { documentos: [], error: 'Acceso no autorizado' }
 
-    const solicitudRes = await viaPool.query(
+    const solicitudRes = await query<any>(
       `SELECT id, tipo_liberacion, es_empresa, nombre_empresa, rfc_empresa, estatus
-       FROM v2_solicitudes_liberacion
+       FROM via.v2_solicitudes_liberacion
        WHERE infraccion_id = $1`,
       [infraccionId],
     )
@@ -147,11 +146,12 @@ export async function obtenerDocumentosLiberacion(infraccionId: string): Promise
 
     const solicitud = solicitudRes.rows[0]
 
-    const docsRes = await viaPool.query(
-      `SELECT id, tipo_documento, url_documento, estatus_revision, observaciones, created_at
-       FROM v2_documentos_liberacion
-       WHERE solicitud_id = $1
-       ORDER BY created_at`,
+    const docsRes = await query<any>(
+      `SELECT DISTINCT ON (dl.tipo_documento)
+              dl.id, dl.tipo_documento, dl.url_documento, dl.estatus_revision, dl.observaciones, dl.created_at
+       FROM via.v2_documentos_liberacion dl
+       WHERE dl.solicitud_id = $1
+       ORDER BY dl.tipo_documento, dl.created_at DESC`,
       [solicitud.id],
     )
 
@@ -196,8 +196,8 @@ export async function revisarDocumentoAction(body: {
     if (accion !== 'ACEPTADO' && accion !== 'RECHAZADO') return { error: 'accion debe ser ACEPTADO o RECHAZADO' }
     if (accion === 'RECHAZADO' && !observaciones?.trim()) return { error: 'Se requieren observaciones para rechazar un documento' }
 
-    const result = await viaPool.query(
-      `UPDATE v2_documentos_liberacion
+    const result = await query<any>(
+      `UPDATE via.v2_documentos_liberacion
        SET estatus_revision = $1, observaciones = $2, fecha_revision = NOW()
        WHERE id = $3
        RETURNING id, estatus_revision, observaciones`,
@@ -234,8 +234,8 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
 
     if (!infraccionId) return { error: 'infraccionId es requerido' }
 
-    const solicitudRes = await viaPool.query(
-      `SELECT id FROM v2_solicitudes_liberacion
+    const solicitudRes = await query<any>(
+      `SELECT id FROM via.v2_solicitudes_liberacion
        WHERE infraccion_id = $1
        ORDER BY created_at DESC LIMIT 1`,
       [infraccionId],
@@ -245,8 +245,11 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
 
     const solicitudId = solicitudRes.rows[0].id
 
-    const docsRes = await viaPool.query(
-      `SELECT estatus_revision FROM v2_documentos_liberacion WHERE solicitud_id = $1`,
+    const docsRes = await query(
+      `SELECT DISTINCT ON (dl.tipo_documento) dl.estatus_revision
+       FROM via.v2_documentos_liberacion dl
+       WHERE dl.solicitud_id = $1
+       ORDER BY dl.tipo_documento, dl.created_at DESC`,
       [solicitudId],
     )
 
@@ -272,12 +275,12 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
     let correo_infractor = ''
 
     if (nuevoEstatus === 'PENDIENTE_PAGO') {
-      const infraRes = await viaPool.query(
+      const infraRes = await query(
         `SELECT i.folio, i.descuento_aplicado, i.fraccion_id,
                 i.nombre_infractor, i.apellido_paterno_infractor, i.apellido_materno_infractor,
                 i.nombre_titular_liberacion, i.appaterno_titular_liberacion, i.apmaterno_titular_liberacion,
                 i.correo_titular_liberacion, i.correo_infractor
-         FROM v2_infracciones i WHERE i.id = $1`,
+         FROM via.v2_infracciones i WHERE i.id = $1`,
         [infraccionId],
       )
 
@@ -290,10 +293,10 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
         apellidos_usuario = [row.appaterno_titular_liberacion || row.apellido_paterno_infractor || '', row.apmaterno_titular_liberacion || row.apellido_materno_infractor || ''].filter(Boolean).join(' ').trim() || 'SIN APELLIDO'
         correo_infractor = (row.correo_titular_liberacion || row.correo_infractor || '') as string
 
-        const conceptoRes = await viaPool.query(
+        const conceptoRes = await query<any>(
           `SELECT ccs.concept_id
-           FROM v2_fracciones_ley fl
-           JOIN v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
+           FROM via.v2_fracciones_ley fl
+           JOIN via.v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
            WHERE fl.id = $1`,
           [row.fraccion_id],
         )
@@ -301,13 +304,13 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
       }
     }
 
-    await viaPool.query(
-      `UPDATE v2_infracciones SET estatus = $1, estatus_dependencia = $2, updated_at = NOW() WHERE id = $3`,
+    await query(
+      `UPDATE via.v2_infracciones SET estatus = $1, estatus_dependencia = $2, updated_at = NOW() WHERE id = $3`,
       [nuevoEstatus, nuevoEstatusDep, infraccionId],
     )
 
-    await viaPool.query(
-      `UPDATE v2_solicitudes_liberacion SET estatus = $1, updated_at = NOW() WHERE id = $2`,
+    await query(
+      `UPDATE via.v2_solicitudes_liberacion SET estatus = $1, updated_at = NOW() WHERE id = $2`,
       [nuevoEstatusDep, solicitudId],
     )
 
@@ -434,8 +437,8 @@ export async function generarOrdenPagoAction(payload: {
     const total_pesos = responseSA7.headers.get('x-total-pesos')
     const total_umas = responseSA7.headers.get('x-total-umas')
 
-    await viaPool.query(
-      `INSERT INTO v2_ordenes_pago_sa7 (
+    await query(
+      `INSERT INTO via.v2_ordenes_pago_sa7 (
         infraccion_id, folio_infraccion, nombre_usuario, apellidos_usuario, concepto_id,
         orden_pago_id, estatus, url_pago, url_guardado, folio_orden,
         fecha_vencimiento, total_pesos, total_umas, request_payload

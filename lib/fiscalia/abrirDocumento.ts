@@ -4,7 +4,7 @@ export const abrirDocumento = async (rutaRelativa: string) => {
 
     const { token } = await tokenRes.json();
 
-    const url = `${process.env.NEXT_PUBLIC_EXPEDIENTE_HOST}${rutaRelativa}`;
+    const url = `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE}${rutaRelativa}`;
 
     const fileRes = await fetch(url, {
       headers: {

@@ -96,17 +96,33 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
   }
 
   useEffect(() => {
-    if (!store.tipoIncidente) {
-      store.setField('tipoIncidente', defaults.dIncidente)
-      store.setField('tipoEmergenciaId', defaults.dEmergencia)
-      store.setField('prioridadId', defaults.dPrioridad)
-      store.setField('descripcion', defaults.dDescripcion)
-      store.setField('contenidoReporte', defaults.dContenido)
-      store.setField('datosPositivosNegativos', defaults.dDatosPN)
-      store.setField('accionesRealizadas', defaults.dAcciones)
-      store.setField('objetosRecuperados', defaults.dObjetos)
-      store.setField('resultadoCateo', defaults.dResultado)
+    store.reset()
+    store.setField('tipoIncidente', defaults.dIncidente)
+    store.setField('tipoEmergenciaId', defaults.dEmergencia)
+    store.setField('prioridadId', defaults.dPrioridad)
+    store.setField('descripcion', defaults.dDescripcion)
+    store.setField('contenidoReporte', defaults.dContenido)
+    store.setField('datosPositivosNegativos', defaults.dDatosPN)
+    store.setField('accionesRealizadas', defaults.dAcciones)
+    store.setField('objetosRecuperados', defaults.dObjetos)
+    store.setField('resultadoCateo', defaults.dResultado)
+
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        store.reset()
+        store.setField('tipoIncidente', defaults.dIncidente)
+        store.setField('tipoEmergenciaId', defaults.dEmergencia)
+        store.setField('prioridadId', defaults.dPrioridad)
+        store.setField('descripcion', defaults.dDescripcion)
+        store.setField('contenidoReporte', defaults.dContenido)
+        store.setField('datosPositivosNegativos', defaults.dDatosPN)
+        store.setField('accionesRealizadas', defaults.dAcciones)
+        store.setField('objetosRecuperados', defaults.dObjetos)
+        store.setField('resultadoCateo', defaults.dResultado)
+      }
     }
+    window.addEventListener('pageshow', onPageShow)
+    return () => window.removeEventListener('pageshow', onPageShow)
   }, [])
 
   const handleSubmit = () => {
@@ -131,7 +147,6 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     fd.set('ofi_hay_vehiculo', st.tieneVehiculo)
     fd.set('ofi_hay_cateo', st.tieneCateo)
     fd.set('ofi_resultado_cateo', st.resultadoCateo)
-    fd.set('ofi_oficial_nombre', `${user?.name || ''} ${user?.apellido || ''}`.trim())
     fd.set('ofi_quiere_denuncia', String(st.quiereDenuncia))
 
     // Ubicación desde store (persiste aunque el mapa se desmonte)
@@ -185,7 +200,6 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
 
   return (
     <form ref={formRef} onSubmit={(e) => e.preventDefault()} style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-      <input type="hidden" name="ofi_oficial_nombre" value={`${user?.name || ''} ${user?.apellido || ''}`.trim()} />
 
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 

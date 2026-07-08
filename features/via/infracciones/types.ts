@@ -120,6 +120,7 @@ export interface InfraccionDetalleDTO {
   total_pesos: number | null;
   total_umas: number | null;
   created_at: string | null;
+  urlOrdenSalida: string | null;
   clasificacion: string;
   id: string;
   folio: string;

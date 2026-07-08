@@ -124,6 +124,7 @@ export function rowToInfraccionDetalle(row: Record<string, unknown>): ViaInfracc
       fraccion_descripcion:         str(row.fraccion_descripcion) ?? '',
       total_umas:                   str(row.total_umas) ?? '0',
       total_pesos:                  str(row.total_pesos) ?? '0',
+      tieneOrdenPago:               row.tiene_orden_pago === true || row.tiene_orden_pago === 'true',
     },
     datos_infractor: {
       nombre_infractor: concatName(row.nombre_infractor, row.apellido_paterno_infractor, row.apellido_materno_infractor),

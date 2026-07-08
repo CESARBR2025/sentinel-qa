@@ -49,7 +49,7 @@ export const SeccionGarantia: React.FC<SeccionGarantiaProps> = ({
 
                 const result = await response.json();
 
-                setGruas(result.data ?? []);
+                setGruas(result ?? []);
             } catch (error) {
                 console.error('Error cargando grúas:', error);
             }

@@ -132,7 +132,12 @@ export default function CargarOficioSection({
                         curp: infractorCurp.trim().toUpperCase(),
                     }
                     : {
-                        nombre: nombreInfractor ?? '',
+                        nombre: (() => {
+                            let n = nombreInfractor ?? '';
+                            if (apmaternoInfractor && n.endsWith(` ${apmaternoInfractor}`)) n = n.slice(0, -apmaternoInfractor.length - 1);
+                            if (appaternoInfractor && n.endsWith(` ${appaternoInfractor}`)) n = n.slice(0, -appaternoInfractor.length - 1);
+                            return n;
+                        })(),
                         appaterno: appaternoInfractor ?? '',
                         apmaterno: apmaternoInfractor ?? '',
                         correo: correoInfractor ?? '',
@@ -291,7 +296,7 @@ export default function CargarOficioSection({
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                                     <div className="p-2.5 rounded-lg bg-white border border-slate-200">
                                         <p className="text-[10px] font-medium tracking-wider uppercase text-slate-400 mb-0.5">Nombre completo</p>
-                                        <p className="text-xs font-medium text-slate-900 truncate">{necesitaCapturaInfractor ? [infractorNombre, infractorAppaterno, infractorApmaterno].filter(Boolean).join(' ') : [nombreInfractor, appaternoInfractor, apmaternoInfractor].filter(Boolean).join(' ') || '—'}</p>
+                                        <p className="text-xs font-medium text-slate-900 truncate">{necesitaCapturaInfractor ? [infractorNombre, infractorAppaterno, infractorApmaterno].filter(Boolean).join(' ') : nombreInfractor || '—'}</p>
                                     </div>
                                     <div className="p-2.5 rounded-lg bg-white border border-slate-200">
                                         <p className="text-[10px] font-medium tracking-wider uppercase text-slate-400 mb-0.5">Correo</p>
@@ -405,7 +410,7 @@ export default function CargarOficioSection({
                                         {esTitularState === true
                                             ? necesitaCapturaInfractor
                                                 ? [infractorNombre, infractorAppaterno, infractorApmaterno].filter(Boolean).join(' ')
-                                                : [nombreInfractor, appaternoInfractor, apmaternoInfractor].filter(Boolean).join(' ')
+                                                : nombreInfractor
                                             : [nombre, appaterno, apmaterno].filter(Boolean).join(' ') || '—'
                                             || '—'}
                                     </span>

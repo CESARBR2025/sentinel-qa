@@ -6,7 +6,6 @@ interface OfiOficialRow {
   ofi_nombre: string;
   ofi_ap_paterno: string;
   ofi_ap_materno: string | null;
-  ofi_placa_unidad_asignada: string | null;
   telefono: string | null;
   departamento: string | null;
   rango: string | null;
@@ -25,7 +24,6 @@ export function mapRowToOficialViaDTO(row: OfiOficialRow): OfiOficialViaDTO {
     nombre: row.ofi_nombre,
     apellidoPaterno: row.ofi_ap_paterno,
     apellidoMaterno: row.ofi_ap_materno,
-    placaUnidad: row.ofi_placa_unidad_asignada,
     telefono: row.telefono,
     departamento: row.departamento,
     rango: row.rango,

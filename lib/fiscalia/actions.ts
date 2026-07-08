@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { viaPool } from '@/lib/db'
+import pool from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
@@ -342,13 +342,13 @@ export async function guardarOficioAction(
       url_oficio_fiscalia = await subirArchivoFiscalia(archivo_oficio, folio)
     }
 
-    const client = await viaPool.connect()
+    const client = await pool.connect()
     try {
       await client.query('BEGIN')
 
       const updateResult = await client.query(
         `
-        UPDATE public.v2_infracciones
+        UPDATE via.v2_infracciones
         SET
           no_oficio_fiscalia = $2,
           url_oficio_fiscalia = COALESCE($3, url_oficio_fiscalia),

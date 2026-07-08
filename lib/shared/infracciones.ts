@@ -1,4 +1,4 @@
-import { queryVia } from "@/lib/db";
+import { query } from "@/lib/db";
 
 const GUEST_TOKEN_URL = "https://sanjuandelrio.sytes.net:3044/api/auth/guest-token";
 
@@ -84,6 +84,7 @@ export interface ViaInfraccionLegal {
   fraccion_descripcion: string;
   total_umas: string;
   total_pesos: string;
+  tieneOrdenPago: boolean;
 }
 
 export interface ViaInfraccionInfractor {
@@ -183,6 +184,7 @@ export function rowToInfraccionDetalle(
       fraccion_descripcion: str(row.fraccion_descripcion) ?? "",
       total_umas: str(row.total_umas) ?? "0",
       total_pesos: str(row.total_pesos) ?? "0",
+      tieneOrdenPago: row.tiene_orden_pago === true || row.tiene_orden_pago === 'true',
     },
     datos_infractor: {
       nombre_infractor: concatName(
@@ -235,7 +237,7 @@ export function rowToInfraccionDetalle(
 export async function obtenerDetalleInfraccionVia(
   id: string,
 ): Promise<ViaInfraccionDetalle | null> {
-  const result = await queryVia<Record<string, unknown>>(
+  const result = await query<Record<string, unknown>>(
     `SELECT
        i.evidencias,
        i.url_inapam,
@@ -272,8 +274,9 @@ export async function obtenerDetalleInfraccionVia(
        i.estado,
        i.tipo_garantia,
        i.garantia_entregada,
-       o.total_umas,
-       o.total_pesos,
+        o.total_umas,
+        o.total_pesos,
+        CASE WHEN o.id IS NOT NULL THEN true ELSE false END as tiene_orden_pago,
        i.oficial_id,
        i.es_titular,
        i.no_oficio_fiscalia,
@@ -283,21 +286,21 @@ export async function obtenerDetalleInfraccionVia(
        i.url_oficio_pago_corralon,
        i.url_orden_salida_liberaciones,
        o.estatus as estatus_orden_pago,
-       off.numero_empleado as oficial_numero_empleado,
-       u.nombres as oficial_nombres,
-       u.apellido_p as oficial_apellido_p,
-       u.apellido_m as oficial_apellido_m,
-        pat.numero_unidad as patrulla_nombre,
-        off.activo as oficial_activo,
+        off.no_nomina as oficial_numero_empleado,
+        u.name as oficial_nombres,
+        u.apellido as oficial_apellido_p,
+        '' as oficial_apellido_m,
+         pat.numero_unidad as patrulla_nombre,
+         CASE WHEN off.ofi_estatus = 'activo' THEN true ELSE false END as oficial_activo,
         g.nombre as grua_nombre
-      FROM v2_infracciones i
-      LEFT JOIN v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
-      JOIN v2_articulos_ley a on i.articulo_id = a.id
-      JOIN v2_fracciones_ley f on i.fraccion_id = f.id
-      LEFT JOIN v2_oficiales off ON off.id = i.oficial_id
-      LEFT JOIN v2_usuarios u ON off.usuario_id = u.id
-      LEFT JOIN v2_patrullas pat ON off.patrulla_id = pat.id
-      LEFT JOIN v2_gruas g ON g.id = i.grua_id
+      FROM via.v2_infracciones i
+      LEFT JOIN via.v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
+      JOIN via.v2_articulos_ley a on i.articulo_id = a.id
+      JOIN via.v2_fracciones_ley f on i.fraccion_id = f.id
+      LEFT JOIN ofi_oficiales off ON off.id = i.oficial_id
+      LEFT JOIN users u ON u.id = off.user_id
+      LEFT JOIN via.v2_patrullas pat ON off.patrulla_id = pat.id
+      LEFT JOIN via.v2_gruas g ON g.id = i.grua_id
      WHERE i.id = $1
      ORDER BY o.created_at DESC
      LIMIT 1`,
