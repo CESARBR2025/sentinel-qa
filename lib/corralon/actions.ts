@@ -4,8 +4,8 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { tienePermiso } from '@/lib/permisos/core'
-import { listarSolicitudesPendientes } from './service'
-import type { UserInfo, SolicitudesResponse } from './types'
+import { listarSolicitudesPendientes, listarSolicitudesFinalizadas } from './service'
+import type { UserInfo, SolicitudRow } from './types'
 
 export async function obtenerDashboardCorralon(): Promise<UserInfo> {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -23,13 +23,22 @@ export async function obtenerDashboardCorralon(): Promise<UserInfo> {
   }
 }
 
-export async function obtenerSolicitudes(): Promise<SolicitudesResponse> {
+export interface TabSolicitudes {
+  pendientes: SolicitudRow[]
+  finalizadas: SolicitudRow[]
+}
+
+export async function obtenerSolicitudes(): Promise<TabSolicitudes> {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
   const puedeAcceder = await tienePermiso(session.user.id, 'corralon_solicitudes', 'ver')
   if (!puedeAcceder) redirect('/dashboard')
 
-  const data = await listarSolicitudesPendientes()
-  return { data, total: data.length }
+  const [pendientes, finalizadas] = await Promise.all([
+    listarSolicitudesPendientes(),
+    listarSolicitudesFinalizadas(),
+  ])
+
+  return { pendientes, finalizadas }
 }

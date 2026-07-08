@@ -13,9 +13,15 @@ export interface SolicitudRow {
   createdAt: string
   nombreInfractor: string | null
   correoInfractor: string | null
+  urlOrdenSalida: string | null
+  urlOficioPagoCorralon: string | null
+  nombreTitular: string | null
+  apellidoPaternoTitular: string | null
+  apellidoMaternoTitular: string | null
+  correoTitular: string | null
 }
 
-export interface SolicitudesResponse {
-  data: SolicitudRow[]
-  total: number
+export interface TabSolicitudes {
+  pendientes: SolicitudRow[]
+  finalizadas: SolicitudRow[]
 }

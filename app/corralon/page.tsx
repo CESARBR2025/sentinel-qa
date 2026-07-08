@@ -8,7 +8,7 @@ export default async function CorralonDashboardPage() {
     obtenerSolicitudes(),
   ])
 
-  const pendientesCount = solicitudes.total
+  const pendientesCount = solicitudes.pendientes.length
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
