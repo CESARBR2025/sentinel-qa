@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
     console.log(
       `[VIA][EXP-DIGITAL][EVIDENCIAS] Guardando ${rutas.length} ruta(s) en BD para infracción ${idInfraccion}`,
     );
-    await queryVia(
+    await query(
       `UPDATE via.v2_infracciones
        SET evidencias = $1::jsonb,
            updated_at = CURRENT_TIMESTAMP

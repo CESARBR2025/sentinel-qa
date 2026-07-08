@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
 
     const id = crypto.randomUUID();
 
-    await queryVia(
+    await query(
       `INSERT INTO via.v2_documentos_liberacion (id, solicitud_id, tipo_documento, url_documento, estatus_revision)
        VALUES ($1, $2, $3, $4, 'ENVIADO')`,
       [id, solicitudId, tipoDocumento, uploadData.data.ruta_relativa],

@@ -5,8 +5,6 @@ import * as schema from './db/schema'
 declare global {
   // eslint-disable-next-line no-var
   var _pgPool: Pool | undefined
-  // eslint-disable-next-line no-var
-  var _viaPool: Pool | undefined
 }
 
 function createPool(): Pool {
@@ -60,43 +58,4 @@ export async function query<T extends object = Record<string, unknown>>(
   }
 }
 
-// ─── Pool para la base de datos VÍA (via_prueba) ───
 
-function createViaPool(): Pool {
-  const dbUrl = process.env.DATABASE_URL
-  const viaDbName = process.env.DB_NAME_VIA || 'via_prueba'
-  const viaConnectionString = dbUrl?.replace(/\/[^/]+$/, '/' + viaDbName)
-
-  const newPool = new Pool({
-    connectionString: viaConnectionString,
-    max: 10,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 8000,
-    keepAlive: true,
-  })
-
-  newPool.on('error', (err) => {
-    console.error('⚠️ Error inesperado en el pool VÍA:', err.message)
-  })
-
-  return newPool
-}
-
-export const viaPool: Pool = globalThis._viaPool ?? createViaPool()
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis._viaPool = viaPool
-}
-
-export async function queryVia<T extends object = Record<string, unknown>>(
-  text: string,
-  params?: unknown[]
-) {
-  try {
-    const result = await viaPool.query<T>(text, params)
-    return result
-  } catch (error) {
-    console.error('❌ Error ejecutando query en BD VÍA:', error instanceof Error ? error.message : error)
-    throw error
-  }
-}

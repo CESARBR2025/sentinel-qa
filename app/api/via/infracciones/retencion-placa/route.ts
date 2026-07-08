@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export async function PATCH(request: Request) {
   try {
@@ -17,7 +17,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'El campo "id" es requerido.' }, { status: 400 });
     }
 
-    const resultado = await queryVia(
+    const resultado = await query(
       `UPDATE via.v2_infracciones
        SET estatus = 'PENDIENTE_PAGO',
            estatus_dependencia = 'PLACA_RETENIDA_EN_TRANSITO',

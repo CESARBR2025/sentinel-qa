@@ -1,4 +1,4 @@
-import pool, { query, queryVia } from "@/lib/db";
+import pool, { query } from "@/lib/db";
 import type {
   RolRow,
   DetalleAsegurado,
@@ -286,7 +286,7 @@ export async function actualizarSolicitudConEvidencias(
 export async function obtenerDetalleInfraccionVia(
   id: string,
 ): Promise<Record<string, unknown> | null> {
-  const result = await queryVia<Record<string, unknown>>(
+  const result = await query<Record<string, unknown>>(
     `SELECT
        i.evidencias,
        i.url_inapam,

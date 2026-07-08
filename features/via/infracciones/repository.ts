@@ -1,16 +1,16 @@
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 import { InfraccionDB } from "./types";
 
 export class InfraccionesRepository {
   static async obtenerSiguienteSecuencia(): Promise<number> {
-    const result = await queryVia<{ nextval: string }>(`
+    const result = await query<{ nextval: string }>(`
       SELECT nextval('via.seq_folios_infraccion')
     `);
     return Number(result.rows[0].nextval);
   }
 
   static async registarNuevaInfraccionRP(data: Partial<InfraccionDB>): Promise<any> {
-    const result = await queryVia(
+    const result = await query(
       `WITH inserted AS (
         INSERT INTO via.v2_infracciones (
           correo_infractor,
@@ -113,12 +113,12 @@ export class InfraccionesRepository {
   }
 
   static async eliminarInfraccion(id: string): Promise<void> {
-    await queryVia(`DELETE FROM via.v2_infracciones WHERE id = $1`, [id]);
+    await query(`DELETE FROM via.v2_infracciones WHERE id = $1`, [id]);
   }
 
   static async obtenerDatosInfraccionCiudadanoRP(id: string) {
     try {
-      const result = await queryVia(
+      const result = await query(
         `SELECT
         i.*,
         vfl.clasificacion,

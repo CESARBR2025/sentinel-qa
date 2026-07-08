@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export async function PATCH(request: Request) {
   try {
@@ -10,7 +10,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "id es requerido" }, { status: 400 });
     }
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_infracciones
        SET estatus = 'FINALIZADA', estatus_dependencia = 'GARANTIA_ENTREGADA', updated_at = CURRENT_TIMESTAMP
        WHERE id = $1`,

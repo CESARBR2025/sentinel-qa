@@ -1,10 +1,10 @@
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 import { mapRowToOrdenPago } from "./mapper";
 import { OrdenPagoSA7 } from "./types";
 
 export class SA7Repository {
   static async obtenerConceptoIdPorClasificacion(clasificacion: string): Promise<number | null> {
-    const result = await queryVia<{ concept_id: number }>(
+    const result = await query<{ concept_id: number }>(
       `SELECT concept_id FROM via.v2_catalogo_conceptos_sa7 WHERE clasificacion_type = $1 LIMIT 1`,
       [clasificacion],
     );
@@ -27,7 +27,7 @@ export class SA7Repository {
     totalUmas: number;
     requestPayload: any;
   }): Promise<string> {
-    const result = await queryVia<{ id: string }>(
+    const result = await query<{ id: string }>(
       `INSERT INTO via.v2_ordenes_pago_sa7 (
         infraccion_id, folio_infraccion, nombre_usuario, apellidos_usuario, concepto_id,
         orden_pago_id, estatus, url_pago, url_guardado, folio_orden,
@@ -55,7 +55,7 @@ export class SA7Repository {
   }
 
   static async buscarOrdenPorInfraccionId(infraccionId: string): Promise<OrdenPagoSA7 | null> {
-    const result = await queryVia(
+    const result = await query(
       `SELECT * FROM via.v2_ordenes_pago_sa7 WHERE infraccion_id = $1 LIMIT 1`,
       [infraccionId],
     );
@@ -88,7 +88,7 @@ export class SA7Repository {
     if (sets.length === 0) return;
 
     values.push(infraccionId);
-    await queryVia(
+    await query(
       `UPDATE via.v2_ordenes_pago_sa7 SET ${sets.join(", ")} WHERE infraccion_id = $${idx}`,
       values,
     );

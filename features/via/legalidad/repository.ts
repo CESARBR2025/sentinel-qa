@@ -1,8 +1,8 @@
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export class ArticulosRepository {
   static async obtenerArticulos() {
-    const result = await queryVia(`
+    const result = await query(`
       SELECT
         al.id AS articulo_id,
         al.numero AS articulo_numero,
@@ -25,7 +25,7 @@ export class ArticulosRepository {
   }
 
   static async obtenerFraccionesPorArticulo(articuloId: string) {
-    const result = await queryVia(
+    const result = await query(
       `SELECT
         id, articulo_id, numero, descripcion, monto_umas, clasificacion, activo
       FROM via.v2_fracciones_ley

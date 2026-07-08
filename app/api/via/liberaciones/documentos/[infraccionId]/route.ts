@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export async function GET(
   _req: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { infraccionId } = await context.params;
 
-    const solicitudRes = await queryVia(
+    const solicitudRes = await query(
       `SELECT id, tipo_liberacion, es_empresa, nombre_empresa, rfc_empresa, estatus
        FROM via.v2_solicitudes_liberacion
        WHERE infraccion_id = $1
@@ -16,7 +16,7 @@ export async function GET(
       [infraccionId],
     );
 
-    const docsRes = await queryVia(
+    const docsRes = await query(
       `SELECT DISTINCT ON (dl.tipo_documento)
               dl.id, dl.tipo_documento, dl.url_documento, dl.estatus_revision, dl.observaciones, dl.created_at
        FROM via.v2_documentos_liberacion dl

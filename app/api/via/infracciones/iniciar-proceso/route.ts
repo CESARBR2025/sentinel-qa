@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 import { SA7Repository } from "@/features/via/saSiete/repository";
 
 const SA7_URL = "https://sanjuandelrio.sytes.net:3044/api/sasiete/qas/generar-orden-completa";
@@ -21,7 +21,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'El campo "id" es requerido.' }, { status: 400 });
     }
 
-    const updateResult = await queryVia(
+    const updateResult = await query(
       `UPDATE via.v2_infracciones
        SET es_titular = $2,
             nombre_titular_liberacion = COALESCE($3, nombre_titular_liberacion),
@@ -119,7 +119,7 @@ export async function PATCH(request: Request) {
       requestPayload: payloadSA7,
     });
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_infracciones SET estatus = 'PENDIENTE_PAGO', estatus_dependencia = 'PENDIENTE_PAGO_INFRACCION', updated_at = NOW() WHERE id = $1`,
       [id],
     );

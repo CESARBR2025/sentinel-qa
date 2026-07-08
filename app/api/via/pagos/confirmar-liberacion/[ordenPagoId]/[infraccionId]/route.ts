@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { consultarEstatusSA7 } from "@/lib/via/sa7";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 import { getExpedienteToken } from "@/lib/via/expediente";
 import { generarOrdenSalidaVehiculo } from "@/lib/ordenSalida/generarOrdenSalida";
 import { enviarCorreoOrdenLiberacion } from "@/lib/emails/server";
@@ -17,12 +17,12 @@ export async function GET(
       return NextResponse.json({ pagado: false, estatusSA7: sa7.estatus });
     }
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_ordenes_pago_sa7 SET estatus = 'P', updated_at = CURRENT_TIMESTAMP WHERE orden_pago_id = $1`,
       [ordenPagoId],
     );
 
-    const infraccion = await queryVia(
+    const infraccion = await query(
       `SELECT motivo_retencion FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
       [infraccionId],
     );
@@ -32,7 +32,7 @@ export async function GET(
                      : motivo === 'DELITO' ? 'LIBERADA_POR_DELITO'
                      : 'LIBERADA_POR_INFRACCION';
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_infracciones
        SET estatus = 'CERRADA', estatus_dependencia = $2,
            updated_at = CURRENT_TIMESTAMP
@@ -41,7 +41,7 @@ export async function GET(
     );
 
     // ── Generar orden de salida ──
-    const datosOrden = await queryVia(
+    const datosOrden = await query(
       `SELECT i.*, s.es_empresa, s.nombre_empresa, s.rfc_empresa,
               s.nombre_resp_fiscal, s.appaterno_resp_fiscal, s.apmaterno_resp_fiscal,
               g.nombre AS nombre_grua
@@ -117,7 +117,7 @@ export async function GET(
           const uploadJson = await uploadRes.json();
           const urlOrdenSalida = uploadJson.data?.ruta_relativa;
           if (urlOrdenSalida) {
-            await queryVia(
+            await query(
               `UPDATE via.v2_infracciones SET url_orden_salida_liberaciones = $2, updated_at = NOW() WHERE id = $1`,
               [infraccionId, urlOrdenSalida],
             );

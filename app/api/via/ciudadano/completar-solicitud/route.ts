@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,12 +10,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "infraccionId es requerido" }, { status: 400 });
     }
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_solicitudes_liberacion SET estatus = 'EN_PROCESO_LIBERACIONES', updated_at = CURRENT_TIMESTAMP WHERE infraccion_id = $1`,
       [infraccionId],
     );
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_infracciones SET estatus_dependencia = 'MESA_DE_CONTROL_REVISION', updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
       [infraccionId],
     );

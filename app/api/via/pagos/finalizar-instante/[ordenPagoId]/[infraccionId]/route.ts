@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { consultarEstatusSA7 } from "@/lib/via/sa7";
-import { queryVia } from "@/lib/via/db";
+import { query } from "@/lib/db";
 
 export async function GET(
   _req: Request,
@@ -15,12 +15,12 @@ export async function GET(
       return NextResponse.json({ pagado: false, estatusSA7: sa7.estatus });
     }
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_ordenes_pago_sa7 SET estatus = 'P', updated_at = CURRENT_TIMESTAMP WHERE orden_pago_id = $1`,
       [ordenPagoId],
     );
 
-    await queryVia(
+    await query(
       `UPDATE via.v2_infracciones
        SET estatus = 'CERRADA', estatus_dependencia = 'LIBERADO_INFRACCIONES_INSTANTE', updated_at = CURRENT_TIMESTAMP
        WHERE id = $1`,
