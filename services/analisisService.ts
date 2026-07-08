@@ -6,8 +6,10 @@ export const analisisService = {
     });
 
     if (!response.ok) {
-      throw new Error("Error en el servidor");
-    }
+  const error = await response.json();
+  console.error("ERROR API:", error);
+  throw new Error(error.error || error.message || JSON.stringify(error));
+}
 
     const data = await response.json();
     return data; // Esto debe ser el array directo

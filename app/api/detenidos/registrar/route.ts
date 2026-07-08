@@ -103,7 +103,8 @@ export async function POST(req: Request) {
 
                 ap_nuc,
                 fuero,
-                agente_aprehensor
+                agente_aprehensor,
+                reporte_denuncia_id
 
             )
 
@@ -185,7 +186,8 @@ export async function POST(req: Request) {
 
                 ${cleanData.apNuc},
                 ${cleanData.fuero},
-                ${cleanData.agenteAprehensor}
+                ${cleanData.agenteAprehensor},
+                ${cleanData.reporteDenunciaId}
 
             )
 

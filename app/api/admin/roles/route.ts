@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
+console.log("DATABASE_URL =", process.env.DATABASE_URL);
     const nuevo = await db.execute(sql`
       INSERT INTO roles (
         nombre,

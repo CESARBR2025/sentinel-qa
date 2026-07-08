@@ -38,6 +38,14 @@ export async function insertarReporteCampo(params: {
     hayDroga: boolean
     drogas: object[]
     observaciones: string | null
+    apoyoFiestasPatronales : boolean
+    operativosMetropolitano : boolean
+    eco8 : boolean
+    alcoholimetria : boolean
+    motocicletas : boolean
+    apoyoActuarios : boolean
+    apoyoCateosFgr : boolean
+    apoyoCateosFge : boolean
 }) {
     await query(
         `INSERT INTO incidente_reporte_campo (
@@ -53,11 +61,15 @@ export async function insertarReporteCampo(params: {
     hay_orden_aprehension, ordenes_aprehension,
     hay_hidrocarburo,      hidrocarburos,
     hay_arma_fuego,        armas_fuego,
-    hay_droga,             drogas, observaciones
+    hay_droga,             drogas, observaciones,
+    apoyo_fiestas_patronales, operativos_metropolitano, eco8,
+    alcoholimetria, motocicletas, apoyo_actuarios,
+    apoyo_cateos_fgr, apoyo_cateos_fge
   ) VALUES (
     $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18::jsonb,
     $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,
-    $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37
+    $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37,
+    $38,$39,$40,$41,$42,$43,$44,$45
   )`,
         [
             params.incidenteId,
@@ -93,6 +105,14 @@ export async function insertarReporteCampo(params: {
             params.hayArmaFuego, JSON.stringify(params.armasFuego),
             params.hayDroga, JSON.stringify(params.drogas),
             params.observaciones,
+            params.apoyoFiestasPatronales, 
+            params.operativosMetropolitano, 
+            params.eco8,
+            params.alcoholimetria, 
+            params.motocicletas, 
+            params.apoyoActuarios,
+            params.apoyoCateosFgr, 
+            params.apoyoCateosFge,
         ]
     )
 

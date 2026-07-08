@@ -24,7 +24,7 @@ export default function BitacoraIPH() {
   }, []);
 
   if (loading) return <div style={{ padding: 40, fontFamily: 'JetBrains Mono', fontSize: 11 }}>CARGANDO MATRIZ...</div>;
-
+console.log(registros);
   return (
     <div style={containerStyle}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -39,6 +39,7 @@ export default function BitacoraIPH() {
         </thead>
         <tbody>
           {registros.length > 0 ? registros.map((r) => (
+            
             <tr key={r.id} style={trStyle}>
               <td style={tdStyle}>
                 <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', color: '#2563eb' }}>{r.folioIPH}</div>
@@ -59,10 +60,6 @@ export default function BitacoraIPH() {
               </td>
               <td style={{ ...tdStyle, textAlign: 'center' }}>
                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                  {/* BOTÓN ANALIZAR (EDITAR) */}
-                  <Link href={`/analisis/detenidos/nuevo?id=${r.id}`} style={btnStyle}>
-                    <Search size={14} /> ANALIZAR
-                  </Link>
 
                   {/* BOTÓN GENERAR PPT (NUEVO) */}
                   <Link href={`/analisis/generar-ppt?id=${r.id}`} style={btnPPTStyle}>

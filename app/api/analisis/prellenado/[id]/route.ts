@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
@@ -16,56 +17,92 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const { id } = await params;
 
     const query = sql`
-      SELECT 
-        -- PASO 1 & 2 & 5 (Ubicación base)
-        i.calle as "calleDetenido",
-        i.numero_exterior as "numeroDetenido",
-        i.colonia as "coloniaDetenido",
-        i.calle as "calleArresto",
-        i.colonia as "coloniaArresto",
-        i.latitud as "latitudArresto",
-        i.longitud as "longitudArresto",
-        i.calle as "calleHecho",
-        i.numero_exterior as "numeroHecho",
-        i.colonia as "coloniaHecho",
-        i.latitud as "latitudHecho",
-        i.longitud as "longitudHecho",
+      SELECT
 
-        -- PASO 4 (Folios y Tiempos)
-        i.folio as "folio911",
-        o.iph as "folioIPH",
-        o.fecha_avistamiento as "fechaEvento",
-        o.fecha_reporte as "fechaReporte",
-        o.hora_reporte as "horaReporte",
-        o.hora_avistamiento as "horaInicioEvento",
-        o.sector as "sectorHecho",
-        o.crp as "crpUnidad",
+        -- ===========================
+        -- PASO 1 - DETENIDO
+        -- ===========================
+        dd.calle                       AS "calleDetenido",
+        dd.numero                      AS "numeroDetenido",
+        dd.colonia                     AS "coloniaDetenido",
+        dd.latitud                     AS "latitudDetenido",
+        dd.longitud                    AS "longitudDetenido",
 
-        -- PASO 5 (Hecho)
-        r.delito_falta as "delito",
-        r.objetos_recuperados as "articulosObjetos",
+        -- ===========================
+        -- PASO 2 - ARRESTO
+        -- ===========================
+        rd.lugar_apoyo                 AS "calleArresto",
+        rd.colonia_apoyo               AS "coloniaArresto",
+        rd.sector                      AS "sectorArresto",
 
-        -- PASO 6 (Cierre)
-        i.nombre_reportante as "nombreAfectado",
-        r.vehiculos_recuperados as "marcaVehiculo",
-        r.tipo_vehiculo as "tipoVehiculo",
-        r.policia_a_cargo as "agenteAprehensor"
+        -- ===========================
+        -- PASO 4 - FOLIOS
+        -- ===========================
+        rd.iph                         AS "folioIPH",
+        rd.folio_denuncia              AS "folio911",
 
-      FROM incidentes i
-      LEFT JOIN incidente_reporte_campo r ON i.id = r.incidente_id
-      LEFT JOIN ofi_reporte_denuncia o ON i.id = o.id 
-      WHERE i.id = ${id}
-      LIMIT 1
+        rd.fecha_avistamiento          AS "fechaEvento",
+        rd.fecha_reporte               AS "fechaReporte",
+
+        rd.hora_reporte                AS "horaReporte",
+        rd.hora_avistamiento           AS "horaInicioEvento",
+        rd.hora_fin_denuncia           AS "horaFinalEvento",
+
+        -- ===========================
+        -- PASO 5 - HECHO
+        -- ===========================
+        rc.delito                      AS "delito",
+        rc.modus_operandi              AS "modusOperandi",
+        rc.ofi_objetos_recuperados     AS "articulosObjetos",
+
+        rd.lugar_hecho                 AS "calleHecho",
+        rd.colonia_hecho               AS "coloniaHecho",
+
+        rd.latitud                     AS "latitudHecho",
+        rd.longitud                    AS "longitudHecho",
+
+        rd.sector                      AS "sectorHecho",
+        rd.crp                         AS "crpUnidad",
+
+        -- ===========================
+        -- PASO 6 - AFECTADO
+        -- ===========================
+        rd.domicilio_calle             AS "calleAfectado",
+        rd.domicilio_numero            AS "numeroAfectado",
+        rd.domicilio_colonia           AS "coloniaAfectado",
+        rd.domicilio_municipio         AS "municipioAfectado",
+        rd.id as "reporteDenunciaId"
+
+      FROM ofi_reportes_campo rc
+
+      INNER JOIN ofi_reporte_denuncia rd
+        ON rd.reporte_campo_id = rc.id
+
+      LEFT JOIN ofi_detalles_asegurados dd
+        ON dd.reporte_campo_id = rc.id
+
+      WHERE rc.id = ${id}
+
+      LIMIT 1;
     `;
 
     const result = await db.execute(query);
-    const rows = Array.isArray(result) ? result : (result as any).rows || [];
-    const data = rows[0] || null;
 
-    if (!data) return NextResponse.json({ error: "No encontrado" }, { status: 404 });
+    const rows = Array.isArray(result)
+      ? result
+      : (result as any).rows || [];
 
-    return NextResponse.json(data);
+    return NextResponse.json(rows[0] ?? {});
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        error: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

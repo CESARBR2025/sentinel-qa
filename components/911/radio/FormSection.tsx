@@ -70,6 +70,15 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
   const [hayDroga, setHayDroga] = useState(false)
   const [drogas, setDrogas] = useState<{ fecha: string; cantidad: string; nombre: string; observaciones: string; nombreSeguimiento: string }[]>([])
 
+  const [apoyoFiestasPatronales, setApoyoFiestasPatronales] = useState(false)
+  const [operativosMetropolitano, setOperativosMetropolitano] = useState(false)
+  const [eco8, setEco8] = useState(false)
+  const [alcoholimetria, setAlcoholimetria] = useState(false)
+  const [motocicletas, setMotocicletas] = useState(false)
+  const [apoyoActuarios, setApoyoActuarios] = useState(false)
+  const [apoyoCateosFgr, setApoyoCateosFgr] = useState(false)
+  const [apoyoCateosFge, setApoyoCateosFge] = useState(false)
+
   // Función para buscar al Oficial
   const buscarOficial = async () => {
     if (!nominaOficial) return;
@@ -215,6 +224,14 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
       <input type="hidden" name="canal" value="radio" />
       <input type="hidden" name="tipoReporte" value="normal" />
       <input type="hidden" name="estatus" value="en_despacho" />
+      <input type="hidden" name="apoyo_fiestas_patronales" value={String(apoyoFiestasPatronales)} />
+      <input type="hidden" name="operativos_metropolitano" value={String(operativosMetropolitano)} />
+      <input type="hidden" name="eco8" value={String(eco8)} />
+      <input type="hidden" name="alcoholimetria" value={String(alcoholimetria)} />
+      <input type="hidden" name="motocicletas" value={String(motocicletas)} />
+      <input type="hidden" name="apoyo_actuarios" value={String(apoyoActuarios)} />
+      <input type="hidden" name="apoyo_cateos_fgr" value={String(apoyoCateosFgr)} />
+      <input type="hidden" name="apoyo_cateos_fge" value={String(apoyoCateosFge)} />
       <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
@@ -886,6 +903,31 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                     </div>
                   )}
                 </div>
+
+                <section className="sentinel-card">
+                  <h2 className="sentinel-section-title">Apoyos</h2>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 12 }}>
+                    {([
+                      { val: apoyoFiestasPatronales, set: setApoyoFiestasPatronales, label: 'Apoyo a Fiestas Patronales' },
+                      { val: operativosMetropolitano, set: setOperativosMetropolitano, label: 'Operativos / Metropolitano' },
+                      { val: eco8, set: setEco8, label: 'ECO 8' },
+                      { val: alcoholimetria, set: setAlcoholimetria, label: 'Alcoholimetría' },
+                      { val: motocicletas, set: setMotocicletas, label: 'Motocicletas' },
+                      { val: apoyoActuarios, set: setApoyoActuarios, label: 'Apoyo a Actuarios' },
+                      { val: apoyoCateosFgr, set: setApoyoCateosFgr, label: 'Apoyo a Cateos FGR' },
+                      { val: apoyoCateosFge, set: setApoyoCateosFge, label: 'Apoyo a Cateos FGE' },
+                    ]).map(({ val, set, label }) => (
+                      <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                        <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#1e293b' }}>{label}</span>
+                        <button type="button" onClick={() => set(!val)}
+                          style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: val ? '#3b82f6' : '#ffffff', color: val ? '#ffffff' : '#64748b', borderColor: val ? '#3b82f6' : '#e2e8f0' }}>
+                          {val ? 'SÍ' : 'NO'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
                 <SentinelField label="Observaciones / Conclusión" name="observaciones" as="textarea"
                   placeholder="Observaciones finales del reporte..." />
               </div>

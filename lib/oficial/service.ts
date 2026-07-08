@@ -162,6 +162,14 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiDrogas: JSON.parse(str(formData, 'ofi_drogas') ?? '[]'),
     ofiTelefonoReportante: str(formData, 'ofi_telefono_reportante'),
     ofiObservaciones: str(formData, 'ofi_observaciones'),
+    ofiApoyoFiestasPatronales: bool(formData, 'ofi_apoyo_fiestas_patronales'),
+    ofiOperativosMetropolitano: bool(formData, 'ofi_operativos_metropolitano'),
+    ofiEco8: bool(formData, 'ofi_eco8'),
+    ofiAlcoholimetria: bool(formData, 'ofi_alcoholimetria'),
+    ofiMotocicletas: bool(formData, 'ofi_motocicletas'),
+    ofiApoyoActuarios: bool(formData, 'ofi_apoyo_actuarios'),
+    ofiApoyoCateosFgr: bool(formData, 'ofi_apoyo_cateos_fgr'),
+    ofiApoyoCateosFge: bool(formData, 'ofi_apoyo_cateos_fge'),
   }
 
   const reporteId = await insertarReporteCampo(input)

@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Shield, Gavel, Car, Eye, Box, MapPin, Search, Clock } from 'lucide-react';
+import { Shield, Gavel, Car, Eye, Box, MapPin, Search, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { analisisService } from '@/services/analisisService';
 import Link from 'next/link';
 
 export default function TablonAnalisis() {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    
+    // --- ESTADOS DE PAGINACIÓN ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10; // Número de registros por página
 
     useEffect(() => {
         analisisService.getReportesRondin()
@@ -15,83 +19,119 @@ export default function TablonAnalisis() {
             .finally(() => setLoading(false));
     }, []);
 
-    // Función para armar la ubicación "por partes"
+    // --- LÓGICA DE PAGINACIÓN ---
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
     const formatUbicacion = (r: any) => {
         const partes = [];
-        // Ahora r.colonia y r.calle vienen de la tabla incidentes
         if (r.colonia && r.colonia !== '') partes.push(`Col. ${r.colonia}`);
         if (r.calle && r.calle !== '') partes.push(r.calle);
-
         return partes.length > 0 ? partes.join(', ') : 'UBICACIÓN NO ESPECIFICADA';
     };
 
     if (loading) return <div style={loadingStyle}>SINCRONIZANDO MATRIZ DE INTELIGENCIA...</div>;
 
     return (
-        <div style={containerStyle}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                    <tr style={headerRowStyle}>
-                        <th style={thStyle}>IDENTIFICADOR / UNIDAD</th>
-                        <th style={thStyle}>EVENTO</th>
-                        <th style={thStyle}>UBICACIÓN DE CAMPO</th>
-                        <th style={thStyle}>RESULTADOS</th>
-                        <th style={thStyle}>ACCIONES</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((r) => (
-                        <tr key={r.id} className="analisis-row" style={trStyle}>
-                            {/* COLUMNA 1: FOLIO Y OFICIAL */}
-                            <td style={tdStyle}>
-                                <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', fontSize: '14px', color: '#0f172a' }}>{r.folio}</div>
-                                <div style={{ fontSize: 10, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-                                    <Shield size={12} color="#2563eb" />
-                                    <span style={{ letterSpacing: '0.05em' }}>{r.oficial || 'OFICIAL NO REGISTRADO'}</span>
-                                </div>
-                            </td>
-
-                            {/* COLUMNA 2: INCIDENTE */}
-                            <td style={tdStyle}>
-                                <div style={{ fontWeight: 600, fontSize: 13, color: '#1e293b' }}>{r.tipo_incidente || 'NO CLASIFICADO'}</div>
-                                <div style={{ fontSize: 10, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-                                    <Clock size={10} /> {new Date(r.fecha).toLocaleString('es-MX', { hour12: true })}
-                                </div>
-                            </td>
-
-                            {/* COLUMNA 3: UBICACIÓN INTELIGENTE */}
-                            <td style={tdStyle}>
-                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                                    <MapPin size={14} color="#3b82f6" style={{ marginTop: 2 }} />
-                                    <div style={{ fontSize: '12px', lineHeight: '1.4', color: '#475569', maxWidth: '250px' }}>
-                                        {formatUbicacion(r)}
-                                        {r.entre_calles && <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: 2 }}>E/C: {r.entre_calles}</div>}
-                                    </div>
-                                </div>
-                            </td>
-
-                            {/* COLUMNA 4: RESULTADOS TÁCTICOS */}
-                            <td style={tdStyle}>
-                                <div style={{ display: 'flex', gap: 6 }}>
-                                    <ResultBadge active={r.tiene_iph} label="IPH" icon={Gavel} color="#dc2626" bg="#fef2f2" />
-                                    <ResultBadge active={r.tiene_veh} label="VEH" icon={Car} color="#2563eb" bg="#eff6ff" />
-                                    <ResultBadge active={r.tiene_obj} label="OBJ" icon={Box} color="#475569" bg="#f1f5f9" />
-                                </div>
-                            </td>
-
-                            {/* COLUMNA 5: ACCIÓN */}
-                            <td style={tdStyle}>
-                                <Link
-                                     href={`/analisis/formulario-ingreso?id=${r.id}`} // <--- Enviamos el ID por la URL
-                                    style={btnStyle}
-                                >
-                                    <Search size={14} /> ANALIZAR
-                                </Link>
-                            </td>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={containerStyle}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr style={headerRowStyle}>
+                            <th style={thStyle}>IDENTIFICADOR / UNIDAD</th>
+                            <th style={thStyle}>FOLIO DENUNCIA</th>
+                            <th style={thStyle}>UBICACIÓN DE CAMPO</th>
+                            <th style={thStyle}>ACCIONES</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        {currentItems.map((r, index) => (
+                            <tr key={`${r.id}-${index}`} className="analisis-row" style={trStyle}>
+                                <td style={tdStyle}>
+                                    <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', fontSize: '14px', color: '#0f172a' }}>{r.folio}</div>
+                                    <div style={{ fontSize: 10, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                                        <Shield size={12} color="#2563eb" />
+                                        <span style={{ letterSpacing: '0.05em' }}>{r.oficial || 'OFICIAL NO REGISTRADO'}</span>
+                                    </div>
+                                </td>
+
+                                <td style={tdStyle}>
+                                    <div style={{ fontWeight: 700, fontSize: 13, color: '#2563eb', fontFamily: 'JetBrains Mono' }}>
+                                        {r.folio_denuncia || 'SIN FOLIO D1'}
+                                    </div>
+                                    <div style={{ fontSize: 10, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                                        <Clock size={10} /> 
+                                        {new Date(r.fecha).toLocaleString('es-MX', { 
+                                            day: '2-digit', month: '2-digit', year: 'numeric',
+                                            hour: '2-digit', minute: '2-digit', hour12: true 
+                                        })}
+                                    </div>
+                                </td>
+
+                                <td style={tdStyle}>
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                                        <MapPin size={14} color="#3b82f6" style={{ marginTop: 2 }} />
+                                        <div style={{ fontSize: '12px', lineHeight: '1.4', color: '#475569', maxWidth: '250px' }}>
+                                            {formatUbicacion(r)}
+                                            {r.entre_calles && <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: 2 }}>E/C: {r.entre_calles}</div>}
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td style={tdStyle}>
+                                    <Link href={`/analisis/formulario-ingreso?id=${r.id}`} style={btnStyle}>
+                                        <Search size={14} /> GENERAR FICHA
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* --- CONTROLES DE PAGINACIÓN --- */}
+            <div style={paginationContainerStyle}>
+                <div style={{ fontSize: '11px', fontFamily: 'JetBrains Mono', color: '#64748b' }}>
+                    MOSTRANDO {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, data.length)} DE {data.length} REGISTROS
+                </div>
+                
+                <div style={{ display: 'flex', gap: '4px' }}>
+                    <button 
+                        onClick={() => paginate(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        style={pageButtonStyle}
+                    >
+                        <ChevronLeft size={14} />
+                    </button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+                        <button 
+                            key={num}
+                            onClick={() => paginate(num)}
+                            style={{
+                                ...pageButtonStyle,
+                                background: currentPage === num ? '#0f172a' : 'white',
+                                color: currentPage === num ? 'white' : '#0f172a',
+                                borderColor: currentPage === num ? '#0f172a' : '#e2e8f0'
+                            }}
+                        >
+                            {num}
+                        </button>
                     ))}
-                </tbody>
-            </table>
+
+                    <button 
+                        onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        style={pageButtonStyle}
+                    >
+                        <ChevronRight size={14} />
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
@@ -117,3 +157,26 @@ const tdStyle: React.CSSProperties = { padding: '20px 24px', borderBottom: '1px 
 const trStyle = { transition: 'all 0.2s' };
 const loadingStyle = { padding: 40, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textAlign: 'center' as const };
 const btnStyle = { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: '#0f172a', color: 'white', borderRadius: 2, fontSize: 10, fontWeight: 700, textDecoration: 'none', fontFamily: 'JetBrains Mono', transition: 'all 0.2s' };
+
+const paginationContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0 10px'
+};
+
+const pageButtonStyle: React.CSSProperties = {
+    width: '32px',
+    height: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px solid #e2e8f0',
+    borderRadius: '2px',
+    background: 'white',
+    cursor: 'pointer',
+    fontFamily: 'JetBrains Mono',
+    fontSize: '11px',
+    fontWeight: 600,
+    transition: 'all 0.2s'
+};

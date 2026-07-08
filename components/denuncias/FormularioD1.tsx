@@ -63,6 +63,7 @@ function generarFolioDenuncia(): string {
 export default function FormularioD1({ user, prefill }: { user: any; prefill?: Prefill }) {
   const folioDenunciaAuto = useMemo(() => generarFolioDenuncia(), [])
   const oficialId = prefill?.oficialId ?? ''
+  const incidenteId = prefill?.incidenteId ?? ''
 
   const store = useD1FormStore()
   const step = store.step
@@ -127,18 +128,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   // --- CONSTRUCCIÓN DEL CUERPO ---
   const body = {
     ...data,
-    // El incidente_id es el ID del suceso principal
     incidenteId: prefill?.incidenteId ?? null, 
-    
-    // El reporte_campo_id es el ID de la tabla azul (Rondín)
     reporteCampoId: prefill?.reporteCampoId ?? null,
-    
-    // El oficialId es el ID del policía (El que tenía 35 caracteres y fallaba)
-    // Asegúrate de que prefill.oficialId sea el UUID completo de 36 caracteres
     oficialId: prefill?.oficialId ?? null,
-    
     capturadoPor: user?.id // ID del usuario en sesión
   };
+
+  console.log("VALORES QUE SE VAN A LA DB:", body); 
 
   const res = await fetch('/api/reportes-d1', {
     method: 'POST',
@@ -166,6 +162,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       <input type="hidden" name="latitudApoyo" value={coordsApoyo.lat} />
       <input type="hidden" name="longitudApoyo" value={coordsApoyo.lng} />
       <input type="hidden" name="oficialId" value={oficialId} />
+      <input type="hidden" name="incidenteId" value={incidenteId} />
       
 
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}

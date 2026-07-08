@@ -7,6 +7,7 @@ import { useDetenidoForm } from '@/hooks/useAnalistaForm';
 import { analistaService } from '@/services/analistaService';
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
 import { analisisService } from '@/services/analisisService';
+import { useRouter } from "next/navigation";
 
 
 
@@ -84,78 +85,67 @@ export default function RegistroDetenidoStepper() {
 
     const searchParams = useSearchParams();
     const incidenteId = searchParams.get('id');
+    const router = useRouter();
 
     useEffect(() => {
-        if (incidenteId) {
-            const cargarDatos = async () => {
-                setLoading(true);
-                try {
-                    const d = await analisisService.getPrellenado(incidenteId);
+    if (incidenteId) {
+        const cargarDatos = async () => {
+            setLoading(true);
+            try {
+                const d = await analisisService.getPrellenado(incidenteId);
+                console.log("ID:", incidenteId);
+console.log("RESPUESTA API:", d);
+                
+                if (d && !d.error) {
+                    // Helpers para limpiar formatos de DB
+                    const cleanDate = (f: any) => f ? f.toString().split('T')[0] : '';
+                    const cleanTime = (h: any) => h ? h.toString().substring(0, 5) : '';
+                    const cleanNull = (v: any) => (v === null || v === undefined) ? '' : v;
+                    
+                    // Obtener día de la semana
+                    const getDia = (f: any) => {
+                        if(!f) return '';
+                        const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
+                        return dias[new Date(f).getDay()];
+                    };
 
-                    if (d && !d.error) {
-                        // --- FUNCIONES DE LIMPIEZA PARA INPUTS HTML5 ---
+                    setFormData((prev: any) => ({
 
-                        // 1. Limpia fechas (de "2026-06-25T..." a "2026-06-25")
-                        const cleanDate = (val: any) => {
-                            if (!val) return '';
-                            return val.toString().split('T')[0];
-                        };
+                        
+                        ...prev,
+                        ...d, // Inyecta automáticamente todos los alias del SQL
 
-                        // 2. Limpia horas (de "15:36:00" a "15:36")
-                        const cleanTime = (val: any) => {
-                            if (!val) return '';
-                            const partes = val.toString().split(':');
-                            return partes.length >= 2 ? `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}` : '';
-                        };
+                        // Aseguramos que los campos de texto no sean null
+                        calleDetenido: cleanNull(d.calleDetenido),
+                        coloniaDetenido: cleanNull(d.coloniaDetenido),
+                        calleArresto: cleanNull(d.calleArresto),
+                        coloniaArresto: cleanNull(d.coloniaArresto),
+                        calleHecho: cleanNull(d.calleHecho),
+                        coloniaHecho: cleanNull(d.coloniaHecho),
+                        calleAfectado: cleanNull(d.calleAfectado),
+                        coloniaAfectado: cleanNull(d.coloniaAfectado),
 
-                        // 3. Evita que los nulos rompan React
-                        const cleanNull = (val: any) => val === null ? '' : val;
+                        // Formateo de Tiempos y Fechas (Paso 4)
+                        fechaEvento: cleanDate(d.fechaEvento),
+                        fechaReporte: cleanDate(d.fechaReporte),
+                        diaEvento: getDia(d.fechaEvento),
+                        horaReporte: cleanTime(d.horaReporte),
+                        horaInicioEvento: cleanTime(d.horaInicioEvento),
+                        horaFinalEvento: cleanTime(d.horaFinalEvento),
 
-                        setFormData((prev: any) => ({
-                            ...prev,
-                            // PASO 1 & 2 & 5 (Ubicaciones base)
-                            calleDetenido: cleanNull(d.calleArresto),
-                            coloniaDetenido: cleanNull(d.coloniaArresto),
-                            calleArresto: cleanNull(d.calleArresto),
-                            coloniaArresto: cleanNull(d.coloniaArresto),
-                            latitudArresto: cleanNull(d.latitudArresto),
-                            longitudArresto: cleanNull(d.longitudArresto),
-
-                            // PASO 4 - FOLIOS Y TIEMPOS (Nombres exactos de tu Hook)
-                            folioIPH: cleanNull(d.folioIPH),
-                            folio911: cleanNull(d.folio911),
-                            fechaEvento: cleanDate(d.fechaEvento),
-                            fechaReporte: cleanDate(d.fechaReporte),
-                            horaReporte: cleanTime(d.horaReporte),
-                            horaInicioEvento: cleanTime(d.horaInicioEvento),
-                            horaFinalEvento: cleanTime(d.horaFinalEvento),
-                            horaPromedio: cleanTime(d.horaPromedio),
-
-                            // PASO 5 - HECHO
-                            delito: cleanNull(d.delito),
-                            articulosObjetos: cleanNull(d.articulosObjetos),
-                            calleHecho: cleanNull(d.calleHecho),
-                            numeroHecho: cleanNull(d.numeroHecho),
-                            coloniaHecho: cleanNull(d.coloniaHecho),
-                            sectorHecho: cleanNull(d.sectorHecho),
-                            crpUnidad: cleanNull(d.crpUnidad),
-
-                            // PASO 6 - AFECTADO
-                            nombreAfectado: cleanNull(d.nombreAfectado),
-                            marcaVehiculo: cleanNull(d.marcaVehiculo),
-                            tipoVehiculo: cleanNull(d.tipoVehiculo),
-                            agenteAprehensor: cleanNull(d.agenteAprehensor),
-                        }));
-                    }
-                } catch (e) {
-                    console.error("Error en prellenado:", e);
-                } finally {
-                    setLoading(false);
+                        reporteDenunciaId: d.reporteDenunciaId || '', 
+                        
+                    }));
                 }
-            };
-            cargarDatos();
-        }
-    }, [incidenteId, setFormData, setLoading]);
+            } catch (e) {
+                console.error("Error al prellenar:", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        cargarDatos();
+    }
+}, [incidenteId, setFormData, setLoading]);
 
 
     const handleLocationFromMap = (data: any) => {
@@ -171,16 +161,22 @@ export default function RegistroDetenidoStepper() {
     };
 
     const finalizarRegistro = async () => {
-        setLoading(true);
-        try {
-            await analistaService.registrarIPH(formData);
-            alert("Registro IPH guardado con éxito.");
-        } catch (e) {
-            alert("Error al guardar.");
-        } finally {
-            setLoading(false);
-        }
-    };
+    setLoading(true);
+
+    try {
+        await analistaService.registrarIPH(formData);
+
+        alert("El registro IPH se guardó correctamente.");
+
+        router.push("/analisis");
+
+    } catch (e) {
+        console.error(e);
+        alert("Ocurrió un error al guardar el registro.");
+    } finally {
+        setLoading(false);
+    }
+};
 
     const handleArrestoMapSelect = (data: any) => {
         setFormData((prev: any) => ({
@@ -557,6 +553,13 @@ export default function RegistroDetenidoStepper() {
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                         <SentinelField 
+                label="ID Técnico Denuncia (Vínculo DB)" 
+                name="reporteDenunciaId" 
+                value={formData.reporteDenunciaId} 
+                readOnly 
+                style={{ background: 'transparent', border: 'none', fontWeight: 'bold', color: '#475569' }}
+            />
 
                         {/* SECCIÓN FOLIOS */}
                         <SentinelField

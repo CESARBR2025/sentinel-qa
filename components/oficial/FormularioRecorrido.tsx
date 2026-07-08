@@ -177,6 +177,15 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     fd.set('ofi_telefono_reportante', st.telefonoReportante)
     fd.set('ofi_observaciones', st.observaciones)
 
+    fd.set('ofi_apoyo_fiestas_patronales', String(st.apoyoFiestasPatronales))
+    fd.set('ofi_operativos_metropolitano', String(st.operativosMetropolitano))
+    fd.set('ofi_eco8', String(st.eco8))
+    fd.set('ofi_alcoholimetria', String(st.alcoholimetria))
+    fd.set('ofi_motocicletas', String(st.motocicletas))
+    fd.set('ofi_apoyo_actuarios', String(st.apoyoActuarios))
+    fd.set('ofi_apoyo_cateos_fgr', String(st.apoyo_cateosFgr))
+    fd.set('ofi_apoyo_cateos_fge', String(st.apoyo_cateosFge))
+
     // Vehiculos desde store
     const partes: string[] = []
     st.vehiculos.forEach(v => {
@@ -703,7 +712,32 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                     </div>
                   )}
                 </div>
-
+              </div>
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 20 }}>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
+                  Apoyos
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 12 }}>
+                  {([
+                    { key: 'apoyoFiestasPatronales', label: 'Apoyo a Fiestas Patronales' },
+                    { key: 'operativosMetropolitano', label: 'Operativos / Metropolitano' },
+                    { key: 'eco8', label: 'ECO 8' },
+                    { key: 'alcoholimetria', label: 'Alcoholimetría' },
+                    { key: 'motocicletas', label: 'Motocicletas' },
+                    { key: 'apoyoActuarios', label: 'Apoyo a Actuarios' },
+                    { key: 'apoyo_cateosFgr', label: 'Apoyo a Cateos FGR' },
+                    { key: 'apoyo_cateosFge', label: 'Apoyo a Cateos FGE' },
+                  ] as const).map(({ key, label }) => (
+                    <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#1e293b' }}>{label}</span>
+                      <button type="button"
+                        onClick={() => $(key, !store[key])}
+                        style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: store[key] ? '#2563eb' : '#ffffff', color: store[key] ? '#ffffff' : '#64748b', borderColor: store[key] ? '#2563eb' : '#e2e8f0' }}>
+                        {store[key] ? 'SÍ' : 'NO'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
           )}
