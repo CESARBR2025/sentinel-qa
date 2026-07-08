@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, Clock, User, LayoutGrid, Send, ArrowLeft } from 'lucide-react';
+import { Shield, Clock, User, LayoutGrid, Send } from 'lucide-react';
 import { RolField } from '@/components/rol_servicios/RolInputs';
 import { ServiceTable } from '@/components/rol_servicios/ServiceTable';
 import { ServiceFooter } from '@/components/rol_servicios/ServiceFooter';
 import { ServiceRow } from '@/lib/rol_servicios/rol';
-import Link from 'next/link';
+import { SubHeader } from '@/components/partials/SubHeader';
 
 export default function ModuloRolZen() {
   const [quadrants, setQuadrants] = useState<ServiceRow[]>([{ id: '1', unidad: '', nomina: '', nombre: '', zona: '', gpsRadio: '', bodyCam: '' }]);
@@ -17,48 +17,7 @@ export default function ModuloRolZen() {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       {/* BARRA SUPERIOR (ESTILO SENTINEL - LIGHT VERSION) */}
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
-        <Link
-          href="/dashboard"
-          style={{ 
-            fontFamily: 'JetBrains Mono, monospace', 
-            fontSize: 10, 
-            letterSpacing: '0.25em', 
-            color: '#64748b', 
-            textTransform: 'uppercase', 
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
-          }}
-        >
-          <ArrowLeft size={14} /> Dashboard
-        </Link>
-        
-        <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
-        
-        <div style={{ flexGrow: 1 }}>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
-            Seguridad Pública Municipal
-          </span>
-          <span style={{ 
-            fontFamily: 'Barlow Condensed, sans-serif', 
-            fontWeight: 800, 
-            fontSize: 22, 
-            letterSpacing: '0.05em', 
-            textTransform: 'uppercase', 
-            marginLeft: 12, 
-            color: '#0f172a' 
-          }}>
-            ROL DE <span style={{ color: '#3b82f6' }}>SERVICIOS</span>
-          </span>
-        </div>
-
-        <div style={{ textAlign: 'right' }}>
-          <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94a3b8', margin: 0, letterSpacing: '0.1em' }}>REGISTRO DE CONTROL</p>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, fontWeight: 600, color: '#1e40af', margin: 0 }}>SSPM/SS/000/2026</p>
-        </div>
-      </header>
+      <SubHeader backHref="/dashboard" backLabel="Dashboard" title="Rol de" accent="Servicios" accentColor="#3b82f6" />
 
       {/* CONTENIDO PRINCIPAL */}
       <main style={{ padding: '40px 48px' }}>

@@ -16,8 +16,9 @@ export async function obtenerOficialPorUserId(
   userId: string,
 ): Promise<OfiOficial | null> {
   const result = await query<Record<string, unknown>>(
-    `SELECT o.*, d.nombre AS departamento_nombre
+    `SELECT o.*, u.name AS ofi_nombre, u.apellido AS ofi_ap_paterno, d.nombre AS departamento_nombre
      FROM ofi_oficiales o
+     LEFT JOIN users u ON u.id = o.user_id
      LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
      WHERE o.user_id = $1 AND o.ofi_estatus = 'activo'
      LIMIT 1`,
@@ -213,7 +214,7 @@ export async function obtenerReporteDetalle(
     `SELECT
        r.*,
        r.quiere_denuncia,
-       CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS ofi_oficial_nombre,
+       CONCAT(u.name, ' ', u.apellido) AS ofi_oficial_nombre,
        d.id                  AS d1_id,
        d.folio_denuncia      AS d1_folio,
        d.iph                 AS d1_iph,
@@ -234,6 +235,7 @@ export async function obtenerReporteDetalle(
        d.ofendido_mujer      AS d1_ofendido_mujer
      FROM ofi_reportes_campo r
      LEFT JOIN ofi_oficiales o ON o.id = r.ofi_oficial_id
+     LEFT JOIN users u ON u.id = o.user_id
      LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
      WHERE r.id = $1::uuid
        AND r.ofi_oficial_id = (

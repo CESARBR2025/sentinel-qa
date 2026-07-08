@@ -46,13 +46,14 @@ function parseDetenidos(raw: unknown): string {
 
 const QUERY_BASE = `SELECT rc.id, rc.ofi_folio_cad, rc.folio_reporte_campo, rc.ofi_tipo_incidente,
   rc.modus_operandi, rc.falta_administrativa, rc.delito, rc.marco_legal,
-  rc.ofi_autoridad_recibe, CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS ofi_oficial_nombre,
+  rc.ofi_autoridad_recibe, CONCAT(u.name, ' ', u.apellido) AS ofi_oficial_nombre,
   rc.ofi_hay_detencion, rc.ofi_hay_vehiculo, rc.ofi_hay_cateo,
   rc.ofi_detenidos, rc.created_at,
   COALESCE(rc.delito, ord.delito) as delito_denuncia,
   COALESCE(rc.marco_legal, ord.marco_legal) as marco_legal_mostrar
 FROM ofi_reportes_campo rc
 LEFT JOIN ofi_oficiales o ON o.id = rc.ofi_oficial_id
+LEFT JOIN users u ON u.id = o.user_id
 LEFT JOIN ofi_reporte_denuncia ord ON ord.reporte_campo_id = rc.id`
 
 export async function getDestinos(): Promise<Dependencia[]> {

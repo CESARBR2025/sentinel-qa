@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
   if (!body.fecha) return NextResponse.json({ error: 'Fecha requerida' }, { status: 400 })
   if (!body.region) return NextResponse.json({ error: 'Región requerida' }, { status: 400 })
   if (!body.evento) return NextResponse.json({ error: 'Evento requerido' }, { status: 400 })
+  if (!body.hora) return NextResponse.json({ error: 'Hora requerida' }, { status: 400 })
 
   try {
     const id = await crearEvento({

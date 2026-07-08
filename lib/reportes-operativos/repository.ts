@@ -5,10 +5,11 @@ export async function obtenerVehiculos(desde: string, hasta: string) {
     SELECT
       created_at::date       AS fecha,
       ofi_folio_cad          AS folio,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento,
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento,
       jsonb_array_elements(ofi_vehiculos) AS vehiculo
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_vehiculo = true
       AND jsonb_array_length(ofi_vehiculos) > 0
       AND created_at::date BETWEEN $1 AND $2
@@ -37,9 +38,10 @@ export async function obtenerCateos(desde: string, hasta: string) {
       ofi_folio_cad                             AS folio,
       (ofi_cateo->>'calle')                     AS ubicacion,
       'SSPM'                                    AS dependencia,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_cateo = true
       AND created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
@@ -67,9 +69,10 @@ export async function obtenerDetenidos(desde: string, hasta: string) {
       ofi_folio_cad         AS folio,
       ofi_detenidos         AS detenidos,
       ofi_autoridad_recibe  AS fiscalia,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_detencion = true
       AND created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
@@ -96,9 +99,10 @@ export async function obtenerOrdenesAprehension(desde: string, hasta: string) {
       created_at::date         AS fecha,
       ofi_folio_cad            AS folio,
       ofi_ordenes_aprehension  AS ordenes,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento_reporte
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_orden_aprehension = true
       AND created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
@@ -124,9 +128,10 @@ export async function obtenerHidrocarburos(desde: string, hasta: string) {
       created_at::date   AS fecha,
       ofi_folio_cad      AS folio,
       ofi_hidrocarburos  AS hidrocarburos,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento_reporte
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_hidrocarburo = true
       AND created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
@@ -152,9 +157,10 @@ export async function obtenerArmas(desde: string, hasta: string) {
       created_at::date   AS fecha,
       ofi_folio_cad      AS folio,
       ofi_armas_fuego    AS armas,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento_reporte
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_arma_fuego = true
       AND created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
@@ -180,9 +186,10 @@ export async function obtenerDrogas(desde: string, hasta: string) {
       created_at::date   AS fecha,
       ofi_folio_cad      AS folio,
       ofi_drogas         AS drogas,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS seguimiento_reporte
+      CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_droga = true
       AND created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])

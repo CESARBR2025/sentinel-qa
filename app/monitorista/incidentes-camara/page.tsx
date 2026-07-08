@@ -2,13 +2,13 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { listarRegistros, TURNOS } from '@/lib/monitorista/incidentes-camara-service'
-import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import Link from 'next/link'
 import React from 'react'
 import { Plus, Camera, BarChart3, Filter } from 'lucide-react'
 import { FilaIncidenteCamara } from '@/components/monitorista/FilaIncidenteCamara'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { ToastAuto } from '@/components/ui/ToastAuto'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 export default async function IncidentesCamaraPage({
   searchParams,
@@ -36,17 +36,7 @@ export default async function IncidentesCamaraPage({
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
       <ToastAuto show={exito === 'creado'} mensaje="Registro creado exitosamente" />
       <ToastAuto show={exito === 'actualizado'} mensaje="Registro actualizado exitosamente" />
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
-        <Link href="/monitorista" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}>← Monitorista</Link>
-        <div style={{ flexGrow: 1 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>Seguridad Pública Municipal</span>
-          <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, letterSpacing: '0.05em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>Incidentes por <span style={{ color: '#2563eb' }}>Cámara</span></span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div><span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span><span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#1e40af' }}>{user.name}</span></div>
-          <SignOutButton />
-        </div>
-      </header>
+      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Incidentes por" accent="Cámara" accentColor="#2563eb" user={user} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 }}>

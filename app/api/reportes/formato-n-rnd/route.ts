@@ -23,6 +23,9 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   if (!body.fecha) return NextResponse.json({ error: 'Fecha requerida' }, { status: 400 })
   if (!body.folio) return NextResponse.json({ error: 'Folio requerido' }, { status: 400 })
+  if (!body.hora_detencion) return NextResponse.json({ error: 'Hora de detención requerida' }, { status: 400 })
+  if (!body.delito) return NextResponse.json({ error: 'Delito requerido' }, { status: 400 })
+  if (!body.autoridad_que_realizo_detencion) return NextResponse.json({ error: 'Autoridad que realizó la detención requerida' }, { status: 400 })
 
   try {
     const id = await crearRnd({
