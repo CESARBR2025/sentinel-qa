@@ -24,11 +24,11 @@ export async function PATCH(request: Request) {
     const updateResult = await queryVia(
       `UPDATE via.v2_infracciones
        SET es_titular = $2,
-           nombre_titular_liberacion = $3,
-           appaterno_titular_liberacion = $4,
-           apmaterno_titular_liberacion = $5,
-           curp_titular_liberacion = $6,
-           correo_titular_liberacion = $7,
+            nombre_titular_liberacion = COALESCE($3, nombre_titular_liberacion),
+            appaterno_titular_liberacion = COALESCE($4, appaterno_titular_liberacion),
+            apmaterno_titular_liberacion = COALESCE($5, apmaterno_titular_liberacion),
+            curp_titular_liberacion = COALESCE($6, curp_titular_liberacion),
+            correo_titular_liberacion = COALESCE($7, correo_titular_liberacion),
            nombre_infractor = COALESCE(NULLIF($8, ''), nombre_infractor),
            apellido_paterno_infractor = COALESCE(NULLIF($9, ''), apellido_paterno_infractor),
            apellido_materno_infractor = COALESCE(NULLIF($10, ''), apellido_materno_infractor),

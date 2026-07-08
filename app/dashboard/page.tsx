@@ -20,6 +20,7 @@ export default async function DashboardPage() {
     .where(eq(users.id, session.user.id))
     .limit(1)
 
+  if (userRole?.rolNombre === 'admin_transito') redirect('/admin-transito')
   if (userRole?.rolNombre === 'Oficial de Campo') redirect('/oficial')
   if (userRole?.rolNombre === 'agente_fiscalia') redirect('/fiscalia')
   if (userRole?.rolNombre === 'agente_juzgado') redirect('/agente_juzgado')

@@ -18,7 +18,7 @@ async function subirArchivo(
   form.append("sistema", process.env.EXPEDIENTE_SISTEMA ?? "sspm");
 
   const response = await fetch(
-    `${process.env.EXPEDIENTE_HOST}/api/upload-custom`,
+    `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE}/api/upload-custom`,
     {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -56,15 +56,24 @@ export async function POST(req: NextRequest) {
     const idInfraccion = formData.get("idInfraccion") as string;
     const archivoInapam = formData.get("archivoInapam") as File | null;
     const archivoIne = formData.get("archivoIne") as File | null;
-    const archivoTarjetaCirculacion = formData.get("archivoTarjetaCirculacion") as File | null;
+    const archivoTarjetaCirculacion = formData.get(
+      "archivoTarjetaCirculacion",
+    ) as File | null;
 
     if (!idInfraccion) {
-      return NextResponse.json({ message: "idInfraccion es requerido" }, { status: 400 });
+      return NextResponse.json(
+        { message: "idInfraccion es requerido" },
+        { status: 400 },
+      );
     }
 
-    const tieneDocumentos = archivoIne || archivoInapam || archivoTarjetaCirculacion;
+    const tieneDocumentos =
+      archivoIne || archivoInapam || archivoTarjetaCirculacion;
     if (!tieneDocumentos) {
-      return NextResponse.json({ message: "No se enviaron documentos" }, { status: 400 });
+      return NextResponse.json(
+        { message: "No se enviaron documentos" },
+        { status: 400 },
+      );
     }
 
     validarArchivo(archivoInapam);
@@ -84,7 +93,11 @@ export async function POST(req: NextRequest) {
       urlInapam = await subirArchivo(archivoInapam, idInfraccion, token);
     }
     if (archivoTarjetaCirculacion) {
-      urlTarjetaCirculacion = await subirArchivo(archivoTarjetaCirculacion, idInfraccion, token);
+      urlTarjetaCirculacion = await subirArchivo(
+        archivoTarjetaCirculacion,
+        idInfraccion,
+        token,
+      );
     }
 
     await queryVia(
@@ -103,8 +116,11 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("[VIA][EXP-DIGITAL][GUARDAR-DOCS]", error);
-    return NextResponse.json({
-      message: error instanceof Error ? error.message : "Error interno",
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        message: error instanceof Error ? error.message : "Error interno",
+      },
+      { status: 500 },
+    );
   }
 }

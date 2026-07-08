@@ -18,16 +18,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const payload = sanitizeCrearInfraccionPayload(body, oficialId);
 
-    if (payload.tipoGarantia === "VEHICULO") {
-      const isAccidenteODelito = ["ACCIDENTE", "DELITO"].includes(
-        body.motivoRetencionVehiculo?.toUpperCase() || "",
-      );
-      if (isAccidenteODelito) {
-        payload.estatus = "REGISTRADA";
-        payload.estatusDependencia = "ACCIDENTE_O_DELITO";
-      }
-    }
-
     console.log(payload);
     const result =
       await InfraccionesService.registrarNuevaInfraccionSV(payload);

@@ -81,6 +81,7 @@ export interface ViaInfraccionLegal {
   fraccion_descripcion: string
   total_umas: string
   total_pesos: string
+  tieneOrdenPago: boolean
 }
 
 export interface ViaInfraccionInfractor {

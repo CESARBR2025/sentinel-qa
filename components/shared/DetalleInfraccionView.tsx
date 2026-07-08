@@ -35,6 +35,7 @@ export interface InfraccionLegal {
   fraccion_descripcion: string
   total_umas: string
   total_pesos: string
+  tieneOrdenPago: boolean
 }
 
 export interface InfraccionInfractor {
@@ -351,7 +352,7 @@ function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbica
             </h4>
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
               {evidencias.map((url, i) => {
-                const fullUrl = `${process.env.NEXT_PUBLIC_EXPEDIENTE_HOST ?? ''}${url}`
+                const fullUrl = `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''}${url}`
                 const ext = url.split('.').pop()?.toLowerCase() ?? ''
                 const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)
                 return (
@@ -489,12 +490,22 @@ function SummaryBar({ detalle }: { detalle: InfraccionDetalle }) {
           </p>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-3xl text-slate-900 st-title">
-            {formatCurrency(detalle.Infraccion.total_pesos)}
-          </p>
-          <p className="text-xs text-slate-500 mt-1">
-            {detalle.Infraccion.total_umas} UMAs
-          </p>
+          {detalle.Infraccion.tieneOrdenPago ? (
+            <>
+              <p className="text-3xl text-slate-900 st-title">
+                {formatCurrency(detalle.Infraccion.total_pesos)}
+              </p>
+              <p className="text-xs text-slate-500 mt-1">
+                {detalle.Infraccion.total_umas} UMAs
+              </p>
+            </>
+          ) : (
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1.5 border border-amber-200">
+                ORDEN DE PAGO PENDIENTE DE CREACIÓN
+              </span>
+            </div>
+          )}
           <p className="text-[10px] text-slate-400 font-mono mt-2">
             ID: {h.id_infraccion}
           </p>
@@ -630,8 +641,8 @@ function OficialSection({ detalle }: { detalle: InfraccionDetalle }) {
               <div>
                 <p className="text-xs text-slate-500 st-label">Estado</p>
                 <span className={`inline-block mt-0.5 text-xs font-medium px-2.5 py-0.5 rounded-full leading-none st-label ${String(detalle.oficial.activo) === 'true'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-700'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-700'
                   }`}>
                   {String(detalle.oficial.activo) === 'true' ? 'En servicio' : 'Con baja'}
                 </span>
@@ -702,7 +713,7 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
         {/* ─── Finalizado ─── */}
         <div className="relative pl-9">
           <div className="absolute left-0 top-0 w-6 h-6 rounded-full bg-emerald-100 border-2 border-emerald-400 flex items-center justify-center">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
           </div>
           <div className="flex items-center justify-between">
             <h4 className="text-sm st-title text-emerald-700">Finalizado</h4>
@@ -731,7 +742,7 @@ function TimelineNode({ nombre, fecha, items }: { nombre: string; fecha: string;
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
         {items.map((item) => {
-          const fullUrl = `${process.env.NEXT_PUBLIC_EXPEDIENTE_HOST ?? ''}${item.ruta}`
+          const fullUrl = `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''}${item.ruta}`
           const isImage = isImageExt(item.ext)
 
           return (

@@ -100,7 +100,7 @@ export class InfraccionesRepository {
         data.descuento_aplicado,
         data.fecha_limite_descuento ?? "",
         data.monto_final,
-        "11564675-0e54-49ec-8f73-8ea24a1556c4",
+        data.grua_id,
         data.dependenciaRemisora ?? null,
         data.anioVehiculo,
         data.tipoVehiculo,
@@ -117,8 +117,9 @@ export class InfraccionesRepository {
   }
 
   static async obtenerDatosInfraccionCiudadanoRP(id: string) {
-    const result = await queryVia(
-      `SELECT
+    try {
+      const result = await queryVia(
+        `SELECT
         i.*,
         vfl.clasificacion,
         val.numero AS articulo_numero,
@@ -142,37 +143,57 @@ export class InfraccionesRepository {
         sl.nombre_empresa AS sl_nombre_empresa,
         sl.rfc_empresa AS sl_rfc_empresa,
         sl.estatus AS sl_estatus,
-        CASE
-          WHEN COUNT(dl.id) = 0 THEN '[]'::jsonb
-          ELSE jsonb_agg(jsonb_build_object('tipo', dl.tipo_documento, 'url', dl.url_documento, 'label', COALESCE(
-            (SELECT 'Factura' WHERE dl.tipo_documento = 'factura'),
-            (SELECT 'INE del titular' WHERE dl.tipo_documento = 'ine_titular'),
-            (SELECT 'Comprobante de domicilio' WHERE dl.tipo_documento = 'comprobante_domicilio'),
-            (SELECT 'Tarjeta de circulación' WHERE dl.tipo_documento = 'tarjeta_circulacion'),
-            (SELECT 'INE del propietario anterior' WHERE dl.tipo_documento = 'ine_propietario_anterior'),
-            (SELECT 'Oficio de liberación fiscalía' WHERE dl.tipo_documento = 'oficio_liberacion_fiscalia'),
-            (SELECT 'Oficio de liberación juzgado' WHERE dl.tipo_documento = 'oficio_liberacion_juzgado'),
-            (SELECT 'INE del representante legal' WHERE dl.tipo_documento = 'ine_representante_legal'),
-            (SELECT 'Poder notarial' WHERE dl.tipo_documento = 'poder_notarial'),
-            (SELECT 'Acta constitutiva' WHERE dl.tipo_documento = 'acta_constitutiva'),
-            (SELECT 'Constancia de situación fiscal' WHERE dl.tipo_documento = 'constancia_situacion_fiscal'),
-            dl.tipo_documento
-          ))) ORDER BY dl.created_at
-        END AS documentos_liberacion_json
+        COALESCE(
+          (SELECT jsonb_agg(sub.docs ORDER BY sub.docs->>'tipo')
+           FROM (
+             SELECT DISTINCT ON (dl.tipo_documento)
+               jsonb_build_object(
+                 'tipo', dl.tipo_documento,
+                 'url', dl.url_documento,
+                 'label', COALESCE(
+                   (SELECT 'Factura' WHERE dl.tipo_documento = 'factura'),
+                   (SELECT 'INE del titular' WHERE dl.tipo_documento = 'ine_titular'),
+                   (SELECT 'Comprobante de domicilio' WHERE dl.tipo_documento = 'comprobante_domicilio'),
+                   (SELECT 'Tarjeta de circulación' WHERE dl.tipo_documento = 'tarjeta_circulacion'),
+                   (SELECT 'INE del representante legal' WHERE dl.tipo_documento = 'ine_representante_legal'),
+                   (SELECT 'Poder notarial' WHERE dl.tipo_documento = 'poder_notarial'),
+                   (SELECT 'Constancia de situación fiscal' WHERE dl.tipo_documento = 'constancia_situacion_fiscal'),
+                   dl.tipo_documento
+                 )
+               ) AS docs
+             FROM via.v2_documentos_liberacion dl
+             WHERE dl.solicitud_id = sl.id
+             ORDER BY dl.tipo_documento, dl.created_at DESC
+           ) sub
+          ), '[]'::jsonb
+        ) AS documentos_liberacion_json
       FROM via.v2_infracciones i
       JOIN via.v2_articulos_ley val ON i.articulo_id = val.id
       JOIN via.v2_fracciones_ley vfl ON i.fraccion_id = vfl.id
       LEFT JOIN via.v2_ordenes_pago_sa7 ops ON ops.infraccion_id = i.id
       LEFT JOIN via.v2_solicitudes_liberacion sl ON sl.infraccion_id = i.id
-      LEFT JOIN via.v2_documentos_liberacion dl ON dl.solicitud_id = sl.id
       WHERE i.id = $1
       GROUP BY i.id, val.numero, val.descripcion, vfl.clasificacion, vfl.numero, vfl.descripcion,
                ops.id, ops.orden_pago_id, ops.estatus, ops.url_pago, ops.url_guardado, ops.folio_orden,
                ops.fecha_vencimiento, ops.total_pesos, ops.total_umas, ops.created_at, ops.concepto_id,
                sl.id, sl.tipo_liberacion, sl.es_empresa, sl.nombre_empresa, sl.rfc_empresa, sl.estatus
       ORDER BY ops.created_at DESC NULLS LAST, sl.id DESC NULLS LAST`,
-      [id],
-    );
-    return result.rows[0] || null;
+        [id],
+      );
+      return result.rows[0] || null;
+    } catch (err) {
+      console.error("[VIA][REPOSITORY][obtenerDatosInfraccionCiudadanoRP] Error:", err);
+      if (err && typeof err === "object") {
+        const e = err as Record<string, unknown>;
+        console.error("  message:", e.message);
+        console.error("  detail:", e.detail);
+        console.error("  code:", e.code);
+        console.error("  schema:", e.schema);
+        console.error("  table:", e.table);
+        console.error("  column:", e.column);
+        console.error("  constraint:", e.constraint);
+      }
+      throw err;
+    }
   }
 }

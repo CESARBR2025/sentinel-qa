@@ -1,24 +1,42 @@
-import { query } from '@/lib/db'
-import { rowToOficial, rowToReporteResumen, rowToReporteDetalle } from './mapper'
-import type { OfiOficial, CrearReporteCampoInput, OfiReporteResumen, OfiReporteDetalle, CatalogoItem } from './types'
+import { query } from "@/lib/db";
+import {
+  rowToOficial,
+  rowToReporteResumen,
+  rowToReporteDetalle,
+} from "./mapper";
+import type {
+  OfiOficial,
+  CrearReporteCampoInput,
+  OfiReporteResumen,
+  OfiReporteDetalle,
+  CatalogoItem,
+} from "./types";
 
-export async function obtenerOficialPorUserId(userId: string): Promise<OfiOficial | null> {
+export async function obtenerOficialPorUserId(
+  userId: string,
+): Promise<OfiOficial | null> {
   const result = await query<Record<string, unknown>>(
-    `SELECT * FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
-    [userId]
-  )
-  return result.rows.length ? rowToOficial(result.rows[0]) : null
+    `SELECT o.*, d.nombre AS departamento_nombre
+     FROM ofi_oficiales o
+     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
+     WHERE o.user_id = $1 AND o.ofi_estatus = 'activo'
+     LIMIT 1`,
+    [userId],
+  );
+  return result.rows.length ? rowToOficial(result.rows[0]) : null;
 }
 
 export async function verificarFolioExiste(folio: string): Promise<boolean> {
   const result = await query<{ count: string }>(
     `SELECT COUNT(*)::int AS count FROM ofi_reportes_campo WHERE folio_reporte_campo = $1`,
-    [folio]
-  )
-  return parseInt(result.rows[0].count, 10) > 0
+    [folio],
+  );
+  return parseInt(result.rows[0].count, 10) > 0;
 }
 
-export async function insertarReporteCampo(data: CrearReporteCampoInput): Promise<string> {
+export async function insertarReporteCampo(
+  data: CrearReporteCampoInput,
+): Promise<string> {
   const result = await query<{ id: string }>(
     `INSERT INTO ofi_reportes_campo (
     folio_reporte_campo,
@@ -30,7 +48,7 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
     ofi_hay_detencion, ofi_detenidos, ofi_autoridad_recibe, ofi_monto_robo, ofi_hay_robo,
     ofi_objetos_recuperados, ofi_hay_vehiculo, ofi_vehiculos,
     ofi_hay_cateo, ofi_cateo, ofi_resultado_cateo,
-    ofi_oficial_id, ofi_oficial_nombre,
+    ofi_oficial_id,
     quiere_denuncia,
     ofi_hay_orden_aprehension, ofi_ordenes_aprehension,
     ofi_hay_hidrocarburo,      ofi_hidrocarburos,
@@ -45,8 +63,7 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
     $11, $12, $13, $14, $15, $16, $17::jsonb, $18, $19, $20,
     $21, $22, $23::jsonb,
     $24, $25::jsonb, $26,
-    $27, $28, $29, $30, $31::jsonb, $32, $33::jsonb, $34, $35::jsonb, $36, $37::jsonb, $38, $39,
-    $40, $41, $42, $43, $44, $45, $46, $47
+    $27, $28, $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37, $38
   ) RETURNING id`,
     [
       data.folioReporteCampo,
@@ -76,62 +93,75 @@ export async function insertarReporteCampo(data: CrearReporteCampoInput): Promis
       data.ofiCateo ? JSON.stringify(data.ofiCateo) : null,
       data.ofiResultadoCateo,
       data.ofiOficialId,
-      data.ofiOficialNombre,
       data.ofiQuiereDenuncia,
-      data.ofiHayOrdenAprehension, JSON.stringify(data.ofiOrdenesAprehension),
-      data.ofiHayHidrocarburo, JSON.stringify(data.ofiHidrocarburos),
-      data.ofiHayArmaFuego, JSON.stringify(data.ofiArmasFuego),
-      data.ofiHayDroga, JSON.stringify(data.ofiDrogas),
-      data.ofiTelefonoReportante, data.ofiObservaciones,
-      data.ofiApoyoFiestasPatronales, data.ofiOperativosMetropolitano, data.ofiEco8,
-      data.ofiAlcoholimetria, data.ofiMotocicletas, data.ofiApoyoActuarios,
-      data.ofiApoyoCateosFgr, data.ofiApoyoCateosFge
-    ]
-  )
-  return result.rows[0].id
+      data.ofiHayOrdenAprehension,
+      JSON.stringify(data.ofiOrdenesAprehension),
+      data.ofiHayHidrocarburo,
+      JSON.stringify(data.ofiHidrocarburos),
+      data.ofiHayArmaFuego,
+      JSON.stringify(data.ofiArmasFuego),
+      data.ofiHayDroga,
+      JSON.stringify(data.ofiDrogas),
+      data.ofiTelefonoReportante,
+      data.ofiObservaciones,
+      data.ofiApoyoFiestasPatronales,
+      data.ofiOperativosMetropolitano,
+      data.ofiEco8,
+      data.ofiAlcoholimetria,
+      data.ofiMotocicletas,
+      data.ofiApoyoActuarios,
+      data.ofiApoyoCateosFgr,
+      data.ofiApoyoCateosFge,
+    ],
+  );
+  return result.rows[0].id;
 }
 
-export async function obtenerRolUsuario(userId: string): Promise<string | null> {
+export async function obtenerRolUsuario(
+  userId: string,
+): Promise<string | null> {
   const result = await query<{ nombre: string }>(
     `SELECT roles.nombre
      FROM users
      LEFT JOIN roles ON roles.id = users.rol_id
      WHERE users.id = $1
      LIMIT 1`,
-    [userId]
-  )
-  return result.rows.length ? result.rows[0].nombre : null
+    [userId],
+  );
+  return result.rows.length ? result.rows[0].nombre : null;
 }
 
 export async function obtenerCatalogoIncidentes(): Promise<CatalogoItem[]> {
   const result = await query<CatalogoItem>(
-    `SELECT id, nombre FROM cat_tipos_incidente WHERE activo = true ORDER BY nombre`
-  )
-  return result.rows
+    `SELECT id, nombre FROM cat_tipos_incidente WHERE activo = true ORDER BY nombre`,
+  );
+  return result.rows;
 }
 
 export async function obtenerCatalogoEmergencias(): Promise<CatalogoItem[]> {
   const result = await query<CatalogoItem>(
-    `SELECT id, nombre FROM cat_tipos_emergencia WHERE activo = true ORDER BY nombre`
-  )
-  return result.rows
+    `SELECT id, nombre FROM cat_tipos_emergencia WHERE activo = true ORDER BY nombre`,
+  );
+  return result.rows;
 }
 
 export async function obtenerCatalogoPrioridades(): Promise<CatalogoItem[]> {
   const result = await query<CatalogoItem>(
-    `SELECT id, nombre FROM cat_prioridades WHERE activo = true ORDER BY orden`
-  )
-  return result.rows
+    `SELECT id, nombre FROM cat_prioridades WHERE activo = true ORDER BY orden`,
+  );
+  return result.rows;
 }
 
 export async function obtenerCatalogoCanalizaciones(): Promise<CatalogoItem[]> {
   const result = await query<CatalogoItem>(
-    `SELECT id, nombre FROM cat_medios_canalizacion WHERE activo = true ORDER BY nombre`
-  )
-  return result.rows
+    `SELECT id, nombre FROM cat_medios_canalizacion WHERE activo = true ORDER BY nombre`,
+  );
+  return result.rows;
 }
 
-export async function contarDenunciasPendientes(userId: string): Promise<number> {
+export async function contarDenunciasPendientes(
+  userId: string,
+): Promise<number> {
   const result = await query<{ count: string }>(
     `SELECT COUNT(*)::int AS count
      FROM ofi_reportes_campo r
@@ -141,12 +171,14 @@ export async function contarDenunciasPendientes(userId: string): Promise<number>
      )
      AND r.quiere_denuncia = true
      AND d.id IS NULL`,
-    [userId]
-  )
-  return parseInt(result.rows[0].count, 10)
+    [userId],
+  );
+  return parseInt(result.rows[0].count, 10);
 }
 
-export async function obtenerReportesOficial(userId: string): Promise<OfiReporteResumen[]> {
+export async function obtenerReportesOficial(
+  userId: string,
+): Promise<OfiReporteResumen[]> {
   const result = await query<Record<string, unknown>>(
     `SELECT
        r.id,
@@ -168,19 +200,20 @@ export async function obtenerReportesOficial(userId: string): Promise<OfiReporte
      )
      ORDER BY r.created_at DESC
      LIMIT 50`,
-    [userId]
-  )
-  return result.rows.map(rowToReporteResumen)
+    [userId],
+  );
+  return result.rows.map(rowToReporteResumen);
 }
 
 export async function obtenerReporteDetalle(
   id: string,
-  userId: string
+  userId: string,
 ): Promise<OfiReporteDetalle | null> {
   const result = await query<Record<string, unknown>>(
     `SELECT
        r.*,
        r.quiere_denuncia,
+       CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS ofi_oficial_nombre,
        d.id                  AS d1_id,
        d.folio_denuncia      AS d1_folio,
        d.iph                 AS d1_iph,
@@ -200,13 +233,26 @@ export async function obtenerReporteDetalle(
        d.ofendido_hombre     AS d1_ofendido_hombre,
        d.ofendido_mujer      AS d1_ofendido_mujer
      FROM ofi_reportes_campo r
+     LEFT JOIN ofi_oficiales o ON o.id = r.ofi_oficial_id
      LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = r.id
      WHERE r.id = $1::uuid
        AND r.ofi_oficial_id = (
          SELECT id FROM ofi_oficiales WHERE user_id = $2 LIMIT 1
        )
      LIMIT 1`,
-    [id, userId]
-  )
-  return result.rows.length ? rowToReporteDetalle(result.rows[0]) : null
+    [id, userId],
+  );
+  return result.rows.length ? rowToReporteDetalle(result.rows[0]) : null;
+}
+
+export async function actualizarPatrullaOficial(
+  userId: string,
+  patrullaId: string | null,
+): Promise<void> {
+  await query(
+    `UPDATE ofi_oficiales
+     SET patrulla_id = $1
+     WHERE user_id = $2`,
+    [patrullaId, userId],
+  );
 }

@@ -285,7 +285,7 @@ export default function FormularioInfraccion() {
 
             try {
                 const response = await fetch(
-                    `/api/saSiete/buscar-orden?infraccion_id=${infraccionCreada.id}`,
+                    `/api/via/sa7/buscar-orden?infraccion_id=${infraccionCreada.id}`,
                     {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json' },
@@ -316,7 +316,7 @@ export default function FormularioInfraccion() {
             // ─────────────────────────────────────────────────────────────
             try {
                 const res = await fetch(
-                    `/api/pagosInfracciones/finalizarPagoInstante/${ordenPagoId}/${infraccionCreada.id}`,
+                    `/api/via/pagos/finalizar-instante/${ordenPagoId}/${infraccionCreada.id}`,
                     {
                         method: 'GET',
                         cache: 'no-store',
@@ -436,7 +436,7 @@ export default function FormularioInfraccion() {
             // Verificar con API que la orden sigue existiendo
             (async () => {
                 try {
-                    const res = await fetch(`/api/saSiete/buscar-orden?infraccion_id=${saved.infraccionId}`, {
+                    const res = await fetch(`/api/via/sa7/buscar-orden?infraccion_id=${saved.infraccionId}`, {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json' },
                     });
@@ -1402,7 +1402,6 @@ export default function FormularioInfraccion() {
                     <pre className="max-h-96 overflow-auto rounded-b-md bg-slate-900/90 p-3 text-[10px] leading-relaxed text-green-300">
                         {JSON.stringify(datos, (_, v) => {
                             if (v instanceof File) return `[File: ${v.name}]`;
-                            if (v instanceof FileList) return Array.from(v).map(f => `[File: ${f.name}]`);
                             return v;
                         }, 2)}
                     </pre>
