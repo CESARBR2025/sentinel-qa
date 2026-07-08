@@ -185,9 +185,9 @@ export async function obtenerDetalleAsegurado(
        rd.fecha_reporte,
        rd.hora_reporte,
        rc.ofi_detenidos,
-       o.ofi_placa_unidad_asignada,
-       o.ofi_nombre,
-       o.ofi_ap_paterno,
+       p.numero_unidad AS ofi_placa_unidad_asignada,
+       ou.name AS ofi_nombre,
+       ou.apellido AS ofi_ap_paterno,
        o.no_nomina,
        rc.ofi_calle,
        rc.ofi_colonia,
@@ -203,6 +203,8 @@ export async function obtenerDetalleAsegurado(
      FROM ofi_reporte_denuncia rd
      JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
      LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+     LEFT JOIN users ou ON ou.id = o.user_id
+     LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
      LEFT JOIN users u ON rd.capturado_por = u.id
      WHERE rd.id = $1
      LIMIT 1`,
@@ -466,11 +468,13 @@ export async function listarAseguradosJuzgado(): Promise<AseguradoRow[]> {
        rc.created_at,
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
-       rc.ofi_oficial_nombre,
-       o.ofi_placa_unidad_asignada
+       CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
+       p.numero_unidad AS ofi_placa_unidad_asignada
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN users ou ON ou.id = o.user_id
+      LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       WHERE rc.ofi_hay_detencion = true
         AND rc.ofi_autoridad_recibe = 'JUZGADO CIVICO'
         AND rc.folio_reporte_asegurados IS NULL

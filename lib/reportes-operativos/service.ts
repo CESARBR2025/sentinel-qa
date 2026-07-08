@@ -156,7 +156,7 @@ export async function obtenerDatosExcel(desde: string, hasta: string) {
     SELECT
       created_at::date          AS fecha,
       ofi_folio_cad             AS folio,
-      CONCAT(o.ofi_nombre, ' ', o.ofi_ap_paterno) AS oficial,
+      CONCAT(u.name, ' ', u.apellido) AS oficial,
       ofi_hay_cateo             AS hay_cateo,
       ofi_cateo                 AS cateo_data,
       ofi_hay_detencion         AS hay_detencion,
@@ -176,6 +176,7 @@ export async function obtenerDatosExcel(desde: string, hasta: string) {
       ofi_objetos_recuperados   AS objetos
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
+    LEFT JOIN users u ON u.id = o.user_id
     WHERE created_at::date BETWEEN $1 AND $2
     ORDER BY created_at DESC
   `, [desde, hasta])

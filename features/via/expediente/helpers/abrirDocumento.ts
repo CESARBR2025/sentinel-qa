@@ -3,7 +3,8 @@ export const abrirDocumento = async (rutaRelativa: string) => {
     const tokenRes = await fetch("/api/via/exp-digital/token");
     const { token } = await tokenRes.json();
 
-    const url = `${process.env.NEXT_PUBLIC_EXPEDIENTE_HOST}${rutaRelativa}`;
+    const host = (process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? "").replace(/\/$/, "");
+    const url = `${host}${rutaRelativa}`;
 
     const fileRes = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },

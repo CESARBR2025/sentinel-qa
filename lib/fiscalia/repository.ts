@@ -131,7 +131,7 @@ export async function obtenerDetalleAsegurado(
        rd.hora_reporte,
        rc.ofi_detenidos,
         p.numero_unidad AS ofi_placa_unidad_asignada,
-        rc.ofi_oficial_nombre,
+        CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
         o.no_nomina,
         rc.ofi_calle,
         rc.ofi_colonia,
@@ -147,6 +147,7 @@ export async function obtenerDetalleAsegurado(
       FROM ofi_reporte_denuncia rd
       JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN users ou ON ou.id = o.user_id
       LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       LEFT JOIN users u ON rd.capturado_por = u.id
      WHERE rd.id = $1
@@ -370,11 +371,12 @@ export async function listarAsegurados(soloPendientes: boolean, autoridad: strin
        rc.created_at,
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
-        rc.ofi_oficial_nombre,
+        CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
         p.numero_unidad AS ofi_placa_unidad_asignada
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN users ou ON ou.id = o.user_id
       LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       WHERE rc.ofi_hay_detencion = true
          AND rc.ofi_autoridad_recibe = $1
@@ -393,7 +395,7 @@ export async function obtenerDetalleAseguradoCompleto(reporteCampoId: string): P
        rc.ofi_detenidos,
        rc.ofi_calle AS lugar_calle,
        rc.ofi_colonia AS lugar_colonia,
-        rc.ofi_oficial_nombre,
+        CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
         rc.ofi_latitud,
         rc.ofi_longitud,
         rc.folio_reporte_asegurados,
@@ -409,6 +411,7 @@ export async function obtenerDetalleAseguradoCompleto(reporteCampoId: string): P
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN users ou ON ou.id = o.user_id
       LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       LEFT JOIN users u ON rd.capturado_por = u.id
      WHERE rc.id = $1
@@ -547,12 +550,13 @@ export async function listarAseguradosConDisposicion(autoridad: string = 'FISCAL
        rc.created_at,
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
-        rc.ofi_oficial_nombre,
+        CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
         p.numero_unidad AS ofi_placa_unidad_asignada,
         pd.id AS puesta_disposicion_id
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
+      LEFT JOIN users ou ON ou.id = o.user_id
       LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
       LEFT JOIN ofi_puesta_disposicion pd ON pd.reporte_campo_id = rc.id
       WHERE rc.ofi_hay_detencion = true
