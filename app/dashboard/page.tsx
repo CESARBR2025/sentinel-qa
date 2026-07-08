@@ -29,6 +29,7 @@ export default async function DashboardPage() {
   if (userRole?.rolNombre === 'Monitorista') redirect('/monitorista')
   if (userRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
   if (userRole?.rolNombre === 'Reportante') redirect('/reportes')
+  if (userRole?.rolNombre === 'corralon_mw' || userRole?.rolNombre === 'corralon_mejia') redirect('/corralon')
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean

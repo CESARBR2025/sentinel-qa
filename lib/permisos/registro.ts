@@ -4,6 +4,7 @@ import { SECCIONES as SECCIONES_AUXILIAR } from '@/lib/auxiliar/permisos'
 import { SECCIONES as SECCIONES_911 } from '@/lib/911/permisos'
 import { SECCIONES as SECCIONES_ANALISIS } from '@/lib/analisis/permisos'
 import { SECCIONES as SECCIONES_REPORTES } from '@/lib/reportes/permisos'
+import { SECCIONES as SECCIONES_CORRALON } from '@/lib/corralon/permisos'
 import type { Seccion as SeccionPrevencion } from '@/lib/prevencion/permisos'
 
 export interface ModuloPermisos {
@@ -117,6 +118,20 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
     secciones: SECCIONES_REPORTES,
     seccionLabels: {
       formato_n_coordinacion: 'Envío de Formatos N (7 reportes)',
+    },
+  },
+  corralon_mw: {
+    labelModulo: 'Corralón',
+    secciones: SECCIONES_CORRALON,
+    seccionLabels: {
+      corralon_solicitudes: 'Solicitudes de Liberación/Cierre',
+    },
+  },
+  corralon_mejia: {
+    labelModulo: 'Corralón',
+    secciones: SECCIONES_CORRALON,
+    seccionLabels: {
+      corralon_solicitudes: 'Solicitudes de Liberación/Cierre',
     },
   },
 }
