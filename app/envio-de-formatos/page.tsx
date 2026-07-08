@@ -1,7 +1,7 @@
 import { OptionSquare } from '@/components/reportes/menuOption'
 import { SentinelHero } from '@/components/reportes/welcomeBanner'
 import {
-  Activity, Building2, Landmark, Fingerprint, Handshake, HeartPulse, Crosshair,
+  Activity, Building2, Landmark, Fingerprint, Handshake, HeartPulse, Crosshair, FileText,
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
@@ -41,6 +41,13 @@ export default async function EnvioDeFormatosPage() {
   const fn = await getFormatoNStats()
 
   const opciones = [
+    {
+      titulo: 'Consolidado Formato N',
+      subtitulo: 'Vista única de las 7 secciones con datos auto-jalados y captura manual.',
+      icono: <FileText size={28} />,
+      enlace: '/envio-de-formatos/consolidar',
+      estadisticas: [{ label: 'Vista completa', value: 'N' }]
+    },
     {
       titulo: 'Eventos Informados',
       subtitulo: 'Bitácora de eventos reportados a Coordinación: hora, región, evento y atenciones.',

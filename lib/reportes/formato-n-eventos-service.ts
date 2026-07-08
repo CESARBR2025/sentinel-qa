@@ -45,6 +45,11 @@ export async function obtenerEvento(id: string): Promise<FormatoNEvento | null> 
   return rowTo(r.rows[0])
 }
 
+export async function obtenerEventosPorFecha(fecha: string): Promise<FormatoNEvento[]> {
+  const r = await query<Record<string, unknown>>(`SELECT * FROM formato_n_eventos WHERE fecha = $1 ORDER BY hora ASC`, [fecha])
+  return r.rows.map(rowTo)
+}
+
 export interface FormatoNEventoInput {
   fecha: string
   hora: string
@@ -67,27 +72,29 @@ export async function crearEvento(data: FormatoNEventoInput): Promise<string> {
 
 export interface FuenteIncidente {
   id: string
+  fecha: string
   hora: string
   evento: string
   ubicacion: string | null
   descripcion: string | null
 }
 
-export async function buscarIncidentesPorFecha(fecha: string): Promise<FuenteIncidente[]> {
+export async function buscarIncidentesPorRango(fechaInicio: string, fechaFin: string): Promise<FuenteIncidente[]> {
   const r = await query<Record<string, unknown>>(
     `SELECT i.id, i.fecha_hora_inicio, i.descripcion, i.calle, i.colonia, i.entre_calles,
             COALESCE(ti.nombre, 'Sin clasificar') as tipo_incidente
      FROM incidentes i
      LEFT JOIN cat_tipos_incidente ti ON i.tipo_incidente_id = ti.id
-     WHERE i.fecha_hora_inicio::date = $1
+     WHERE i.fecha_hora_inicio::date BETWEEN $1 AND $2
      ORDER BY i.fecha_hora_inicio DESC`,
-    [fecha],
+    [fechaInicio, fechaFin],
   )
   return r.rows.map(row => {
     const fecha_hora = row.fecha_hora_inicio instanceof Date ? row.fecha_hora_inicio : new Date(String(row.fecha_hora_inicio))
     const ubicacionPartes = [row.calle, row.colonia, row.entre_calles].filter(Boolean)
     return {
       id: String(row.id),
+      fecha: isNaN(fecha_hora.getTime()) ? '' : fecha_hora.toISOString().slice(0, 10),
       hora: isNaN(fecha_hora.getTime()) ? '' : fecha_hora.toISOString().slice(11, 16),
       evento: String(row.tipo_incidente),
       ubicacion: ubicacionPartes.length ? ubicacionPartes.join(', ') : null,

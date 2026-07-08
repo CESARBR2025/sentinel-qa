@@ -2,11 +2,10 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { query } from '@/lib/db'
-import { ArrowLeft, Camera, CheckCircle2, XCircle, FileText, Edit, Plus, PenBox } from 'lucide-react'
-import { SignOutButton } from '@/app/dashboard/sign-out-button'
-import Link from 'next/link'
+import { Camera, CheckCircle2, XCircle, FileText, Edit, Plus, PenBox } from 'lucide-react'
 import React from 'react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 export default async function HistorialPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -50,17 +49,7 @@ export default async function HistorialPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
-        <Link href="/monitorista" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}>← Monitorista</Link>
-        <div style={{ flexGrow: 1 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>Seguridad Pública Municipal</span>
-          <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, letterSpacing: '0.05em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>Historial</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div><span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span><span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#1e40af' }}>{user.name}</span></div>
-          <SignOutButton />
-        </div>
-      </header>
+      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Historial" user={user} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>

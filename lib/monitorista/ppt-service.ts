@@ -2,6 +2,8 @@ import { query } from '@/lib/db'
 import PptxGenJS from 'pptxgenjs'
 import { obtenerGuestToken } from '@/lib/expediente/client'
 
+const EXP_HOST = process.env.EXPEDIENTE_DIGITAL_URL ?? 'https://sanjuandelrio.sytes.net:3044'
+
 function parseDetenidos(raw: unknown): string {
   if (typeof raw === 'string') {
     try { const arr = JSON.parse(raw); return Array.isArray(arr) && arr.length > 0 ? (arr[0].nombre || 'Sin nombre') : 'Sin nombre' }
@@ -11,15 +13,42 @@ function parseDetenidos(raw: unknown): string {
   return 'Sin nombre'
 }
 
+function normalizarUrl(url: string): string | null {
+  if (!url) return null
+  if (url.startsWith('/')) return `${EXP_HOST}${url}`
+  return url
+}
+
 async function descargarFoto(url: string, token: string): Promise<{ base64: string; mime: string } | null> {
+  const ext = url.split('.').pop()?.toLowerCase() || ''
+  if (ext === 'pdf') {
+    console.error('[ppt] skip .pdf URL:', url.substring(0, 80))
+    return null
+  }
   try {
-    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(15000) })
-    if (!res.ok) return null
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(15000),
+    })
+    if (!res.ok) {
+      console.error(`[ppt] descargarFoto fail HTTP ${res.status} for:`, url.substring(0, 80))
+      if (res.status === 401 || res.status === 403) {
+        const res2 = await fetch(url, { signal: AbortSignal.timeout(10000) })
+        if (res2.ok) {
+          const buf2 = await res2.arrayBuffer()
+          const mime2 = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg'
+          return { base64: Buffer.from(buf2).toString('base64'), mime: mime2 }
+        }
+      }
+      return null
+    }
     const buf = await res.arrayBuffer()
-    const ext = url.split('.').pop()?.toLowerCase() || 'jpg'
     const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg'
     return { base64: Buffer.from(buf).toString('base64'), mime }
-  } catch { return null }
+  } catch (err) {
+    console.error(`[ppt] descargarFoto error:`, err instanceof Error ? err.message : err)
+    return null
+  }
 }
 
 function getAspectRatio(base64: string): number {
@@ -102,8 +131,14 @@ export async function generarPpt(
        ORDER BY tipo_foto`, [id],
     )
     const buffers = await Promise.all(
-      evs.rows.map(e => String(e.url_archivo).startsWith('http') ? descargarFoto(String(e.url_archivo), token) : Promise.resolve(null)),
+      evs.rows.map(e => {
+        const raw = String(e.url_archivo)
+        const url = normalizarUrl(raw)
+        if (!url || !url.startsWith('http')) return Promise.resolve(null)
+        return descargarFoto(url, token)
+      }),
     )
+    console.log(`[ppt] report ${id.substring(0,8)}: ${evs.rows.length} evidencias, ${buffers.filter(Boolean).length} downloaded`)
     const valids = buffers.filter((f): f is { base64: string; mime: string } => f !== null)
     const imgCount = Math.min(valids.length, 3)
 

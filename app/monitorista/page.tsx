@@ -4,10 +4,9 @@ import { redirect } from 'next/navigation'
 import { query } from '@/lib/db'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
 import { Camera, ClipboardList, Clock, History, Shield, User, Video } from 'lucide-react'
-import { SignOutButton } from '@/app/dashboard/sign-out-button'
-import Link from 'next/link'
-import React from 'react'
 import { obtenerPermisosUsuario } from '@/lib/monitorista/permisos'
+import { DashboardHeader } from '@/components/partials/Header'
+import Link from 'next/link'
 
 export default async function MonitoristaHubPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -30,24 +29,12 @@ export default async function MonitoristaHubPage() {
     query<{ personas: number; vehiculos: number }>("SELECT COALESCE(SUM(total_personas_revisadas),0)::int as personas, COALESCE(SUM(vehiculos_revisar),0)::int as vehiculos FROM incidentes_camara"),
   ])
 
-  const user = session.user as { name: string; apellido?: string }
+  const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: 24, background: '#ffffff' }}>
-        {esAdmin && <Link href="/dashboard" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}>← Dashboard</Link>}
-        {!esAdmin && <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase' }}>Monitorista</div>}
-        <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
-        <div style={{ flexGrow: 1 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>Seguridad Pública Municipal</span>
-          <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, letterSpacing: '0.05em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>Monitorista</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div><span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span><span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#1e40af' }}>{user.name}</span></div>
-          <SignOutButton />
-        </div>
-      </header>
+      <DashboardHeader user={user as { name: string; apellido?: string; email: string }} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 40 }}>
@@ -126,5 +113,5 @@ export default async function MonitoristaHubPage() {
   )
 }
 
-const cardStyle: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, cursor: 'pointer', borderRadius: 2 }
-const onlineStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#059669', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }
+const cardStyle: import('react').CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, cursor: 'pointer', borderRadius: 2 }
+const onlineStyle: import('react').CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#059669', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }

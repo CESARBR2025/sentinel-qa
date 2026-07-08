@@ -6,9 +6,11 @@ import { ArrowLeft, Save, Search } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, btnTiny, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 interface FuenteDetencion {
   id: string
+  fecha: string
   hora_detencion: string
   delito: string
   autoridad_que_realizo_detencion: string
@@ -25,14 +27,15 @@ export default function NuevoFormatoNRndPage() {
     hora_detencion: '', delito: '', autoridad_que_realizo_detencion: '', folio: '',
   })
 
-  const [fuenteFecha, setFuenteFecha] = useState(formData.fecha)
+  const [fuenteFechaInicio, setFuenteFechaInicio] = useState(formData.fecha)
+  const [fuenteFechaFin, setFuenteFechaFin] = useState(formData.fecha)
   const [fuenteResultados, setFuenteResultados] = useState<FuenteDetencion[] | null>(null)
   const [fuenteLoading, setFuenteLoading] = useState(false)
 
   async function buscarFuente() {
     setFuenteLoading(true)
     try {
-      const res = await fetch(`/api/reportes/formato-n-rnd/fuente?fecha=${fuenteFecha}`)
+      const res = await fetch(`/api/reportes/formato-n-rnd/fuente?fecha_inicio=${fuenteFechaInicio}&fecha_fin=${fuenteFechaFin}`)
       const data = await res.json()
       setFuenteResultados(data)
     } finally {
@@ -43,7 +46,7 @@ export default function NuevoFormatoNRndPage() {
   function usarCandidato(c: FuenteDetencion) {
     setFormData(f => ({
       ...f,
-      fecha: fuenteFecha,
+      fecha: c.fecha,
       hora_detencion: c.hora_detencion,
       delito: c.delito,
       autoridad_que_realizo_detencion: c.autoridad_que_realizo_detencion,
@@ -82,10 +85,7 @@ export default function NuevoFormatoNRndPage() {
   return (
     <div style={pageWrap}>
       <style>{fontsImport}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', background: '#ffffff' }}>
-        <Link href="/formato-n-rnd" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}><ArrowLeft size={14} /> Registro Nacional de Detenciones</Link>
-        <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, marginLeft: 24, color: '#0f172a', textTransform: 'uppercase' }}>Nueva Inscripción</span>
-      </header>
+      <SubHeader backHref="/formato-n-rnd" backLabel="Registro Nacional de Detenciones" title="Nueva Inscripción" />
 
       <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         {error && (
@@ -101,8 +101,12 @@ export default function NuevoFormatoNRndPage() {
           <div style={sectionBody}>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
               <div style={{ flex: 1 }}>
-                <Label>Fecha a buscar</Label>
-                <input type="date" style={inputStyle} value={fuenteFecha} onChange={e => setFuenteFecha(e.target.value)} />
+                <Label>Desde</Label>
+                <input type="date" style={inputStyle} value={fuenteFechaInicio} onChange={e => setFuenteFechaInicio(e.target.value)} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <Label>Hasta</Label>
+                <input type="date" style={inputStyle} value={fuenteFechaFin} onChange={e => setFuenteFechaFin(e.target.value)} />
               </div>
               <button type="button" style={btnTiny} onClick={buscarFuente} disabled={fuenteLoading}>
                 <Search size={12} /> {fuenteLoading ? 'BUSCANDO...' : 'BUSCAR'}
@@ -110,13 +114,13 @@ export default function NuevoFormatoNRndPage() {
             </div>
             {fuenteResultados !== null && (
               fuenteResultados.length === 0 ? (
-                <div style={{ fontFamily: 'Inter', fontSize: 12, color: '#94a3b8' }}>No hay detenciones registradas esa fecha.</div>
+                <div style={{ fontFamily: 'Inter', fontSize: 12, color: '#94a3b8' }}>No hay detenciones registradas en ese rango.</div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {fuenteResultados.map(c => (
                     <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2 }}>
                       <div style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>
-                        <strong>{c.hora_detencion || '—'}</strong> — {c.delito || 'Sin delito'} {c.folio ? `· Folio ${c.folio}` : ''}
+                        <strong>{c.fecha} {c.hora_detencion || '—'}</strong> — {c.delito || 'Sin delito'} {c.folio ? `· Folio ${c.folio}` : ''}
                       </div>
                       <button type="button" style={btnTiny} onClick={() => usarCandidato(c)}>USAR</button>
                     </div>

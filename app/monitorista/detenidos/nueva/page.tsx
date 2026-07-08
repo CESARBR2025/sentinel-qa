@@ -6,6 +6,7 @@ import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
 import { BuscadorEvento } from '@/components/monitorista/BuscadorEvento'
 import React from 'react'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 export default function NuevaDetenidoPage() {
   const router = useRouter()
@@ -41,10 +42,7 @@ export default function NuevaDetenidoPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', background: '#ffffff' }}>
-        <Link href="/monitorista/detenidos" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}><ArrowLeft size={14} /> Detenidos</Link>
-        <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, marginLeft: 24, color: '#0f172a', textTransform: 'uppercase' }}>Nueva Solicitud</span>
-      </header>
+      <SubHeader backHref="/monitorista/detenidos" backLabel="Detenidos" title="Nueva Solicitud" />
 
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>

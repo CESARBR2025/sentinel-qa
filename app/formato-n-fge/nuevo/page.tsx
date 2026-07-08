@@ -6,6 +6,7 @@ import { ArrowLeft, Save, Calculator } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, btnTiny, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 const PERIODOS = [
   { value: 'diario', label: 'Diario' },
@@ -91,10 +92,7 @@ export default function NuevoFormatoNFgePage() {
   return (
     <div style={pageWrap}>
       <style>{fontsImport}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', background: '#ffffff' }}>
-        <Link href="/formato-n-fge" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}><ArrowLeft size={14} /> Eventos FGE</Link>
-        <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, marginLeft: 24, color: '#0f172a', textTransform: 'uppercase' }}>Nuevo Reporte</span>
-      </header>
+      <SubHeader backHref="/formato-n-fge" backLabel="Eventos FGE" title="Nuevo Reporte" />
 
       <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         {error && (

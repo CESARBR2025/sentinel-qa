@@ -41,6 +41,11 @@ export async function obtenerRnd(id: string): Promise<FormatoNRnd | null> {
   return rowTo(r.rows[0])
 }
 
+export async function obtenerRndPorFecha(fecha: string): Promise<FormatoNRnd[]> {
+  const r = await query<Record<string, unknown>>(`SELECT * FROM formato_n_rnd WHERE fecha = $1 ORDER BY hora_detencion ASC`, [fecha])
+  return r.rows.map(rowTo)
+}
+
 export interface FormatoNRndInput {
   fecha: string
   hora_detencion: string
@@ -61,25 +66,27 @@ export async function crearRnd(data: FormatoNRndInput): Promise<string> {
 
 export interface FuenteDetencion {
   id: string
+  fecha: string
   hora_detencion: string
   delito: string
   autoridad_que_realizo_detencion: string
   folio: string
 }
 
-export async function buscarDetencionesPorFecha(fecha: string): Promise<FuenteDetencion[]> {
+export async function buscarDetencionesPorRango(fechaInicio: string, fechaFin: string): Promise<FuenteDetencion[]> {
   const r = await query<Record<string, unknown>>(
     `SELECT rc.id, i.fecha_hora_inicio, rc.delito_falta, rc.policia_a_cargo, i.folio
      FROM incidente_reporte_campo rc
      INNER JOIN incidentes i ON i.id = rc.incidente_id
-     WHERE rc.hay_detencion = true AND i.fecha_hora_inicio::date = $1
+     WHERE rc.hay_detencion = true AND i.fecha_hora_inicio::date BETWEEN $1 AND $2
      ORDER BY i.fecha_hora_inicio DESC`,
-    [fecha],
+    [fechaInicio, fechaFin],
   )
   return r.rows.map(row => {
     const fecha_hora = row.fecha_hora_inicio instanceof Date ? row.fecha_hora_inicio : new Date(String(row.fecha_hora_inicio))
     return {
       id: String(row.id),
+      fecha: isNaN(fecha_hora.getTime()) ? '' : fecha_hora.toISOString().slice(0, 10),
       hora_detencion: isNaN(fecha_hora.getTime()) ? '' : fecha_hora.toISOString().slice(11, 16),
       delito: row.delito_falta != null ? String(row.delito_falta) : '',
       autoridad_que_realizo_detencion: row.policia_a_cargo != null ? String(row.policia_a_cargo) : '',

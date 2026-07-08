@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { buscarIncidentesPorFecha } from '@/lib/reportes/formato-n-eventos-service'
+import { buscarIncidentesPorRango } from '@/lib/reportes/formato-n-eventos-service'
 import { verificarAccesoFormatoNApi } from '@/lib/reportes/permisos'
 
 export async function GET(req: NextRequest) {
@@ -11,9 +11,11 @@ export async function GET(req: NextRequest) {
   if (chequeo) return chequeo
 
   const { searchParams } = new URL(req.url)
-  const fecha = searchParams.get('fecha')
-  if (!fecha) return NextResponse.json({ error: 'Fecha requerida' }, { status: 400 })
+  const fechaInicio = searchParams.get('fecha_inicio')
+  const fechaFin = searchParams.get('fecha_fin')
+  if (!fechaInicio || !fechaFin) return NextResponse.json({ error: 'Rango de fechas requerido' }, { status: 400 })
+  if (fechaInicio > fechaFin) return NextResponse.json({ error: 'La fecha inicial debe ser anterior a la final' }, { status: 400 })
 
-  const candidatos = await buscarIncidentesPorFecha(fecha)
+  const candidatos = await buscarIncidentesPorRango(fechaInicio, fechaFin)
   return NextResponse.json(candidatos)
 }

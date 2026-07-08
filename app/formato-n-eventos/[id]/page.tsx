@@ -6,6 +6,7 @@ import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 export default function EditarFormatoNEventoPage() {
   const router = useRouter()
@@ -76,10 +77,7 @@ export default function EditarFormatoNEventoPage() {
   return (
     <div style={pageWrap}>
       <style>{fontsImport}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', background: '#ffffff' }}>
-        <Link href="/formato-n-eventos" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}><ArrowLeft size={14} /> Eventos Informados</Link>
-        <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, marginLeft: 24, color: '#0f172a', textTransform: 'uppercase' }}>Editar Evento</span>
-      </header>
+      <SubHeader backHref="/formato-n-eventos" backLabel="Eventos Informados" title="Editar Evento" />
 
       <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         {error && (

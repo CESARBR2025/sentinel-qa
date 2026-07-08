@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { listarArmasAseguradas } from '@/lib/reportes/formato-n-armas-aseguradas-service'
-import { DashboardHeader } from '@/components/partials/Header'
+import { SubHeader } from '@/components/partials/SubHeader'
 import Link from 'next/link'
 import React from 'react'
 import { Plus } from 'lucide-react'
@@ -21,7 +21,7 @@ export default async function FormatoNArmasAseguradasPage() {
   return (
     <div style={pageWrap}>
       <style>{fontsImport}</style>
-      <DashboardHeader user={user} />
+      <SubHeader backHref="/envio-de-formatos" backLabel="Envío de Formatos" title="Armas Aseguradas" user={user} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 }}>

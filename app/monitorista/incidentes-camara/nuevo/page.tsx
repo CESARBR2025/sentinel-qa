@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import { SubHeader } from '@/components/partials/SubHeader'
 
 const TURNOS = [
   { value: 'MATUTINO', label: 'Primer Turno (07:00 - 15:00 HRS)' },
@@ -74,10 +75,7 @@ export default function NuevoIncidenteCamaraPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <header style={{ borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', background: '#ffffff' }}>
-        <Link href="/monitorista/incidentes-camara" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}><ArrowLeft size={14} /> Incidentes</Link>
-        <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, marginLeft: 24, color: '#0f172a', textTransform: 'uppercase' }}>Nuevo Registro</span>
-      </header>
+      <SubHeader backHref="/monitorista/incidentes-camara" backLabel="Incidentes" title="Nuevo Registro" />
 
       <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
