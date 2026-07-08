@@ -4,17 +4,10 @@ import { auth }           from '@/lib/auth'
 import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { eq, sql }        from 'drizzle-orm'
-import { db }             from '@/lib/db/index'
+import { query }          from '@/lib/db'
 import { addDays, addMonths, isBefore, parseISO, format } from 'date-fns'
 import { promises as fs } from 'fs'
 import path               from 'path'
-import {
-  medidasProteccion, visitasDomiciliarias,
-  fichasBusqueda, seguimientosBusqueda,
-  solicitudesInformacion, solicitudesC4Internas, contestaciones,
-  medidaAutoridadesAdicionales,
-} from '@/lib/db/schema'
 import { tieneAccesoSeccion, tienePermiso, Seccion, Accion } from '@/lib/prevencion/permisos'
 
 async function requireAcceso(seccion: Seccion, accion: Accion) {
@@ -34,44 +27,44 @@ export async function createMedida(formData: FormData) {
   const req = (k: string): string =>
     (formData.get(k) as string).trim()
 
-  const [row] = await db.insert(medidasProteccion).values({
-    expediente:          req('expediente'),
-    nOficio:             req('nOficio'),
-    fechaOficio:         req('fechaOficio'),
-    fechaRecepcion:      req('fechaRecepcion'),
-    personaRecepciona:   req('personaRecepciona'),
-    autoridad:           req('autoridad'),
-    nombreAutoridad:     str('nombreAutoridad'),
-    delitos:             str('delitos'),
-    victima:             req('victima'),
-    demandado:           str('demandado'),
-    tipoMedida:          str('tipoMedida'),
-    domicilioProteccion: req('domicilioProteccion'),
-    colonia:             str('colonia'),
-    telefono:            str('telefono'),
-    tiempoMedida:        str('tiempoMedida'),
-    fechaVencimiento:    str('fechaVencimiento'),
-    tipoApercibimiento:  str('tipoApercibimiento'),
-    enlace:              str('enlace'),
-    observaciones:       str('observaciones'),
-    creadoPor:           session.user.id,
-  }).returning({ id: medidasProteccion.id })
+  const row = await query<{ id: string }>(
+    `INSERT INTO medidas_proteccion (
+      expediente, n_oficio, fecha_oficio, fecha_recepcion, persona_recepciona,
+      autoridad, nombre_autoridad, delitos, victima, demandado,
+      tipo_medida, domicilio_proteccion, colonia, telefono, tiempo_medida,
+      fecha_vencimiento, tipo_apercibimiento, enlace, observaciones, creado_por
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+    RETURNING id`,
+    [
+      req('expediente'), req('nOficio'), req('fechaOficio'), req('fechaRecepcion'),
+      req('personaRecepciona'), req('autoridad'), str('nombreAutoridad'),
+      str('delitos'), req('victima'), str('demandado'),
+      str('tipoMedida'), req('domicilioProteccion'), str('colonia'),
+      str('telefono'), str('tiempoMedida'),
+      str('fechaVencimiento'), str('tipoApercibimiento'), str('enlace'),
+      str('observaciones'), session.user.id,
+    ],
+  )
 
   revalidatePath('/prevencion/medidas')
-  redirect(`/prevencion/medidas/${row.id}`)
+  redirect(`/prevencion/medidas/${row.rows[0].id}`)
 }
 
 export async function createVisita(medidaId: string, formData: FormData) {
   const session = await requireAcceso('medidas', 'editar')
 
-  await db.insert(visitasDomiciliarias).values({
-    medidaId,
-    fechaVisita:            (formData.get('fechaVisita') as string).trim(),
-    horaVisita:             (formData.get('horaVisita') as string).trim(),
-    resultado:              (formData.get('resultado') as string | null)?.trim() || null,
-    apercibimientoAplicado: formData.get('apercibimientoAplicado') === '1',
-    registradoPor:          session.user.id,
-  })
+  await query(
+    `INSERT INTO visitas_domiciliarias (medida_id, fecha_visita, hora_visita, resultado, apercibimiento_aplicado, registrado_por)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [
+      medidaId,
+      (formData.get('fechaVisita') as string).trim(),
+      (formData.get('horaVisita') as string).trim(),
+      (formData.get('resultado') as string | null)?.trim() || null,
+      formData.get('apercibimientoAplicado') === '1',
+      session.user.id,
+    ],
+  )
 
   revalidatePath(`/prevencion/medidas/${medidaId}`)
 }
@@ -84,13 +77,11 @@ export async function addAutoridadMedida(formData: FormData) {
   const nOficio    = (formData.get('nOficio')    as string | null)?.trim() || null
   const fechaOficioRaw = (formData.get('fechaOficio') as string | null)?.trim() || null
 
-  await db.insert(medidaAutoridadesAdicionales).values({
-    medidaId,
-    autoridad,
-    nOficio,
-    fechaOficio: fechaOficioRaw || null,
-    creadoPor:   session.user.id,
-  })
+  await query(
+    `INSERT INTO medida_autoridades_adicionales (medida_id, autoridad, n_oficio, fecha_oficio, creado_por)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [medidaId, autoridad, nOficio, fechaOficioRaw || null, session.user.id],
+  )
 
   revalidatePath(`/prevencion/medidas/${medidaId}`)
 }
@@ -103,24 +94,20 @@ export async function createProrroga(formData: FormData) {
   const unidad   = formData.get('unidad') as 'dias' | 'meses'
   const archivo  = formData.get('archivo') as File | null
 
-  const [medida] = await db
-    .select({ fechaVencimiento: medidasProteccion.fechaVencimiento, expediente: medidasProteccion.expediente })
-    .from(medidasProteccion)
-    .where(eq(medidasProteccion.id, medidaId))
-    .limit(1)
+  const medida = await query<{ fecha_vencimiento: string | null; expediente: string }>(
+    `SELECT fecha_vencimiento, expediente FROM medidas_proteccion WHERE id = $1 LIMIT 1`,
+    [medidaId],
+  )
+  if (!medida.rows[0]) throw new Error('Medida no encontrada')
 
-  if (!medida) throw new Error('Medida no encontrada')
-
-  // Extend from today if already expired, otherwise from current end date
   const today = new Date()
-  const base  = medida.fechaVencimiento ? parseISO(medida.fechaVencimiento) : today
+  const base  = medida.rows[0].fecha_vencimiento ? parseISO(medida.rows[0].fecha_vencimiento) : today
   const start = isBefore(base, today) ? today : base
   const newDate = unidad === 'dias' ? addDays(start, cantidad) : addMonths(start, cantidad)
 
-  // Save uploaded file locally if provided
   let archivoPath: string | null = null
   if (archivo && archivo.size > 0) {
-    const folio    = medida.expediente.replace(/[^a-zA-Z0-9_-]/g, '_')
+    const folio    = medida.rows[0].expediente.replace(/[^a-zA-Z0-9_-]/g, '_')
     const ext      = path.extname(archivo.name) || '.bin'
     const filename = `${Date.now()}${ext}`
     const dir      = path.join(process.cwd(), 'uploads', 'medidas_proteccion', folio, 'prorroga')
@@ -129,14 +116,10 @@ export async function createProrroga(formData: FormData) {
     archivoPath = `uploads/medidas_proteccion/${folio}/prorroga/${filename}`
   }
 
-  await db.update(medidasProteccion)
-    .set({
-      fechaVencimiento:   format(newDate, 'yyyy-MM-dd'),
-      prorrogada:         true,
-      archivoProrrogaUrl: archivoPath,
-      actualizadoEn:      sql`now()`,
-    })
-    .where(eq(medidasProteccion.id, medidaId))
+  await query(
+    `UPDATE medidas_proteccion SET fecha_vencimiento = $1, prorrogada = true, archivo_prorroga_url = $2, actualizado_en = NOW() WHERE id = $3`,
+    [format(newDate, 'yyyy-MM-dd'), archivoPath, medidaId],
+  )
 
   revalidatePath(`/prevencion/medidas/${medidaId}`)
   revalidatePath('/prevencion/medidas')
@@ -154,22 +137,26 @@ export async function createFicha(formData: FormData) {
   const fechaAceptacionRaw  = str('fechaAceptacion')
   const edadRaw             = str('edad')
 
-  const [row] = await db.insert(fichasBusqueda).values({
-    tipo:                 (formData.get('tipo') as string).trim(),
-    folio:                str('folio'),
-    enlace:               str('enlace'),
-    fechaActivacion:      fechaActivacionRaw,
-    carpetaInvestigacion: str('carpetaInvestigacion'),
-    nombreDesaparecida:   (formData.get('nombreDesaparecida') as string).trim(),
-    edad:                 edadRaw ? parseInt(edadRaw) : null,
-    fechaAceptacion:      fechaAceptacionRaw ?? null,
-    rtAtiende:            str('rtAtiende'),
-    elementoNovedades:    str('elementoNovedades'),
-    creadoPor:            session.user.id,
-  }).returning({ id: fichasBusqueda.id })
+  const row = await query<{ id: string }>(
+    `INSERT INTO fichas_busqueda (
+      tipo, folio, enlace, fecha_activacion, carpeta_investigacion,
+      nombre_desaparecida, edad, fecha_aceptacion, rt_atiende, elemento_novedades, creado_por
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+    RETURNING id`,
+    [
+      (formData.get('tipo') as string).trim(),
+      str('folio'), str('enlace'),
+      fechaActivacionRaw, str('carpetaInvestigacion'),
+      (formData.get('nombreDesaparecida') as string).trim(),
+      edadRaw ? parseInt(edadRaw) : null,
+      fechaAceptacionRaw ?? null,
+      str('rtAtiende'), str('elementoNovedades'),
+      session.user.id,
+    ],
+  )
 
   revalidatePath('/prevencion/busquedas')
-  redirect(`/prevencion/busquedas/${row.id}`)
+  redirect(`/prevencion/busquedas/${row.rows[0].id}`)
 }
 
 export async function createSeguimiento(formData: FormData) {
@@ -189,13 +176,11 @@ export async function createSeguimiento(formData: FormData) {
     archivoUrl = `uploads/busquedas/${fichaId}/seguimientos/${filename}`
   }
 
-  await db.insert(seguimientosBusqueda).values({
-    fichaId,
-    tipo,
-    fechaHoraEnvio: sql`now()`,
-    registradoPor:  session.user.id,
-    archivoUrl,
-  })
+  await query(
+    `INSERT INTO seguimientos_busqueda (ficha_id, tipo, fecha_hora_envio, registrado_por, archivo_url)
+     VALUES ($1, $2, NOW(), $3, $4)`,
+    [fichaId, tipo, session.user.id, archivoUrl],
+  )
 
   revalidatePath(`/prevencion/busquedas/${fichaId}`)
 }
@@ -205,14 +190,15 @@ export async function cancelarFicha(formData: FormData) {
 
   const fichaId = (formData.get('fichaId') as string).trim()
 
-  await db.update(fichasBusqueda)
-    .set({
-      status:           'cancelada',
-      fechaCancelacion:  (formData.get('fechaCancelacion') as string).trim(),
-      fiscalCancela:    (formData.get('fiscalCancela') as string).trim(),
-      motivoCancelacion: (formData.get('motivoCancelacion') as string | null)?.trim() || null,
-    })
-    .where(eq(fichasBusqueda.id, fichaId))
+  await query(
+    `UPDATE fichas_busqueda SET status = 'cancelada', fecha_cancelacion = $1, fiscal_cancela = $2, motivo_cancelacion = $3 WHERE id = $4`,
+    [
+      (formData.get('fechaCancelacion') as string).trim(),
+      (formData.get('fiscalCancela') as string).trim(),
+      (formData.get('motivoCancelacion') as string | null)?.trim() || null,
+      fichaId,
+    ],
+  )
 
   revalidatePath(`/prevencion/busquedas/${fichaId}`)
   revalidatePath('/prevencion/busquedas')
@@ -231,22 +217,22 @@ export async function createSolicitud(formData: FormData) {
 
   const fechaAceptacionRaw = str('fechaAceptacion')
 
-  const [row] = await db.insert(solicitudesInformacion).values({
-    enlace:               str('enlace'),
-    oficio:               req('oficio'),
-    fechaActivacion:      req('fechaActivacion'),
-    autoridad:            req('autoridad'),
-    fiscalSolicita:       str('fiscalSolicita'),
-    delito:               str('delito'),
-    carpetaInvestigacion: str('carpetaInvestigacion'),
-    solicitudTexto:       str('solicitudTexto'),
-    fechaAceptacion:      fechaAceptacionRaw ?? null,
-    status:               'en_juridico',
-    creadoPor:            session.user.id,
-  }).returning({ id: solicitudesInformacion.id })
+  const row = await query<{ id: string }>(
+    `INSERT INTO solicitudes_informacion (
+      enlace, oficio, fecha_activacion, autoridad, fiscal_solicita,
+      delito, carpeta_investigacion, solicitud_texto, fecha_aceptacion, status, creado_por
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+    RETURNING id`,
+    [
+      str('enlace'), req('oficio'), req('fechaActivacion'),
+      req('autoridad'), str('fiscalSolicita'), str('delito'),
+      str('carpetaInvestigacion'), str('solicitudTexto'),
+      fechaAceptacionRaw ?? null, 'en_juridico', session.user.id,
+    ],
+  )
 
   revalidatePath('/prevencion/juridico')
-  redirect(`/prevencion/juridico/solicitudes/${row.id}`)
+  redirect(`/prevencion/juridico/solicitudes/${row.rows[0].id}`)
 }
 
 export async function createSolicitudC4(formData: FormData) {
@@ -254,11 +240,15 @@ export async function createSolicitudC4(formData: FormData) {
 
   const solicitudId = (formData.get('solicitudId') as string).trim()
 
-  await db.insert(solicitudesC4Internas).values({
-    solicitudId,
-    descripcionEvidencias: (formData.get('descripcionEvidencias') as string).trim(),
-    creadoPor:             session.user.id,
-  })
+  await query(
+    `INSERT INTO solicitudes_c4_internas (solicitud_id, descripcion_evidencias, creado_por)
+     VALUES ($1, $2, $3)`,
+    [
+      solicitudId,
+      (formData.get('descripcionEvidencias') as string).trim(),
+      session.user.id,
+    ],
+  )
 
   revalidatePath(`/prevencion/juridico/solicitudes/${solicitudId}`)
 }
@@ -270,19 +260,21 @@ export async function createContestacion(formData: FormData) {
   const str = (k: string): string | null =>
     (formData.get(k) as string | null)?.trim() || null
 
-  await db.insert(contestaciones).values({
-    solicitudId,
-    fechaContestacion:   (formData.get('fechaContestacion') as string).trim(),
-    archivoPdfUrl:       str('archivoPdfUrl'),
-    fechaEntrega:        str('fechaEntrega'),
-    horaEntrega:         str('horaEntrega'),
-    nombreQuienRecibio:  str('nombreQuienRecibio'),
-    creadoPor:           session.user.id,
-  })
+  await query(
+    `INSERT INTO contestaciones (solicitud_id, fecha_contestacion, archivo_pdf_url, fecha_entrega, hora_entrega, nombre_quien_recibio, creado_por)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [
+      solicitudId,
+      (formData.get('fechaContestacion') as string).trim(),
+      str('archivoPdfUrl'), str('fechaEntrega'), str('horaEntrega'),
+      str('nombreQuienRecibio'), session.user.id,
+    ],
+  )
 
-  await db.update(solicitudesInformacion)
-    .set({ status: 'completado', actualizadoEn: sql`now()` })
-    .where(eq(solicitudesInformacion.id, solicitudId))
+  await query(
+    `UPDATE solicitudes_informacion SET status = 'completado', actualizado_en = NOW() WHERE id = $1`,
+    [solicitudId],
+  )
 
   revalidatePath(`/prevencion/juridico/solicitudes/${solicitudId}`)
   revalidatePath('/prevencion/juridico')

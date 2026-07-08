@@ -4,25 +4,20 @@ import { auth }           from '@/lib/auth'
 import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { eq }             from 'drizzle-orm'
-import { db }             from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import {
-  catSectores, catRadios, catBodyCams,
-  catEstadoFuerzaConceptos, catTiposObservacion,
-  catTiposEmergencia, catMediosCanalizacion,
-} from '@/lib/db/schema'
+import { query }          from '@/lib/db'
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  const [u] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-  if (u?.rolNombre !== 'Administrador') redirect('/dashboard')
+  const u = await query<{ rolnombre: string }>(
+    `SELECT r.nombre AS rolnombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id],
+  )
+  if (u.rows[0]?.rolnombre !== 'Administrador') redirect('/dashboard')
   return session
 }
 
@@ -31,133 +26,106 @@ const str = (fd: FormData, k: string): string | null =>
 const req = (fd: FormData, k: string): string =>
   (fd.get(k) as string).trim()
 
+type TablaCatalogo = 'cat_sectores' | 'cat_radios' | 'cat_body_cams'
+  | 'cat_estado_fuerza_conceptos' | 'cat_tipos_observacion'
+  | 'cat_tipos_emergencia' | 'cat_medios_canalizacion'
+
+async function toggleCatalogo(tabla: TablaCatalogo, path: string, formData: FormData) {
+  await requireAdmin()
+  await query(
+    `UPDATE ${tabla} SET activo = NOT activo WHERE id = $1`,
+    [Number(req(formData, 'id'))],
+  )
+  revalidatePath(path)
+}
+
 // ─── Sectores ─────────────────────────────────────────────────────────────────
 export async function createSector(formData: FormData) {
   await requireAdmin()
-  await db.insert(catSectores).values({
-    nombre: req(formData, 'nombre'),
-    clave:  req(formData, 'clave'),
-  })
+  await query(
+    `INSERT INTO cat_sectores (nombre, clave) VALUES ($1, $2)`,
+    [req(formData, 'nombre'), req(formData, 'clave')],
+  )
   revalidatePath('/admin/catalogos/sectores')
 }
 
-export async function toggleSector(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catSectores).set({ activo: !activo }).where(eq(catSectores.id, id))
-  revalidatePath('/admin/catalogos/sectores')
-}
+export const toggleSector = (formData: FormData) =>
+  toggleCatalogo('cat_sectores', '/admin/catalogos/sectores', formData)
 
 // ─── Radios ───────────────────────────────────────────────────────────────────
 export async function createRadio(formData: FormData) {
   await requireAdmin()
-  await db.insert(catRadios).values({
-    codigo: req(formData, 'codigo'),
-    tipo:   str(formData, 'tipo'),
-    estado: req(formData, 'estado'),
-  })
+  await query(
+    `INSERT INTO cat_radios (codigo, tipo, estado) VALUES ($1, $2, $3)`,
+    [req(formData, 'codigo'), str(formData, 'tipo'), req(formData, 'estado')],
+  )
   revalidatePath('/admin/catalogos/radios')
 }
 
-export async function toggleRadio(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catRadios).set({ activo: !activo }).where(eq(catRadios.id, id))
-  revalidatePath('/admin/catalogos/radios')
-}
+export const toggleRadio = (formData: FormData) =>
+  toggleCatalogo('cat_radios', '/admin/catalogos/radios', formData)
 
 // ─── Body Cams ────────────────────────────────────────────────────────────────
 export async function createBodyCam(formData: FormData) {
   await requireAdmin()
-  await db.insert(catBodyCams).values({
-    codigo: req(formData, 'codigo'),
-    estado: req(formData, 'estado'),
-  })
+  await query(
+    `INSERT INTO cat_body_cams (codigo, estado) VALUES ($1, $2)`,
+    [req(formData, 'codigo'), req(formData, 'estado')],
+  )
   revalidatePath('/admin/catalogos/body-cams')
 }
 
-export async function toggleBodyCam(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catBodyCams).set({ activo: !activo }).where(eq(catBodyCams.id, id))
-  revalidatePath('/admin/catalogos/body-cams')
-}
+export const toggleBodyCam = (formData: FormData) =>
+  toggleCatalogo('cat_body_cams', '/admin/catalogos/body-cams', formData)
 
 // ─── Conceptos de Estado de Fuerza ────────────────────────────────────────────
 export async function createConcepto(formData: FormData) {
   await requireAdmin()
-  await db.insert(catEstadoFuerzaConceptos).values({
-    nombre: req(formData, 'nombre'),
-    codigo: req(formData, 'codigo'),
-    grupo:  str(formData, 'grupo'),
-    orden:  Number(str(formData, 'orden') ?? '0'),
-  })
+  await query(
+    `INSERT INTO cat_estado_fuerza_conceptos (nombre, codigo, grupo, orden) VALUES ($1, $2, $3, $4)`,
+    [req(formData, 'nombre'), req(formData, 'codigo'), str(formData, 'grupo'), Number(str(formData, 'orden') ?? '0')],
+  )
   revalidatePath('/admin/catalogos/estado-fuerza')
 }
 
-export async function toggleConcepto(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catEstadoFuerzaConceptos).set({ activo: !activo }).where(eq(catEstadoFuerzaConceptos.id, id))
-  revalidatePath('/admin/catalogos/estado-fuerza')
-}
+export const toggleConcepto = (formData: FormData) =>
+  toggleCatalogo('cat_estado_fuerza_conceptos', '/admin/catalogos/estado-fuerza', formData)
 
 // ─── Tipos de Observación ─────────────────────────────────────────────────────
 export async function createTipoObservacion(formData: FormData) {
   await requireAdmin()
-  await db.insert(catTiposObservacion).values({
-    nombre: req(formData, 'nombre'),
-    codigo: req(formData, 'codigo'),
-  })
+  await query(
+    `INSERT INTO cat_tipos_observacion (nombre, codigo) VALUES ($1, $2)`,
+    [req(formData, 'nombre'), req(formData, 'codigo')],
+  )
   revalidatePath('/admin/catalogos/observaciones')
 }
 
-export async function toggleTipoObservacion(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catTiposObservacion).set({ activo: !activo }).where(eq(catTiposObservacion.id, id))
-  revalidatePath('/admin/catalogos/observaciones')
-}
-
-// Agregar a lib/rol-servicios/catalogos-actions.ts
+export const toggleTipoObservacion = (formData: FormData) =>
+  toggleCatalogo('cat_tipos_observacion', '/admin/catalogos/observaciones', formData)
 
 // ─── Tipos de Emergencia ──────────────────────────────────────────────────────
 export async function createTipoEmergencia(formData: FormData) {
   await requireAdmin()
-  await db.insert(catTiposEmergencia).values({
-    clave:  req(formData, 'clave'),
-    nombre: req(formData, 'nombre'),
-  })
+  await query(
+    `INSERT INTO cat_tipos_emergencia (clave, nombre) VALUES ($1, $2)`,
+    [req(formData, 'clave'), req(formData, 'nombre')],
+  )
   revalidatePath('/admin/catalogos/tipos-emergencia')
 }
 
-export async function toggleTipoEmergencia(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catTiposEmergencia).set({ activo: !activo }).where(eq(catTiposEmergencia.id, id))
-  revalidatePath('/admin/catalogos/tipos-emergencia')
-}
+export const toggleTipoEmergencia = (formData: FormData) =>
+  toggleCatalogo('cat_tipos_emergencia', '/admin/catalogos/tipos-emergencia', formData)
 
 // ─── Medios de Canalización ───────────────────────────────────────────────────
 export async function createMedioCanalizacion(formData: FormData) {
   await requireAdmin()
-  await db.insert(catMediosCanalizacion).values({
-    clave:  req(formData, 'clave'),
-    nombre: req(formData, 'nombre'),
-  })
+  await query(
+    `INSERT INTO cat_medios_canalizacion (clave, nombre) VALUES ($1, $2)`,
+    [req(formData, 'clave'), req(formData, 'nombre')],
+  )
   revalidatePath('/admin/catalogos/medios-canalizacion')
 }
 
-export async function toggleMedioCanalizacion(formData: FormData) {
-  await requireAdmin()
-  const id     = Number(req(formData, 'id'))
-  const activo = req(formData, 'activo') === 'true'
-  await db.update(catMediosCanalizacion).set({ activo: !activo }).where(eq(catMediosCanalizacion.id, id))
-  revalidatePath('/admin/catalogos/medios-canalizacion')
-}
+export const toggleMedioCanalizacion = (formData: FormData) =>
+  toggleCatalogo('cat_medios_canalizacion', '/admin/catalogos/medios-canalizacion', formData)

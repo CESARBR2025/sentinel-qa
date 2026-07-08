@@ -1,14 +1,17 @@
-import { db }          from '@/lib/db/index'
-import { incidentes }  from '@/lib/db/schema'
-import { sql }         from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 export async function generarFolioIncidente(): Promise<{ folio: string; consecutivo: number }> {
   const año = new Date().getFullYear()
-  const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(incidentes)
-    .where(sql`extract(year from creado_en) = ${año}`)
-  const consecutivo = (count ?? 0) + 1
+
+  await query(`SELECT pg_advisory_xact_lock($1)`, [año])
+
+  const result = await query<{ next: number }>(
+    `SELECT COALESCE(MAX(folio_consecutivo), 0) + 1 AS next
+     FROM incidentes
+     WHERE EXTRACT(YEAR FROM creado_en) = $1`,
+    [año],
+  )
+  const consecutivo = result.rows[0].next
   const folio = `SSPM/INC/${String(consecutivo).padStart(3, '0')}/${año}`
   return { folio, consecutivo }
 }

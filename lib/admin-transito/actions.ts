@@ -4,23 +4,22 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { db } from '@/lib/db/index'
-import { users, roles, sessions } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
 import { query } from '@/lib/db'
 
 async function requireAdminTransito() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [u] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const u = await query<{ rolnombre: string }>(
+    `SELECT r.nombre AS rolnombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id],
+  )
 
-  if (u?.rolNombre !== 'admin_transito') redirect('/dashboard')
+  if (u.rows[0]?.rolnombre !== 'admin_transito') redirect('/dashboard')
   return session
 }
 
@@ -34,16 +33,17 @@ export async function crearOficial(formData: FormData) {
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
 
-  const [rolOficial] = await db
-    .select({ id: roles.id })
-    .from(roles)
-    .where(eq(roles.nombre, 'Oficial de Campo'))
-    .limit(1)
+  const rolOficial = await query<{ id: number }>(
+    `SELECT id FROM roles WHERE nombre = 'Oficial de Campo' LIMIT 1`,
+  )
 
-  if (!rolOficial) throw new Error('Rol Oficial de Campo no encontrado')
+  if (!rolOficial.rows[0]) throw new Error('Rol Oficial de Campo no encontrado')
 
   if (userId) {
-    await db.update(users).set({ rolId: rolOficial.id }).where(eq(users.id, userId))
+    await query(
+      `UPDATE users SET rol_id = $1 WHERE id = $2`,
+      [rolOficial.rows[0].id, userId],
+    )
 
     const existing = await query<{ id: string }>(
       `SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1`,
@@ -89,10 +89,10 @@ export async function crearOficial(formData: FormData) {
 
     if (!result?.user?.id) throw new Error('Error al crear usuario')
 
-    await db
-      .update(users)
-      .set({ rolId: rolOficial.id })
-      .where(eq(users.id, result.user.id))
+    await query(
+      `UPDATE users SET rol_id = $1 WHERE id = $2`,
+      [rolOficial.rows[0].id, result.user.id],
+    )
 
     await query(
       `INSERT INTO ofi_oficiales
@@ -103,7 +103,10 @@ export async function crearOficial(formData: FormData) {
     )
 
     if (result?.token) {
-      await db.delete(sessions).where(eq(sessions.token, result.token))
+      await query(
+        `DELETE FROM sessions WHERE token = $1`,
+        [result.token],
+      )
     }
   } catch (e) {
     if (e && typeof e === 'object' && 'digest' in e) throw e
@@ -162,7 +165,7 @@ export async function destituirOficial(formData: FormData) {
   }
 
   await query(`UPDATE ofi_oficiales SET ofi_estatus = 'destituido', updated_at = NOW() WHERE id = $1`, [oficialId])
-  await db.update(users).set({ rolId: 39 }).where(eq(users.id, userId))
+  await query(`UPDATE users SET rol_id = 39 WHERE id = $1`, [userId])
 
   revalidatePath('/admin-transito/oficiales')
   redirect('/admin-transito/oficiales?exito=destituido')
@@ -182,13 +185,11 @@ export async function reactivarOficialConDatos(formData: FormData) {
     redirect('/admin-transito/oficiales?error=datos_invalidos')
   }
 
-  const [rolOficial] = await db
-    .select({ id: roles.id })
-    .from(roles)
-    .where(eq(roles.nombre, 'Oficial de Campo'))
-    .limit(1)
+  const rolOficial = await query<{ id: number }>(
+    `SELECT id FROM roles WHERE nombre = 'Oficial de Campo' LIMIT 1`,
+  )
 
-  if (!rolOficial) throw new Error('Rol Oficial de Campo no encontrado')
+  if (!rolOficial.rows[0]) throw new Error('Rol Oficial de Campo no encontrado')
 
   await query(
     `UPDATE ofi_oficiales SET
@@ -198,7 +199,10 @@ export async function reactivarOficialConDatos(formData: FormData) {
     WHERE id = $5`,
     [noNomina, telefono, departamentoId, patrullaId, oficialId],
   )
-  await db.update(users).set({ rolId: rolOficial.id }).where(eq(users.id, userId))
+  await query(
+    `UPDATE users SET rol_id = $1 WHERE id = $2`,
+    [rolOficial.rows[0].id, userId],
+  )
 
   revalidatePath('/admin-transito/oficiales')
   redirect('/admin-transito/oficiales?exito=reactivado')
@@ -265,13 +269,14 @@ export async function actualizarOficial(formData: FormData) {
   }
 
   if (userId) {
-    const updateData: Record<string, string> = {}
-    if (userName) updateData.name = userName
-    if (userApellido) updateData.apellido = userApellido
-    if (userEmail) updateData.email = userEmail
-    if (Object.keys(updateData).length) {
-      await db.update(users).set(updateData).where(eq(users.id, userId))
-    }
+    await query(
+      `UPDATE users
+       SET name = CASE WHEN $1::text IS NOT NULL THEN $1 ELSE name END,
+           apellido = CASE WHEN $2::text IS NOT NULL THEN $2 ELSE apellido END,
+           email = CASE WHEN $3::text IS NOT NULL THEN $3 ELSE email END
+       WHERE id = $4`,
+      [userName, userApellido, userEmail, userId],
+    )
   }
 
   await query(

@@ -125,8 +125,13 @@ export async function actualizarCampo(id: string, campo: string, valor: string):
     throw new Error('Campo no válido para edición')
   }
   await query(
-    `UPDATE ofi_reportes_campo SET ${campo} = $1 WHERE id = $2`,
-    [valor || null, id],
+    `UPDATE ofi_reportes_campo
+     SET modus_operandi = CASE WHEN $1 = 'modus_operandi' THEN $2 ELSE modus_operandi END,
+         falta_administrativa = CASE WHEN $1 = 'falta_administrativa' THEN $2 ELSE falta_administrativa END,
+         delito = CASE WHEN $1 = 'delito' THEN $2 ELSE delito END,
+         marco_legal = CASE WHEN $1 = 'marco_legal' THEN $2 ELSE marco_legal END
+     WHERE id = $3`,
+    [campo, valor || null, id],
   )
 }
 

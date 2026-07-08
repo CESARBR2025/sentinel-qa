@@ -4,9 +4,8 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { eq, sql } from 'drizzle-orm'
-import { db } from '@/lib/db/index'
-import { users, roles, incidentes, incidentePersonasAfectadas, incidenteDespacho, incidenteReporteCampo, incidenteExtorsion, incidenteAlarmaEscolar, incidenteDespachoUnidades, incidenteDespachoElementos } from '@/lib/db/schema'
+import { query } from '@/lib/db'
+import pool from '@/lib/db'
 import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
 import { crearReporteCampo } from './service'
@@ -17,15 +16,17 @@ async function requireOperador(accion: Accion = 'crear') {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [u] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const u = await query<{ rolnombre: string }>(
+    `SELECT r.nombre AS rolnombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id],
+  )
 
   const rolesPermitidos = ['Administrador', 'Operador', 'Oficial de Campo']
-  if (!u?.rolNombre || !rolesPermitidos.includes(u.rolNombre)) redirect('/dashboard')
+  if (!u.rows[0]?.rolnombre || !rolesPermitidos.includes(u.rows[0].rolnombre)) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'incidentes', accion))) redirect('/dashboard')
 
   return session
@@ -80,99 +81,87 @@ export async function createIncidente(formData: FormData) {
   const lng = formData.get('longitud') ? String(formData.get('longitud')) : null;
 
 
-  const [inc] = await db.insert(incidentes).values({
-    folio,
-    folioConsecutivo: consecutivo,
-    canal,
-    tipoReporte,
-    nombreReportante,
-    anonimo,
-    sexo,
-    edad: num(formData, 'edad'),
-    esUsuarioFrecuente: bool(formData, 'esUsuarioFrecuente'),
-    esPersonaAfectada: bool(formData, 'esPersonaAfectada'),
-    esMigrante: bool(formData, 'esMigrante'),
-    calle: str(formData, 'calle'),
-    numeroExterior: str(formData, 'numero_exterior'),
-    numeroInterior: str(formData, 'numero_interior'),
-    colonia: str(formData, 'colonia'),
-    entreCalles: str(formData, 'entreCalles'),
-    referenciaUbicacion: str(formData, 'referenciaUbicacion'),
-    municipio: str(formData, 'municipio') ?? 'San Juan del Río',
-    latitud: lat,
-    longitud: lng,
-    tipoEmergenciaId: num(formData, 'tipoEmergenciaId'),
-    tipoIncidenteId: num(formData, 'tipoIncidenteId'),
-    prioridadId: num(formData, 'prioridadId'),
-    descripcion: str(formData, 'descripcion'),
-    observaciones: str(formData, 'observaciones'),
-    fechaHoraInicio,
-    fechaHoraFin,
-    grupoWhatsapp: canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
-    nombreOficial: canal === 'radio' ? str(formData, 'nombreOficial') : null,
-    medioCanalizacionId: num(formData, 'medioCanalizacionId'),
-    requiereDespacho: bool(formData, 'requiereDespacho'),
-    estatus,
-    capturadoPor: session.user.id,
-  }).returning()
-
-
+  const inc = await query<{ id: string }>(
+    `INSERT INTO incidentes (
+      folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
+      anonimo, sexo, edad, es_usuario_frecuente, es_persona_afectada,
+      es_migrante, calle, numero_exterior, numero_interior, colonia,
+      entre_calles, referencia_ubicacion, municipio, latitud, longitud,
+      tipo_emergencia_id, tipo_incidente_id, prioridad_id, descripcion,
+      observaciones, fecha_hora_inicio, fecha_hora_fin, grupo_whatsapp,
+      nombre_oficial, medio_canalizacion_id, requiere_despacho, estatus,
+      capturado_por
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33)
+    RETURNING id`,
+    [
+      folio, consecutivo, canal, tipoReporte, nombreReportante,
+      anonimo, sexo, num(formData, 'edad'),
+      bool(formData, 'esUsuarioFrecuente'), bool(formData, 'esPersonaAfectada'),
+      bool(formData, 'esMigrante'),
+      str(formData, 'calle'), str(formData, 'numero_exterior'), str(formData, 'numero_interior'),
+      str(formData, 'colonia'), str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
+      str(formData, 'municipio') ?? 'San Juan del Río',
+      lat, lng,
+      num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
+      str(formData, 'descripcion'), str(formData, 'observaciones'),
+      fechaHoraInicio, fechaHoraFin,
+      canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
+      canal === 'radio' ? str(formData, 'nombreOficial') : null,
+      num(formData, 'medioCanalizacionId'), bool(formData, 'requiereDespacho'),
+      estatus, session.user.id,
+    ],
+  )
+  const incidenteId = inc.rows[0].id
 
   const pNombres = formData.getAll('p_nombre') as string[];
   const pSexos = formData.getAll('p_sexo') as string[];
   const pEdades = formData.getAll('p_edad') as string[];
 
-  // Creamos el array de objetos para insertar
   const personasParaInsertar = pNombres.map((nombre, i) => {
-    // Solo procesamos si el nombre no está vacío para evitar basura
     if (!nombre.trim()) return null;
-
     return {
-      incidenteId: inc.id,
+      incidenteId,
       nombre: nombre.trim(),
       sexo: (pSexos[i] as 'M' | 'F' | 'NE') || 'NE',
       edad: pEdades[i] ? Number(pEdades[i]) : null,
     };
-  }).filter(Boolean); // Eliminamos los nulos
+  }).filter(Boolean);
 
   if (personasParaInsertar.length > 0) {
-    // @ts-expect-error - Drizzle insert values
-    await db.insert(incidentePersonasAfectadas).values(personasParaInsertar);
+    const placeholders = personasParaInsertar.map((_, i) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`).join(', ')
+    const values = personasParaInsertar.flatMap(p => [p!.incidenteId, p!.nombre, p!.sexo, p!.edad])
+    await query(
+      `INSERT INTO incidente_personas_afectadas (incidente_id, nombre, sexo, edad) VALUES ${placeholders}`,
+      values,
+    )
   }
 
   if (formData.get('tipoReporte') === 'extorsion') {
-    formData.set('incidenteId', inc.id); // Le pasamos el ID necesario
-    await createExtorsion(formData);     // Consumimos la función que ya tenías
+    formData.set('incidenteId', incidenteId);
+    await createExtorsion(formData);
   }
 
-  // Si es alarma escolar, hacemos lo mismo
   if (formData.get('tipoReporte') === 'alarma_escolar') {
-    formData.set('incidenteId', inc.id);
-    await createAlarmaEscolar(formData); // Consumimos la función que ya tenías
+    formData.set('incidenteId', incidenteId);
+    await createAlarmaEscolar(formData);
   }
 
+  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId })
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: inc.id })
-
-
-  // Usamos la constante 'canal' que ya definiste al principio de la función
-  let targetPath = `/911/ciudadano/incidentes/${inc.id}`; // Ruta por defecto para 911
-
+  let targetPath = `/911/ciudadano/incidentes/${incidenteId}`;
   if (canal === 'whatsapp') {
-    targetPath = `/911/whatsapp/incidentes/${inc.id}`;
+    targetPath = `/911/whatsapp/incidentes/${incidenteId}`;
   } else if (canal === 'radio') {
-    targetPath = `/911/rondin/incidentes/${inc.id}`;
+    targetPath = `/911/rondin/incidentes/${incidenteId}`;
   }
 
-  // Revalidamos las rutas para que la paginación se actualice
   revalidatePath('/911/whatsapp');
   revalidatePath('/911/rondin');
   revalidatePath('/911/ciudadano');
   revalidatePath('/incidentes');
 
-  // Ejecutamos la redirección
   redirect(targetPath);
-  return inc
+  return { id: incidenteId };
 }
 // ─── Personas afectadas ───────────────────────────────────────────────────────
 export async function addPersonaAfectada(formData: FormData) {
@@ -182,17 +171,17 @@ export async function addPersonaAfectada(formData: FormData) {
   const sexoRaw = str(formData, 'sexo')
   const sexo = sexoRaw ? validarEnum(sexoRaw, SEXOS, 'sexo') : null
 
-  // Verificar que el incidente existe y no está cerrado
-  const [inc] = await db.select({ estatus: incidentes.estatus }).from(incidentes).where(eq(incidentes.id, incidenteId)).limit(1)
-  if (!inc) throw new Error('Incidente no encontrado')
-  if (inc.estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  const incResult = await query<{ estatus: string }>(
+    `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+    [incidenteId],
+  )
+  if (!incResult.rows[0]) throw new Error('Incidente no encontrado')
+  if (incResult.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
 
-  await db.insert(incidentePersonasAfectadas).values({
-    incidenteId,
-    nombre: str(formData, 'nombre'),
-    sexo,
-    edad: num(formData, 'edad'),
-  })
+  await query(
+    `INSERT INTO incidente_personas_afectadas (incidente_id, nombre, sexo, edad) VALUES ($1, $2, $3, $4)`,
+    [incidenteId, str(formData, 'nombre'), sexo, num(formData, 'edad')],
+  )
 
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_personas_afectadas', entidadId: incidenteId })
   revalidatePath(`/incidentes/${incidenteId}`)
@@ -204,11 +193,14 @@ export async function deletePersonaAfectada(formData: FormData) {
   const id = req(formData, 'id')
   const incidenteId = req(formData, 'incidenteId')
 
-  const [inc] = await db.select({ estatus: incidentes.estatus }).from(incidentes).where(eq(incidentes.id, incidenteId)).limit(1)
-  if (!inc) throw new Error('Incidente no encontrado')
-  if (inc.estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  const incResult = await query<{ estatus: string }>(
+    `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+    [incidenteId],
+  )
+  if (!incResult.rows[0]) throw new Error('Incidente no encontrado')
+  if (incResult.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
 
-  await db.delete(incidentePersonasAfectadas).where(eq(incidentePersonasAfectadas.id, id))
+  await query(`DELETE FROM incidente_personas_afectadas WHERE id = $1`, [id])
   await registrarAudit({ userId: session.user.id, accion: 'DELETE', entidad: 'incidente_personas_afectadas', entidadId: id, payload: { incidenteId } })
   revalidatePath(`/incidentes/${incidenteId}`)
 }
@@ -283,40 +275,61 @@ export async function createDespacho(formData: FormData) {
   const session = await requireOperador()
   const incidenteId = req(formData, 'incidenteId')
 
-  const [inc] = await db.select({ estatus: incidentes.estatus })
-    .from(incidentes).where(eq(incidentes.id, incidenteId)).limit(1)
-  if (!inc) throw new Error('Incidente no encontrado')
-  if (inc.estatus !== 'sin_despachar') throw new Error('El incidente no está en estado sin_despachar')
+  const cliente = await pool.connect()
+  try {
+    const inc = await cliente.query<{ estatus: string }>(
+      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!inc.rows[0]) throw new Error('Incidente no encontrado')
+    if (inc.rows[0].estatus !== 'sin_despachar') throw new Error('El incidente no está en estado sin_despachar')
 
-  const [existe] = await db.select({ id: incidenteDespacho.id })
-    .from(incidenteDespacho).where(eq(incidenteDespacho.incidenteId, incidenteId)).limit(1)
-  if (existe) throw new Error('El incidente ya tiene un despacho asignado')
+    const existe = await cliente.query<{ id: string }>(
+      `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (existe.rows[0]) throw new Error('El incidente ya tiene un despacho asignado')
 
-  // El front manda JSON arrays en campos 'unidades' y 'elementos'
-  const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
-  const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
+    const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
+    const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
 
-  if (unidades.length === 0) throw new Error('Se requiere al menos una unidad')
-  if (elementos.length === 0) throw new Error('Se requiere al menos un elemento')
+    if (unidades.length === 0) throw new Error('Se requiere al menos una unidad')
+    if (elementos.length === 0) throw new Error('Se requiere al menos un elemento')
 
-  await db.transaction(async tx => {
-    const [despacho] = await tx.insert(incidenteDespacho).values({
-      incidenteId,
-      despachadorPor: session.user.id,
-    }).returning()
+    await cliente.query('BEGIN')
 
-    await tx.insert(incidenteDespachoUnidades).values(
-      unidades.map(u => ({ despachoId: despacho.id, unidadExtId: u.extId, unidadPlaca: u.placa }))
+    const despacho = await cliente.query<{ id: string }>(
+      `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
+      [incidenteId, session.user.id],
+    )
+    const despachoId = despacho.rows[0].id
+
+    for (const u of unidades) {
+      await cliente.query(
+        `INSERT INTO incidente_despacho_unidades (despacho_id, unidad_ext_id, unidad_placa) VALUES ($1, $2, $3)`,
+        [despachoId, u.extId, u.placa],
+      )
+    }
+
+    for (const e of elementos) {
+      await cliente.query(
+        `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre) VALUES ($1, $2, $3, $4)`,
+        [despachoId, e.extId, e.nomina, e.nombre],
+      )
+    }
+
+    await cliente.query(
+      `UPDATE incidentes SET estatus = 'en_despacho', actualizado_en = NOW() WHERE id = $1`,
+      [incidenteId],
     )
 
-    await tx.insert(incidenteDespachoElementos).values(
-      elementos.map(e => ({ despachoId: despacho.id, elementoExtId: e.extId, elementoNomina: e.nomina, elementoNombre: e.nombre }))
-    )
-
-    await tx.update(incidentes)
-      .set({ estatus: 'en_despacho', actualizadoEn: sql`now()` })
-      .where(eq(incidentes.id, incidenteId))
-  })
+    await cliente.query('COMMIT')
+  } catch (err) {
+    await cliente.query('ROLLBACK')
+    throw err
+  } finally {
+    cliente.release()
+  }
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'sin_despachar', estatus_nuevo: 'en_despacho' } })
   revalidatePath(`/incidentes/${incidenteId}`)
@@ -412,38 +425,41 @@ async function insertarIncidente(formData: FormData, session: Awaited<ReturnType
   const lat = formData.get('latitud') ? String(formData.get('latitud')) : null
   const lng = formData.get('longitud') ? String(formData.get('longitud')) : null
 
-  const [inc] = await db.insert(incidentes).values({
-    folio, folioConsecutivo: consecutivo, canal, tipoReporte,
-    nombreReportante, anonimo, sexo,
-    edad: num(formData, 'edad'),
-    esUsuarioFrecuente: bool(formData, 'esUsuarioFrecuente'),
-    esPersonaAfectada: bool(formData, 'esPersonaAfectada'),
-    esMigrante: bool(formData, 'esMigrante'),
-    calle: str(formData, 'calle'),
-    numeroExterior: str(formData, 'numero_exterior'),
-    numeroInterior: str(formData, 'numero_interior'),
-    colonia: str(formData, 'colonia'),
-    entreCalles: str(formData, 'entreCalles'),
-    referenciaUbicacion: str(formData, 'referenciaUbicacion'),
-    municipio: str(formData, 'municipio') ?? 'San Juan del Río',
-    latitud: lat, longitud: lng,
-    tipoEmergenciaId: num(formData, 'tipoEmergenciaId'),
-    tipoIncidenteId: num(formData, 'tipoIncidenteId'),
-    prioridadId: num(formData, 'prioridadId'),
-    descripcion: str(formData, 'descripcion'),
-    observaciones: str(formData, 'observaciones'),
-    fechaHoraInicio, fechaHoraFin,
-    grupoWhatsapp: canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
-    nombreOficial: canal === 'radio' ? str(formData, 'nombreOficial') : null,
-    medioCanalizacionId: num(formData, 'medioCanalizacionId'),
-    requiereDespacho: bool(formData, 'requiereDespacho'),
-    estatus,
-    capturadoPor: session.user.id,
-  }).returning()
+  const inc = await query<{ id: string }>(
+    `INSERT INTO incidentes (
+      folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
+      anonimo, sexo, edad, es_usuario_frecuente, es_persona_afectada,
+      es_migrante, calle, numero_exterior, numero_interior, colonia,
+      entre_calles, referencia_ubicacion, municipio, latitud, longitud,
+      tipo_emergencia_id, tipo_incidente_id, prioridad_id, descripcion,
+      observaciones, fecha_hora_inicio, fecha_hora_fin, grupo_whatsapp,
+      nombre_oficial, medio_canalizacion_id, requiere_despacho, estatus,
+      capturado_por
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33)
+    RETURNING id`,
+    [
+      folio, consecutivo, canal, tipoReporte, nombreReportante,
+      anonimo, sexo, num(formData, 'edad'),
+      bool(formData, 'esUsuarioFrecuente'), bool(formData, 'esPersonaAfectada'),
+      bool(formData, 'esMigrante'),
+      str(formData, 'calle'), str(formData, 'numero_exterior'), str(formData, 'numero_interior'),
+      str(formData, 'colonia'), str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
+      str(formData, 'municipio') ?? 'San Juan del Río',
+      lat, lng,
+      num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
+      str(formData, 'descripcion'), str(formData, 'observaciones'),
+      fechaHoraInicio, fechaHoraFin,
+      canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
+      canal === 'radio' ? str(formData, 'nombreOficial') : null,
+      num(formData, 'medioCanalizacionId'), bool(formData, 'requiereDespacho'),
+      estatus, session.user.id,
+    ],
+  )
+  const result = { id: inc.rows[0].id }
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: inc.id })
+  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: result.id })
 
-  return inc
+  return result
 }
 
 // ─── Extorsión ────────────────────────────────────────────────────────────────
@@ -452,20 +468,23 @@ export async function createExtorsion(formData: FormData) {
 
   const incidenteId = req(formData, 'incidenteId')
 
-  const [inc] = await db.select({ tipoReporte: incidentes.tipoReporte, estatus: incidentes.estatus }).from(incidentes).where(eq(incidentes.id, incidenteId)).limit(1)
-  if (!inc) throw new Error('Incidente no encontrado')
-  if (inc.tipoReporte !== 'extorsion') throw new Error('El incidente no es de tipo extorsion')
-  if (inc.estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  const inc = await query<{ tipo_reporte: string; estatus: string }>(
+    `SELECT tipo_reporte, estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+    [incidenteId],
+  )
+  if (!inc.rows[0]) throw new Error('Incidente no encontrado')
+  if (inc.rows[0].tipo_reporte !== 'extorsion') throw new Error('El incidente no es de tipo extorsion')
+  if (inc.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
 
-  await db.insert(incidenteExtorsion).values({
-    incidenteId,
-    telefonoExtorsion: str(formData, 'telefonoExtorsion'),
-    grupoDelictivo: str(formData, 'grupoDelictivo'),
-    modusOperandi: str(formData, 'modusOperandi'),
-    unidadResultado: str(formData, 'unidadResultado'),
-    folioReporte: str(formData, 'folioReporte'),
-    fecha: str(formData, 'fecha'),
-  })
+  await query(
+    `INSERT INTO incidente_extorsion (incidente_id, telefono_extorsion, grupo_delictivo, modus_operandi, unidad_resultado, folio_reporte, fecha) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+    [
+      incidenteId,
+      str(formData, 'telefonoExtorsion'), str(formData, 'grupoDelictivo'),
+      str(formData, 'modusOperandi'), str(formData, 'unidadResultado'),
+      str(formData, 'folioReporte'), str(formData, 'fecha'),
+    ],
+  )
 
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_extorsion', entidadId: incidenteId })
   revalidatePath(`/incidentes/${incidenteId}`)
@@ -477,28 +496,29 @@ export async function createAlarmaEscolar(formData: FormData) {
 
   const incidenteId = req(formData, 'incidenteId')
 
-  const [inc] = await db.select({ tipoReporte: incidentes.tipoReporte, estatus: incidentes.estatus }).from(incidentes).where(eq(incidentes.id, incidenteId)).limit(1)
-  if (!inc) throw new Error('Incidente no encontrado')
-  if (inc.tipoReporte !== 'alarma_escolar') throw new Error('El incidente no es de tipo alarma_escolar')
-  if (inc.estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  const inc = await query<{ tipo_reporte: string; estatus: string }>(
+    `SELECT tipo_reporte, estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+    [incidenteId],
+  )
+  if (!inc.rows[0]) throw new Error('Incidente no encontrado')
+  if (inc.rows[0].tipo_reporte !== 'alarma_escolar') throw new Error('El incidente no es de tipo alarma_escolar')
+  if (inc.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
 
   const activaciones = num(formData, 'activaciones') ?? 0
   if (activaciones < 0) throw new Error('activaciones no puede ser negativo')
 
-  await db.insert(incidenteAlarmaEscolar).values({
-    incidenteId,
-    establecimiento: str(formData, 'establecimiento'),
-    direccion: str(formData, 'direccion'),
-    inmueble: str(formData, 'inmueble'),
-    responsable: str(formData, 'responsable'),
-    reporteDescripcion: str(formData, 'reporteDescripcion'),
-    horaCanalizacion: str(formData, 'horaCanalizacion'),
-    unidadArribo: str(formData, 'unidadArribo'),
-    horaArribo: str(formData, 'horaArribo'),
-    nombreResponsable: str(formData, 'nombreResponsable'),
-    nombreVerificador: str(formData, 'nombreVerificador'),
-    activaciones,
-  })
+  await query(
+    `INSERT INTO incidente_alarma_escolar (incidente_id, establecimiento, direccion, inmueble, responsable, reporte_descripcion, hora_canalizacion, unidad_arribo, hora_arribo, nombre_responsable, nombre_verificador, activaciones) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+    [
+      incidenteId,
+      str(formData, 'establecimiento'), str(formData, 'direccion'),
+      str(formData, 'inmueble'), str(formData, 'responsable'),
+      str(formData, 'reporteDescripcion'), str(formData, 'horaCanalizacion'),
+      str(formData, 'unidadArribo'), str(formData, 'horaArribo'),
+      str(formData, 'nombreResponsable'), str(formData, 'nombreVerificador'),
+      activaciones,
+    ],
+  )
 
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_alarma_escolar', entidadId: incidenteId })
   revalidatePath(`/incidentes/${incidenteId}`)

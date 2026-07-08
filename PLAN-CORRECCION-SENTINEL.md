@@ -138,7 +138,7 @@ Adicionalmente:
 
 #### Veredicto
 
-> **Eliminar Drizzle ORM.** El schema no refleja la realidad, no se usa para consultas, y su mantenimiento genera más problemas de los que resuelve. La documentación real de la BD debe vivir en un archivo markdown (`docs/ESQUEMA-BD.md`) generado desde `information_schema`, que es la única fuente de verdad.
+> **Eliminar Drizzle ORM del código de aplicación.** Sin embargo, `better-auth` (librería de autenticación) **requiere** el adaptador Drizzle internamente. La decisión es mantener Drizzle **únicamente** para better-auth, con un schema reducido a las 5 tablas que better-auth necesita (`users`, `sessions`, `accounts`, `verifications`, `two_factors`). Todo el código de aplicación (incidentes, prevención, admin, etc.) usa raw SQL vía `query()`. Esto elimina el schema drift (las tablas de aplicación ya no estarán en Drizzle) y el riesgo de migraciones automáticas, manteniendo auth funcional sin riesgo.
 
 ### 3.3 Orden de Eliminación
 
@@ -167,13 +167,15 @@ Paso 1 ─── Limpiar lib/db.ts
   1.3  Eliminar: `export const db = drizzle(pool, { schema })`
    →    lib/db.ts queda solo como exportador de pool y query()
 
-Paso 2 ─── Eliminar archivos Drizzle
-  2.1  Eliminar: `lib/db/index.ts`     (instancia duplicada)
-  2.2  Eliminar: `lib/db/schema.ts`    (definiciones de tablas Drizzle)
-  2.3  Eliminar: `drizzle/schema.ts`   (generado)
-  2.4  Eliminar: `drizzle/relations.ts` (generado)
-  2.5  Eliminar: `drizzle/` completo   (migraciones históricas, ya aplicadas en BD)
-  2.6  Eliminar: `drizzle.config.ts`   (configuración de Drizzle Kit)
+Paso 2 ─── Reducir schema Drizzle a solo better-auth
+  2.1  Reducir: `lib/db/schema.ts`     → solo las 5 tablas de better-auth (users, sessions, accounts, verifications, two_factors). Eliminar las ~40 tablas de aplicación del schema Drizzle.
+  2.2  Mantener: `lib/db/index.ts`     como la instancia Drizzle para better-auth (no es duplicada, es la única instancia).
+  2.3  Mantener: `lib/auth.ts`         sigue usando `drizzleAdapter` con el schema reducido.
+  2.4  Eliminar: `drizzle/schema.ts`   (generado automáticamente)
+  2.5  Eliminar: `drizzle/relations.ts` (generado)
+  2.6  Eliminar: `drizzle/` completo   (migraciones históricas, ya aplicadas en BD)
+  2.7  Mantener: `drizzle.config.ts`   (opcional, solo si se necesita regenerar schema better-auth)
+  2.8  Mantener: `drizzle-orm` en package.json (necesario para better-auth)
 
 Paso 3 ─── Limpiar package.json
   3.1  Eliminar dependencia: `drizzle-orm`
