@@ -1,12 +1,12 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
 import { ClipboardList, CheckCircle2, Clock } from 'lucide-react'
 import React from 'react'
 import { BandejaSolicitudes } from '@/components/monitorista/BandejaSolicitudes'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { listarSolicitudesEvidencia, getHistorialCount } from '@/lib/monitorista/repository'
 import { SubHeader } from '@/components/partials/SubHeader'
 
 export default async function SolicitudesPage() {
@@ -17,9 +17,9 @@ export default async function SolicitudesPage() {
   const hoy = new Date(); hoy.setHours(0, 0, 0, 0)
 
   const [gralPend, gralComp, histCount, d1Pend, d1Comp] = await Promise.all([
-    query<Record<string, unknown>>("SELECT id, incidente_id, folio_incidente, solicitado_nombre, descripcion, status, creado_en, completado_en, (SELECT count(*)::int FROM evidencias e WHERE e.solicitud_id = se.id) as total_evidencias FROM solicitudes_evidencia se WHERE status = 'pendiente' ORDER BY creado_en DESC LIMIT 50"),
-    query<Record<string, unknown>>("SELECT id, incidente_id, folio_incidente, solicitado_nombre, descripcion, status, creado_en, completado_en, (SELECT count(*)::int FROM evidencias e WHERE e.solicitud_id = se.id) as total_evidencias FROM solicitudes_evidencia se WHERE status = 'completada' ORDER BY completado_en DESC LIMIT 50"),
-    query<{ c: number }>("SELECT count(*)::int as c FROM monitorista_historial WHERE monitorista_id = $1 AND creado_en >= $2", [session.user.id, hoy.toISOString()]),
+    listarSolicitudesEvidencia('pendiente'),
+    listarSolicitudesEvidencia('completada'),
+    getHistorialCount(session.user.id, hoy.toISOString()),
     obtenerDenunciasPendientes(),
     obtenerDenunciasAtendidas(),
   ])
@@ -50,8 +50,8 @@ export default async function SolicitudesPage() {
       status: 'completada' as const, creadoEn: d.createdAt, completadoEn: d.createdAt, totalEvidencias: total }
   })
 
-  const pendientes = [...denunciaItemsPend, ...mapGral(gralPend.rows, 'pendiente')]
-  const completadas = [...denunciaItemsAtend, ...mapGral(gralComp.rows, 'completada')]
+  const pendientes = [...denunciaItemsPend, ...mapGral(gralPend, 'pendiente')]
+  const completadas = [...denunciaItemsAtend, ...mapGral(gralComp, 'completada')]
   const user = session.user as { name: string; apellido?: string }
 
   return (
@@ -69,7 +69,7 @@ export default async function SolicitudesPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 40 }}>
           <StatCard icon={<Clock size={20} color="#2563eb" />} label="Pendientes" value={pendientes.length} />
           <StatCard icon={<CheckCircle2 size={20} color="#059669" />} label="Completadas" value={completadas.length} />
-          <StatCard icon={<ClipboardList size={20} color="#64748b" />} label="Acciones Hoy" value={histCount.rows[0]?.c ?? 0} />
+          <StatCard icon={<ClipboardList size={20} color="#64748b" />} label="Acciones Hoy" value={histCount} />
         </div>
 
         <BandejaSolicitudes pendientes={pendientes as any} completadas={completadas as any} />

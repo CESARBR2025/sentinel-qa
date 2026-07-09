@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { query } from "@/lib/db";
+import { getUserWithRole } from "@/lib/auth/helpers";
+import { listarIncidentesRecientes } from "@/lib/911/repository";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -18,22 +19,11 @@ export default async function BitacoraIncidentesPage() {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
 
-    const rolResult = await query<{ nombre: string }>(
-        `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
-    )
-    if (!ROLES_PERMITIDOS.includes(rolResult.rows[0]?.nombre ?? '')) redirect('/dashboard')
+    const userWithRole = await getUserWithRole(session.user.id)
+    if (!userWithRole || !ROLES_PERMITIDOS.includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
     if (!(await tienePermiso(session.user.id, 'incidentes', 'ver'))) redirect('/dashboard')
 
-    const listaIncidentesResult = await query<any>(
-        `SELECT i.id, i.folio, i.canal, i.estatus, i.colonia, i.fecha_hora_inicio,
-                cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre
-         FROM incidentes i
-         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
-         ORDER BY i.creado_en DESC
-         LIMIT 100`
-    )
-    const listaIncidentes = listaIncidentesResult.rows
+    const listaIncidentes = await listarIncidentesRecientes(100)
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>

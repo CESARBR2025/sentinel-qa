@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
+import { getMedidas, getVisitaMedidaIds, getMedidasStats } from '@/lib/prevencion/repository'
 import Link from 'next/link'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
 import { SemaforoVigencia } from '@/components/prevencion/SemaforoVigencia'
@@ -34,15 +34,7 @@ export default async function MedidasPage({
 
   const { estado, autoridad, sinVisita, prorrogadas } = await searchParams
 
-  // Build DB conditions
-  let sql = `SELECT * FROM medidas_proteccion WHERE 1=1`
-  const values: any[] = []
-  if (autoridad) { values.push(autoridad); sql += ` AND autoridad = $${values.length}` }
-  if (prorrogadas === '1') { values.push(true); sql += ` AND prorrogada = $${values.length}` }
-  sql += ` ORDER BY creado_en DESC`
-
-  const result = await query<any>(sql, values)
-  let rows = result.rows
+  let rows = await getMedidas({ autoridad, prorrogadas })
 
   // Semáforo filter (computed from date, not stored)
   const targetColor = estado ? COLOR_MAP[estado] : null
@@ -52,16 +44,14 @@ export default async function MedidasPage({
 
   // Sin visita filter
   if (sinVisita === '1') {
-    const conVisita = await query<{ medida_id: string }>(`SELECT DISTINCT medida_id FROM visitas_domiciliarias`)
-    const idsConVisita = new Set(conVisita.rows.map(v => v.medida_id))
+    const idsConVisita = new Set(await getVisitaMedidaIds())
     rows = rows.filter(r => !idsConVisita.has(r.id))
   }
 
   const semaforos = rows.map(r => calcularSemaforoVigencia(r.fecha_vencimiento))
 
   // Stats siempre del total sin filtros (para contexto)
-  const allRowsResult = await query<{ fecha_vencimiento: string; status: string }>(`SELECT fecha_vencimiento, status FROM medidas_proteccion`)
-  const allRows = allRowsResult.rows
+  const allRows = await getMedidasStats()
   const allSem = allRows.map(r => calcularSemaforoVigencia(r.fecha_vencimiento))
   const STATS = [
     { label: 'Total', value: allRows.length, color: '#1e293b' },

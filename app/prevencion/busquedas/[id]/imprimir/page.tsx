@@ -1,11 +1,11 @@
 import { auth }        from '@/lib/auth'
 import { headers }     from 'next/headers'
-import { query }       from '@/lib/db'
 import { notFound, redirect } from 'next/navigation'
 import { format }      from 'date-fns'
 import { es }          from 'date-fns/locale'
 import { PrintButton } from '@/components/prevencion/PrintButton'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { obtenerFichaBusqueda } from '@/lib/prevencion/repository'
 
 function fmtDT(v: Date | string | null): string {
   if (!v) return '—'
@@ -20,9 +20,7 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
 
   const { id } = await params
 
-  const fichaResult = await query<any>(`SELECT * FROM fichas_busqueda WHERE id = $1 LIMIT 1`, [id])
-  const ficha = fichaResult.rows[0]
-
+  const ficha = await obtenerFichaBusqueda(id)
   if (!ficha) notFound()
 
   const esDifusion = ficha.tipo === 'PROTOCOLO_ALBA'

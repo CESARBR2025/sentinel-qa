@@ -9,7 +9,7 @@ import { styles } from '@/components/reportes/modulo_incidentes/styles'
 import { PhoneStatsCards } from '@/components/reportes/estadisticos/PhoneStatsCards'
 import { PhoneReportsTable } from '@/components/reportes/estadisticos/PhoneReportsTable'
 import { obtenerDatosTelefonicos } from '@/lib/reportes-operativos/service'
-import { query } from '@/lib/db'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 export default async function ReportesTelefonicosPage({
   searchParams,
@@ -19,17 +19,9 @@ export default async function ReportesTelefonicosPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userRoleResult = await query<any>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const userRole = userRoleResult.rows[0]
+  const userWithRole = await getUserWithRole(session.user.id)
 
-  if (!['Administrador', 'Reportante'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
+  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }
   const sp = await searchParams

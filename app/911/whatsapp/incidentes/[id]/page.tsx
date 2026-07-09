@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { query } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
+import { getIncidenteConExtras } from "@/lib/911/service";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -18,21 +18,9 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
 
-    // Consulta con Joins para evitar el error de 'referencedTable'
-    const data = await query<any>(
-        `SELECT row_to_json(i.*) AS inc, cti.nombre AS "tipoNombre",
-                cp.nombre AS "prioridadNombre", cte.nombre AS "emergenciaNombre"
-         FROM incidentes i
-         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
-         LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
-         WHERE i.id = $1
-         LIMIT 1`,
-        [id]
-    );
-
-    if (!data.rows[0]) notFound();
-    const { inc } = data.rows[0] as any;
+    const data = await getIncidenteConExtras(id) as any;
+    if (!data) notFound();
+    const { inc } = data;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -98,11 +86,11 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
                             <div style={infoGridStyle}>
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}>TIPO DE INCIDENTE</label>
-                                    <span style={valueStyle}>{data.rows[0].tipoNombre || 'S/C'}</span>
+                                    <span style={valueStyle}>{data.tipo_nombre || 'S/C'}</span>
                                 </div>
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}>PRIORIDAD</label>
-                                    <span style={{...valueStyle, fontWeight: 700}}>{data.rows[0].prioridadNombre || 'N/A'}</span>
+                                    <span style={{...valueStyle, fontWeight: 700}}>{data.prioridad_nombre || 'N/A'}</span>
                                 </div>
                             </div>
                         </section>

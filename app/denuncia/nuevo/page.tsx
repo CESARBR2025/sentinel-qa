@@ -1,13 +1,13 @@
 import { auth }           from '@/lib/auth'
 import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
-import { query }          from '@/lib/db'
+
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import FormularioD1        from '@/components/denuncias/FormularioD1'
 import { FileText, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { verificarRolOficial } from '@/lib/oficial/service'
+import { verificarRolOficial, obtenerPlacaPatrulla } from '@/lib/oficial/service'
 
 export default async function NuevaDenunciaD1Page({
   searchParams,
@@ -24,14 +24,7 @@ export default async function NuevaDenunciaD1Page({
   // Datos pre-llenados desde el reporte de recorrido
   let placaPatrulla = ''
   if (sp.oficialId) {
-    const result = await query<{ placa: string }>(
-      `SELECT p.numero_unidad AS placa
-       FROM ofi_oficiales o
-       LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
-       WHERE o.id = $1 LIMIT 1`,
-      [sp.oficialId]
-    )
-    placaPatrulla = result.rows[0]?.placa ?? ''
+    placaPatrulla = await obtenerPlacaPatrulla(sp.oficialId)
   }
 
   const prefill = {

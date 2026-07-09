@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import ReporteRecorridoZen from "@/components/911/radio/FormSection"; 
 
-import { query } from "@/lib/db";
+import { getCatalogos } from "@/lib/911/service";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ReporteRecorridoPage() {
@@ -18,16 +18,11 @@ export default async function ReporteRecorridoPage() {
     redirect("/dashboard");
   }
 
-   const [emergencias, incidentes, prioridades, canalizaciones] = await Promise.all([
-    query('SELECT * FROM cat_tipos_emergencia WHERE activo = $1', [true]),
-    query('SELECT * FROM cat_tipos_incidente WHERE activo = $1', [true]),
-    query('SELECT * FROM cat_prioridades WHERE activo = $1', [true]),
-    query('SELECT * FROM cat_medios_canalizacion WHERE activo = $1', [true]),
-  ]);
+   const catalogos = await getCatalogos();
 
 
   return  <ReporteRecorridoZen 
       user={session.user} 
-      catalogos={{ emergencias: emergencias.rows, incidentes: incidentes.rows, prioridades: prioridades.rows, canalizaciones: canalizaciones.rows }} 
+      catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades, canalizaciones: catalogos.canalizaciones }} 
     />
 }

@@ -1,6 +1,6 @@
 import { ModuleCard } from '@/components/911/ModuleCard'
 import { Users, MessageSquare, MapPin, Shield, ClipboardList } from 'lucide-react'
-import { query } from '@/lib/db'
+import { getStats } from '@/lib/911/service'
 
 // --- NUEVOS IMPORTS PARA SESIÓN ---
 import { redirect } from 'next/navigation'
@@ -10,34 +10,6 @@ import { DashboardHeader } from '@/components/partials/Header'
 // ----------------------------------
 import { tieneAccesoHub } from '@/lib/911/permisos'
 
-async function getStats() {
-  const hoy = new Date()
-  hoy.setHours(0, 0, 0, 0)
-  const hoyISO = hoy.toISOString()
-
-  const [total, hoyTotal, pendientes, enDespacho] = await Promise.all([
-    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes'),
-    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes WHERE fecha_hora_inicio >= $1', [hoyISO]),
-    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes WHERE estatus = $1 AND requiere_despacho = $2', ['sin_despachar', true]),
-    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes WHERE estatus = $1', ['en_despacho']),
-  ])
-
-  const porCanal = await query<{ canal: string; count: number }>(
-    'SELECT canal, count(*)::int AS count FROM incidentes WHERE fecha_hora_inicio >= $1 GROUP BY canal',
-    [hoyISO]
-  )
-
-  return {
-    total:      total.rows[0]?.count      ?? 0,
-    hoyTotal:   hoyTotal.rows[0]?.count   ?? 0,
-    pendientes: pendientes.rows[0]?.count ?? 0,
-    enDespacho: enDespacho.rows[0]?.count ?? 0,
-    hoy911:  porCanal.rows.find(r => r.canal === '911')?.count      ?? 0,
-    hoyWA:   porCanal.rows.find(r => r.canal === 'whatsapp')?.count ?? 0,
-    hoyRadio: porCanal.rows.find(r => r.canal === 'radio')?.count   ?? 0,
-  }
-}
-
 export default async function SeleccionAtencionPage() {
   // 1. VALIDACIÓN DE SESIÓN (Igual que en Despacho)
   const session = await auth.api.getSession({ headers: await headers() })
@@ -46,7 +18,15 @@ export default async function SeleccionAtencionPage() {
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
-  const stats = await getStats()
+  const hoy = new Date()
+  hoy.setHours(0, 0, 0, 0)
+  const hoyISO = hoy.toISOString()
+  const stats = await getStats(hoyISO)
+  const hoyTotal = stats.hoy
+  const pendientes = stats.sinDespachar
+  const hoy911 = stats.channels.find(c => c.canal === '911')?.count ?? 0
+  const hoyWA = stats.channels.find(c => c.canal === 'whatsapp')?.count ?? 0
+  const hoyRadio = stats.channels.find(c => c.canal === 'radio')?.count ?? 0
 
   const modulos = [
     {
@@ -55,7 +35,7 @@ export default async function SeleccionAtencionPage() {
       sub: 'Base de datos de atención, registros de identidad y antecedentes de contacto.',
       icon: <Users size={28} />,
       href: '/911/ciudadano/incidentes',
-      stats: [{ label: 'Canal 911 hoy', value: String(stats.hoy911) }, { label: 'Total', value: String(stats.total) }]
+      stats: [{ label: 'Canal 911 hoy', value: String(hoy911) }, { label: 'Total', value: String(stats.total) }]
     },
     {
       id: 'whatsapp',
@@ -63,7 +43,7 @@ export default async function SeleccionAtencionPage() {
       sub: 'Gestión de reportes entrantes vía mensajería instantánea y despacho digital.',
       icon: <MessageSquare size={28} />,
       href: '/911/whatsapp/incidentes',
-      stats: [{ label: 'WhatsApp hoy', value: String(stats.hoyWA) }, { label: 'Total', value: String(stats.total) }]
+      stats: [{ label: 'WhatsApp hoy', value: String(hoyWA) }, { label: 'Total', value: String(stats.total) }]
     },
     {
       id: 'rondin',
@@ -71,7 +51,7 @@ export default async function SeleccionAtencionPage() {
       sub: 'Control de patrullaje preventivo, puntos de firma y geolocalización de unidades.',
       icon: <MapPin size={28} />,
       href: '/911/rondin/incidentes',
-      stats: [{ label: 'Radio hoy', value: String(stats.hoyRadio) }, { label: 'Total', value: String(stats.total) }]
+      stats: [{ label: 'Radio hoy', value: String(hoyRadio) }, { label: 'Total', value: String(stats.total) }]
     },
     {
       id: 'despacho',
@@ -79,7 +59,7 @@ export default async function SeleccionAtencionPage() {
       sub: 'Tablón de incidentes pendientes, asignación de unidades y elementos por turno.',
       icon: <Shield size={28} />,
       href: '/911/despacho',
-      stats: [{ label: 'Pendientes', value: String(stats.pendientes) }, { label: 'En campo', value: String(stats.enDespacho) }]
+      stats: [{ label: 'Pendientes', value: String(pendientes) }, { label: 'En campo', value: String(stats.enDespacho) }]
     },
     {
       id: 'bitacora',
@@ -87,7 +67,7 @@ export default async function SeleccionAtencionPage() {
       sub: 'Registro general de todos los incidentes capturados, filtros por canal, estatus y fecha.',
       icon: <ClipboardList size={28} />,
       href: '/incidentes',
-      stats: [{ label: 'Total', value: String(stats.total) }, { label: 'Hoy', value: String(stats.hoyTotal) }]
+      stats: [{ label: 'Total', value: String(stats.total) }, { label: 'Hoy', value: String(hoyTotal) }]
     },
   ]
 

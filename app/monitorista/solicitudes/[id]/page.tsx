@@ -2,12 +2,12 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import { query } from '@/lib/db'
 import { ArrowLeft, Clock, User, FileText } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { GaleriaEvidencias } from '@/components/monitorista/GaleriaEvidencias'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { obtenerSolicitudEvidencia, listarEvidencias } from '@/lib/monitorista/repository'
 
 export default async function DetalleSolicitudPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -15,27 +15,11 @@ export default async function DetalleSolicitudPage({ params }: { params: Promise
   if (!session) redirect('/login')
   if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/monitorista')
 
-  const solResult = await query<Record<string, unknown>>(
-    `SELECT id, incidente_id AS "incidenteId", folio_incidente AS "folioIncidente",
-            solicitado_nombre AS "solicitadoNombre", descripcion, status,
-            creado_en AS "creadoEn", completado_en AS "completadoEn"
-     FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`,
-    [id],
-  )
-  const sol = solResult.rows[0] as Record<string, unknown> | undefined
+  const sol = await obtenerSolicitudEvidencia(id)
 
   if (!sol) notFound()
 
-  const evsResult = await query<Record<string, unknown>>(
-    `SELECT e.id, e.tipo, e.nombre_original AS "nombreOriginal", e.url_expediente AS "urlExpediente",
-            u.name AS "subidoPorNombre", e.creado_en AS "creadoEn"
-     FROM evidencias e
-     LEFT JOIN users u ON e.subido_por = u.id
-     WHERE e.solicitud_id = $1
-     ORDER BY e.creado_en`,
-    [id],
-  )
-  const evs = evsResult.rows
+  const evs = await listarEvidencias(id)
 
   const statusBadge = getStatusBadge(sol.status as string)
 

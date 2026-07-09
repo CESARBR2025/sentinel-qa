@@ -1,10 +1,10 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
 import { Camera, CheckCircle2, XCircle, FileText, Edit, Plus, PenBox } from 'lucide-react'
 import React from 'react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { listarHistorial } from '@/lib/monitorista/repository'
 import { SubHeader } from '@/components/partials/SubHeader'
 
 export default async function HistorialPage() {
@@ -12,19 +12,7 @@ export default async function HistorialPage() {
   if (!session) redirect('/login')
   if (!(await tienePermiso(session.user.id, 'historial', 'ver'))) redirect('/monitorista')
 
-  const registros = await query<Record<string, unknown>>(
-    `SELECT mh.id, mh.accion, mh.incidente_id, mh.creado_en,
-            u.name as monitorista_nombre,
-            se.folio_incidente as folio_solicitud,
-            rc.folio_reporte_campo as folio_detenido,
-            ic.fecha as ic_fecha, ic.turno as ic_turno
-     FROM monitorista_historial mh
-     LEFT JOIN users u ON mh.monitorista_id = u.id
-     LEFT JOIN solicitudes_evidencia se ON mh.solicitud_id = se.id
-     LEFT JOIN ofi_reportes_campo rc ON mh.incidente_id = rc.id
-     LEFT JOIN incidentes_camara ic ON mh.incidente_id = ic.id
-     ORDER BY mh.creado_en DESC LIMIT 200`,
-  )
+  const registros = await listarHistorial()
 
   const user = session.user as { name: string; apellido?: string }
 
@@ -59,14 +47,14 @@ export default async function HistorialPage() {
         </div>
 
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
-          {registros.rows.length === 0 && <div style={{ padding: 48, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>Sin actividad registrada</div>}
-          {registros.rows.length > 0 && (
+          {registros.length === 0 && <div style={{ padding: 48, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>Sin actividad registrada</div>}
+          {registros.length > 0 && (
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead><tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
                 <th style={thStyle}>ACCIÓN</th><th style={thStyle}>DETALLE</th><th style={thStyle}>MONITORISTA</th><th style={thStyle}>FECHA</th>
               </tr></thead>
               <tbody>
-                {registros.rows.map((r) => {
+                {registros.map((r) => {
                   const info = accionLabel[String(r.accion)] ?? { label: String(r.accion), icon: null }
                   return (
                     <tr key={String(r.id)} style={{ borderBottom: '1px solid #f1f5f9' }}>

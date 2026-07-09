@@ -1,5 +1,5 @@
-import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { getIncidentesPaginados } from "@/lib/911/service";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
@@ -17,43 +17,14 @@ export default async function Listado911Page({
     const params = await searchParams;
     const page = Math.max(1, Number(params?.page) || 1);
     const pageSize = 10;
-    const offset = (page - 1) * pageSize;
 
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
 
-    // 2. Consultas en paralelo (Optimizado para Central 911)
-    const [totalRes, dataRes] = await Promise.all([
-        query<{ value: number }>(
-            'SELECT count(*)::int AS value FROM incidentes WHERE canal = $1',
-            ['911']
-        ),
-
-        query<{
-            id: string;
-            folio: string;
-            estatus: string;
-            fecha: string;
-            colonia: string | null;
-            tipo: string | null;
-            prioridad: string | null;
-        }>(
-            `SELECT i.id, i.folio, i.estatus, i.fecha_hora_inicio AS fecha, i.colonia,
-                    cti.nombre AS tipo, cp.nombre AS prioridad
-             FROM incidentes i
-             LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-             LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
-             WHERE i.canal = $1
-             ORDER BY i.fecha_hora_inicio DESC
-             LIMIT $2 OFFSET $3`,
-            ['911', pageSize, offset]
-        ),
-    ]);
-
-    const totalCount = totalRes.rows[0].value;
+    // 2. Consultas paginadas via servicio (Optimizado para Central 911)
+    const { rows: listado, total: totalCount } = await getIncidentesPaginados('911', page, pageSize);
     const totalPages = Math.ceil(totalCount / pageSize);
-    const listado = dataRes.rows;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -116,12 +87,12 @@ export default async function Listado911Page({
                                             {item.folio}
                                         </td>
                                         <td style={tdStyle}>
-                                            {new Date(item.fecha).toLocaleTimeString('es-MX', { 
+                                            {new Date(item.fechaHoraInicio).toLocaleTimeString('es-MX', { 
                                                 hour: '2-digit', minute: '2-digit', second: '2-digit'
                                             })}
                                         </td>
                                         <td style={{ ...tdStyle, fontWeight: 600 }}>
-                                            {item.tipo?.toUpperCase() || 'NO ESPECIFICADO'}
+                                            {item.tipoNombre?.toUpperCase() || 'NO ESPECIFICADO'}
                                         </td>
                                         <td style={tdStyle}>
                                             {item.colonia?.toUpperCase() || 'UBICACIÓN EN CURSO'}
@@ -129,9 +100,9 @@ export default async function Listado911Page({
                                         <td style={tdStyle}>
                                             <span style={{ 
                                                 fontSize: '10px', fontWeight: 800, 
-                                                color: item.prioridad === 'ALTA' ? '#ef4444' : '#64748b' 
+                                                color: item.prioridadNombre === 'ALTA' ? '#ef4444' : '#64748b' 
                                             }}>
-                                                {item.prioridad || 'MEDIA'}
+                                                {item.prioridadNombre || 'MEDIA'}
                                             </span>
                                         </td>
                                         <td style={tdStyle}>

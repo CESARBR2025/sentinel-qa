@@ -9,41 +9,21 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
-import { query } from '@/lib/db'
-
-async function getStats() {
-  const result = await query<{ count: number }>(`SELECT count(*)::int AS count FROM incidentes`)
-  return {
-    total: result.rows[0]?.count ?? 0
-  }
-}
-
-async function getEnvioFormatosCount() {
-  const tablas = ['formato_n_eventos', 'formato_n_fge', 'formato_n_fgr', 'formato_n_rnd', 'formato_n_medios_alternativos', 'formato_n_atencion_victimas', 'formato_n_armas_aseguradas']
-  const counts = await Promise.all(tablas.map(t => query<{ c: number }>(`SELECT count(*)::int as c FROM ${t}`)))
-  return counts.reduce((sum, r) => sum + (r.rows[0]?.c ?? 0), 0)
-}
+import { getUserWithRole } from '@/lib/auth/helpers'
+import { getIncidentesCount, getEnvioFormatosCount } from '@/lib/reportes/repository'
 
 export default async function GestionPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userRoleResult = await query<any>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const userRole = userRoleResult.rows[0]
+  const userWithRole = await getUserWithRole(session.user.id)
 
-  if (!['Administrador', 'Reportante'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
+  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
   // Obtenemos las estadísticas
-  const stats = await getStats()
+  const stats = { total: await getIncidentesCount() }
   const envioFormatosCount = await getEnvioFormatosCount()
 
   const opciones = [

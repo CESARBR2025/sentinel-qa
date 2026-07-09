@@ -11,6 +11,7 @@ import {
   obtenerReportesOficial,
   obtenerReporteDetalle,
 } from './repository'
+import { query } from '@/lib/db'
 import type {
   OfiOficial,
   CrearReporteCampoInput,
@@ -52,6 +53,17 @@ async function generarFolioUnico(): Promise<string> {
     if (!existe) return folio
   }
   throw new Error('No se pudo generar un folio único después de 10 intentos')
+}
+
+export async function obtenerPlacaPatrulla(oficialId: string): Promise<string> {
+  const result = await query<{ placa: string }>(
+    `SELECT COALESCE(p.numero_unidad, '') AS placa
+     FROM ofi_oficiales o
+     LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+     WHERE o.id = $1 LIMIT 1`,
+    [oficialId]
+  )
+  return result.rows[0]?.placa ?? ''
 }
 
 export async function verificarRolOficial(userId: string): Promise<boolean> {

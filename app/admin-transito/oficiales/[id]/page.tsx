@@ -1,15 +1,9 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { query } from '@/lib/db'
 import { FlotaService } from '@/lib/flota/service'
+import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialPorId, actualizarOficial } from '@/lib/admin-transito/actions'
 import PatrullaSelector from '@/components/admin-transito/PatrullaSelector'
-
-interface Departamento {
-  id: string
-  clave: string
-  nombre: string
-}
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
@@ -80,9 +74,7 @@ export default async function EditarOficialPage({
     redirect('/admin-transito/oficiales?error=no_encontrado')
   }
 
-  const deptos = await query<Departamento>(
-    `SELECT id, clave, nombre FROM via.v2_departamentos WHERE activo = true ORDER BY nombre`,
-  )
+  const deptos = await listarDepartamentosActivos()
 
   const patrullas = await FlotaService.listarPatrullasParaAsignacion()
 
@@ -304,7 +296,7 @@ export default async function EditarOficialPage({
                 defaultValue={oficial.departamentoId ?? ''}
               >
                 <option value="">— Seleccionar —</option>
-                {deptos.rows.map((d) => (
+                {deptos.map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.nombre}
                   </option>

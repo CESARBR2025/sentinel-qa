@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import RegistroIncidenteForm from "@/components/911/whatsapp/RegistroIncidenteForm";
-import { query } from "@/lib/db";
+import { getTiposIncidente } from "@/lib/911/service";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function RegistroIncidentePage() {
@@ -18,20 +18,12 @@ export default async function RegistroIncidentePage() {
     redirect("/dashboard");
   }
 
-  // 1. Traemos los datos
-  const tiposIncidenteData = await query(
-    'SELECT * FROM cat_tipos_incidente WHERE activo = $1',
-    [true]
-  );
+  const tiposIncidente = await getTiposIncidente();
 
-  // DEBUG: Si quieres ver en tu consola si hay datos, descomenta la línea de abajo:
-  console.log("TIPOS ENCONTRADOS:", tiposIncidenteData.rows);
-
-  // 2. IMPORTANTE: Asegúrate de pasar la variable EXACTAMENTE con el mismo nombre
   return (
     <RegistroIncidenteForm 
       user={session.user} 
-      tiposIncidente={tiposIncidenteData.rows} 
+      tiposIncidente={tiposIncidente} 
     />
   );
 }

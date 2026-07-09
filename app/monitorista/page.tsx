@@ -1,10 +1,11 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
 import { Camera, ClipboardList, Clock, History, Shield, User, Video } from 'lucide-react'
 import { obtenerPermisosUsuario } from '@/lib/monitorista/permisos'
+import { getMonitoristaStats } from '@/lib/monitorista/repository'
+import { getUserWithRole } from '@/lib/auth/helpers'
 import { DashboardHeader } from '@/components/partials/Header'
 import Link from 'next/link'
 
@@ -12,21 +13,14 @@ export default async function MonitoristaHubPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const r = await query<{ nombre: string }>(
-    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
-  )
-  const esAdmin = r.rows[0]?.nombre === 'Administrador'
+  const userWithRole = await getUserWithRole(session.user.id)
+  const esAdmin = userWithRole?.rolNombre === 'Administrador'
   const permisos = await obtenerPermisosUsuario(session.user.id)
 
-  const [solsPend, solsComp, histCount, d1Pend, d1Comp, detPend, detComp, icStats] = await Promise.all([
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'pendiente'"),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'completada'"),
-    query<{ c: number }>("SELECT count(*)::int as c FROM monitorista_historial WHERE monitorista_id = $1", [session.user.id]),
+  const stats = await getMonitoristaStats(session.user.id)
+  const [d1Pend, d1Comp] = await Promise.all([
     obtenerDenunciasPendientes(),
     obtenerDenunciasAtendidas(),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado IN ('pendiente','enviado','rechazado')"),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado NOT IN ('pendiente','enviado','rechazado')"),
-    query<{ personas: number; vehiculos: number }>("SELECT COALESCE(SUM(total_personas_revisadas),0)::int as personas, COALESCE(SUM(vehiculos_revisar),0)::int as vehiculos FROM incidentes_camara"),
   ])
 
   const user = session.user as { name: string; apellido?: string; email: string }
@@ -53,8 +47,8 @@ export default async function MonitoristaHubPage() {
               <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Solicitudes de Evidencia</div>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Denuncias D1 · Incidentes</div>
               <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Pendientes</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{d1Pend.length + solsPend.rows[0]?.c}</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{d1Comp.length + solsComp.rows[0]?.c}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Pendientes</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{d1Pend.length + stats.solsPend}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{d1Comp.length + stats.solsComp}</div></div>
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
@@ -69,8 +63,8 @@ export default async function MonitoristaHubPage() {
               <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Reporte de Detenidos</div>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Solicitar evidencias a Fiscalía/Juzgado</div>
               <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Enviados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{detPend.rows[0]?.c ?? 0}</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{detComp.rows[0]?.c ?? 0}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Enviados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{stats.detPend}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{stats.detComp}</div></div>
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
@@ -85,8 +79,8 @@ export default async function MonitoristaHubPage() {
               <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Incidentes por Cámara</div>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Registro de novedades por turno</div>
               <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{icStats.rows[0]?.personas ?? 0}</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{icStats.rows[0]?.vehiculos ?? 0}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{stats.icStats?.personas ?? 0}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{stats.icStats?.vehiculos ?? 0}</div></div>
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
@@ -98,7 +92,7 @@ export default async function MonitoristaHubPage() {
               <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Historial</div>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Actividad registrada</div>
               <div style={{ paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Registros</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#0f172a' }}>{histCount.rows[0]?.c ?? 0}</div></div>
+                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Registros</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#0f172a' }}>{stats.histCount}</div></div>
               </div>
               <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>VER →</div>
             </div>

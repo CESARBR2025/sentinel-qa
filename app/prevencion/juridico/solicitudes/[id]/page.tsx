@@ -1,6 +1,5 @@
 import { auth }     from '@/lib/auth'
 import { headers }  from 'next/headers'
-import { query }    from '@/lib/db'
 import Link          from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
@@ -8,6 +7,7 @@ import { AutoridadBadge }    from '@/components/prevencion/AutoridadBadge'
 import { SolicitudC4Form }   from '@/components/prevencion/SolicitudC4Form'
 import { ContestacionForm }  from '@/components/prevencion/ContestacionForm'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { listarSolicitudesC4, obtenerContestacion, obtenerSolicitud } from '@/lib/prevencion/repository'
 
 function toDate(v: Date | string): Date {
   return v instanceof Date ? v : new Date(String(v))
@@ -26,22 +26,12 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
   const { id } = await params
 
-  const solicitudResult = await query<any>(`SELECT * FROM solicitudes_informacion WHERE id = $1 LIMIT 1`, [id])
-  const solicitud = solicitudResult.rows[0]
-
+  const solicitud = await obtenerSolicitud(id)
   if (!solicitud) notFound()
 
-  const solicitudesC4Result = await query<any>(
-    `SELECT * FROM solicitudes_c4_internas WHERE solicitud_id = $1 ORDER BY creado_en ASC`,
-    [id]
-  )
-  const solicitudesC4 = solicitudesC4Result.rows
+  const solicitudesC4 = await listarSolicitudesC4(id)
 
-  const contestacionResult = await query<any>(
-    `SELECT * FROM contestaciones WHERE solicitud_id = $1 LIMIT 1`,
-    [id]
-  )
-  const contestacion = contestacionResult.rows[0]
+  const contestacion = await obtenerContestacion(id)
 
   const completado = solicitud.status === 'completado'
 

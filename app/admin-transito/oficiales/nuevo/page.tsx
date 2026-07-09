@@ -1,14 +1,8 @@
 import Link from 'next/link'
-import { query } from '@/lib/db'
 import { FlotaService } from '@/lib/flota/service'
+import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import NuevoOficialForm from '@/components/admin-transito/NuevoOficialForm'
-
-interface Departamento {
-  id: string
-  clave: string
-  nombre: string
-}
 
 export default async function NuevoOficialPage({
   searchParams,
@@ -17,9 +11,7 @@ export default async function NuevoOficialPage({
 }) {
   const { error, exito } = await searchParams
 
-  const deptos = await query<Departamento>(
-    `SELECT id, clave, nombre FROM via.v2_departamentos WHERE activo = true ORDER BY nombre`,
-  )
+  const deptos = await listarDepartamentosActivos()
 
   const patrullas = await FlotaService.listarPatrullasParaAsignacion()
 
@@ -66,7 +58,7 @@ export default async function NuevoOficialPage({
         </Link>
       </div>
 
-      <NuevoOficialForm deptos={deptos.rows} patrullas={patrullas} />
+      <NuevoOficialForm deptos={deptos} patrullas={patrullas} />
     </div>
   )
 }

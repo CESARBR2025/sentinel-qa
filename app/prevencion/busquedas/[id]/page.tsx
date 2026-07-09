@@ -1,12 +1,12 @@
 import { auth }      from '@/lib/auth'
 import { headers }   from 'next/headers'
-import { query }     from '@/lib/db'
 import Link         from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
 import { SeguimientoTimeline } from '@/components/prevencion/SeguimientoTimeline'
 import { CancelacionModal }    from '@/components/prevencion/CancelacionModal'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { listarSeguimientos, obtenerFichaBusqueda } from '@/lib/prevencion/repository'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#991b1b' },
@@ -31,21 +31,10 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
   const { id } = await params
 
-  const fichaResult = await query<any>(`SELECT * FROM fichas_busqueda WHERE id = $1 LIMIT 1`, [id])
-  const ficha = fichaResult.rows[0]
-
+  const ficha = await obtenerFichaBusqueda(id)
   if (!ficha) notFound()
 
-  const seguimientosResult = await query<any>(
-    `SELECT sb.id, sb.tipo, sb.fecha_hora_envio, sb.archivo_url, sb.registrado_por,
-            u.name AS nombre_usuario, u.apellido AS apellido_usuario
-     FROM seguimientos_busqueda sb
-     LEFT JOIN users u ON sb.registrado_por = u.id
-     WHERE sb.ficha_id = $1
-     ORDER BY sb.creado_en ASC`,
-    [id]
-  )
-  const seguimientos = seguimientosResult.rows
+  const seguimientos = await listarSeguimientos(id)
 
   const cfg        = TIPO_CFG[ficha.tipo] ?? { label: ficha.tipo, color: '#64748b' }
   const fichaActiva = ficha.status === 'activa'

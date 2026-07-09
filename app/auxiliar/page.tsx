@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
+import { getUserWithRole } from '@/lib/auth/helpers'
 import Link from 'next/link'
 import { ClipboardList, CheckSquare } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
@@ -12,17 +12,9 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userRoleResult = await query<any>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const userRole = userRoleResult.rows[0]
+  const userWithRole = await getUserWithRole(session.user.id)
 
-  if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
+  if (!userWithRole || !['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
   const params = await searchParams

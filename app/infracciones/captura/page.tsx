@@ -2,22 +2,10 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { query } from "@/lib/db";
+import { verificarRolOficial } from "@/lib/oficial/service";
 import { FileBadge2, ArrowLeft } from "lucide-react";
 import { ProfileDropdown } from "@/components/oficial/ProfileDropdown";
 import FormularioInfraccion from "@/features/via/oficiales/components/FormularioInfraccion";
-
-async function verificarRolOficial(userId: string): Promise<boolean> {
-  const result = await query<{ nombre: string }>(
-    `SELECT roles.nombre
-     FROM users
-     LEFT JOIN roles ON roles.id = users.rol_id
-     WHERE users.id = $1
-     LIMIT 1`,
-    [userId],
-  );
-  return result.rows[0]?.nombre === "Oficial de Campo";
-}
 
 export default async function CapturaPage() {
   const session = await auth.api.getSession({ headers: await headers() });

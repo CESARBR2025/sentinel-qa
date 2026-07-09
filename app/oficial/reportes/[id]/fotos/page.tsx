@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
+import { obtenerReporteCampoSimple } from '@/lib/oficial/repository'
 import { verificarRolOficial } from '@/lib/oficial/service'
 import { SubirFotoDetenido } from '@/components/monitorista/SubirFotoDetenido'
 import Link from 'next/link'
@@ -16,17 +16,14 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
 
   const { id } = await params
 
-  const rc = await query<Record<string, unknown>>(
-    `SELECT id, folio_reporte_campo, ofi_detenidos FROM ofi_reportes_campo WHERE id = $1`,
-    [id],
-  )
-  if (!rc.rows.length) redirect('/oficial')
+  const rc = await obtenerReporteCampoSimple(id)
+  if (!rc) redirect('/oficial')
 
-  const detenidos = rc.rows[0].ofi_detenidos
+  const detenidos = rc.ofi_detenidos
   let nombre = 'Sin nombre'
   if (Array.isArray(detenidos) && detenidos.length > 0) nombre = detenidos[0]?.nombre || 'Sin nombre'
 
-  const folio = String(rc.rows[0].folio_reporte_campo || '')
+  const folio = String(rc.folio_reporte_campo || '')
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>

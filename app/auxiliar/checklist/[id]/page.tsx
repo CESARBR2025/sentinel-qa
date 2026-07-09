@@ -1,7 +1,7 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
-import { query } from '@/lib/db'
+import { getUserWithRole } from '@/lib/auth/helpers'
 import { listarParesReporte } from '@/lib/auxiliar/service'
 import { upsertChecklistAction } from '@/lib/auxiliar/actions'
 import { ToastExito } from '@/components/oficial/ToastExito'
@@ -35,17 +35,9 @@ export default async function ChecklistFormPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userRoleResult = await query<any>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const userRole = userRoleResult.rows[0]
+  const userWithRole = await getUserWithRole(session.user.id)
 
-  if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
+  if (!userWithRole || !['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const { id }    = await params

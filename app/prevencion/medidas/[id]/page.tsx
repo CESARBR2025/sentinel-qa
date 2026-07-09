@@ -1,16 +1,16 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query }   from '@/lib/db'
 import Link         from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
-import { SemaforoVigencia }         from '@/components/prevencion/SemaforoVigencia'
+import { SemaforoVigencia }                 from '@/components/prevencion/SemaforoVigencia'
 import { AutoridadBadge }           from '@/components/prevencion/AutoridadBadge'
 import { VisitaModal }              from '@/components/prevencion/VisitaModal'
 import { ProrrogaViewerModal }  from '@/components/prevencion/ProrrogaViewerModal'
 import { ProrrogaModal }        from '@/components/prevencion/ProrrogaModal'
 import { AgregarAutoridadForm } from '@/components/prevencion/AgregarAutoridadForm'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { listarAutoridadesAdicionales, listarVisitas, obtenerMedidaDetalle } from '@/lib/prevencion/repository'
 
 export default async function MedidaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -20,22 +20,12 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
 
   const { id } = await params
 
-  const medidaResult = await query<any>(`SELECT * FROM medidas_proteccion WHERE id = $1 LIMIT 1`, [id])
-  const medida = medidaResult.rows[0]
-
+  const medida = await obtenerMedidaDetalle(id)
   if (!medida) notFound()
 
-  const visitasResult = await query<any>(
-    `SELECT * FROM visitas_domiciliarias WHERE medida_id = $1 ORDER BY fecha_visita DESC`,
-    [id]
-  )
-  const visitas = visitasResult.rows
+  const visitas = await listarVisitas(id)
 
-  const autoridadesAdicionalesResult = await query<any>(
-    `SELECT * FROM medida_autoridades_adicionales WHERE medida_id = $1 ORDER BY creado_en ASC`,
-    [id]
-  )
-  const autoridadesAdicionales = autoridadesAdicionalesResult.rows
+  const autoridadesAdicionales = await listarAutoridadesAdicionales(id)
 
   const semaforo = calcularSemaforoVigencia(medida.fecha_vencimiento)
 

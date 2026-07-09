@@ -1,5 +1,5 @@
-import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { getIncidentesPaginados } from "@/lib/911/service";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
@@ -17,41 +17,14 @@ export default async function ListadoWhatsAppPage({
     const params = await searchParams;
     const page = Number(params.page) || 1;
     const pageSize = 10;
-    const offset = (page - 1) * pageSize;
 
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
 
-    // 2. Obtener el conteo total de registros con el mismo filtro (canal = whatsapp)
-    const [totalResult, dataRes] = await Promise.all([
-        query<{ value: number }>(
-            'SELECT count(*)::int AS value FROM incidentes WHERE canal = $1',
-            ['whatsapp']
-        ),
-
-        query<{
-            id: string;
-            folio: string;
-            estatus: string;
-            fecha: string;
-            colonia: string | null;
-            tipo: string | null;
-        }>(
-            `SELECT i.id, i.folio, i.estatus, i.fecha_hora_inicio AS fecha, i.colonia,
-                    cti.nombre AS tipo
-             FROM incidentes i
-             LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-             WHERE i.canal = $1
-             ORDER BY i.fecha_hora_inicio DESC
-             LIMIT $2 OFFSET $3`,
-            ['whatsapp', pageSize, offset]
-        ),
-    ]);
-
-    const totalCount = totalResult.rows[0].value;
+    // 2. Consultas paginadas via servicio
+    const { rows: listado, total: totalCount } = await getIncidentesPaginados('whatsapp', page, pageSize);
     const totalPages = Math.ceil(totalCount / pageSize);
-    const listado = dataRes.rows;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -118,13 +91,13 @@ export default async function ListadoWhatsAppPage({
                                             {item.folio}
                                         </td>
                                         <td style={tdStyle}>
-                                            {new Date(item.fecha).toLocaleString('es-MX', {
+                                            {new Date(item.fechaHoraInicio).toLocaleString('es-MX', {
                                                 day: '2-digit', month: '2-digit', year: '2-digit',
                                                 hour: '2-digit', minute: '2-digit'
                                             })}
                                         </td>
                                         <td style={{ ...tdStyle, fontWeight: 500 }}>
-                                            {item.tipo?.toUpperCase() || 'SIN CLASIFICAR'}
+                                            {item.tipoNombre?.toUpperCase() || 'SIN CLASIFICAR'}
                                         </td>
                                         <td style={tdStyle}>
                                             {item.colonia?.toUpperCase() || 'N/A'}

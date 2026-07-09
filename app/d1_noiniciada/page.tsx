@@ -8,7 +8,7 @@ import { styles } from '@/components/reportes/d1_noiniciada/styles';
 import { DescargaFilters } from '@/components/reportes/d1_noiniciada/DescargaFilters';
 import { DescargaTable } from '@/components/reportes/d1_noiniciada/DescargaTable';
 import { listarSinD1 } from '@/lib/reportes-sin-d1/service'
-import { query } from '@/lib/db'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 export default async function DescargasPage({
   searchParams,
@@ -18,17 +18,9 @@ export default async function DescargasPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userRoleResult = await query<any>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const userRole = userRoleResult.rows[0]
+  const userWithRole = await getUserWithRole(session.user.id)
 
-  if (!['Administrador', 'Reportante'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
+  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
 
 
   const user = session.user as { name: string; email: string; image?: string }

@@ -1,5 +1,5 @@
-import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { getIncidentesPaginados } from "@/lib/911/service";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
@@ -17,42 +17,14 @@ export default async function ListadoRondinPage({
     const params = await searchParams;
     const page = Number(params.page) || 1;
     const pageSize = 10;
-    const offset = (page - 1) * pageSize;
 
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_rondin"))) redirect("/dashboard");
 
-    // 2. Ejecución de consultas en paralelo (Optimizado)
-    const [totalRes, dataRes] = await Promise.all([
-        query<{ value: number }>(
-            'SELECT count(*)::int AS value FROM incidentes WHERE canal = $1',
-            ['radio']
-        ),
-
-        query<{
-            id: string;
-            folio: string;
-            estatus: string;
-            fecha: string;
-            colonia: string | null;
-            tipo: string | null;
-            oficial: string | null;
-        }>(
-            `SELECT i.id, i.folio, i.estatus, i.fecha_hora_inicio AS fecha, i.colonia,
-                    cti.nombre AS tipo, i.nombre_oficial AS oficial
-             FROM incidentes i
-             LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-             WHERE i.canal = $1
-             ORDER BY i.fecha_hora_inicio DESC
-             LIMIT $2 OFFSET $3`,
-            ['radio', pageSize, offset]
-        ),
-    ]);
-
-    const totalCount = totalRes.rows[0].value;
+    // 2. Consultas paginadas via servicio (Optimizado)
+    const { rows: listado, total: totalCount } = await getIncidentesPaginados('radio', page, pageSize);
     const totalPages = Math.ceil(totalCount / pageSize);
-    const listado = dataRes.rows;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -115,15 +87,15 @@ export default async function ListadoRondinPage({
                                             {item.folio}
                                         </td>
                                         <td style={tdStyle}>
-                                            {new Date(item.fecha).toLocaleString('es-MX', { 
+                                            {new Date(item.fechaHoraInicio).toLocaleString('es-MX', { 
                                                 day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' 
                                             })}
                                         </td>
                                         <td style={{ ...tdStyle, fontSize: '11px', fontWeight: 600 }}>
-                                            {item.oficial?.toUpperCase() || 'N/E'}
+                                            {item.nombreOficial?.toUpperCase() || 'N/E'}
                                         </td>
                                         <td style={{ ...tdStyle, color: '#2563eb', fontWeight: 500 }}>
-                                            {item.tipo?.toUpperCase() || 'RECORRIDO GENERAL'}
+                                            {item.tipoNombre?.toUpperCase() || 'RECORRIDO GENERAL'}
                                         </td>
                                         <td style={tdStyle}>
                                             {item.colonia?.toUpperCase() || 'S/C'}

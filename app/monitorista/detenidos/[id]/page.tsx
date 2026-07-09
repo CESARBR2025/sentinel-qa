@@ -3,7 +3,6 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
 import { obtenerReportePorId, getDestinos, crearSolicitudFotos } from '@/lib/monitorista/detenido-service'
-import { query } from '@/lib/db'
 import { ArrowLeft, User, Camera, Clock, Shield } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -11,6 +10,7 @@ import { CardEnvioFoto } from '@/components/monitorista/CardEnvioFoto'
 import { BatchEnvioFotos } from '@/components/monitorista/BatchEnvioFotos'
 import { EditarCampoDetenido } from '@/components/monitorista/EditarCampoDetenido'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { listarEvidenciasDetenido } from '@/lib/monitorista/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 
 export default async function DetenidoDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ exito?: string }> }) {
@@ -24,20 +24,7 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
   if (!reporte) notFound()
 
   const [fotos, destinos] = await Promise.all([
-    query<Record<string, unknown>>(
-      `SELECT sub.id, sub.tipo_foto, sub.url_archivo, sub.nombre_archivo, sub.subido_por,
-              COALESCE(r.nombre, 'Monitorista') as rol_subio
-       FROM (
-         SELECT ed.id, ed.tipo_foto, ed.url_archivo, ed.nombre_archivo, ed.subido_por,
-                ROW_NUMBER() OVER (PARTITION BY ed.tipo_foto ORDER BY ed.creado_en DESC) as rn
-         FROM evidencias_detenido ed
-         WHERE ed.reporte_campo_id = $1
-       ) sub
-       LEFT JOIN users u ON sub.subido_por = u.id
-       LEFT JOIN roles r ON u.rol_id = r.id
-       WHERE sub.rn = 1
-       ORDER BY sub.tipo_foto`, [id],
-    ),
+    listarEvidenciasDetenido(id),
     getDestinos(),
   ])
 
@@ -46,8 +33,8 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
     return redirect(`/monitorista/detenidos/${id}${exito ? `?exito=${exito}` : ''}`)
   }
 
-  const fotosPorTipo = new Map<string, typeof fotos.rows>()
-  for (const f of fotos.rows) {
+  const fotosPorTipo = new Map<string, typeof fotos>()
+  for (const f of fotos) {
     const arr = fotosPorTipo.get(String(f.tipo_foto)) ?? []
     arr.push(f)
     fotosPorTipo.set(String(f.tipo_foto), arr)

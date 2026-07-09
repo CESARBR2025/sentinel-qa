@@ -1,36 +1,25 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query }   from '@/lib/db'
 import Link          from 'next/link'
 import { format }    from 'date-fns'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
 import { tienePermiso } from '@/lib/prevencion/permisos'
+import { listarSolicitudesJuridico } from '@/lib/prevencion/repository'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 export default async function JuridicoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userRoleResult = await query<{ rol_nombre: string }>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const userWithRole = userRoleResult.rows[0]
+  const userWithRole = await getUserWithRole(session.user.id)
 
-  const isJuridico = userWithRole?.rol_nombre === 'Jurídico'
-  const isAdmin = userWithRole?.rol_nombre === 'Administrador'
+  const isJuridico = userWithRole?.rolNombre === 'Jurídico'
+  const isAdmin = userWithRole?.rolNombre === 'Administrador'
   if (!isJuridico && !isAdmin) redirect('/prevencion/medidas')
   if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/prevencion/medidas')
 
-  const solicitudesResult = await query<any>(
-    `SELECT * FROM solicitudes_informacion WHERE status = $1 ORDER BY creado_en DESC`,
-    ['en_juridico']
-  )
-  const solicitudes = solicitudesResult.rows
+  const solicitudes = await listarSolicitudesJuridico()
 
   return (
     <div>

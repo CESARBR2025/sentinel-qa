@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { query } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
+import { getIncidenteConExtras } from "@/lib/911/service";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -18,20 +18,9 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_rondin"))) redirect("/dashboard");
 
-    const data = await query<any>(
-        `SELECT row_to_json(i.*) AS inc, cti.nombre AS "tipoNombre", cp.nombre AS "prioridadNombre",
-                row_to_json(irc.*) AS rep
-         FROM incidentes i
-         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
-         LEFT JOIN incidente_reporte_campo irc ON i.id = irc.incidente_id
-         WHERE i.id = $1
-         LIMIT 1`,
-        [id]
-    );
-
-    if (!data.rows[0]) notFound();
-    const { inc, rep } = data.rows[0] as any;
+    const data = await getIncidenteConExtras(id) as any;
+    if (!data) notFound();
+    const { inc, rep } = data;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -58,8 +47,8 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                             <h2 style={sectionTitleStyle}><Shield size={18}/> CLASIFICACIÓN OPERATIVA</h2>
                             <div style={infoGridStyle}>
                                 <div style={itemGroupStyle}><label style={labelStyle}>OFICIAL QUE REPORTA</label><span style={valueStyle}>{inc.nombre_oficial}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>TIPO INCIDENTE</label><span style={valueStyle}>{data.rows[0].tipoNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, color: '#dc2626'}}>{data.rows[0].prioridadNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>TIPO INCIDENTE</label><span style={valueStyle}>{data.tipo_nombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, color: '#dc2626'}}>{data.prioridad_nombre}</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>CAPTURÓ</label><span style={valueStyle}>{inc.capturado_por}</span></div>
                             </div>
                         </section>

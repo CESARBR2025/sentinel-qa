@@ -248,6 +248,14 @@ export async function obtenerReporteDetalle(
   return result.rows.length ? rowToReporteDetalle(result.rows[0]) : null;
 }
 
+export async function obtenerReporteCampoSimple(id: string) {
+  const result = await query<Record<string, unknown>>(
+    `SELECT id, folio_reporte_campo, ofi_detenidos FROM ofi_reportes_campo WHERE id = $1`,
+    [id],
+  )
+  return result.rows[0] ?? null
+}
+
 export async function actualizarPatrullaOficial(
   userId: string,
   patrullaId: string | null,

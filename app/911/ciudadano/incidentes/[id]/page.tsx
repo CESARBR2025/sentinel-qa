@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { query } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
+import { getIncidenteConExtras } from "@/lib/911/service";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -15,22 +15,9 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
 
-    const data = await query<any>(
-        `SELECT row_to_json(i.*) AS inc, cti.nombre AS "tipoNombre", cp.nombre AS "prioridadNombre",
-                cte.nombre AS "emergenciaNombre", row_to_json(ie.*) AS ext, row_to_json(iae.*) AS ala
-         FROM incidentes i
-         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
-         LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
-         LEFT JOIN incidente_extorsion ie ON i.id = ie.incidente_id
-         LEFT JOIN incidente_alarma_escolar iae ON i.id = iae.incidente_id
-         WHERE i.id = $1
-         LIMIT 1`,
-        [id]
-    );
-
-    if (!data.rows[0]) notFound();
-    const { inc, ext, ala } = data.rows[0] as any;
+    const data = await getIncidenteConExtras(id) as any;
+    if (!data) notFound();
+    const { inc, ext, ala } = data;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -66,9 +53,9 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                         <section style={cardStyle}>
                             <h2 style={sectionTitleStyle}><AlertTriangle size={18}/> CLASIFICACIÓN TÉCNICA</h2>
                             <div style={infoGridStyle}>
-                                <div style={itemGroupStyle}><label style={labelStyle}>EMERGENCIA</label><span style={valueStyle}>{data.rows[0].emergenciaNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>INCIDENTE</label><span style={valueStyle}>{data.rows[0].tipoNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, fontWeight: 800}}>{data.rows[0].prioridadNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>EMERGENCIA</label><span style={valueStyle}>{data.emergencia_nombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>INCIDENTE</label><span style={valueStyle}>{data.tipo_nombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, fontWeight: 800}}>{data.prioridad_nombre}</span></div>
                             </div>
                         </section>
 

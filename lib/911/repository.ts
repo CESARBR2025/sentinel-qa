@@ -109,6 +109,20 @@ export async function obtenerIncidenteConExtras(id: string): Promise<Record<stri
   return result.rows[0] ?? null
 }
 
+export async function listarIncidentesRecientes(limit: number = 100) {
+  const result = await query<Record<string, unknown>>(
+    `SELECT i.id, i.folio, i.canal, i.estatus, i.colonia, i.fecha_hora_inicio,
+            cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre
+     FROM incidentes i
+     LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+     LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+     ORDER BY i.creado_en DESC
+     LIMIT $1`,
+    [limit]
+  )
+  return result.rows
+}
+
 export async function obtenerTiposIncidente(): Promise<CatalogoItem[]> {
   const result = await query<Record<string, unknown>>(
     'SELECT id, nombre FROM cat_tipos_incidente WHERE activo = $1 ORDER BY nombre',

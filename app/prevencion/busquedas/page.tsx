@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
+import { getFichasBusqueda } from '@/lib/prevencion/repository'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
@@ -17,8 +17,7 @@ export default async function BusquedasPage() {
   if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
 
-  const fichasResult = await query<any>(`SELECT * FROM fichas_busqueda ORDER BY fecha_activacion DESC`)
-  const fichas = fichasResult.rows
+  const fichas = await getFichasBusqueda()
 
   const activas    = fichas.filter(f => f.status === 'activa').length
   const canceladas = fichas.filter(f => f.status === 'cancelada').length

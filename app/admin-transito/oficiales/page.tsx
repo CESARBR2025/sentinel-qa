@@ -1,15 +1,9 @@
 import Link from 'next/link'
-import { query } from '@/lib/db'
 import { FlotaService } from '@/lib/flota/service'
+import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialesLista } from '@/lib/admin-transito/actions'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import OficialesTable from '@/components/admin-transito/OficialesTable'
-
-interface Departamento {
-  id: string
-  clave: string
-  nombre: string
-}
 
 export default async function OficialesPage({
   searchParams,
@@ -19,9 +13,7 @@ export default async function OficialesPage({
   const { exito, error } = await searchParams
   const oficiales = await obtenerOficialesLista()
 
-  const deptos = await query<Departamento>(
-    `SELECT id, clave, nombre FROM via.v2_departamentos WHERE activo = true ORDER BY nombre`,
-  )
+  const deptos = await listarDepartamentosActivos()
 
   const patrullas = await FlotaService.listarPatrullasParaAsignacion()
 
@@ -150,7 +142,7 @@ export default async function OficialesPage({
             </tr>
           </thead>
           <tbody>
-            <OficialesTable oficiales={oficiales} deptos={deptos.rows} patrullas={patrullas} />
+            <OficialesTable oficiales={oficiales} deptos={deptos} patrullas={patrullas} />
           </tbody>
         </table>
       </div>

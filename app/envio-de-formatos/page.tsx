@@ -7,29 +7,8 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
-import { query } from '@/lib/db'
+import { getFormatoNStats } from '@/lib/reportes/repository'
 import { tieneAccesoFormatoN, tienePermiso } from '@/lib/reportes/permisos'
-
-async function getFormatoNStats() {
-  const [eventos, fge, fgr, rnd, medios, victimas, armas] = await Promise.all([
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_eventos'),
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_fge'),
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_fgr'),
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_rnd'),
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_medios_alternativos'),
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_atencion_victimas'),
-    query<{ c: number }>('SELECT count(*)::int as c FROM formato_n_armas_aseguradas'),
-  ])
-  return {
-    eventos: eventos.rows[0]?.c ?? 0,
-    fge: fge.rows[0]?.c ?? 0,
-    fgr: fgr.rows[0]?.c ?? 0,
-    rnd: rnd.rows[0]?.c ?? 0,
-    medios: medios.rows[0]?.c ?? 0,
-    victimas: victimas.rows[0]?.c ?? 0,
-    armas: armas.rows[0]?.c ?? 0,
-  }
-}
 
 export default async function EnvioDeFormatosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
