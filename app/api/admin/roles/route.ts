@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { db, query } from "@/lib/db";
+import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { sql } from "drizzle-orm";
 
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
@@ -35,36 +34,27 @@ export async function POST(request: Request) {
       );
     }
 
-    const existe = await db.execute(sql`
-      SELECT id
-      FROM roles
-      WHERE LOWER(nombre)=LOWER(${body.nombre})
-      LIMIT 1
-    `);
+    const existe = await query<any>(
+      `SELECT id FROM roles WHERE LOWER(nombre) = LOWER($1) LIMIT 1`,
+      [body.nombre],
+    );
 
-    if ((existe as any).rows.length > 0) {
+    if (existe.rows.length > 0) {
       return NextResponse.json(
         { error: "Ya existe un rol con ese nombre." },
         { status: 400 }
       );
     }
-    const nuevo = await db.execute(sql`
-      INSERT INTO roles (
-        nombre,
-        descripcion,
-        activo
-      )
-      VALUES (
-        ${body.nombre},
-        ${body.descripcion ?? ""},
-        ${body.activo ?? true}
-      )
-      RETURNING id
-    `);
+    const nuevo = await query<any>(
+      `INSERT INTO roles (nombre, descripcion, activo)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [body.nombre, body.descripcion ?? "", body.activo ?? true],
+    );
 
     return NextResponse.json({
       success: true,
-      id: (nuevo as any).rows[0].id,
+      id: nuevo.rows[0].id,
       message: "Rol creado correctamente.",
     });
 

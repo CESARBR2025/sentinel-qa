@@ -2,8 +2,7 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { sql } from "drizzle-orm";
+import { query as dbQuery } from "@/lib/db";
 import { verificarAccesoAnalisisApi } from "@/lib/analisis/permisos";
 
 export async function GET(
@@ -31,97 +30,58 @@ export async function GET(
   try {
     const { id } = await params;
 
-    console.log("PARAM ID =", JSON.stringify(id));
-    console.log(typeof id);
+    const result = await dbQuery<any>(
+      `SELECT
 
-    const query = sql`
-      SELECT
+        CONCAT_WS(' ', da.nombre_detenido, da.ap_paterno_detenido, da.ap_materno_detenido) AS "nombreDetenido",
 
-        -- =====================================
-        -- PASO 1
-        -- =====================================
+        rc.ofi_folio_cad AS "folio",
 
-        CONCAT_WS(
-          ' ',
-          da.nombre_detenido,
-          da.ap_paterno_detenido,
-          da.ap_materno_detenido
-        )                             AS "nombreDetenido",
+        iph.fecha_nacimiento AS "fechaNacimiento",
 
-        rc.ofi_folio_cad              AS "folio",
+        iph.ciudad_origen AS "origen",
 
-        iph.fecha_nacimiento          AS "fechaNacimiento",
+        iph.genero AS "genero",
 
-        iph.ciudad_origen             AS "origen",
+        CONCAT_WS(', ', da.calle, da.numero, da.colonia) AS "domicilio",
 
-        iph.genero                    AS "genero",
+        rc.delito AS "eventosDelictivos",
 
-        CONCAT_WS(
-          ', ',
-          da.calle,
-          da.numero,
-          da.colonia
-        )                             AS "domicilio",
+        (rd.fecha_reporte::text || ' ' || rd.hora_reporte::text) AS "fechaHora",
 
-        rc.delito                     AS "eventosDelictivos",
+        iph.rnd AS "rnd",
 
-        -- =====================================
-        -- PASO 2
-        -- =====================================
+        '' AS "expediente",
 
-        (
-          rd.fecha_reporte::text || ' ' ||
-          rd.hora_reporte::text
-        )                             AS "fechaHora",
+        CONCAT_WS(', ', rd.lugar_hecho, rd.colonia_hecho) AS "lugarEvento",
 
-        iph.rnd                       AS "rnd",
+        CONCAT_WS(', ', rd.lugar_apoyo, rd.colonia_apoyo) AS "lugarDetencion",
 
-        ''                            AS "expediente",
+        rd.iph AS "iph",
 
-        CONCAT_WS(
-          ', ',
-          rd.lugar_hecho,
-          rd.colonia_hecho
-        )                             AS "lugarEvento",
+        '' AS "nexosDelictivos",
 
-        CONCAT_WS(
-          ', ',
-          rd.lugar_apoyo,
-          rd.colonia_apoyo
-        )                             AS "lugarDetencion",
+        rd.sector AS "zonaOperacion",
 
-        rd.iph                        AS "iph",
+        '' AS "puestaDisposicion",
 
-        ''                            AS "nexosDelictivos",
+        rc.modus_operandi AS "modusOperandi",
 
-        rd.sector                     AS "zonaOperacion",
+        rc.ofi_contenido_reporte AS "infoAdicional",
 
-        ''                            AS "puestaDisposicion",
+        '' AS "antecedentes",
 
-        rc.modus_operandi             AS "modusOperandi",
-
-        rc.ofi_contenido_reporte      AS "infoAdicional",
-
-        ''                            AS "antecedentes",
-
-        rc.falta_administrativa       AS "faltasAdmin"
+        rc.falta_administrativa AS "faltasAdmin"
 FROM iph_detenidos iph
-LEFT JOIN ofi_reporte_denuncia rd
-    ON rd.folio_denuncia = iph.folio_911
-LEFT JOIN ofi_reportes_campo rc
-    ON rc.id = rd.reporte_campo_id
-LEFT JOIN ofi_detalles_asegurados da
-    ON da.reporte_campo_id = rc.id
-WHERE iph.id = ${id}
+LEFT JOIN ofi_reporte_denuncia rd ON rd.folio_denuncia = iph.folio_911
+LEFT JOIN ofi_reportes_campo rc ON rc.id = rd.reporte_campo_id
+LEFT JOIN ofi_detalles_asegurados da ON da.reporte_campo_id = rc.id
+WHERE iph.id = $1
+LIMIT 1`,
+      [id],
+    );
 
-      LIMIT 1;
-    `;
-
-    const result = await db.execute(query);
-
-    const rows = Array.isArray(result)
-      ? result
-      : (result as any).rows || [];
+    const rows = result.rows;
 
     if (!rows.length) {
       return NextResponse.json(

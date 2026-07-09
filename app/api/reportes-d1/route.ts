@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { sql } from "drizzle-orm";
 import { verificarRolOficial } from "@/lib/oficial/service";
 
 function generarFolioDenuncia(): string {
@@ -23,7 +22,7 @@ function generarFolioDenuncia(): string {
 async function generarFolioDenunciaUnico(): Promise<string> {
   for (let i = 0; i < 10; i++) {
     const folio = generarFolioDenuncia()
-    const result = await db.execute(sql`SELECT COUNT(*)::int AS count FROM ofi_reporte_denuncia WHERE folio_denuncia = ${folio}`)
+    const result = await query<{ count: number }>(`SELECT COUNT(*)::int AS count FROM ofi_reporte_denuncia WHERE folio_denuncia = $1`, [folio])
     if (Number(result.rows[0]?.count ?? 1) === 0) return folio
   }
   throw new Error('No se pudo generar un folio único después de 10 intentos')
@@ -51,8 +50,8 @@ export async function POST(request: Request) {
       return null;
     };
 
-    const result = await db.execute(sql`
-      INSERT INTO ofi_reporte_denuncia (
+    const result = await query<any>(
+      `INSERT INTO ofi_reporte_denuncia (
         folio_denuncia, iph, folio_cu, corporacion, sector, grupo_adscripcion,
         fecha_reporte, hora_reporte,
         fecha_avistamiento, hora_avistamiento,
@@ -74,60 +73,80 @@ export async function POST(request: Request) {
         observaciones, capturado_por, incidente_id, reporte_campo_id,
         oficial_id, estado_tramite, estado_evidencia
       ) VALUES (
-        ${clean(body.folioDenuncia)},
-        ${clean(body.iph)},
-        ${clean(body.folioCu)},
-        ${clean(body.corporacion)},
-        ${clean(body.sector)},
-        ${clean(body.grupoAdscripcion)},
-        ${clean(body.fechaReporte)}::date,
-        ${clean(body.horaReporte)}::time,
-        ${clean(body.fechaAvistamiento)}::date,
-        ${clean(body.horaAvistamiento)}::time,
-        ${clean(body.fechaDespacho)}::date,
-        ${clean(body.horaDespacho)}::time,
-        ${clean(body.fechaConfirmacion)}::date,
-        ${clean(body.horaConfirmacion)}::time,
-        ${clean(body.fechaLlegada)}::date,
-        ${clean(body.horaLlegada)}::time,
-        ${clean(body.horaInicioDenuncia)}::time,
-        ${clean(body.horaFinDenuncia)}::time,
-        ${clean(body.horaTerminoAtencion)}::time,
-        ${clean(body.horaCuestionario)}::time,
-        ${clean(body.lugarHecho)},
-        ${clean(body.lugarApoyo)},
-        ${clean(body.coloniaHecho)},
-        ${clean(body.coloniaApoyo)},
-        ${clean(body.municipio)},
-        ${clean(body.latitudHecho)},
-        ${clean(body.longitudHecho)},
+        $1, $2, $3, $4, $5, $6,
+        $7::date, $8::time,
+        $9::date, $10::time,
+        $11::date, $12::time,
+        $13::date, $14::time,
+        $15::date, $16::time,
+        $17::time, $18::time,
+        $19::time, $20::time,
+        $21, $22,
+        $23, $24,
+        $25,
+        $26, $27,
         NULL,
         NULL,
-        ${clean(body.tipoEvento)},
-        ${clean(body.delito)},
-        ${toBool(body.violencia)},
-        ${clean(body.crp)},
+        $28, $29, $30, $31,
         NULL,
         NULL,
         NULL,
-        ${toBool(body.requirioTablet)},
-        ${toBool(body.funcionabaTablet)},
-        ${Number(body.ofendidoHombre) || 0},
-        ${Number(body.ofendidoMujer) || 0},
-        ${Number(body.numCuestionarios) || 0},
-        ${toBool(body.intervinoGs)},
-        ${toBool(body.seGeneroD1)},
-        ${toBool(body.seVaAGenerarD1)},
-        ${clean(body.observaciones)},
-        ${session.user.id},
-        ${clean(body.incidenteId)}::uuid,
-        ${clean(body.reporteCampoId)}::uuid,
-        ${clean(body.oficialId)}::uuid,
+        $32, $33,
+        $34, $35, $36,
+        $37, $38, $39,
+        $40, $41, $42::uuid, $43::uuid,
+        $44::uuid,
         'EN_REVISION_JUZGADO',
         'SIN_SOLICITUD'
       )
-      RETURNING id
-    `)
+      RETURNING id`,
+      [
+        clean(body.folioDenuncia),
+        clean(body.iph),
+        clean(body.folioCu),
+        clean(body.corporacion),
+        clean(body.sector),
+        clean(body.grupoAdscripcion),
+        clean(body.fechaReporte),
+        clean(body.horaReporte),
+        clean(body.fechaAvistamiento),
+        clean(body.horaAvistamiento),
+        clean(body.fechaDespacho),
+        clean(body.horaDespacho),
+        clean(body.fechaConfirmacion),
+        clean(body.horaConfirmacion),
+        clean(body.fechaLlegada),
+        clean(body.horaLlegada),
+        clean(body.horaInicioDenuncia),
+        clean(body.horaFinDenuncia),
+        clean(body.horaTerminoAtencion),
+        clean(body.horaCuestionario),
+        clean(body.lugarHecho),
+        clean(body.lugarApoyo),
+        clean(body.coloniaHecho),
+        clean(body.coloniaApoyo),
+        clean(body.municipio),
+        clean(body.latitudHecho),
+        clean(body.longitudHecho),
+        clean(body.tipoEvento),
+        clean(body.delito),
+        toBool(body.violencia),
+        clean(body.crp),
+        toBool(body.requirioTablet),
+        toBool(body.funcionabaTablet),
+        Number(body.ofendidoHombre) || 0,
+        Number(body.ofendidoMujer) || 0,
+        Number(body.numCuestionarios) || 0,
+        toBool(body.intervinoGs),
+        toBool(body.seGeneroD1),
+        toBool(body.seVaAGenerarD1),
+        clean(body.observaciones),
+        session.user.id,
+        clean(body.incidenteId),
+        clean(body.reporteCampoId),
+        clean(body.oficialId),
+      ]
+    )
 
     const reporteId = result.rows[0]?.id
 

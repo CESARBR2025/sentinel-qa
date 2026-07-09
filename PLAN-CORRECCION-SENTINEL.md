@@ -178,10 +178,10 @@ Paso 2 ─── Reducir schema Drizzle a solo better-auth
   2.8  Mantener: `drizzle-orm` en package.json (necesario para better-auth)
 
 Paso 3 ─── Limpiar package.json
-  3.1  Eliminar dependencia: `drizzle-orm`
-  3.2  Eliminar dependencia: `drizzle-kit`
-  3.3  Eliminar dependencia: `@types/pg` (si ya no se necesita)
-  3.4  Ejecutar: `npm uninstall drizzle-orm drizzle-kit`
+  3.1  Mantener: `drizzle-orm`        (necesario como adaptador de better-auth)
+  3.2  Eliminar: `drizzle-kit`        (CLI de migraciones, ya no se usa)
+  3.3  Mantener: `@types/pg`          (necesario para tipos de Pool en lib/db.ts)
+  3.4  Ejecutar: `npm uninstall drizzle-kit`
 
 Paso 4 ─── Documentar la BD real
   4.1  Generar esquema real desde information_schema:
@@ -195,11 +195,10 @@ Paso 4 ─── Documentar la BD real
   4.3  Mantener este archivo como fuente de verdad (actualizar manualmente con cada cambio)
 
 Paso 5 ─── Verificación
-  5.1  `grep -r "drizzle-orm" . --include="*.ts" --include="*.tsx"` → 0 resultados
-  5.2  `grep -r "from '@/lib/db/index'" . --include="*.ts" --include="*.tsx"` → 0 resultados
-  5.3  `grep -r "from '@/lib/db/schema'" . --include="*.ts" --include="*.tsx"` → 0 resultados
-  5.4  `npm run build` → exit 0
-  5.5  Probar: crear incidente, crear reporte campo, crear medida protección
+  5.1  `grep -r "from 'drizzle-orm'" lib/ app/ --include="*.ts" --include="*.tsx"` → 0 resultados (excepto node_modules)
+  5.2  `grep -r "from '@/lib/db/schema'" lib/ app/ --include="*.ts" --include="*.tsx"` → solo lib/auth.ts
+  5.3  `npm run build` → exit 0
+  5.4  Probar: crear incidente, crear reporte campo, crear medida protección
 ```
 
 ### 3.4 Fases del Paso 0 (Migración de Código)

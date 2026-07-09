@@ -1,9 +1,6 @@
 import { Pool } from 'pg'
-import { drizzle } from 'drizzle-orm/node-postgres'
-import * as schema from './db/schema'
 
 declare global {
-  // eslint-disable-next-line no-var
   var _pgPool: Pool | undefined
 }
 
@@ -12,28 +9,22 @@ function createPool(): Pool {
     connectionString: process.env.DATABASE_URL,
     max: process.env.NODE_ENV === 'production' ? 20 : 10,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 8000, // Aumentado ligeramente para redes inestables
-    // Evita que las conexiones se cierren silenciosamente por firewalls
+    connectionTimeoutMillis: 8000,
     keepAlive: true,
   })
 
-  // CRÍTICO: Capturar errores a nivel del pool. 
-  // Si una conexión inactiva falla y no hay listener, Node.js crashea todo el proceso.
   newPool.on('error', (err) => {
-    console.error('⚠️ Error inesperado en el pool de conexiones de Postgres:', err.message)
+    console.error('Error inesperado en el pool de conexiones de Postgres:', err.message)
   })
 
   return newPool
 }
 
-// Reutiliza el pool entre hot-reloads en desarrollo
 const pool: Pool = globalThis._pgPool ?? createPool()
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis._pgPool = pool
 }
-
-export const db = drizzle(pool, { schema })
 
 export default pool
 
