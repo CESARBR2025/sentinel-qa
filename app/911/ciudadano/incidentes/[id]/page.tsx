@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from "@/lib/db";
-import { 
-    incidentes, incidenteExtorsion, incidenteAlarmaEscolar,
-    catTiposIncidente, catPrioridades, catTiposEmergencia 
-} from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { query } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
@@ -20,26 +15,22 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
 
-    const [data] = await db
-        .select({
-            inc: incidentes,
-            tipoNombre: catTiposIncidente.nombre,
-            prioridadNombre: catPrioridades.nombre,
-            emergenciaNombre: catTiposEmergencia.nombre,
-            ext: incidenteExtorsion,
-            ala: incidenteAlarmaEscolar
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .leftJoin(catPrioridades, eq(incidentes.prioridadId, catPrioridades.id))
-        .leftJoin(catTiposEmergencia, eq(incidentes.tipoEmergenciaId, catTiposEmergencia.id))
-        .leftJoin(incidenteExtorsion, eq(incidentes.id, incidenteExtorsion.incidenteId))
-        .leftJoin(incidenteAlarmaEscolar, eq(incidentes.id, incidenteAlarmaEscolar.incidenteId))
-        .where(eq(incidentes.id, id))
-        .limit(1);
+    const data = await query<any>(
+        `SELECT row_to_json(i.*) AS inc, cti.nombre AS "tipoNombre", cp.nombre AS "prioridadNombre",
+                cte.nombre AS "emergenciaNombre", row_to_json(ie.*) AS ext, row_to_json(iae.*) AS ala
+         FROM incidentes i
+         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+         LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
+         LEFT JOIN incidente_extorsion ie ON i.id = ie.incidente_id
+         LEFT JOIN incidente_alarma_escolar iae ON i.id = iae.incidente_id
+         WHERE i.id = $1
+         LIMIT 1`,
+        [id]
+    );
 
-    if (!data) notFound();
-    const { inc, ext, ala } = data as any;
+    if (!data.rows[0]) notFound();
+    const { inc, ext, ala } = data.rows[0] as any;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -64,10 +55,10 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                         <section style={cardStyle}>
                             <h2 style={sectionTitleStyle}><User size={18}/> DATOS DEL REPORTANTE</h2>
                             <div style={infoGridStyle}>
-                                <div style={itemGroupStyle}><label style={labelStyle}>NOMBRE</label><span style={valueStyle}>{inc.anonimo ? 'MODO ANÓNIMO' : inc.nombreReportante}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>NOMBRE</label><span style={valueStyle}>{inc.anonimo ? 'MODO ANÓNIMO' : inc.nombre_reportante}</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>SEXO / EDAD</label><span style={valueStyle}>{inc.sexo || 'NE'} / {inc.edad || '--'} AÑOS</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>¿MIGRANTE?</label><span style={valueStyle}>{inc.esMigrante ? 'SÍ' : 'NO'}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>¿USUARIO FRECUENTE?</label><span style={valueStyle}>{inc.esUsuarioFrecuente ? 'SÍ' : 'NO'}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>¿MIGRANTE?</label><span style={valueStyle}>{inc.es_migrante ? 'SÍ' : 'NO'}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>¿USUARIO FRECUENTE?</label><span style={valueStyle}>{inc.es_usuario_frecuente ? 'SÍ' : 'NO'}</span></div>
                             </div>
                         </section>
 
@@ -75,9 +66,9 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                         <section style={cardStyle}>
                             <h2 style={sectionTitleStyle}><AlertTriangle size={18}/> CLASIFICACIÓN TÉCNICA</h2>
                             <div style={infoGridStyle}>
-                                <div style={itemGroupStyle}><label style={labelStyle}>EMERGENCIA</label><span style={valueStyle}>{data.emergenciaNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>INCIDENTE</label><span style={valueStyle}>{data.tipoNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, fontWeight: 800}}>{data.prioridadNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>EMERGENCIA</label><span style={valueStyle}>{data.rows[0].emergenciaNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>INCIDENTE</label><span style={valueStyle}>{data.rows[0].tipoNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, fontWeight: 800}}>{data.rows[0].prioridadNombre}</span></div>
                             </div>
                         </section>
 
@@ -98,9 +89,9 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                             <section style={{...cardStyle, borderLeft: '4px solid #e11d48'}}>
                                 <h2 style={{...sectionTitleStyle, color: '#e11d48'}}><Phone size={18}/> DETALLES DE EXTORSIÓN</h2>
                                 <div style={infoGridStyle}>
-                                    <div><label style={labelStyle}>TELÉFONO</label><span style={valueStyle}>{ext.telefonoExtorsion}</span></div>
-                                    <div><label style={labelStyle}>GRUPO</label><span style={valueStyle}>{ext.grupoDelictivo}</span></div>
-                                    <div style={{gridColumn: 'span 2'}}><label style={labelStyle}>MODUS OPERANDI</label><p style={valueStyle}>{ext.modusOperandi}</p></div>
+                                    <div><label style={labelStyle}>TELÉFONO</label><span style={valueStyle}>{ext.telefono_extorsion}</span></div>
+                                    <div><label style={labelStyle}>GRUPO</label><span style={valueStyle}>{ext.grupo_delictivo}</span></div>
+                                    <div style={{gridColumn: 'span 2'}}><label style={labelStyle}>MODUS OPERANDI</label><p style={valueStyle}>{ext.modus_operandi}</p></div>
                                 </div>
                             </section>
                         )}
@@ -110,7 +101,7 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                                 <h2 style={{...sectionTitleStyle, color: '#059669'}}><School size={18}/> ALARMA ESCOLAR</h2>
                                 <div style={infoGridStyle}>
                                     <div><label style={labelStyle}>ESTABLECIMIENTO</label><span style={valueStyle}>{ala.establecimiento}</span></div>
-                                    <div><label style={labelStyle}>RESPONSABLE</label><span style={valueStyle}>{ala.nombreResponsable}</span></div>
+                                    <div><label style={labelStyle}>RESPONSABLE</label><span style={valueStyle}>{ala.nombre_responsable}</span></div>
                                     <div><label style={labelStyle}>INMUEBLE</label><span style={valueStyle}>{ala.inmueble}</span></div>
                                 </div>
                             </section>
@@ -122,10 +113,10 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                             <h2 style={sectionTitleStyle}><MapPin size={18}/> UBICACIÓN</h2>
                             <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                                 <div><label style={labelStyle}>DOMICILIO</label><span style={valueStyle}>{inc.calle}, {inc.colonia}</span></div>
-                                <div><label style={labelStyle}>REFERENCIAS</label><p style={{fontSize: '12px'}}>{inc.referenciaUbicacion}</p></div>
+                                <div><label style={labelStyle}>REFERENCIAS</label><p style={{fontSize: '12px'}}>{inc.referencia_ubicacion}</p></div>
                             </div>
                         </section>
-                        <div style={footerCardStyle}>CAPTURADO POR: {inc.capturadoPor}</div>
+                        <div style={footerCardStyle}>CAPTURADO POR: {inc.capturado_por}</div>
                     </div>
                 </div>
             </main>

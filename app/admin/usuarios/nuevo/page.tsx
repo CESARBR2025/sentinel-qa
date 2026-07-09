@@ -1,6 +1,4 @@
-import { db }    from '@/lib/db/index'
-import { roles }  from '@/lib/db/schema'
-import { eq }     from 'drizzle-orm'
+import { query } from '@/lib/db'
 import Link       from 'next/link'
 import { createUser } from '@/lib/admin/actions'
 import { labelStyle as L, inputStyle as I, selectStyle as S, btnPrimario as BTN, btnSecundario } from '../../admin-styles'
@@ -11,7 +9,8 @@ export default async function NuevoUsuarioPage({
   searchParams: Promise<{ error?: string }>
 }) {
   const { error } = await searchParams
-  const rolesList = await db.select().from(roles).where(eq(roles.activo, true))
+  const rolesResult = await query<any>(`SELECT * FROM roles WHERE activo = $1`, [true])
+  const rolesList = rolesResult.rows
 
   return (
     <div style={{ maxWidth: 600 }}>

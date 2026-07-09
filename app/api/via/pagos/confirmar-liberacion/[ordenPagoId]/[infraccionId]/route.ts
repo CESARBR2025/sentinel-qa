@@ -22,7 +22,7 @@ export async function GET(
       [ordenPagoId],
     );
 
-    const infraccion = await query(
+    const infraccion = await query<any>(
       `SELECT motivo_retencion FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
       [infraccionId],
     );
@@ -41,7 +41,7 @@ export async function GET(
     );
 
     // ── Generar orden de salida ──
-    const datosOrden = await query(
+    const datosOrden = await query<any>(
       `SELECT i.*, s.es_empresa, s.nombre_empresa, s.rfc_empresa,
               s.nombre_resp_fiscal, s.appaterno_resp_fiscal, s.apmaterno_resp_fiscal,
               g.nombre AS nombre_grua

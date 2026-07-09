@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db } from '@/lib/db'
-import { seguimientosBusqueda } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { verificarAccesoPrevencionApi } from '@/lib/prevencion/permisos'
 
 export async function POST(
@@ -18,11 +16,9 @@ export async function POST(
   const { id } = await params
   const body = await request.json()
 
-  const [created] = await db.insert(seguimientosBusqueda).values({
-    fichaId: id,
-    tipo: body.tipo,
-    fechaHoraEnvio: body.fechaHoraEnvio ?? new Date(),
-  }).returning()
-
-  return NextResponse.json(created, { status: 201 })
+  const created = await query(
+    `INSERT INTO seguimientos_busqueda (ficha_id, tipo, fecha_hora_envio) VALUES ($1, $2, $3) RETURNING id, ficha_id AS "fichaId", tipo, fecha_hora_envio AS "fechaHoraEnvio", registrado_por AS "registradoPor", creado_en AS "creadoEn", archivo_url AS "archivoUrl"`,
+    [id, body.tipo, body.fechaHoraEnvio ?? new Date()],
+  )
+  return NextResponse.json(created.rows[0], { status: 201 })
 }

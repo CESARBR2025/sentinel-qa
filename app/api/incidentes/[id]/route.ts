@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db }      from '@/lib/db/index'
-import { eq }      from 'drizzle-orm'
-import { incidentes, incidentePersonasAfectadas, incidenteDespacho, incidenteReporteCampo, incidenteExtorsion, incidenteAlarmaEscolar, catTiposIncidente, catTiposEmergencia, catPrioridades, catMediosCanalizacion, users } from '@/lib/db/schema'
+import { query }   from '@/lib/db'
 import { registrarAudit } from '@/lib/incidentes/audit'
 import { verificarAccesoIncidentesApi } from '@/lib/incidentes/permisos'
 
@@ -15,68 +13,28 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   const { id } = await params
 
-  const [inc] = await db
-    .select({
-      id:                  incidentes.id,
-      folio:               incidentes.folio,
-      canal:               incidentes.canal,
-      tipoReporte:         incidentes.tipoReporte,
-      estatus:             incidentes.estatus,
-      nombreReportante:    incidentes.nombreReportante,
-      anonimo:             incidentes.anonimo,
-      sexo:                incidentes.sexo,
-      edad:                incidentes.edad,
-      esUsuarioFrecuente:  incidentes.esUsuarioFrecuente,
-      esPersonaAfectada:   incidentes.esPersonaAfectada,
-      esMigrante:          incidentes.esMigrante,
-      calle:               incidentes.calle,
-      colonia:             incidentes.colonia,
-      entreCalles:         incidentes.entreCalles,
-      referenciaUbicacion: incidentes.referenciaUbicacion,
-      municipio:           incidentes.municipio,
-      descripcion:         incidentes.descripcion,
-      observaciones:       incidentes.observaciones,
-      fechaHoraInicio:     incidentes.fechaHoraInicio,
-      fechaHoraFin:        incidentes.fechaHoraFin,
-      grupoWhatsapp:       incidentes.grupoWhatsapp,
-      nombreOficial:       incidentes.nombreOficial,
-      requiereDespacho:    incidentes.requiereDespacho,
-      creadoEn:            incidentes.creadoEn,
-      tipoIncidente:       catTiposIncidente.nombre,
-      tipoEmergencia:      catTiposEmergencia.nombre,
-      prioridad:           catPrioridades.nombre,
-      medioCanalizacion:   catMediosCanalizacion.nombre,
-      capturadoPorNombre:  users.name,
-    })
-    .from(incidentes)
-    .leftJoin(catTiposIncidente,    eq(incidentes.tipoIncidenteId,    catTiposIncidente.id))
-    .leftJoin(catTiposEmergencia,   eq(incidentes.tipoEmergenciaId,   catTiposEmergencia.id))
-    .leftJoin(catPrioridades,       eq(incidentes.prioridadId,        catPrioridades.id))
-    .leftJoin(catMediosCanalizacion, eq(incidentes.medioCanalizacionId, catMediosCanalizacion.id))
-    .leftJoin(users,                eq(incidentes.capturadoPor,       users.id))
-    .where(eq(incidentes.id, id))
-    .limit(1)
+  const inc = await query(
+    `SELECT i.id, i.folio, i.canal, i.tipo_reporte AS "tipoReporte", i.estatus, i.nombre_reportante AS "nombreReportante", i.anonimo, i.sexo, i.edad, i.es_usuario_frecuente AS "esUsuarioFrecuente", i.es_persona_afectada AS "esPersonaAfectada", i.es_migrante AS "esMigrante", i.calle, i.colonia, i.entre_calles AS "entreCalles", i.referencia_ubicacion AS "referenciaUbicacion", i.municipio, i.descripcion, i.observaciones, i.fecha_hora_inicio AS "fechaHoraInicio", i.fecha_hora_fin AS "fechaHoraFin", i.grupo_whatsapp AS "grupoWhatsapp", i.nombre_oficial AS "nombreOficial", i.requiere_despacho AS "requiereDespacho", i.creado_en AS "creadoEn", cti.nombre AS "tipoIncidente", cte.nombre AS "tipoEmergencia", cp.nombre AS prioridad, cmc.nombre AS "medioCanalizacion", u.name AS "capturadoPorNombre" FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN cat_medios_canalizacion cmc ON i.medio_canalizacion_id = cmc.id LEFT JOIN users u ON i.capturado_por = u.id WHERE i.id = $1 LIMIT 1`,
+    [id],
+  )
+  if (!inc.rows[0]) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
 
-  if (!inc) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
-
-  // Cargar sub-entidades en paralelo
   const [personas, despacho, reporte, extorsion, alarma] = await Promise.all([
-    db.select().from(incidentePersonasAfectadas).where(eq(incidentePersonasAfectadas.incidenteId, id)),
-    db.select().from(incidenteDespacho).where(eq(incidenteDespacho.incidenteId, id)).limit(1),
-    db.select().from(incidenteReporteCampo).where(eq(incidenteReporteCampo.incidenteId, id)).limit(1),
-    db.select().from(incidenteExtorsion).where(eq(incidenteExtorsion.incidenteId, id)).limit(1),
-    db.select().from(incidenteAlarmaEscolar).where(eq(incidenteAlarmaEscolar.incidenteId, id)).limit(1),
+    query(`SELECT id, incidente_id AS "incidenteId", nombre, sexo, edad, creado_en AS "creadoEn" FROM incidente_personas_afectadas WHERE incidente_id = $1`, [id]),
+    query(`SELECT id, incidente_id AS "incidenteId", fecha_hora_despacho AS "fechaHoraDespacho", despachado_por AS "despachadorPor", creado_en AS "creadoEn" FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`, [id]),
+    query(`SELECT id, incidente_id AS "incidenteId", contenido_reporte AS "contenidoReporte", lugar_calle AS "lugarCalle", lugar_colonia AS "lugarColonia", lugar_entre_calles AS "lugarEntreCalles", lugar_referencia AS "lugarReferencia", datos_positivos_negativos AS "datosPositivosNegativos", acciones_realizadas AS "accionesRealizadas", hay_detencion AS "hayDetencion", nombre_detenidos AS "nombreDetenidos", autoridad_recibe AS "autoridadRecibe", expediente_ci AS "expedienteCi", delito_falta AS "delitoFalta", monto_robo AS "montoRobo", objetos_recuperados AS "objetosRecuperados", hay_cateo AS "hayCateo", domicilio_cateado AS "domicilioCateado", resultado_cateo AS "resultadoCateo", policia_a_cargo AS "policiaCargo", capturado_por AS "capturadoPor", creado_en AS "creadoEn" FROM incidente_reporte_campo WHERE incidente_id = $1 LIMIT 1`, [id]),
+    query(`SELECT id, incidente_id AS "incidenteId", telefono_extorsion AS "telefonoExtorsion", grupo_delictivo AS "grupoDelictivo", modus_operandi AS "modusOperandi", unidad_resultado AS "unidadResultado", folio_reporte AS "folioReporte", fecha, creado_en AS "creadoEn" FROM incidente_extorsion WHERE incidente_id = $1 LIMIT 1`, [id]),
+    query(`SELECT id, incidente_id AS "incidenteId", establecimiento, direccion, inmueble, responsable, reporte_descripcion AS "reporteDescripcion", hora_canalizacion AS "horaCanalizacion", unidad_arribo AS "unidadArribo", hora_arribo AS "horaArribo", nombre_responsable AS "nombreResponsable", nombre_verificador AS "nombreVerificador", activaciones, creado_en AS "creadoEn" FROM incidente_alarma_escolar WHERE incidente_id = $1 LIMIT 1`, [id]),
   ])
 
-  // Auditar vista de incidente sensible
   await registrarAudit({ userId: session.user.id, accion: 'VIEW', entidad: 'incidentes', entidadId: id })
 
   return NextResponse.json({
-    ...inc,
-    personasAfectadas: personas,
-    despacho:          despacho[0]  ?? null,
-    reporteCampo:      reporte[0]   ?? null,
-    extorsion:         extorsion[0] ?? null,
-    alarmaEscolar:     alarma[0]    ?? null,
+    ...inc.rows[0],
+    personasAfectadas: personas.rows,
+    despacho:          despacho.rows[0]  ?? null,
+    reporteCampo:      reporte.rows[0]   ?? null,
+    extorsion:         extorsion.rows[0] ?? null,
+    alarmaEscolar:     alarma.rows[0]    ?? null,
   })
 }

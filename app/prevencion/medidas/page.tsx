@@ -1,9 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import { medidasProteccion, visitasDomiciliarias } from '@/lib/db/schema'
-import { desc, eq, and } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import Link from 'next/link'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
 import { SemaforoVigencia } from '@/components/prevencion/SemaforoVigencia'
@@ -37,36 +35,34 @@ export default async function MedidasPage({
   const { estado, autoridad, sinVisita, prorrogadas } = await searchParams
 
   // Build DB conditions
-  const conds = []
-  if (autoridad) conds.push(eq(medidasProteccion.autoridad, autoridad))
-  if (prorrogadas === '1') conds.push(eq(medidasProteccion.prorrogada, true))
+  let sql = `SELECT * FROM medidas_proteccion WHERE 1=1`
+  const values: any[] = []
+  if (autoridad) { values.push(autoridad); sql += ` AND autoridad = $${values.length}` }
+  if (prorrogadas === '1') { values.push(true); sql += ` AND prorrogada = $${values.length}` }
+  sql += ` ORDER BY creado_en DESC`
 
-  let rows = await db
-    .select()
-    .from(medidasProteccion)
-    .where(conds.length ? and(...conds) : undefined)
-    .orderBy(desc(medidasProteccion.creadoEn))
+  const result = await query<any>(sql, values)
+  let rows = result.rows
 
   // Semáforo filter (computed from date, not stored)
   const targetColor = estado ? COLOR_MAP[estado] : null
   if (targetColor) {
-    rows = rows.filter(r => calcularSemaforoVigencia(r.fechaVencimiento) === targetColor)
+    rows = rows.filter(r => calcularSemaforoVigencia(r.fecha_vencimiento) === targetColor)
   }
 
   // Sin visita filter
   if (sinVisita === '1') {
-    const conVisita = await db
-      .selectDistinct({ medidaId: visitasDomiciliarias.medidaId })
-      .from(visitasDomiciliarias)
-    const idsConVisita = new Set(conVisita.map(v => v.medidaId))
+    const conVisita = await query<{ medida_id: string }>(`SELECT DISTINCT medida_id FROM visitas_domiciliarias`)
+    const idsConVisita = new Set(conVisita.rows.map(v => v.medida_id))
     rows = rows.filter(r => !idsConVisita.has(r.id))
   }
 
-  const semaforos = rows.map(r => calcularSemaforoVigencia(r.fechaVencimiento))
+  const semaforos = rows.map(r => calcularSemaforoVigencia(r.fecha_vencimiento))
 
   // Stats siempre del total sin filtros (para contexto)
-  const allRows = await db.select({ fv: medidasProteccion.fechaVencimiento, status: medidasProteccion.status }).from(medidasProteccion)
-  const allSem = allRows.map(r => calcularSemaforoVigencia(r.fv))
+  const allRowsResult = await query<{ fecha_vencimiento: string; status: string }>(`SELECT fecha_vencimiento, status FROM medidas_proteccion`)
+  const allRows = allRowsResult.rows
+  const allSem = allRows.map(r => calcularSemaforoVigencia(r.fecha_vencimiento))
   const STATS = [
     { label: 'Total', value: allRows.length, color: '#1e293b' },
     { label: 'Activas', value: allRows.filter(r => r.status === 'activa').length, color: '#166534' },
@@ -155,10 +151,10 @@ export default async function MedidasPage({
                     <AutoridadBadge autoridad={r.autoridad} />
                   </td>
                   <td style={{ padding: '10px 12px', fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#64748b', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {r.tipoMedida ?? '—'}
+                    {r.tipo_medida ?? '—'}
                   </td>
                   <td style={{ padding: '10px 12px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', whiteSpace: 'nowrap' }}>
-                    {r.fechaVencimiento ?? '—'}
+                    {r.fecha_vencimiento ?? '—'}
                   </td>
                   <td style={{ padding: '10px 12px' }}>
                     <Link

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { db, query } from "@/lib/db";
-import { incidentes, catTiposIncidente, catPrioridades } from "@/lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { query } from "@/lib/db";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -26,23 +24,16 @@ export default async function BitacoraIncidentesPage() {
     if (!ROLES_PERMITIDOS.includes(rolResult.rows[0]?.nombre ?? '')) redirect('/dashboard')
     if (!(await tienePermiso(session.user.id, 'incidentes', 'ver'))) redirect('/dashboard')
 
-    // CAMBIAMOS A SELECT ESTÁNDAR CON JOINS (Evita el error de referencedTable)
-    const listaIncidentes = await db
-        .select({
-            id: incidentes.id,
-            folio: incidentes.folio,
-            canal: incidentes.canal,
-            estatus: incidentes.estatus,
-            colonia: incidentes.colonia,
-            fechaHoraInicio: incidentes.fechaHoraInicio,
-            tipoIncidenteNombre: catTiposIncidente.nombre,
-            prioridadNombre: catPrioridades.nombre
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .leftJoin(catPrioridades, eq(incidentes.prioridadId, catPrioridades.id))
-        .orderBy(desc(incidentes.creadoEn))
-        .limit(100);
+    const listaIncidentesResult = await query<any>(
+        `SELECT i.id, i.folio, i.canal, i.estatus, i.colonia, i.fecha_hora_inicio,
+                cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre
+         FROM incidentes i
+         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+         ORDER BY i.creado_en DESC
+         LIMIT 100`
+    )
+    const listaIncidentes = listaIncidentesResult.rows
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -78,7 +69,7 @@ export default async function BitacoraIncidentesPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {listaIncidentes.map((item) => {
+                            {listaIncidentes.map((item: any) => {
                                 let urlDetalle = "";
 
                                 if (item.canal === 'radio') {
@@ -86,7 +77,6 @@ export default async function BitacoraIncidentesPage() {
                                 } else if (item.canal === 'whatsapp') {
                                     urlDetalle = `/911/whatsapp/incidentes/${item.id}`;
                                 } else {
-                                    // Por defecto mandamos a ciudadano (911)
                                     urlDetalle = `/911/ciudadano/incidentes/${item.id}`;
                                 }
 
@@ -97,7 +87,6 @@ export default async function BitacoraIncidentesPage() {
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {/* ICONOS DINÁMICOS POR CANAL */}
                                                 {item.canal === 'radio' && <Radio size={14} color="#2563eb" />}
                                                 {item.canal === 'whatsapp' && <MessageSquare size={14} color="#059669" />}
                                                 {item.canal === '911' && <Phone size={14} color="#dc2626" />}
@@ -113,9 +102,9 @@ export default async function BitacoraIncidentesPage() {
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                <span style={{ fontSize: '13px', fontWeight: 600 }}>{item.tipoIncidenteNombre || 'S/C'}</span>
+                                                <span style={{ fontSize: '13px', fontWeight: 600 }}>{item.tipo_incidente_nombre || 'S/C'}</span>
                                                 <span style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase' }}>
-                                                    PRIORIDAD: {item.prioridadNombre || 'N/A'}
+                                                    PRIORIDAD: {item.prioridad_nombre || 'N/A'}
                                                 </span>
                                             </div>
                                         </td>
@@ -128,7 +117,7 @@ export default async function BitacoraIncidentesPage() {
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
                                                 <Clock size={12} color="#64748b" />
-                                                {new Date(item.fechaHoraInicio).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(item.fecha_hora_inicio).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </td>
                                         <td style={tdStyle}>

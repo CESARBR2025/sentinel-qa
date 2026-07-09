@@ -5,23 +5,16 @@ import {
   Camera, Zap, BarChart3, Globe, FolderClock, PackageX,
   ShieldAlert, Send
 } from 'lucide-react'
-import { db } from '@/lib/db/index'
-import { incidentes } from '@/lib/db/schema'
-import { sql } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
-import { users, roles } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
 import { query } from '@/lib/db'
 
 async function getStats() {
-  // Ejecutamos la consulta
-  const result = await db.select({ count: sql<number>`count(*)::int` }).from(incidentes)
-  // Retornamos el valor de forma segura
+  const result = await query<{ count: number }>(`SELECT count(*)::int AS count FROM incidentes`)
   return {
-    total: result[0]?.count ?? 0
+    total: result.rows[0]?.count ?? 0
   }
 }
 
@@ -35,14 +28,17 @@ export default async function GestionPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [userRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const userRoleResult = await query<any>(
+    `SELECT r.nombre AS rol_nombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id]
+  )
+  const userRole = userRoleResult.rows[0]
 
-  if (!['Administrador', 'Reportante'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!['Administrador', 'Reportante'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 

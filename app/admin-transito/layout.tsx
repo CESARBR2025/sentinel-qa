@@ -1,9 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 
 export default async function AdminTransitoLayout({
@@ -14,14 +12,17 @@ export default async function AdminTransitoLayout({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [u] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const uResult = await query<any>(
+    `SELECT r.nombre AS rol_nombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id]
+  )
+  const u = uResult.rows[0]
 
-  if (u?.rolNombre !== 'admin_transito') redirect('/dashboard')
+  if (u?.rol_nombre !== 'admin_transito') redirect('/dashboard')
 
   const user = session.user as {
     name: string

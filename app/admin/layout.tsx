@@ -1,23 +1,24 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db }       from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq }       from 'drizzle-orm'
+import { query }   from '@/lib/db'
 import Link         from 'next/link'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [u] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const uResult = await query<{ rol_nombre: string }>(
+    `SELECT r.nombre AS rol_nombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id]
+  )
+  const u = uResult.rows[0]
 
-  if (u?.rolNombre !== 'Administrador') redirect('/dashboard')
+  if (u?.rol_nombre !== 'Administrador') redirect('/dashboard')
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>

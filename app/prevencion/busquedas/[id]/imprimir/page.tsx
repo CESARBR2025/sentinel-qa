@@ -1,8 +1,6 @@
 import { auth }        from '@/lib/auth'
 import { headers }     from 'next/headers'
-import { db } from '@/lib/db/index'
-import { fichasBusqueda } from '@/lib/db/schema'
-import { eq }          from 'drizzle-orm'
+import { query }       from '@/lib/db'
 import { notFound, redirect } from 'next/navigation'
 import { format }      from 'date-fns'
 import { es }          from 'date-fns/locale'
@@ -22,11 +20,8 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
 
   const { id } = await params
 
-  const [ficha] = await db
-    .select()
-    .from(fichasBusqueda)
-    .where(eq(fichasBusqueda.id, id))
-    .limit(1)
+  const fichaResult = await query<any>(`SELECT * FROM fichas_busqueda WHERE id = $1 LIMIT 1`, [id])
+  const ficha = fichaResult.rows[0]
 
   if (!ficha) notFound()
 
@@ -93,9 +88,9 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
         {/* Datos de la persona */}
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 20, fontFamily: 'sans-serif', fontSize: 12 }}>
           <tbody>
-            <PrintRow label="Nombre completo"   value={ficha.nombreDesaparecida} bold />
+            <PrintRow label="Nombre completo"   value={ficha.nombre_desaparecida} bold />
             <PrintRow label="Edad"               value={ficha.edad != null ? `${ficha.edad} años` : '—'} />
-            <PrintRow label="Carpeta de investigación" value={ficha.carpetaInvestigacion} />
+            <PrintRow label="Carpeta de investigación" value={ficha.carpeta_investigacion} />
           </tbody>
         </table>
 
@@ -105,11 +100,11 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 20, fontFamily: 'sans-serif', fontSize: 12 }}>
           <tbody>
-            <PrintRow label="Fecha y hora de activación" value={fmtDT(ficha.fechaActivacion)} bold />
-            <PrintRow label="Fecha y hora de aceptación" value={fmtDT(ficha.fechaAceptacion)} />
+            <PrintRow label="Fecha y hora de activación" value={fmtDT(ficha.fecha_activacion)} bold />
+            <PrintRow label="Fecha y hora de aceptación" value={fmtDT(ficha.fecha_aceptacion)} />
             <PrintRow label="Enlace asignado"            value={ficha.enlace} />
-            <PrintRow label="RT que atiende"             value={ficha.rtAtiende} />
-            <PrintRow label="Elemento de novedades"      value={ficha.elementoNovedades} />
+            <PrintRow label="RT que atiende"             value={ficha.rt_atiende} />
+            <PrintRow label="Elemento de novedades"      value={ficha.elemento_novedades} />
           </tbody>
         </table>
 

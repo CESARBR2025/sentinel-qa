@@ -1,13 +1,11 @@
-import { db } from "@/lib/db";
-import { incidentes, catTiposIncidente } from "@/lib/db/schema";
-import { eq, desc, count } from "drizzle-orm"; // Importamos count
+import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, Shield, Car } from "lucide-react";
 import Link from "next/link";
-import { Pagination } from "@/components/911/Pagination"; // Importamos el componente
+import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ListadoRondinPage({
@@ -27,32 +25,34 @@ export default async function ListadoRondinPage({
 
     // 2. Ejecución de consultas en paralelo (Optimizado)
     const [totalRes, dataRes] = await Promise.all([
-        // Conteo total para rondines (canal 'radio')
-        db.select({ value: count() })
-          .from(incidentes)
-          .where(eq(incidentes.canal, 'radio')),
-        
-        // Datos paginados
-        db.select({
-            id: incidentes.id,
-            folio: incidentes.folio,
-            estatus: incidentes.estatus,
-            fecha: incidentes.fechaHoraInicio,
-            colonia: incidentes.colonia,
-            tipo: catTiposIncidente.nombre,
-            oficial: incidentes.nombreOficial,
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .where(eq(incidentes.canal, 'radio')) 
-        .orderBy(desc(incidentes.fechaHoraInicio))
-        .limit(pageSize)
-        .offset(offset)
+        query<{ value: number }>(
+            'SELECT count(*)::int AS value FROM incidentes WHERE canal = $1',
+            ['radio']
+        ),
+
+        query<{
+            id: string;
+            folio: string;
+            estatus: string;
+            fecha: string;
+            colonia: string | null;
+            tipo: string | null;
+            oficial: string | null;
+        }>(
+            `SELECT i.id, i.folio, i.estatus, i.fecha_hora_inicio AS fecha, i.colonia,
+                    cti.nombre AS tipo, i.nombre_oficial AS oficial
+             FROM incidentes i
+             LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+             WHERE i.canal = $1
+             ORDER BY i.fecha_hora_inicio DESC
+             LIMIT $2 OFFSET $3`,
+            ['radio', pageSize, offset]
+        ),
     ]);
 
-    const totalCount = totalRes[0].value;
+    const totalCount = totalRes.rows[0].value;
     const totalPages = Math.ceil(totalCount / pageSize);
-    const listado = dataRes;
+    const listado = dataRes.rows;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -151,7 +151,7 @@ export default async function ListadoRondinPage({
                         totalPages={totalPages}
                         totalCount={totalCount}
                         pageSize={pageSize}
-                        baseUrl="/911/rondin/incidentes" // <-- Ajusta esta URL a la ruta real de este archivo
+                        baseUrl="/911/rondin/incidentes"
                     />
                 </div>
             </main>

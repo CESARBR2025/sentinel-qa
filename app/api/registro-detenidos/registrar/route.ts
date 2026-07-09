@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db'; // Tu conexión
+import { query } from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { sql } from 'drizzle-orm';
 
 export async function POST(req: Request) {
   try {
@@ -37,8 +36,8 @@ export async function POST(req: Request) {
     const d = (key: string) => formData.get(key)?.toString() || null;
 
     // 5. Insertar en la Base de Datos
-    await db.execute(sql`
-      INSERT INTO fichas_inteligencia_detenidos (
+    await query(
+      `INSERT INTO fichas_inteligencia_detenidos (
         nombre_detenido, folio, foto_frontal_url, foto_objetos_url, fecha_nacimiento,
         origen, genero, escolaridad, estado_civil, ocupacion, domicilio,
         rasgos_particulares, eventos_delictivos, fecha_hora_evento, rnd, iph,
@@ -46,14 +45,18 @@ export async function POST(req: Request) {
         puesta_disposicion, modus_operandi, info_adicional, antecedentes, faltas_admin,
         capturado_por
       ) VALUES (
-        ${d('nombreDetenido')}, ${d('folio')}, ${fotoFrontalUrl}, ${fotoObjetosUrl}, ${d('fechaNacimiento')},
-        ${d('origen')}, ${d('genero')}, ${d('escolaridad')}, ${d('estadoCivil')}, ${d('ocupacion')}, ${d('domicilio')},
-        ${d('rasgosParticulares')}, ${d('eventosDelictivos')}, ${d('fechaHora')}, ${d('rnd')}, ${d('iph')},
-        ${d('expediente')}, ${d('lugarEvento')}, ${d('lugarDetencion')}, ${d('nexosDelictivos')}, ${d('zonaOperacion')},
-        ${d('puestaDisposicion')}, ${d('modusOperandi')}, ${d('infoAdicional')}, ${d('antecedentes')}, ${d('faltasAdmin')},
-        ${session.user.name}
-      )
-    `);
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+        $21, $22, $23, $24, $25, $26, $27
+      )`,
+      [d('nombreDetenido'), d('folio'), fotoFrontalUrl, fotoObjetosUrl,
+       d('fechaNacimiento'), d('origen'), d('genero'), d('escolaridad'),
+       d('estadoCivil'), d('ocupacion'), d('domicilio'), d('rasgosParticulares'),
+       d('eventosDelictivos'), d('fechaHora'), d('rnd'), d('iph'),
+       d('expediente'), d('lugarEvento'), d('lugarDetencion'), d('nexosDelictivos'),
+       d('zonaOperacion'), d('puestaDisposicion'), d('modusOperandi'),
+       d('infoAdicional'), d('antecedentes'), d('faltasAdmin'), session.user.name],
+    );
 
     return NextResponse.json({ 
       success: true, 

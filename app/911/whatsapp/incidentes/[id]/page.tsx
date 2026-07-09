@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from "@/lib/db";
-import { 
-    incidentes, 
-    catTiposIncidente, catPrioridades, catTiposEmergencia 
-} from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { query } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
@@ -24,22 +19,20 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
     if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
 
     // Consulta con Joins para evitar el error de 'referencedTable'
-    const [data] = await db
-        .select({
-            inc: incidentes,
-            tipoNombre: catTiposIncidente.nombre,
-            prioridadNombre: catPrioridades.nombre,
-            emergenciaNombre: catTiposEmergencia.nombre
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .leftJoin(catPrioridades, eq(incidentes.prioridadId, catPrioridades.id))
-        .leftJoin(catTiposEmergencia, eq(incidentes.tipoEmergenciaId, catTiposEmergencia.id))
-        .where(eq(incidentes.id, id))
-        .limit(1);
+    const data = await query<any>(
+        `SELECT row_to_json(i.*) AS inc, cti.nombre AS "tipoNombre",
+                cp.nombre AS "prioridadNombre", cte.nombre AS "emergenciaNombre"
+         FROM incidentes i
+         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+         LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
+         WHERE i.id = $1
+         LIMIT 1`,
+        [id]
+    );
 
-    if (!data) notFound();
-    const { inc } = data as any;
+    if (!data.rows[0]) notFound();
+    const { inc } = data.rows[0] as any;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -76,19 +69,19 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}><Shield size={12}/> GRUPO DE ORIGEN</label>
                                     <span style={{...valueStyle, color: '#059669', fontWeight: 700}}>
-                                        {inc.grupoWhatsapp || 'SIN GRUPO ESPECIFICADO'}
+                                        {inc.grupo_whatsapp || 'SIN GRUPO ESPECIFICADO'}
                                     </span>
                                 </div>
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}><User size={12}/> REPORTANTE</label>
                                     <span style={valueStyle}>
-                                        {inc.anonimo ? 'MODO ANÓNIMO' : (inc.nombreReportante || 'No identificado')}
+                                        {inc.anonimo ? 'MODO ANÓNIMO' : (inc.nombre_reportante || 'No identificado')}
                                     </span>
                                 </div>
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}><Clock size={12}/> FECHA Y HORA</label>
                                     <span style={valueStyle}>
-                                        {inc.fechaHoraInicio ? new Date(inc.fechaHoraInicio).toLocaleString() : 'N/A'}
+                                        {inc.fecha_hora_inicio ? new Date(inc.fecha_hora_inicio).toLocaleString() : 'N/A'}
                                     </span>
                                 </div>
                                 <div style={itemGroupStyle}>
@@ -105,11 +98,11 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
                             <div style={infoGridStyle}>
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}>TIPO DE INCIDENTE</label>
-                                    <span style={valueStyle}>{data.tipoNombre || 'S/C'}</span>
+                                    <span style={valueStyle}>{data.rows[0].tipoNombre || 'S/C'}</span>
                                 </div>
                                 <div style={itemGroupStyle}>
                                     <label style={labelStyle}>PRIORIDAD</label>
-                                    <span style={{...valueStyle, fontWeight: 700}}>{data.prioridadNombre || 'N/A'}</span>
+                                    <span style={{...valueStyle, fontWeight: 700}}>{data.rows[0].prioridadNombre || 'N/A'}</span>
                                 </div>
                             </div>
                         </section>
@@ -139,7 +132,7 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
                                 <div style={refBoxStyle}>
                                     <label style={labelStyle}>REFERENCIAS</label>
                                     <p style={{fontSize: '13px', margin: 0}}>
-                                        {inc.referenciaUbicacion || 'SIN REFERENCIAS'}
+                                        {inc.referencia_ubicacion || 'SIN REFERENCIAS'}
                                     </p>
                                 </div>
                             </div>
@@ -148,7 +141,7 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
                         <div style={footerCardStyle}>
                             REGISTRO CAPTURADO POR:<br/>
                             <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: 'white' }}>
-                                {inc.capturadoPor}
+                                {inc.capturado_por}
                             </span>
                         </div>
                     </div>

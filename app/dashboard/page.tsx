@@ -4,32 +4,32 @@ import { redirect } from 'next/navigation'
 import { SignOutButton } from './sign-out-button'
 import { Enable2FA } from './enable-2fa'
 import { ModuleCards } from './module-cards'
-import { db } from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  // Redirect Oficial de Campo to their dedicated view
-  const [userRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const userRoleResult = await query<any>(
+    `SELECT r.nombre AS rol_nombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id]
+  )
+  const userRole = userRoleResult.rows[0]
 
-  if (userRole?.rolNombre === 'admin_transito') redirect('/admin-transito')
-  if (userRole?.rolNombre === 'Oficial de Campo') redirect('/oficial')
-  if (userRole?.rolNombre === 'agente_fiscalia') redirect('/fiscalia')
-  if (userRole?.rolNombre === 'agente_juzgado') redirect('/agente_juzgado')
-  if (userRole?.rolNombre === 'agente_liberaciones') redirect('/agente_liberaciones')
-  if (userRole?.rolNombre === 'agente_infracciones') redirect('/agente_infracciones')
-  if (userRole?.rolNombre === 'Monitorista') redirect('/monitorista')
-  if (userRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
-  if (userRole?.rolNombre === 'Reportante') redirect('/reportes')
-  if (userRole?.rolNombre === 'corralon_mw' || userRole?.rolNombre === 'corralon_mejia') redirect('/corralon')
+  if (userRole?.rol_nombre === 'admin_transito') redirect('/admin-transito')
+  if (userRole?.rol_nombre === 'Oficial de Campo') redirect('/oficial')
+  if (userRole?.rol_nombre === 'agente_fiscalia') redirect('/fiscalia')
+  if (userRole?.rol_nombre === 'agente_juzgado') redirect('/agente_juzgado')
+  if (userRole?.rol_nombre === 'agente_liberaciones') redirect('/agente_liberaciones')
+  if (userRole?.rol_nombre === 'agente_infracciones') redirect('/agente_infracciones')
+  if (userRole?.rol_nombre === 'Monitorista') redirect('/monitorista')
+  if (userRole?.rol_nombre === 'Auxiliar') redirect('/auxiliar')
+  if (userRole?.rol_nombre === 'Reportante') redirect('/reportes')
+  if (userRole?.rol_nombre === 'corralon_mw' || userRole?.rol_nombre === 'corralon_mejia') redirect('/corralon')
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean

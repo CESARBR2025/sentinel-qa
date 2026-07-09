@@ -1,6 +1,4 @@
-import { db } from '@/lib/db/index'
-import { roles } from '@/lib/db/schema'
-import { eq } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { obtenerPlantillaRol, guardarPlantillaSeccionesAction } from '@/lib/permisos/core'
@@ -19,7 +17,8 @@ export default async function PlantillaPermisosRolPage({
   const { exito } = await searchParams
   const rolId = Number(id)
 
-  const [rol] = await db.select().from(roles).where(eq(roles.id, rolId)).limit(1)
+  const rolResult = await query<any>(`SELECT * FROM roles WHERE id = $1 LIMIT 1`, [rolId])
+  const rol = rolResult.rows[0]
   if (!rol) notFound()
 
   const modulo = MODULOS_POR_ROL[rol.nombre]

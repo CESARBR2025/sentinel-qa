@@ -1,9 +1,7 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db }      from '@/lib/db/index'
-import { users, roles } from '@/lib/db/schema'
-import { eq }      from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { listarParesReporte } from '@/lib/auxiliar/service'
 import { ArrowLeft, CheckCircle2, Circle } from 'lucide-react'
 import Link from 'next/link'
@@ -13,14 +11,17 @@ export default async function ChecklistPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [userRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const userRoleResult = await query<any>(
+    `SELECT r.nombre AS rol_nombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id]
+  )
+  const userRole = userRoleResult.rows[0]
 
-  if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rolNombre ?? '')) redirect('/dashboard')
+  if (!['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userRole?.rol_nombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const pares = await listarParesReporte()

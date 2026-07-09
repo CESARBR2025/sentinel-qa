@@ -1,9 +1,7 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db }       from '@/lib/db/index'
-import { notificaciones } from '@/lib/db/schema'
-import { eq, and, desc } from 'drizzle-orm'
+import { query }   from '@/lib/db'
 import Link         from 'next/link'
 import PrevencionNav from './PrevencionNav'
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones'
@@ -17,14 +15,11 @@ export default async function PrevencionLayout({ children }: { children: React.R
   await generarAlertasBusquedas(session.user.id)
 
   // Fetch initial unread notifications to pass as SSR props
-  const initialNotifs = await db
-    .select()
-    .from(notificaciones)
-    .where(and(
-      eq(notificaciones.userId, session.user.id),
-      eq(notificaciones.leida, false),
-    ))
-    .orderBy(desc(notificaciones.creadoEn))
+  const notifsResult = await query(
+    `SELECT * FROM notificaciones WHERE user_id = $1 AND leida = $2 ORDER BY creado_en DESC`,
+    [session.user.id, false]
+  )
+  const initialNotifs = notifsResult.rows as any
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>

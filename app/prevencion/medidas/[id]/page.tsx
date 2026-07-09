@@ -1,8 +1,6 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db }  from '@/lib/db/index'
-import { medidasProteccion, visitasDomiciliarias, medidaAutoridadesAdicionales } from '@/lib/db/schema'
-import { eq, desc, asc } from 'drizzle-orm'
+import { query }   from '@/lib/db'
 import Link         from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
@@ -22,27 +20,24 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
 
   const { id } = await params
 
-  const [medida] = await db
-    .select()
-    .from(medidasProteccion)
-    .where(eq(medidasProteccion.id, id))
-    .limit(1)
+  const medidaResult = await query<any>(`SELECT * FROM medidas_proteccion WHERE id = $1 LIMIT 1`, [id])
+  const medida = medidaResult.rows[0]
 
   if (!medida) notFound()
 
-  const visitas = await db
-    .select()
-    .from(visitasDomiciliarias)
-    .where(eq(visitasDomiciliarias.medidaId, id))
-    .orderBy(desc(visitasDomiciliarias.fechaVisita))
+  const visitasResult = await query<any>(
+    `SELECT * FROM visitas_domiciliarias WHERE medida_id = $1 ORDER BY fecha_visita DESC`,
+    [id]
+  )
+  const visitas = visitasResult.rows
 
-  const autoridadesAdicionales = await db
-    .select()
-    .from(medidaAutoridadesAdicionales)
-    .where(eq(medidaAutoridadesAdicionales.medidaId, id))
-    .orderBy(asc(medidaAutoridadesAdicionales.creadoEn))
+  const autoridadesAdicionalesResult = await query<any>(
+    `SELECT * FROM medida_autoridades_adicionales WHERE medida_id = $1 ORDER BY creado_en ASC`,
+    [id]
+  )
+  const autoridadesAdicionales = autoridadesAdicionalesResult.rows
 
-  const semaforo = calcularSemaforoVigencia(medida.fechaVencimiento)
+  const semaforo = calcularSemaforoVigencia(medida.fecha_vencimiento)
 
   return (
     <div>
@@ -89,29 +84,29 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
       {/* Detalle */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 40 }}>
         <Card title="Datos del Oficio">
-          <Field label="No. Oficio"     value={medida.nOficio} />
-          <Field label="Fecha Oficio"   value={medida.fechaOficio} />
-          <Field label="Fecha Recepción" value={medida.fechaRecepcion} />
-          <Field label="Recepciona"     value={medida.personaRecepciona} />
+          <Field label="No. Oficio"     value={medida.n_oficio} />
+          <Field label="Fecha Oficio"   value={medida.fecha_oficio} />
+          <Field label="Fecha Recepción" value={medida.fecha_recepcion} />
+          <Field label="Recepciona"     value={medida.persona_recepciona} />
           <Field label="Autoridad"      value={<AutoridadBadge autoridad={medida.autoridad} />} />
-          {medida.nombreAutoridad && <Field label="Emite"         value={medida.nombreAutoridad} />}
+          {medida.nombre_autoridad && <Field label="Emite"         value={medida.nombre_autoridad} />}
           {medida.delitos         && <Field label="Delito(s)"     value={medida.delitos} />}
         </Card>
 
         <Card title="Medida de Protección">
           <Field label="Víctima"        value={medida.victima} />
           {medida.demandado       && <Field label="Demandado"     value={medida.demandado} />}
-          {medida.tipoMedida      && <Field label="Tipo Medida"   value={medida.tipoMedida} />}
-          <Field label="Domicilio"      value={medida.domicilioProteccion} />
+          {medida.tipo_medida      && <Field label="Tipo Medida"   value={medida.tipo_medida} />}
+          <Field label="Domicilio"      value={medida.domicilio_proteccion} />
           {medida.colonia         && <Field label="Colonia"       value={medida.colonia} />}
           {medida.telefono        && <Field label="Teléfono"      value={medida.telefono} />}
-          {medida.tiempoMedida    && <Field label="Tiempo"        value={medida.tiempoMedida} />}
-          {medida.fechaVencimiento && <Field label="Vencimiento"  value={medida.fechaVencimiento} />}
-          {medida.tipoApercibimiento && <Field label="Apercibimiento" value={medida.tipoApercibimiento} />}
+          {medida.tiempo_medida    && <Field label="Tiempo"        value={medida.tiempo_medida} />}
+          {medida.fecha_vencimiento && <Field label="Vencimiento"  value={medida.fecha_vencimiento} />}
+          {medida.tipo_apercibimiento && <Field label="Apercibimiento" value={medida.tipo_apercibimiento} />}
 {medida.prorrogada && (
             <Field label="Doc. prorrogue" value={
-              medida.archivoProrrogaUrl ? (
-                <ProrrogaViewerModal archivoProrrogaUrl={medida.archivoProrrogaUrl} />
+              medida.archivo_prorroga_url ? (
+                <ProrrogaViewerModal archivoProrrogaUrl={medida.archivo_prorroga_url} />
               ) : (
                 <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#334155', letterSpacing: '0.08em' }}>
                   Sin archivo adjunto
@@ -142,14 +137,14 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
             {autoridadesAdicionales.map(a => (
               <div key={a.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px', display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
                 <AutoridadBadge autoridad={a.autoridad} />
-                {a.nOficio && (
+                {a.n_oficio && (
                   <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1e293b' }}>
-                    Oficio: {a.nOficio}
+                    Oficio: {a.n_oficio}
                   </span>
                 )}
-                {a.fechaOficio && (
+                {a.fecha_oficio && (
                   <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#334155' }}>
-                    {a.fechaOficio}
+                    {a.fecha_oficio}
                   </span>
                 )}
               </div>
@@ -198,9 +193,9 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
             {visitas.map(v => (
               <div key={v.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '14px 18px', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
                 <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2563eb', whiteSpace: 'nowrap' }}>
-                  {v.fechaVisita} · {v.horaVisita}
+                  {v.fecha_visita} · {v.hora_visita}
                 </span>
-                {v.apercibimientoAplicado && (
+                {v.apercibimiento_aplicado && (
                   <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#991b1b', border: '1px solid #991b1b', background: '#fef2f2', padding: '2px 7px', letterSpacing: '0.15em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                     Apercibimiento aplicado
                   </span>

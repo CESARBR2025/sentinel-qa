@@ -1,13 +1,11 @@
-import { db } from "@/lib/db";
-import { incidentes, catTiposIncidente, catPrioridades } from "@/lib/db/schema";
-import { eq, desc, count } from "drizzle-orm"; // Importamos count
+import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, AlertTriangle, Clock } from "lucide-react";
 import Link from "next/link";
-import { Pagination } from "@/components/911/Pagination"; // Importamos el componente
+import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function Listado911Page({
@@ -27,31 +25,35 @@ export default async function Listado911Page({
 
     // 2. Consultas en paralelo (Optimizado para Central 911)
     const [totalRes, dataRes] = await Promise.all([
-        db.select({ value: count() })
-          .from(incidentes)
-          .where(eq(incidentes.canal, '911')),
-        
-        db.select({
-            id: incidentes.id,
-            folio: incidentes.folio,
-            estatus: incidentes.estatus,
-            fecha: incidentes.fechaHoraInicio,
-            colonia: incidentes.colonia,
-            tipo: catTiposIncidente.nombre,
-            prioridad: catPrioridades.nombre,
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .leftJoin(catPrioridades, eq(incidentes.prioridadId, catPrioridades.id))
-        .where(eq(incidentes.canal, '911'))
-        .orderBy(desc(incidentes.fechaHoraInicio))
-        .limit(pageSize)
-        .offset(offset)
+        query<{ value: number }>(
+            'SELECT count(*)::int AS value FROM incidentes WHERE canal = $1',
+            ['911']
+        ),
+
+        query<{
+            id: string;
+            folio: string;
+            estatus: string;
+            fecha: string;
+            colonia: string | null;
+            tipo: string | null;
+            prioridad: string | null;
+        }>(
+            `SELECT i.id, i.folio, i.estatus, i.fecha_hora_inicio AS fecha, i.colonia,
+                    cti.nombre AS tipo, cp.nombre AS prioridad
+             FROM incidentes i
+             LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+             LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+             WHERE i.canal = $1
+             ORDER BY i.fecha_hora_inicio DESC
+             LIMIT $2 OFFSET $3`,
+            ['911', pageSize, offset]
+        ),
     ]);
 
-    const totalCount = totalRes[0].value;
+    const totalCount = totalRes.rows[0].value;
     const totalPages = Math.ceil(totalCount / pageSize);
-    const listado = dataRes;
+    const listado = dataRes.rows;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -155,7 +157,7 @@ export default async function Listado911Page({
                         totalPages={totalPages}
                         totalCount={totalCount}
                         pageSize={pageSize}
-                        baseUrl="/911/ciudadano/incidentes" // <-- REVISA QUE ESTA SEA LA RUTA REAL
+                        baseUrl="/911/ciudadano/incidentes"
                     />
                 </div>
             </main>

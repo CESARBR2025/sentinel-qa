@@ -1,8 +1,6 @@
 import { ModuleCard } from '@/components/911/ModuleCard'
 import { Users, MessageSquare, MapPin, Shield, ClipboardList } from 'lucide-react'
-import { db } from '@/lib/db/index'
-import { incidentes } from '@/lib/db/schema'
-import { eq, and, sql } from 'drizzle-orm'
+import { query } from '@/lib/db'
 
 // --- NUEVOS IMPORTS PARA SESIÓN ---
 import { redirect } from 'next/navigation'
@@ -18,29 +16,25 @@ async function getStats() {
   const hoyISO = hoy.toISOString()
 
   const [total, hoyTotal, pendientes, enDespacho] = await Promise.all([
-    db.select({ count: sql<number>`count(*)::int` }).from(incidentes),
-    db.select({ count: sql<number>`count(*)::int` }).from(incidentes)
-      .where(sql`fecha_hora_inicio >= ${hoyISO}`),
-    db.select({ count: sql<number>`count(*)::int` }).from(incidentes)
-      .where(and(eq(incidentes.estatus, 'sin_despachar'), eq(incidentes.requiereDespacho, true))),
-    db.select({ count: sql<number>`count(*)::int` }).from(incidentes)
-      .where(eq(incidentes.estatus, 'en_despacho')),
+    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes'),
+    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes WHERE fecha_hora_inicio >= $1', [hoyISO]),
+    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes WHERE estatus = $1 AND requiere_despacho = $2', ['sin_despachar', true]),
+    query<{ count: number }>('SELECT count(*)::int AS count FROM incidentes WHERE estatus = $1', ['en_despacho']),
   ])
 
-  const porCanal = await db
-    .select({ canal: incidentes.canal, count: sql<number>`count(*)::int` })
-    .from(incidentes)
-    .where(sql`fecha_hora_inicio >= ${hoyISO}`)
-    .groupBy(incidentes.canal)
+  const porCanal = await query<{ canal: string; count: number }>(
+    'SELECT canal, count(*)::int AS count FROM incidentes WHERE fecha_hora_inicio >= $1 GROUP BY canal',
+    [hoyISO]
+  )
 
   return {
-    total:      total[0]?.count      ?? 0,
-    hoyTotal:   hoyTotal[0]?.count   ?? 0,
-    pendientes: pendientes[0]?.count ?? 0,
-    enDespacho: enDespacho[0]?.count ?? 0,
-    hoy911:  porCanal.find(r => r.canal === '911')?.count      ?? 0,
-    hoyWA:   porCanal.find(r => r.canal === 'whatsapp')?.count ?? 0,
-    hoyRadio: porCanal.find(r => r.canal === 'radio')?.count   ?? 0,
+    total:      total.rows[0]?.count      ?? 0,
+    hoyTotal:   hoyTotal.rows[0]?.count   ?? 0,
+    pendientes: pendientes.rows[0]?.count ?? 0,
+    enDespacho: enDespacho.rows[0]?.count ?? 0,
+    hoy911:  porCanal.rows.find(r => r.canal === '911')?.count      ?? 0,
+    hoyWA:   porCanal.rows.find(r => r.canal === 'whatsapp')?.count ?? 0,
+    hoyRadio: porCanal.rows.find(r => r.canal === 'radio')?.count   ?? 0,
   }
 }
 

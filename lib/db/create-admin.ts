@@ -3,40 +3,38 @@
  * Ejecutar: npm run db:create-admin
  */
 import { loadEnvConfig } from '@next/env'
-import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import { eq } from 'drizzle-orm'
-import * as schema from './schema'
 import { hashPassword } from 'better-auth/crypto'
 import { generateId } from 'better-auth'
 
 loadEnvConfig(process.cwd())
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
-const db   = drizzle(pool, { schema })
 
 const ADMIN = {
   nombre:   'CARLOS ADRIAN',
   apellido: 'TREJO RAMIREZ',
   email:    'triniummx@gmail.com',
-  password: 'Admin@SSPM2025!',  // Cambia esto en el primer login
+  password: 'Admin@SSPM2025!',
 }
 
 async function main() {
-  // Verificar si ya existe
-  const existing = await db.query.users.findFirst({
-    where: eq(schema.users.email, ADMIN.email),
-  })
+  const existing = (await pool.query(
+    `SELECT id FROM users WHERE email = $1 LIMIT 1`,
+    [ADMIN.email],
+  )).rows[0]
+
   if (existing) {
     console.log('⚠  El usuario ya existe:', ADMIN.email)
     await pool.end()
     return
   }
 
-  // Obtener rol Administrador
-  const rol = await db.query.roles.findFirst({
-    where: eq(schema.roles.nombre, 'Administrador'),
-  })
+  const rol = (await pool.query<{ id: number; nombre: string }>(
+    `SELECT id, nombre FROM roles WHERE nombre = $1 LIMIT 1`,
+    ['Administrador'],
+  )).rows[0]
+
   if (!rol) {
     console.error('✗ No se encontró el rol Administrador. Ejecuta npm run db:seed primero.')
     await pool.end()
@@ -47,26 +45,17 @@ async function main() {
   const accountId    = generateId()
   const passwordHash = await hashPassword(ADMIN.password)
 
-  // Insertar usuario
-  await db.insert(schema.users).values({
-    id:        userId,
-    name:      ADMIN.nombre,
-    apellido:  ADMIN.apellido,
-    email:     ADMIN.email,
-    emailVerified: true,
-    rolId:     rol.id,
-    activo:    true,
-    twoFactorEnabled: false,
-  })
+  await pool.query(
+    `INSERT INTO users (id, name, apellido, email, email_verified, rol_id, activo, two_factor_enabled)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+    [userId, ADMIN.nombre, ADMIN.apellido, ADMIN.email, true, rol.id, true, false],
+  )
 
-  // Insertar cuenta (credenciales email/password)
-  await db.insert(schema.accounts).values({
-    id:         accountId,
-    accountId:  userId,
-    providerId: 'credential',
-    userId:     userId,
-    password:   passwordHash,
-  })
+  await pool.query(
+    `INSERT INTO accounts (id, account_id, provider_id, user_id, password)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [accountId, userId, 'credential', userId, passwordHash],
+  )
 
   console.log('✓ Usuario administrador creado:')
   console.log('  Nombre:     ', ADMIN.nombre, ADMIN.apellido)

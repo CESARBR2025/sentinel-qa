@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { db } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -11,8 +11,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const { id } = await params;
     
-    // SQL PURO para traer absolutamente todo el registro
-    const result = await db.$client.query(`
+    const result = await query(`
       SELECT * FROM iph_detenidos WHERE id = $1
     `, [id]);
 

@@ -3,14 +3,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db/index"; // Asegúrate de que esta ruta sea correcta
-import { eq } from "drizzle-orm";
-import { 
-  catTiposEmergencia, 
-  catTiposIncidente, 
-  catPrioridades, 
-  catMediosCanalizacion 
-} from "@/lib/db/schema";
+import { query } from "@/lib/db";
 
 import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
@@ -39,10 +32,10 @@ export default async function Ciudadano911Page() {
   };
 
     const [emergencias, incidentes, prioridades, canalizaciones] = await Promise.all([
-    db.select().from(catTiposEmergencia).where(eq(catTiposEmergencia.activo, true)),
-    db.select().from(catTiposIncidente).where(eq(catTiposIncidente.activo, true)),
-    db.select().from(catPrioridades).where(eq(catPrioridades.activo, true)),
-    db.select().from(catMediosCanalizacion).where(eq(catMediosCanalizacion.activo, true)),
+    query('SELECT * FROM cat_tipos_emergencia WHERE activo = $1', [true]),
+    query('SELECT * FROM cat_tipos_incidente WHERE activo = $1', [true]),
+    query('SELECT * FROM cat_prioridades WHERE activo = $1', [true]),
+    query('SELECT * FROM cat_medios_canalizacion WHERE activo = $1', [true]),
   ]);
 
   return (
@@ -151,10 +144,10 @@ export default async function Ciudadano911Page() {
           <Formulario911 
             user={user} 
             catalogos={{
-              emergencias,
-              incidentes,
-              prioridades,
-              canalizaciones
+              emergencias: emergencias.rows,
+              incidentes: incidentes.rows,
+              prioridades: prioridades.rows,
+              canalizaciones: canalizaciones.rows
             }}
           />
         </div>

@@ -1,9 +1,7 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db }       from '@/lib/db/index'
-import { solicitudesInformacion, users, roles } from '@/lib/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { query }   from '@/lib/db'
 import Link          from 'next/link'
 import { format }    from 'date-fns'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
@@ -13,23 +11,26 @@ export default async function JuridicoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const [userWithRole] = await db
-    .select({ rolNombre: roles.nombre })
-    .from(users)
-    .leftJoin(roles, eq(users.rolId, roles.id))
-    .where(eq(users.id, session.user.id))
-    .limit(1)
+  const userRoleResult = await query<{ rol_nombre: string }>(
+    `SELECT r.nombre AS rol_nombre
+     FROM users u
+     LEFT JOIN roles r ON u.rol_id = r.id
+     WHERE u.id = $1
+     LIMIT 1`,
+    [session.user.id]
+  )
+  const userWithRole = userRoleResult.rows[0]
 
-  const isJuridico = userWithRole?.rolNombre === 'Jurídico'
-  const isAdmin = userWithRole?.rolNombre === 'Administrador'
+  const isJuridico = userWithRole?.rol_nombre === 'Jurídico'
+  const isAdmin = userWithRole?.rol_nombre === 'Administrador'
   if (!isJuridico && !isAdmin) redirect('/prevencion/medidas')
   if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/prevencion/medidas')
 
-  const solicitudes = await db
-    .select()
-    .from(solicitudesInformacion)
-    .where(eq(solicitudesInformacion.status, 'en_juridico'))
-    .orderBy(desc(solicitudesInformacion.creadoEn))
+  const solicitudesResult = await query<any>(
+    `SELECT * FROM solicitudes_informacion WHERE status = $1 ORDER BY creado_en DESC`,
+    ['en_juridico']
+  )
+  const solicitudes = solicitudesResult.rows
 
   return (
     <div>
@@ -70,14 +71,14 @@ export default async function JuridicoPage() {
             </thead>
             <tbody>
               {solicitudes.map(s => {
-                const fechaAct = new Date(String(s.fechaActivacion))
+                const fechaAct = new Date(String(s.fecha_activacion))
                 return (
                   <tr key={s.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={{ padding: '12px 16px', color: '#1e293b', fontWeight: 600 }}>{s.oficio}</td>
                     <td style={{ padding: '12px 16px' }}><AutoridadBadge autoridad={s.autoridad} /></td>
                     <td style={{ padding: '12px 16px', color: '#64748b' }}>{s.delito ?? '—'}</td>
                     <td style={{ padding: '12px 16px', color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 10 }}>
-                      {s.carpetaInvestigacion ?? '—'}
+                      {s.carpeta_investigacion ?? '—'}
                     </td>
                     <td style={{ padding: '12px 16px', color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 10 }}>
                       {format(fechaAct, 'dd/MM/yy HH:mm')}

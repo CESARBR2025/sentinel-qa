@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db }      from '@/lib/db/index'
-import { incidentes, users, catTiposIncidente, catPrioridades } from '@/lib/db/schema'
-import { desc, eq, and, gte, lte, ilike, SQL } from 'drizzle-orm'
+import { query }   from '@/lib/db'
 import { verificarAccesoIncidentesApi } from '@/lib/incidentes/permisos'
 
 export async function GET(req: NextRequest) {
@@ -12,49 +10,32 @@ export async function GET(req: NextRequest) {
   const chequeo = await verificarAccesoIncidentesApi(session.user.id, 'ver')
   if (chequeo) return chequeo
 
-  const p      = req.nextUrl.searchParams
-  const canal  = p.get('canal')
+  const p       = req.nextUrl.searchParams
+  const canal   = p.get('canal')
   const estatus = p.get('estatus')
-  const desde  = p.get('desde')
-  const hasta  = p.get('hasta')
-  const folio  = p.get('folio')
+  const desde   = p.get('desde')
+  const hasta   = p.get('hasta')
+  const folio   = p.get('folio')
 
-  // Whitelist — nunca confiar en parámetros del cliente directamente
-  const canalesPermitidos  = ['911', 'whatsapp', 'radio']
-  const estatusPermitidos  = ['sin_despachar', 'en_despacho', 'atendido']
+  const canalesPermitidos = ['911', 'whatsapp', 'radio']
+  const estatusPermitidos = ['sin_despachar', 'en_despacho', 'atendido']
 
-  if (canal  && !canalesPermitidos.includes(canal))
-    return NextResponse.json({ error: 'canal inválido' }, { status: 400 })
-  if (estatus && !estatusPermitidos.includes(estatus))
-    return NextResponse.json({ error: 'estatus inválido' }, { status: 400 })
+  if (canal   && !canalesPermitidos.includes(canal))   return NextResponse.json({ error: 'canal inválido' }, { status: 400 })
+  if (estatus && !estatusPermitidos.includes(estatus)) return NextResponse.json({ error: 'estatus inválido' }, { status: 400 })
 
-  const filtros: SQL[] = []
-  if (canal)   filtros.push(eq(incidentes.canal,   canal))
-  if (estatus) filtros.push(eq(incidentes.estatus, estatus))
-  if (desde)   filtros.push(gte(incidentes.fechaHoraInicio, desde))
-  if (hasta)   filtros.push(lte(incidentes.fechaHoraInicio, hasta))
-  if (folio)   filtros.push(ilike(incidentes.folio, `%${folio}%`))
+  const conditions: string[] = []
+  const params: unknown[] = []
+  if (canal)   { conditions.push(`i.canal = $${params.length + 1}`); params.push(canal) }
+  if (estatus) { conditions.push(`i.estatus = $${params.length + 1}`); params.push(estatus) }
+  if (desde)   { conditions.push(`i.fecha_hora_inicio >= $${params.length + 1}`); params.push(desde) }
+  if (hasta)   { conditions.push(`i.fecha_hora_inicio <= $${params.length + 1}`); params.push(hasta) }
+  if (folio)   { conditions.push(`i.folio ILIKE $${params.length + 1}`); params.push(`%${folio}%`) }
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
 
-  const lista = await db
-    .select({
-      id:              incidentes.id,
-      folio:           incidentes.folio,
-      canal:           incidentes.canal,
-      tipoReporte:     incidentes.tipoReporte,
-      estatus:         incidentes.estatus,
-      fechaHoraInicio: incidentes.fechaHoraInicio,
-      colonia:         incidentes.colonia,
-      tipoIncidente:   catTiposIncidente.nombre,
-      prioridad:       catPrioridades.nombre,
-      capturadoPor:    users.name,
-    })
-    .from(incidentes)
-    .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-    .leftJoin(catPrioridades,    eq(incidentes.prioridadId,     catPrioridades.id))
-    .leftJoin(users,             eq(incidentes.capturadoPor,    users.id))
-    .where(filtros.length ? and(...filtros) : undefined)
-    .orderBy(desc(incidentes.creadoEn))
-    .limit(200)
+  const lista = await query(
+    `SELECT i.id, i.folio, i.canal, i.tipo_reporte AS "tipoReporte", i.estatus, i.fecha_hora_inicio AS "fechaHoraInicio", i.colonia, cti.nombre AS "tipoIncidente", cp.nombre AS prioridad, u.name AS "capturadoPor" FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id ${where} ORDER BY i.creado_en DESC LIMIT 200`,
+    params.length ? params : undefined,
+  )
 
-  return NextResponse.json(lista)
+  return NextResponse.json(lista.rows)
 }

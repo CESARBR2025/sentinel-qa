@@ -1,12 +1,11 @@
-import { db }    from '@/lib/db/index'
-import { roles }  from '@/lib/db/schema'
-import { asc }    from 'drizzle-orm'
+import { query } from '@/lib/db'
 import { ShieldPlus } from 'lucide-react'
 import Link from 'next/link'
 import { btnPrimario, cardStyle } from '../admin-styles'
 
 export default async function RolesPage() {
-  const lista = await db.select().from(roles).orderBy(asc(roles.id))
+  const result = await query<any>(`SELECT * FROM roles ORDER BY id ASC`)
+  const lista = result.rows
 
   return (
     <div>

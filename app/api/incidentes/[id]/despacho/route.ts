@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db }      from '@/lib/db/index'
-import { eq }      from 'drizzle-orm'
-import { incidentes, incidenteDespacho, incidenteDespachoUnidades, incidenteDespachoElementos, users } from '@/lib/db/schema'
+import { query }   from '@/lib/db'
 import { verificarAccesoIncidentesApi } from '@/lib/incidentes/permisos'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -14,50 +12,25 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   const { id } = await params
 
-  const [inc] = await db
-    .select({ id: incidentes.id, estatus: incidentes.estatus, folio: incidentes.folio })
-    .from(incidentes)
-    .where(eq(incidentes.id, id))
-    .limit(1)
+  const inc = await query<{ id: string; estatus: string; folio: string }>(
+    `SELECT id, estatus, folio FROM incidentes WHERE id = $1 LIMIT 1`,
+    [id],
+  )
+  if (!inc.rows[0]) return NextResponse.json({ error: 'Incidente no encontrado' }, { status: 404 })
 
-  if (!inc) return NextResponse.json({ error: 'Incidente no encontrado' }, { status: 404 })
-
-  const [despacho] = await db
-    .select({
-      id:                incidenteDespacho.id,
-      incidenteId:       incidenteDespacho.incidenteId,
-      fechaHoraDespacho: incidenteDespacho.fechaHoraDespacho,
-      despachadorNombre: users.name,
-      creadoEn:          incidenteDespacho.creadoEn,
-    })
-    .from(incidenteDespacho)
-    .leftJoin(users, eq(incidenteDespacho.despachadorPor, users.id))
-    .where(eq(incidenteDespacho.incidenteId, id))
-    .limit(1)
-
-  if (!despacho) return NextResponse.json({ error: 'Este incidente no tiene despacho asignado' }, { status: 404 })
+  const despacho = await query(
+    `SELECT d.id, d.incidente_id AS "incidenteId", d.fecha_hora_despacho AS "fechaHoraDespacho", u.name AS "despachadorNombre", d.creado_en AS "creadoEn" FROM incidente_despacho d LEFT JOIN users u ON d.despachado_por = u.id WHERE d.incidente_id = $1 LIMIT 1`,
+    [id],
+  )
+  if (!despacho.rows[0]) return NextResponse.json({ error: 'Este incidente no tiene despacho asignado' }, { status: 404 })
 
   const [unidades, elementos] = await Promise.all([
-    db.select({
-      id:          incidenteDespachoUnidades.id,
-      unidadExtId: incidenteDespachoUnidades.unidadExtId,
-      unidadPlaca: incidenteDespachoUnidades.unidadPlaca,
-    })
-    .from(incidenteDespachoUnidades)
-    .where(eq(incidenteDespachoUnidades.despachoId, despacho.id)),
-
-    db.select({
-      id:             incidenteDespachoElementos.id,
-      elementoExtId:  incidenteDespachoElementos.elementoExtId,
-      elementoNomina: incidenteDespachoElementos.elementoNomina,
-      elementoNombre: incidenteDespachoElementos.elementoNombre,
-    })
-    .from(incidenteDespachoElementos)
-    .where(eq(incidenteDespachoElementos.despachoId, despacho.id)),
+    query(`SELECT id, unidad_ext_id AS "unidadExtId", unidad_placa AS "unidadPlaca" FROM incidente_despacho_unidades WHERE despacho_id = $1`, [despacho.rows[0].id]),
+    query(`SELECT id, elemento_ext_id AS "elementoExtId", elemento_nomina AS "elementoNomina", elemento_nombre AS "elementoNombre" FROM incidente_despacho_elementos WHERE despacho_id = $1`, [despacho.rows[0].id]),
   ])
 
   return NextResponse.json({
-    incidente: { id: inc.id, folio: inc.folio, estatus: inc.estatus },
-    despacho:  { ...despacho, unidades, elementos },
+    incidente: { id: inc.rows[0].id, folio: inc.rows[0].folio, estatus: inc.rows[0].estatus },
+    despacho:  { ...despacho.rows[0], unidades: unidades.rows, elementos: elementos.rows },
   })
 }

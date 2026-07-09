@@ -1,8 +1,6 @@
 import { auth }     from '@/lib/auth'
 import { headers }  from 'next/headers'
-import { db }       from '@/lib/db/index'
-import { solicitudesInformacion, solicitudesC4Internas, contestaciones } from '@/lib/db/schema'
-import { eq, asc }  from 'drizzle-orm'
+import { query }    from '@/lib/db'
 import Link          from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
@@ -28,25 +26,22 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
   const { id } = await params
 
-  const [solicitud] = await db
-    .select()
-    .from(solicitudesInformacion)
-    .where(eq(solicitudesInformacion.id, id))
-    .limit(1)
+  const solicitudResult = await query<any>(`SELECT * FROM solicitudes_informacion WHERE id = $1 LIMIT 1`, [id])
+  const solicitud = solicitudResult.rows[0]
 
   if (!solicitud) notFound()
 
-  const solicitudesC4 = await db
-    .select()
-    .from(solicitudesC4Internas)
-    .where(eq(solicitudesC4Internas.solicitudId, id))
-    .orderBy(asc(solicitudesC4Internas.creadoEn))
+  const solicitudesC4Result = await query<any>(
+    `SELECT * FROM solicitudes_c4_internas WHERE solicitud_id = $1 ORDER BY creado_en ASC`,
+    [id]
+  )
+  const solicitudesC4 = solicitudesC4Result.rows
 
-  const [contestacion] = await db
-    .select()
-    .from(contestaciones)
-    .where(eq(contestaciones.solicitudId, id))
-    .limit(1)
+  const contestacionResult = await query<any>(
+    `SELECT * FROM contestaciones WHERE solicitud_id = $1 LIMIT 1`,
+    [id]
+  )
+  const contestacion = contestacionResult.rows[0]
 
   const completado = solicitud.status === 'completado'
 
@@ -83,15 +78,15 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 40 }}>
         <Card title="Datos del Oficio">
           <Field label="Oficio"      value={solicitud.oficio} />
-          <Field label="Activación"  value={fmtDT(solicitud.fechaActivacion)} />
-          <Field label="Aceptación"  value={fmtDT(solicitud.fechaAceptacion)} />
+          <Field label="Activación"  value={fmtDT(solicitud.fecha_activacion)} />
+          <Field label="Aceptación"  value={fmtDT(solicitud.fecha_aceptacion)} />
           <Field label="Enlace"      value={solicitud.enlace} />
         </Card>
         <Card title="Datos del Caso">
-          <Field label="Fiscal"      value={solicitud.fiscalSolicita} />
+          <Field label="Fiscal"      value={solicitud.fiscal_solicita} />
           <Field label="Delito"      value={solicitud.delito} />
-          <Field label="Carpeta"     value={solicitud.carpetaInvestigacion} />
-          <Field label="Solicitud"   value={solicitud.solicitudTexto} />
+          <Field label="Carpeta"     value={solicitud.carpeta_investigacion} />
+          <Field label="Solicitud"   value={solicitud.solicitud_texto} />
         </Card>
       </div>
 
@@ -108,12 +103,12 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
             {solicitudesC4.map(c4 => (
               <div key={c4.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '12px 16px' }}>
                 <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  {format(toDate(c4.creadoEn), 'dd/MM/yyyy HH:mm')}
+                  {format(toDate(c4.creado_en), 'dd/MM/yyyy HH:mm')}
                   {' · '}
                   <span style={{ color: c4.status === 'completada' ? '#166534' : '#854d0e' }}>{c4.status}</span>
                 </div>
                 <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a', margin: 0 }}>
-                  {c4.descripcionEvidencias}
+                  {c4.descripcion_evidencias}
                 </p>
               </div>
             ))}
@@ -134,11 +129,11 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
         {completado && contestacion ? (
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-              <Field label="Fecha contestación" value={contestacion.fechaContestacion} />
-              <Field label="Archivo PDF"         value={contestacion.archivoPdfUrl} />
-              <Field label="Fecha de entrega"    value={contestacion.fechaEntrega} />
-              <Field label="Hora de entrega"     value={contestacion.horaEntrega} />
-              <Field label="Recibió"             value={contestacion.nombreQuienRecibio} />
+              <Field label="Fecha contestación" value={contestacion.fecha_contestacion} />
+              <Field label="Archivo PDF"         value={contestacion.archivo_pdf_url} />
+              <Field label="Fecha de entrega"    value={contestacion.fecha_entrega} />
+              <Field label="Hora de entrega"     value={contestacion.hora_entrega} />
+              <Field label="Recibió"             value={contestacion.nombre_quien_recibio} />
             </div>
             <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#166534', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
               ✓ Expediente completado — campos en solo lectura

@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { db } from "@/lib/db/index";
-import { fichasBusqueda, seguimientosBusqueda } from "@/lib/db/schema";
-import { eq, isNotNull } from "drizzle-orm";
+import { query } from "@/lib/db";
 import { addHours } from "date-fns";
 import { verificarAccesoPrevencionApi } from "@/lib/prevencion/permisos";
 
@@ -18,26 +16,24 @@ export async function GET() {
   );
   if (chequeo) return chequeo;
 
-  const busquedas = await db
-    .select()
-    .from(fichasBusqueda)
-    .where(eq(fichasBusqueda.status, "activa"));
+  const busquedas = (await query<{ id: string; fechaActivacion: string }>(
+    `SELECT id, fecha_activacion AS "fechaActivacion" FROM fichas_busqueda WHERE status = 'activa'`,
+  )).rows;
 
   const ahora = new Date();
-  const enProximo = addHours(ahora, 24); // próximas en 24h
+  const enProximo = addHours(ahora, 24);
 
   let pendientes24h = 0;
   let vencidos = 0;
 
   for (const ficha of busquedas) {
-    const seguimientos = await db
-      .select()
-      .from(seguimientosBusqueda)
-      .where(eq(seguimientosBusqueda.fichaId, ficha.id));
+    const seguimientos = (await query<{ tipo: string }>(
+      `SELECT tipo FROM seguimientos_busqueda WHERE ficha_id = $1`,
+      [ficha.id],
+    )).rows;
 
-    const regs = new Set(seguimientos.map((s) => s.tipo));
+    const regs = new Set(seguimientos.map(s => s.tipo));
 
-    // Hitos que aún no se han registrado
     const hitosPendientes = ["CONTESTACION_INICIAL", "24H", "48H", "72H"];
 
     for (const hito of hitosPendientes) {

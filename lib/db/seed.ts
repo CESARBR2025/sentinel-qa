@@ -3,63 +3,65 @@
  * Ejecutar: npm run db:seed
  */
 import { loadEnvConfig } from '@next/env'
-import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import * as schema from './schema'
 
 loadEnvConfig(process.cwd())
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
-const db   = drizzle(pool, { schema })
 
 async function main() {
   // ── Roles ──────────────────────────────────────────────────────────────────
-  await db.insert(schema.roles).values([
-    { nombre: 'Administrador',     descripcion: 'Acceso total al sistema' },
-    { nombre: 'Consultor',         descripcion: 'Acceso de sólo lectura/consulta' },
-    { nombre: 'Operador',          descripcion: 'Captura y gestión de incidentes' },
-    { nombre: 'Operador Víctimas', descripcion: 'Captura y seguimiento de medidas y búsquedas' },
-    { nombre: 'Jurídico',          descripcion: 'Bandeja legal, solicitudes a C4 y contestaciones' },
-    { nombre: 'Agente Fiscalía',  descripcion: 'Agente del ministerio público' },
-    { nombre: 'Agente Liberaciones', descripcion: 'Gestión de liberaciones de vehículos' },
-    { nombre: 'Agente Infracciones', descripcion: 'Gestión de infracciones de tránsito' },
-  ]).onConflictDoNothing()
+  await pool.query(`
+    INSERT INTO roles (nombre, descripcion)
+    VALUES
+      ('Administrador',     'Acceso total al sistema'),
+      ('Consultor',         'Acceso de sólo lectura/consulta'),
+      ('Operador',          'Captura y gestión de incidentes'),
+      ('Operador Víctimas', 'Captura y seguimiento de medidas y búsquedas'),
+      ('Jurídico',          'Bandeja legal, solicitudes a C4 y contestaciones'),
+      ('Agente Fiscalía',   'Agente del ministerio público'),
+      ('Agente Liberaciones', 'Gestión de liberaciones de vehículos'),
+      ('Agente Infracciones', 'Gestión de infracciones de tránsito')
+    ON CONFLICT (nombre) DO NOTHING
+  `)
 
   // ── Módulos del sidebar ────────────────────────────────────────────────────
-  await db.insert(schema.modulos).values([
-    { clave: 'dashboard',   nombre: 'Dashboard',           ruta: '/dashboard',        icono: 'LayoutDashboard', orden: 1 },
-    { clave: 'incidentes',  nombre: 'Incidentes',          ruta: null,                icono: 'AlertTriangle',   orden: 2 },
-    { clave: 'reportes',    nombre: 'Reportes',            ruta: null,                icono: 'BarChart2',       orden: 3 },
-    { clave: 'catalogos',   nombre: 'Catálogos',           ruta: null,                icono: 'BookOpen',        orden: 4 },
-    { clave: 'prevencion',  nombre: 'Prevención del Delito', ruta: null,              icono: 'ShieldAlert',     orden: 5 },
-    { clave: 'admin',       nombre: 'Administración',      ruta: null,                icono: 'Settings',        orden: 6 },
-  ]).onConflictDoNothing()
+  await pool.query(`
+    INSERT INTO modulos (clave, nombre, ruta, icono, orden)
+    VALUES
+      ('dashboard',   'Dashboard',           '/dashboard',        'LayoutDashboard', 1),
+      ('incidentes',  'Incidentes',          null,                'AlertTriangle',   2),
+      ('reportes',    'Reportes',            null,                'BarChart2',       3),
+      ('catalogos',   'Catálogos',           null,                'BookOpen',        4),
+      ('prevencion',  'Prevención del Delito', null,              'ShieldAlert',     5),
+      ('admin',       'Administración',      null,                'Settings',        6)
+    ON CONFLICT (clave) DO NOTHING
+  `)
 
-  const grupos = await db.query.modulos.findMany({
-    where: (m, { inArray }) => inArray(m.clave, ['incidentes', 'reportes', 'catalogos', 'prevencion', 'admin']),
-  })
+  const grupos = (await pool.query<{ id: number; clave: string }>(
+    `SELECT id, clave FROM modulos WHERE clave = ANY($1)`,
+    [['incidentes', 'reportes', 'catalogos', 'prevencion', 'admin']],
+  )).rows
   const id = (clave: string) => grupos.find(g => g.clave === clave)!.id
 
-  await db.insert(schema.modulos).values([
-    // Incidentes
-    { clave: 'incidentes.nuevo',       nombre: 'Nuevo incidente',       ruta: '/incidentes/nuevo',          icono: 'Plus',          padreId: id('incidentes'), orden: 1 },
-    { clave: 'incidentes.listado',     nombre: 'Listado',               ruta: '/incidentes',                icono: 'List',          padreId: id('incidentes'), orden: 2 },
-    { clave: 'incidentes.mapa',        nombre: 'Mapa',                  ruta: '/incidentes/mapa',           icono: 'Map',           padreId: id('incidentes'), orden: 3 },
-    // Reportes
-    { clave: 'reportes.diario',        nombre: 'Reporte diario',        ruta: '/reportes/diario',           icono: 'FileText',      padreId: id('reportes'),    orden: 1 },
-    { clave: 'reportes.estadistico',   nombre: 'Estadísticas',          ruta: '/reportes/estadistico',      icono: 'TrendingUp',    padreId: id('reportes'),    orden: 2 },
-    // Catálogos
-    { clave: 'catalogos.tipos',        nombre: 'Tipos de incidente',    ruta: '/catalogos/tipos',           icono: 'Tag',           padreId: id('catalogos'),   orden: 1 },
-    { clave: 'catalogos.colonias',     nombre: 'Colonias/Sectores',     ruta: '/catalogos/colonias',        icono: 'MapPin',        padreId: id('catalogos'),   orden: 2 },
-    // Prevención del Delito
-    { clave: 'prevencion.medidas',     nombre: 'Medidas de Protección', ruta: '/prevencion/medidas',        icono: 'ShieldCheck',   padreId: id('prevencion'),  orden: 1 },
-    { clave: 'prevencion.busquedas',   nombre: 'Búsquedas / Alba',      ruta: '/prevencion/busquedas',      icono: 'Search',        padreId: id('prevencion'),  orden: 2 },
-    { clave: 'prevencion.juridico',    nombre: 'Área Jurídica',         ruta: '/prevencion/juridico',       icono: 'Scale',         padreId: id('prevencion'),  orden: 3 },
-    // Administración
-    { clave: 'admin.usuarios',         nombre: 'Usuarios',              ruta: '/admin/usuarios',            icono: 'Users',         padreId: id('admin'),       orden: 1 },
-    { clave: 'admin.permisos',         nombre: 'Permisos',              ruta: '/admin/permisos',            icono: 'ShieldCheck',   padreId: id('admin'),       orden: 2 },
-    { clave: 'admin.roles',            nombre: 'Roles',                 ruta: '/admin/roles',               icono: 'UserCog',       padreId: id('admin'),       orden: 3 },
-  ]).onConflictDoNothing()
+  await pool.query(`
+    INSERT INTO modulos (clave, nombre, ruta, icono, padre_id, orden)
+    VALUES
+      ('incidentes.nuevo',     'Nuevo incidente',    '/incidentes/nuevo',       'Plus',       $1, 1),
+      ('incidentes.listado',   'Listado',             '/incidentes',             'List',       $1, 2),
+      ('incidentes.mapa',      'Mapa',                '/incidentes/mapa',        'Map',        $1, 3),
+      ('reportes.diario',      'Reporte diario',      '/reportes/diario',        'FileText',   $2, 1),
+      ('reportes.estadistico', 'Estadísticas',        '/reportes/estadistico',   'TrendingUp', $2, 2),
+      ('catalogos.tipos',      'Tipos de incidente',  '/catalogos/tipos',        'Tag',        $3, 1),
+      ('catalogos.colonias',   'Colonias/Sectores',   '/catalogos/colonias',     'MapPin',     $3, 2),
+      ('prevencion.medidas',   'Medidas de Protección', '/prevencion/medidas',   'ShieldCheck',$4, 1),
+      ('prevencion.busquedas', 'Búsquedas / Alba',    '/prevencion/busquedas',   'Search',     $4, 2),
+      ('prevencion.juridico',  'Área Jurídica',       '/prevencion/juridico',    'Scale',      $4, 3),
+      ('admin.usuarios',       'Usuarios',            '/admin/usuarios',         'Users',      $5, 1),
+      ('admin.permisos',       'Permisos',            '/admin/permisos',         'ShieldCheck',$5, 2),
+      ('admin.roles',          'Roles',               '/admin/roles',            'UserCog',    $5, 3)
+    ON CONFLICT (clave) DO NOTHING
+  `, [id('incidentes'), id('reportes'), id('catalogos'), id('prevencion'), id('admin')])
 
   console.log('✓ Seed completado')
   await pool.end()

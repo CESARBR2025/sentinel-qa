@@ -2,21 +2,20 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { db } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
 
   try {
-    // Cambiamos 'creado_en' por 'id' para el ordenamiento
-    const result = await db.$client.query(`
+    const result = await query(`
       SELECT 
         id, 
-        folio_iph as "folioIPH", 
+        folio_iph AS "folioIPH", 
         alias, 
         delito, 
-        fecha_evento as "fechaEvento", 
+        fecha_evento AS "fechaEvento", 
         genero
       FROM iph_detenidos
       ORDER BY id DESC 

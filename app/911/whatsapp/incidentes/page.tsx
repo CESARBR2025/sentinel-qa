@@ -1,13 +1,11 @@
-import { db } from "@/lib/db";
-import { incidentes, catTiposIncidente } from "@/lib/db/schema";
+import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, ShieldAlert } from "lucide-react";
 import Link from "next/link";
-import { eq, desc, count } from "drizzle-orm"; // Importamos count
-import { Pagination } from "@/components/911/Pagination"; // Importa el nuevo componente
+import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ListadoWhatsAppPage({
@@ -18,7 +16,7 @@ export default async function ListadoWhatsAppPage({
     // 1. Configuración de paginación
     const params = await searchParams;
     const page = Number(params.page) || 1;
-    const pageSize = 10; // Cantidad de registros por página
+    const pageSize = 10;
     const offset = (page - 1) * pageSize;
 
     const session = await auth.api.getSession({ headers: await headers() });
@@ -26,30 +24,34 @@ export default async function ListadoWhatsAppPage({
     if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
 
     // 2. Obtener el conteo total de registros con el mismo filtro (canal = whatsapp)
-    const [totalResult] = await db
-        .select({ value: count() })
-        .from(incidentes)
-        .where(eq(incidentes.canal, 'whatsapp'));
+    const [totalResult, dataRes] = await Promise.all([
+        query<{ value: number }>(
+            'SELECT count(*)::int AS value FROM incidentes WHERE canal = $1',
+            ['whatsapp']
+        ),
 
-    const totalCount = totalResult.value;
+        query<{
+            id: string;
+            folio: string;
+            estatus: string;
+            fecha: string;
+            colonia: string | null;
+            tipo: string | null;
+        }>(
+            `SELECT i.id, i.folio, i.estatus, i.fecha_hora_inicio AS fecha, i.colonia,
+                    cti.nombre AS tipo
+             FROM incidentes i
+             LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+             WHERE i.canal = $1
+             ORDER BY i.fecha_hora_inicio DESC
+             LIMIT $2 OFFSET $3`,
+            ['whatsapp', pageSize, offset]
+        ),
+    ]);
+
+    const totalCount = totalResult.rows[0].value;
     const totalPages = Math.ceil(totalCount / pageSize);
-
-    // 3. Consulta con Limit y Offset
-    const listado = await db
-        .select({
-            id: incidentes.id,
-            folio: incidentes.folio,
-            estatus: incidentes.estatus,
-            fecha: incidentes.fechaHoraInicio,
-            colonia: incidentes.colonia,
-            tipo: catTiposIncidente.nombre,
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .where(eq(incidentes.canal, 'whatsapp'))
-        .orderBy(desc(incidentes.fechaHoraInicio))
-        .limit(pageSize) // LIMIT
-        .offset(offset); // OFFSET
+    const listado = dataRes.rows;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -146,8 +148,8 @@ export default async function ListadoWhatsAppPage({
                     <Pagination
                         currentPage={page}
                         totalPages={totalPages}
-                        totalCount={totalCount} // <-- Añade esto
-                        pageSize={pageSize}     // <-- Añade esto
+                        totalCount={totalCount}
+                        pageSize={pageSize}
                         baseUrl="/911/whatsapp/incidentes"
                     />
                 </div>

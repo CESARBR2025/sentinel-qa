@@ -21,7 +21,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'El campo "id" es requerido.' }, { status: 400 });
     }
 
-    const updateResult = await query(
+    const updateResult = await query<any>(
       `UPDATE via.v2_infracciones
        SET es_titular = $2,
             nombre_titular_liberacion = COALESCE($3, nombre_titular_liberacion),
@@ -36,7 +36,7 @@ export async function PATCH(request: Request) {
            correo_infractor = COALESCE(NULLIF($12, ''), correo_infractor),
            updated_at = NOW()
        WHERE id = $1
-       RETURNING id, folio, descuento_aplicado, monto_total, nombre_infractor,
+       RETURNING id, folio, clasificacion, descuento_aplicado, monto_total, nombre_infractor,
                  apellido_paterno_infractor, apellido_materno_infractor, correo_infractor,
                  fecha_limite_descuento`,
       [id, es_titular ?? null, nombre_titular || null, appaterno_titular || null, apmaterno_titular || null, curp_titular || null, correo_titular || null, nombre_infractor || null, appaterno_infractor || null, apmaterno_infractor || null, curp_infractor || null, correo_infractor || null],

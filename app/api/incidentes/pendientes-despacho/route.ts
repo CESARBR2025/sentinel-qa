@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
-import { db }      from '@/lib/db/index'
-import { incidentes, users, catTiposIncidente, catPrioridades } from '@/lib/db/schema'
-import { eq, and, desc } from 'drizzle-orm'
+import { query }   from '@/lib/db'
 import { verificarAccesoIncidentesApi } from '@/lib/incidentes/permisos'
 
 export async function GET(_req: NextRequest) {
@@ -12,31 +10,9 @@ export async function GET(_req: NextRequest) {
   const chequeo = await verificarAccesoIncidentesApi(session.user.id, 'ver')
   if (chequeo) return chequeo
 
-  const lista = await db
-    .select({
-      id:                  incidentes.id,
-      folio:               incidentes.folio,
-      canal:               incidentes.canal,
-      fechaHoraInicio:     incidentes.fechaHoraInicio,
-      calle:               incidentes.calle,
-      colonia:             incidentes.colonia,
-      entreCalles:         incidentes.entreCalles,
-      referenciaUbicacion: incidentes.referenciaUbicacion,
-      descripcion:         incidentes.descripcion,
-      tipoIncidente:       catTiposIncidente.nombre,
-      prioridad:           catPrioridades.nombre,
-      prioridadOrden:      catPrioridades.orden,
-      capturadoPor:        users.name,
-    })
-    .from(incidentes)
-    .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-    .leftJoin(catPrioridades,    eq(incidentes.prioridadId,     catPrioridades.id))
-    .leftJoin(users,             eq(incidentes.capturadoPor,    users.id))
-    .where(and(
-      eq(incidentes.estatus,          'sin_despachar'),
-      eq(incidentes.requiereDespacho, true),
-    ))
-    .orderBy(catPrioridades.orden, desc(incidentes.fechaHoraInicio))
+  const lista = await query(
+    `SELECT i.id, i.folio, i.canal, i.fecha_hora_inicio AS "fechaHoraInicio", i.calle, i.colonia, i.entre_calles AS "entreCalles", i.referencia_ubicacion AS "referenciaUbicacion", i.descripcion, cti.nombre AS "tipoIncidente", cp.nombre AS prioridad, cp.orden AS "prioridadOrden", u.name AS "capturadoPor" FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id WHERE i.estatus = 'sin_despachar' AND i.requiere_despacho = true ORDER BY cp.orden, i.fecha_hora_inicio DESC`,
+  )
 
-  return NextResponse.json(lista)
+  return NextResponse.json(lista.rows)
 }

@@ -3,14 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import ReporteRecorridoZen from "@/components/911/radio/FormSection"; 
 
-import { db } from "@/lib/db/index";
-import { 
-  catTiposEmergencia, 
-  catTiposIncidente, 
-  catPrioridades, 
-  catMediosCanalizacion 
-} from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { query } from "@/lib/db";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function ReporteRecorridoPage() {
@@ -26,15 +19,15 @@ export default async function ReporteRecorridoPage() {
   }
 
    const [emergencias, incidentes, prioridades, canalizaciones] = await Promise.all([
-    db.select().from(catTiposEmergencia).where(eq(catTiposEmergencia.activo, true)),
-    db.select().from(catTiposIncidente).where(eq(catTiposIncidente.activo, true)),
-    db.select().from(catPrioridades).where(eq(catPrioridades.activo, true)),
-    db.select().from(catMediosCanalizacion).where(eq(catMediosCanalizacion.activo, true)),
+    query('SELECT * FROM cat_tipos_emergencia WHERE activo = $1', [true]),
+    query('SELECT * FROM cat_tipos_incidente WHERE activo = $1', [true]),
+    query('SELECT * FROM cat_prioridades WHERE activo = $1', [true]),
+    query('SELECT * FROM cat_medios_canalizacion WHERE activo = $1', [true]),
   ]);
 
 
   return  <ReporteRecorridoZen 
       user={session.user} 
-      catalogos={{ emergencias, incidentes, prioridades, canalizaciones }} 
+      catalogos={{ emergencias: emergencias.rows, incidentes: incidentes.rows, prioridades: prioridades.rows, canalizaciones: canalizaciones.rows }} 
     />
 }

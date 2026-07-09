@@ -1,8 +1,6 @@
 import { auth }      from '@/lib/auth'
 import { headers }   from 'next/headers'
-import { db } from '@/lib/db/index'
-import { fichasBusqueda, seguimientosBusqueda, users } from '@/lib/db/schema'
-import { eq, asc } from 'drizzle-orm'
+import { query }     from '@/lib/db'
 import Link         from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
@@ -33,28 +31,21 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
   const { id } = await params
 
-  const [ficha] = await db
-    .select()
-    .from(fichasBusqueda)
-    .where(eq(fichasBusqueda.id, id))
-    .limit(1)
+  const fichaResult = await query<any>(`SELECT * FROM fichas_busqueda WHERE id = $1 LIMIT 1`, [id])
+  const ficha = fichaResult.rows[0]
 
   if (!ficha) notFound()
 
-  const seguimientos = await db
-    .select({
-      id:              seguimientosBusqueda.id,
-      tipo:            seguimientosBusqueda.tipo,
-      fechaHoraEnvio:  seguimientosBusqueda.fechaHoraEnvio,
-      archivoUrl:      seguimientosBusqueda.archivoUrl,
-      registradoPor:   seguimientosBusqueda.registradoPor,
-      nombreUsuario:   users.name,
-      apellidoUsuario: users.apellido,
-    })
-    .from(seguimientosBusqueda)
-    .leftJoin(users, eq(seguimientosBusqueda.registradoPor, users.id))
-    .where(eq(seguimientosBusqueda.fichaId, id))
-    .orderBy(asc(seguimientosBusqueda.creadoEn))
+  const seguimientosResult = await query<any>(
+    `SELECT sb.id, sb.tipo, sb.fecha_hora_envio, sb.archivo_url, sb.registrado_por,
+            u.name AS nombre_usuario, u.apellido AS apellido_usuario
+     FROM seguimientos_busqueda sb
+     LEFT JOIN users u ON sb.registrado_por = u.id
+     WHERE sb.ficha_id = $1
+     ORDER BY sb.creado_en ASC`,
+    [id]
+  )
+  const seguimientos = seguimientosResult.rows
 
   const cfg        = TIPO_CFG[ficha.tipo] ?? { label: ficha.tipo, color: '#64748b' }
   const fichaActiva = ficha.status === 'activa'
@@ -80,7 +71,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
             </span>
           </div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#1e293b', margin: '0 0 4px' }}>
-            {ficha.nombreDesaparecida}
+            {ficha.nombre_desaparecida}
           </h2>
           {ficha.edad != null && (
             <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#8a9bc0', margin: 0 }}>
@@ -104,20 +95,20 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
         <Card title="Datos de Activación">
           <Field label="Folio"              value={ficha.folio} />
           <Field label="Tipo"               value={cfg.label} />
-          <Field label="Activación"         value={fmtDT(ficha.fechaActivacion)} />
-          <Field label="Aceptación"         value={fmtDT(ficha.fechaAceptacion)} />
-          <Field label="Carpeta Invest."    value={ficha.carpetaInvestigacion} />
+          <Field label="Activación"         value={fmtDT(ficha.fecha_activacion)} />
+          <Field label="Aceptación"         value={fmtDT(ficha.fecha_aceptacion)} />
+          <Field label="Carpeta Invest."    value={ficha.carpeta_investigacion} />
         </Card>
 
         <Card title="Personal Asignado">
           <Field label="Enlace"             value={ficha.enlace} />
-          <Field label="RT que atiende"     value={ficha.rtAtiende} />
-          <Field label="Elemento Novedades" value={ficha.elementoNovedades} />
+          <Field label="RT que atiende"     value={ficha.rt_atiende} />
+          <Field label="Elemento Novedades" value={ficha.elemento_novedades} />
           {!fichaActiva && (
             <>
-              <Field label="Cancelación"    value={fmtDT(ficha.fechaCancelacion)} />
-              <Field label="Fiscal cancela" value={ficha.fiscalCancela} />
-              <Field label="Motivo"         value={ficha.motivoCancelacion} />
+              <Field label="Cancelación"    value={fmtDT(ficha.fecha_cancelacion)} />
+              <Field label="Fiscal cancela" value={ficha.fiscal_cancela} />
+              <Field label="Motivo"         value={ficha.motivo_cancelacion} />
             </>
           )}
         </Card>
@@ -131,12 +122,12 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
         <SeguimientoTimeline
           fichaId={id}
-          fechaActivacionISO={toISO(ficha.fechaActivacion)}
+          fechaActivacionISO={toISO(ficha.fecha_activacion)}
           seguimientosRegistrados={seguimientos.map(s => ({
             tipo:               s.tipo,
-            fechaHoraEnvioISO: toISO(s.fechaHoraEnvio),
-            archivoUrl:        s.archivoUrl,
-            nombreUsuario:     s.nombreUsuario && s.apellidoUsuario ? `${s.nombreUsuario} ${s.apellidoUsuario}` : s.nombreUsuario,
+            fechaHoraEnvioISO: toISO(s.fecha_hora_envio),
+            archivoUrl:        s.archivo_url,
+            nombreUsuario:     s.nombre_usuario && s.apellido_usuario ? `${s.nombre_usuario} ${s.apellido_usuario}` : s.nombre_usuario,
           }))}
           fichaActiva={fichaActiva}
         />

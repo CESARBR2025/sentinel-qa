@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { db } from "@/lib/db";
-import { 
-    incidentes, incidenteReporteCampo, 
-    catTiposIncidente, catPrioridades 
-} from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { query } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
@@ -23,25 +18,20 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_rondin"))) redirect("/dashboard");
 
-    const [data] = await db
-        .select({
-            // INCIDENTE
-            inc: incidentes,
-            // CATALOGOS
-            tipoNombre: catTiposIncidente.nombre,
-            prioridadNombre: catPrioridades.nombre,
-            // REPORTE DE CAMPO
-            rep: incidenteReporteCampo
-        })
-        .from(incidentes)
-        .leftJoin(catTiposIncidente, eq(incidentes.tipoIncidenteId, catTiposIncidente.id))
-        .leftJoin(catPrioridades, eq(incidentes.prioridadId, catPrioridades.id))
-        .leftJoin(incidenteReporteCampo, eq(incidentes.id, incidenteReporteCampo.incidenteId))
-        .where(eq(incidentes.id, id))
-        .limit(1);
+    const data = await query<any>(
+        `SELECT row_to_json(i.*) AS inc, cti.nombre AS "tipoNombre", cp.nombre AS "prioridadNombre",
+                row_to_json(irc.*) AS rep
+         FROM incidentes i
+         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+         LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+         LEFT JOIN incidente_reporte_campo irc ON i.id = irc.incidente_id
+         WHERE i.id = $1
+         LIMIT 1`,
+        [id]
+    );
 
-    if (!data) notFound();
-    const { inc, rep } = data as any;
+    if (!data.rows[0]) notFound();
+    const { inc, rep } = data.rows[0] as any;
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -55,7 +45,7 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                     <div>
                         <span style={labelTopStyle}>INFORME POLICIAL HOMOLOGADO (RECORRIDO)</span>
                         <h1 style={titleStyle}>{inc.folio}</h1>
-                        <div style={{fontFamily: 'JetBrains Mono', fontSize: '12px', color: '#64748b'}}>CAD: {inc.folioCad || 'N/A'}</div>
+                        <div style={{fontFamily: 'JetBrains Mono', fontSize: '12px', color: '#64748b'}}>CAD: {inc.folio_cad || 'N/A'}</div>
                     </div>
                     <div style={getStatusBadgeStyle(inc.estatus)}>{inc.estatus?.toUpperCase()}</div>
                 </div>
@@ -67,10 +57,10 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                         <section style={cardStyle}>
                             <h2 style={sectionTitleStyle}><Shield size={18}/> CLASIFICACIÓN OPERATIVA</h2>
                             <div style={infoGridStyle}>
-                                <div style={itemGroupStyle}><label style={labelStyle}>OFICIAL QUE REPORTA</label><span style={valueStyle}>{inc.nombreOficial}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>TIPO INCIDENTE</label><span style={valueStyle}>{data.tipoNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, color: '#dc2626'}}>{data.prioridadNombre}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>CAPTURÓ</label><span style={valueStyle}>{inc.capturadoPor}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>OFICIAL QUE REPORTA</label><span style={valueStyle}>{inc.nombre_oficial}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>TIPO INCIDENTE</label><span style={valueStyle}>{data.rows[0].tipoNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, color: '#dc2626'}}>{data.rows[0].prioridadNombre}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>CAPTURÓ</label><span style={valueStyle}>{inc.capturado_por}</span></div>
                             </div>
                         </section>
 
@@ -78,8 +68,8 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                         <section style={cardStyle}>
                             <h2 style={sectionTitleStyle}><Clock size={18}/> CRONOLOGÍA</h2>
                             <div style={infoGridStyle}>
-                                <div style={itemGroupStyle}><label style={labelStyle}>INICIO</label><span style={valueStyle}>{new Date(inc.fechaHoraInicio).toLocaleString()}</span></div>
-                                <div style={itemGroupStyle}><label style={labelStyle}>CIERRE</label><span style={valueStyle}>{inc.fechaHoraFin ? new Date(inc.fechaHoraFin).toLocaleString() : 'EN PROCESO'}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>INICIO</label><span style={valueStyle}>{new Date(inc.fecha_hora_inicio).toLocaleString()}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>CIERRE</label><span style={valueStyle}>{inc.fecha_hora_fin ? new Date(inc.fecha_hora_fin).toLocaleString() : 'EN PROCESO'}</span></div>
                             </div>
                         </section>
 
@@ -90,7 +80,7 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                                 <strong style={{fontSize: '10px', color: '#2563eb'}}>DESCRIPCIÓN INICIAL:</strong><br/>
                                 {inc.descripcion}<br/><br/>
                                 <strong style={{fontSize: '10px', color: '#2563eb'}}>INFORME DE CAMPO:</strong><br/>
-                                {rep?.contenidoReporte || 'Sin informe detallado.'}
+                                {rep?.contenido_reporte || 'Sin informe detallado.'}
                             </div>
                         </section>
 
@@ -99,8 +89,8 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                             <section style={{...cardStyle, background: '#f0f9ff'}}>
                                 <h2 style={sectionTitleStyle}><Search size={18}/> RESULTADOS DE INTERVENCIÓN</h2>
                                 <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
-                                    <div><label style={labelStyle}>DATOS POSITIVOS/NEGATIVOS</label><p style={valueStyle}>{rep.datosPositivosNegativos}</p></div>
-                                    <div><label style={labelStyle}>ACCIONES REALIZADAS</label><p style={valueStyle}>{rep.accionesRealizadas}</p></div>
+                                    <div><label style={labelStyle}>DATOS POSITIVOS/NEGATIVOS</label><p style={valueStyle}>{rep.datos_positivos_negativos}</p></div>
+                                    <div><label style={labelStyle}>ACCIONES REALIZADAS</label><p style={valueStyle}>{rep.acciones_realizadas}</p></div>
                                 </div>
                             </section>
                         )}
@@ -113,29 +103,29 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                             <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
                                 <div><label style={labelStyle}>CALLE</label><span style={valueStyle}>{inc.calle}</span></div>
                                 <div><label style={labelStyle}>COLONIA</label><span style={valueStyle}>{inc.colonia}</span></div>
-                                <div><label style={labelStyle}>ENTRE CALLES</label><span style={valueStyle}>{inc.entreCalles || 'N/A'}</span></div>
-                                <div style={refBoxStyle}><label style={labelStyle}>REFERENCIA</label><p style={{fontSize: '12px', margin: 0}}>{inc.referenciaUbicacion}</p></div>
+                                <div><label style={labelStyle}>ENTRE CALLES</label><span style={valueStyle}>{inc.entre_calles || 'N/A'}</span></div>
+                                <div style={refBoxStyle}><label style={labelStyle}>REFERENCIA</label><p style={{fontSize: '12px', margin: 0}}>{inc.referencia_ubicacion}</p></div>
                             </div>
                         </section>
 
                         {/* DETENCIONES */}
-                        {rep?.hayDetencion && (
+                        {rep?.hay_detencion && (
                             <section style={{...cardStyle, background: '#fef2f2', border: '1px solid #fee2e2'}}>
                                 <h2 style={{...sectionTitleStyle, color: '#991b1b'}}><Gavel size={18}/> DETENCIONES</h2>
                                 <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                                    <div><label style={labelStyle}>NOMBRES</label><span style={{...valueStyle, fontSize: '13px'}}>{rep.nombreDetenidos}</span></div>
-                                    <div><label style={labelStyle}>AUTORIDAD</label><span style={valueStyle}>{rep.autoridadRecibe}</span></div>
-                                    <div><label style={labelStyle}>EXPEDIENTE CI</label><span style={{...valueStyle, fontWeight: 700}}>{rep.expedienteCi}</span></div>
+                                    <div><label style={labelStyle}>NOMBRES</label><span style={{...valueStyle, fontSize: '13px'}}>{rep.nombre_detenidos}</span></div>
+                                    <div><label style={labelStyle}>AUTORIDAD</label><span style={valueStyle}>{rep.autoridad_recibe}</span></div>
+                                    <div><label style={labelStyle}>EXPEDIENTE CI</label><span style={{...valueStyle, fontWeight: 700}}>{rep.expediente_ci}</span></div>
                                 </div>
                             </section>
                         )}
 
                         {/* ASEGURAMIENTOS */}
-                        {(rep?.objetosRecuperados || rep?.vehiculosRecuperados) && (
+                        {(rep?.objetos_recuperados || rep?.vehiculos_recuperados) && (
                             <section style={{...cardStyle, background: '#f8fafc'}}>
                                 <h2 style={sectionTitleStyle}><Archive size={18}/> ASEGURAMIENTOS</h2>
-                                {rep.objetosRecuperados && <div style={{marginBottom: '15px'}}><label style={labelStyle}>OBJETOS</label><p style={{fontSize: '12px'}}>{rep.objetosRecuperados}</p></div>}
-                                {rep.vehiculosRecuperados && <div><label style={labelStyle}><Car size={14}/> VEHÍCULO</label><p style={{fontSize: '12px'}}>{rep.vehiculosRecuperados}<br/><strong>TIPO:</strong> {rep.tipoVehiculo}<br/><strong>DESTINO:</strong> {rep.destinoVehiculo}</p></div>}
+                                {rep.objetos_recuperados && <div style={{marginBottom: '15px'}}><label style={labelStyle}>OBJETOS</label><p style={{fontSize: '12px'}}>{rep.objetos_recuperados}</p></div>}
+                                {rep.vehiculos_recuperados && <div><label style={labelStyle}><Car size={14}/> VEHÍCULO</label><p style={{fontSize: '12px'}}>{rep.vehiculos_recuperados}<br/><strong>TIPO:</strong> {rep.tipo_vehiculo}<br/><strong>DESTINO:</strong> {rep.destino_vehiculo}</p></div>}
                             </section>
                         )}
                     </div>

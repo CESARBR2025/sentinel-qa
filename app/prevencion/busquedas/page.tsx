@@ -1,9 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db } from '@/lib/db/index'
-import { fichasBusqueda } from '@/lib/db/schema'
-import { desc } from 'drizzle-orm'
+import { query } from '@/lib/db'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
@@ -19,10 +17,8 @@ export default async function BusquedasPage() {
   if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
 
-  const fichas = await db
-    .select()
-    .from(fichasBusqueda)
-    .orderBy(desc(fichasBusqueda.fechaActivacion))
+  const fichasResult = await query<any>(`SELECT * FROM fichas_busqueda ORDER BY fecha_activacion DESC`)
+  const fichas = fichasResult.rows
 
   const activas    = fichas.filter(f => f.status === 'activa').length
   const canceladas = fichas.filter(f => f.status === 'cancelada').length
@@ -79,7 +75,7 @@ export default async function BusquedasPage() {
             <tbody>
               {fichas.map((f, i) => {
                 const cfg = TIPO_CFG[f.tipo] ?? { label: f.tipo, color: '#4a5878' }
-                const fechaStr = format(new Date(String(f.fechaActivacion)), 'dd/MM/yy HH:mm')
+                const fechaStr = format(new Date(String(f.fecha_activacion)), 'dd/MM/yy HH:mm')
 
                 return (
                   <tr key={f.id} style={{ borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
@@ -92,7 +88,7 @@ export default async function BusquedasPage() {
                       {f.folio ?? '—'}
                     </td>
                     <td style={{ padding: '10px 12px', fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#1e293b', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {f.nombreDesaparecida}
+                      {f.nombre_desaparecida}
                     </td>
                     <td style={{ padding: '10px 12px', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', textAlign: 'center' }}>
                       {f.edad ?? '—'}
