@@ -4,6 +4,13 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+# Bóveda de Conocimiento
+
+**Antes de cualquier cambio, leer `boveda/Home.md` para contexto completo del proyecto.**
+La bóveda en `boveda/` es la única fuente de documentación. No crear documentación suelta fuera de ella.
+
+El archivo `.opencode/context-map.yaml` mapea cada dominio del proyecto a sus archivos relevantes, documentación y query de Graphify. Usarlo para cargar contexto en una tarea nueva.
+
 # No Drizzle — raw pg only (except better-auth)
 
 Never use Drizzle ORM (`drizzle-orm`, `db.insert`, `db.select`, etc.) in application code. All database access is via raw SQL with the `query` export from `@/lib/db`. The only exception is `lib/auth.ts` which uses Drizzle internally for `better-auth`. The `@/lib/db/index.ts` drizzle instance is used exclusively by better-auth and must never be imported in application code.
@@ -26,105 +33,6 @@ lib/<module>/
 - **Mapper functions** always accept `Record<string, unknown>` (the raw pg row) and return a typed interface with **camelCase** properties. DB columns are **snake_case**, mapper converts them.
 - **Repository functions** never import mappers from other domains. Cross-domain data composition happens in service layer.
 - **Service functions** re-export repository functions (thin pass-through) unless business logic is needed.
-
-# Existing Modules — Compliance Status
-
-| Module | types.ts | mapper.ts | repository.ts | service.ts | actions.ts | Status |
-|--------|----------|-----------|---------------|------------|------------|--------|
-| `lib/auth/helpers.ts` | `UserWithRole` | `rowToUserWithRole` | `getUserWithRole` | — | — | ✅ |
-| `lib/911/` | ✅ | ✅ | ✅ | ✅ | — (reads only) | **GREEN** |
-| `lib/admin/` | ✅ | ✅ | ✅ | ❌ | ✅ | **GREEN** |
-| `lib/admin-transito/` | ✅ | ✅ | ✅ | ❌ | ✅ | **GREEN** |
-| `lib/auxiliar/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/camara/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/corralon/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/d1/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/incidentes/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/fiscalia/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/flota/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/monitorista/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/notificaciones/` | ✅ | ✅ | ✅ | — | ✅ | **GREEN** |
-| `lib/oficial/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/prevencion/` | ✅ | ✅ | ✅ | ❌ | ✅ | **GREEN** |
-| `lib/reportes/` | ✅ | ✅ | ✅ | ❌ | — | **GREEN** |
-| `lib/reportes-operativos/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/reportes-sin-d1/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/reportes-sin-novedad/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/reportes-incidentes/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
-| `lib/agente_juzgado/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/agente_liberaciones/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/agente_infracciones/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/rol-servicios/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-
-### Current totals
-- **GREEN**: 23 modules
-- **YELLOW**: 0 modules
-- **RED**: 0 modules
-
-### Auth helper (`lib/auth/helpers.ts`)
-The standard way to get the current user's role. Replaces the pattern of writing inline `query(...)` with `LEFT JOIN roles`:
-
-```ts
-import { getUserWithRole } from '@/lib/auth/helpers'
-
-const userWithRole = await getUserWithRole(session.user.id)
-// userWithRole.rolNombre === 'Administrador'
-// userWithRole.rolId === 1
-```
-
-### Module example — `lib/911/`
-
-**types.ts** — interfaces with camelCase:
-```ts
-export interface IncidenteDetalle {
-  id: string
-  folio: string
-  tipoNombre: string | null  // camelCase, mapper reads tipo_nombre from DB
-  fechaHoraInicio: string
-}
-```
-
-**mapper.ts** — reads snake_case DB columns, returns camelCase interface:
-```ts
-function toStr(val: unknown): string | null {
-  if (val === null || val === undefined) return null
-  if (val instanceof Date) return val.toISOString()
-  return String(val)
-}
-
-export function rowToIncidenteDetalle(row: Record<string, unknown>): IncidenteDetalle {
-  return {
-    id: String(row.id ?? ''),
-    folio: String(row.folio ?? ''),
-    tipoNombre: toStr(row.tipo_nombre),  // snake_case → camelCase
-    fechaHoraInicio: toStr(row.fecha_hora_inicio) ?? '',
-  }
-}
-```
-
-**repository.ts** — SQL + mapper:
-```ts
-import { query } from '@/lib/db'
-import { rowToIncidenteDetalle } from './mapper'
-
-export async function obtenerIncidente(id: string): Promise<IncidenteDetalle | null> {
-  const result = await query<Record<string, unknown>>(
-    `SELECT i.*, cti.nombre AS tipo_nombre
-     FROM incidentes i
-     LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
-     WHERE i.id = $1 LIMIT 1`,
-    [id],
-  )
-  return result.rows.length ? rowToIncidenteDetalle(result.rows[0]) : null
-}
-```
-
-### Mapper conventions
-- `toStr(val)` — converts any value to `string | null` (Dates → ISO string)
-- `toNum(val)` — converts to `number | null` (NaN → null)
-- `toBool(val)` — converts to `boolean` (string `"true"` → `true`)
-- All mappers accept `Record<string, unknown>` and return typed interfaces
-- Mapper functions are pure — no side effects, no async
 
 # Error handling — centralized
 
@@ -167,53 +75,39 @@ API routes should use `apiHandler`, `apiSuccess`, `apiError` from the same modul
 - For domain data: use the corresponding `lib/<module>/service.ts` or `repository.ts`
 - JSX references must match the **camelCase** properties from the types/interfaces, NOT the snake_case DB columns
 
-# Architectural compliance — Full Compliance
-All 23 modules are **GREEN**. Every module follows the standard layered pattern:
-- `types.ts` — camelCase interfaces
-- `mapper.ts` — snake_case → camelCase conversion
-- `repository.ts` — raw SQL via `query()`, returns typed objects via mappers
-- `service.ts` — orchestration / pass-through (optional)
-- `actions.ts` — server actions (optional)
+# Checklist post-cambio
 
-# Refactoring History
+Al completar cualquier cambio (nueva feature, bugfix, refactor):
 
-This project underwent a complete architectural overhaul. Key milestones:
+1. **TypeCheck**: `npx tsc --noEmit` — 0 errores
+2. **Build**: `npm run build` — exit 0
+3. **Si el módulo es nuevo**: seguir [Crear Modulo.md](boveda/🏗%20Arquitectura/Crear%20Modulo.md)
+4. **Actualizar bóveda**:
+   - Feature nueva → `boveda/🧩 Features/[nombre].md` + actualizar `Index.md`
+   - Bug fix → agregar entrada en `boveda/🗺 Roadmap/Troubleshooting.md`
+   - Cambio en BD → actualizar `boveda/📦 Datos/Esquema BD.md`
+   - Decisión técnica → ADR en `boveda/🏗 Arquitectura/Decisiones.md`
+   - Cambio en dependencias → `boveda/🛠 Stack/Librerias.md`
+5. **Verificar nomenclatura**:
+   - JSX props en camelCase (no snake_case de BD)
+   - Pages sin `import { query }` directo
+   - Role checks con `getUserWithRole()`
+   - Errores con AppError/tryAction
+6. **Graphify**: `npx graphify update` para mantener el grafo sincronizado
+7. **Si hay cambios en BD**: `npm run db:schema` para refrescar `boveda/📦 Datos/Esquema BD.md`
 
-## Phase 1 — Drizzle elimination
-- Migrated ALL `lib/` server actions from Drizzle ORM to raw SQL via `query()`
-- Migrated ALL `app/api/` routes (58+ files) from Drizzle to raw SQL
-- Reduced `lib/db/schema.ts` to only 5 better-auth tables
-- Removed `drizzle-kit`, kept `drizzle-orm` (required by better-auth)
-- Deleted auto-generated `drizzle/` directory
+## graphify
 
-## Phase 2 — Page files refactoring
-- Removed inline `query()` calls from ALL `app/**/page.tsx` (52 files)
-- Removed inline role-check queries → centralized `getUserWithRole()`
-- Every page now reads data through `lib/<module>/repository.ts` or `service.ts`
+This project has a graphify knowledge graph at .graphify/.
 
-## Phase 3 — API routes refactoring
-- Removed inline `query()` from ALL `app/api/**/route.ts` (58+ files)
-- Every route now delegates to repository/actions modules
-
-## Phase 4 — Layout files refactoring
-- Removed inline `query()` from ALL `app/**/layout.tsx` (3 files)
-
-## Phase 5 — Architecture standardization
-- Created types.ts + mapper.ts for all RED modules (camara, d1, monitorista, reportes*, prevencion, rol-servicios)
-- Fixed all `any` types in repository functions
-- Consolidated duplicated directories (`lib/rol_servicios/` → `lib/rol-servicios/`)
-- Converted class-based repos to functional (`lib/flota/`)
-- Extracted inline mappers to dedicated files (`lib/corralon/`)
-- Fixed dead mapper code (`lib/admin-transito/`)
-
-## Phase 6 — Error handling
-- Created `lib/error-handler.ts` with AppError classes + tryAction/tryActionRaw wrappers
-- Updated all 14 `actions.ts` files to use structured error handling
-- Replaced all `throw new Error(...)` with typed AppError subclasses
-
-# Key architectural decisions
-1. **No Drizzle in app code** — raw SQL only, keeps control over queries and avoids ORM complexity
-2. **camelCase in TypeScript, snake_case in DB** — mapper layer handles conversion, never leaks DB naming to components
-3. **Pages never query DB directly** — all data flows through lib/ modules, making testing and auditing possible
-4. **Server actions as the mutation API** — mutations go through 'use server' actions, reads go directly to pages from server components
-5. **Functional over class-based** — all repositories and services are plain functions (except external API wrappers)
+Rules:
+- For codebase or architecture questions, when `.graphify/graph.json` exists, first run `graphify query "<question>"` (or `graphify path "<A>" "<B>"` / `graphify explain "<concept>"`); these return a scoped subgraph, usually much smaller than `GRAPH_REPORT.md` or raw grep output
+- If .graphify/wiki/index.md exists, navigate it instead of reading raw files
+- If .graphify/graph.json is missing but graphify-out/graph.json exists, run `graphify migrate-state --dry-run` first; if tracked legacy artifacts are reported, ask before using the recommended `git mv -f graphify-out .graphify` and commit message
+- If .graphify/needs_update exists or .graphify/branch.json has stale=true, warn before relying on semantic results and run the graphify skill with --update when appropriate
+- If the user asks to build, update, query, path, or explain the graph, use the installed `graphify` skill instead of ad-hoc file traversal
+- Before proposing or committing .graphify artifacts, run `graphify portable-check .graphify`; commit-safe graph artifacts must use repo-relative paths, and never commit .graphify/branch.json, .graphify/worktree.json, .graphify/needs_update, or .graphify/cache/. If a repo already tracks any of them, first add them to .gitignore, then propose `git rm --cached .graphify/branch.json .graphify/worktree.json .graphify/needs_update` and `git rm -r --cached .graphify/cache`; never mutate git state without asking
+- Before deep graph traversal, prefer `graphify summary --graph .graphify/graph.json` for compact first-hop orientation
+- For review impact on changed files, use `graphify review-delta --graph .graphify/graph.json` instead of generic traversal
+- Read `.graphify/GRAPH_REPORT.md` only for broad architecture review or when `query` / `path` / `explain` do not surface enough context
+- After modifying code files in this session, run `npx graphify hook-rebuild` to keep the graph current

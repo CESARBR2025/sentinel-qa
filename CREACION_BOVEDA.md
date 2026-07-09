@@ -402,9 +402,15 @@ diagrama de texto de FK
 ### Regla de cierre
 Cuando el usuario diga **"listo"** después de cambios:
 1. Ejecutar typecheck (`npx tsc --noEmit`)
-2. Actualizar bóveda según escritura automática
-3. Si hubo cambios en BD → ejecutar `exportarSchema()`
-4. Confirmar al usuario
+2. Ejecutar build (`npm run build`) — exit 0
+3. Actualizar bóveda según escritura automática
+4. Si hubo cambios en BD → ejecutar `exportarSchema()`
+5. **Verificar nomenclatura**:
+   - JSX props en camelCase (no snake_case de BD)
+   - Pages sin `import { query }` directo
+   - Role checks con `getUserWithRole()`
+   - Errores con AppError/tryAction
+6. Confirmar al usuario
 
 ---
 

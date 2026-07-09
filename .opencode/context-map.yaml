@@ -1,0 +1,133 @@
+# Context Map — Sentinel SSPM
+# Mapea cada dominio a su contexto mínimo.
+# El agente debe cargar estos archivos + ejecutar graphify query al iniciar una tarea.
+
+monitorista:
+  label: "Monitorista — Evidencias, Detenidos, Cámaras"
+  docs:
+    - "boveda/🧩 Features/Monitorista.md"
+  lib:
+    - "lib/monitorista/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/monitorista"
+  troubleshoot: [TS2551, TS2322]
+
+incidentes:
+  label: "Incidentes 911 — Atención de Emergencias"
+  docs:
+    - "boveda/🧩 Features/911.md"
+  lib:
+    - "lib/incidentes/"
+    - "lib/911/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/incidentes"
+
+prevencion:
+  label: "Prevención del Delito"
+  docs:
+    - "boveda/🧩 Features/Prevencion.md"
+  lib:
+    - "lib/prevencion/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/prevencion"
+
+admin:
+  label: "Administración de Usuarios y Roles"
+  docs:
+    - "boveda/🧩 Features/Admin.md"
+  lib:
+    - "lib/admin/"
+    - "lib/admin-transito/"
+  graph_query: "deps of lib/admin"
+
+fiscalia:
+  label: "Fiscalía — Asegurados, Solicitudes, Puesta a Disposición"
+  docs:
+    - "boveda/🧩 Features/Fiscalia.md"
+  lib:
+    - "lib/fiscalia/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/fiscalia"
+
+juzgado:
+  label: "Juzgado Cívico — Procesos y Liberaciones"
+  docs:
+    - "boveda/🧩 Features/Juzgado.md"
+  lib:
+    - "lib/agente_juzgado/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/agente_juzgado"
+
+infracciones:
+  label: "Infracciones VÍA — Captura, Garantías, Corralón"
+  docs:
+    - "boveda/🧩 Features/Infracciones.md"
+  lib:
+    - "lib/agente_infracciones/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/agente_infracciones"
+
+liberaciones:
+  label: "Liberaciones — Revisión Documental, Órdenes de Pago"
+  docs:
+    - "boveda/🧩 Features/Liberaciones.md"
+  lib:
+    - "lib/agente_liberaciones/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/agente_liberaciones"
+
+flota:
+  label: "Flota — Sincronización de Patrullas"
+  docs:
+    - "boveda/🧩 Features/Flota.md"
+  lib:
+    - "lib/flota/"
+  graph_query: "deps of lib/flota"
+
+reportes:
+  label: "Reportes y Estadísticas"
+  docs:
+    - "boveda/🧩 Features/Formato N.md"
+    - "boveda/🧩 Features/Reporte Campo.md"
+  lib:
+    - "lib/reportes/"
+    - "lib/reportes-operativos/"
+    - "lib/reportes-sin-d1/"
+    - "lib/reportes-sin-novedad/"
+    - "lib/reportes-incidentes/"
+    - "lib/camara/"
+    - "lib/d1/"
+  graph_query: "deps of lib/reportes"
+
+rol-servicios:
+  label: "Rol de Servicios — Estado de Fuerza"
+  docs:
+    - "boveda/🧩 Features/Rol Servicios.md"
+  lib:
+    - "lib/rol-servicios/"
+  graph_query: "deps of lib/rol-servicios"
+
+auxiliar:
+  label: "Auxiliar de Novedades"
+  docs:
+    - "boveda/🧩 Features/Index.md"
+  lib:
+    - "lib/auxiliar/"
+  graph_query: "deps of lib/auxiliar"
+
+auth:
+  label: "Autenticación y Roles"
+  docs:
+    - "boveda/🏗 Arquitectura/Middleware y Auth.md"
+  lib:
+    - "lib/auth/"
+    - "lib/error-handler.ts"
+  graph_query: "deps of lib/auth"
+
+oficial:
+  label: "Oficial de Campo — Reportes e Infracciones"
+  docs:
+    - "boveda/🧩 Features/Reporte Campo.md"
+  lib:
+    - "lib/oficial/"
+  graph_query: "deps of lib/oficial"

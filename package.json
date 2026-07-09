@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "db:seed": "tsx lib/db/seed.ts",
-    "db:create-admin": "tsx lib/db/create-admin.ts"
+    "db:create-admin": "tsx lib/db/create-admin.ts",
+    "db:schema": "tsx scripts/exportar-schema.ts"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",
+    "@sentropic/graphify": "^0.17.1",
     "better-auth": "^1.6.7",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.2",
