@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { query } from "@/lib/db";
 import { addHours } from "date-fns";
 import { verificarAccesoPrevencionApi } from "@/lib/prevencion/permisos";
+import { getFichasActivas, getSeguimientoTipos } from "@/lib/prevencion/repository";
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -16,9 +16,7 @@ export async function GET() {
   );
   if (chequeo) return chequeo;
 
-  const busquedas = (await query<{ id: string; fechaActivacion: string }>(
-    `SELECT id, fecha_activacion AS "fechaActivacion" FROM fichas_busqueda WHERE status = 'activa'`,
-  )).rows;
+  const busquedas = await getFichasActivas();
 
   const ahora = new Date();
   const enProximo = addHours(ahora, 24);
@@ -27,10 +25,7 @@ export async function GET() {
   let vencidos = 0;
 
   for (const ficha of busquedas) {
-    const seguimientos = (await query<{ tipo: string }>(
-      `SELECT tipo FROM seguimientos_busqueda WHERE ficha_id = $1`,
-      [ficha.id],
-    )).rows;
+    const seguimientos = await getSeguimientoTipos(ficha.id);
 
     const regs = new Set(seguimientos.map(s => s.tipo));
 
@@ -40,12 +35,12 @@ export async function GET() {
       if (!regs.has(hito)) {
         const fechaEsperada =
           hito === "24H"
-            ? addHours(new Date(ficha.fechaActivacion), 24)
+            ? addHours(new Date(ficha.fecha_activacion), 24)
             : hito === "48H"
-              ? addHours(new Date(ficha.fechaActivacion), 48)
+              ? addHours(new Date(ficha.fecha_activacion), 48)
               : hito === "72H"
-                ? addHours(new Date(ficha.fechaActivacion), 72)
-                : new Date(ficha.fechaActivacion);
+                ? addHours(new Date(ficha.fecha_activacion), 72)
+                : new Date(ficha.fecha_activacion);
 
         if (fechaEsperada < ahora) {
           vencidos++;

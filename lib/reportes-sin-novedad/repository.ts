@@ -1,6 +1,8 @@
 import { query } from '@/lib/db'
+import type { SinNovedadRow } from './types'
+import { rowToSinNovedad } from './mapper'
 
-export async function obtenerReportesSinNovedad(desde?: string, hasta?: string, busqueda?: string) {
+export async function obtenerReportesSinNovedad(desde?: string, hasta?: string, busqueda?: string): Promise<SinNovedadRow[]> {
   const d = desde ?? '2000-01-01'
   const h = hasta  ?? new Date().toISOString().split('T')[0]
 
@@ -22,5 +24,5 @@ export async function obtenerReportesSinNovedad(desde?: string, hasta?: string, 
     ORDER BY created_at DESC
   `, busqueda ? [d, h, `%${busqueda}%`] : [d, h])
 
-  return result.rows
+  return result.rows.map(rowToSinNovedad)
 }

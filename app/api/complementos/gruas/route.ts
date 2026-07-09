@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server'
-import { query } from '@/lib/db'
+import { listarGruasActivas } from '@/lib/complementos/repository'
 
 export async function GET() {
   try {
-    const result = await query<{ id: string; nombre: string; activo: boolean }>(
-      `SELECT id, nombre, activo FROM via.v2_gruas WHERE activo = true ORDER BY nombre`,
-    )
-    return NextResponse.json(result.rows)
+    const gruas = await listarGruasActivas()
+    return NextResponse.json(gruas)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error al obtener grúas'
     console.error('[GET /api/complementos/gruas]', msg)

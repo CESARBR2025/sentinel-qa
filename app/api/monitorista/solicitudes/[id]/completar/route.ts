@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { obtenerSolicitudConIncidente, actualizarEstadoSolicitud, insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(
   req: NextRequest,
@@ -20,34 +20,16 @@ export async function POST(
     return NextResponse.json({ error: 'Acción inválida' }, { status: 400 })
   }
 
-  const solResult = await query<Record<string, unknown>>(
-    `SELECT id, status, incidente_id AS "incidenteId" FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`,
-    [id],
-  )
-  const sol = solResult.rows[0] as { id: string; status: string; incidenteId: string } | undefined
-
+  const sol = await obtenerSolicitudConIncidente(id)
   if (!sol) return NextResponse.json({ error: 'Solicitud no encontrada' }, { status: 404 })
   if (sol.status !== 'pendiente') return NextResponse.json({ error: 'La solicitud no está pendiente' }, { status: 400 })
 
   const newStatus = action === 'completar' ? 'completada' : 'cancelada'
   const historialAccion = action === 'completar' ? 'solicitud_completada' : 'solicitud_cancelada'
+  const completadoEn = action === 'completar'
 
-  if (action === 'completar') {
-    await query(
-      `UPDATE solicitudes_evidencia SET status = $1, completado_en = NOW() WHERE id = $2`,
-      [newStatus, id],
-    )
-  } else {
-    await query(
-      `UPDATE solicitudes_evidencia SET status = $1, completado_en = NULL WHERE id = $2`,
-      [newStatus, id],
-    )
-  }
-
-  await query(
-    `INSERT INTO monitorista_historial (monitorista_id, accion, solicitud_id, incidente_id) VALUES ($1, $2, $3, $4)`,
-    [session.user.id, historialAccion, id, sol.incidenteId],
-  )
+  await actualizarEstadoSolicitud(id, newStatus, completadoEn)
+  await insertHistorial(session.user.id, historialAccion, sol.incidente_id, id)
 
   return NextResponse.json({ status: newStatus })
 }

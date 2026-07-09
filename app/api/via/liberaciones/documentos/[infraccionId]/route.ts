@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import {
+  obtenerSolicitudLiberacion,
+  obtenerDocumentosLiberacion,
+} from "@/lib/agente_infracciones/repository";
 
 export async function GET(
   _req: NextRequest,
@@ -8,27 +11,12 @@ export async function GET(
   try {
     const { infraccionId } = await context.params;
 
-    const solicitudRes = await query(
-      `SELECT id, tipo_liberacion, es_empresa, nombre_empresa, rfc_empresa, estatus
-       FROM via.v2_solicitudes_liberacion
-       WHERE infraccion_id = $1
-       LIMIT 1`,
-      [infraccionId],
-    );
-
-    const docsRes = await query(
-      `SELECT DISTINCT ON (dl.tipo_documento)
-              dl.id, dl.tipo_documento, dl.url_documento, dl.estatus_revision, dl.observaciones, dl.created_at
-       FROM via.v2_documentos_liberacion dl
-       JOIN via.v2_solicitudes_liberacion sl ON sl.id = dl.solicitud_id
-       WHERE sl.infraccion_id = $1
-       ORDER BY dl.tipo_documento, dl.created_at DESC`,
-      [infraccionId],
-    );
+    const solicitud = await obtenerSolicitudLiberacion(infraccionId);
+    const documentos = await obtenerDocumentosLiberacion(infraccionId);
 
     return NextResponse.json({
-      solicitud: solicitudRes.rows[0] ?? null,
-      documentos: docsRes.rows,
+      solicitud,
+      documentos,
     });
   } catch (error) {
     console.error("[VIA][LIBERACIONES][DOCUMENTOS]", error);

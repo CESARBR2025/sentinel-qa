@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { query } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { verificarRolOficial } from "@/lib/oficial/service";
+import { verificarFolioDenunciaUnico, insertarReporteDenuncia } from "@/lib/d1/repository";
 
 function generarFolioDenuncia(): string {
   const hoy = new Date()
@@ -22,8 +22,8 @@ function generarFolioDenuncia(): string {
 async function generarFolioDenunciaUnico(): Promise<string> {
   for (let i = 0; i < 10; i++) {
     const folio = generarFolioDenuncia()
-    const result = await query<{ count: number }>(`SELECT COUNT(*)::int AS count FROM ofi_reporte_denuncia WHERE folio_denuncia = $1`, [folio])
-    if (Number(result.rows[0]?.count ?? 1) === 0) return folio
+    const disponible = await verificarFolioDenunciaUnico(folio)
+    if (disponible) return folio
   }
   throw new Error('No se pudo generar un folio único después de 10 intentos')
 }
@@ -50,105 +50,52 @@ export async function POST(request: Request) {
       return null;
     };
 
-    const result = await query<any>(
-      `INSERT INTO ofi_reporte_denuncia (
-        folio_denuncia, iph, folio_cu, corporacion, sector, grupo_adscripcion,
-        fecha_reporte, hora_reporte,
-        fecha_avistamiento, hora_avistamiento,
-        fecha_despacho, hora_despacho,
-        fecha_confirmacion, hora_confirmacion,
-        fecha_llegada, hora_llegada,
-        hora_inicio_denuncia, hora_fin_denuncia,
-        hora_termino_atencion, hora_cuestionario,
-        lugar_hecho, lugar_apoyo,
-        colonia_hecho, colonia_apoyo,
-        municipio,
-        latitud, longitud,
-        nomina_mando, policia_a_cargo,
-        tipo_evento, delito, violencia, crp,
-        policia_denuncia, policia_firma_d1, policia_ingresa_cu,
-        requirio_tablet, funcionaba_tablet,
-        ofendido_hombre, ofendido_mujer, num_cuestionarios,
-        intervino_gs, se_genero_d1, se_va_a_generar_d1,
-        observaciones, capturado_por, incidente_id, reporte_campo_id,
-        oficial_id, estado_tramite, estado_evidencia
-      ) VALUES (
-        $1, $2, $3, $4, $5, $6,
-        $7::date, $8::time,
-        $9::date, $10::time,
-        $11::date, $12::time,
-        $13::date, $14::time,
-        $15::date, $16::time,
-        $17::time, $18::time,
-        $19::time, $20::time,
-        $21, $22,
-        $23, $24,
-        $25,
-        $26, $27,
-        NULL,
-        NULL,
-        $28, $29, $30, $31,
-        NULL,
-        NULL,
-        NULL,
-        $32, $33,
-        $34, $35, $36,
-        $37, $38, $39,
-        $40, $41, $42::uuid, $43::uuid,
-        $44::uuid,
-        'EN_REVISION_JUZGADO',
-        'SIN_SOLICITUD'
-      )
-      RETURNING id`,
-      [
-        clean(body.folioDenuncia),
-        clean(body.iph),
-        clean(body.folioCu),
-        clean(body.corporacion),
-        clean(body.sector),
-        clean(body.grupoAdscripcion),
-        clean(body.fechaReporte),
-        clean(body.horaReporte),
-        clean(body.fechaAvistamiento),
-        clean(body.horaAvistamiento),
-        clean(body.fechaDespacho),
-        clean(body.horaDespacho),
-        clean(body.fechaConfirmacion),
-        clean(body.horaConfirmacion),
-        clean(body.fechaLlegada),
-        clean(body.horaLlegada),
-        clean(body.horaInicioDenuncia),
-        clean(body.horaFinDenuncia),
-        clean(body.horaTerminoAtencion),
-        clean(body.horaCuestionario),
-        clean(body.lugarHecho),
-        clean(body.lugarApoyo),
-        clean(body.coloniaHecho),
-        clean(body.coloniaApoyo),
-        clean(body.municipio),
-        clean(body.latitudHecho),
-        clean(body.longitudHecho),
-        clean(body.tipoEvento),
-        clean(body.delito),
-        toBool(body.violencia),
-        clean(body.crp),
-        toBool(body.requirioTablet),
-        toBool(body.funcionabaTablet),
-        Number(body.ofendidoHombre) || 0,
-        Number(body.ofendidoMujer) || 0,
-        Number(body.numCuestionarios) || 0,
-        toBool(body.intervinoGs),
-        toBool(body.seGeneroD1),
-        toBool(body.seVaAGenerarD1),
-        clean(body.observaciones),
-        session.user.id,
-        clean(body.incidenteId),
-        clean(body.reporteCampoId),
-        clean(body.oficialId),
-      ]
-    )
-
-    const reporteId = result.rows[0]?.id
+    const reporteId = await insertarReporteDenuncia({
+      folioDenuncia: clean(body.folioDenuncia),
+      iph: clean(body.iph),
+      folioCu: clean(body.folioCu),
+      corporacion: clean(body.corporacion),
+      sector: clean(body.sector),
+      grupoAdscripcion: clean(body.grupoAdscripcion),
+      fechaReporte: clean(body.fechaReporte),
+      horaReporte: clean(body.horaReporte),
+      fechaAvistamiento: clean(body.fechaAvistamiento),
+      horaAvistamiento: clean(body.horaAvistamiento),
+      fechaDespacho: clean(body.fechaDespacho),
+      horaDespacho: clean(body.horaDespacho),
+      fechaConfirmacion: clean(body.fechaConfirmacion),
+      horaConfirmacion: clean(body.horaConfirmacion),
+      fechaLlegada: clean(body.fechaLlegada),
+      horaLlegada: clean(body.horaLlegada),
+      horaInicioDenuncia: clean(body.horaInicioDenuncia),
+      horaFinDenuncia: clean(body.horaFinDenuncia),
+      horaTerminoAtencion: clean(body.horaTerminoAtencion),
+      horaCuestionario: clean(body.horaCuestionario),
+      lugarHecho: clean(body.lugarHecho),
+      lugarApoyo: clean(body.lugarApoyo),
+      coloniaHecho: clean(body.coloniaHecho),
+      coloniaApoyo: clean(body.coloniaApoyo),
+      municipio: clean(body.municipio),
+      latitudHecho: clean(body.latitudHecho),
+      longitudHecho: clean(body.longitudHecho),
+      tipoEvento: clean(body.tipoEvento),
+      delito: clean(body.delito),
+      violencia: toBool(body.violencia),
+      crp: clean(body.crp),
+      requirioTablet: toBool(body.requirioTablet),
+      funcionabaTablet: toBool(body.funcionabaTablet),
+      ofendidoHombre: Number(body.ofendidoHombre) || 0,
+      ofendidoMujer: Number(body.ofendidoMujer) || 0,
+      numCuestionarios: Number(body.numCuestionarios) || 0,
+      intervinoGs: toBool(body.intervinoGs),
+      seGeneroD1: toBool(body.seGeneroD1),
+      seVaAGenerarD1: toBool(body.seVaAGenerarD1),
+      observaciones: clean(body.observaciones),
+      capturadoPor: session.user.id,
+      incidenteId: clean(body.incidenteId),
+      reporteCampoId: clean(body.reporteCampoId),
+      oficialId: clean(body.oficialId),
+    })
 
     return NextResponse.json(
       {

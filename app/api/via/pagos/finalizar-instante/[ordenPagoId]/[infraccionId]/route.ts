@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { consultarEstatusSA7 } from "@/lib/via/sa7";
-import { query } from "@/lib/db";
+import { marcarOrdenPagoPagada, liberarInfraccionInstante } from "@/lib/agente_infracciones/repository";
 
 export async function GET(
   _req: Request,
@@ -15,17 +15,8 @@ export async function GET(
       return NextResponse.json({ pagado: false, estatusSA7: sa7.estatus });
     }
 
-    await query(
-      `UPDATE via.v2_ordenes_pago_sa7 SET estatus = 'P', updated_at = CURRENT_TIMESTAMP WHERE orden_pago_id = $1`,
-      [ordenPagoId],
-    );
-
-    await query(
-      `UPDATE via.v2_infracciones
-       SET estatus = 'CERRADA', estatus_dependencia = 'LIBERADO_INFRACCIONES_INSTANTE', updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1`,
-      [infraccionId],
-    );
+    await marcarOrdenPagoPagada(ordenPagoId);
+    await liberarInfraccionInstante(infraccionId);
 
     return NextResponse.json({ pagado: true });
   } catch (error) {

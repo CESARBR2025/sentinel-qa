@@ -48,3 +48,21 @@ export async function obtenerRol(id: number): Promise<RolItem | null> {
   )
   return result.rows.length ? rowToRol(result.rows[0]) : null
 }
+
+export async function existeRolPorNombre(nombre: string): Promise<boolean> {
+  const result = await query<{ count: number }>(
+    `SELECT COUNT(*)::int AS count FROM roles WHERE LOWER(nombre) = LOWER($1) LIMIT 1`,
+    [nombre],
+  )
+  return Number(result.rows[0]?.count ?? 0) > 0
+}
+
+export async function crearRol(nombre: string, descripcion: string, activo: boolean): Promise<number> {
+  const result = await query<{ id: number }>(
+    `INSERT INTO roles (nombre, descripcion, activo)
+     VALUES ($1, $2, $3)
+     RETURNING id`,
+    [nombre, descripcion, activo],
+  )
+  return result.rows[0].id
+}

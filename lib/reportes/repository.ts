@@ -1,14 +1,5 @@
 import { query } from '@/lib/db'
-
-export interface FormatoNStats {
-  eventos: number
-  fge: number
-  fgr: number
-  rnd: number
-  medios: number
-  victimas: number
-  armas: number
-}
+import type { FormatoNStats } from './types'
 
 export async function getFormatoNStats(): Promise<FormatoNStats> {
   const [eventos, fge, fgr, rnd, medios, victimas, armas] = await Promise.all([

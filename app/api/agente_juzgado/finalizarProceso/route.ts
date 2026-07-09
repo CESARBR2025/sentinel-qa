@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
+import { finalizarProcesoJuzgadoSvc } from '@/lib/agente_juzgado/service'
 
 export async function PATCH(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -13,12 +13,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
     }
 
-    await query(
-      `UPDATE via.v2_infracciones
-       SET estatus_dependencia = 'LIBERADA_POR_JUZGADO', updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1`,
-      [id],
-    )
+    await finalizarProcesoJuzgadoSvc(id)
 
     return NextResponse.json({ success: true })
   } catch (err) {

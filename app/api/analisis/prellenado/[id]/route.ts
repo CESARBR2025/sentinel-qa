@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { query } from '@/lib/db';
+import { obtenerPrellenado } from '@/lib/oficial/repository';
 import { verificarAccesoAnalisisApi } from '@/lib/analisis/permisos';
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -14,47 +12,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
   try {
     const { id } = await params;
+    const row = await obtenerPrellenado(id);
 
-    const result = await query<any>(
-      `SELECT
-        dd.calle                       AS "calleDetenido",
-        dd.numero                      AS "numeroDetenido",
-        dd.colonia                     AS "coloniaDetenido",
-        dd.latitud                     AS "latitudDetenido",
-        dd.longitud                    AS "longitudDetenido",
-        rd.lugar_apoyo                 AS "calleArresto",
-        rd.colonia_apoyo               AS "coloniaArresto",
-        rd.sector                      AS "sectorArresto",
-        rd.iph                         AS "folioIPH",
-        rd.folio_denuncia              AS "folio911",
-        rd.fecha_avistamiento          AS "fechaEvento",
-        rd.fecha_reporte               AS "fechaReporte",
-        rd.hora_reporte                AS "horaReporte",
-        rd.hora_avistamiento           AS "horaInicioEvento",
-        rd.hora_fin_denuncia           AS "horaFinalEvento",
-        rc.delito                      AS "delito",
-        rc.modus_operandi              AS "modusOperandi",
-        rc.ofi_objetos_recuperados     AS "articulosObjetos",
-        rd.lugar_hecho                 AS "calleHecho",
-        rd.colonia_hecho               AS "coloniaHecho",
-        rd.latitud                     AS "latitudHecho",
-        rd.longitud                    AS "longitudHecho",
-        rd.sector                      AS "sectorHecho",
-        rd.crp                         AS "crpUnidad",
-        rd.domicilio_calle             AS "calleAfectado",
-        rd.domicilio_numero            AS "numeroAfectado",
-        rd.domicilio_colonia           AS "coloniaAfectado",
-        rd.domicilio_municipio         AS "municipioAfectado",
-        rd.id AS "reporteDenunciaId"
-      FROM ofi_reportes_campo rc
-      INNER JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
-      LEFT JOIN ofi_detalles_asegurados dd ON dd.reporte_campo_id = rc.id
-      WHERE rc.id = $1
-      LIMIT 1`,
-      [id],
-    );
-
-    return NextResponse.json(result.rows[0] ?? {});
+    return NextResponse.json(row ?? {});
   } catch (error: any) {
     console.error(error);
 

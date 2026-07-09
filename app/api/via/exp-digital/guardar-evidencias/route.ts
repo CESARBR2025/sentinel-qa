@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
-import { query } from "@/lib/db";
+import { actualizarEvidenciasInfraccion } from "@/lib/agente_infracciones/repository";
 
 export async function POST(req: NextRequest) {
   try {
@@ -110,13 +110,7 @@ export async function POST(req: NextRequest) {
     console.log(
       `[VIA][EXP-DIGITAL][EVIDENCIAS] Guardando ${rutas.length} ruta(s) en BD para infracción ${idInfraccion}`,
     );
-    await query(
-      `UPDATE via.v2_infracciones
-       SET evidencias = $1::jsonb,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $2`,
-      [JSON.stringify(rutas), idInfraccion],
-    );
+    await actualizarEvidenciasInfraccion(idInfraccion, rutas);
 
     return NextResponse.json({
       message: "Evidencias guardadas correctamente",

@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { consultarEstatusSA7 } from "@/lib/via/sa7";
-import { query } from "@/lib/db";
 import { getExpedienteToken } from "@/lib/via/expediente";
 import { generarOrdenSalidaVehiculo } from "@/lib/ordenSalida/generarOrdenSalida";
 import { enviarCorreoOrdenLiberacion } from "@/lib/emails/server";
+import {
+  marcarOrdenPagoPagada,
+  obtenerMotivoRetencion,
+  cerrarInfraccion,
+  obtenerDatosOrdenSalida,
+  actualizarUrlOrdenSalida,
+} from "@/lib/agente_infracciones/repository";
 
 export async function GET(
   _req: Request,
@@ -17,44 +23,20 @@ export async function GET(
       return NextResponse.json({ pagado: false, estatusSA7: sa7.estatus });
     }
 
-    await query(
-      `UPDATE via.v2_ordenes_pago_sa7 SET estatus = 'P', updated_at = CURRENT_TIMESTAMP WHERE orden_pago_id = $1`,
-      [ordenPagoId],
-    );
+    await marcarOrdenPagoPagada(ordenPagoId);
 
-    const infraccion = await query<any>(
-      `SELECT motivo_retencion FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
-      [infraccionId],
-    );
-
-    const motivo = infraccion.rows[0]?.motivo_retencion as string | undefined;
+    const motivo = await obtenerMotivoRetencion(infraccionId);
     const estatusDep = motivo === 'ACCIDENTE' ? 'LIBERADA_POR_ACCIDENTE'
                      : motivo === 'DELITO' ? 'LIBERADA_POR_DELITO'
                      : 'LIBERADA_POR_INFRACCION';
 
-    await query(
-      `UPDATE via.v2_infracciones
-       SET estatus = 'CERRADA', estatus_dependencia = $2,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1`,
-      [infraccionId, estatusDep],
-    );
+    await cerrarInfraccion(infraccionId, estatusDep);
 
     // ── Generar orden de salida ──
-    const datosOrden = await query<any>(
-      `SELECT i.*, s.es_empresa, s.nombre_empresa, s.rfc_empresa,
-              s.nombre_resp_fiscal, s.appaterno_resp_fiscal, s.apmaterno_resp_fiscal,
-              g.nombre AS nombre_grua
-       FROM via.v2_infracciones i
-       LEFT JOIN via.v2_solicitudes_liberacion s ON s.infraccion_id = i.id
-       LEFT JOIN via.v2_gruas g ON g.id = i.grua_id
-       WHERE i.id = $1
-       ORDER BY s.created_at DESC LIMIT 1`,
-      [infraccionId],
-    );
+    const rawData = await obtenerDatosOrdenSalida(infraccionId);
 
-    if (datosOrden.rows.length > 0) {
-      const dbData = datosOrden.rows[0];
+    if (rawData) {
+      const dbData = rawData as any;
       const esEmpresa = dbData.rfc_empresa || dbData.es_empresa;
       const tNombre = !esEmpresa ? dbData.nombre_titular_liberacion : dbData.nombre_resp_fiscal;
       const tPaterno = !esEmpresa ? dbData.appaterno_titular_liberacion : dbData.appaterno_resp_fiscal;
@@ -117,10 +99,7 @@ export async function GET(
           const uploadJson = await uploadRes.json();
           const urlOrdenSalida = uploadJson.data?.ruta_relativa;
           if (urlOrdenSalida) {
-            await query(
-              `UPDATE via.v2_infracciones SET url_orden_salida_liberaciones = $2, updated_at = NOW() WHERE id = $1`,
-              [infraccionId, urlOrdenSalida],
-            );
+            await actualizarUrlOrdenSalida(infraccionId, urlOrdenSalida);
           }
         }
       } catch (err) {

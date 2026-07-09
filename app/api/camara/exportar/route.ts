@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerPorTurno, obtenerConcentradoDiario, obtenerTotalesCamara } from '@/lib/camara/repository'
+import type { IncidenteCamara } from '@/lib/camara/types'
 import ExcelJS from 'exceljs'
 
 const COLS = [
@@ -13,25 +14,20 @@ const COLS = [
 const INST = 'SECRETARÍA DE SEGURIDAD PÚBLICA MUNICIPAL · SAN JUAN DEL RÍO, QRO.'
 const WIDTHS = [14, 12, 12, 14, 14, 12, 12, 14, 12, 14, 12, 16]
 
-function formatFecha(val: unknown) {
-    if (val instanceof Date) return val.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    return String(val ?? '—')
-}
-
-function rowVals(r: Record<string, unknown>) {
+function rowVals(r: IncidenteCamara) {
     return [
-        formatFecha(r.fecha),
-        Number(r.personas_sin_novedad ?? 0),
-        Number(r.personas_con_antecedentes ?? 0),
-        Number(r.vehiculos_revisar ?? 0),
-        Number(r.vehiculos_repuve ?? 0),
-        Number(r.persecuciones ?? 0),
-        Number(r.asegurados_camara ?? 0),
-        Number(r.vehiculos_recuperados ?? 0),
-        Number(r.incendios ?? 0),
-        Number(r.hechos_transito ?? 0),
-        Number(r.motos_revisadas ?? 0),
-        Number(r.total_personas_revisadas ?? 0),
+        r.fecha ?? '—',
+        r.personasSinNovedad,
+        r.conAntecedentes,
+        r.vehiculosRevisar,
+        r.vehiculosRepuve,
+        r.persecuciones,
+        r.asegurados,
+        r.recuperados,
+        r.incendios,
+        r.hechosTransito,
+        r.motosRevisadas,
+        r.totalPersonasRevisadas,
     ]
 }
 
@@ -39,7 +35,7 @@ function crearHoja(
     wb: ExcelJS.Workbook,
     nombre: string,
     subtitulo: string,
-    filas: Record<string, unknown>[],
+    filas: IncidenteCamara[],
     opts?: { conTurno?: boolean }
 ) {
     const ws = wb.addWorksheet(nombre, { pageSetup: { orientation: 'landscape', fitToPage: true } })
@@ -94,8 +90,8 @@ function crearHoja(
     filas.forEach((r, i) => {
         const rowNum = i + 5
         const bg = i % 2 === 0 ? 'FFFFFFFF' : 'FFF8FAFC'
-        const vals = opts?.conTurno
-            ? [formatFecha(r.fecha), String(r.turno ?? ''), ...rowVals(r).slice(1)]
+        const         vals = opts?.conTurno
+            ? [r.fecha ?? '—', r.turno ?? '', ...rowVals(r).slice(1)]
             : rowVals(r)
 
         vals.forEach((val, ci) => {

@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { tienePermiso } from "@/lib/permisos/core";
 import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
-import { query } from "@/lib/db";
+import { obtenerEstatusInfraccion, finalizarInfraccionCorralon } from "@/lib/corralon/repository";
 
 function mapearEstatusFinal(estatusDep: string): string {
   if (estatusDep === "LIBERADA_POR_ACCIDENTE") return "FINALIZADA_ACCIDENTE";
@@ -49,18 +49,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Obtener estatus_dependencia actual
-    const infraRes = await query<{ estatus_dependencia: string }>(
-      `SELECT estatus_dependencia FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
-      [infraccionId],
-    );
-    if (infraRes.rows.length === 0) {
+    const estatusDepActual = await obtenerEstatusInfraccion(infraccionId);
+    if (estatusDepActual === null) {
       return NextResponse.json(
         { error: "Infracción no encontrada" },
         { status: 404 },
       );
     }
-
-    const estatusDepActual = infraRes.rows[0].estatus_dependencia;
 
     // Subir a expediente digital
     let token: string;
@@ -130,15 +125,7 @@ export async function POST(req: NextRequest) {
     const urlDocumento = uploadData.data.ruta_relativa;
     const nuevoEstatusDep = mapearEstatusFinal(estatusDepActual);
 
-    await query(
-      `UPDATE via.v2_infracciones
-       SET url_oficio_pago_corralon = $2,
-           estatus = 'FINALIZADA',
-           estatus_dependencia = $3,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1`,
-      [infraccionId, urlDocumento, nuevoEstatusDep],
-    );
+    await finalizarInfraccionCorralon(infraccionId, urlDocumento, nuevoEstatusDep)
 
     return NextResponse.json({
       success: true,

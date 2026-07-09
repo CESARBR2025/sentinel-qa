@@ -24,6 +24,26 @@ export async function obtenerSolicitudesPendientes() {
   `)
 }
 
+export async function obtenerEstatusInfraccion(id: string): Promise<string | null> {
+  const result = await query<{ estatus_dependencia: string }>(
+    `SELECT estatus_dependencia FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
+    [id],
+  )
+  return result.rows[0]?.estatus_dependencia ?? null
+}
+
+export async function finalizarInfraccionCorralon(id: string, urlDocumento: string, estatusDep: string): Promise<void> {
+  await query(
+    `UPDATE via.v2_infracciones
+     SET url_oficio_pago_corralon = $2,
+         estatus = 'FINALIZADA',
+         estatus_dependencia = $3,
+         updated_at = CURRENT_TIMESTAMP
+     WHERE id = $1`,
+    [id, urlDocumento, estatusDep],
+  )
+}
+
 export async function obtenerSolicitudesFinalizadas() {
   return query<Record<string, unknown>>(`
     SELECT

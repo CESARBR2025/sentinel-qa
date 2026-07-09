@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import {
+  actualizarEstatusSolicitudLiberacion,
+  actualizarEstatusDependenciaMesaControl,
+} from "@/lib/agente_infracciones/repository";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,15 +13,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "infraccionId es requerido" }, { status: 400 });
     }
 
-    await query(
-      `UPDATE via.v2_solicitudes_liberacion SET estatus = 'EN_PROCESO_LIBERACIONES', updated_at = CURRENT_TIMESTAMP WHERE infraccion_id = $1`,
-      [infraccionId],
-    );
-
-    await query(
-      `UPDATE via.v2_infracciones SET estatus_dependencia = 'MESA_DE_CONTROL_REVISION', updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
-      [infraccionId],
-    );
+    await actualizarEstatusSolicitudLiberacion(infraccionId);
+    await actualizarEstatusDependenciaMesaControl(infraccionId);
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -256,6 +256,69 @@ export async function obtenerReporteCampoSimple(id: string) {
   return result.rows[0] ?? null
 }
 
+export async function obtenerPrellenado(id: string) {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+      dd.calle                       AS "calleDetenido",
+      dd.numero                      AS "numeroDetenido",
+      dd.colonia                     AS "coloniaDetenido",
+      dd.latitud                     AS "latitudDetenido",
+      dd.longitud                    AS "longitudDetenido",
+      rd.lugar_apoyo                 AS "calleArresto",
+      rd.colonia_apoyo               AS "coloniaArresto",
+      rd.sector                      AS "sectorArresto",
+      rd.iph                         AS "folioIPH",
+      rd.folio_denuncia              AS "folio911",
+      rd.fecha_avistamiento          AS "fechaEvento",
+      rd.fecha_reporte               AS "fechaReporte",
+      rd.hora_reporte                AS "horaReporte",
+      rd.hora_avistamiento           AS "horaInicioEvento",
+      rd.hora_fin_denuncia           AS "horaFinalEvento",
+      rc.delito                      AS "delito",
+      rc.modus_operandi              AS "modusOperandi",
+      rc.ofi_objetos_recuperados     AS "articulosObjetos",
+      rd.lugar_hecho                 AS "calleHecho",
+      rd.colonia_hecho               AS "coloniaHecho",
+      rd.latitud                     AS "latitudHecho",
+      rd.longitud                    AS "longitudHecho",
+      rd.sector                      AS "sectorHecho",
+      rd.crp                         AS "crpUnidad",
+      rd.domicilio_calle             AS "calleAfectado",
+      rd.domicilio_numero            AS "numeroAfectado",
+      rd.domicilio_colonia           AS "coloniaAfectado",
+      rd.domicilio_municipio         AS "municipioAfectado",
+      rd.id AS "reporteDenunciaId"
+    FROM ofi_reportes_campo rc
+    INNER JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
+    LEFT JOIN ofi_detalles_asegurados dd ON dd.reporte_campo_id = rc.id
+    WHERE rc.id = $1
+    LIMIT 1`,
+    [id],
+  )
+  return result.rows[0] ?? null
+}
+
+export async function listarReportesCampo() {
+  const result = await query<Record<string, unknown>>(
+    `SELECT 
+      rc.id, 
+      rc.ofi_folio_cad AS "folio", 
+      'N/D' AS "oficial",
+      rc.created_at AS "fecha", 
+      rc.delito AS "tipo_incidente",
+      rd.folio_denuncia AS "folio_denuncia", 
+      rc.ofi_calle AS "calle", 
+      rc.ofi_colonia AS "colonia", 
+      COALESCE(rc.ofi_hay_detencion, false) AS "tiene_iph",
+      (rc.ofi_vehiculos IS NOT NULL AND rc.ofi_vehiculos::text <> '[]') AS "tiene_veh",
+      (rc.ofi_objetos_recuperados IS NOT NULL AND rc.ofi_objetos_recuperados <> '') AS "tiene_obj"
+    FROM ofi_reportes_campo rc
+    LEFT JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
+    ORDER BY rc.created_at DESC`,
+  )
+  return result.rows
+}
+
 export async function actualizarPatrullaOficial(
   userId: string,
   patrullaId: string | null,

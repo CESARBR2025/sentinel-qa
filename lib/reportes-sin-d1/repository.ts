@@ -1,6 +1,8 @@
 import { query } from '@/lib/db'
+import type { SinD1Row } from './types'
+import { rowToSinD1 } from './mapper'
 
-export async function obtenerSinD1(desde?: string, hasta?: string, nombre?: string) {
+export async function obtenerSinD1(desde?: string, hasta?: string, nombre?: string): Promise<SinD1Row[]> {
   const d = desde ?? '2000-01-01'
   const h = hasta  ?? new Date().toISOString().split('T')[0]
 
@@ -20,5 +22,5 @@ export async function obtenerSinD1(desde?: string, hasta?: string, nombre?: stri
     ORDER BY r.created_at DESC
   `, nombre ? [d, h, `%${nombre}%`] : [d, h])
 
-  return result.rows
+  return result.rows.map(rowToSinD1)
 }

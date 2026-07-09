@@ -1,6 +1,8 @@
 import { query } from '@/lib/db'
+import type { ReporteDiarioRow, ReporteSemanalRow } from './types'
+import { rowToReporteDiario, rowToReporteSemanal } from './mapper'
 
-export async function obtenerReporteDiario(desde: string, hasta: string) {
+export async function obtenerReporteDiario(desde: string, hasta: string): Promise<{ ofi: ReporteDiarioRow[], inc: ReporteDiarioRow[] }> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date AS fecha,
@@ -23,10 +25,13 @@ export async function obtenerReporteDiario(desde: string, hasta: string) {
     GROUP BY creado_en::date ORDER BY creado_en::date
   `, [desde, hasta])
 
-  return { ofi: ofi.rows, inc: inc.rows }
+  return {
+    ofi: ofi.rows.map(rowToReporteDiario),
+    inc: inc.rows.map(rowToReporteDiario),
+  }
 }
 
-export async function obtenerReporteSemanal(desde: string, hasta: string) {
+export async function obtenerReporteSemanal(desde: string, hasta: string): Promise<{ ofi: ReporteSemanalRow[], inc: ReporteSemanalRow[] }> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date AS fecha,
@@ -65,5 +70,8 @@ export async function obtenerReporteSemanal(desde: string, hasta: string) {
     GROUP BY creado_en::date ORDER BY creado_en::date
   `, [desde, hasta])
 
-  return { ofi: ofi.rows, inc: inc.rows }
+  return {
+    ofi: ofi.rows.map(rowToReporteSemanal),
+    inc: inc.rows.map(rowToReporteSemanal),
+  }
 }

@@ -1,3 +1,8 @@
+import type {
+  VehiculoRow, CateoRow, DetencionOfiRow, DetencionIncRow,
+  OrdenAprehensionRow, HidrocarburoRow, ArmaRow, DrogaRow,
+  ExtorsionRow,
+} from './types'
 import {
     obtenerVehiculos, obtenerCateos, obtenerDetenidos,
     obtenerOrdenesAprehension, obtenerHidrocarburos,
@@ -31,7 +36,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     ])
 
     // Vehículos — separar motos del resto
-    const todosVeh = vehRows.flatMap(r => {
+    const todosVeh = vehRows.flatMap((r: VehiculoRow) => {
         const v = r.vehiculo as any
         return [{
             fecha: r.fecha instanceof Date
@@ -49,7 +54,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     const vehiculos = todosVeh.filter(v => v._tipo !== 'motocicleta').map(({ _tipo, ...r }) => r)
 
     // Cateos
-    const cateos = catRows.map(r => ({
+    const cateos = catRows.map((r: CateoRow) => ({
         fecha: r.fecha instanceof Date
             ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
             : String(r.fecha ?? '—'),
@@ -61,7 +66,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
 
     // Detenidos
     const detenidos = [
-        ...detRows.ofi.flatMap(r =>
+        ...detRows.ofi.flatMap((r: DetencionOfiRow) =>
             parseJsonb(r.detenidos).map((d: any) => ({
                 fecha: r.fecha instanceof Date
                     ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -73,7 +78,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
                 seguimiento: toStr(r.seguimiento),
             }))
         ),
-        ...detRows.inc.map(r => ({
+        ...detRows.inc.map((r: DetencionIncRow) => ({
             fecha: r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : String(r.fecha ?? '—'),
@@ -86,7 +91,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     ]
 
     // Órdenes de aprehensión
-    const ordenes = ordRows.flatMap(r =>
+    const ordenes = ordRows.flatMap((r: OrdenAprehensionRow) =>
         parseJsonb(r.ordenes).map((o: any) => ({
             fecha: o.fecha || (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -95,12 +100,12 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
             nombre: toStr(o.nombrePersona),
             observaciones: toStr(o.observaciones),
             estatus: toStr(o.estatus),
-            seguimiento: toStr(o.nombreSeguimiento || r.seguimiento_reporte),
+            seguimiento: toStr(o.nombreSeguimiento || r.seguimientoReporte),
         }))
     )
 
     // Hidrocarburos
-    const hidrocarburo = hidRows.flatMap(r =>
+    const hidrocarburo = hidRows.flatMap((r: HidrocarburoRow) =>
         parseJsonb(r.hidrocarburos).map((h: any) => ({
             fecha: h.fecha || (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -111,12 +116,12 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
             litros: toStr(h.litrosExtraccion),
             toma: toStr(h.nombreToma),
             observaciones: toStr(h.observaciones),
-            seguimiento: toStr(h.nombreSeguimiento || r.seguimiento_reporte),
+            seguimiento: toStr(h.nombreSeguimiento || r.seguimientoReporte),
         }))
     )
 
     // Armas
-    const armas = armRows.flatMap(r =>
+    const armas = armRows.flatMap((r: ArmaRow) =>
         parseJsonb(r.armas).map((a: any) => ({
             fecha: a.fecha || (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -125,12 +130,12 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
             datos: toStr(a.datos),
             cartuchos: toStr(a.cartuchos),
             observaciones: toStr(a.observaciones),
-            seguimiento: toStr(a.nombreSeguimiento || r.seguimiento_reporte),
+            seguimiento: toStr(a.nombreSeguimiento || r.seguimientoReporte),
         }))
     )
 
     // Drogas
-    const droga = droRows.flatMap(r =>
+    const droga = droRows.flatMap((r: DrogaRow) =>
         parseJsonb(r.drogas).map((d: any) => ({
             fecha: d.fecha || (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -139,7 +144,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
             cantidad: toStr(d.cantidad),
             nombre: toStr(d.nombre),
             observaciones: toStr(d.observaciones),
-            seguimiento: toStr(d.nombreSeguimiento || r.seguimiento_reporte),
+            seguimiento: toStr(d.nombreSeguimiento || r.seguimientoReporte),
         }))
     )
 
@@ -276,7 +281,7 @@ export async function obtenerDatosTelefonicos(desde?: string, hasta?: string) {
     const d = desde ?? '2000-01-01'
     const h = hasta ?? new Date().toISOString().split('T')[0]
     const rows = await obtenerExtorsiones(d, h)
-    return rows.map(r => ({
+    return rows.map((r: ExtorsionRow) => ({
         folio: toStr(r.folio),
         telefono: toStr(r.telefono),
         fecha: r.fecha instanceof Date

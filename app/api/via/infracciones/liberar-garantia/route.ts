@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { marcarGarantiaEntregada } from "@/lib/agente_infracciones/repository";
 
 export async function PATCH(request: Request) {
   try {
@@ -10,12 +10,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "id es requerido" }, { status: 400 });
     }
 
-    await query(
-      `UPDATE via.v2_infracciones
-       SET estatus = 'FINALIZADA', estatus_dependencia = 'GARANTIA_ENTREGADA', updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1`,
-      [id],
-    );
+    await marcarGarantiaEntregada(id);
 
     return NextResponse.json({ success: true });
   } catch (error) {

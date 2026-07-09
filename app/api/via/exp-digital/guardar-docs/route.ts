@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getExpedienteToken } from "@/lib/via/expediente";
-import { query } from "@/lib/db";
+import { actualizarUrlsDocumentosInfraccion } from "@/lib/agente_infracciones/repository";
 
 async function subirArchivo(
   archivo: File,
@@ -100,15 +100,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await query(
-      `UPDATE via.v2_infracciones
-       SET url_ine = COALESCE($2, url_ine),
-           url_inapam = COALESCE($3, url_inapam),
-           url_tarjeta_circulacion = COALESCE($4, url_tarjeta_circulacion),
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1`,
-      [idInfraccion, urlIne, urlInapam, urlTarjetaCirculacion],
-    );
+    await actualizarUrlsDocumentosInfraccion(idInfraccion, {
+      ine: urlIne,
+      inapam: urlInapam,
+      tarjetaCirculacion: urlTarjetaCirculacion,
+    });
 
     return NextResponse.json({
       message: "Documentos guardados correctamente",

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { query } from "@/lib/db";
+import { marcarPlacaRetenidaEnTransito } from "@/lib/agente_infracciones/repository";
 
 export async function PATCH(request: Request) {
   try {
@@ -17,23 +17,15 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'El campo "id" es requerido.' }, { status: 400 });
     }
 
-    const resultado = await query(
-      `UPDATE via.v2_infracciones
-       SET estatus = 'PENDIENTE_PAGO',
-           estatus_dependencia = 'PLACA_RETENIDA_EN_TRANSITO',
-           updated_at = NOW()
-       WHERE id = $1
-       RETURNING id, folio, estatus, estatus_dependencia`,
-      [id],
-    );
+    const infraccion = await marcarPlacaRetenidaEnTransito(id);
 
-    if (resultado.rows.length === 0) {
+    if (!infraccion) {
       return NextResponse.json({ error: "No se encontró la infracción con el ID proporcionado." }, { status: 404 });
     }
 
     return NextResponse.json({
       message: "Infracción marcada con placa retenida en tránsito.",
-      infraccion: resultado.rows[0],
+      infraccion,
     });
   } catch (error) {
     console.error("Error al actualizar retención de placa:", error);

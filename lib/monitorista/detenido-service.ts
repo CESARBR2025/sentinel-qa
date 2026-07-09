@@ -156,6 +156,171 @@ export async function enviarFoto(fotoId: string, destino: string): Promise<void>
   )
 }
 
+export async function subirFotoDetenido(
+  reporteCampoId: string,
+  tipoFoto: string,
+  urlArchivo: string,
+  nombreArchivo: string,
+  subidoPor: string,
+) {
+  await query(
+    `INSERT INTO evidencias_detenido (reporte_campo_id, tipo_foto, url_archivo, nombre_archivo, subido_por)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [reporteCampoId, tipoFoto, urlArchivo, nombreArchivo, subidoPor],
+  )
+}
+
+export async function completarSolicitudFoto(reporteCampoId: string, tipoFoto: string): Promise<boolean> {
+  const updResult = await query(
+    `UPDATE solicitud_fotos SET estado = 'completado', enviado_a = 'MONITORISTA'
+     WHERE reporte_campo_id = $1::uuid AND tipo_foto = $2::varchar`,
+    [reporteCampoId, tipoFoto],
+  )
+
+  if (updResult.rowCount === 0) {
+    await query(
+      `INSERT INTO solicitud_fotos (reporte_campo_id, tipo_foto, estado, enviado_a)
+       VALUES ($1::uuid, $2::varchar, 'completado', 'MONITORISTA')`,
+      [reporteCampoId, tipoFoto],
+    )
+    return true
+  }
+  return true
+}
+
+export async function obtenerObtenerSolicitudFoto(reporteCampoId: string, tipoFoto: string) {
+  const r = await query<Record<string, unknown>>(
+    `SELECT id, estado, enviado_a FROM solicitud_fotos WHERE reporte_campo_id = $1 AND tipo_foto = $2 LIMIT 1`,
+    [reporteCampoId, tipoFoto],
+  )
+  return r.rows[0] as { id: string; estado: string; enviado_a: string } | undefined
+}
+
+export async function insertarEvidenciaDetenido(
+  reporteCampoId: string,
+  tipoFoto: string,
+  urlArchivo: string,
+  nombreArchivo: string,
+  subidoPor: string,
+) {
+  await query(
+    `INSERT INTO evidencias_detenido (reporte_campo_id, tipo_foto, url_archivo, nombre_archivo, subido_por)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [reporteCampoId, tipoFoto, urlArchivo, nombreArchivo, subidoPor],
+  )
+}
+
+export async function actualizarSolicitudFotoEstado(fotoId: string) {
+  await query(
+    `UPDATE solicitud_fotos SET estado = 'completado' WHERE id = $1`,
+    [fotoId],
+  )
+}
+
+export async function registrarIphDetenido(data: Record<string, unknown>) {
+  const result = await query<any>(
+    `INSERT INTO iph_detenidos(
+      fecha_nacimiento, edad, genero, alias, ciudad_origen,
+      calle_detenido, numero_detenido, colonia_detenido,
+      articulo, tipo_falta, es_rnd, rnd,
+      calle_arresto, colonia_arresto, sector_arresto, agrupamiento_arresto,
+      latitud_arresto, longitud_arresto,
+      presencia, verbalizacion, control_contacto, control_fisico,
+      tecnicas_no_letales, fuerza_letal,
+      folio_iph, folio_911, dia_evento, fecha_evento, fecha_reporte,
+      hora_reporte, hora_inicio_evento, hora_final_evento, hora_promedio,
+      delito, modus_operandi, articulos_objetos,
+      calle_hecho, numero_hecho, colonia_hecho, latitud_hecho, longitud_hecho, sector_hecho,
+      rt_responsable, turno_responsable, crp_unidad,
+      nombre_afectado, telefono_afectado, calle_afectado, numero_afectado, colonia_afectado,
+      marca_vehiculo, submarca_vehiculo, tipo_vehiculo, color_vehiculo,
+      placas_vehiculo, estado_vehiculo, niv_vehiculo, motor_vehiculo, modelo_vehiculo,
+      ap_nuc, fuero, agente_aprehensor, reporte_denuncia_id
+    ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63) RETURNING id, folio;`,
+    [
+      data.fechaNacimiento, data.edad, data.genero, data.alias, data.ciudadOrigen,
+      data.calleDetenido, data.numeroDetenido, data.coloniaDetenido,
+      data.articulo, data.tipoFalta, data.esRND, data.rnd,
+      data.calleArresto, data.coloniaArresto, data.sectorArresto, data.agrupamientoArresto,
+      data.latitudArresto, data.longitudArresto,
+      data.presencia, data.verbalizacion, data.controlContacto, data.controlFisico,
+      data.tecnicasNoLetales, data.fuerzaLetal,
+      data.folioIPH, data.folio911, data.diaEvento, data.fechaEvento, data.fechaReporte,
+      data.horaReporte, data.horaInicioEvento, data.horaFinalEvento, data.horaPromedio,
+      data.delito, data.modusOperandi, data.articulosObjetos,
+      data.calleHecho, data.numeroHecho, data.coloniaHecho, data.latitudHecho, data.longitudHecho, data.sectorHecho,
+      data.rtResponsable, data.turnoResponsable, data.crpUnidad,
+      data.nombreAfectado, data.telefonoAfectado, data.calleAfectado, data.numeroAfectado, data.coloniaAfectado,
+      data.marcaVehiculo, data.submarcaVehiculo, data.tipoVehiculo, data.colorVehiculo,
+      data.placasVehiculo, data.estadoVehiculo, data.nivVehiculo, data.motorVehiculo, data.modeloVehiculo,
+      data.apNuc, data.fuero, data.agenteAprehensor, data.reporteDenunciaId
+    ],
+  )
+  return result.rows[0]
+}
+
+export async function registrarFichaInteligencia(data: {
+  nombreDetenido: string | null
+  folio: string | null
+  fotoFrontalUrl: string | null
+  fotoObjetosUrl: string | null
+  fechaNacimiento: string | null
+  origen: string | null
+  genero: string | null
+  escolaridad: string | null
+  estadoCivil: string | null
+  ocupacion: string | null
+  domicilio: string | null
+  rasgosParticulares: string | null
+  eventosDelictivos: string | null
+  fechaHora: string | null
+  rnd: string | null
+  iph: string | null
+  expediente: string | null
+  lugarEvento: string | null
+  lugarDetencion: string | null
+  nexosDelictivos: string | null
+  zonaOperacion: string | null
+  puestaDisposicion: string | null
+  modusOperandi: string | null
+  infoAdicional: string | null
+  antecedentes: string | null
+  faltasAdmin: string | null
+  capturadoPor: string | null
+}) {
+  await query(
+    `INSERT INTO fichas_inteligencia_detenidos (
+      nombre_detenido, folio, foto_frontal_url, foto_objetos_url, fecha_nacimiento,
+      origen, genero, escolaridad, estado_civil, ocupacion, domicilio,
+      rasgos_particulares, eventos_delictivos, fecha_hora_evento, rnd, iph,
+      expediente, lugar_evento, lugar_detencion, nexos_delictivos, zona_operacion,
+      puesta_disposicion, modus_operandi, info_adicional, antecedentes, faltas_admin,
+      capturado_por
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+      $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+      $21, $22, $23, $24, $25, $26, $27
+    )`,
+    [
+      data.nombreDetenido, data.folio, data.fotoFrontalUrl, data.fotoObjetosUrl,
+      data.fechaNacimiento, data.origen, data.genero, data.escolaridad,
+      data.estadoCivil, data.ocupacion, data.domicilio, data.rasgosParticulares,
+      data.eventosDelictivos, data.fechaHora, data.rnd, data.iph,
+      data.expediente, data.lugarEvento, data.lugarDetencion, data.nexosDelictivos,
+      data.zonaOperacion, data.puestaDisposicion, data.modusOperandi,
+      data.infoAdicional, data.antecedentes, data.faltasAdmin, data.capturadoPor,
+    ],
+  )
+}
+
+export async function getRolUsuario(userId: string): Promise<string> {
+  const r = await query<{ rol: string }>(
+    `SELECT r.nombre AS rol FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`,
+    [userId],
+  )
+  return r.rows[0]?.rol ?? ''
+}
+
 export async function rechazarFoto(fotoId: string): Promise<void> {
   await query(
     `UPDATE solicitud_fotos SET estado = 'rechazado' WHERE id = $1 AND estado = 'enviado'`,

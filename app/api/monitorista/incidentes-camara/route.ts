@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { listarRegistros, crearRegistro, Turno, obtenerRegistroPorFechaTurno } from '@/lib/monitorista/incidentes-camara-service'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -49,10 +49,7 @@ export async function POST(req: NextRequest) {
       hechos_transito: body.hechos_transito,
     })
 
-    await query(
-      `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1, 'incidente_creado', $2)`,
-      [session.user.id, id],
-    )
+    await insertHistorial(session.user.id, 'incidente_creado', id)
 
     return NextResponse.json({ id }, { status: 201 })
   } catch (err: unknown) {

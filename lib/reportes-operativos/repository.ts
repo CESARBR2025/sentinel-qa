@@ -1,6 +1,16 @@
 import { query } from '@/lib/db'
+import type {
+  VehiculoRow, CateoRow, DetencionResult,
+  OrdenAprehensionRow, HidrocarburoRow, ArmaRow, DrogaRow,
+  ExtorsionRow,
+} from './types'
+import {
+  rowToVehiculo, rowToCateo, rowToDetencionOfi, rowToDetencionInc,
+  rowToOrdenAprehension, rowToHidrocarburo, rowToArma, rowToDroga,
+  rowToExtorsion,
+} from './mapper'
 
-export async function obtenerVehiculos(desde: string, hasta: string) {
+export async function obtenerVehiculos(desde: string, hasta: string): Promise<VehiculoRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date       AS fecha,
@@ -28,10 +38,10 @@ export async function obtenerVehiculos(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return [...ofi.rows, ...inc.rows]
+  return [...ofi.rows.map(rowToVehiculo), ...inc.rows.map(rowToVehiculo)]
 }
 
-export async function obtenerCateos(desde: string, hasta: string) {
+export async function obtenerCateos(desde: string, hasta: string): Promise<CateoRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date                          AS fecha,
@@ -59,10 +69,10 @@ export async function obtenerCateos(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return [...ofi.rows, ...inc.rows]
+  return [...ofi.rows.map(rowToCateo), ...inc.rows.map(rowToCateo)]
 }
 
-export async function obtenerDetenidos(desde: string, hasta: string) {
+export async function obtenerDetenidos(desde: string, hasta: string): Promise<DetencionResult> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date      AS fecha,
@@ -90,10 +100,13 @@ export async function obtenerDetenidos(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return { ofi: ofi.rows, inc: inc.rows }
+  return {
+    ofi: ofi.rows.map(rowToDetencionOfi),
+    inc: inc.rows.map(rowToDetencionInc),
+  }
 }
 
-export async function obtenerOrdenesAprehension(desde: string, hasta: string) {
+export async function obtenerOrdenesAprehension(desde: string, hasta: string): Promise<OrdenAprehensionRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date         AS fecha,
@@ -119,10 +132,10 @@ export async function obtenerOrdenesAprehension(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return [...ofi.rows, ...inc.rows]
+  return [...ofi.rows.map(rowToOrdenAprehension), ...inc.rows.map(rowToOrdenAprehension)]
 }
 
-export async function obtenerHidrocarburos(desde: string, hasta: string) {
+export async function obtenerHidrocarburos(desde: string, hasta: string): Promise<HidrocarburoRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date   AS fecha,
@@ -148,10 +161,10 @@ export async function obtenerHidrocarburos(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return [...ofi.rows, ...inc.rows]
+  return [...ofi.rows.map(rowToHidrocarburo), ...inc.rows.map(rowToHidrocarburo)]
 }
 
-export async function obtenerArmas(desde: string, hasta: string) {
+export async function obtenerArmas(desde: string, hasta: string): Promise<ArmaRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date   AS fecha,
@@ -177,10 +190,10 @@ export async function obtenerArmas(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return [...ofi.rows, ...inc.rows]
+  return [...ofi.rows.map(rowToArma), ...inc.rows.map(rowToArma)]
 }
 
-export async function obtenerDrogas(desde: string, hasta: string) {
+export async function obtenerDrogas(desde: string, hasta: string): Promise<DrogaRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
       created_at::date   AS fecha,
@@ -206,10 +219,10 @@ export async function obtenerDrogas(desde: string, hasta: string) {
       AND rc.creado_en::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  return [...ofi.rows, ...inc.rows]
+  return [...ofi.rows.map(rowToDroga), ...inc.rows.map(rowToDroga)]
 }
 
-export async function obtenerExtorsiones(desde: string, hasta: string) {
+export async function obtenerExtorsiones(desde: string, hasta: string): Promise<ExtorsionRow[]> {
   const result = await query<Record<string, unknown>>(`
     SELECT
       i.folio                AS folio,
@@ -221,5 +234,5 @@ export async function obtenerExtorsiones(desde: string, hasta: string) {
     WHERE e.creado_en::date BETWEEN $1 AND $2
     ORDER BY e.creado_en DESC
   `, [desde, hasta])
-  return result.rows
+  return result.rows.map(rowToExtorsion)
 }

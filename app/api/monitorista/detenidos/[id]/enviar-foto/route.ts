@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { enviarFoto, getDestinos } from '@/lib/monitorista/detenido-service'
-import { query } from '@/lib/db'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(
   req: NextRequest,
@@ -28,11 +28,7 @@ export async function POST(
   }
 
   await enviarFoto(fotoId, destino)
-
-  await query(
-    `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1,'evidencia_subida',$2)`,
-    [session.user.id, id],
-  )
+  await insertHistorial(session.user.id, 'evidencia_subida', id)
 
   return NextResponse.json({ success: true })
 }

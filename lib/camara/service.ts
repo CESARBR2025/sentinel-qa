@@ -1,6 +1,5 @@
 import { obtenerIncidentesCamara, obtenerTotalesCamara } from './repository'
 
-function toNum(val: unknown) { return Number(val ?? 0) }
 function toStr(val: unknown) { return String(val ?? '—') }
 
 export async function listarIncidentesCamara(desde?: string, hasta?: string) {
@@ -11,31 +10,29 @@ export async function listarIncidentesCamara(desde?: string, hasta?: string) {
 
   return {
     registros: rows.map(r => ({
-      fecha:                r.fecha instanceof Date
-        ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        : toStr(r.fecha),
-      turno:                toStr(r.turno),
-      persSinNovedad:       toNum(r.personas_sin_novedad),
-      persConAntecedentes:  toNum(r.personas_con_antecedentes),
-      vehiculosRevisar:     toNum(r.vehiculos_revisar),
-      vehiculosRepuve:      toNum(r.vehiculos_repuve),
-      persecuciones:        toNum(r.persecuciones),
-      asegurados:           toNum(r.asegurados_camara),
-      recuperados:          toNum(r.vehiculos_recuperados),
-      incendios:            toNum(r.incendios),
-      hechosTransito:       toNum(r.hechos_transito),
-      motosRevisadas:       toNum(r.motos_revisadas),
-      totalPersonas:        toNum(r.total_personas_revisadas),
-      registradoPor:        toStr(r.registrado_por),
+      fecha:                r.fecha ?? '—',
+      turno:                r.turno ?? '—',
+      persSinNovedad:       r.personasSinNovedad,
+      persConAntecedentes:  r.conAntecedentes,
+      vehiculosRevisar:     r.vehiculosRevisar,
+      vehiculosRepuve:      r.vehiculosRepuve,
+      persecuciones:        r.persecuciones,
+      asegurados:           r.asegurados,
+      recuperados:          r.recuperados,
+      incendios:            r.incendios,
+      hechosTransito:       r.hechosTransito,
+      motosRevisadas:       r.motosRevisadas,
+      totalPersonas:        r.totalPersonasRevisadas,
+      registradoPor:        r.registradoPor ?? '—',
     })),
     totales: {
-      sinNovedad:      toNum(totales?.total_sin_novedad),
-      conAntecedentes: toNum(totales?.total_con_antecedentes),
-      vehiculos:       toNum(totales?.total_vehiculos),
-      persecuciones:   toNum(totales?.total_persecuciones),
-      asegurados:      toNum(totales?.total_asegurados),
-      recuperados:     toNum(totales?.total_recuperados),
-      totalPersonas:   toNum(totales?.total_personas),
+      sinNovedad:      totales?.totalSinNovedad ?? 0,
+      conAntecedentes: totales?.totalConAntecedentes ?? 0,
+      vehiculos:       totales?.totalVehiculos ?? 0,
+      persecuciones:   totales?.totalPersecuciones ?? 0,
+      asegurados:      totales?.totalAsegurados ?? 0,
+      recuperados:     totales?.totalRecuperados ?? 0,
+      totalPersonas:   totales?.totalPersonas ?? 0,
     }
   }
 }

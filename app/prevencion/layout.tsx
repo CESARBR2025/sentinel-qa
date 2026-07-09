@@ -1,11 +1,11 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query }   from '@/lib/db'
 import Link         from 'next/link'
 import PrevencionNav from './PrevencionNav'
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones'
 import { generarAlertasBusquedas }  from '@/lib/notificaciones/checker'
+import { listarNotificacionesNoLeidas } from '@/lib/notificaciones/repository'
 
 export default async function PrevencionLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -15,11 +15,7 @@ export default async function PrevencionLayout({ children }: { children: React.R
   await generarAlertasBusquedas(session.user.id)
 
   // Fetch initial unread notifications to pass as SSR props
-  const notifsResult = await query(
-    `SELECT * FROM notificaciones WHERE user_id = $1 AND leida = $2 ORDER BY creado_en DESC`,
-    [session.user.id, false]
-  )
-  const initialNotifs = notifsResult.rows as any
+  const initialNotifs = await listarNotificacionesNoLeidas(session.user.id)
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>

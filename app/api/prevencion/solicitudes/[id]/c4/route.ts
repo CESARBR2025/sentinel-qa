@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { verificarAccesoPrevencionApi } from '@/lib/prevencion/permisos'
-
-const C4_COLS = `id, solicitud_id AS "solicitudId", descripcion_evidencias AS "descripcionEvidencias", status, creado_por AS "creadoPor", creado_en AS "creadoEn"`
+import { createSolicitudC4Api } from '@/lib/prevencion/actions'
 
 export async function POST(
   request: NextRequest,
@@ -17,10 +15,6 @@ export async function POST(
 
   const { id } = await params
   const body = await request.json()
-
-  const created = await query(
-    `INSERT INTO solicitudes_c4_internas (solicitud_id, descripcion_evidencias, status) VALUES ($1, $2, 'pendiente') RETURNING ${C4_COLS}`,
-    [id, body.descripcionEvidencias],
-  )
-  return NextResponse.json(created.rows[0], { status: 201 })
+  const created = await createSolicitudC4Api(id, body)
+  return NextResponse.json(created, { status: 201 })
 }

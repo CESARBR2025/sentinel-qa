@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { generarPpt } from '@/lib/monitorista/ppt-service'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -18,10 +18,7 @@ export async function POST(req: NextRequest) {
   try {
     const buf = await generarPpt(session.user.name || 'Monitorista', desde, hasta, filtro)
 
-    await query(
-      `INSERT INTO monitorista_historial (monitorista_id, accion) VALUES ($1, 'ppt_generado')`,
-      [session.user.id],
-    )
+    await insertHistorial(session.user.id, 'ppt_generado')
 
     return new NextResponse(new Uint8Array(buf), {
       headers: {

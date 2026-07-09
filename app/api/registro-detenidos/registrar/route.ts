@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { registrarFichaInteligencia } from '@/lib/monitorista/detenido-service';
 
 export async function POST(req: Request) {
   try {
@@ -36,27 +35,35 @@ export async function POST(req: Request) {
     const d = (key: string) => formData.get(key)?.toString() || null;
 
     // 5. Insertar en la Base de Datos
-    await query(
-      `INSERT INTO fichas_inteligencia_detenidos (
-        nombre_detenido, folio, foto_frontal_url, foto_objetos_url, fecha_nacimiento,
-        origen, genero, escolaridad, estado_civil, ocupacion, domicilio,
-        rasgos_particulares, eventos_delictivos, fecha_hora_evento, rnd, iph,
-        expediente, lugar_evento, lugar_detencion, nexos_delictivos, zona_operacion,
-        puesta_disposicion, modus_operandi, info_adicional, antecedentes, faltas_admin,
-        capturado_por
-      ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
-        $21, $22, $23, $24, $25, $26, $27
-      )`,
-      [d('nombreDetenido'), d('folio'), fotoFrontalUrl, fotoObjetosUrl,
-       d('fechaNacimiento'), d('origen'), d('genero'), d('escolaridad'),
-       d('estadoCivil'), d('ocupacion'), d('domicilio'), d('rasgosParticulares'),
-       d('eventosDelictivos'), d('fechaHora'), d('rnd'), d('iph'),
-       d('expediente'), d('lugarEvento'), d('lugarDetencion'), d('nexosDelictivos'),
-       d('zonaOperacion'), d('puestaDisposicion'), d('modusOperandi'),
-       d('infoAdicional'), d('antecedentes'), d('faltasAdmin'), session.user.name],
-    );
+    await registrarFichaInteligencia({
+      nombreDetenido: d('nombreDetenido'),
+      folio: d('folio'),
+      fotoFrontalUrl,
+      fotoObjetosUrl,
+      fechaNacimiento: d('fechaNacimiento'),
+      origen: d('origen'),
+      genero: d('genero'),
+      escolaridad: d('escolaridad'),
+      estadoCivil: d('estadoCivil'),
+      ocupacion: d('ocupacion'),
+      domicilio: d('domicilio'),
+      rasgosParticulares: d('rasgosParticulares'),
+      eventosDelictivos: d('eventosDelictivos'),
+      fechaHora: d('fechaHora'),
+      rnd: d('rnd'),
+      iph: d('iph'),
+      expediente: d('expediente'),
+      lugarEvento: d('lugarEvento'),
+      lugarDetencion: d('lugarDetencion'),
+      nexosDelictivos: d('nexosDelictivos'),
+      zonaOperacion: d('zonaOperacion'),
+      puestaDisposicion: d('puestaDisposicion'),
+      modusOperandi: d('modusOperandi'),
+      infoAdicional: d('infoAdicional'),
+      antecedentes: d('antecedentes'),
+      faltasAdmin: d('faltasAdmin'),
+      capturadoPor: session.user.name,
+    });
 
     return NextResponse.json({ 
       success: true, 

@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/expediente/client'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { obtenerFolioReporteCampo } from '@/lib/monitorista/repository'
+import { subirFotoDetenido, completarSolicitudFoto } from '@/lib/monitorista/detenido-service'
+import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(
   req: NextRequest,
@@ -25,41 +27,16 @@ export async function POST(
     return NextResponse.json({ error: 'tipoFoto inválido' }, { status: 400 })
   }
 
-  const folioResult = await query<{ folio: string | null }>(
-    `SELECT folio_reporte_campo as folio FROM ofi_reportes_campo WHERE id = $1 LIMIT 1`,
-    [id],
-  )
-  const folio = folioResult.rows[0]?.folio || id.substring(0, 8)
+  const folio = (await obtenerFolioReporteCampo(id)) ?? id.substring(0, 8)
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
     const token = await obtenerGuestToken(session.user.name || 'Monitorista')
     const url = await subirArchivoExpediente(token, { buffer, nombre: file.name, tipo: file.type }, folio, `FOTO_DETENIDO_${tipoFoto.toUpperCase()}`)
 
-    await query(
-      `INSERT INTO evidencias_detenido (reporte_campo_id, tipo_foto, url_archivo, nombre_archivo, subido_por)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [id, tipoFoto, url, file.name, session.user.id],
-    )
-
-    const updResult = await query(
-      `UPDATE solicitud_fotos SET estado = 'completado', enviado_a = 'MONITORISTA'
-       WHERE reporte_campo_id = $1::uuid AND tipo_foto = $2::varchar`,
-      [id, tipoFoto],
-    )
-
-    if (updResult.rowCount === 0) {
-      await query(
-        `INSERT INTO solicitud_fotos (reporte_campo_id, tipo_foto, estado, enviado_a)
-         VALUES ($1::uuid, $2::varchar, 'completado', 'MONITORISTA')`,
-        [id, tipoFoto],
-      )
-    }
-
-    await query(
-      `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1, 'evidencia_subida', $2)`,
-      [session.user.id, id],
-    )
+    await subirFotoDetenido(id, tipoFoto, url, file.name, session.user.id)
+    await completarSolicitudFoto(id, tipoFoto)
+    await insertHistorial(session.user.id, 'evidencia_subida', id)
 
     return NextResponse.json({ success: true, url }, { status: 201 })
   } catch (err) {

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { verificarAccesoPrevencionApi } from '@/lib/prevencion/permisos'
-
-const VISITA_COLS = `id, medida_id AS "medidaId", fecha_visita AS "fechaVisita", hora_visita AS "horaVisita", resultado, apercibimiento_aplicado AS "apercibimientoAplicado", registrado_por AS "registradoPor", creado_en AS "creadoEn"`
+import { listarVisitasConAlias } from '@/lib/prevencion/repository'
+import { createVisitaApi } from '@/lib/prevencion/actions'
 
 export async function GET(
   request: NextRequest,
@@ -16,11 +15,8 @@ export async function GET(
   if (chequeo) return chequeo
 
   const { id } = await params
-  const visitas = await query(
-    `SELECT ${VISITA_COLS} FROM visitas_domiciliarias WHERE medida_id = $1 ORDER BY fecha_visita`,
-    [id],
-  )
-  return NextResponse.json(visitas.rows)
+  const visitas = await listarVisitasConAlias(id)
+  return NextResponse.json(visitas)
 }
 
 export async function POST(
@@ -34,10 +30,6 @@ export async function POST(
 
   const { id } = await params
   const body = await request.json()
-
-  const created = await query(
-    `INSERT INTO visitas_domiciliarias (medida_id, fecha_visita, hora_visita, resultado, apercibimiento_aplicado) VALUES ($1,$2,$3,$4,$5) RETURNING ${VISITA_COLS}`,
-    [id, body.fechaVisita, body.horaVisita, body.resultado, body.apercibimientoAplicado ?? false],
-  )
-  return NextResponse.json(created.rows[0], { status: 201 })
+  const created = await createVisitaApi(id, body)
+  return NextResponse.json(created, { status: 201 })
 }

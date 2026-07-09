@@ -108,3 +108,121 @@ export async function listarSeguimientos(fichaId: string): Promise<SeguimientoBu
   )
   return result.rows.map(rowToSeguimiento)
 }
+
+// ── Filtered reads for API routes ────────────────────────────────────────
+
+export async function getMedidasFiltradas(
+  autoridad?: string | null,
+  status?: string | null,
+): Promise<any[]> {
+  const conditions: string[] = []
+  const params: unknown[] = []
+  if (autoridad) { conditions.push(`autoridad = $${params.length + 1}`); params.push(autoridad) }
+  if (status) { conditions.push(`status = $${params.length + 1}`); params.push(status) }
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const result = await query<any>(
+    `SELECT id, expediente, n_oficio AS "nOficio", fecha_oficio AS "fechaOficio", fecha_recepcion AS "fechaRecepcion", persona_recepciona AS "personaRecepciona", autoridad, nombre_autoridad AS "nombreAutoridad", delitos, victima, demandado, tipo_medida AS "tipoMedida", domicilio_proteccion AS "domicilioProteccion", colonia, telefono, tiempo_medida AS "tiempoMedida", fecha_vencimiento AS "fechaVencimiento", tipo_apercibimiento AS "tipoApercibimiento", enlace, observaciones, status, creado_por AS "creadoPor", creado_en AS "creadoEn", actualizado_en AS "actualizadoEn", prorrogada, archivo_prorroga_url AS "archivoProrrogaUrl" FROM medidas_proteccion ${where} ORDER BY fecha_vencimiento`,
+    params.length ? params : undefined,
+  )
+  return result.rows
+}
+
+export async function obtenerMedidaDetalleCompleto(id: string): Promise<{
+  medida: any
+  visitas: any[]
+}> {
+  const MEDIDA_COLS = `id, expediente, n_oficio AS "nOficio", fecha_oficio AS "fechaOficio", fecha_recepcion AS "fechaRecepcion", persona_recepciona AS "personaRecepciona", autoridad, nombre_autoridad AS "nombreAutoridad", delitos, victima, demandado, tipo_medida AS "tipoMedida", domicilio_proteccion AS "domicilioProteccion", colonia, telefono, tiempo_medida AS "tiempoMedida", fecha_vencimiento AS "fechaVencimiento", tipo_apercibimiento AS "tipoApercibimiento", enlace, observaciones, status, creado_por AS "creadoPor", creado_en AS "creadoEn", actualizado_en AS "actualizadoEn", prorrogada, archivo_prorroga_url AS "archivoProrrogaUrl"`
+  const VISITA_COLS = `id, medida_id AS "medidaId", fecha_visita AS "fechaVisita", hora_visita AS "horaVisita", resultado, apercibimiento_aplicado AS "apercibimientoAplicado", registrado_por AS "registradoPor", creado_en AS "creadoEn"`
+
+  const [medida, visitas] = await Promise.all([
+    query<any>(`SELECT ${MEDIDA_COLS} FROM medidas_proteccion WHERE id = $1 LIMIT 1`, [id]).then(r => r.rows[0]),
+    query<any>(`SELECT ${VISITA_COLS} FROM visitas_domiciliarias WHERE medida_id = $1 ORDER BY fecha_visita`, [id]).then(r => r.rows),
+  ])
+  return { medida: medida ?? null, visitas }
+}
+
+export async function listarVisitasConAlias(medidaId: string): Promise<any[]> {
+  const result = await query<any>(
+    `SELECT id, medida_id AS "medidaId", fecha_visita AS "fechaVisita", hora_visita AS "horaVisita", resultado, apercibimiento_aplicado AS "apercibimientoAplicado", registrado_por AS "registradoPor", creado_en AS "creadoEn" FROM visitas_domiciliarias WHERE medida_id = $1 ORDER BY fecha_visita`,
+    [medidaId],
+  )
+  return result.rows
+}
+
+export async function getFichasActivas(): Promise<{ id: string; fecha_activacion: string }[]> {
+  const result = await query<{ id: string; fecha_activacion: string }>(
+    `SELECT id, fecha_activacion FROM fichas_busqueda WHERE status = 'activa'`,
+  )
+  return result.rows
+}
+
+export async function getSeguimientoTipos(fichaId: string): Promise<{ tipo: string }[]> {
+  const result = await query<{ tipo: string }>(
+    `SELECT tipo FROM seguimientos_busqueda WHERE ficha_id = $1`,
+    [fichaId],
+  )
+  return result.rows
+}
+
+export async function getFichasBusquedaFiltradas(
+  tipo?: string | null,
+  status?: string | null,
+): Promise<any[]> {
+  const conditions: string[] = []
+  const params: unknown[] = []
+  if (tipo) { conditions.push(`tipo = $${params.length + 1}`); params.push(tipo) }
+  if (status) { conditions.push(`status = $${params.length + 1}`); params.push(status) }
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const result = await query<any>(
+    `SELECT id, tipo, folio, enlace, fecha_activacion AS "fechaActivacion", carpeta_investigacion AS "carpetaInvestigacion", nombre_desaparecida AS "nombreDesaparecida", edad, fecha_aceptacion AS "fechaAceptacion", rt_atiende AS "rtAtiende", elemento_novedades AS "elementoNovedades", status, fecha_cancelacion AS "fechaCancelacion", fiscal_cancela AS "fiscalCancela", motivo_cancelacion AS "motivoCancelacion", creado_por AS "creadoPor", creado_en AS "creadoEn" FROM fichas_busqueda ${where} ORDER BY fecha_activacion`,
+    params.length ? params : undefined,
+  )
+  return result.rows
+}
+
+export async function obtenerFichaDetalle(id: string): Promise<{
+  ficha: any
+  seguimientos: any[]
+}> {
+  const FICHA_COLS = `id, tipo, folio, enlace, fecha_activacion AS "fechaActivacion", carpeta_investigacion AS "carpetaInvestigacion", nombre_desaparecida AS "nombreDesaparecida", edad, fecha_aceptacion AS "fechaAceptacion", rt_atiende AS "rtAtiende", elemento_novedades AS "elementoNovedades", status, fecha_cancelacion AS "fechaCancelacion", fiscal_cancela AS "fiscalCancela", motivo_cancelacion AS "motivoCancelacion", creado_por AS "creadoPor", creado_en AS "creadoEn"`
+  const SEG_COLS = `id, ficha_id AS "fichaId", tipo, fecha_hora_envio AS "fechaHoraEnvio", registrado_por AS "registradoPor", creado_en AS "creadoEn", archivo_url AS "archivoUrl"`
+
+  const [ficha, seguimientos] = await Promise.all([
+    query<any>(`SELECT ${FICHA_COLS} FROM fichas_busqueda WHERE id = $1 LIMIT 1`, [id]).then(r => r.rows[0]),
+    query<any>(`SELECT ${SEG_COLS} FROM seguimientos_busqueda WHERE ficha_id = $1 ORDER BY fecha_hora_envio`, [id]).then(r => r.rows),
+  ])
+  return { ficha: ficha ?? null, seguimientos }
+}
+
+export async function listarSolicitudesFiltradas(
+  status?: string | null,
+  autoridad?: string | null,
+): Promise<any[]> {
+  const conditions: string[] = []
+  const params: unknown[] = []
+  if (status) { conditions.push(`status = $${params.length + 1}`); params.push(status) }
+  if (autoridad) { conditions.push(`autoridad = $${params.length + 1}`); params.push(autoridad) }
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+  const result = await query<any>(
+    `SELECT id, enlace, oficio, fecha_activacion AS "fechaActivacion", autoridad, fiscal_solicita AS "fiscalSolicita", delito, carpeta_investigacion AS "carpetaInvestigacion", solicitud_texto AS "solicitudTexto", fecha_aceptacion AS "fechaAceptacion", status, creado_por AS "creadoPor", creado_en AS "creadoEn", actualizado_en AS "actualizadoEn" FROM solicitudes_informacion ${where} ORDER BY fecha_activacion`,
+    params.length ? params : undefined,
+  )
+  return result.rows
+}
+
+export async function obtenerSolicitudDetalle(id: string): Promise<{
+  solicitud: any
+  solicitudesC4: any[]
+  contestacion: any
+}> {
+  const SOL_COLS = `id, enlace, oficio, fecha_activacion AS "fechaActivacion", autoridad, fiscal_solicita AS "fiscalSolicita", delito, carpeta_investigacion AS "carpetaInvestigacion", solicitud_texto AS "solicitudTexto", fecha_aceptacion AS "fechaAceptacion", status, creado_por AS "creadoPor", creado_en AS "creadoEn", actualizado_en AS "actualizadoEn"`
+  const C4_COLS = `id, solicitud_id AS "solicitudId", descripcion_evidencias AS "descripcionEvidencias", status, creado_por AS "creadoPor", creado_en AS "creadoEn"`
+  const CONT_COLS = `id, solicitud_id AS "solicitudId", fecha_contestacion AS "fechaContestacion", archivo_pdf_url AS "archivoPdfUrl", fecha_entrega AS "fechaEntrega", hora_entrega AS "horaEntrega", nombre_quien_recibio AS "nombreQuienRecibio", creado_por AS "creadoPor", creado_en AS "creadoEn"`
+
+  const [solicitud, solicitudesC4, contestacion] = await Promise.all([
+    query<any>(`SELECT ${SOL_COLS} FROM solicitudes_informacion WHERE id = $1 LIMIT 1`, [id]).then(r => r.rows[0]),
+    query<any>(`SELECT ${C4_COLS} FROM solicitudes_c4_internas WHERE solicitud_id = $1 ORDER BY creado_en`, [id]).then(r => r.rows),
+    query<any>(`SELECT ${CONT_COLS} FROM contestaciones WHERE solicitud_id = $1 LIMIT 1`, [id]).then(r => r.rows[0]),
+  ])
+  return { solicitud: solicitud ?? null, solicitudesC4, contestacion: contestacion ?? null }
+}

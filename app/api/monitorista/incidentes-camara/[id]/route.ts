@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { obtenerRegistro, actualizarRegistro } from '@/lib/monitorista/incidentes-camara-service'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function GET(
   _req: NextRequest,
@@ -42,10 +42,7 @@ export async function PATCH(
   try {
     await actualizarRegistro(id, data)
 
-    await query(
-      `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1, 'incidente_editado', $2)`,
-      [session.user.id, id],
-    )
+    await insertHistorial(session.user.id, 'incidente_editado', id)
 
     return NextResponse.json({ success: true })
   } catch (err: unknown) {

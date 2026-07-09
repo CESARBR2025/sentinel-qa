@@ -27,25 +27,41 @@ lib/<module>/
 - **Repository functions** never import mappers from other domains. Cross-domain data composition happens in service layer.
 - **Service functions** re-export repository functions (thin pass-through) unless business logic is needed.
 
-# Existing Modules
+# Existing Modules — Compliance Status
 
-| Module | Types | Mapper | Repository | Service | Actions |
-|--------|-------|--------|------------|---------|---------|
-| `lib/auth/helpers.ts` | `UserWithRole` | `rowToUserWithRole` | `getUserWithRole(userId)` | — | — |
-| `lib/911/` | ✅ | ✅ | ✅ | ✅ | — |
-| `lib/admin/` | ✅ | ✅ | ✅ | — | — |
-| `lib/admin-transito/` | ✅ | ✅ | ✅ | — | — |
-| `lib/auxiliar/` | ✅ | ✅ | — | ✅ | ✅ |
-| `lib/camara/` | — | — | — | ✅ | — |
-| `lib/d1/` | — | — | — | ✅ | — |
-| `lib/incidentes/` | — | — | — | — | — (solo permisos) |
-| `lib/monitorista/` | — | — | ✅ | ✅ (denuncia/detenido services) | — |
-| `lib/oficial/` | — | — | ✅ | ✅ | — |
-| `lib/prevencion/` | ✅ | ✅ | ✅ | — | — |
-| `lib/reportes/` | — | — | ✅ | — | — |
-| `lib/reportes-operativos/` | — | — | — | ✅ | — |
-| `lib/reportes-sin-d1/` | — | — | — | ✅ | — |
-| `lib/reportes-sin-novedad/` | — | — | — | ✅ | — |
+| Module | types.ts | mapper.ts | repository.ts | service.ts | actions.ts | Status |
+|--------|----------|-----------|---------------|------------|------------|--------|
+| `lib/auth/helpers.ts` | `UserWithRole` | `rowToUserWithRole` | `getUserWithRole` | — | — | ✅ |
+| `lib/911/` | ✅ | ✅ | ✅ | ✅ | — (reads only) | **GREEN** |
+| `lib/admin/` | ✅ | ✅ | ✅ | ❌ | ⚠️ (inline query) | **YELLOW** |
+| `lib/admin-transito/` | ✅ | ✅ | ⚠️ (no mapper use) | ❌ | ❌ (inline query) | **RED** |
+| `lib/auxiliar/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/camara/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
+| `lib/corralon/` | ✅ | ⚠️ (inline in service) | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/d1/` | ❌ | ❌ | ⚠️ | ⚠️ (inline map) | — | **RED** |
+| `lib/incidentes/` | ✅ | ✅ | ✅ | ✅ | ⚠️ | **GREEN** |
+| `lib/fiscalia/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/flota/` | ✅ | ❌ | ⚠️ (class, raw) | ✅ | — | **YELLOW** |
+| `lib/monitorista/` | ❌ | ❌ | ✅ | ⚠️ (split services) | ❌ (inline query) | **RED** |
+| `lib/notificaciones/` | ✅ | ✅ | ✅ | — | ⚠️ | **YELLOW** |
+| `lib/oficial/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/prevencion/` | ✅ | ✅ | ⚠️ (partial any[]) | ❌ | ⚠️ | **YELLOW** |
+| `lib/reportes/` | ❌ | ❌ | ✅ | ❌ | — | **RED** |
+| `lib/reportes-operativos/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
+| `lib/reportes-sin-d1/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
+| `lib/reportes-sin-novedad/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
+| `lib/reportes-incidentes/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
+| `lib/agente_juzgado/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/agente_liberaciones/` | ✅ | ✅ | ✅ | ✅ | ⚠️ (inline query) | **YELLOW** |
+| `lib/agente_infracciones/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/rol-servicios/` + `lib/rol_servicios/` | ❌ | ❌ | ❌ | ❌ | ❌ (inline query) | **RED** |
+
+### Current totals
+- **GREEN**: 8 modules (911, auxiliar, corralon, incidentes, fiscalia, oficial, agente_juzgado, agente_infracciones)
+- **YELLOW**: 5 modules (admin, flota, notificaciones, prevencion, agente_liberaciones)
+- **RED**: 10 modules (admin-transito, camara, d1, monitorista, reportes, reportes-operativos, reportes-sin-d1, reportes-sin-novedad, reportes-incidentes, rol-servicios)
+
+### Auth helper (`lib/auth/helpers.ts`)
 
 ### Auth helper (`lib/auth/helpers.ts`)
 The standard way to get the current user's role. Replaces the pattern of writing inline `query(...)` with `LEFT JOIN roles`:
@@ -113,7 +129,17 @@ export async function obtenerIncidente(id: string): Promise<IncidenteDetalle | n
 
 # Page file rules
 - **Never** import `query` from `@/lib/db` in `app/**/page.tsx`
+- **Never** import `query` from `@/lib/db` in `app/**/layout.tsx`
+- **Never** import `query` from `@/lib/db` in `app/api/**/route.ts`
 - **Never** import `db` from `@/lib/db/index` (that's for better-auth only)
+- **Never** import from `@/lib/db/schema` in app code (only used by better-auth in `lib/auth.ts`)
 - For role checks: use `getUserWithRole()` from `@/lib/auth/helpers`
 - For domain data: use the corresponding `lib/<module>/service.ts` or `repository.ts`
 - JSX references must match the **camelCase** properties from the types/interfaces, NOT the snake_case DB columns
+
+# Architectural compliance — Next steps
+The following modules need types.ts + mapper.ts created to reach full compliance:
+- `lib/camara/`, `lib/d1/`, `lib/monitorista/`, `lib/reportes/`, `lib/reportes-operativos/`, `lib/reportes-sin-d1/`, `lib/reportes-sin-novedad/`, `lib/reportes-incidentes/`, `lib/rol-servicios/`
+
+The following modules need their actions.ts refactored to go through service/repository instead of using `query` directly:
+- `lib/admin/actions.ts`, `lib/admin-transito/actions.ts`, `lib/monitorista/actions.ts`, `lib/agente_liberaciones/actions.ts`

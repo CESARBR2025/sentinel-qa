@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { query } from '@/lib/db'
 import { marcarSolicitudAtendida } from '@/lib/monitorista/denuncia-service'
+import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(
   req: NextRequest,
@@ -21,10 +21,7 @@ export async function POST(
 
   try {
     await marcarSolicitudAtendida(denunciaId, solicitudId)
-    await query(
-      `INSERT INTO monitorista_historial (monitorista_id, accion, incidente_id) VALUES ($1, $2, $3)`,
-      [session.user.id, 'solicitud_completada', denunciaId],
-    )
+    await insertHistorial(session.user.id, 'solicitud_completada', denunciaId)
     return NextResponse.json({ success: true })
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error interno'

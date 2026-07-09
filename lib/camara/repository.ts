@@ -1,6 +1,8 @@
 import { query } from '@/lib/db'
+import type { IncidenteCamara, TotalesCamara } from './types'
+import { rowToIncidenteCamara, rowToTotalesCamara } from './mapper'
 
-export async function obtenerIncidentesCamara(desde?: string, hasta?: string) {
+export async function obtenerIncidentesCamara(desde?: string, hasta?: string): Promise<IncidenteCamara[]> {
   const d = desde ?? '2000-01-01'
   const h = hasta  ?? new Date().toISOString().split('T')[0]
 
@@ -26,10 +28,10 @@ export async function obtenerIncidentesCamara(desde?: string, hasta?: string) {
     ORDER BY ic.fecha DESC, ic.turno ASC
   `, [d, h])
 
-  return result.rows
+  return result.rows.map(rowToIncidenteCamara)
 }
 
-export async function obtenerTotalesCamara(desde?: string, hasta?: string) {
+export async function obtenerTotalesCamara(desde?: string, hasta?: string): Promise<TotalesCamara | null> {
   const d = desde ?? '2000-01-01'
   const h = hasta  ?? new Date().toISOString().split('T')[0]
 
@@ -46,10 +48,10 @@ export async function obtenerTotalesCamara(desde?: string, hasta?: string) {
     WHERE fecha BETWEEN $1 AND $2
   `, [d, h])
 
-  return result.rows[0]
+  return result.rows[0] ? rowToTotalesCamara(result.rows[0]) : null
 }
 
-export async function obtenerPorTurno(turno: string, desde: string, hasta: string) {
+export async function obtenerPorTurno(turno: string, desde: string, hasta: string): Promise<IncidenteCamara[]> {
   const result = await query<Record<string, unknown>>(`
     SELECT
       fecha, personas_sin_novedad, personas_con_antecedentes,
@@ -60,10 +62,10 @@ export async function obtenerPorTurno(turno: string, desde: string, hasta: strin
     WHERE turno = $1 AND fecha BETWEEN $2 AND $3
     ORDER BY fecha ASC
   `, [turno, desde, hasta])
-  return result.rows
+  return result.rows.map(rowToIncidenteCamara)
 }
 
-export async function obtenerConcentradoDiario(desde: string, hasta: string) {
+export async function obtenerConcentradoDiario(desde: string, hasta: string): Promise<IncidenteCamara[]> {
   const result = await query<Record<string, unknown>>(`
     SELECT
       fecha, turno,
@@ -75,5 +77,5 @@ export async function obtenerConcentradoDiario(desde: string, hasta: string) {
     WHERE fecha BETWEEN $1 AND $2
     ORDER BY fecha ASC, turno ASC
   `, [desde, hasta])
-  return result.rows
+  return result.rows.map(rowToIncidenteCamara)
 }
