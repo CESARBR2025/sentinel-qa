@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FlotaService } from '@/lib/flota/service'
+import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
 import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialesLista } from '@/lib/admin-transito/actions'
 import { ToastAuto } from '@/components/ui/ToastAuto'
@@ -15,7 +15,7 @@ export default async function OficialesPage({
 
   const deptos = await listarDepartamentosActivos()
 
-  const patrullas = await FlotaService.listarPatrullasParaAsignacion()
+  const patrullas = await listarPatrullasParaAsignacion()
 
   return (
     <div>

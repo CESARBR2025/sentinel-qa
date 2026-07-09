@@ -1,4 +1,4 @@
-import type { BusquedaItem, FichaBusquedaDetalle, MedidaDetalle, MedidaItem, SeguimientoBusqueda, SolicitudInformacion } from './types'
+import type { AutoridadAdicional, BusquedaItem, Contestacion, FichaBusquedaDetalle, MedidaDetalle, MedidaItem, SeguimientoBusqueda, SolicitudC4, SolicitudInformacion, VisitaDomiciliaria } from './types'
 
 function toStr(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -45,6 +45,10 @@ export function rowToSolicitud(row: Record<string, unknown>): SolicitudInformaci
     carpeta_investigacion: row.carpeta_investigacion ? String(row.carpeta_investigacion) : null,
     fecha_activacion: toStr(row.fecha_activacion) ?? '',
     status: String(row.status ?? ''),
+    enlace: toStr(row.enlace),
+    fiscal_solicita: toStr(row.fiscal_solicita),
+    solicitud_texto: toStr(row.solicitud_texto),
+    fecha_aceptacion: toStr(row.fecha_aceptacion),
   }
 }
 
@@ -108,6 +112,52 @@ export function rowToSeguimiento(row: Record<string, unknown>): SeguimientoBusqu
   }
 }
 
-export function rowToVisita(row: Record<string, unknown>): Record<string, unknown> {
-  return row
+export function rowToSolicitudC4(row: Record<string, unknown>): SolicitudC4 {
+  return {
+    id: String(row.id ?? ''),
+    solicitud_id: String(row.solicitud_id ?? ''),
+    descripcion_evidencias: String(row.descripcion_evidencias ?? ''),
+    status: String(row.status ?? ''),
+    creado_por: toStr(row.creado_por),
+    creado_en: toStr(row.creado_en) ?? '',
+  }
+}
+
+export function rowToContestacion(row: Record<string, unknown>): Contestacion {
+  return {
+    id: String(row.id ?? ''),
+    solicitud_id: String(row.solicitud_id ?? ''),
+    fecha_contestacion: toStr(row.fecha_contestacion) ?? '',
+    archivo_pdf_url: toStr(row.archivo_pdf_url),
+    fecha_entrega: toStr(row.fecha_entrega),
+    hora_entrega: toStr(row.hora_entrega),
+    nombre_quien_recibio: toStr(row.nombre_quien_recibio),
+    creado_por: toStr(row.creado_por),
+    creado_en: toStr(row.creado_en) ?? '',
+  }
+}
+
+export function rowToVisita(row: Record<string, unknown>): VisitaDomiciliaria {
+  return {
+    id: String(row.id ?? ''),
+    medida_id: String(row.medida_id ?? ''),
+    fecha_visita: toStr(row.fecha_visita) ?? '',
+    hora_visita: toStr(row.hora_visita),
+    resultado: toStr(row.resultado),
+    apercibimiento_aplicado: toBool(row.apercibimiento_aplicado),
+    registrado_por: toStr(row.registrado_por),
+    creado_en: toStr(row.creado_en) ?? '',
+  }
+}
+
+export function rowToAutoridadAdicional(row: Record<string, unknown>): AutoridadAdicional {
+  return {
+    id: String(row.id ?? ''),
+    medida_id: String(row.medida_id ?? ''),
+    autoridad: String(row.autoridad ?? ''),
+    n_oficio: toStr(row.n_oficio),
+    fecha_oficio: toStr(row.fecha_oficio),
+    creado_por: toStr(row.creado_por),
+    creado_en: toStr(row.creado_en) ?? '',
+  }
 }

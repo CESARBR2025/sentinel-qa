@@ -67,30 +67,30 @@ export default async function DetenidosPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20 }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 15, fontWeight: 700, color: '#1e40af' }}>{r.nombre_detenido}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 15, fontWeight: 700, color: '#1e40af' }}>{r.nombreDetenido}</span>
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', padding: '2px 8px', background: '#f1f5f9', borderRadius: 2 }}>
-                      Folio: {r.folio_detenido || r.id.substring(0, 12)}
+                      Folio: {r.folioDetenido || r.id.substring(0, 12)}
                     </span>
-                    <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#059669', fontWeight: 500 }}>{r.tipo_incidente || 'S/C'}</span>
+                    <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#059669', fontWeight: 500 }}>{r.tipoIncidente || 'S/C'}</span>
                   </div>
 
                   <div style={{ fontFamily: 'Inter', fontSize: 12, color: '#475569', lineHeight: 1.6, marginBottom: 12 }}>
-                    {r.delito_denuncia && <div><strong>Delitos:</strong> {r.delito_denuncia}</div>}
-                    <div><strong>Modus Operandi:</strong> {r.modus_operandi || '—'}</div>
+                    {r.delitoDenuncia && <div><strong>Delitos:</strong> {r.delitoDenuncia}</div>}
+                    <div><strong>Modus Operandi:</strong> {r.modusOperandi || '—'}</div>
                   </div>
 
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {r.fotos.map(f => (
                       <span key={f.id} style={fotoBadge(f.estado)}>
-                        {f.tipo_foto === 'frontal' ? 'Frontal' : f.tipo_foto === 'derecho' ? 'Derecho' : 'Izquierdo'}: {f.estado.toUpperCase()}
+                        {f.tipoFoto === 'frontal' ? 'Frontal' : f.tipoFoto === 'derecho' ? 'Derecho' : 'Izquierdo'}: {f.estado.toUpperCase()}
                       </span>
                     ))}
                     {r.fotos.length === 0 && <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8' }}>Sin solicitar fotos</span>}
                   </div>
 
                   <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#cbd5e1', marginTop: 8 }}>
-                    {r.oficial_nombre && `${r.oficial_nombre} · `}
-                    {new Date(r.created_at).toLocaleString('es-MX', { day: '2-digit', month: '2-digit' })}
+                    {r.oficialNombre && `${r.oficialNombre} · `}
+                    {new Date(r.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit' })}
                   </div>
                 </div>
                 <Link href={`/monitorista/detenidos/${r.id}`} style={btnDetalle}>

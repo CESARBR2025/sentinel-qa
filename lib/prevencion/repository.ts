@@ -1,6 +1,6 @@
 import { query } from '@/lib/db'
-import type { FichaBusquedaDetalle, MedidaDetalle, SeguimientoBusqueda, SolicitudInformacion } from './types'
-import { rowToFichaBusquedaDetalle, rowToMedidaDetalle, rowToSeguimiento, rowToSolicitud } from './mapper'
+import type { AutoridadAdicional, Contestacion, FichaBusquedaDetalle, MedidaDetalle, SeguimientoBusqueda, SolicitudC4, SolicitudInformacion, VisitaDomiciliaria } from './types'
+import { rowToAutoridadAdicional, rowToContestacion, rowToFichaBusquedaDetalle, rowToMedidaDetalle, rowToSeguimiento, rowToSolicitud, rowToSolicitudC4, rowToVisita } from './mapper'
 
 export async function getMedidas(filters: {
   autoridad?: string
@@ -11,7 +11,7 @@ export async function getMedidas(filters: {
   if (filters.autoridad) { values.push(filters.autoridad); sql += ` AND autoridad = $${values.length}` }
   if (filters.prorrogadas === '1') { values.push(true); sql += ` AND prorrogada = $${values.length}` }
   sql += ` ORDER BY creado_en DESC`
-  const result = await query<any>(sql, values)
+  const result = await query<Record<string, unknown>>(sql, values)
   return result.rows
 }
 
@@ -28,7 +28,7 @@ export async function getMedidasStats(): Promise<{ fecha_vencimiento: string; st
 }
 
 export async function getFichasBusqueda(): Promise<any[]> {
-  const result = await query<any>(`SELECT * FROM fichas_busqueda ORDER BY fecha_activacion DESC`)
+  const result = await query<Record<string, unknown>>(`SELECT * FROM fichas_busqueda ORDER BY fecha_activacion DESC`)
   return result.rows
 }
 
@@ -40,28 +40,28 @@ export async function listarSolicitudesJuridico(): Promise<SolicitudInformacion[
   return result.rows.map(rowToSolicitud)
 }
 
-export async function obtenerSolicitud(id: string): Promise<any> {
-  const result = await query<any>(
+export async function obtenerSolicitud(id: string): Promise<SolicitudInformacion | null> {
+  const result = await query<Record<string, unknown>>(
     `SELECT * FROM solicitudes_informacion WHERE id = $1 LIMIT 1`,
     [id]
   )
-  return result.rows[0] ?? null
+  return result.rows.length ? rowToSolicitud(result.rows[0]) : null
 }
 
-export async function listarSolicitudesC4(solicitudId: string): Promise<any[]> {
-  const result = await query<any>(
+export async function listarSolicitudesC4(solicitudId: string): Promise<SolicitudC4[]> {
+  const result = await query<Record<string, unknown>>(
     `SELECT * FROM solicitudes_c4_internas WHERE solicitud_id = $1 ORDER BY creado_en ASC`,
     [solicitudId]
   )
-  return result.rows
+  return result.rows.map(rowToSolicitudC4)
 }
 
-export async function obtenerContestacion(solicitudId: string): Promise<any> {
-  const result = await query<any>(
+export async function obtenerContestacion(solicitudId: string): Promise<Contestacion | null> {
+  const result = await query<Record<string, unknown>>(
     `SELECT * FROM contestaciones WHERE solicitud_id = $1 LIMIT 1`,
     [solicitudId]
   )
-  return result.rows[0] ?? null
+  return result.rows.length ? rowToContestacion(result.rows[0]) : null
 }
 
 export async function obtenerMedidaDetalle(id: string): Promise<MedidaDetalle | null> {
@@ -72,20 +72,20 @@ export async function obtenerMedidaDetalle(id: string): Promise<MedidaDetalle | 
   return result.rows.length ? rowToMedidaDetalle(result.rows[0]) : null
 }
 
-export async function listarVisitas(medidaId: string): Promise<any[]> {
-  const result = await query<any>(
+export async function listarVisitas(medidaId: string): Promise<VisitaDomiciliaria[]> {
+  const result = await query<Record<string, unknown>>(
     `SELECT * FROM visitas_domiciliarias WHERE medida_id = $1 ORDER BY fecha_visita DESC`,
     [medidaId]
   )
-  return result.rows
+  return result.rows.map(rowToVisita)
 }
 
-export async function listarAutoridadesAdicionales(medidaId: string): Promise<any[]> {
-  const result = await query<any>(
+export async function listarAutoridadesAdicionales(medidaId: string): Promise<AutoridadAdicional[]> {
+  const result = await query<Record<string, unknown>>(
     `SELECT * FROM medida_autoridades_adicionales WHERE medida_id = $1 ORDER BY creado_en ASC`,
     [medidaId]
   )
-  return result.rows
+  return result.rows.map(rowToAutoridadAdicional)
 }
 
 export async function obtenerFichaBusqueda(id: string): Promise<FichaBusquedaDetalle | null> {

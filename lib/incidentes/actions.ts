@@ -9,24 +9,19 @@ import pool from '@/lib/db'
 import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
 import { crearReporteCampo } from './service'
+import { getUserWithRole } from '@/lib/auth/helpers'
 import { tienePermiso, Accion } from '@/lib/incidentes/permisos'
+import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 async function requireOperador(accion: Accion = 'crear') {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const u = await query<{ rolnombre: string }>(
-    `SELECT r.nombre AS rolnombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id],
-  )
+  const u = await getUserWithRole(session.user.id)
 
   const rolesPermitidos = ['Administrador', 'Operador', 'Oficial de Campo']
-  if (!u.rows[0]?.rolnombre || !rolesPermitidos.includes(u.rows[0].rolnombre)) redirect('/dashboard')
+  if (!u?.rolNombre || !rolesPermitidos.includes(u.rolNombre)) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'incidentes', accion))) redirect('/dashboard')
 
   return session
@@ -45,7 +40,7 @@ const SEXOS = ['M', 'F', 'NE'] as const
 
 function validarEnum<T extends string>(valor: string | null, permitidos: readonly T[], campo: string): T {
   if (!valor || !permitidos.includes(valor as T))
-    throw new Error(`Valor inválido para ${campo}: ${valor}`)
+    throw new ValidationError(`Valor inválido para ${campo}: ${valor}`)
   return valor as T
 }
 
@@ -69,7 +64,7 @@ export async function createIncidente(formData: FormData) {
 
   // Validar que fin no sea anterior a inicio
   if (fechaHoraFin && new Date(fechaHoraFin) < new Date(fechaHoraInicio))
-    throw new Error('fechaHoraFin no puede ser anterior a fechaHoraInicio');
+    throw new ValidationError('fechaHoraFin no puede ser anterior a fechaHoraInicio');
 
 
   // Estatus inicial según canal
@@ -171,19 +166,22 @@ export async function addPersonaAfectada(formData: FormData) {
   const sexoRaw = str(formData, 'sexo')
   const sexo = sexoRaw ? validarEnum(sexoRaw, SEXOS, 'sexo') : null
 
-  const incResult = await query<{ estatus: string }>(
-    `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-    [incidenteId],
-  )
-  if (!incResult.rows[0]) throw new Error('Incidente no encontrado')
-  if (incResult.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  await tryActionRaw(async () => {
+    const incResult = await query<{ estatus: string }>(
+      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!incResult.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    if (incResult.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
 
-  await query(
-    `INSERT INTO incidente_personas_afectadas (incidente_id, nombre, sexo, edad) VALUES ($1, $2, $3, $4)`,
-    [incidenteId, str(formData, 'nombre'), sexo, num(formData, 'edad')],
-  )
+    await query(
+      `INSERT INTO incidente_personas_afectadas (incidente_id, nombre, sexo, edad) VALUES ($1, $2, $3, $4)`,
+      [incidenteId, str(formData, 'nombre'), sexo, num(formData, 'edad')],
+    )
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_personas_afectadas', entidadId: incidenteId })
+    await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_personas_afectadas', entidadId: incidenteId })
+  })
+
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
@@ -193,15 +191,18 @@ export async function deletePersonaAfectada(formData: FormData) {
   const id = req(formData, 'id')
   const incidenteId = req(formData, 'incidenteId')
 
-  const incResult = await query<{ estatus: string }>(
-    `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-    [incidenteId],
-  )
-  if (!incResult.rows[0]) throw new Error('Incidente no encontrado')
-  if (incResult.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  await tryActionRaw(async () => {
+    const incResult = await query<{ estatus: string }>(
+      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!incResult.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    if (incResult.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
 
-  await query(`DELETE FROM incidente_personas_afectadas WHERE id = $1`, [id])
-  await registrarAudit({ userId: session.user.id, accion: 'DELETE', entidad: 'incidente_personas_afectadas', entidadId: id, payload: { incidenteId } })
+    await query(`DELETE FROM incidente_personas_afectadas WHERE id = $1`, [id])
+    await registrarAudit({ userId: session.user.id, accion: 'DELETE', entidad: 'incidente_personas_afectadas', entidadId: id, payload: { incidenteId } })
+  })
+
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
@@ -210,59 +211,61 @@ export async function createRecorridoCompleto(formData: FormData) {
   const session = await requireOperador()
 
   // Insertar incidente sin redirect
-  const inc = await insertarIncidente(formData, session)
+  const inc = await tryActionRaw(async () => insertarIncidente(formData, session))
 
   // Insertar reporte de campo
   const vehiculosRaw = str(formData, 'vehiculos')
   const vehiculos = vehiculosRaw ? JSON.parse(vehiculosRaw) : []
   const montoRaw = num(formData, 'montoRobo')
 
-  await crearReporteCampo({
-    incidenteId: inc.id,
-    contenidoReporte: str(formData, 'contenidoReporte'),
-    lugarCalle: str(formData, 'calle'),
-    lugarColonia: str(formData, 'colonia'),
-    lugarEntreCalles: str(formData, 'entreCalles'),
-    lugarReferencia: str(formData, 'referenciaUbicacion'),
-    datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
-    accionesRealizadas: str(formData, 'accionesRealizadas'),
-    hayDetencion: bool(formData, 'hayDetencion'),
-    nombreDetenidos: str(formData, 'nombreDetenidos'),
-    autoridadRecibe: str(formData, 'autoridadRecibe'),
-    expedienteCi: str(formData, 'expedienteCi'),
-    delitoFalta: str(formData, 'delitoFalta'),
-    hayRobo: bool(formData, 'hayRobo'),
-    montoRobo: montoRaw,
-    objetosRecuperados: str(formData, 'objetosRecuperados'),
-    hayVehiculo: bool(formData, 'hayVehiculo'),
-    vehiculos,
-    hayCateo: bool(formData, 'hayCateo'),
-    domicilioCateado: str(formData, 'domicilioCateado'),
-    cateoCalle: str(formData, 'cateoCalle'),
-    cateoColonia: str(formData, 'cateoColonia'),
-    cateoLatitud: str(formData, 'cateoLatitud'),
-    cateoLongitud: str(formData, 'cateoLongitud'),
-    resultadoCateo: str(formData, 'resultadoCateo'),
-    policiaACargo: str(formData, 'policiaCargo'),
-    personalIngresoCi: str(formData, 'personalIngresoCi'),
-    capturadoPor: session.user.id,
-    hayOrdenAprehension: bool(formData, 'hay_orden_aprehension'),
-    ordenesAprehension: JSON.parse(str(formData, 'ordenes_aprehension') ?? '[]'),
-    hayHidrocarburo: bool(formData, 'hay_hidrocarburo'),
-    hidrocarburos: JSON.parse(str(formData, 'hidrocarburos') ?? '[]'),
-    hayArmaFuego: bool(formData, 'hay_arma_fuego'),
-    armasFuego: JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
-    hayDroga: bool(formData, 'hay_droga'),
-    drogas: JSON.parse(str(formData, 'drogas') ?? '[]'),
-    observaciones: str(formData, 'observaciones'),
-    apoyoFiestasPatronales: bool(formData, 'apoyo_fiestas_patronales'),
-    operativosMetropolitano: bool(formData, 'operativos_metropolitano'),
-    eco8: bool(formData, 'eco8'),
-    alcoholimetria: bool(formData, 'alcoholimetria'),
-    motocicletas: bool(formData, 'motocicletas'),
-    apoyoActuarios: bool(formData, 'apoyo_actuarios'),
-    apoyoCateosFgr: bool(formData, 'apoyo_cateos_fgr'),
-    apoyoCateosFge: bool(formData, 'apoyo_cateos_fge'),
+  await tryActionRaw(async () => {
+    await crearReporteCampo({
+      incidenteId: inc.id,
+      contenidoReporte: str(formData, 'contenidoReporte'),
+      lugarCalle: str(formData, 'calle'),
+      lugarColonia: str(formData, 'colonia'),
+      lugarEntreCalles: str(formData, 'entreCalles'),
+      lugarReferencia: str(formData, 'referenciaUbicacion'),
+      datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
+      accionesRealizadas: str(formData, 'accionesRealizadas'),
+      hayDetencion: bool(formData, 'hayDetencion'),
+      nombreDetenidos: str(formData, 'nombreDetenidos'),
+      autoridadRecibe: str(formData, 'autoridadRecibe'),
+      expedienteCi: str(formData, 'expedienteCi'),
+      delitoFalta: str(formData, 'delitoFalta'),
+      hayRobo: bool(formData, 'hayRobo'),
+      montoRobo: montoRaw,
+      objetosRecuperados: str(formData, 'objetosRecuperados'),
+      hayVehiculo: bool(formData, 'hayVehiculo'),
+      vehiculos,
+      hayCateo: bool(formData, 'hayCateo'),
+      domicilioCateado: str(formData, 'domicilioCateado'),
+      cateoCalle: str(formData, 'cateoCalle'),
+      cateoColonia: str(formData, 'cateoColonia'),
+      cateoLatitud: str(formData, 'cateoLatitud'),
+      cateoLongitud: str(formData, 'cateoLongitud'),
+      resultadoCateo: str(formData, 'resultadoCateo'),
+      policiaACargo: str(formData, 'policiaCargo'),
+      personalIngresoCi: str(formData, 'personalIngresoCi'),
+      capturadoPor: session.user.id,
+      hayOrdenAprehension: bool(formData, 'hay_orden_aprehension'),
+      ordenesAprehension: JSON.parse(str(formData, 'ordenes_aprehension') ?? '[]'),
+      hayHidrocarburo: bool(formData, 'hay_hidrocarburo'),
+      hidrocarburos: JSON.parse(str(formData, 'hidrocarburos') ?? '[]'),
+      hayArmaFuego: bool(formData, 'hay_arma_fuego'),
+      armasFuego: JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
+      hayDroga: bool(formData, 'hay_droga'),
+      drogas: JSON.parse(str(formData, 'drogas') ?? '[]'),
+      observaciones: str(formData, 'observaciones'),
+      apoyoFiestasPatronales: bool(formData, 'apoyo_fiestas_patronales'),
+      operativosMetropolitano: bool(formData, 'operativos_metropolitano'),
+      eco8: bool(formData, 'eco8'),
+      alcoholimetria: bool(formData, 'alcoholimetria'),
+      motocicletas: bool(formData, 'motocicletas'),
+      apoyoActuarios: bool(formData, 'apoyo_actuarios'),
+      apoyoCateosFgr: bool(formData, 'apoyo_cateos_fgr'),
+      apoyoCateosFge: bool(formData, 'apoyo_cateos_fge'),
+    })
   })
 
   revalidatePath('/911/rondin')
@@ -275,61 +278,63 @@ export async function createDespacho(formData: FormData) {
   const session = await requireOperador()
   const incidenteId = req(formData, 'incidenteId')
 
-  const cliente = await pool.connect()
-  try {
-    const inc = await cliente.query<{ estatus: string }>(
-      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-      [incidenteId],
-    )
-    if (!inc.rows[0]) throw new Error('Incidente no encontrado')
-    if (inc.rows[0].estatus !== 'sin_despachar') throw new Error('El incidente no está en estado sin_despachar')
-
-    const existe = await cliente.query<{ id: string }>(
-      `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
-      [incidenteId],
-    )
-    if (existe.rows[0]) throw new Error('El incidente ya tiene un despacho asignado')
-
-    const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
-    const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
-
-    if (unidades.length === 0) throw new Error('Se requiere al menos una unidad')
-    if (elementos.length === 0) throw new Error('Se requiere al menos un elemento')
-
-    await cliente.query('BEGIN')
-
-    const despacho = await cliente.query<{ id: string }>(
-      `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
-      [incidenteId, session.user.id],
-    )
-    const despachoId = despacho.rows[0].id
-
-    for (const u of unidades) {
-      await cliente.query(
-        `INSERT INTO incidente_despacho_unidades (despacho_id, unidad_ext_id, unidad_placa) VALUES ($1, $2, $3)`,
-        [despachoId, u.extId, u.placa],
+  await tryActionRaw(async () => {
+    const cliente = await pool.connect()
+    try {
+      const inc = await cliente.query<{ estatus: string }>(
+        `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+        [incidenteId],
       )
-    }
+      if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+      if (inc.rows[0].estatus !== 'sin_despachar') throw new ValidationError('El incidente no está en estado sin_despachar')
 
-    for (const e of elementos) {
-      await cliente.query(
-        `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre) VALUES ($1, $2, $3, $4)`,
-        [despachoId, e.extId, e.nomina, e.nombre],
+      const existe = await cliente.query<{ id: string }>(
+        `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
+        [incidenteId],
       )
+      if (existe.rows[0]) throw new ValidationError('El incidente ya tiene un despacho asignado')
+
+      const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
+      const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
+
+      if (unidades.length === 0) throw new ValidationError('Se requiere al menos una unidad')
+      if (elementos.length === 0) throw new ValidationError('Se requiere al menos un elemento')
+
+      await cliente.query('BEGIN')
+
+      const despacho = await cliente.query<{ id: string }>(
+        `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
+        [incidenteId, session.user.id],
+      )
+      const despachoId = despacho.rows[0].id
+
+      for (const u of unidades) {
+        await cliente.query(
+          `INSERT INTO incidente_despacho_unidades (despacho_id, unidad_ext_id, unidad_placa) VALUES ($1, $2, $3)`,
+          [despachoId, u.extId, u.placa],
+        )
+      }
+
+      for (const e of elementos) {
+        await cliente.query(
+          `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre) VALUES ($1, $2, $3, $4)`,
+          [despachoId, e.extId, e.nomina, e.nombre],
+        )
+      }
+
+      await cliente.query(
+        `UPDATE incidentes SET estatus = 'en_despacho', actualizado_en = NOW() WHERE id = $1`,
+        [incidenteId],
+      )
+
+      await cliente.query('COMMIT')
+    } catch (err) {
+      await cliente.query('ROLLBACK')
+      throw err
+    } finally {
+      cliente.release()
     }
-
-    await cliente.query(
-      `UPDATE incidentes SET estatus = 'en_despacho', actualizado_en = NOW() WHERE id = $1`,
-      [incidenteId],
-    )
-
-    await cliente.query('COMMIT')
-  } catch (err) {
-    await cliente.query('ROLLBACK')
-    throw err
-  } finally {
-    cliente.release()
-  }
+  })
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'sin_despachar', estatus_nuevo: 'en_despacho' } })
   revalidatePath(`/incidentes/${incidenteId}`)
@@ -344,60 +349,57 @@ export async function createReporteCampo(formData: FormData) {
 
   const montoRaw = num(formData, 'montoRobo')
 
-  const { estatusAnterior } = await crearReporteCampo({
-    incidenteId: req(formData, 'incidenteId'),
-    contenidoReporte: str(formData, 'contenidoReporte'),
-    lugarCalle: str(formData, 'lugarCalle'),
-    lugarColonia: str(formData, 'lugarColonia'),
-    lugarEntreCalles: str(formData, 'lugarEntreCalles'),
-    lugarReferencia: str(formData, 'lugarReferencia'),
-    datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
-    accionesRealizadas: str(formData, 'accionesRealizadas'),
-    hayDetencion: bool(formData, 'hayDetencion'),
-    nombreDetenidos: str(formData, 'nombreDetenidos'),
-    autoridadRecibe: str(formData, 'autoridadRecibe'),
-    expedienteCi: str(formData, 'expedienteCi'),
-    delitoFalta: str(formData, 'delitoFalta'),
-    hayRobo: bool(formData, 'hayRobo'),
-    montoRobo: montoRaw,
-    objetosRecuperados: str(formData, 'objetosRecuperados'),
-    hayVehiculo: bool(formData, 'hayVehiculo'),
-    vehiculos,
-    hayCateo: bool(formData, 'hayCateo'),
-    domicilioCateado: str(formData, 'domicilioCateado'),
-    cateoCalle: str(formData, 'cateoCalle'),
-    cateoColonia: str(formData, 'cateoColonia'),
-    cateoLatitud: str(formData, 'cateoLatitud'),
-    cateoLongitud: str(formData, 'cateoLongitud'),
-    resultadoCateo: str(formData, 'resultadoCateo'),
-    policiaACargo: str(formData, 'policiaCargo'),
-    personalIngresoCi: str(formData, 'personalIngresoCi'),
-    capturadoPor: session.user.id,
-    hayOrdenAprehension: bool(formData, 'hay_orden_aprehension'),
-    ordenesAprehension: JSON.parse(str(formData, 'ordenes_aprehension') ?? '[]'),
-    hayHidrocarburo: bool(formData, 'hay_hidrocarburo'),
-    hidrocarburos: JSON.parse(str(formData, 'hidrocarburos') ?? '[]'),
-    hayArmaFuego: bool(formData, 'hay_arma_fuego'),
-    armasFuego: JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
-    hayDroga: bool(formData, 'hay_droga'),
-    drogas: JSON.parse(str(formData, 'drogas') ?? '[]'),
-    observaciones: str(formData, 'observaciones'),
-    apoyoFiestasPatronales: bool(formData, 'apoyo_fiestas_patronales'),
-    operativosMetropolitano: bool(formData, 'operativos_metropolitano'),
-    eco8: bool(formData, 'eco8'),
-    alcoholimetria: bool(formData, 'alcoholimetria'),
-    motocicletas: bool(formData, 'motocicletas'),
-    apoyoActuarios: bool(formData, 'apoyo_actuarios'),
-    apoyoCateosFgr: bool(formData, 'apoyo_cateos_fgr'),
-    apoyoCateosFge: bool(formData, 'apoyo_cateos_fge'),
+  await tryActionRaw(async () => {
+    const { estatusAnterior } = await crearReporteCampo({
+      incidenteId: req(formData, 'incidenteId'),
+      contenidoReporte: str(formData, 'contenidoReporte'),
+      lugarCalle: str(formData, 'lugarCalle'),
+      lugarColonia: str(formData, 'lugarColonia'),
+      lugarEntreCalles: str(formData, 'lugarEntreCalles'),
+      lugarReferencia: str(formData, 'lugarReferencia'),
+      datosPositivosNegativos: str(formData, 'datosPositivosNegativos'),
+      accionesRealizadas: str(formData, 'accionesRealizadas'),
+      hayDetencion: bool(formData, 'hayDetencion'),
+      nombreDetenidos: str(formData, 'nombreDetenidos'),
+      autoridadRecibe: str(formData, 'autoridadRecibe'),
+      expedienteCi: str(formData, 'expedienteCi'),
+      delitoFalta: str(formData, 'delitoFalta'),
+      hayRobo: bool(formData, 'hayRobo'),
+      montoRobo: montoRaw,
+      objetosRecuperados: str(formData, 'objetosRecuperados'),
+      hayVehiculo: bool(formData, 'hayVehiculo'),
+      vehiculos,
+      hayCateo: bool(formData, 'hayCateo'),
+      domicilioCateado: str(formData, 'domicilioCateado'),
+      cateoCalle: str(formData, 'cateoCalle'),
+      cateoColonia: str(formData, 'cateoColonia'),
+      cateoLatitud: str(formData, 'cateoLatitud'),
+      cateoLongitud: str(formData, 'cateoLongitud'),
+      resultadoCateo: str(formData, 'resultadoCateo'),
+      policiaACargo: str(formData, 'policiaCargo'),
+      personalIngresoCi: str(formData, 'personalIngresoCi'),
+      capturadoPor: session.user.id,
+      hayOrdenAprehension: bool(formData, 'hay_orden_aprehension'),
+      ordenesAprehension: JSON.parse(str(formData, 'ordenes_aprehension') ?? '[]'),
+      hayHidrocarburo: bool(formData, 'hay_hidrocarburo'),
+      hidrocarburos: JSON.parse(str(formData, 'hidrocarburos') ?? '[]'),
+      hayArmaFuego: bool(formData, 'hay_arma_fuego'),
+      armasFuego: JSON.parse(str(formData, 'armas_fuego') ?? '[]'),
+      hayDroga: bool(formData, 'hay_droga'),
+      drogas: JSON.parse(str(formData, 'drogas') ?? '[]'),
+      observaciones: str(formData, 'observaciones'),
+      apoyoFiestasPatronales: bool(formData, 'apoyo_fiestas_patronales'),
+      operativosMetropolitano: bool(formData, 'operativos_metropolitano'),
+      eco8: bool(formData, 'eco8'),
+      alcoholimetria: bool(formData, 'alcoholimetria'),
+      motocicletas: bool(formData, 'motocicletas'),
+      apoyoActuarios: bool(formData, 'apoyo_actuarios'),
+      apoyoCateosFgr: bool(formData, 'apoyo_cateos_fgr'),
+      apoyoCateosFge: bool(formData, 'apoyo_cateos_fge'),
+    })
   })
 
   const incidenteId = req(formData, 'incidenteId')
-  await registrarAudit({
-    userId: session.user.id, accion: 'CREATE',
-    entidad: 'incidente_reporte_campo', entidadId: incidenteId,
-    payload: { estatus_anterior: estatusAnterior, estatus_nuevo: 'atendido' }
-  })
 
   revalidatePath(`/incidentes/${incidenteId}`)
 }
@@ -417,7 +419,7 @@ async function insertarIncidente(formData: FormData, session: Awaited<ReturnType
   const fechaHoraFin = str(formData, 'fechaHoraFin')
 
   if (fechaHoraFin && new Date(fechaHoraFin) < new Date(fechaHoraInicio))
-    throw new Error('fechaHoraFin no puede ser anterior a fechaHoraInicio')
+    throw new ValidationError('fechaHoraFin no puede ser anterior a fechaHoraInicio')
 
   const estatus = canal === 'radio' ? 'en_despacho' : 'sin_despachar'
   const { folio, consecutivo } = await generarFolioIncidente()
@@ -468,25 +470,28 @@ export async function createExtorsion(formData: FormData) {
 
   const incidenteId = req(formData, 'incidenteId')
 
-  const inc = await query<{ tipo_reporte: string; estatus: string }>(
-    `SELECT tipo_reporte, estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-    [incidenteId],
-  )
-  if (!inc.rows[0]) throw new Error('Incidente no encontrado')
-  if (inc.rows[0].tipo_reporte !== 'extorsion') throw new Error('El incidente no es de tipo extorsion')
-  if (inc.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  await tryActionRaw(async () => {
+    const inc = await query<{ tipo_reporte: string; estatus: string }>(
+      `SELECT tipo_reporte, estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    if (inc.rows[0].tipo_reporte !== 'extorsion') throw new ValidationError('El incidente no es de tipo extorsion')
+    if (inc.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
 
-  await query(
-    `INSERT INTO incidente_extorsion (incidente_id, telefono_extorsion, grupo_delictivo, modus_operandi, unidad_resultado, folio_reporte, fecha) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-    [
-      incidenteId,
-      str(formData, 'telefonoExtorsion'), str(formData, 'grupoDelictivo'),
-      str(formData, 'modusOperandi'), str(formData, 'unidadResultado'),
-      str(formData, 'folioReporte'), str(formData, 'fecha'),
-    ],
-  )
+    await query(
+      `INSERT INTO incidente_extorsion (incidente_id, telefono_extorsion, grupo_delictivo, modus_operandi, unidad_resultado, folio_reporte, fecha) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        incidenteId,
+        str(formData, 'telefonoExtorsion'), str(formData, 'grupoDelictivo'),
+        str(formData, 'modusOperandi'), str(formData, 'unidadResultado'),
+        str(formData, 'folioReporte'), str(formData, 'fecha'),
+      ],
+    )
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_extorsion', entidadId: incidenteId })
+    await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_extorsion', entidadId: incidenteId })
+  })
+
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
@@ -496,33 +501,33 @@ export async function createAlarmaEscolar(formData: FormData) {
 
   const incidenteId = req(formData, 'incidenteId')
 
-  const inc = await query<{ tipo_reporte: string; estatus: string }>(
-    `SELECT tipo_reporte, estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-    [incidenteId],
-  )
-  if (!inc.rows[0]) throw new Error('Incidente no encontrado')
-  if (inc.rows[0].tipo_reporte !== 'alarma_escolar') throw new Error('El incidente no es de tipo alarma_escolar')
-  if (inc.rows[0].estatus === 'atendido') throw new Error('No se puede modificar un incidente atendido')
+  await tryActionRaw(async () => {
+    const inc = await query<{ tipo_reporte: string; estatus: string }>(
+      `SELECT tipo_reporte, estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    if (inc.rows[0].tipo_reporte !== 'alarma_escolar') throw new ValidationError('El incidente no es de tipo alarma_escolar')
+    if (inc.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
 
-  const activaciones = num(formData, 'activaciones') ?? 0
-  if (activaciones < 0) throw new Error('activaciones no puede ser negativo')
+    const activaciones = num(formData, 'activaciones') ?? 0
+    if (activaciones < 0) throw new ValidationError('activaciones no puede ser negativo')
 
-  await query(
-    `INSERT INTO incidente_alarma_escolar (incidente_id, establecimiento, direccion, inmueble, responsable, reporte_descripcion, hora_canalizacion, unidad_arribo, hora_arribo, nombre_responsable, nombre_verificador, activaciones) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
-    [
-      incidenteId,
-      str(formData, 'establecimiento'), str(formData, 'direccion'),
-      str(formData, 'inmueble'), str(formData, 'responsable'),
-      str(formData, 'reporteDescripcion'), str(formData, 'horaCanalizacion'),
-      str(formData, 'unidadArribo'), str(formData, 'horaArribo'),
-      str(formData, 'nombreResponsable'), str(formData, 'nombreVerificador'),
-      activaciones,
-    ],
-  )
+    await query(
+      `INSERT INTO incidente_alarma_escolar (incidente_id, establecimiento, direccion, inmueble, responsable, reporte_descripcion, hora_canalizacion, unidad_arribo, hora_arribo, nombre_responsable, nombre_verificador, activaciones) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+      [
+        incidenteId,
+        str(formData, 'establecimiento'), str(formData, 'direccion'),
+        str(formData, 'inmueble'), str(formData, 'responsable'),
+        str(formData, 'reporteDescripcion'), str(formData, 'horaCanalizacion'),
+        str(formData, 'unidadArribo'), str(formData, 'horaArribo'),
+        str(formData, 'nombreResponsable'), str(formData, 'nombreVerificador'),
+        activaciones,
+      ],
+    )
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_alarma_escolar', entidadId: incidenteId })
+    await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidente_alarma_escolar', entidadId: incidenteId })
+  })
+
   revalidatePath(`/incidentes/${incidenteId}`)
 }
-
-
-

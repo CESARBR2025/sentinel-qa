@@ -6,7 +6,7 @@ import { ArrowLeft, User, BadgeCheck, Building2, Phone, Calendar, Shield, Finger
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 import { verificarRolOficial, obtenerMiPerfil } from '@/lib/oficial/service'
 import { UnidadAsignadaSection } from '@/components/oficial/UnidadAsignadaSection'
-import { FlotaService } from '@/lib/flota/service'
+import { listarPatrullasParaAsignacion, obtenerPatrullaPorId } from '@/lib/flota/service'
 
 export default async function ConfiguracionPerfilPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -25,10 +25,10 @@ export default async function ConfiguracionPerfilPage() {
     error = e instanceof Error ? e.message : 'Error al cargar perfil'
   }
 
-  const patrullaActual = await FlotaService.obtenerPatrullaPorId(
+  const patrullaActual = await obtenerPatrullaPorId(
     perfil?.patrullaId ?? null,
   )
-  const patrullas = await FlotaService.listarPatrullasParaAsignacion()
+  const patrullas = await listarPatrullasParaAsignacion()
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>

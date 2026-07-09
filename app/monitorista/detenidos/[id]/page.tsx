@@ -2,7 +2,8 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
-import { obtenerReportePorId, getDestinos, crearSolicitudFotos } from '@/lib/monitorista/detenido-service'
+import { obtenerReportePorId, getDestinos } from '@/lib/monitorista/service'
+import { crearSolicitudFotos } from '@/lib/monitorista/repository'
 import { ArrowLeft, User, Camera, Clock, Shield } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -35,9 +36,9 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
 
   const fotosPorTipo = new Map<string, typeof fotos>()
   for (const f of fotos) {
-    const arr = fotosPorTipo.get(String(f.tipo_foto)) ?? []
+    const arr = fotosPorTipo.get(String(f.tipoFoto)) ?? []
     arr.push(f)
-    fotosPorTipo.set(String(f.tipo_foto), arr)
+    fotosPorTipo.set(String(f.tipoFoto), arr)
   }
 
   return (
@@ -50,7 +51,7 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
           <div>
             <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 8 }}>Reporte de Detenido</div>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: 0 }}>{reporte.nombre_detenido}</h1>
+            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: 0 }}>{reporte.nombreDetenido}</h1>
           </div>
         </div>
 
@@ -59,13 +60,13 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
             <section style={card}>
               <h2 style={sectionTitle}><User size={18} /> DATOS PRINCIPALES</h2>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-                <Campo label="Nombre" value={reporte.nombre_detenido} />
-                <Campo label="Folio" value={reporte.folio_detenido} />
-                <Campo label="Evento o Incidente" value={reporte.tipo_incidente} />
-                <EditarCampoDetenido reporteId={id} campo="delito" label="Delito" valor={reporte.delito_denuncia} />
-                <EditarCampoDetenido reporteId={id} campo="falta_administrativa" label="Falta Administrativa" valor={reporte.falta_administrativa} />
-                <EditarCampoDetenido reporteId={id} campo="marco_legal" label="Marco Legal" valor={reporte.marco_legal} />
-                <EditarCampoDetenido reporteId={id} campo="modus_operandi" label="Modus Operandi" valor={reporte.modus_operandi} />
+                <Campo label="Nombre" value={reporte.nombreDetenido} />
+                <Campo label="Folio" value={reporte.folioDetenido} />
+                <Campo label="Evento o Incidente" value={reporte.tipoIncidente} />
+                <EditarCampoDetenido reporteId={id} campo="delito" label="Delito" valor={reporte.delitoDenuncia} />
+                <EditarCampoDetenido reporteId={id} campo="falta_administrativa" label="Falta Administrativa" valor={reporte.faltaAdministrativa} />
+                <EditarCampoDetenido reporteId={id} campo="marco_legal" label="Marco Legal" valor={reporte.marcoLegal} />
+                <EditarCampoDetenido reporteId={id} campo="modus_operandi" label="Modus Operandi" valor={reporte.modusOperandi} />
               </div>
             </section>
 
@@ -78,12 +79,12 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
                 {reporte.fotos.map((f) => (
                   <CardEnvioFoto
-                    key={f.tipo_foto}
+                    key={f.tipoFoto}
                     solicitudId={reporte.id}
-                    tipo={f.tipo_foto}
+                    tipo={f.tipoFoto}
                     foto={f}
                     destinos={destinos}
-                    evidencias={(fotosPorTipo.get(f.tipo_foto) ?? []).map(e => ({ id: String(e.id), url: String(e.url_archivo), nombre: String(e.nombre_archivo ?? ''), subidoPor: e.rol_subio ? String(e.rol_subio) : null }))}
+                    evidencias={(fotosPorTipo.get(f.tipoFoto) ?? []).map(e => ({ id: String(e.id), url: String(e.urlArchivo), nombre: String(e.nombreArchivo ?? ''), subidoPor: e.rolSubio ? String(e.rolSubio) : null }))}
                   />
                 ))}
               </div>
@@ -93,15 +94,15 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div style={card}>
               <h2 style={sectionTitle}><Clock size={18} /> FECHA</h2>
-              <Campo label="Reporte" value={new Date(reporte.created_at).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />
+              <Campo label="Reporte" value={new Date(reporte.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />
             </div>
             <div style={card}>
               <h2 style={sectionTitle}><Shield size={18} /> MARCAS</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {reporte.hay_detencion && <span style={marcaStyle}>✅ Detención</span>}
-                {reporte.hay_vehiculo && <span style={marcaStyle}>✅ Vehículo Involucrado</span>}
-                {reporte.hay_cateo && <span style={marcaStyle}>✅ Cateo Realizado</span>}
-                {!reporte.hay_detencion && !reporte.hay_vehiculo && !reporte.hay_cateo && (
+                {reporte.hayDetencion && <span style={marcaStyle}>✅ Detención</span>}
+                {reporte.hayVehiculo && <span style={marcaStyle}>✅ Vehículo Involucrado</span>}
+                {reporte.hayCateo && <span style={marcaStyle}>✅ Cateo Realizado</span>}
+                {!reporte.hayDetencion && !reporte.hayVehiculo && !reporte.hayCateo && (
                   <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#94a3b8' }}>Sin marcas</span>
                 )}
               </div>

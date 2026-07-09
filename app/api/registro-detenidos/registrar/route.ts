@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { registrarFichaInteligencia } from '@/lib/monitorista/detenido-service';
+import { registrarFichaInteligencia } from '@/lib/monitorista/repository';
 
 export async function POST(req: Request) {
   try {

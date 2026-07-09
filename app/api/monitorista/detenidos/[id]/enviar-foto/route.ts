@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import { enviarFoto, getDestinos } from '@/lib/monitorista/detenido-service'
+import { enviarFoto } from '@/lib/monitorista/repository'
+import { getDestinos } from '@/lib/monitorista/service'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { insertHistorial } from '@/lib/monitorista/repository'
 

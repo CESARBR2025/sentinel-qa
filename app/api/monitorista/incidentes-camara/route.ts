@@ -35,18 +35,18 @@ export async function POST(req: NextRequest) {
     const id = await crearRegistro({
       fecha: body.fecha,
       turno: body.turno,
-      registrado_por: session.user.id,
-      personas_sin_novedad: body.personas_sin_novedad,
-      personas_con_antecedentes: body.personas_con_antecedentes,
-      total_personas_revisadas: body.total_personas_revisadas,
-      vehiculos_revisar: body.vehiculos_revisar,
-      vehiculos_repuve: body.vehiculos_repuve,
-      motos_revisadas: body.motos_revisadas,
+      registradoPor: session.user.id,
+      personasSinNovedad: body.personas_sin_novedad,
+      personasConAntecedentes: body.personas_con_antecedentes,
+      totalPersonasRevisadas: body.total_personas_revisadas,
+      vehiculosRevisar: body.vehiculos_revisar,
+      vehiculosRepuve: body.vehiculos_repuve,
+      motosRevisadas: body.motos_revisadas,
       persecuciones: body.persecuciones,
-      asegurados_camara: body.asegurados_camara,
-      vehiculos_recuperados: body.vehiculos_recuperados,
+      aseguradosCamara: body.asegurados_camara,
+      vehiculosRecuperados: body.vehiculos_recuperados,
       incendios: body.incendios,
-      hechos_transito: body.hechos_transito,
+      hechosTransito: body.hechos_transito,
     })
 
     await insertHistorial(session.user.id, 'incidente_creado', id)

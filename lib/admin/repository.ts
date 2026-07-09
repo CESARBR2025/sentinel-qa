@@ -66,3 +66,29 @@ export async function crearRol(nombre: string, descripcion: string, activo: bool
   )
   return result.rows[0].id
 }
+
+export async function obtenerRolUsuario(userId: string): Promise<number | null> {
+  const result = await query<{ rolid: number }>(
+    `SELECT rol_id AS rolid FROM users WHERE id = $1 LIMIT 1`,
+    [userId],
+  )
+  return result.rows[0]?.rolid ?? null
+}
+
+export async function actualizarUsuario(
+  userId: string,
+  data: { name: string; apellido: string; rolId: number | null; activo: boolean },
+): Promise<void> {
+  await query(
+    `UPDATE users SET name = $1, apellido = $2, rol_id = $3, activo = $4, updated_at = now() WHERE id = $5`,
+    [data.name, data.apellido, data.rolId, data.activo, userId],
+  )
+}
+
+export async function asignarRolUsuario(userId: string, rolId: number): Promise<void> {
+  await query(`UPDATE users SET rol_id = $1 WHERE id = $2`, [rolId, userId])
+}
+
+export async function eliminarSesion(token: string): Promise<void> {
+  await query(`DELETE FROM sessions WHERE token = $1`, [token])
+}

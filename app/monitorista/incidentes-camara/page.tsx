@@ -27,9 +27,9 @@ export default async function IncidentesCamaraPage({
   const registros = await listarRegistros(turnoValido)
   const user = session.user as { name: string }
 
-  const totalPersonas = registros.reduce((s, r) => s + r.total_personas_revisadas, 0)
-  const totalVehiculos = registros.reduce((s, r) => s + r.vehiculos_revisar, 0)
-  const totalMotos = registros.reduce((s, r) => s + r.motos_revisadas, 0)
+  const totalPersonas = registros.reduce((s, r) => s + r.totalPersonasRevisadas, 0)
+  const totalVehiculos = registros.reduce((s, r) => s + r.vehiculosRevisar, 0)
+  const totalMotos = registros.reduce((s, r) => s + r.motosRevisadas, 0)
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>

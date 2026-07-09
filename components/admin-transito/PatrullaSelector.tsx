@@ -14,7 +14,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
   const [selectedLabel, setSelectedLabel] = useState(() => {
     if (!defaultValue) return ''
     const found = patrullas.find((p) => p.id === defaultValue)
-    return found ? `${found.numero_unidad} — ${found.descripcion}` : ''
+    return found ? `${found.numeroUnidad} — ${found.descripcion}` : ''
   })
   const [modalOpen, setModalOpen] = useState(false)
   const [busqueda, setBusqueda] = useState('')
@@ -23,7 +23,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
 
   const filtradas = patrullas.filter(
     (p) =>
-      p.numero_unidad.toLowerCase().includes(busqueda.toLowerCase()) ||
+      p.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
       p.descripcion.toLowerCase().includes(busqueda.toLowerCase()),
   )
 
@@ -55,7 +55,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
     if (!tempId) return
     const found = patrullas.find((p) => p.id === tempId)
     setSelectedId(tempId)
-    setSelectedLabel(found ? `${found.numero_unidad} — ${found.descripcion}` : '')
+    setSelectedLabel(found ? `${found.numeroUnidad} — ${found.descripcion}` : '')
     setModalOpen(false)
   }
 
@@ -277,7 +277,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                             marginBottom: 2,
                           }}
                         >
-                          {p.numero_unidad}
+                          {p.numeroUnidad}
                         </div>
                         <div
                           style={{

@@ -4,7 +4,7 @@ import { Shield, Clock, User, LayoutGrid, Send } from 'lucide-react';
 import { RolField } from '@/components/rol_servicios/RolInputs';
 import { ServiceTable } from '@/components/rol_servicios/ServiceTable';
 import { ServiceFooter } from '@/components/rol_servicios/ServiceFooter';
-import { ServiceRow } from '@/lib/rol_servicios/rol';
+import { ServiceRow } from '@/lib/rol-servicios/types';
 import { SubHeader } from '@/components/partials/SubHeader';
 
 export default function ModuloRolZen() {

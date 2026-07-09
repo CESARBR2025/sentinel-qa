@@ -33,35 +33,33 @@ lib/<module>/
 |--------|----------|-----------|---------------|------------|------------|--------|
 | `lib/auth/helpers.ts` | `UserWithRole` | `rowToUserWithRole` | `getUserWithRole` | — | — | ✅ |
 | `lib/911/` | ✅ | ✅ | ✅ | ✅ | — (reads only) | **GREEN** |
-| `lib/admin/` | ✅ | ✅ | ✅ | ❌ | ⚠️ (inline query) | **YELLOW** |
-| `lib/admin-transito/` | ✅ | ✅ | ⚠️ (no mapper use) | ❌ | ❌ (inline query) | **RED** |
+| `lib/admin/` | ✅ | ✅ | ✅ | ❌ | ✅ | **GREEN** |
+| `lib/admin-transito/` | ✅ | ✅ | ✅ | ❌ | ✅ | **GREEN** |
 | `lib/auxiliar/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/camara/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
-| `lib/corralon/` | ✅ | ⚠️ (inline in service) | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/d1/` | ❌ | ❌ | ⚠️ | ⚠️ (inline map) | — | **RED** |
-| `lib/incidentes/` | ✅ | ✅ | ✅ | ✅ | ⚠️ | **GREEN** |
+| `lib/camara/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
+| `lib/corralon/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/d1/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
+| `lib/incidentes/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
 | `lib/fiscalia/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/flota/` | ✅ | ❌ | ⚠️ (class, raw) | ✅ | — | **YELLOW** |
-| `lib/monitorista/` | ❌ | ❌ | ✅ | ⚠️ (split services) | ❌ (inline query) | **RED** |
-| `lib/notificaciones/` | ✅ | ✅ | ✅ | — | ⚠️ | **YELLOW** |
+| `lib/flota/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
+| `lib/monitorista/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
+| `lib/notificaciones/` | ✅ | ✅ | ✅ | — | ✅ | **GREEN** |
 | `lib/oficial/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/prevencion/` | ✅ | ✅ | ⚠️ (partial any[]) | ❌ | ⚠️ | **YELLOW** |
-| `lib/reportes/` | ❌ | ❌ | ✅ | ❌ | — | **RED** |
-| `lib/reportes-operativos/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
-| `lib/reportes-sin-d1/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
-| `lib/reportes-sin-novedad/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
-| `lib/reportes-incidentes/` | ❌ | ❌ | ❌ (raw) | ⚠️ (inline map) | — | **RED** |
+| `lib/prevencion/` | ✅ | ✅ | ✅ | ❌ | ✅ | **GREEN** |
+| `lib/reportes/` | ✅ | ✅ | ✅ | ❌ | — | **GREEN** |
+| `lib/reportes-operativos/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
+| `lib/reportes-sin-d1/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
+| `lib/reportes-sin-novedad/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
+| `lib/reportes-incidentes/` | ✅ | ✅ | ✅ | ✅ | — | **GREEN** |
 | `lib/agente_juzgado/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/agente_liberaciones/` | ✅ | ✅ | ✅ | ✅ | ⚠️ (inline query) | **YELLOW** |
+| `lib/agente_liberaciones/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
 | `lib/agente_infracciones/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
-| `lib/rol-servicios/` + `lib/rol_servicios/` | ❌ | ❌ | ❌ | ❌ | ❌ (inline query) | **RED** |
+| `lib/rol-servicios/` | ✅ | ✅ | ✅ | ✅ | ✅ | **GREEN** |
 
 ### Current totals
-- **GREEN**: 8 modules (911, auxiliar, corralon, incidentes, fiscalia, oficial, agente_juzgado, agente_infracciones)
-- **YELLOW**: 5 modules (admin, flota, notificaciones, prevencion, agente_liberaciones)
-- **RED**: 10 modules (admin-transito, camara, d1, monitorista, reportes, reportes-operativos, reportes-sin-d1, reportes-sin-novedad, reportes-incidentes, rol-servicios)
-
-### Auth helper (`lib/auth/helpers.ts`)
+- **GREEN**: 23 modules
+- **YELLOW**: 0 modules
+- **RED**: 0 modules
 
 ### Auth helper (`lib/auth/helpers.ts`)
 The standard way to get the current user's role. Replaces the pattern of writing inline `query(...)` with `LEFT JOIN roles`:
@@ -90,6 +88,7 @@ export interface IncidenteDetalle {
 ```ts
 function toStr(val: unknown): string | null {
   if (val === null || val === undefined) return null
+  if (val instanceof Date) return val.toISOString()
   return String(val)
 }
 
@@ -127,6 +126,37 @@ export async function obtenerIncidente(id: string): Promise<IncidenteDetalle | n
 - All mappers accept `Record<string, unknown>` and return typed interfaces
 - Mapper functions are pure — no side effects, no async
 
+# Error handling — centralized
+
+All server actions use `tryAction` / `tryActionRaw` from `@/lib/error-handler`:
+
+```ts
+import { tryAction, tryActionRaw, ValidationError, NotFoundError } from '@/lib/error-handler'
+
+// For data-fetching actions (returns { success, data } | { success, error }):
+export async function obtenerAlgo(id: string) {
+  return tryAction(async () => {
+    const data = await repositoryFn(id)
+    if (!data) throw new NotFoundError('Algo no encontrado')
+    return data
+  })
+}
+
+// For mutation actions (re-throws, caller must handle):
+export async function crearAlgo(formData: FormData) {
+  return tryActionRaw(async () => {
+    const val = formData.get('campo')
+    if (!val) throw new ValidationError('Campo requerido')
+    await repositoryInsert(val)
+    revalidatePath('/ruta')
+  })
+}
+```
+
+Error classes: `AppError`, `NotFoundError` (404), `ValidationError` (400), `UnauthorizedError` (401), `ForbiddenError` (403), `ConflictError` (409).
+
+API routes should use `apiHandler`, `apiSuccess`, `apiError` from the same module.
+
 # Page file rules
 - **Never** import `query` from `@/lib/db` in `app/**/page.tsx`
 - **Never** import `query` from `@/lib/db` in `app/**/layout.tsx`
@@ -137,9 +167,53 @@ export async function obtenerIncidente(id: string): Promise<IncidenteDetalle | n
 - For domain data: use the corresponding `lib/<module>/service.ts` or `repository.ts`
 - JSX references must match the **camelCase** properties from the types/interfaces, NOT the snake_case DB columns
 
-# Architectural compliance — Next steps
-The following modules need types.ts + mapper.ts created to reach full compliance:
-- `lib/camara/`, `lib/d1/`, `lib/monitorista/`, `lib/reportes/`, `lib/reportes-operativos/`, `lib/reportes-sin-d1/`, `lib/reportes-sin-novedad/`, `lib/reportes-incidentes/`, `lib/rol-servicios/`
+# Architectural compliance — Full Compliance
+All 23 modules are **GREEN**. Every module follows the standard layered pattern:
+- `types.ts` — camelCase interfaces
+- `mapper.ts` — snake_case → camelCase conversion
+- `repository.ts` — raw SQL via `query()`, returns typed objects via mappers
+- `service.ts` — orchestration / pass-through (optional)
+- `actions.ts` — server actions (optional)
 
-The following modules need their actions.ts refactored to go through service/repository instead of using `query` directly:
-- `lib/admin/actions.ts`, `lib/admin-transito/actions.ts`, `lib/monitorista/actions.ts`, `lib/agente_liberaciones/actions.ts`
+# Refactoring History
+
+This project underwent a complete architectural overhaul. Key milestones:
+
+## Phase 1 — Drizzle elimination
+- Migrated ALL `lib/` server actions from Drizzle ORM to raw SQL via `query()`
+- Migrated ALL `app/api/` routes (58+ files) from Drizzle to raw SQL
+- Reduced `lib/db/schema.ts` to only 5 better-auth tables
+- Removed `drizzle-kit`, kept `drizzle-orm` (required by better-auth)
+- Deleted auto-generated `drizzle/` directory
+
+## Phase 2 — Page files refactoring
+- Removed inline `query()` calls from ALL `app/**/page.tsx` (52 files)
+- Removed inline role-check queries → centralized `getUserWithRole()`
+- Every page now reads data through `lib/<module>/repository.ts` or `service.ts`
+
+## Phase 3 — API routes refactoring
+- Removed inline `query()` from ALL `app/api/**/route.ts` (58+ files)
+- Every route now delegates to repository/actions modules
+
+## Phase 4 — Layout files refactoring
+- Removed inline `query()` from ALL `app/**/layout.tsx` (3 files)
+
+## Phase 5 — Architecture standardization
+- Created types.ts + mapper.ts for all RED modules (camara, d1, monitorista, reportes*, prevencion, rol-servicios)
+- Fixed all `any` types in repository functions
+- Consolidated duplicated directories (`lib/rol_servicios/` → `lib/rol-servicios/`)
+- Converted class-based repos to functional (`lib/flota/`)
+- Extracted inline mappers to dedicated files (`lib/corralon/`)
+- Fixed dead mapper code (`lib/admin-transito/`)
+
+## Phase 6 — Error handling
+- Created `lib/error-handler.ts` with AppError classes + tryAction/tryActionRaw wrappers
+- Updated all 14 `actions.ts` files to use structured error handling
+- Replaced all `throw new Error(...)` with typed AppError subclasses
+
+# Key architectural decisions
+1. **No Drizzle in app code** — raw SQL only, keeps control over queries and avoids ORM complexity
+2. **camelCase in TypeScript, snake_case in DB** — mapper layer handles conversion, never leaks DB naming to components
+3. **Pages never query DB directly** — all data flows through lib/ modules, making testing and auditing possible
+4. **Server actions as the mutation API** — mutations go through 'use server' actions, reads go directly to pages from server components
+5. **Functional over class-based** — all repositories and services are plain functions (except external API wrappers)

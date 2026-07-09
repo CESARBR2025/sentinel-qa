@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/expediente/client'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { obtenerFolioReporteCampo } from '@/lib/monitorista/repository'
-import { subirFotoDetenido, completarSolicitudFoto } from '@/lib/monitorista/detenido-service'
+import { subirFotoDetenido, completarSolicitudFoto } from '@/lib/monitorista/repository'
 import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { FlotaService } from '@/lib/flota/service'
+import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
 import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialPorId, actualizarOficial } from '@/lib/admin-transito/actions'
 import PatrullaSelector from '@/components/admin-transito/PatrullaSelector'
@@ -76,7 +76,7 @@ export default async function EditarOficialPage({
 
   const deptos = await listarDepartamentosActivos()
 
-  const patrullas = await FlotaService.listarPatrullasParaAsignacion()
+  const patrullas = await listarPatrullasParaAsignacion()
 
   return (
     <div>

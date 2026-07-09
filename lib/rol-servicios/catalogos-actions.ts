@@ -5,19 +5,13 @@ import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { query }          from '@/lib/db'
+import { getUserRoleName } from './repository'
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  const u = await query<{ rolnombre: string }>(
-    `SELECT r.nombre AS rolnombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id],
-  )
-  if (u.rows[0]?.rolnombre !== 'Administrador') redirect('/dashboard')
+  const roleName = await getUserRoleName(session.user.id)
+  if (roleName !== 'Administrador') redirect('/dashboard')
   return session
 }
 

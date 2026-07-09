@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/expediente/client'
-import { getRolUsuario, obtenerObtenerSolicitudFoto, insertarEvidenciaDetenido, actualizarSolicitudFotoEstado } from '@/lib/monitorista/detenido-service'
+import { getRolUsuario, obtenerObtenerSolicitudFoto, insertarEvidenciaDetenido, actualizarSolicitudFotoEstado } from '@/lib/monitorista/repository'
 import { insertHistorial } from '@/lib/monitorista/repository'
 
 export async function POST(req: NextRequest) {
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
   if (sf.estado !== 'enviado') {
     return NextResponse.json({ error: 'La solicitud no ha sido enviada a ningún destino' }, { status: 400 })
   }
-  if (!destinosPermitidos.includes(sf.enviado_a)) {
+  if (!destinosPermitidos.includes(sf.enviadoA)) {
     return NextResponse.json({ error: 'Esta solicitud no fue enviada a tu dependencia' }, { status: 403 })
   }
 

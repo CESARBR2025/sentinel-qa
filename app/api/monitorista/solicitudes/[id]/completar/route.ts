@@ -28,8 +28,8 @@ export async function POST(
   const historialAccion = action === 'completar' ? 'solicitud_completada' : 'solicitud_cancelada'
   const completadoEn = action === 'completar'
 
-  await actualizarEstadoSolicitud(id, newStatus, completadoEn)
-  await insertHistorial(session.user.id, historialAccion, sol.incidente_id, id)
+  await actualizarEstadoSolicitud(id, newStatus)
+  await insertHistorial(session.user.id, historialAccion, sol.incidenteId, id)
 
   return NextResponse.json({ status: newStatus })
 }

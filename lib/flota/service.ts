@@ -1,4 +1,4 @@
-import { FlotaRepository } from "./repository";
+import { estaStale, upsertPatrullas, listarActivas, obtenerPorId } from "./repository";
 import type { FlotaVehiculoRaw, PatrullaAsignacion } from "./types";
 
 const FLOTA_API_URL =
@@ -28,80 +28,78 @@ let cacheFlota: {
   timestamp: number;
 } | null = null;
 
-export class FlotaService {
-  static async obtenerFlota(): Promise<{
-    datos: FlotaVehiculoRaw[];
-    desdeCache: boolean;
-  }> {
-    const ahora = Date.now();
+export async function obtenerFlota(): Promise<{
+  datos: FlotaVehiculoRaw[];
+  desdeCache: boolean;
+}> {
+  const ahora = Date.now();
 
-    if (cacheFlota && ahora - cacheFlota.timestamp < CACHE_TTL) {
+  if (cacheFlota && ahora - cacheFlota.timestamp < CACHE_TTL) {
+    return { datos: cacheFlota.datos, desdeCache: true };
+  }
+
+  const apiKey = process.env.NEXT_PUBLIC_FLOTA_API_KEY;
+
+  if (!apiKey) {
+    console.warn("[FLOTA] API key no configurada");
+    return { datos: [], desdeCache: false };
+  }
+
+  const res = await fetch(FLOTA_API_URL, {
+    headers: { "x-api-key": apiKey },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    console.error(`[FLOTA] Error HTTP ${res.status}`);
+    if (cacheFlota)
       return { datos: cacheFlota.datos, desdeCache: true };
-    }
-
-    const apiKey = process.env.NEXT_PUBLIC_FLOTA_API_KEY;
-
-    if (!apiKey) {
-      console.warn("[FLOTA] API key no configurada");
-      return { datos: [], desdeCache: false };
-    }
-
-    const res = await fetch(FLOTA_API_URL, {
-      headers: { "x-api-key": apiKey },
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      console.error(`[FLOTA] Error HTTP ${res.status}`);
-      if (cacheFlota)
-        return { datos: cacheFlota.datos, desdeCache: true };
-      return { datos: [], desdeCache: false };
-    }
-
-    const raw: FlotaApiResponse = await res.json();
-    const datos = extraerVehiculos(raw);
-
-    cacheFlota = { datos, timestamp: ahora };
-
-    return { datos, desdeCache: false };
+    return { datos: [], desdeCache: false };
   }
 
-  static invalidarCache() {
-    cacheFlota = null;
-  }
+  const raw: FlotaApiResponse = await res.json();
+  const datos = extraerVehiculos(raw);
 
-  static async listarPatrullasParaAsignacion(): Promise<
-    PatrullaAsignacion[]
-  > {
-    const stale = await FlotaRepository.estaStale(6);
+  cacheFlota = { datos, timestamp: ahora };
 
-    if (stale) {
-      const { datos } = await this.obtenerFlota();
-      if (datos.length > 0) {
-        await FlotaRepository.upsertPatrullas(datos);
-      }
+  return { datos, desdeCache: false };
+}
+
+export function invalidarCache() {
+  cacheFlota = null;
+}
+
+export async function listarPatrullasParaAsignacion(): Promise<
+  PatrullaAsignacion[]
+> {
+  const stale = await estaStale(6);
+
+  if (stale) {
+    const { datos } = await obtenerFlota();
+    if (datos.length > 0) {
+      await upsertPatrullas(datos);
     }
-
-    const rows = await FlotaRepository.listarActivas();
-    return rows.map((r) => ({
-      id: r.id,
-      numero_unidad: r.numero_unidad,
-      placas: r.placas,
-      descripcion: r.descripcion,
-    }));
   }
 
-  static async obtenerPatrullaPorId(
-    id: string | null,
-  ): Promise<PatrullaAsignacion | null> {
-    if (!id) return null;
-    const row = await FlotaRepository.obtenerPorId(id);
-    if (!row) return null;
-    return {
-      id: row.id,
-      numero_unidad: row.numero_unidad,
-      placas: row.placas,
-      descripcion: row.descripcion,
-    };
-  }
+  const rows = await listarActivas();
+  return rows.map((r) => ({
+    id: r.id,
+    numeroUnidad: r.numeroUnidad,
+    placas: r.placas,
+    descripcion: r.descripcion,
+  }));
+}
+
+export async function obtenerPatrullaPorId(
+  id: string | null,
+): Promise<PatrullaAsignacion | null> {
+  if (!id) return null;
+  const row = await obtenerPorId(id);
+  if (!row) return null;
+  return {
+    id: row.id,
+    numeroUnidad: row.numeroUnidad,
+    placas: row.placas,
+    descripcion: row.descripcion,
+  };
 }

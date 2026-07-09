@@ -84,7 +84,7 @@ export function UnidadAsignadaSection({
                   fontWeight: 600,
                 }}
               >
-                {patrullaActual.numero_unidad}
+                {patrullaActual.numeroUnidad}
               </div>
             </div>
           </div>

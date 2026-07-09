@@ -1,26 +1,26 @@
 export interface FlotaVehiculoRaw {
-  placa_vehiculo: string;
-  num_serie: string;
+  placaVehiculo: string;
+  numSerie: string;
   marca: string;
   modelo: string;
   color: string;
-  tipo_vehiculo: string;
+  tipoVehiculo: string;
   secretaria: string;
-  id_vehiculo: number;
+  idVehiculo: number;
 }
 
-export interface PatrullaRow {
+export interface Patrulla {
   id: string;
-  numero_unidad: string;
+  numeroUnidad: string;
   placas: string;
   descripcion: string;
   activo: boolean;
-  sincronizado_en: string;
+  sincronizadoEn: string;
 }
 
 export interface PatrullaAsignacion {
   id: string;
-  numero_unidad: string;
+  numeroUnidad: string;
   placas: string;
   descripcion: string;
 }

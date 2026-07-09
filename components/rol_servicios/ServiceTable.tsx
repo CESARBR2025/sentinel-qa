@@ -1,7 +1,7 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Database } from 'lucide-react';
-import { ServiceRow } from '@/lib/rol_servicios/rol';
+import { ServiceRow } from '@/lib/rol-servicios/types';
 
 interface Props {
   title: string;

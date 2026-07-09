@@ -9,17 +9,17 @@ export function FilaIncidenteCamara({
     id: string
     fecha: string
     turno: string
-    personas_sin_novedad: number
-    personas_con_antecedentes: number
-    vehiculos_revisar: number
-    vehiculos_repuve: number
-    motos_revisadas: number
+    personasSinNovedad: number
+    personasConAntecedentes: number
+    vehiculosRevisar: number
+    vehiculosRepuve: number
+    motosRevisadas: number
     persecuciones: number
-    asegurados_camara: number
-    vehiculos_recuperados: number
+    aseguradosCamara: number
+    vehiculosRecuperados: number
     incendios: number
-    hechos_transito: number
-    total_personas_revisadas: number
+    hechosTransito: number
+    totalPersonasRevisadas: number
   }
 }) {
   const turnoLabel: Record<string, string> = {
@@ -43,17 +43,17 @@ export function FilaIncidenteCamara({
     >
       <Td>{formatFecha(registro.fecha)}</Td>
       <Td><span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, background: '#f1f5f9', padding: '2px 8px', borderRadius: 2, color: '#475569' }}>{turnoLabel[registro.turno] || registro.turno}</span></Td>
-      <Td>{registro.personas_sin_novedad}</Td>
-      <Td>{registro.personas_con_antecedentes}</Td>
-      <Td>{registro.vehiculos_revisar}</Td>
-      <Td>{registro.vehiculos_repuve}</Td>
-      <Td>{registro.motos_revisadas}</Td>
+      <Td>{registro.personasSinNovedad}</Td>
+      <Td>{registro.personasConAntecedentes}</Td>
+      <Td>{registro.vehiculosRevisar}</Td>
+      <Td>{registro.vehiculosRepuve}</Td>
+      <Td>{registro.motosRevisadas}</Td>
       <Td>{registro.persecuciones}</Td>
-      <Td>{registro.asegurados_camara}</Td>
-      <Td>{registro.vehiculos_recuperados}</Td>
+      <Td>{registro.aseguradosCamara}</Td>
+      <Td>{registro.vehiculosRecuperados}</Td>
       <Td>{registro.incendios}</Td>
-      <Td>{registro.hechos_transito}</Td>
-      <Td><strong>{registro.total_personas_revisadas}</strong></Td>
+      <Td>{registro.hechosTransito}</Td>
+      <Td><strong>{registro.totalPersonasRevisadas}</strong></Td>
     </tr>
   )
 }

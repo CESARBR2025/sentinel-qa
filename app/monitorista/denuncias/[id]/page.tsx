@@ -87,11 +87,11 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
                 )}
                 {denuncia.monitoristaFechasRequeridas.map((sol) => {
                   return (
-                    <div key={sol.solicitud_id} style={{ background: '#f8fafc', border: `1px solid ${sol.atendida ? '#bbf7d0' : '#fde68a'}`, padding: 24, borderRadius: 2 }}>
+                    <div key={sol.solicitudId} style={{ background: '#f8fafc', border: `1px solid ${sol.atendida ? '#bbf7d0' : '#fde68a'}`, padding: 24, borderRadius: 2 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                           <div style={{ fontFamily: 'JetBrains Mono', fontSize: 14, fontWeight: 600, color: sol.atendida ? '#15803d' : '#b45309' }}>
-                            Solicitud #{sol.solicitud_id}
+                            Solicitud #{sol.solicitudId}
                           </div>
                           <span style={{
                             fontFamily: 'JetBrains Mono', fontSize: 9, padding: '3px 10px', borderRadius: 2,
@@ -104,7 +104,7 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
                             fontFamily: 'JetBrains Mono', fontSize: 9, padding: '3px 10px', borderRadius: 2,
                             background: '#f1f5f9', color: '#475569',
                           }}>
-                            {sol.hora_inicio} - {sol.hora_fin}
+                            {sol.horaInicio} - {sol.horaFin}
                           </span>
                         </div>
                       </div>
@@ -114,7 +114,7 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                           {!sol.atendida && (
-                            <BotonSubirDenuncia denunciaId={denuncia.id} solicitudId={sol.solicitud_id} />
+                            <BotonSubirDenuncia denunciaId={denuncia.id} solicitudId={sol.solicitudId} />
                           )}
                           {sol.atendida && (
                             <span style={{
@@ -125,9 +125,9 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
                             </span>
                           )}
                         </div>
-                        {(evidenciasPorSolicitud.get(sol.solicitud_id) ?? []).length > 0 && (
+                        {(evidenciasPorSolicitud.get(sol.solicitudId) ?? []).length > 0 && (
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                            {(evidenciasPorSolicitud.get(sol.solicitud_id) ?? []).map((ev) => (
+                            {(evidenciasPorSolicitud.get(sol.solicitudId) ?? []).map((ev) => (
                               <a key={ev.id} href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
 fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb',
                       textDecoration: 'none', padding: '6px 12px',
@@ -152,12 +152,12 @@ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb',
                 <h2 style={sectionTitle}><Camera size={18} /> EVIDENCIAS SUBIDAS ({evidencias.length})</h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {denuncia.monitoristaFechasRequeridas.map((sol) => {
-                    const evs = evidenciasPorSolicitud.get(sol.solicitud_id) ?? []
+                    const evs = evidenciasPorSolicitud.get(sol.solicitudId) ?? []
                     if (evs.length === 0) return null
                     return (
-                      <div key={sol.solicitud_id}>
+                      <div key={sol.solicitudId}>
                         <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2563eb', marginBottom: 8, letterSpacing: '0.05em' }}>
-                          Solicitud #{sol.solicitud_id} — {evs.length} archivo{evs.length > 1 ? 's' : ''}
+                          Solicitud #{sol.solicitudId} — {evs.length} archivo{evs.length > 1 ? 's' : ''}
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                           {evs.map((ev) => (

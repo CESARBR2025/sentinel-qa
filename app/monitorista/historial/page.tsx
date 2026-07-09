@@ -5,6 +5,7 @@ import { Camera, CheckCircle2, XCircle, FileText, Edit, Plus, PenBox } from 'luc
 import React from 'react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarHistorial } from '@/lib/monitorista/repository'
+import type { HistorialEntry } from '@/lib/monitorista/types'
 import { SubHeader } from '@/components/partials/SubHeader'
 
 export default async function HistorialPage() {
@@ -26,11 +27,11 @@ export default async function HistorialPage() {
     ppt_generado: { label: 'PPT de detenidos generado', icon: <FileText size={14} color="#059669" /> },
   }
 
-  function formatearDetalle(r: Record<string, unknown>): string {
-    if (r.folio_solicitud) return String(r.folio_solicitud)
-    if (r.folio_detenido) return String(r.folio_detenido)
-    if (r.ic_fecha) return `${String(r.ic_fecha)} ${String(r.ic_turno ?? '')}`
-    if (r.incidente_id) return String(r.incidente_id).substring(0, 8)
+  function formatearDetalle(r: HistorialEntry): string {
+    if (r.folioIncidente) return String(r.folioIncidente)
+    if (r.folioDetenido) return String(r.folioDetenido)
+    if (r.icFecha) return `${String(r.icFecha)} ${String(r.icTurno ?? '')}`
+    if (r.incidenteId) return String(r.incidenteId).substring(0, 8)
     return '—'
   }
 
@@ -60,8 +61,8 @@ export default async function HistorialPage() {
                     <tr key={String(r.id)} style={{ borderBottom: '1px solid #f1f5f9' }}>
                       <td style={tdStyle}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{info.icon}<span style={{ fontFamily: 'JetBrains Mono', fontSize: 11 }}>{info.label}</span></div></td>
                       <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{formatearDetalle(r)}</td>
-                      <td style={{ ...tdStyle, fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>{String(r.monitorista_nombre ?? '—')}</td>
-                      <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{new Date(String(r.creado_en)).toLocaleString('es-MX')}</td>
+                      <td style={{ ...tdStyle, fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>{String(r.monitoristaNombre ?? '—')}</td>
+                      <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{new Date(String(r.creadoEn)).toLocaleString('es-MX')}</td>
                     </tr>
                   )
                 })}

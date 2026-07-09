@@ -5,6 +5,8 @@ import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { query }          from '@/lib/db'
+import { getRolById } from './repository'
+import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 
 async function requireSession() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -31,9 +33,9 @@ async function generarFolio(): Promise<{ folio: string; consecutivo: number }> {
 export async function createRol(formData: FormData) {
   const session = await requireSession()
 
-  const { folio, consecutivo } = await generarFolio()
+  const { folio, consecutivo } = await tryActionRaw(async () => generarFolio())
 
-  const rol = await query<{ id: string }>(
+  const rol = await tryActionRaw(async () => query<{ id: string }>(
     `INSERT INTO roles_servicio
      (folio, folio_consecutivo, turno, horario_inicio, horario_fin,
       responsable_turno, sector_id, fecha, fundamento_legal, status, creado_por)
@@ -50,7 +52,7 @@ export async function createRol(formData: FormData) {
       (formData.get('fundamentoLegal') as string) || null,
       session.user.id,
     ],
-  )
+  ))
 
   redirect(`/rol-servicios/${rol.rows[0].id}`)
 }
@@ -60,23 +62,25 @@ export async function updateEncabezadoRol(formData: FormData) {
   await requireSession()
 
   const id = formData.get('id') as string
-  await query(
-    `UPDATE roles_servicio SET
-      turno = $1, horario_inicio = $2, horario_fin = $3,
-      responsable_turno = $4, sector_id = $5, fecha = $6,
-      fundamento_legal = $7, actualizado_en = now()
-     WHERE id = $8`,
-    [
-      formData.get('turno') as string,
-      (formData.get('horarioInicio') as string) || null,
-      (formData.get('horarioFin')    as string) || null,
-      (formData.get('responsableTurno') as string) || null,
-      formData.get('sectorId') ? Number(formData.get('sectorId')) : null,
-      formData.get('fecha') as string,
-      (formData.get('fundamentoLegal') as string) || null,
-      id,
-    ],
-  )
+  await tryActionRaw(async () => {
+    await query(
+      `UPDATE roles_servicio SET
+        turno = $1, horario_inicio = $2, horario_fin = $3,
+        responsable_turno = $4, sector_id = $5, fecha = $6,
+        fundamento_legal = $7, actualizado_en = now()
+       WHERE id = $8`,
+      [
+        formData.get('turno') as string,
+        (formData.get('horarioInicio') as string) || null,
+        (formData.get('horarioFin')    as string) || null,
+        (formData.get('responsableTurno') as string) || null,
+        formData.get('sectorId') ? Number(formData.get('sectorId')) : null,
+        formData.get('fecha') as string,
+        (formData.get('fundamentoLegal') as string) || null,
+        id,
+      ],
+    )
+  })
 
   revalidatePath(`/rol-servicios/${id}`)
 }
@@ -87,27 +91,29 @@ export async function createAsignacion(formData: FormData) {
 
   const rolId = formData.get('rolId') as string
 
-  await query(
-    `INSERT INTO rol_asignaciones
-     (rol_id, seccion, unidad_ext_id, unidad_placa,
-      elemento_ext_id, elemento_nomina, elemento_nombre,
-      zona, servicio, radio_id, body_cam_id, orden)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
-    [
-      rolId,
-      formData.get('seccion') as string,
-      (formData.get('unidadExtId')  as string) || null,
-      (formData.get('unidadPlaca')  as string) || null,
-      (formData.get('elementoExtId')  as string) || null,
-      (formData.get('elementoNomina') as string) || null,
-      (formData.get('elementoNombre') as string) || null,
-      (formData.get('zona')    as string) || null,
-      (formData.get('servicio') as string) || null,
-      formData.get('radioId')   ? Number(formData.get('radioId'))   : null,
-      formData.get('bodyCamId') ? Number(formData.get('bodyCamId')) : null,
-      formData.get('orden')     ? Number(formData.get('orden'))     : 0,
-    ],
-  )
+  await tryActionRaw(async () => {
+    await query(
+      `INSERT INTO rol_asignaciones
+       (rol_id, seccion, unidad_ext_id, unidad_placa,
+        elemento_ext_id, elemento_nomina, elemento_nombre,
+        zona, servicio, radio_id, body_cam_id, orden)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+      [
+        rolId,
+        formData.get('seccion') as string,
+        (formData.get('unidadExtId')  as string) || null,
+        (formData.get('unidadPlaca')  as string) || null,
+        (formData.get('elementoExtId')  as string) || null,
+        (formData.get('elementoNomina') as string) || null,
+        (formData.get('elementoNombre') as string) || null,
+        (formData.get('zona')    as string) || null,
+        (formData.get('servicio') as string) || null,
+        formData.get('radioId')   ? Number(formData.get('radioId'))   : null,
+        formData.get('bodyCamId') ? Number(formData.get('bodyCamId')) : null,
+        formData.get('orden')     ? Number(formData.get('orden'))     : 0,
+      ],
+    )
+  })
 
   revalidatePath(`/rol-servicios/${rolId}`)
 }
@@ -118,7 +124,9 @@ export async function deleteAsignacion(formData: FormData) {
   const id    = formData.get('id')    as string
   const rolId = formData.get('rolId') as string
 
-  await query(`DELETE FROM rol_asignaciones WHERE id = $1`, [id])
+  await tryActionRaw(async () => {
+    await query(`DELETE FROM rol_asignaciones WHERE id = $1`, [id])
+  })
   revalidatePath(`/rol-servicios/${rolId}`)
 }
 
@@ -130,13 +138,15 @@ export async function upsertEstadoFuerza(formData: FormData) {
   const conceptoId = Number(formData.get('conceptoId'))
   const cantidad   = Number(formData.get('cantidad') ?? 0)
 
-  await query(
-    `INSERT INTO rol_estado_fuerza (rol_id, concepto_id, cantidad)
-     VALUES ($1, $2, $3)
-     ON CONFLICT (rol_id, concepto_id)
-     DO UPDATE SET cantidad = EXCLUDED.cantidad`,
-    [rolId, conceptoId, cantidad],
-  )
+  await tryActionRaw(async () => {
+    await query(
+      `INSERT INTO rol_estado_fuerza (rol_id, concepto_id, cantidad)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (rol_id, concepto_id)
+       DO UPDATE SET cantidad = EXCLUDED.cantidad`,
+      [rolId, conceptoId, cantidad],
+    )
+  })
 
   revalidatePath(`/rol-servicios/${rolId}`)
 }
@@ -147,15 +157,17 @@ export async function createObservacion(formData: FormData) {
 
   const rolId = formData.get('rolId') as string
 
-  await query(
-    `INSERT INTO rol_observaciones (rol_id, tipo_id, descripcion)
-     VALUES ($1, $2, $3)`,
-    [
-      rolId,
-      Number(formData.get('tipoId')),
-      (formData.get('descripcion') as string) || null,
-    ],
-  )
+  await tryActionRaw(async () => {
+    await query(
+      `INSERT INTO rol_observaciones (rol_id, tipo_id, descripcion)
+       VALUES ($1, $2, $3)`,
+      [
+        rolId,
+        Number(formData.get('tipoId')),
+        (formData.get('descripcion') as string) || null,
+      ],
+    )
+  })
 
   revalidatePath(`/rol-servicios/${rolId}`)
 }
@@ -166,7 +178,9 @@ export async function deleteObservacion(formData: FormData) {
   const id    = formData.get('id')    as string
   const rolId = formData.get('rolId') as string
 
-  await query(`DELETE FROM rol_observaciones WHERE id = $1`, [id])
+  await tryActionRaw(async () => {
+    await query(`DELETE FROM rol_observaciones WHERE id = $1`, [id])
+  })
   revalidatePath(`/rol-servicios/${rolId}`)
 }
 
@@ -179,17 +193,19 @@ export async function guardarFirmas(formData: FormData) {
   const firmaJefeSectorialUrl = formData.get('firmaJefeSectorialUrl') as string
 
   if (!firmaResponsableUrl || !firmaJefeSectorialUrl) {
-    throw new Error('Se requieren ambas firmas para cerrar el rol')
+    throw new ValidationError('Se requieren ambas firmas para cerrar el rol')
   }
 
-  await query(
-    `UPDATE roles_servicio SET
-      firma_responsable_url = $1, firma_jefe_sectorial_url = $2,
-      firmado_por = $3, firmado_en = now(),
-      status = 'cerrado', actualizado_en = now()
-     WHERE id = $4`,
-    [firmaResponsableUrl, firmaJefeSectorialUrl, session.user.id, id],
-  )
+  await tryActionRaw(async () => {
+    await query(
+      `UPDATE roles_servicio SET
+        firma_responsable_url = $1, firma_jefe_sectorial_url = $2,
+        firmado_por = $3, firmado_en = now(),
+        status = 'cerrado', actualizado_en = now()
+       WHERE id = $4`,
+      [firmaResponsableUrl, firmaJefeSectorialUrl, session.user.id, id],
+    )
+  })
 
   revalidatePath(`/rol-servicios/${id}`)
 }

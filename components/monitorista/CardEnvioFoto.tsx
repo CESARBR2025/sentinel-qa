@@ -22,12 +22,12 @@ export function CardEnvioFoto({
 }: {
   solicitudId: string
   tipo: string
-  foto: { id: string; tipo_foto: string; enviado_a: string | null; estado: string } | undefined
+  foto: { id: string; tipoFoto: string; enviadoA: string | null; estado: string } | undefined
   destinos: { clave: string; nombre: string }[]
   evidencias: { id: string; url: string; nombre: string; subidoPor: string | null }[]
 }) {
   const router = useRouter()
-  const [destino, setDestino] = useState(foto?.enviado_a || destinos[0]?.clave || '')
+  const [destino, setDestino] = useState(foto?.enviadoA || destinos[0]?.clave || '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [toast, setToast] = useState(false)
@@ -65,9 +65,9 @@ export function CardEnvioFoto({
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 600, color: '#1e40af', textTransform: 'uppercase' }}>{label}</span>
           <span style={estadoBadge(estado)}>{estado.toUpperCase()}</span>
         </div>
-        {foto?.enviado_a && estado !== 'completado' && (
+        {foto?.enviadoA && estado !== 'completado' && (
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b' }}>
-            Enviado a: {destinos.find(d => d.clave === foto.enviado_a)?.nombre || foto.enviado_a}
+            Enviado a: {destinos.find(d => d.clave === foto.enviadoA)?.nombre || foto.enviadoA}
           </span>
         )}
         {estado === 'completado' && evidencias.length > 0 && evidencias[0]?.subidoPor && (

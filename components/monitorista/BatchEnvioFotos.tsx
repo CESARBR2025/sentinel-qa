@@ -11,7 +11,7 @@ export function BatchEnvioFotos({
   destinos,
   solicitudId,
 }: {
-  fotos: { id: string; tipo_foto: string; estado: string }[]
+  fotos: { id: string; tipoFoto: string; estado: string }[]
   destinos: { clave: string; nombre: string }[]
   solicitudId: string
 }) {

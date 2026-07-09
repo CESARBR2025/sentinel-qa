@@ -60,7 +60,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
 
   const filtradas = patrullas.filter(
     (p) =>
-      p.numero_unidad.toLowerCase().includes(busqueda.toLowerCase()) ||
+      p.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
       p.descripcion.toLowerCase().includes(busqueda.toLowerCase()),
   )
 
@@ -103,7 +103,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
           transition: 'all 0.15s ease',
         }}
       >
-        <span>{selected ? `${selected.numero_unidad} — ${selected.descripcion}` : '— Sin asignar —'}</span>
+        <span>{selected ? `${selected.numeroUnidad} — ${selected.descripcion}` : '— Sin asignar —'}</span>
         <Car size={14} color={tempId ? '#2563eb' : '#94a3b8'} />
       </button>
 
@@ -241,7 +241,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
                       />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, fontWeight: 600, color: '#0f172a', marginBottom: 2 }}>
-                          {p.numero_unidad}
+                          {p.numeroUnidad}
                         </div>
                         <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {p.descripcion}

@@ -7,6 +7,7 @@ import { BandejaSolicitudes } from '@/components/monitorista/BandejaSolicitudes'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarSolicitudesEvidencia, getHistorialCount } from '@/lib/monitorista/repository'
+import type { SolicitudEvidencia } from '@/lib/monitorista/types'
 import { SubHeader } from '@/components/partials/SubHeader'
 
 export default async function SolicitudesPage() {
@@ -24,21 +25,21 @@ export default async function SolicitudesPage() {
     obtenerDenunciasAtendidas(),
   ])
 
-  const mapGral = (rows: Record<string, unknown>[], origen: 'pendiente' | 'completada') =>
+  const mapGral = (rows: SolicitudEvidencia[], origen: 'pendiente' | 'completada') =>
     rows.map(r => ({
-      id: String(r.id), origen: 'general' as const, entidadId: String(r.incidente_id), solicitudId: null as number | null,
-      folio: String(r.folio_incidente ?? ''), solicitadoNombre: String(r.solicitado_nombre ?? ''),
-      descripcion: String(r.descripcion ?? ''), status: origen, creadoEn: String(r.creado_en ?? ''),
-      completadoEn: r.completado_en ? String(r.completado_en) : null, totalEvidencias: Number(r.total_evidencias ?? 0),
+      id: String(r.id), origen: 'general' as const, entidadId: String(r.incidenteId), solicitudId: null as number | null,
+      folio: String(r.folioIncidente ?? ''), solicitadoNombre: String(r.solicitadoNombre ?? ''),
+      descripcion: String(r.descripcion ?? ''), status: origen, creadoEn: String(r.creadoEn ?? ''),
+      completadoEn: r.completadoEn ? String(r.completadoEn) : null, totalEvidencias: Number(r.totalEvidencias ?? 0),
     }))
 
   const denunciaItemsPend = d1Pend.flatMap((d) =>
     d.monitoristaFechasRequeridas.map((s) => ({
-      id: `${d.id}_${s.solicitud_id}`, origen: 'denuncia' as const, entidadId: d.id, solicitudId: s.solicitud_id,
+      id: `${d.id}_${s.solicitudId}`, origen: 'denuncia' as const, entidadId: d.id, solicitudId: s.solicitudId,
       folio: d.folioDenuncia, solicitadoNombre: 'Fiscalía',
-      descripcion: `${s.calle} ${s.numero}, Col. ${s.colonia} (${s.hora_inicio} - ${s.hora_fin})`,
+      descripcion: `${s.calle} ${s.numero}, Col. ${s.colonia} (${s.horaInicio} - ${s.horaFin})`,
       status: s.atendida ? 'completada' as const : 'pendiente' as const,
-      creadoEn: s.fecha_peticion, completadoEn: null, totalEvidencias: 0,
+      creadoEn: s.fechaPeticion, completadoEn: null, totalEvidencias: 0,
     })))
 
   const denunciaItemsAtend = d1Comp.map((d) => {
