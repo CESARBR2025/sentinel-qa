@@ -6,6 +6,14 @@
 
 ## 2026 — Julio
 
+### — Normalización de detenidos en Reporte Campo
+- `OfiDetenido` expandido: ahora almacena `nombre`, `apellidoPaterno`, `apellidoMaterno` en vez de solo `nombre`
+- UI de Step 3 (Intervención y Detenciones) cambiada de 1 input a 3 inputs por detenido
+- Inserción automática en `ofi_detalles_asegurados` al crear el reporte
+- Serialización de detenidos vía `JSON.stringify` en vez de `join(',')`
+- Todos los consumidores (detalle reporte, fotos, store) actualizados para mostrar nombre completo
+- 0 errores TypeScript, build exitoso
+
 ### — Refactorización arquitectónica completa
 - Migración de Drizzle ORM a raw SQL en toda la aplicación
 - Creación de arquitectura en capas para 23 módulos (types, mapper, repository, service, actions)

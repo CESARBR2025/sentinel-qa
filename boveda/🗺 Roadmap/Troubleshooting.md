@@ -143,3 +143,59 @@ export async function crearAlgo(formData: FormData) {
 console.log('row raw:', row)
 console.log('row mapped:', rowToAlgo(row))
 ```
+
+---
+
+## Flota: null `placaVehiculo` viola NOT NULL en `numero_unidad`
+
+**Síntoma**: `el valor nulo en la columna «numero_unidad» de la relación «v2_patrullas» viola la restricción de no nulo`
+
+**Causa raíz**: La API externa de flota devuelve campos en snake_case (`placa_vehiculo`), pero `upsertPatrullas` accede a `v.placaVehiculo` (camelCase) obteniendo `undefined`. Ese `undefined` se pasa como NULL al INSERT, violando `NOT NULL` en `numero_unidad`.
+
+**Fix**:
+1. Agregar mapper `apiRowToFlotaVehiculo` en `lib/flota/service.ts` que convierta snake_case → camelCase y filtre vehículos sin placa
+2. Filtrar vehículos sin `placaVehiculo` en `upsertPatrullas` (`lib/flota/repository.ts`)
+
+```ts
+function apiRowToFlotaVehiculo(raw: Record<string, unknown>): FlotaVehiculoRaw | null {
+  const placaVehiculo = String(raw.placa_vehiculo ?? raw.placaVehiculo ?? '').trim()
+  if (!placaVehiculo) return null
+  return {
+    placaVehiculo,
+    numSerie: String(raw.num_serie ?? raw.numSerie ?? ''),
+    marca: String(raw.marca ?? ''),
+    modelo: String(raw.modelo ?? ''),
+    color: String(raw.color ?? ''),
+    tipoVehiculo: String(raw.tipo_vehiculo ?? raw.tipoVehiculo ?? ''),
+    secretaria: String(raw.secretaria ?? ''),
+    idVehiculo: Number(raw.id_vehiculo ?? raw.idVehiculo ?? 0),
+  }
+}
+```
+
+---
+
+## Google Maps: `useJsApiLoader` con `id` inconsistente entre componentes
+
+**Síntoma**: `Loader must not be called again with different options. {"id":"script-loader",...} !== {"id":"google-map-script",...}`
+
+**Causa raíz**: Algunos componentes usan `id: 'google-map-script'` explícito en `useJsApiLoader`, mientras que otros omiten el `id` y obtienen el default `script-loader`. `@react-google-maps/api` lanza error si el loader se inicializa con opciones diferentes.
+
+**Fix**: Unificar el `id` en todos los llamados a `useJsApiLoader`:
+```tsx
+const { isLoaded } = useJsApiLoader({
+  id: 'google-map-script',
+  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+  libraries: ['places'],
+})
+```
+
+**Archivos afectados** (8 componentes):
+- `features/via/oficiales/components/MapaDireccionRegistro.tsx`
+- `features/via/infracciones/components/MapSectionCiudadano.tsx`
+- `components/shared/DetalleInfraccionView.tsx`
+- `components/denuncias/FormularioD1.tsx`
+- `components/911/radio/FormSection.tsx`
+- `components/maps/GoogleMapPicker.tsx`
+- `components/911/whatsapp/RegistroIncidenteForm.tsx`
+- `app/911/ciudadano/Formulario911.tsx`

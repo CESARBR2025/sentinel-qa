@@ -17,6 +17,8 @@ export interface OfiOficial {
 
 export interface OfiDetenido {
   nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
 }
 
 export interface OfiVehiculo {

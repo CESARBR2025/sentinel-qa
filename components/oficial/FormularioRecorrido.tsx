@@ -163,7 +163,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
     fd.set('ofi_cateo_longitud', st.cateoLng)
 
     // Detenidos desde store
-    fd.set('ofi_detenidos', st.detenidos.filter(Boolean).join(','))
+    fd.set('ofi_detenidos', JSON.stringify(st.detenidos))
 
     fd.set('ofi_hay_orden_aprehension', String(st.hayOrdenAprehension))
     fd.set('ofi_ordenes_aprehension', JSON.stringify(st.ordenesAprehension))
@@ -351,22 +351,52 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                         <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                           Detenidos
                         </span>
-                        <button type="button" onClick={() => store.setDetenidos([...detenidos, ''])} className="of-btn-toggle" style={{ fontSize: 10 }}>
+                        <button type="button" onClick={() => store.setDetenidos([...detenidos, { nombre: '', apellidoPaterno: '', apellidoMaterno: '' }])} className="of-btn-toggle" style={{ fontSize: 10 }}>
                           + AGREGAR DETENIDO
                         </button>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        {detenidos.map((nombre, i) => (
+                        {detenidos.map((d, i) => (
                           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                             <input
                               data-det-nombre
-                              value={nombre}
+                              value={d.nombre}
                               onChange={(e) => {
                                 const next = [...detenidos]
-                                next[i] = e.target.value
+                                next[i] = { ...next[i], nombre: e.target.value }
                                 store.setDetenidos(next)
                               }}
-                              placeholder={`Nombre del detenido ${i + 1}`}
+                              placeholder="Nombre(s)"
+                              style={{
+                                flex: 1, padding: '10px 12px', background: '#ffffff',
+                                border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
+                                borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
+                                outline: 'none',
+                              }}
+                            />
+                            <input
+                              value={d.apellidoPaterno}
+                              onChange={(e) => {
+                                const next = [...detenidos]
+                                next[i] = { ...next[i], apellidoPaterno: e.target.value }
+                                store.setDetenidos(next)
+                              }}
+                              placeholder="Ap. Paterno"
+                              style={{
+                                flex: 1, padding: '10px 12px', background: '#ffffff',
+                                border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
+                                borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
+                                outline: 'none',
+                              }}
+                            />
+                            <input
+                              value={d.apellidoMaterno}
+                              onChange={(e) => {
+                                const next = [...detenidos]
+                                next[i] = { ...next[i], apellidoMaterno: e.target.value }
+                                store.setDetenidos(next)
+                              }}
+                              placeholder="Ap. Materno"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
                                 border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
@@ -776,7 +806,7 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
                   <div className="of-resumen-grid">
                     <div style={{ gridColumn: '1 / -1' }}><span>Acciones:</span> {accionesRealizadas}</div>
                     <div><span>Detención:</span> {tieneDetencion === 'true' ? 'SÍ' : 'NO'}</div>
-                    {tieneDetencion === 'true' && <div><span>Detenidos:</span> {detenidos.filter(Boolean).join(', ') || '—'}</div>}
+                    {tieneDetencion === 'true' && <div><span>Detenidos:</span> {detenidos.map(d => [d.nombre, d.apellidoPaterno, d.apellidoMaterno].filter(Boolean).join(' ')).filter(Boolean).join(', ') || '—'}</div>}
                     {tieneDetencion === 'true' && <div><span>Autoridad:</span> {autoridadRecibe}</div>}
                     {montoRobo !== '0' && <div><span>Monto Robado:</span> ${montoRobo}</div>}
                   </div>

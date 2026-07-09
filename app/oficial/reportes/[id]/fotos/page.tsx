@@ -21,7 +21,10 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
 
   const detenidos = rc.ofi_detenidos
   let nombre = 'Sin nombre'
-  if (Array.isArray(detenidos) && detenidos.length > 0) nombre = detenidos[0]?.nombre || 'Sin nombre'
+  if (Array.isArray(detenidos) && detenidos.length > 0) {
+    const d = detenidos[0]
+    nombre = [d?.nombre, d?.apellidoPaterno, d?.apellidoMaterno].filter(Boolean).join(' ') || 'Sin nombre'
+  }
 
   const folio = String(rc.folio_reporte_campo || '')
 

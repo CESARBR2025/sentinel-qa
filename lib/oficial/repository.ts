@@ -319,6 +319,21 @@ export async function listarReportesCampo() {
   return result.rows
 }
 
+export async function insertarDetallesAsegurados(
+  reporteCampoId: string,
+  detenidos: { nombre: string; apellidoPaterno: string; apellidoMaterno: string }[],
+): Promise<void> {
+  if (detenidos.length === 0) return
+  for (const d of detenidos) {
+    await query(
+      `INSERT INTO ofi_detalles_asegurados
+       (reporte_campo_id, nombre_detenido, ap_paterno_detenido, ap_materno_detenido)
+       VALUES ($1, $2, $3, $4)`,
+      [reporteCampoId, d.nombre, d.apellidoPaterno, d.apellidoMaterno],
+    )
+  }
+}
+
 export async function actualizarPatrullaOficial(
   userId: string,
   patrullaId: string | null,

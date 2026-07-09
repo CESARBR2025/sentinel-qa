@@ -43,7 +43,7 @@ flowchart TD
 | `ofi_reportes_campo` | `id`, `folio_reporte_campo`, `ofi_folio_cad`, `ofi_tipo_incidente`, `ofi_descripcion`, `ofi_contenido_reporte`, `ofi_calle`, `ofi_colonia`, `ofi_latitud`, `ofi_longitud`, `ofi_hay_detencion`, `ofi_detenidos` (JSONB), `ofi_hay_vehiculo`, `ofi_vehiculos` (JSONB), `ofi_hay_cateo`, `ofi_cateo` (JSONB), `ofi_estatus`, `quiere_denuncia` | Reporte principal de campo |
 | `ofi_reporte_denuncia` | `id`, `reporte_campo_id`, `folio_denuncia`, `iph`, `delito`, `fecha_reporte`, `hora_reporte`, `estado_tramite` | Denuncia D1 vinculada |
 | `ofi_oficiales` | `id`, `user_id`, `no_nomina`, `numero_empleado`, `patrulla_id`, `ofi_estatus` | Perfil del oficial |
-| `ofi_detalles_asegurados` | `id`, `reporte_campo_id`, `nombre_detenido`, `calle`, `colonia`, `latitud`, `longitud` | Detalles de detenidos |
+| `ofi_detalles_asegurados` | `id`, `reporte_campo_id`, `nombre_detenido`, `ap_paterno_detenido`, `ap_materno_detenido`, `calle`, `colonia`, `latitud`, `longitud` | Detalles de detenidos — se llena automáticamente al crear el reporte |
 | `solicitud_fotos` | `id`, `reporte_campo_id`, `tipo_foto`, `estado`, `enviado_a` | Solicitudes de foto a monitorista |
 | `cat_tipos_incidente` | `id`, `nombre`, `activo` | Catálogo de tipos de incidente |
 | `cat_tipos_emergencia` | `id`, `nombre`, `activo` | Catálogo de tipos de emergencia |
@@ -57,5 +57,6 @@ flowchart TD
 5. El folio del reporte se verifica para evitar duplicados
 6. Estatus del reporte: `registrado` → `en_fiscalia` → `cerrado`
 7. La ubicación se captura desde un mapa (latitud/longitud + calle/colonia)
-8. `ofi_detenidos` y `ofi_vehiculos` son arrays JSONB flexibles
-9. `ofi_cateo` es un objeto JSONB con ubicación
+8. `ofi_detenidos` es un array JSONB con objetos `{ nombre, apellidoPaterno, apellidoMaterno }` (antes solo `{ nombre }`)
+9. Al crear el reporte se insertan automáticamente registros en `ofi_detalles_asegurados` con los nombres completos
+10. `ofi_cateo` es un objeto JSONB con ubicación

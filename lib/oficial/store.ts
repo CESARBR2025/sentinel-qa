@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { OfiOrdenAprehension, OfiHidrocarburo, OfiArmaFuego, OfiDroga } from './types'
+import type { OfiDetenido, OfiOrdenAprehension, OfiHidrocarburo, OfiArmaFuego, OfiDroga } from './types'
 
 export interface VehiculoState {
   placas: string
@@ -26,7 +26,7 @@ export interface OficialFormState {
   autoridadRecibe: string
   tieneCateo: string
   domicilioCateado: string
-  detenidos: string[]
+  detenidos: OfiDetenido[]
   numVehiculos: number
   vehiculos: VehiculoState[]
   tieneVehiculo: string
@@ -66,7 +66,7 @@ export interface OficialFormState {
 export interface OficialFormActions {
   setStep: (s: number) => void
   setField: <K extends keyof OficialFormState>(key: K, value: OficialFormState[K]) => void
-  setDetenidos: (d: string[]) => void
+  setDetenidos: (d: OfiDetenido[]) => void
   setVehiculos: (v: VehiculoState[]) => void
   setNumVehiculos: (n: number) => void
   setLocation: (data: { calle: string; colonia: string; lat: string; lng: string }) => void
@@ -97,7 +97,7 @@ const initialState: OficialFormState = {
   autoridadRecibe: 'FISCALIA',
   tieneCateo: 'false',
   domicilioCateado: '',
-  detenidos: [''],
+  detenidos: [{ nombre: '', apellidoPaterno: '', apellidoMaterno: '' }],
   numVehiculos: 0,
   vehiculos: [],
   tieneVehiculo: 'false',

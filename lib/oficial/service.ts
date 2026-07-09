@@ -1,6 +1,7 @@
 import {
   obtenerOficialPorUserId,
   insertarReporteCampo,
+  insertarDetallesAsegurados,
   verificarFolioExiste,
   obtenerRolUsuario,
   obtenerCatalogoIncidentes,
@@ -14,6 +15,7 @@ import {
 import { query } from '@/lib/db'
 import type {
   OfiOficial,
+  OfiDetenido,
   CrearReporteCampoInput,
   OfiReporteResumen,
   OfiReporteDetalle,
@@ -105,8 +107,8 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   const folio = await generarFolioUnico()
 
   const detenidosRaw = str(formData, 'ofi_detenidos')
-  const detenidosArr = detenidosRaw
-    ? detenidosRaw.split(',').map(n => ({ nombre: n.trim() })).filter(d => d.nombre)
+  const detenidosArr: OfiDetenido[] = detenidosRaw
+    ? JSON.parse(detenidosRaw).filter((d: OfiDetenido) => d.nombre?.trim())
     : []
 
   const vehiculosRaw = str(formData, 'ofi_vehiculos')
@@ -185,6 +187,9 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   }
 
   const reporteId = await insertarReporteCampo(input)
+  if (detenidosArr.length > 0) {
+    await insertarDetallesAsegurados(reporteId, detenidosArr)
+  }
   return { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId: oficial.id, hayDetenidos: detenidosArr.length > 0 }
 }
 

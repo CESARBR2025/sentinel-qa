@@ -114,7 +114,11 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
                 <div>
                   <span style={LBL}>Detenidos</span>
                   {r.ofiDetenidos.length > 0
-                    ? r.ofiDetenidos.map((d, i) => <div key={i} style={VAL}>{d.nombre}</div>)
+                    ? r.ofiDetenidos.map((d, i) => (
+                        <div key={i} style={VAL}>
+                          {[d.nombre, d.apellidoPaterno, d.apellidoMaterno].filter(Boolean).join(' ')}
+                        </div>
+                      ))
                     : <span style={VAL}>—</span>
                   }
                 </div>
