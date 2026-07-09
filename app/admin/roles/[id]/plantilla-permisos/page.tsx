@@ -1,4 +1,4 @@
-import { query } from '@/lib/db'
+import { obtenerRol } from '@/lib/admin/repository'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { obtenerPlantillaRol, guardarPlantillaSeccionesAction } from '@/lib/permisos/core'
@@ -17,8 +17,7 @@ export default async function PlantillaPermisosRolPage({
   const { exito } = await searchParams
   const rolId = Number(id)
 
-  const rolResult = await query<any>(`SELECT * FROM roles WHERE id = $1 LIMIT 1`, [rolId])
-  const rol = rolResult.rows[0]
+  const rol = await obtenerRol(rolId)
   if (!rol) notFound()
 
   const modulo = MODULOS_POR_ROL[rol.nombre]

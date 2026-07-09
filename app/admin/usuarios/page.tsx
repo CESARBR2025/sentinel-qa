@@ -1,4 +1,4 @@
-import { query } from '@/lib/db'
+import { listarUsuarios } from '@/lib/admin/repository'
 import Link        from 'next/link'
 import { btnPrimario, cardStyle } from '../admin-styles'
 import { ToastAuto } from '@/components/ui/ToastAuto'
@@ -10,14 +10,7 @@ export default async function UsuariosPage({
   searchParams: Promise<{ exito?: string }>
 }) {
   const { exito } = await searchParams
-  const result = await query<any>(
-    `SELECT u.id, u.name, u.apellido, u.email, u.activo, u.two_factor_enabled,
-            r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     ORDER BY u.created_at ASC`
-  )
-  const lista = result.rows
+  const lista = await listarUsuarios()
 
   return (
     <div>
@@ -61,9 +54,9 @@ export default async function UsuariosPage({
                   {u.email}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  {u.rol_nombre ? (
+                  {u.rolNombre ? (
                     <span style={{ padding: '3px 10px', background: '#eff6ff', color: '#2563eb', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                      {u.rol_nombre}
+                      {u.rolNombre}
                     </span>
                   ) : (
                     <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8' }}>—</span>
@@ -79,11 +72,11 @@ export default async function UsuariosPage({
                     {u.activo ? 'Activo' : 'Inactivo'}
                   </span>
                 </td>
-                <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: u.two_factor_enabled ? '#059669' : '#94a3b8' }}>
-                  {u.two_factor_enabled ? '✓ ON' : '— OFF'}
+                <td style={{ padding: '12px 16px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: u.twoFactorEnabled ? '#059669' : '#94a3b8' }}>
+                  {u.twoFactorEnabled ? '✓ ON' : '— OFF'}
                 </td>
                 <td style={{ padding: '12px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                  {u.rol_nombre && MODULOS_POR_ROL[u.rol_nombre] && (
+                  {u.rolNombre && MODULOS_POR_ROL[u.rolNombre] && (
                     <Link
                       href={`/admin/usuarios/${u.id}#permisos`}
                       style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase', marginRight: 16 }}

@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query } from '@/lib/db'
+import { getUserWithRole } from '@/lib/auth/helpers'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 
 export default async function AdminTransitoLayout({
@@ -12,17 +12,9 @@ export default async function AdminTransitoLayout({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const uResult = await query<any>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const u = uResult.rows[0]
+  const u = await getUserWithRole(session.user.id)
 
-  if (u?.rol_nombre !== 'admin_transito') redirect('/dashboard')
+  if (u?.rolNombre !== 'admin_transito') redirect('/dashboard')
 
   const user = session.user as {
     name: string

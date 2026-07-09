@@ -1,11 +1,10 @@
-import { query } from '@/lib/db'
+import { listarRoles } from '@/lib/admin/repository'
 import { ShieldPlus } from 'lucide-react'
 import Link from 'next/link'
 import { btnPrimario, cardStyle } from '../admin-styles'
 
 export default async function RolesPage() {
-  const result = await query<any>(`SELECT * FROM roles ORDER BY id ASC`)
-  const lista = result.rows
+  const lista = await listarRoles()
 
   return (
     <div>

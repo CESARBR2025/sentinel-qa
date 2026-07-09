@@ -1,24 +1,16 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { query }   from '@/lib/db'
+import { getUserWithRole } from '@/lib/auth/helpers'
 import Link         from 'next/link'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const uResult = await query<{ rol_nombre: string }>(
-    `SELECT r.nombre AS rol_nombre
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [session.user.id]
-  )
-  const u = uResult.rows[0]
+  const u = await getUserWithRole(session.user.id)
 
-  if (u?.rol_nombre !== 'Administrador') redirect('/dashboard')
+  if (u?.rolNombre !== 'Administrador') redirect('/dashboard')
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>

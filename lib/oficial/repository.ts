@@ -64,7 +64,8 @@ export async function insertarReporteCampo(
     $11, $12, $13, $14, $15, $16, $17::jsonb, $18, $19, $20,
     $21, $22, $23::jsonb,
     $24, $25::jsonb, $26,
-    $27, $28, $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37, $38
+    $27, $28, $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37, $38,
+    $39, $40, $41, $42, $43, $44, $45, $46
   ) RETURNING id`,
     [
       data.folioReporteCampo,

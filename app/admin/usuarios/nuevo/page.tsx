@@ -1,4 +1,4 @@
-import { query } from '@/lib/db'
+import { listarRolesActivos } from '@/lib/admin/repository'
 import Link       from 'next/link'
 import { createUser } from '@/lib/admin/actions'
 import { labelStyle as L, inputStyle as I, selectStyle as S, btnPrimario as BTN, btnSecundario } from '../../admin-styles'
@@ -9,8 +9,7 @@ export default async function NuevoUsuarioPage({
   searchParams: Promise<{ error?: string }>
 }) {
   const { error } = await searchParams
-  const rolesResult = await query<any>(`SELECT * FROM roles WHERE activo = $1`, [true])
-  const rolesList = rolesResult.rows
+  const rolesList = await listarRolesActivos()
 
   return (
     <div style={{ maxWidth: 600 }}>

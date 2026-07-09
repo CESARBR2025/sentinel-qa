@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/purity */
-import { query }    from '@/lib/db'
+import { obtenerUsuario, listarRolesActivos } from '@/lib/admin/repository'
 import { notFound }  from 'next/navigation'
 import Link          from 'next/link'
 import { format }    from 'date-fns'
@@ -20,29 +20,15 @@ export default async function EditarUsuarioPage({
   const { id } = await params
   const { exito } = await searchParams
 
-  const userResult = await query<any>(
-    `SELECT id, name, apellido, email, rol_id, activo, two_factor_enabled, created_at
-     FROM users
-     WHERE id = $1
-     LIMIT 1`,
-    [id]
-  )
-  const user = userResult.rows[0]
-
+  const user = await obtenerUsuario(id)
   if (!user) notFound()
 
-  const rolesResult = await query<any>(`SELECT * FROM roles WHERE activo = $1`, [true])
-  const rolesList = rolesResult.rows
-  const rolNombre = rolesList.find(r => r.id === user.rol_id)?.nombre
+  const rolesList = await listarRolesActivos()
+  const rolNombre = rolesList.find(r => r.id === user.rolId)?.nombre
   const modulo = rolNombre ? MODULOS_POR_ROL[rolNombre] : undefined
   const permisos = modulo ? await obtenerPermisosUsuario(user.id, modulo.secciones) : null
 
-  const createdAtValue = user.created_at as Date | string | null
-
-const createdAt =
-  createdAtValue instanceof Date
-    ? createdAtValue
-    : new Date(createdAtValue ?? Date.now())
+  const createdAt = new Date(user.createdAt)
 
   return (
     <div style={{ maxWidth: 600 }}>
@@ -85,7 +71,7 @@ const createdAt =
 
         <div>
           <label style={L}>Rol</label>
-          <select name="rolId" defaultValue={user.rol_id?.toString() ?? ''} style={S}>
+          <select name="rolId" defaultValue={user.rolId?.toString() ?? ''} style={S}>
             <option value="">— Sin rol asignado —</option>
             {rolesList.map(r => (
               <option key={r.id} value={r.id}>{r.nombre}</option>
@@ -105,8 +91,8 @@ const createdAt =
           <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 6 }}>
             Autenticación de dos factores
           </div>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: user.two_factor_enabled ? '#059669' : '#64748b' }}>
-            {user.two_factor_enabled ? '✓ Habilitado' : '— No configurado'}
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: user.twoFactorEnabled ? '#059669' : '#64748b' }}>
+            {user.twoFactorEnabled ? '✓ Habilitado' : '— No configurado'}
           </span>
         </div>
 
