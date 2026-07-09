@@ -14,7 +14,8 @@ export async function estaStale(horas: number = 6): Promise<boolean> {
 }
 
 export async function upsertPatrullas(vehiculos: FlotaVehiculoRaw[]): Promise<void> {
-  if (vehiculos.length === 0) return
+  const validos = vehiculos.filter((v) => v.placaVehiculo.trim().length > 0)
+  if (validos.length === 0) return
 
   await query(
     `INSERT INTO via.v2_patrullas (numero_unidad, placas, descripcion, activo, sincronizado_en)
@@ -30,9 +31,9 @@ export async function upsertPatrullas(vehiculos: FlotaVehiculoRaw[]): Promise<vo
        descripcion     = EXCLUDED.descripcion,
        sincronizado_en = NOW()`,
     [
-      vehiculos.map((v) => v.placaVehiculo),
-      vehiculos.map((v) => v.placaVehiculo),
-      vehiculos.map((v) => `${v.marca} ${v.modelo} ${v.tipoVehiculo}`.trim()),
+      validos.map((v) => v.placaVehiculo),
+      validos.map((v) => v.placaVehiculo),
+      validos.map((v) => `${v.marca} ${v.modelo} ${v.tipoVehiculo}`.trim()),
     ],
   )
 }

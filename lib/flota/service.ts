@@ -12,8 +12,8 @@ type FlotaApiResponse =
   | { results?: FlotaVehiculoRaw[] }
   | { patrullas?: FlotaVehiculoRaw[] };
 
-function extraerVehiculos(raw: FlotaApiResponse): FlotaVehiculoRaw[] {
-  if (Array.isArray(raw)) return raw;
+function extraerVehiculos(raw: FlotaApiResponse): Record<string, unknown>[] {
+  if (Array.isArray(raw)) return raw as unknown as Record<string, unknown>[];
   if (raw && typeof raw === "object") {
     if (Array.isArray((raw as any).data)) return (raw as any).data;
     if (Array.isArray((raw as any).vehicles)) return (raw as any).vehicles;
@@ -21,6 +21,22 @@ function extraerVehiculos(raw: FlotaApiResponse): FlotaVehiculoRaw[] {
     if (Array.isArray((raw as any).patrullas)) return (raw as any).patrullas;
   }
   return [];
+}
+
+function apiRowToFlotaVehiculo(raw: Record<string, unknown>): FlotaVehiculoRaw | null {
+  const placaVehiculo = String(raw.placa_vehiculo ?? raw.placaVehiculo ?? '').trim()
+  if (!placaVehiculo) return null
+
+  return {
+    placaVehiculo,
+    numSerie: String(raw.num_serie ?? raw.numSerie ?? ''),
+    marca: String(raw.marca ?? ''),
+    modelo: String(raw.modelo ?? ''),
+    color: String(raw.color ?? ''),
+    tipoVehiculo: String(raw.tipo_vehiculo ?? raw.tipoVehiculo ?? ''),
+    secretaria: String(raw.secretaria ?? ''),
+    idVehiculo: Number(raw.id_vehiculo ?? raw.idVehiculo ?? 0),
+  }
 }
 
 let cacheFlota: {
@@ -58,7 +74,9 @@ export async function obtenerFlota(): Promise<{
   }
 
   const raw: FlotaApiResponse = await res.json();
-  const datos = extraerVehiculos(raw);
+  const datos = extraerVehiculos(raw)
+    .map(apiRowToFlotaVehiculo)
+    .filter((v): v is FlotaVehiculoRaw => v !== null)
 
   cacheFlota = { datos, timestamp: ahora };
 

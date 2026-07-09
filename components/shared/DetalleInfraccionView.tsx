@@ -213,6 +213,7 @@ function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbica
   const hasCoords = !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
 
   const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
     googleMapsApiKey: GMAPS_KEY ?? '',
   })
 
