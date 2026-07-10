@@ -1,4 +1,4 @@
-# Node Description Batch 42 of 79
+# Node Description Batch 42 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "monitorista_ppt_service_parsedetenidos": "parseDetenidos()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L7 | neighbors=[ppt-service.ts, generarPpt()]
-- "monitorista_repository_actualizarcampo": "actualizarCampo()" | kind=code-symbol | source=lib/monitorista/repository.ts:L433 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_actualizarsolicitudfotoestado": "actualizarSolicitudFotoEstado()" | kind=code-symbol | source=lib/monitorista/repository.ts:L526 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_completarsolicitudfoto": "completarSolicitudFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L483 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_crearsolicitudfotos": "crearSolicitudFotos()" | kind=code-symbol | source=lib/monitorista/repository.ts:L448 | neighbors=[page.tsx, repository.ts]
-- "monitorista_repository_enviarfoto": "enviarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L462 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_getdestinosraw": "getDestinosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L351 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_gethistorialcount": "getHistorialCount()" | kind=code-symbol | source=lib/monitorista/repository.ts:L44 | neighbors=[repository.ts, page.tsx]
-- "monitorista_repository_getmonitoristastats": "getMonitoristaStats()" | kind=code-symbol | source=lib/monitorista/repository.ts:L12 | neighbors=[page.tsx, repository.ts]
-- "monitorista_repository_insertarevidenciadetenido": "insertarEvidenciaDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L512 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_listarevidencias": "listarEvidencias()" | kind=code-symbol | source=lib/monitorista/repository.ts:L78 | neighbors=[page.tsx, repository.ts]
-- "monitorista_repository_listarevidenciasdetenido": "listarEvidenciasDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L287 | neighbors=[page.tsx, repository.ts]
-- "monitorista_repository_listarhistorial": "listarHistorial()" | kind=code-symbol | source=lib/monitorista/repository.ts:L52 | neighbors=[page.tsx, repository.ts]
-- "monitorista_repository_listarhistorialconfiltros": "listarHistorialConFiltros()" | kind=code-symbol | source=lib/monitorista/repository.ts:L187 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_listariphdetenidos": "listarIphDetenidos()" | kind=code-symbol | source=lib/monitorista/repository.ts:L246 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_listarregistrosraw": "listarRegistrosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L405 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_listarreportescondetenidosraw": "listarReportesConDetenidosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L358 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_listarsolicitudesconfiltro": "listarSolicitudesConFiltro()" | kind=code-symbol | source=lib/monitorista/repository.ts:L127 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_listarsolicitudesevidencia": "listarSolicitudesEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L31 | neighbors=[repository.ts, page.tsx]
-- "monitorista_repository_marcarsolicitudatendida": "marcarSolicitudAtendida()" | kind=code-symbol | source=lib/monitorista/repository.ts:L616 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerdenunciaporidraw": "obtenerDenunciaPorIdRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L328 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerdenunciasatendidasraw": "obtenerDenunciasAtendidasRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L316 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerdenunciaspendientesraw": "obtenerDenunciasPendientesRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L305 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerevidenciasdenunciaraw": "obtenerEvidenciasDenunciaRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L340 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerfolioreportecampo": "obtenerFolioReporteCampo()" | kind=code-symbol | source=lib/monitorista/repository.ts:L170 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_obteneriphdetenido": "obtenerIphDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L238 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_obtenerobtenersolicitudfoto": "obtenerObtenerSolicitudFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L499 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_obtenerprellenadocompleto": "obtenerPrellenadoCompleto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L253 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_obtenerregistroporfechaturnoraw": "obtenerRegistroPorFechaTurnoRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L425 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerregistroraw": "obtenerRegistroRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L417 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenerreporteporidraw": "obtenerReportePorIdRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L378 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_obtenersolicitudconevidencias": "obtenerSolicitudConEvidencias()" | kind=code-symbol | source=lib/monitorista/repository.ts:L138 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_obtenersolicitudconincidente": "obtenerSolicitudConIncidente()" | kind=code-symbol | source=lib/monitorista/repository.ts:L104 | neighbors=[route.ts, repository.ts]
-- "monitorista_repository_obtenersolicitudevidencia": "obtenerSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L69 | neighbors=[page.tsx, repository.ts]
-- "monitorista_repository_obtenersolicitudfotosraw": "obtenerSolicitudFotosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L397 | neighbors=[repository.ts, service.ts]
-- "monitorista_repository_registrarfichainteligencia": "registrarFichaInteligencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L575 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_registrariphdetenido": "registrarIphDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L533 | neighbors=[repository.ts, route.ts]
-- "monitorista_repository_subirfotodetenido": "subirFotoDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L469 | neighbors=[repository.ts, route.ts]
-- "monitorista_service_cameltosnake": "camelToSnake()" | kind=code-symbol | source=lib/monitorista/service.ts:L210 | neighbors=[service.ts, actualizarRegistro()]
-- "monitorista_service_crearregistro": "crearRegistro()" | kind=code-symbol | source=lib/monitorista/service.ts:L142 | neighbors=[incidentes-camara-service.ts, service.ts]
+- "legalidad_actions_obtenerfraccionesaction": "obtenerFraccionesAction()" | kind=code-symbol | source=features/via/legalidad/actions.ts:L10 | neighbors=[actions.ts, SeccionMotivo.tsx]
+- "legalidad_types_articuloley": "ArticuloLey" | kind=code-symbol | source=features/via/legalidad/types.ts:L11 | neighbors=[mapper.ts, types.ts]
+- "lib_auth_session": "Session" | kind=code-symbol | source=lib/auth.ts:L62 | neighbors=[auth.ts, proxy.ts]
+- "manual_migrations_0006_formato_n_formato_n_armas_aseguradas": "formato_n_armas_aseguradas" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L78 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0006_formato_n_formato_n_atencion_victimas": "formato_n_atencion_victimas" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L68 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0006_formato_n_formato_n_eventos": "formato_n_eventos" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L12 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0006_formato_n_formato_n_fge": "formato_n_fge" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L23 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0006_formato_n_formato_n_fgr": "formato_n_fgr" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L37 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0006_formato_n_formato_n_medios_alternativos": "formato_n_medios_alternativos" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L60 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0006_formato_n_formato_n_rnd": "formato_n_rnd" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L51 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
+- "manual_migrations_0008_monitorista_permisos_monitorista_permisos": "monitorista_permisos" | kind=code-symbol | source=lib/db/manual-migrations/0008_monitorista_permisos.sql:L1 | neighbors=[0008_monitorista_permisos.sql, users]
+- "manual_migrations_0008_monitorista_permisos_users": "users" | kind=code-symbol | source=lib/db/manual-migrations/0008_monitorista_permisos.sql:L3 | neighbors=[0008_monitorista_permisos.sql, monitorista_permisos]
+- "manual_migrations_0011_permisos_plantillas_permisos_plantillas": "permisos_plantillas" | kind=code-symbol | source=lib/db/manual-migrations/0011_permisos_plantillas.sql:L4 | neighbors=[0011_permisos_plantillas.sql, roles]
+- "manual_migrations_0011_permisos_plantillas_roles": "roles" | kind=code-symbol | source=lib/db/manual-migrations/0011_permisos_plantillas.sql:L6 | neighbors=[0011_permisos_plantillas.sql, permisos_plantillas]
+- "modulo_incidentes_reportestabs_reportestabs": "ReportesTabs()" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportesTabs.tsx:L10 | neighbors=[page.tsx, ReportesTabs.tsx]
+- "modulo_incidentes_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportFilters.tsx:L7 | neighbors=[page.tsx, ReportFilters.tsx]
+- "modulo_incidentes_reporttables_operationaltable": "OperationalTable()" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportTables.tsx:L12 | neighbors=[ReportesTabs.tsx, ReportTables.tsx]
+- "monitorista_actions_cancelarsolicitud": "cancelarSolicitud()" | kind=code-symbol | source=lib/monitorista/actions.ts:L77 | neighbors=[actions.ts, requireMonitorista()]
+- "monitorista_actions_completarsolicitud": "completarSolicitud()" | kind=code-symbol | source=lib/monitorista/actions.ts:L64 | neighbors=[actions.ts, requireMonitorista()]
+- "monitorista_actions_subirevidencia": "subirEvidencia()" | kind=code-symbol | source=lib/monitorista/actions.ts:L35 | neighbors=[actions.ts, requireMonitorista()]
+- "monitorista_bandejasolicitudes_tabstyle": "tabStyle()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L130 | neighbors=[BandejaSolicitudes.tsx, BandejaSolicitudes()]
+- "monitorista_batchenviofotos_batchenviofotos": "BatchEnvioFotos()" | kind=code-symbol | source=components/monitorista/BatchEnvioFotos.tsx:L9 | neighbors=[page.tsx, BatchEnvioFotos.tsx]
+- "monitorista_botongenerarppt_botongenerarppt": "BotonGenerarPpt()" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L7 | neighbors=[page.tsx, BotonGenerarPpt.tsx]
+- "monitorista_botonsubirdenuncia_botonsubirdenuncia": "BotonSubirDenuncia()" | kind=code-symbol | source=components/monitorista/BotonSubirDenuncia.tsx:L10 | neighbors=[page.tsx, BotonSubirDenuncia.tsx]
+- "monitorista_buscadorevento_buscadorevento": "BuscadorEvento()" | kind=code-symbol | source=components/monitorista/BuscadorEvento.tsx:L24 | neighbors=[BuscadorEvento.tsx, page.tsx]
+- "monitorista_cardenviofoto_estadobadge": "estadoBadge()" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L137 | neighbors=[CardEnvioFoto.tsx, CardEnvioFoto()]
+- "monitorista_editarcampodetenido_editarcampodetenido": "EditarCampoDetenido()" | kind=code-symbol | source=components/monitorista/EditarCampoDetenido.tsx:L9 | neighbors=[page.tsx, EditarCampoDetenido.tsx]
+- "monitorista_filaincidentecamara_filaincidentecamara": "FilaIncidenteCamara()" | kind=code-symbol | source=components/monitorista/FilaIncidenteCamara.tsx:L5 | neighbors=[page.tsx, FilaIncidenteCamara.tsx]
+- "monitorista_galeriaevidencias_galeriaevidencias": "GaleriaEvidencias()" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L15 | neighbors=[page.tsx, GaleriaEvidencias.tsx]
+- "monitorista_mapper_parsedetenidos": "parseDetenidos()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L139 | neighbors=[mapper.ts, rowToReporteDetenido()]
+- "monitorista_mapper_parseturno": "parseTurno()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L25 | neighbors=[mapper.ts, rowToIncidenteCamara()]
+- "monitorista_mapper_rowtodependencia": "rowToDependencia()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L122 | neighbors=[mapper.ts, service.ts]
+- "monitorista_mapper_rowtoevidencia": "rowToEvidencia()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L65 | neighbors=[mapper.ts, repository.ts]
+- "monitorista_mapper_rowtoevidenciaarchivo": "rowToEvidenciaArchivo()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L111 | neighbors=[mapper.ts, service.ts]
+- "monitorista_mapper_rowtoevidenciadetenido": "rowToEvidenciaDetenido()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L211 | neighbors=[mapper.ts, repository.ts]
+- "monitorista_mapper_rowtohistorialentry": "rowToHistorialEntry()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L76 | neighbors=[mapper.ts, repository.ts]
+- "monitorista_mapper_rowtoiphdetenido": "rowToIphDetenido()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L200 | neighbors=[mapper.ts, repository.ts]
+- "monitorista_mapper_rowtoprellenadocompleto": "rowToPrellenadoCompleto()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L222 | neighbors=[mapper.ts, repository.ts]
+- "monitorista_mapper_rowtosolicitudfotos": "rowToSolicitudFotos()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L130 | neighbors=[mapper.ts, service.ts]
+- "monitorista_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L9 | neighbors=[page.tsx, permisos.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-041.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-041.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

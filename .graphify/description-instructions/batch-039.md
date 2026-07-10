@@ -1,4 +1,4 @@
-# Node Description Batch 40 of 79
+# Node Description Batch 40 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "id_page_todate": "toDate()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/[id]/page.tsx:L12 | neighbors=[page.tsx, fmtDT()]
-- "id_page_toiso": "toISO()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/page.tsx:L17 | neighbors=[page.tsx, FichaDetailPage()]
-- "imprimir_page_fmtdt": "fmtDT()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L10 | neighbors=[page.tsx, ImprimirFichaPage()]
-- "imprimir_page_imprimirfichapage": "ImprimirFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L15 | neighbors=[page.tsx, fmtDT()]
-- "incidentes_camara_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L129 | neighbors=[page.tsx, IncidentesCamaraPage()]
-- "incidentes_camara_page_incidentescamarapage": "IncidentesCamaraPage()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L13 | neighbors=[page.tsx, filtroBtn()]
-- "incidentes_filtrosincidencias_filtrosincidencias": "FiltrosIncidencias()" | kind=code-symbol | source=components/reportes/incidentes/FiltrosIncidencias.tsx:L7 | neighbors=[FiltrosIncidencias.tsx, page.tsx]
-- "incidentes_folio_generarfolioincidente": "generarFolioIncidente()" | kind=code-symbol | source=lib/incidentes/folio.ts:L3 | neighbors=[actions.ts, folio.ts]
-- "incidentes_mapper_rowtoincidentebasico": "rowToIncidenteBasico()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L190 | neighbors=[mapper.ts, repository.ts]
-- "incidentes_permisos_accion": "Accion" | kind=code-symbol | source=lib/incidentes/permisos.ts:L7 | neighbors=[actions.ts, permisos.ts]
-- "incidentes_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/incidentes/permisos.ts:L5 | neighbors=[permisos.ts, registro.ts]
-- "incidentes_repository_insertarreportecampo": "insertarReporteCampo()" | kind=code-symbol | source=lib/incidentes/repository.ts:L145 | neighbors=[repository.ts, service.ts]
-- "incidentes_repository_listarincidentesatendidos": "listarIncidentesAtendidos()" | kind=code-symbol | source=lib/incidentes/repository.ts:L28 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_listarincidentesconfiltros": "listarIncidentesConFiltros()" | kind=code-symbol | source=lib/incidentes/repository.ts:L10 | neighbors=[repository.ts, route.ts]
-- "incidentes_repository_listarincidentesendespacho": "listarIncidentesEnDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L40 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_listarincidentespendientesdespacho": "listarIncidentesPendientesDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L63 | neighbors=[repository.ts, route.ts]
-- "incidentes_repository_obtenerelementosdedespacho": "obtenerElementosDeDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L129 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_obtenerincidentecompleto": "obtenerIncidenteCompleto()" | kind=code-symbol | source=lib/incidentes/repository.ts:L70 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_obtenerreportecampodeincidente": "obtenerReporteCampoDeIncidente()" | kind=code-symbol | source=lib/incidentes/repository.ts:L137 | neighbors=[repository.ts, route.ts]
-- "incidentes_repository_obtenerunidadesdedespacho": "obtenerUnidadesDeDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L121 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_tostr": "toStr()" | kind=code-symbol | source=lib/incidentes/repository.ts:L5 | neighbors=[repository.ts, obtenerDespachoDeIncidente()]
-- "incidentes_repository_verificarreportecampo": "verificarReporteCampo()" | kind=code-symbol | source=lib/incidentes/repository.ts:L267 | neighbors=[repository.ts, service.ts]
-- "incidentes_service_crearreportecampo": "crearReporteCampo()" | kind=code-symbol | source=lib/incidentes/service.ts:L3 | neighbors=[actions.ts, service.ts]
-- "incidentes_statincidencia_incidentestat": "IncidenteStat()" | kind=code-symbol | source=components/reportes/incidentes/StatIncidencia.tsx:L3 | neighbors=[StatIncidencia.tsx, page.tsx]
-- "incidentes_tablaincidentes_tablaincidentes": "TablaIncidentes()" | kind=code-symbol | source=components/reportes/incidentes/TablaIncidentes.tsx:L23 | neighbors=[TablaIncidentes.tsx, page.tsx]
-- "incidentes_types_despachodetalleresponse": "DespachoDetalleResponse" | kind=code-symbol | source=lib/incidentes/types.ts:L196 | neighbors=[mapper.ts, types.ts]
-- "incidentes_types_incidentefiltros": "IncidenteFiltros" | kind=code-symbol | source=lib/incidentes/types.ts:L1 | neighbors=[repository.ts, types.ts]
-- "incidentes_types_reportedetalleresponse": "ReporteDetalleResponse" | kind=code-symbol | source=lib/incidentes/types.ts:L230 | neighbors=[mapper.ts, types.ts]
-- "infracciones_actions_eliminarinfraccionaction": "eliminarInfraccionAction()" | kind=code-symbol | source=features/via/infracciones/actions.ts:L5 | neighbors=[FormularioInfraccion.tsx, actions.ts]
-- "infracciones_mapper_mapcrearinfracciontodb": "mapCrearInfraccionToDB()" | kind=code-symbol | source=features/via/infracciones/mapper.ts:L3 | neighbors=[mapper.ts, service.ts]
-- "infracciones_mapper_mapinfracciondetalle": "mapInfraccionDetalle()" | kind=code-symbol | source=features/via/infracciones/mapper.ts:L54 | neighbors=[mapper.ts, service.ts]
-- "infracciones_service_infraccionesservice_registrarnuevainfraccionsv": ".registrarNuevaInfraccionSV()" | kind=code-symbol | source=features/via/infracciones/service.ts:L33 | neighbors=[InfraccionesService, generarFolioInfraccion()]
-- "infracciones_service_randombase36char": "randomBase36Char()" | kind=code-symbol | source=features/via/infracciones/service.ts:L7 | neighbors=[service.ts, rellenarBase36()]
-- "infracciones_service_sanitizecrearinfraccionpayload": "sanitizeCrearInfraccionPayload()" | kind=code-symbol | source=features/via/infracciones/service.ts:L69 | neighbors=[service.ts, route.ts]
-- "infracciones_types_infracciondb": "InfraccionDB" | kind=code-symbol | source=features/via/infracciones/types.ts:L45 | neighbors=[repository.ts, types.ts]
-- "infracciones_types_infracciondetalledto": "InfraccionDetalleDTO" | kind=code-symbol | source=features/via/infracciones/types.ts:L94 | neighbors=[mapper.ts, types.ts]
-- "infracciones_types_viewarticuloslista": "ViewArticulosLista" | kind=code-symbol | source=features/via/infracciones/types.ts:L179 | neighbors=[FormularioInfraccion.tsx, types.ts]
-- "legalidad_actions_obtenerarticulosaction": "obtenerArticulosAction()" | kind=code-symbol | source=features/via/legalidad/actions.ts:L5 | neighbors=[FormularioInfraccion.tsx, actions.ts]
-- "legalidad_actions_obtenerfraccionesaction": "obtenerFraccionesAction()" | kind=code-symbol | source=features/via/legalidad/actions.ts:L10 | neighbors=[actions.ts, SeccionMotivo.tsx]
-- "legalidad_types_articuloley": "ArticuloLey" | kind=code-symbol | source=features/via/legalidad/types.ts:L11 | neighbors=[mapper.ts, types.ts]
+- "fiscalia_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/fiscalia/ToastExito.tsx:L6 | neighbors=[page.tsx, ToastExito.tsx]
+- "fiscalia_tomarcasomodal_tomarcasoboton": "TomarCasoBoton()" | kind=code-symbol | source=components/fiscalia/TomarCasoModal.tsx:L6 | neighbors=[TabSolicitudes.tsx, TomarCasoModal.tsx]
+- "fiscalia_types_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=lib/fiscalia/types.ts:L352 | neighbors=[FiscaliaDashboard.tsx, types.ts]
+- "fiscalia_types_rolrow": "RolRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L7 | neighbors=[repository.ts, types.ts]
+- "fiscalia_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/fiscalia/types.ts:L1 | neighbors=[actions.ts, types.ts]
+- "fiscalia_usetoaststore_usetoaststore": "useToastStore" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L21 | neighbors=[CargarOficioSection.tsx, useToastStore.ts]
+- "flota_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/flota/mapper.ts:L8 | neighbors=[mapper.ts, rowToPatrulla()]
+- "flota_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/flota/mapper.ts:L3 | neighbors=[mapper.ts, rowToPatrulla()]
+- "flota_repository_estastale": "estaStale()" | kind=code-symbol | source=lib/flota/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "flota_repository_listaractivas": "listarActivas()" | kind=code-symbol | source=lib/flota/repository.ts:L41 | neighbors=[repository.ts, service.ts]
+- "flota_repository_obtenerporid": "obtenerPorId()" | kind=code-symbol | source=lib/flota/repository.ts:L51 | neighbors=[repository.ts, service.ts]
+- "flota_repository_upsertpatrullas": "upsertPatrullas()" | kind=code-symbol | source=lib/flota/repository.ts:L16 | neighbors=[repository.ts, service.ts]
+- "flota_service_extraervehiculos": "extraerVehiculos()" | kind=code-symbol | source=lib/flota/service.ts:L15 | neighbors=[service.ts, obtenerFlota()]
+- "flota_service_obtenerpatrullaporid": "obtenerPatrullaPorId()" | kind=code-symbol | source=lib/flota/service.ts:L111 | neighbors=[page.tsx, service.ts]
+- "formato_n_atencion_victimas_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L102 | neighbors=[page.tsx, FormatoNAtencionVictimasPage()]
+- "formato_n_atencion_victimas_page_formatonatencionvictimaspage": "FormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "formato_n_fge_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L112 | neighbors=[page.tsx, FormatoNFgePage()]
+- "formato_n_fge_page_formatonfgepage": "FormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "formato_n_fgr_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L112 | neighbors=[page.tsx, FormatoNFgrPage()]
+- "formato_n_fgr_page_formatonfgrpage": "FormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "formato_n_medios_alternativos_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L100 | neighbors=[page.tsx, FormatoNMediosAlternativosPage()]
+- "formato_n_medios_alternativos_page_formatonmediosalternativospage": "FormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "guardar_docs_route_subirarchivo": "subirArchivo()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L7 | neighbors=[route.ts, POST()]
+- "guardar_docs_route_validararchivo": "validarArchivo()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L39 | neighbors=[route.ts, POST()]
+- "health_repository_ping": "ping()" | kind=code-symbol | source=lib/health/repository.ts:L3 | neighbors=[repository.ts, route.ts]
+- "hooks_useanalistaform_usedetenidoform": "useDetenidoForm()" | kind=code-symbol | source=hooks/useAnalistaForm.ts:L4 | neighbors=[formAnalisis.tsx, useAnalistaForm.ts]
+- "hooks_usedespacho_usedespacho": "useDespacho()" | kind=code-symbol | source=hooks/useDespacho.ts:L33 | neighbors=[TablonDespacho.tsx, useDespacho.ts]
+- "hooks_useflota_useflota": "useFlota()" | kind=code-symbol | source=hooks/useFlota.ts:L13 | neighbors=[DespachoForm.tsx, useFlota.ts]
+- "hooks_usepolling_usepolling": "usePolling()" | kind=code-symbol | source=hooks/usePolling.ts:L4 | neighbors=[TablonDespacho.tsx, usePolling.ts]
+- "hooks_useregistrodetenido_useregistrodetenido": "useRegistroDetenido()" | kind=code-symbol | source=hooks/useRegistroDetenido.ts:L4 | neighbors=[generarPresentacion.tsx, useRegistroDetenido.ts]
+- "id_page_btnprimario": "btnPrimario()" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L159 | neighbors=[page.tsx, EditarIncidenteCamaraPage()]
+- "id_page_detalleciudadanocompletopage": "DetalleCiudadanoCompletoPage()" | kind=code-symbol | source=app/agente_911/ciudadano/incidentes/[id]/page.tsx:L12 | neighbors=[page.tsx, getStatusBadgeStyle()]
+- "id_page_detallerondincompletopage": "DetalleRondinCompletoPage()" | kind=code-symbol | source=app/agente_911/rondin/incidentes/[id]/page.tsx:L15 | neighbors=[page.tsx, getStatusBadgeStyle()]
+- "id_page_detallesolicitudpage": "DetalleSolicitudPage()" | kind=code-symbol | source=app/monitorista/solicitudes/[id]/page.tsx:L12 | neighbors=[page.tsx, getStatusBadge()]
+- "id_page_detallewhatsapppage": "DetalleWhatsAppPage()" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L15 | neighbors=[page.tsx, getStatusBadgeStyle()]
+- "id_page_editarincidentecamarapage": "EditarIncidenteCamaraPage()" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L30 | neighbors=[page.tsx, btnPrimario()]
+- "id_page_estadobadge": "estadoBadge()" | kind=code-symbol | source=app/monitorista/denuncias/[id]/page.tsx:L243 | neighbors=[page.tsx, DetalleDenunciaPage()]
+- "id_page_getstatusbadge": "getStatusBadge()" | kind=code-symbol | source=app/monitorista/solicitudes/[id]/page.tsx:L107 | neighbors=[page.tsx, DetalleSolicitudPage()]
+- "id_page_getstatusstyle": "getStatusStyle()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L58 | neighbors=[page.tsx, InfraccionCiudadanoPage()]
+- "id_page_sanitize": "sanitize()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L53 | neighbors=[page.tsx, InfraccionCiudadanoPage()]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-039.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-039.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

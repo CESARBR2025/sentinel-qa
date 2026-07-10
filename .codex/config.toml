@@ -1,0 +1,3 @@
+[mcp_servers.alexandria]
+command = "node"
+args = ["/usr/local/lib/node_modules/@ureck/alexandria/dist/mcp/server.js"]

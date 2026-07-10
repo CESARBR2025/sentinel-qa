@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "alexandria": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/usr/local/lib/node_modules/@ureck/alexandria/dist/mcp/server.js"
+      ]
+    }
+  }
+}

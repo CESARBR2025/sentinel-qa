@@ -1,4 +1,4 @@
-# Node Description Batch 28 of 79
+# Node Description Batch 28 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_service_guardarpuestadisposicionservice": "guardarPuestaDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L159 | neighbors=[actions.ts, actions.ts, service.ts]
+- "fiscalia_service_listaraseguradoscondisposicionservice": "listarAseguradosConDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L151 | neighbors=[actions.ts, actions.ts, service.ts]
+- "fiscalia_service_obtenerdatosasegurado": "obtenerDatosAsegurado()" | kind=code-symbol | source=lib/fiscalia/service.ts:L63 | neighbors=[actions.ts, service.ts, page.tsx]
+- "fiscalia_service_obtenerpuestadisposicionservice": "obtenerPuestaDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L155 | neighbors=[actions.ts, actions.ts, service.ts]
+- "fiscalia_service_verificarrolfiscalia": "verificarRolFiscalia()" | kind=code-symbol | source=lib/fiscalia/service.ts:L25 | neighbors=[actions.ts, service.ts, page.tsx]
+- "fiscalia_types_detalledetenidoguardado": "DetalleDetenidoGuardado" | kind=code-symbol | source=lib/fiscalia/types.ts:L81 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "fiscalia_types_evidenciamonitorista": "EvidenciaMonitorista" | kind=code-symbol | source=lib/fiscalia/types.ts:L11 | neighbors=[DetallesAseguradoView.tsx, repository.ts, types.ts]
+- "fiscalia_types_liberacionrow": "LiberacionRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L206 | neighbors=[actions.ts, repository.ts, types.ts]
+- "flota_service_obtenerflota": "obtenerFlota()" | kind=code-symbol | source=lib/flota/service.ts:L47 | neighbors=[service.ts, listarPatrullasParaAsignacion(), extraerVehiculos()]
+- "flota_types_flotavehiculoraw": "FlotaVehiculoRaw" | kind=code-symbol | source=lib/flota/types.ts:L1 | neighbors=[repository.ts, service.ts, types.ts]
+- "flota_types_patrulla": "Patrulla" | kind=code-symbol | source=lib/flota/types.ts:L12 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "guardar_docs_route_post": "POST()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L48 | neighbors=[route.ts, subirArchivo(), validarArchivo()]
+- "hooks_useempleado_useempleado": "useEmpleado()" | kind=code-symbol | source=hooks/useEmpleado.ts:L12 | neighbors=[DespachoForm.tsx, useEmpleado.ts, FormSection.tsx]
+- "hooks_useincidente": "useIncidente.ts" | kind=code-symbol | source=hooks/useIncidente.ts:L1 | neighbors=[6feefe2 BackEnd completo para hacer la …, IncidenteDetalle, useIncidente()]
+- "hooks_usepolling": "usePolling.ts" | kind=code-symbol | source=hooks/usePolling.ts:L1 | neighbors=[511fea4 Modulo de despacho, TablonDespacho.tsx, usePolling()]
+- "hooks_usereportecampo": "useReporteCampo.ts" | kind=code-symbol | source=hooks/useReporteCampo.ts:L1 | neighbors=[a58a0f7 Despachos, ReporteCampoDetalle, useReporteCampo()]
+- "id_page_detalledenunciapage": "DetalleDenunciaPage()" | kind=code-symbol | source=app/monitorista/denuncias/[id]/page.tsx:L10 | neighbors=[page.tsx, estadoBadge(), statusBadge()]
+- "id_page_fichadetailpage": "FichaDetailPage()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/page.tsx:L26 | neighbors=[page.tsx, fmtDT(), toISO()]
+- "id_page_formatdate": "formatDate()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L28 | neighbors=[page.tsx, InfraccionCiudadanoPage(), timeAgo()]
+- "id_page_timeago": "timeAgo()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L38 | neighbors=[page.tsx, InfraccionCiudadanoPage(), formatDate()]
+- "incidentes_actions_deletepersonaafectada": "deletePersonaAfectada()" | kind=code-symbol | source=lib/incidentes/actions.ts:L183 | neighbors=[actions.ts, req(), requireOperador()]
+- "incidentes_audit_registraraudit": "registrarAudit()" | kind=code-symbol | source=lib/incidentes/audit.ts:L6 | neighbors=[route.ts, actions.ts, audit.ts]
+- "incidentes_mapper_rowtodespacho": "rowToDespacho()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L103 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "incidentes_mapper_rowtodespachoelemento": "rowToDespachoElemento()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L181 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "incidentes_mapper_rowtodespachounidad": "rowToDespachoUnidad()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L173 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "incidentes_mapper_rowtoextorsion": "rowToExtorsion()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L140 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "incidentes_mapper_rowtoincidentelistitem": "rowToIncidenteListItem()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L39 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "incidentes_repository_obtenerdespachodeincidente": "obtenerDespachoDeIncidente()" | kind=code-symbol | source=lib/incidentes/repository.ts:L105 | neighbors=[route.ts, repository.ts, toStr()]
+- "incidentes_repository_obtenerincidentebasico": "obtenerIncidenteBasico()" | kind=code-symbol | source=lib/incidentes/repository.ts:L97 | neighbors=[route.ts, repository.ts, route.ts]
+- "incidentes_types_alarmaescolarrow": "AlarmaEscolarRow" | kind=code-symbol | source=lib/incidentes/types.ts:L112 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachocompleto": "DespachoCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L186 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachoelementorow": "DespachoElementoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L173 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachorow": "DespachoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L67 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachounidadrow": "DespachoUnidadRow" | kind=code-symbol | source=lib/incidentes/types.ts:L167 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_extorsionrow": "ExtorsionRow" | kind=code-symbol | source=lib/incidentes/types.ts:L100 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentebasico": "IncidenteBasico" | kind=code-symbol | source=lib/incidentes/types.ts:L180 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentecondespacho": "IncidenteConDespacho" | kind=code-symbol | source=lib/incidentes/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentedetallecompleto": "IncidenteDetalleCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L129 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentelistitem": "IncidenteListItem" | kind=code-symbol | source=lib/incidentes/types.ts:L9 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=lib/incidentes/types.ts:L42 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "incidentes_types_personaafectadarow": "PersonaAfectadaRow" | kind=code-symbol | source=lib/incidentes/types.ts:L58 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "incidentes_types_reportecampodetalle": "ReporteCampoDetalle" | kind=code-symbol | source=lib/incidentes/types.ts:L201 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "incidentes_types_reportecamporow": "ReporteCampoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L75 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "infracciones_service_generarfolioinfraccion": "generarFolioInfraccion()" | kind=code-symbol | source=features/via/infracciones/service.ts:L22 | neighbors=[service.ts, rellenarBase36(), .registrarNuevaInfraccionSV()]
-- "infracciones_service_rellenarbase36": "rellenarBase36()" | kind=code-symbol | source=features/via/infracciones/service.ts:L12 | neighbors=[service.ts, generarFolioInfraccion(), randomBase36Char()]
-- "infracciones_types_crearinfracciondto": "CrearInfraccionDTO" | kind=code-symbol | source=features/via/infracciones/types.ts:L1 | neighbors=[mapper.ts, service.ts, types.ts]
-- "infracciones_types_procesoestado": "ProcesoEstado" | kind=code-symbol | source=features/via/infracciones/types.ts:L160 | neighbors=[FormularioInfraccion.tsx, types.ts, ProcesoModal.tsx]
-- "legalidad_mapper_articulosmapper": "ArticulosMapper" | kind=code-symbol | source=features/via/legalidad/mapper.ts:L16 | neighbors=[mapper.ts, .toDomain(), service.ts]
-- "legalidad_service_articulosservice": "ArticulosService" | kind=code-symbol | source=features/via/legalidad/service.ts:L6 | neighbors=[actions.ts, service.ts, .obtenerFraccionesPorArticulo()]
-- "legalidad_types_fraccionley": "FraccionLey" | kind=code-symbol | source=features/via/legalidad/types.ts:L1 | neighbors=[mapper.ts, service.ts, types.ts]
-- "lib_detenidos_compartido_listardetenidospararol": "listarDetenidosParaRol()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L47 | neighbors=[page.tsx, detenidos-compartido.ts, nombreDetenido()]
-- "lib_detenidos_compartido_nombredetenido": "nombreDetenido()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L39 | neighbors=[detenidos-compartido.ts, listarDetenidosParaRol(), obtenerDetenidoParaRol()]
-- "lib_detenidos_compartido_obtenerdetenidopararol": "obtenerDetenidoParaRol()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L111 | neighbors=[page.tsx, detenidos-compartido.ts, nombreDetenido()]
-- "lib_error_handler_conflicterror": "ConflictError" | kind=code-symbol | source=lib/error-handler.ts:L36 | neighbors=[error-handler.ts, AppError, .constructor()]
-- "monitorista_bandejasolicitudes_bandejasolicitudes": "BandejaSolicitudes()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L25 | neighbors=[BandejaSolicitudes.tsx, tabStyle(), page.tsx]
-- "monitorista_cardenviofoto_cardenviofoto": "CardEnvioFoto()" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L16 | neighbors=[page.tsx, CardEnvioFoto.tsx, estadoBadge()]
-- "monitorista_mapper_num": "num()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L13 | neighbors=[mapper.ts, rowToIncidenteCamara(), rowToSolicitudEvidencia()]
-- "monitorista_mapper_rowtodenunciadetalle": "rowToDenunciaDetalle()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L91 | neighbors=[mapper.ts, parseSolicitudesJson(), service.ts]
-- "monitorista_mapper_rowtoreportedetenido": "rowToReporteDetenido()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L152 | neighbors=[mapper.ts, parseDetenidos(), service.ts]
-- "monitorista_mapper_rowtosolicitudevidencia": "rowToSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L51 | neighbors=[mapper.ts, num(), repository.ts]
-- "monitorista_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/monitorista/repository.ts:L117 | neighbors=[route.ts, actions.ts, repository.ts]
-- "monitorista_repository_crearsolicitudevidencia": "crearSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L155 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_repository_getrolusuario": "getRolUsuario()" | kind=code-symbol | source=lib/monitorista/repository.ts:L601 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_repository_insertarevidencia": "insertarEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L223 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_repository_obtenersolicitudfolioincidente": "obtenerSolicitudFolioIncidente()" | kind=code-symbol | source=lib/monitorista/repository.ts:L178 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_service_actualizarregistro": "actualizarRegistro()" | kind=code-symbol | source=lib/monitorista/service.ts:L179 | neighbors=[incidentes-camara-service.ts, service.ts, camelToSnake()]
-- "monitorista_service_listarreportescondetenidos": "listarReportesConDetenidos()" | kind=code-symbol | source=lib/monitorista/service.ts:L90 | neighbors=[detenido-service.ts, service.ts, parseDetenidos()]
-- "monitorista_service_obtenerreporteporid": "obtenerReportePorId()" | kind=code-symbol | source=lib/monitorista/service.ts:L117 | neighbors=[page.tsx, detenido-service.ts, service.ts]
-- "monitorista_service_subirevidenciadenuncia": "subirEvidenciaDenuncia()" | kind=code-symbol | source=lib/monitorista/service.ts:L51 | neighbors=[denuncia-service.ts, service.ts, solicitudIdToUuid()]
-- "monitorista_subirfotodetenido_subirfotodetenido": "SubirFotoDetenido()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L31 | neighbors=[page.tsx, CardEnvioFoto.tsx, SubirFotoDetenido.tsx]
-- "monitorista_types_evidencia": "Evidencia" | kind=code-symbol | source=lib/monitorista/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_evidenciadetenido": "EvidenciaDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L140 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_iphdetenido": "IphDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L131 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_prellenadocompleto": "PrellenadoCompleto" | kind=code-symbol | source=lib/monitorista/types.ts:L149 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "notificaciones_repository_listarnotificacionesnoleidas": "listarNotificacionesNoLeidas()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L5 | neighbors=[repository.ts, route.ts, layout.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-027.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-027.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

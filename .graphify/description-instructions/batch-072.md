@@ -1,4 +1,4 @@
-# Node Description Batch 73 of 79
+# Node Description Batch 73 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "plugins_graphify_skill_path": "SKILL_PATH" | kind=code-symbol | source=.opencode/plugins/graphify.js:L13 | neighbors=[graphify.js]
-- "postcss_config_config": "config" | kind=code-symbol | source=postcss.config.mjs:L1 | neighbors=[postcss.config.mjs]
-- "prevencion_agregarautoridadform_autoridad": "Autoridad" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L8 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_autoridades": "AUTORIDADES" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L7 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_i": "I" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L20 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_l": "L" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L16 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_props": "Props" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L10 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_autoridadbadge_cfg": "CFG" | kind=code-symbol | source=components/prevencion/AutoridadBadge.tsx:L1 | neighbors=[AutoridadBadge.tsx]
-- "prevencion_cancelacionmodal_inputfield": "InputField()" | kind=code-symbol | source=components/prevencion/CancelacionModal.tsx:L73 | neighbors=[CancelacionModal.tsx]
-- "prevencion_cancelacionmodal_textareafield": "TextareaField()" | kind=code-symbol | source=components/prevencion/CancelacionModal.tsx:L85 | neighbors=[CancelacionModal.tsx]
-- "prevencion_contestacionform_formfield": "FormField()" | kind=code-symbol | source=components/prevencion/ContestacionForm.tsx:L93 | neighbors=[ContestacionForm.tsx]
-- "prevencion_contestacionform_inputstyle": "inputStyle" | kind=code-symbol | source=components/prevencion/ContestacionForm.tsx:L82 | neighbors=[ContestacionForm.tsx]
-- "prevencion_layout_prevencionlayout": "PrevencionLayout()" | kind=code-symbol | source=app/prevencion/layout.tsx:L10 | neighbors=[layout.tsx]
-- "prevencion_medidasfiltros_autoridades": "AUTORIDADES" | kind=code-symbol | source=components/prevencion/MedidasFiltros.tsx:L14 | neighbors=[MedidasFiltros.tsx]
-- "prevencion_medidasfiltros_estados": "ESTADOS" | kind=code-symbol | source=components/prevencion/MedidasFiltros.tsx:L6 | neighbors=[MedidasFiltros.tsx]
-- "prevencion_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L18 | neighbors=[permisos.ts]
-- "prevencion_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L26 | neighbors=[permisos.ts]
-- "prevencion_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L10 | neighbors=[permisos.ts]
-- "prevencion_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L22 | neighbors=[permisos.ts]
-- "prevencion_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/prevencion/permisos.ts:L8 | neighbors=[permisos.ts]
-- "prevencion_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/prevencion/permisos.ts:L32 | neighbors=[permisos.ts]
-- "prevencion_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/prevencion/permisos.ts:L5 | neighbors=[permisos.ts]
-- "prevencion_prevencionnav_alertas": "Alertas" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L39 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_icons": "ICONS" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L37 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_nav": "NAV" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L7 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_prevencionnav": "PrevencionNav()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L41 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_scaleicon": "ScaleIcon()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L26 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_searchicon": "SearchIcon()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L19 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_shieldicon": "ShieldIcon()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L13 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prorrogamodal_i": "I" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L127 | neighbors=[ProrrogaModal.tsx]
-- "prevencion_prorrogamodal_l": "L" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L123 | neighbors=[ProrrogaModal.tsx]
-- "prevencion_prorrogaviewermodal_prorrogaviewermodalprops": "ProrrogaViewerModalProps" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L5 | neighbors=[ProrrogaViewerModal.tsx]
-- "prevencion_seguimientotimeline_props": "Props" | kind=code-symbol | source=components/prevencion/SeguimientoTimeline.tsx:L8 | neighbors=[SeguimientoTimeline.tsx]
-- "prevencion_semaforovigencia_cfg": "CFG" | kind=code-symbol | source=components/prevencion/SemaforoVigencia.tsx:L3 | neighbors=[SemaforoVigencia.tsx]
-- "prevencion_timeline_tiposeguimiento": "TipoSeguimiento" | kind=code-symbol | source=lib/prevencion/timeline.ts:L8 | neighbors=[timeline.ts]
-- "prevencion_visitamodal_checkboxfield": "CheckboxField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L110 | neighbors=[VisitaModal.tsx]
-- "prevencion_visitamodal_inputfield": "InputField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L86 | neighbors=[VisitaModal.tsx]
-- "prevencion_visitamodal_textareafield": "TextareaField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L98 | neighbors=[VisitaModal.tsx]
-- "proxy_config": "config" | kind=code-symbol | source=proxy.ts:L40 | neighbors=[proxy.ts]
-- "proxy_public_paths": "PUBLIC_PATHS" | kind=code-symbol | source=proxy.ts:L6 | neighbors=[proxy.ts]
+- "monitorista_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L27 | neighbors=[permisos.ts]
+- "monitorista_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L21 | neighbors=[permisos.ts]
+- "monitorista_permisos_permisorow": "PermisoRow" | kind=code-symbol | source=lib/monitorista/permisos.ts:L7 | neighbors=[permisos.ts]
+- "monitorista_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L6 | neighbors=[permisos.ts]
+- "monitorista_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L4 | neighbors=[permisos.ts]
+- "monitorista_ppt_service_descargarfoto": "descargarFoto()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L22 | neighbors=[ppt-service.ts]
+- "monitorista_ppt_service_normalizarurl": "normalizarUrl()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L16 | neighbors=[ppt-service.ts]
+- "monitorista_repository_rechazarfoto": "rechazarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L609 | neighbors=[repository.ts]
+- "monitorista_subirevidenciamodal_btncancel": "btnCancel" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L252 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L8 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_limites": "LIMITES" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L45 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_modal": "modal" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L247 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_overlay": "overlay" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L242 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L8 | neighbors=[SubirFotoDetenido.tsx]
+- "monitorista_tabladetenidos_btndetalle": "btnDetalle" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L104 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_detenidorow": "DetenidoRow" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L14 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_fotobadge": "fotoBadge()" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L111 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_fotoinfo": "FotoInfo" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L8 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_types_fichainteligenciadata": "FichaInteligenciaData" | kind=code-symbol | source=lib/monitorista/types.ts:L172 | neighbors=[types.ts]
+- "monitorista_types_monitoristastats": "MonitoristaStats" | kind=code-symbol | source=lib/monitorista/types.ts:L1 | neighbors=[types.ts]
+- "next_config_nextconfig": "nextConfig" | kind=code-symbol | source=next.config.ts:L3 | neighbors=[next.config.ts]
+- "notificaciones_campanillanotificaciones_alerttoast": "AlertToast()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L101 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_bellicon": "BellIcon()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L20 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_injectkeyframes": "injectKeyframes()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L92 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_notificacion": "Notificacion" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L7 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_playalertsound": "playAlertSound()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L41 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_props": "Props" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L187 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_timeago": "timeAgo()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L31 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_toastprops": "ToastProps" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L73 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_checker_hitos_alertar": "HITOS_ALERTAR" | kind=code-symbol | source=lib/notificaciones/checker.ts:L4 | neighbors=[checker.ts]
+- "notificaciones_route_get": "GET()" | kind=code-symbol | source=app/api/notificaciones/route.ts:L7 | neighbors=[route.ts]
+- "nueva_page_autoridades": "AUTORIDADES" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L8 | neighbors=[page.tsx]
+- "nueva_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L94 | neighbors=[page.tsx]
+- "nueva_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L132 | neighbors=[page.tsx]
+- "nueva_page_nuevafichapage": "NuevaFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L14 | neighbors=[page.tsx]
+- "nueva_page_nuevamedidapage": "NuevaMedidaPage()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L15 | neighbors=[page.tsx]
+- "nueva_page_nuevasolicitudpage": "NuevaSolicitudPage()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/nueva/page.tsx:L15 | neighbors=[page.tsx]
+- "nueva_page_row": "Row()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L124 | neighbors=[page.tsx]
+- "nueva_page_section": "Section()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L111 | neighbors=[page.tsx]
+- "nueva_page_selectfield": "SelectField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L148 | neighbors=[page.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-072.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-072.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

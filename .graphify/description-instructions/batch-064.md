@@ -1,4 +1,4 @@
-# Node Description Batch 65 of 79
+# Node Description Batch 65 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "id_page_aseguradodetallepage": "AseguradoDetallePage()" | kind=code-symbol | source=app/fiscalia/asegurados/[id]/page.tsx:L31 | neighbors=[page.tsx]
-- "id_page_btn": "BTN" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L15 | neighbors=[page.tsx]
-- "id_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L158 | neighbors=[page.tsx]
-- "id_page_campo": "Campo()" | kind=code-symbol | source=app/monitorista/detenidos/[id]/page.tsx:L117 | neighbors=[page.tsx]
-- "id_page_campos": "CAMPOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L16 | neighbors=[page.tsx]
-- "id_page_card": "Card()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L209 | neighbors=[page.tsx]
-- "id_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/monitorista/solicitudes/[id]/page.tsx:L97 | neighbors=[page.tsx]
-- "id_page_checklistformpage": "ChecklistFormPage()" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L29 | neighbors=[page.tsx]
-- "id_page_checkrow": "CheckRow()" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L17 | neighbors=[page.tsx]
-- "id_page_detalleinfraccionjuzgadopage": "DetalleInfraccionJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/liberaciones/[id]/page.tsx:L6 | neighbors=[page.tsx]
-- "id_page_detalleinfraccionpage": "DetalleInfraccionPage()" | kind=code-symbol | source=app/fiscalia/liberaciones/[id]/page.tsx:L6 | neighbors=[page.tsx]
-- "id_page_detenidodetailpage": "DetenidoDetailPage()" | kind=code-symbol | source=app/monitorista/detenidos/[id]/page.tsx:L17 | neighbors=[page.tsx]
-- "id_page_detenidofiscaliadetailpage": "DetenidoFiscaliaDetailPage()" | kind=code-symbol | source=app/fiscalia/detenidos/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_detenidojuzgadodetailpage": "DetenidoJuzgadoDetailPage()" | kind=code-symbol | source=app/agente_juzgado/detenidos/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_disabledsx": "disabledSx" | kind=code-symbol | source=app/fiscalia/asegurados/[id]/page.tsx:L21 | neighbors=[page.tsx]
-- "id_page_editarformatonarmaaseguradapage": "EditarFormatoNArmaAseguradaPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_editarformatonatencionvictimaspage": "EditarFormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/[id]/page.tsx:L17 | neighbors=[page.tsx]
-- "id_page_editarformatoneventopage": "EditarFormatoNEventoPage()" | kind=code-symbol | source=app/formato-n-eventos/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_editarformatonfgepage": "EditarFormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/[id]/page.tsx:L29 | neighbors=[page.tsx]
-- "id_page_editarformatonfgrpage": "EditarFormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/[id]/page.tsx:L29 | neighbors=[page.tsx]
-- "id_page_editarformatonmediosalternativospage": "EditarFormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/[id]/page.tsx:L17 | neighbors=[page.tsx]
-- "id_page_editarformatonrndpage": "EditarFormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_editaroficialpage": "EditarOficialPage()" | kind=code-symbol | source=app/admin-transito/oficiales/[id]/page.tsx:L62 | neighbors=[page.tsx]
-- "id_page_editarusuariopage": "EditarUsuarioPage()" | kind=code-symbol | source=app/admin/usuarios/[id]/page.tsx:L13 | neighbors=[page.tsx]
-- "id_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L222 | neighbors=[page.tsx]
-- "id_page_fieldwithicon": "FieldWithIcon()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L395 | neighbors=[page.tsx]
-- "id_page_g3": "G3" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L13 | neighbors=[page.tsx]
-- "id_page_inp": "INP" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L14 | neighbors=[page.tsx]
-- "id_page_inputstyle": "inputStyle" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L157 | neighbors=[page.tsx]
-- "id_page_juzgadoaseguradodetallepage": "JuzgadoAseguradoDetallePage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/[id]/page.tsx:L32 | neighbors=[page.tsx]
-- "id_page_juzgadopuestadisposicionpage": "JuzgadoPuestaDisposicionPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/puesta-disposicion/[id]/page.tsx:L10 | neighbors=[page.tsx]
-- "id_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L153 | neighbors=[page.tsx]
-- "id_page_labelstyle": "labelStyle" | kind=code-symbol | source=app/admin-transito/oficiales/[id]/page.tsx:L8 | neighbors=[page.tsx]
-- "id_page_labelsx": "labelSx" | kind=code-symbol | source=app/fiscalia/asegurados/[id]/page.tsx:L12 | neighbors=[page.tsx]
-- "id_page_lbl": "LBL" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L9 | neighbors=[page.tsx]
-- "id_page_marcastyle": "marcaStyle" | kind=code-symbol | source=app/monitorista/detenidos/[id]/page.tsx:L129 | neighbors=[page.tsx]
-- "id_page_medidadetailpage": "MedidaDetailPage()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L15 | neighbors=[page.tsx]
-- "id_page_montorow": "MontoRow()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L409 | neighbors=[page.tsx]
-- "id_page_periodos": "PERIODOS" | kind=code-symbol | source=app/formato-n-medios-alternativos/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_props": "Props" | kind=code-symbol | source=app/fiscalia/asegurados/puesta-disposicion/[id]/page.tsx:L6 | neighbors=[page.tsx]
+- "fiscalia_types_aseguradocondisposicion": "AseguradoConDisposicion" | kind=code-symbol | source=lib/fiscalia/types.ts:L121 | neighbors=[types.ts]
+- "fiscalia_types_detallegarantia": "DetalleGarantia" | kind=code-symbol | source=lib/fiscalia/types.ts:L338 | neighbors=[types.ts]
+- "fiscalia_types_detalleheader": "DetalleHeader" | kind=code-symbol | source=lib/fiscalia/types.ts:L292 | neighbors=[types.ts]
+- "fiscalia_types_detalleinfraccion": "DetalleInfraccion" | kind=code-symbol | source=lib/fiscalia/types.ts:L312 | neighbors=[types.ts]
+- "fiscalia_types_detalleinfractor": "DetalleInfractor" | kind=code-symbol | source=lib/fiscalia/types.ts:L319 | neighbors=[types.ts]
+- "fiscalia_types_detalleubicacion": "DetalleUbicacion" | kind=code-symbol | source=lib/fiscalia/types.ts:L342 | neighbors=[types.ts]
+- "fiscalia_types_detallevehiculo": "DetalleVehiculo" | kind=code-symbol | source=lib/fiscalia/types.ts:L329 | neighbors=[types.ts]
+- "fiscalia_types_detenidobase": "DetenidoBase" | kind=code-symbol | source=lib/fiscalia/types.ts:L39 | neighbors=[types.ts]
+- "fiscalia_types_viainfracciongarantia": "ViaInfraccionGarantia" | kind=code-symbol | source=lib/fiscalia/types.ts:L267 | neighbors=[types.ts]
+- "fiscalia_types_viainfraccionheader": "ViaInfraccionHeader" | kind=code-symbol | source=lib/fiscalia/types.ts:L218 | neighbors=[types.ts]
+- "fiscalia_types_viainfraccioninfractor": "ViaInfraccionInfractor" | kind=code-symbol | source=lib/fiscalia/types.ts:L243 | neighbors=[types.ts]
+- "fiscalia_types_viainfraccionlegal": "ViaInfraccionLegal" | kind=code-symbol | source=lib/fiscalia/types.ts:L233 | neighbors=[types.ts]
+- "fiscalia_types_viainfraccionoficial": "ViaInfraccionOficial" | kind=code-symbol | source=lib/fiscalia/types.ts:L251 | neighbors=[types.ts]
+- "fiscalia_types_viainfraccionubicacion": "ViaInfraccionUbicacion" | kind=code-symbol | source=lib/fiscalia/types.ts:L271 | neighbors=[types.ts]
+- "fiscalia_types_viainfraccionvehiculo": "ViaInfraccionVehiculo" | kind=code-symbol | source=lib/fiscalia/types.ts:L258 | neighbors=[types.ts]
+- "fiscalia_usetoaststore_generateid": "generateId()" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L19 | neighbors=[useToastStore.ts]
+- "fiscalia_usetoaststore_toast": "Toast" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L7 | neighbors=[useToastStore.ts]
+- "fiscalia_usetoaststore_toaststore": "ToastStore" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L13 | neighbors=[useToastStore.ts]
+- "fiscalia_usetoaststore_toasttype": "ToastType" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L5 | neighbors=[useToastStore.ts]
+- "flota_mapper_rowtopatrullaasignacion": "rowToPatrullaAsignacion()" | kind=code-symbol | source=lib/flota/mapper.ts:L25 | neighbors=[mapper.ts]
+- "flota_route_get": "GET()" | kind=code-symbol | source=app/api/rol-servicios/externos/flota/route.ts:L8 | neighbors=[route.ts]
+- "flota_service_apirowtoflotavehiculo": "apiRowToFlotaVehiculo()" | kind=code-symbol | source=lib/flota/service.ts:L26 | neighbors=[service.ts]
+- "flota_service_flotaapiresponse": "FlotaApiResponse" | kind=code-symbol | source=lib/flota/service.ts:L8 | neighbors=[service.ts]
+- "flota_service_invalidarcache": "invalidarCache()" | kind=code-symbol | source=lib/flota/service.ts:L86 | neighbors=[service.ts]
+- "formato_n_armas_aseguradas_page_formatonarmasaseguradaspage": "FormatoNArmasAseguradasPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L12 | neighbors=[page.tsx]
+- "formato_n_armas_aseguradas_page_td": "Td()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L76 | neighbors=[page.tsx]
+- "formato_n_armas_aseguradas_page_th": "Th()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L72 | neighbors=[page.tsx]
+- "formato_n_armas_aseguradas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-armas-aseguradas/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_armas_aseguradas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-armas-aseguradas/route.ts:L17 | neighbors=[route.ts]
+- "formato_n_atencion_victimas_page_td": "Td()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L98 | neighbors=[page.tsx]
+- "formato_n_atencion_victimas_page_th": "Th()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L94 | neighbors=[page.tsx]
+- "formato_n_atencion_victimas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_atencion_victimas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_consolidado_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-consolidado/route.ts:L9 | neighbors=[route.ts]
+- "formato_n_eventos_page_formatoneventospage": "FormatoNEventosPage()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L12 | neighbors=[page.tsx]
+- "formato_n_eventos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L78 | neighbors=[page.tsx]
+- "formato_n_eventos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L74 | neighbors=[page.tsx]
+- "formato_n_eventos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_eventos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L17 | neighbors=[route.ts]
+- "formato_n_fge_page_td": "Td()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L108 | neighbors=[page.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-064.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-064.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

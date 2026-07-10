@@ -1,0 +1,48 @@
+{
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/usr/local/lib/node_modules/@ureck/alexandria/dist/hooks/on-stop.js\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/usr/local/lib/node_modules/@ureck/alexandria/dist/hooks/on-session-start.js\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/usr/local/lib/node_modules/@ureck/alexandria/dist/hooks/on-prompt.js\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/usr/local/lib/node_modules/@ureck/alexandria/dist/hooks/on-stop.js\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

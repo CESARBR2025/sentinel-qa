@@ -1,4 +1,4 @@
-# Node Description Batch 37 of 79
+# Node Description Batch 37 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "auxiliar_actions_requireauxiliar": "requireAuxiliar()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L10 | neighbors=[actions.ts, upsertChecklistAction()]
+- "auxiliar_permisos_accion": "Accion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
+- "auxiliar_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
+- "auxiliar_profiledropdownauxiliar_profiledropdownauxiliar": "ProfileDropdownAuxiliar()" | kind=code-symbol | source=components/auxiliar/ProfileDropdownAuxiliar.tsx:L14 | neighbors=[page.tsx, ProfileDropdownAuxiliar.tsx]
+- "auxiliar_repository_obtenercuestionariosrobo": "obtenerCuestionariosRobo()" | kind=code-symbol | source=lib/auxiliar/repository.ts:L47 | neighbors=[repository.ts, service.ts]
+- "auxiliar_repository_obtenerparesreporte": "obtenerParesReporte()" | kind=code-symbol | source=lib/auxiliar/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "auxiliar_repository_upsertchecklist": "upsertChecklist()" | kind=code-symbol | source=lib/auxiliar/repository.ts:L72 | neighbors=[repository.ts, service.ts]
+- "auxiliar_service_guardarchecklist": "guardarChecklist()" | kind=code-symbol | source=lib/auxiliar/service.ts:L13 | neighbors=[actions.ts, service.ts]
+- "camara_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/camara/mapper.ts:L9 | neighbors=[mapper.ts, rowToIncidenteCamara()]
+- "camara_mapper_tonumnullable": "toNumNullable()" | kind=code-symbol | source=lib/camara/mapper.ts:L15 | neighbors=[mapper.ts, rowToTotalesCamara()]
+- "camara_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/camara/mapper.ts:L3 | neighbors=[mapper.ts, rowToIncidenteCamara()]
+- "camara_repository_obtenerconcentradodiario": "obtenerConcentradoDiario()" | kind=code-symbol | source=lib/camara/repository.ts:L68 | neighbors=[repository.ts, route.ts]
+- "camara_repository_obtenerincidentescamara": "obtenerIncidentesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "camara_repository_obtenerporturno": "obtenerPorTurno()" | kind=code-symbol | source=lib/camara/repository.ts:L54 | neighbors=[repository.ts, route.ts]
+- "camara_service_listarincidentescamara": "listarIncidentesCamara()" | kind=code-symbol | source=lib/camara/service.ts:L5 | neighbors=[service.ts, page.tsx]
+- "complementos_repository_listargruasactivas": "listarGruasActivas()" | kind=code-symbol | source=lib/complementos/repository.ts:L9 | neighbors=[repository.ts, route.ts]
+- "components_capturardatostitularsection_isnodata": "isNoData()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L29 | neighbors=[CapturarDatosTitularSection.tsx, TitularForm()]
+- "components_capturardatostitularsection_titularform": "TitularForm()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L47 | neighbors=[CapturarDatosTitularSection.tsx, isNoData()]
+- "components_filadetenidorol_filadetenidorol": "FilaDetenidoRol()" | kind=code-symbol | source=components/FilaDetenidoRol.tsx:L5 | neighbors=[FilaDetenidoRol.tsx, page.tsx]
+- "components_mapadireccionregistro_extractaddress": "extractAddress()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L111 | neighbors=[MapaDireccionRegistro.tsx, extractNeighborhoodFromComponents()]
+- "components_mapadireccionregistro_getmunicipioestado": "getMunicipioEstado()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L125 | neighbors=[MapaDireccionRegistro.tsx, normalizeUpper()]
+- "components_mapadireccionregistro_mapadireccionregistro": "MapaDireccionRegistro()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L141 | neighbors=[MapaDireccionRegistro.tsx, PasoUbicacion.tsx]
+- "components_modalentregargarantia_getgarantiainfo": "getGarantiaInfo()" | kind=code-symbol | source=features/via/infracciones/components/ModalEntregarGarantia.tsx:L14 | neighbors=[ModalEntregarGarantia.tsx, ModalEntregarGarantia()]
+- "components_modalentregargarantia_modalentregargarantia": "ModalEntregarGarantia()" | kind=code-symbol | source=features/via/infracciones/components/ModalEntregarGarantia.tsx:L22 | neighbors=[ModalEntregarGarantia.tsx, getGarantiaInfo()]
+- "components_seccionliberacion_getestatusconfig": "getEstatusConfig()" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L87 | neighbors=[SeccionLiberacion.tsx, SeccionLiberacion()]
+- "components_seccionliberacion_seccionliberacion": "SeccionLiberacion()" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L136 | neighbors=[SeccionLiberacion.tsx, getEstatusConfig()]
+- "corralon_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/corralon/mapper.ts:L3 | neighbors=[mapper.ts, rowToSolicitud()]
+- "corralon_module_card_modulecard": "ModuleCard()" | kind=code-symbol | source=app/corralon/module-card.tsx:L6 | neighbors=[module-card.tsx, page.tsx]
+- "corralon_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/corralon/permisos.ts:L3 | neighbors=[permisos.ts, registro.ts]
+- "corralon_repository_finalizarinfraccioncorralon": "finalizarInfraccionCorralon()" | kind=code-symbol | source=lib/corralon/repository.ts:L35 | neighbors=[repository.ts, route.ts]
+- "corralon_repository_obtenerestatusinfraccion": "obtenerEstatusInfraccion()" | kind=code-symbol | source=lib/corralon/repository.ts:L27 | neighbors=[repository.ts, route.ts]
+- "corralon_repository_obtenersolicitudesfinalizadas": "obtenerSolicitudesFinalizadas()" | kind=code-symbol | source=lib/corralon/repository.ts:L47 | neighbors=[repository.ts, service.ts]
+- "corralon_repository_obtenersolicitudespendientes": "obtenerSolicitudesPendientes()" | kind=code-symbol | source=lib/corralon/repository.ts:L3 | neighbors=[repository.ts, service.ts]
+- "corralon_service_listarsolicitudesfinalizadas": "listarSolicitudesFinalizadas()" | kind=code-symbol | source=lib/corralon/service.ts:L10 | neighbors=[actions.ts, service.ts]
+- "corralon_service_listarsolicitudespendientes": "listarSolicitudesPendientes()" | kind=code-symbol | source=lib/corralon/service.ts:L5 | neighbors=[actions.ts, service.ts]
+- "corralon_types_tabsolicitudes": "TabSolicitudes" | kind=code-symbol | source=lib/corralon/types.ts:L24 | neighbors=[types.ts, solicitudes-client.tsx]
+- "corralon_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/corralon/types.ts:L1 | neighbors=[actions.ts, types.ts]
+- "d1_d1filters_d1filters": "D1Filters()" | kind=code-symbol | source=components/reportes/d1/D1Filters.tsx:L7 | neighbors=[D1Filters.tsx, page.tsx]
 - "d1_d1pagination_d1pagination": "D1Pagination()" | kind=code-symbol | source=components/reportes/d1/D1Pagination.tsx:L14 | neighbors=[D1Pagination.tsx, D1ReportsTable.tsx]
 - "d1_d1reportstable_d1reportstable": "D1ReportsTable()" | kind=code-symbol | source=components/reportes/d1/D1ReportsTable.tsx:L7 | neighbors=[D1ReportsTable.tsx, page.tsx]
-- "d1_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/d1/mapper.ts:L15 | neighbors=[mapper.ts, rowToReporteD1()]
-- "d1_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/d1/mapper.ts:L9 | neighbors=[mapper.ts, rowToReporteD1()]
-- "d1_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/d1/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteD1()]
-- "d1_noiniciada_descargafilters_descargafilters": "DescargaFilters()" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaFilters.tsx:L7 | neighbors=[DescargaFilters.tsx, page.tsx]
-- "d1_noiniciada_descargapagination_descargapagination": "DescargaPagination()" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaPagination.tsx:L13 | neighbors=[DescargaPagination.tsx, DescargaTable.tsx]
-- "d1_noiniciada_descargatable_descargatable": "DescargaTable()" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaTable.tsx:L7 | neighbors=[DescargaTable.tsx, page.tsx]
-- "d1_repository_insertarreportedenuncia": "insertarReporteDenuncia()" | kind=code-symbol | source=lib/d1/repository.ts:L13 | neighbors=[repository.ts, route.ts]
-- "d1_repository_obtenerreportesd1": "obtenerReportesD1()" | kind=code-symbol | source=lib/d1/repository.ts:L83 | neighbors=[repository.ts, service.ts]
-- "d1_repository_verificarfoliodenunciaunico": "verificarFolioDenunciaUnico()" | kind=code-symbol | source=lib/d1/repository.ts:L5 | neighbors=[repository.ts, route.ts]
-- "dashboard_enable_2fa_enable2fa": "Enable2FA()" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L7 | neighbors=[enable-2fa.tsx, page.tsx]
-- "dashboard_module_cards_modulecards": "ModuleCards()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L260 | neighbors=[module-cards.tsx, page.tsx]
-- "db_index_db": "db" | kind=code-symbol | source=lib/db/index.ts:L5 | neighbors=[index.ts, auth.ts]
-- "denuncias_stored1_used1formstore": "useD1FormStore" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L52 | neighbors=[FormularioD1.tsx, storeD1.ts]
-- "despacho_despachoform_despachoform": "DespachoForm()" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L19 | neighbors=[DespachoForm.tsx, TablonDespacho.tsx]
-- "deteccion_camara_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/deteccion_camara/ReportFilters.tsx:L7 | neighbors=[ReportFilters.tsx, page.tsx]
-- "deteccion_camara_reporttables_reporttable": "ReportTable()" | kind=code-symbol | source=components/reportes/deteccion_camara/ReportTables.tsx:L4 | neighbors=[ReportTables.tsx, page.tsx]
-- "emails_mailer_sendmail": "sendMail()" | kind=code-symbol | source=lib/emails/mailer.ts:L28 | neighbors=[mailer.ts, server.ts]
-- "emails_server_enviarcorreoasignacionfiscalia": "enviarCorreoAsignacionFiscalia()" | kind=code-symbol | source=lib/emails/server.ts:L12 | neighbors=[server.ts, actions.ts]
-- "emails_server_enviarcorreoordenliberacion": "enviarCorreoOrdenLiberacion()" | kind=code-symbol | source=lib/emails/server.ts:L39 | neighbors=[server.ts, route.ts]
-- "eslint_config": "eslint.config.mjs" | kind=code-symbol | source=eslint.config.mjs:L1 | neighbors=[90da1ca Initial commit from Create Next…, eslintConfig]
-- "estadisticos_phonereportstable_phonereportstable": "PhoneReportsTable()" | kind=code-symbol | source=components/reportes/estadisticos/PhoneReportsTable.tsx:L13 | neighbors=[page.tsx, PhoneReportsTable.tsx]
-- "estadisticos_phonestatscards_phonestatscards": "PhoneStatsCards()" | kind=code-symbol | source=components/reportes/estadisticos/PhoneStatsCards.tsx:L5 | neighbors=[page.tsx, PhoneStatsCards.tsx]
-- "estadisticos_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/estadisticos/ReportFilters.tsx:L7 | neighbors=[page.tsx, ReportFilters.tsx]
-- "expediente_client_limpiarcachetoken": "limpiarCacheToken()" | kind=code-symbol | source=lib/expediente/client.ts:L62 | neighbors=[client.ts, expediente.ts]
-- "exportar_route_crearhoja": "crearHoja()" | kind=code-symbol | source=app/api/camara/exportar/route.ts:L34 | neighbors=[route.ts, GET()]
-- "exportar_route_getrango": "getRango()" | kind=code-symbol | source=app/api/reportes-telefonicos/exportar/route.ts:L7 | neighbors=[route.ts, GET()]
-- "fiscalia_actions_acciontomarcaso": "accionTomarCaso()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L56 | neighbors=[actions.ts, TomarCasoModal.tsx]
-- "fiscalia_actions_guardardetallesaseguradoaction": "guardarDetallesAseguradoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L120 | neighbors=[actions.ts, CapturarDetallesForm.tsx]
-- "fiscalia_actions_guardardetallesaseguradosaction": "guardarDetallesAseguradosAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L218 | neighbors=[actions.ts, FormularioAsegurado.tsx]
-- "fiscalia_actions_guardaroficioaction": "guardarOficioAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L304 | neighbors=[actions.ts, CargarOficioSection.tsx]
-- "fiscalia_actions_guardarpuestadisposicionaction": "guardarPuestaDisposicionAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L263 | neighbors=[actions.ts, FormularioPuestaDisposicion.tsx]
-- "fiscalia_actions_obteneraseguradosaction": "obtenerAseguradosAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L184 | neighbors=[page.tsx, actions.ts]
-- "fiscalia_actions_obtenerdetalleaseguradocompletoaction": "obtenerDetalleAseguradoCompletoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L199 | neighbors=[actions.ts, page.tsx]
-- "fiscalia_actions_obtenerliberacionesaction": "obtenerLiberacionesAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L167 | neighbors=[actions.ts, page.tsx]
-- "fiscalia_actions_obtenerpuestadisposicionaction": "obtenerPuestaDisposicionAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L244 | neighbors=[actions.ts, page.tsx]
-- "fiscalia_actions_obtenersolicitudes": "obtenerSolicitudes()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L39 | neighbors=[actions.ts, page.tsx]
-- "fiscalia_buttonverdetalles_botonverdetalle": "BotonVerDetalle()" | kind=code-symbol | source=components/fiscalia/ButtonVerDetalles.tsx:L10 | neighbors=[ButtonVerDetalles.tsx, FiscaliaDashboard.tsx]
-- "fiscalia_capturardetallesform_emptyitem": "emptyItem()" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L53 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm()]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-036.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-036.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

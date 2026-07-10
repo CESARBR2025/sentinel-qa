@@ -1,4 +1,4 @@
-# Node Description Batch 70 of 79
+# Node Description Batch 70 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "monitorista_buscadorevento_opciones": "OPCIONES" | kind=code-symbol | source=components/monitorista/BuscadorEvento.tsx:L6 | neighbors=[BuscadorEvento.tsx]
-- "monitorista_cardenviofoto_etiquetas": "ETIQUETAS" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L10 | neighbors=[CardEnvioFoto.tsx]
-- "monitorista_filaincidentecamara_td": "Td()" | kind=code-symbol | source=components/monitorista/FilaIncidenteCamara.tsx:L61 | neighbors=[FilaIncidenteCamara.tsx]
-- "monitorista_galeriaevidencias_cardstyle": "cardStyle" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L98 | neighbors=[GaleriaEvidencias.tsx]
-- "monitorista_galeriaevidencias_evidenciarow": "EvidenciaRow" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L6 | neighbors=[GaleriaEvidencias.tsx]
-- "monitorista_galeriaevidencias_itemstyle": "itemStyle" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L107 | neighbors=[GaleriaEvidencias.tsx]
-- "monitorista_galeriaevidencias_sectiontitle": "sectionTitle" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L102 | neighbors=[GaleriaEvidencias.tsx]
-- "monitorista_layout_monitoristalayout": "MonitoristaLayout()" | kind=code-symbol | source=app/monitorista/layout.tsx:L6 | neighbors=[layout.tsx]
-- "monitorista_mapper_bool": "bool()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L19 | neighbors=[mapper.ts]
-- "monitorista_mapper_str": "str()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L8 | neighbors=[mapper.ts]
-- "monitorista_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L110 | neighbors=[page.tsx]
-- "monitorista_page_monitoristahubpage": "MonitoristaHubPage()" | kind=code-symbol | source=app/monitorista/page.tsx:L12 | neighbors=[page.tsx]
-- "monitorista_page_onlinestyle": "onlineStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L111 | neighbors=[page.tsx]
-- "monitorista_permisos_accion": "Accion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L5 | neighbors=[permisos.ts]
-- "monitorista_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L17 | neighbors=[permisos.ts]
-- "monitorista_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L27 | neighbors=[permisos.ts]
-- "monitorista_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L21 | neighbors=[permisos.ts]
-- "monitorista_permisos_permisorow": "PermisoRow" | kind=code-symbol | source=lib/monitorista/permisos.ts:L7 | neighbors=[permisos.ts]
-- "monitorista_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L6 | neighbors=[permisos.ts]
-- "monitorista_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L4 | neighbors=[permisos.ts]
-- "monitorista_ppt_service_descargarfoto": "descargarFoto()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L22 | neighbors=[ppt-service.ts]
-- "monitorista_ppt_service_normalizarurl": "normalizarUrl()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L16 | neighbors=[ppt-service.ts]
-- "monitorista_repository_rechazarfoto": "rechazarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L609 | neighbors=[repository.ts]
-- "monitorista_subirevidenciamodal_btncancel": "btnCancel" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L252 | neighbors=[SubirEvidenciaModal.tsx]
-- "monitorista_subirevidenciamodal_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L8 | neighbors=[SubirEvidenciaModal.tsx]
-- "monitorista_subirevidenciamodal_limites": "LIMITES" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L45 | neighbors=[SubirEvidenciaModal.tsx]
-- "monitorista_subirevidenciamodal_modal": "modal" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L247 | neighbors=[SubirEvidenciaModal.tsx]
-- "monitorista_subirevidenciamodal_overlay": "overlay" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L242 | neighbors=[SubirEvidenciaModal.tsx]
-- "monitorista_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L8 | neighbors=[SubirFotoDetenido.tsx]
-- "monitorista_tabladetenidos_btndetalle": "btnDetalle" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L104 | neighbors=[TablaDetenidos.tsx]
-- "monitorista_tabladetenidos_detenidorow": "DetenidoRow" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L14 | neighbors=[TablaDetenidos.tsx]
-- "monitorista_tabladetenidos_fotobadge": "fotoBadge()" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L111 | neighbors=[TablaDetenidos.tsx]
-- "monitorista_tabladetenidos_fotoinfo": "FotoInfo" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L8 | neighbors=[TablaDetenidos.tsx]
-- "monitorista_types_fichainteligenciadata": "FichaInteligenciaData" | kind=code-symbol | source=lib/monitorista/types.ts:L172 | neighbors=[types.ts]
-- "monitorista_types_monitoristastats": "MonitoristaStats" | kind=code-symbol | source=lib/monitorista/types.ts:L1 | neighbors=[types.ts]
-- "next_config_nextconfig": "nextConfig" | kind=code-symbol | source=next.config.ts:L3 | neighbors=[next.config.ts]
-- "notificaciones_campanillanotificaciones_alerttoast": "AlertToast()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L101 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_bellicon": "BellIcon()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L20 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_injectkeyframes": "injectKeyframes()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L92 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_notificacion": "Notificacion" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L7 | neighbors=[CampanillaNotificaciones.tsx]
+- "infracciones_types_viewfraccionlista": "ViewFraccionLista" | kind=code-symbol | source=features/via/infracciones/types.ts:L169 | neighbors=[types.ts]
+- "infraccionid_route_get": "GET()" | kind=code-symbol | source=app/api/via/pagos/finalizar-instante/[ordenPagoId]/[infraccionId]/route.ts:L5 | neighbors=[route.ts]
+- "iniciar_proceso_route_patch": "PATCH()" | kind=code-symbol | source=app/api/via/infracciones/iniciar-proceso/route.ts:L13 | neighbors=[route.ts]
+- "iniciar_solicitud_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/iniciar-solicitud/route.ts:L5 | neighbors=[route.ts]
+- "iniciarproceso_route_patch": "PATCH()" | kind=code-symbol | source=app/api/agente_juzgado/iniciarProceso/route.ts:L6 | neighbors=[route.ts]
+- "iph_bitacoraiph_bitacoraiph": "BitacoraIPH()" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L8 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_btnpptstyle": "btnPPTStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L99 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_btnstyle": "btnStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L92 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_containerstyle": "containerStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L85 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_headerrowstyle": "headerRowStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L86 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_tdstyle": "tdStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L88 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_thstyle": "thStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L87 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_trstyle": "trStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L89 | neighbors=[BitacoraIPH.tsx]
+- "iph_page_iphpage": "IPHPage()" | kind=code-symbol | source=app/analisis/iph/page.tsx:L10 | neighbors=[page.tsx]
+- "juridico_page_juridicopage": "JuridicoPage()" | kind=code-symbol | source=app/prevencion/juridico/page.tsx:L10 | neighbors=[page.tsx]
+- "legalidad_mapper_articulosmapper_todomain": ".toDomain()" | kind=code-symbol | source=features/via/legalidad/mapper.ts:L17 | neighbors=[ArticulosMapper]
+- "legalidad_mapper_queryrow": "QueryRow" | kind=code-symbol | source=features/via/legalidad/mapper.ts:L3 | neighbors=[mapper.ts]
+- "legalidad_repository_articulosrepository_obtenerarticulos": ".obtenerArticulos()" | kind=code-symbol | source=features/via/legalidad/repository.ts:L4 | neighbors=[ArticulosRepository]
+- "legalidad_repository_articulosrepository_obtenerfraccionesporarticulo": ".obtenerFraccionesPorArticulo()" | kind=code-symbol | source=features/via/legalidad/repository.ts:L27 | neighbors=[ArticulosRepository]
+- "legalidad_service_articulosservice_obtenerfraccionesporarticulo": ".obtenerFraccionesPorArticulo()" | kind=code-symbol | source=features/via/legalidad/service.ts:L16 | neighbors=[ArticulosService]
+- "lib_auth_authuser": "AuthUser" | kind=code-symbol | source=lib/auth.ts:L63 | neighbors=[auth.ts]
+- "lib_db_createpool": "createPool()" | kind=code-symbol | source=lib/db.ts:L7 | neighbors=[db.ts]
+- "lib_detenidos_compartido_detenidofotodetalle": "DetenidoFotoDetalle" | kind=code-symbol | source=lib/detenidos-compartido.ts:L17 | neighbors=[detenidos-compartido.ts]
+- "lib_detenidos_compartido_detenidofotopendiente": "DetenidoFotoPendiente" | kind=code-symbol | source=lib/detenidos-compartido.ts:L3 | neighbors=[detenidos-compartido.ts]
+- "lib_error_handler_actionresult": "ActionResult" | kind=code-symbol | source=lib/error-handler.ts:L42 | neighbors=[error-handler.ts]
+- "lib_error_handler_apierror": "apiError()" | kind=code-symbol | source=lib/error-handler.ts:L75 | neighbors=[error-handler.ts]
+- "lib_error_handler_apihandler": "ApiHandler" | kind=code-symbol | source=lib/error-handler.ts:L87 | neighbors=[error-handler.ts]
+- "lib_error_handler_apiresponse": "ApiResponse" | kind=code-symbol | source=lib/error-handler.ts:L67 | neighbors=[error-handler.ts]
+- "lib_error_handler_apisuccess": "apiSuccess()" | kind=code-symbol | source=lib/error-handler.ts:L71 | neighbors=[error-handler.ts]
+- "lib_error_handler_apperror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L2 | neighbors=[AppError]
+- "lib_error_handler_conflicterror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L37 | neighbors=[ConflictError]
+- "lib_error_handler_forbiddenerror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L31 | neighbors=[ForbiddenError]
+- "lib_error_handler_notfounderror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L13 | neighbors=[NotFoundError]
+- "lib_error_handler_unauthorizederror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L25 | neighbors=[UnauthorizedError]
+- "lib_error_handler_validationerror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L19 | neighbors=[ValidationError]
+- "liberaciones_page_liberacionesjuzgadopage": "LiberacionesJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/liberaciones/page.tsx:L5 | neighbors=[page.tsx]
+- "liberaciones_page_liberacionespage": "LiberacionesPage()" | kind=code-symbol | source=app/fiscalia/liberaciones/page.tsx:L5 | neighbors=[page.tsx]
+- "liberar_garantia_route_patch": "PATCH()" | kind=code-symbol | source=app/api/via/infracciones/liberar-garantia/route.ts:L4 | neighbors=[route.ts]
+- "listar_route_get": "GET()" | kind=code-symbol | source=app/api/detenidos/listar/route.ts:L6 | neighbors=[route.ts]
+- "login_desing_app_app": "App()" | kind=code-symbol | source=login-desing/app.jsx:L9 | neighbors=[app.jsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-069.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-069.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

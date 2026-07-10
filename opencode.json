@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "alexandria": {
+      "type": "local",
+      "command": [
+        "node",
+        "/usr/local/lib/node_modules/@ureck/alexandria/dist/mcp/server.js"
+      ],
+      "enabled": true
+    }
+  }
+}

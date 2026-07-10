@@ -1,4 +1,4 @@
-# Node Description Batch 79 of 79
+# Node Description Batch 79 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,44 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "types_detalleinfraccion_detallevehiculo": "DetalleVehiculo" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L38 | neighbors=[detalleInfraccion.ts]
-- "ui_customselect_customselectprops": "CustomSelectProps" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L9 | neighbors=[CustomSelect.tsx]
-- "ui_customselect_option": "Option" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L4 | neighbors=[CustomSelect.tsx]
-- "ui_radioinput_radiooption": "RadioOption()" | kind=code-symbol | source=features/via/infracciones/components/ui/RadioInput.tsx:L1 | neighbors=[RadioInput.tsx]
-- "ui_segmentedcontrol_option": "Option" | kind=code-symbol | source=features/via/infracciones/components/ui/SegmentedControl.tsx:L3 | neighbors=[SegmentedControl.tsx]
-- "ui_segmentedcontrol_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/ui/SegmentedControl.tsx:L10 | neighbors=[SegmentedControl.tsx]
-- "usuarios_page_usuariospage": "UsuariosPage()" | kind=code-symbol | source=app/admin/usuarios/page.tsx:L7 | neighbors=[page.tsx]
-- "utils_generateiphppt_generateiphppt": "generateIPHPPT()" | kind=code-symbol | source=lib/utils/generateIPHPPT.ts:L4 | neighbors=[generateIPHPPT.ts]
-- "via_expediente_limpiarcachetoken": "limpiarCacheToken()" | kind=code-symbol | source=lib/via/expediente.ts:L88 | neighbors=[expediente.ts]
-- "via_online_getsnapshot": "getSnapshot()" | kind=code-symbol | source=lib/via/online.ts:L3 | neighbors=[online.ts]
-- "via_online_subscribe": "subscribe()" | kind=code-symbol | source=lib/via/online.ts:L7 | neighbors=[online.ts]
-- "via_pagos_resultadopago": "ResultadoPago" | kind=code-symbol | source=lib/via/pagos.ts:L4 | neighbors=[pagos.ts]
-- "visitas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/medidas/[id]/visitas/route.ts:L8 | neighbors=[route.ts]
-- "visitas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/medidas/[id]/visitas/route.ts:L22 | neighbors=[route.ts]
-- "whatsapp_formsection_formsection": "FormSection()" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L6 | neighbors=[FormSection.tsx]
-- "whatsapp_formsection_sectionprops": "SectionProps" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L1 | neighbors=[FormSection.tsx]
-- "whatsapp_registroincidenteform_libraries": "libraries" | kind=code-symbol | source=components/911/whatsapp/RegistroIncidenteForm.tsx:L13 | neighbors=[RegistroIncidenteForm.tsx]
-- "whatsapp_registroincidenteform_registroincidentezen": "RegistroIncidenteZen()" | kind=code-symbol | source=components/911/whatsapp/RegistroIncidenteForm.tsx:L15 | neighbors=[RegistroIncidenteForm.tsx]
-- "wireframes_shared_arrow": "Arrow()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L65 | neighbors=[shared.jsx]
-- "wireframes_shared_corner": "Corner()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L138 | neighbors=[shared.jsx]
-- "wireframes_shared_darkframe": "DarkFrame()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L123 | neighbors=[shared.jsx]
-- "wireframes_shared_gridbg": "GridBG()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L152 | neighbors=[shared.jsx]
-- "wireframes_shared_inputfield": "InputField()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L81 | neighbors=[shared.jsx]
-- "wireframes_shared_primarybutton": "PrimaryButton()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L105 | neighbors=[shared.jsx]
-- "wireframes_shared_scribble": "Scribble()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L50 | neighbors=[shared.jsx]
-- "wireframes_shared_shieldmark": "ShieldMark()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L28 | neighbors=[shared.jsx]
-- "wireframes_shared_statusbar": "StatusBar()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L166 | neighbors=[shared.jsx]
-- "wireframes_shared_wf": "WF" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L5 | neighbors=[shared.jsx]
-- "wireframes_wf_a_wireframea": "WireframeA()" | kind=code-symbol | source=login-desing/wireframes/wf-a.jsx:L6 | neighbors=[wf-a.jsx]
-- "wireframes_wf_b_wireframeb": "WireframeB()" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L4 | neighbors=[wf-b.jsx]
-- "wireframes_wf_c_wireframec": "WireframeC()" | kind=code-symbol | source=login-desing/wireframes/wf-c.jsx:L4 | neighbors=[wf-c.jsx]
-- "wireframes_wf_d_wireframed": "WireframeD()" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L4 | neighbors=[wf-d.jsx]
-- "wireframes_wf_e_wireframee": "WireframeE()" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L4 | neighbors=[wf-e.jsx]
+- "scripts_extract_domain_extractdomain": "extractDomain()" | kind=code-symbol | source=scripts/extract-domain.mjs:L26 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/extract-domain.mjs:L10 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_root": "ROOT" | kind=code-symbol | source=scripts/extract-domain.mjs:L8 | neighbors=[extract-domain.mjs]
+- "scripts_load_context_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/load-context.mjs:L11 | neighbors=[load-context.mjs]
+- "scripts_load_context_dirname": "__dirname" | kind=code-symbol | source=scripts/load-context.mjs:L9 | neighbors=[load-context.mjs]
+- "scripts_load_context_graph_json": "GRAPH_JSON" | kind=code-symbol | source=scripts/load-context.mjs:L12 | neighbors=[load-context.mjs]
+- "scripts_load_context_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/load-context.mjs:L14 | neighbors=[load-context.mjs]
+- "scripts_load_context_root": "ROOT" | kind=code-symbol | source=scripts/load-context.mjs:L10 | neighbors=[load-context.mjs]
+- "seguimientos_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/[id]/seguimientos/route.ts:L7 | neighbors=[route.ts]
+- "setup_2fa_page_setup2fapage": "Setup2FAPage()" | kind=code-symbol | source=app/(auth)/login/setup-2fa/page.tsx:L7 | neighbors=[page.tsx]
+- "shared_detalleinfraccionview_fieldwithicon": "FieldWithIcon()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L464 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_getstatusstyle": "getStatusStyle()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L96 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infracciondetalle": "InfraccionDetalle" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L77 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infracciongarantia": "InfraccionGarantia" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L63 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionheader": "InfraccionHeader" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L15 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccioninfractor": "InfraccionInfractor" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L41 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionlegal": "InfraccionLegal" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L31 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionoficial": "InfraccionOficial" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L47 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionubicacion": "InfraccionUbicacion" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L67 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionvehiculo": "InfraccionVehiculo" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L54 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_props": "Props" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L142 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_section": "Section()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L440 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_status_styles": "STATUS_STYLES" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L89 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_streetviewmap": "StreetViewMap()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L400 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_timelinenode": "TimelineNode()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L731 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_direcciongooglemaps_props": "Props" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L13 | neighbors=[DireccionGoogleMaps.tsx]
+- "shared_infracciones_bool": "bool()" | kind=code-symbol | source=lib/shared/infracciones.ts:L48 | neighbors=[infracciones.ts]
+- "shared_infracciones_num": "num()" | kind=code-symbol | source=lib/shared/infracciones.ts:L55 | neighbors=[infracciones.ts]
+- "shared_infracciones_str": "str()" | kind=code-symbol | source=lib/shared/infracciones.ts:L43 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfracciongarantia": "ViaInfraccionGarantia" | kind=code-symbol | source=lib/shared/infracciones.ts:L114 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfraccionheader": "ViaInfraccionHeader" | kind=code-symbol | source=lib/shared/infracciones.ts:L63 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfraccioninfractor": "ViaInfraccionInfractor" | kind=code-symbol | source=lib/shared/infracciones.ts:L90 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfraccionlegal": "ViaInfraccionLegal" | kind=code-symbol | source=lib/shared/infracciones.ts:L80 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfraccionoficial": "ViaInfraccionOficial" | kind=code-symbol | source=lib/shared/infracciones.ts:L98 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfraccionubicacion": "ViaInfraccionUbicacion" | kind=code-symbol | source=lib/shared/infracciones.ts:L118 | neighbors=[infracciones.ts]
+- "shared_infracciones_viainfraccionvehiculo": "ViaInfraccionVehiculo" | kind=code-symbol | source=lib/shared/infracciones.ts:L105 | neighbors=[infracciones.ts]
+- "shared_pedirevidenciasmodal_evidenciaitem": "EvidenciaItem" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L18 | neighbors=[PedirEvidenciasModal.tsx]
+- "shared_pedirevidenciasmodal_existingevidencia": "ExistingEvidencia" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L7 | neighbors=[PedirEvidenciasModal.tsx]
+- "shared_pedirevidenciasmodal_inputsx": "inputSx" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L30 | neighbors=[PedirEvidenciasModal.tsx]
+- "shared_pedirevidenciasmodal_readonlysx": "readOnlySx" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L41 | neighbors=[PedirEvidenciasModal.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-078.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-078.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

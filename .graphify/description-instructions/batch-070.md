@@ -1,4 +1,4 @@
-# Node Description Batch 71 of 79
+# Node Description Batch 71 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "notificaciones_campanillanotificaciones_playalertsound": "playAlertSound()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L41 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_props": "Props" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L187 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_timeago": "timeAgo()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L31 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_toastprops": "ToastProps" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L73 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_checker_hitos_alertar": "HITOS_ALERTAR" | kind=code-symbol | source=lib/notificaciones/checker.ts:L4 | neighbors=[checker.ts]
-- "notificaciones_route_get": "GET()" | kind=code-symbol | source=app/api/notificaciones/route.ts:L7 | neighbors=[route.ts]
-- "nueva_page_autoridades": "AUTORIDADES" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L8 | neighbors=[page.tsx]
-- "nueva_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L94 | neighbors=[page.tsx]
-- "nueva_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L132 | neighbors=[page.tsx]
-- "nueva_page_nuevafichapage": "NuevaFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L14 | neighbors=[page.tsx]
-- "nueva_page_nuevamedidapage": "NuevaMedidaPage()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L15 | neighbors=[page.tsx]
-- "nueva_page_nuevasolicitudpage": "NuevaSolicitudPage()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/nueva/page.tsx:L15 | neighbors=[page.tsx]
-- "nueva_page_row": "Row()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L124 | neighbors=[page.tsx]
-- "nueva_page_section": "Section()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L111 | neighbors=[page.tsx]
-- "nueva_page_selectfield": "SelectField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L148 | neighbors=[page.tsx]
-- "nueva_page_textareafield": "TextareaField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L166 | neighbors=[page.tsx]
-- "nueva_page_tipos": "TIPOS" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L8 | neighbors=[page.tsx]
-- "nuevo_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L150 | neighbors=[page.tsx]
-- "nuevo_page_campos": "CAMPOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L16 | neighbors=[page.tsx]
-- "nuevo_page_campos_calculables": "CAMPOS_CALCULABLES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_campos_manuales": "CAMPOS_MANUALES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L26 | neighbors=[page.tsx]
-- "nuevo_page_fuentedetencion": "FuenteDetencion" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_fuenteincidente": "FuenteIncidente" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_inputstyle": "inputStyle" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L149 | neighbors=[page.tsx]
-- "nuevo_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L145 | neighbors=[page.tsx]
-- "nuevo_page_nuevadenunciad1page": "NuevaDenunciaD1Page()" | kind=code-symbol | source=app/denuncia/nuevo/page.tsx:L12 | neighbors=[page.tsx]
-- "nuevo_page_nuevaformatonarmaaseguradapage": "NuevaFormatoNArmaAseguradaPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonatencionvictimaspage": "NuevoFormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatoneventopage": "NuevoFormatoNEventoPage()" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L20 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonfgepage": "NuevoFormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L32 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonfgrpage": "NuevoFormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/nuevo/page.tsx:L29 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonmediosalternativospage": "NuevoFormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonrndpage": "NuevoFormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L20 | neighbors=[page.tsx]
-- "nuevo_page_nuevooficialpage": "NuevoOficialPage()" | kind=code-symbol | source=app/admin-transito/oficiales/nuevo/page.tsx:L7 | neighbors=[page.tsx]
-- "nuevo_page_nuevoreporteoficialpage": "NuevoReporteOficialPage()" | kind=code-symbol | source=app/oficial/nuevo/page.tsx:L7 | neighbors=[page.tsx]
-- "nuevo_page_nuevousuariopage": "NuevoUsuarioPage()" | kind=code-symbol | source=app/admin/usuarios/nuevo/page.tsx:L6 | neighbors=[page.tsx]
-- "nuevo_page_periodos": "PERIODOS" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_turnos": "TURNOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L10 | neighbors=[page.tsx]
-- "oficial_formulariorecorrido_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L23 | neighbors=[FormularioRecorrido.tsx]
-- "oficial_formulariorecorrido_steps": "STEPS" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L13 | neighbors=[FormularioRecorrido.tsx]
+- "login_desing_app_applyglobaltweaks": "applyGlobalTweaks()" | kind=code-symbol | source=login-desing/app.jsx:L211 | neighbors=[app.jsx]
+- "login_desing_app_appwitheffects": "AppWithEffects()" | kind=code-symbol | source=login-desing/app.jsx:L223 | neighbors=[app.jsx]
+- "login_desing_app_nextstepscard": "NextStepsCard()" | kind=code-symbol | source=login-desing/app.jsx:L139 | neighbors=[app.jsx]
+- "login_desing_app_palettecard": "PaletteCard()" | kind=code-symbol | source=login-desing/app.jsx:L87 | neighbors=[app.jsx]
+- "login_desing_app_tweaks": "TWEAKS" | kind=code-symbol | source=login-desing/app.jsx:L3 | neighbors=[app.jsx]
+- "login_desing_app_tweakspanel": "TweaksPanel()" | kind=code-symbol | source=login-desing/app.jsx:L167 | neighbors=[app.jsx]
+- "login_desing_app_typecard": "TypeCard()" | kind=code-symbol | source=login-desing/app.jsx:L115 | neighbors=[app.jsx]
+- "login_desing_design_canvas_dc": "DC" | kind=code-symbol | source=login-desing/design-canvas.jsx:L17 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcartboard": "DCArtboard()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L372 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcartboardframe": "DCArtboardFrame()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L374 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcctx": "DCCtx" | kind=code-symbol | source=login-desing/design-canvas.jsx:L57 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dceditable": "DCEditable()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L464 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcfocusoverlay": "DCFocusOverlay()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L480 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcpostit": "DCPostIt()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L607 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcsection": "DCSection()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L333 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcviewport": "DCViewport()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L182 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_designcanvas": "DesignCanvas()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L71 | neighbors=[design-canvas.jsx]
+- "login_desing_login_app_app": "App()" | kind=code-symbol | source=login-desing/login-app.jsx:L180 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconarrow": "IconArrow()" | kind=code-symbol | source=login-desing/login-app.jsx:L21 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconcheck": "IconCheck()" | kind=code-symbol | source=login-desing/login-app.jsx:L24 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconlock": "IconLock()" | kind=code-symbol | source=login-desing/login-app.jsx:L15 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconshield": "IconShield()" | kind=code-symbol | source=login-desing/login-app.jsx:L18 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconuser": "IconUser()" | kind=code-symbol | source=login-desing/login-app.jsx:L12 | neighbors=[login-app.jsx]
+- "login_desing_login_app_otpinput": "OtpInput()" | kind=code-symbol | source=login-desing/login-app.jsx:L125 | neighbors=[login-app.jsx]
+- "login_desing_login_app_terminal": "Terminal()" | kind=code-symbol | source=login-desing/login-app.jsx:L29 | neighbors=[login-app.jsx]
+- "login_desing_login_app_tweaks": "TWEAKS" | kind=code-symbol | source=login-desing/login-app.jsx:L6 | neighbors=[login-app.jsx]
+- "login_page_iconarrow": "IconArrow()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L16 | neighbors=[page.tsx]
+- "login_page_iconcheck": "IconCheck()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L19 | neighbors=[page.tsx]
+- "login_page_iconlock": "IconLock()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L10 | neighbors=[page.tsx]
+- "login_page_iconshield": "IconShield()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L13 | neighbors=[page.tsx]
+- "login_page_iconuser": "IconUser()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L7 | neighbors=[page.tsx]
+- "login_page_logincontent": "LoginContent()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L180 | neighbors=[page.tsx]
+- "login_page_loginpage": "LoginPage()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L172 | neighbors=[page.tsx]
+- "login_page_logline": "LogLine" | kind=code-symbol | source=app/(auth)/login/page.tsx:L25 | neighbors=[page.tsx]
+- "login_page_logtype": "LogType" | kind=code-symbol | source=app/(auth)/login/page.tsx:L24 | neighbors=[page.tsx]
+- "login_page_otpinput": "OtpInput()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L103 | neighbors=[page.tsx]
+- "login_page_terminal": "Terminal()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L27 | neighbors=[page.tsx]
+- "manual_migrations_0006_formato_n_formato_n_reportes": "formato_n_reportes" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L1 | neighbors=[0006_formato_n.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_armas_aseguradas": "formato_n_armas_aseguradas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L113 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_atencion_victimas": "formato_n_atencion_victimas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L98 | neighbors=[0007_formato_n_split.sql]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-070.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-070.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

@@ -1,4 +1,4 @@
-# Node Description Batch 64 of 79
+# Node Description Batch 64 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "formato_n_fgr_page_th": "Th()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L104 | neighbors=[page.tsx]
-- "formato_n_fgr_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fgr/route.ts:L7 | neighbors=[route.ts]
-- "formato_n_fgr_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-fgr/route.ts:L20 | neighbors=[route.ts]
-- "formato_n_medios_alternativos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L96 | neighbors=[page.tsx]
-- "formato_n_medios_alternativos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L92 | neighbors=[page.tsx]
-- "formato_n_medios_alternativos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-medios-alternativos/route.ts:L7 | neighbors=[route.ts]
-- "formato_n_medios_alternativos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-medios-alternativos/route.ts:L20 | neighbors=[route.ts]
-- "formato_n_rnd_page_formatonrndpage": "FormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L12 | neighbors=[page.tsx]
-- "formato_n_rnd_page_td": "Td()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L76 | neighbors=[page.tsx]
-- "formato_n_rnd_page_th": "Th()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L72 | neighbors=[page.tsx]
-- "formato_n_rnd_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/route.ts:L7 | neighbors=[route.ts]
-- "formato_n_rnd_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/route.ts:L17 | neighbors=[route.ts]
-- "formulario_ingreso_page_despachopage": "DespachoPage()" | kind=code-symbol | source=app/analisis/formulario-ingreso/page.tsx:L9 | neighbors=[page.tsx]
-- "fotos_page_fotosdetenidopage": "FotosDetenidoPage()" | kind=code-symbol | source=app/oficial/reportes/[id]/fotos/page.tsx:L10 | neighbors=[page.tsx]
-- "fuente_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/fuente/route.ts:L7 | neighbors=[route.ts]
-- "generar_orden_pago_route_post": "POST()" | kind=code-symbol | source=app/api/via/sa7/generar-orden-pago/route.ts:L9 | neighbors=[route.ts]
-- "generar_ppt_page_registrointeligenciapage": "RegistroInteligenciaPage()" | kind=code-symbol | source=app/analisis/generar-ppt/page.tsx:L9 | neighbors=[page.tsx]
-- "generar_ppt_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/generar-ppt/route.ts:L8 | neighbors=[route.ts]
-- "gruas_route_get": "GET()" | kind=code-symbol | source=app/api/complementos/gruas/route.ts:L4 | neighbors=[route.ts]
-- "guardar_evidencias_route_post": "POST()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-evidencias/route.ts:L7 | neighbors=[route.ts]
-- "health_route_get": "GET()" | kind=code-symbol | source=app/api/health/route.ts:L4 | neighbors=[route.ts]
-- "helpers_abrirdocumento_abrirdocumento": "abrirDocumento()" | kind=code-symbol | source=features/via/expediente/helpers/abrirDocumento.ts:L1 | neighbors=[abrirDocumento.ts]
-- "historial_page_historialpage": "HistorialPage()" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L11 | neighbors=[page.tsx]
-- "historial_page_tdstyle": "tdStyle" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L79 | neighbors=[page.tsx]
-- "historial_page_thstyle": "thStyle" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L78 | neighbors=[page.tsx]
-- "historial_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/historial/route.ts:L7 | neighbors=[route.ts]
-- "hooks_usedespacho_despachodetalle": "DespachoDetalle" | kind=code-symbol | source=hooks/useDespacho.ts:L23 | neighbors=[useDespacho.ts]
-- "hooks_usedespacho_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useDespacho.ts:L9 | neighbors=[useDespacho.ts]
-- "hooks_usedespacho_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=hooks/useDespacho.ts:L14 | neighbors=[useDespacho.ts]
-- "hooks_usedespacho_vehiculooption": "VehiculoOption" | kind=code-symbol | source=hooks/useDespacho.ts:L4 | neighbors=[useDespacho.ts]
-- "hooks_useempleado_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useEmpleado.ts:L4 | neighbors=[useEmpleado.ts]
-- "hooks_useflota_filtrosflota": "FiltrosFlota" | kind=code-symbol | source=hooks/useFlota.ts:L9 | neighbors=[useFlota.ts]
-- "hooks_useflota_vehiculooption": "VehiculoOption" | kind=code-symbol | source=hooks/useFlota.ts:L4 | neighbors=[useFlota.ts]
-- "hooks_useincidente_incidentedetalle": "IncidenteDetalle" | kind=code-symbol | source=hooks/useIncidente.ts:L4 | neighbors=[useIncidente.ts]
-- "hooks_useincidente_useincidente": "useIncidente()" | kind=code-symbol | source=hooks/useIncidente.ts:L23 | neighbors=[useIncidente.ts]
-- "hooks_useincidentes_filtros": "Filtros" | kind=code-symbol | source=hooks/useIncidentes.ts:L10 | neighbors=[useIncidentes.ts]
-- "hooks_useincidentes_incidenteresumen": "IncidenteResumen" | kind=code-symbol | source=hooks/useIncidentes.ts:L4 | neighbors=[useIncidentes.ts]
-- "hooks_useincidentes_useincidentes": "useIncidentes()" | kind=code-symbol | source=hooks/useIncidentes.ts:L14 | neighbors=[useIncidentes.ts]
-- "hooks_usereportecampo_reportecampodetalle": "ReporteCampoDetalle" | kind=code-symbol | source=hooks/useReporteCampo.ts:L4 | neighbors=[useReporteCampo.ts]
-- "hooks_usereportecampo_usereportecampo": "useReporteCampo()" | kind=code-symbol | source=hooks/useReporteCampo.ts:L35 | neighbors=[useReporteCampo.ts]
+- "fiscalia_fiscaliadashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L24 | neighbors=[FiscaliaDashboard.tsx]
+- "fiscalia_fiscaliadashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L31 | neighbors=[FiscaliaDashboard.tsx]
+- "fiscalia_fiscaliadashboard_props": "Props" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L37 | neighbors=[FiscaliaDashboard.tsx]
+- "fiscalia_fiscaliadashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L68 | neighbors=[FiscaliaDashboard.tsx]
+- "fiscalia_fiscaliadashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L52 | neighbors=[FiscaliaDashboard.tsx]
+- "fiscalia_fiscaliadashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L47 | neighbors=[FiscaliaDashboard.tsx]
+- "fiscalia_fiscaliatable_columns": "columns" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L23 | neighbors=[FiscaliaTable.tsx]
+- "fiscalia_fiscaliatable_datarow": "DataRow" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L5 | neighbors=[FiscaliaTable.tsx]
+- "fiscalia_fiscaliatable_fiscaliatable": "FiscaliaTable()" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L31 | neighbors=[FiscaliaTable.tsx]
+- "fiscalia_fiscaliatable_fiscaliatableprops": "FiscaliaTableProps" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L16 | neighbors=[FiscaliaTable.tsx]
+- "fiscalia_formularioasegurado_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L30 | neighbors=[FormularioAsegurado.tsx]
+- "fiscalia_formularioasegurado_inputsx": "inputSx" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L42 | neighbors=[FormularioAsegurado.tsx]
+- "fiscalia_formularioasegurado_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L20 | neighbors=[FormularioAsegurado.tsx]
+- "fiscalia_formularioasegurado_props": "Props" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L13 | neighbors=[FormularioAsegurado.tsx]
+- "fiscalia_formulariopuestadisposicion_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L38 | neighbors=[FormularioPuestaDisposicion.tsx]
+- "fiscalia_formulariopuestadisposicion_inputsx": "inputSx" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L27 | neighbors=[FormularioPuestaDisposicion.tsx]
+- "fiscalia_formulariopuestadisposicion_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L17 | neighbors=[FormularioPuestaDisposicion.tsx]
+- "fiscalia_formulariopuestadisposicion_props": "Props" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L10 | neighbors=[FormularioPuestaDisposicion.tsx]
+- "fiscalia_mapper_bool": "bool()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L8 | neighbors=[mapper.ts]
+- "fiscalia_mapper_rowtoinfracciondetalle": "rowToInfraccionDetalle()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L87 | neighbors=[mapper.ts]
+- "fiscalia_mapper_str": "str()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L3 | neighbors=[mapper.ts]
+- "fiscalia_page_fiscaliadashboardpage": "FiscaliaDashboardPage()" | kind=code-symbol | source=app/fiscalia/page.tsx:L7 | neighbors=[page.tsx]
+- "fiscalia_permisos_accion": "Accion" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L5 | neighbors=[permisos.ts]
+- "fiscalia_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L12 | neighbors=[permisos.ts]
+- "fiscalia_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L20 | neighbors=[permisos.ts]
+- "fiscalia_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L16 | neighbors=[permisos.ts]
+- "fiscalia_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L6 | neighbors=[permisos.ts]
+- "fiscalia_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L4 | neighbors=[permisos.ts]
+- "fiscalia_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L3 | neighbors=[permisos.ts]
+- "fiscalia_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L8 | neighbors=[permisos.ts]
+- "fiscalia_profiledropdown_props": "Props" | kind=code-symbol | source=components/fiscalia/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
+- "fiscalia_service_obtenerdetalleinfraccionviaservice": "obtenerDetalleInfraccionViaService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L147 | neighbors=[service.ts]
+- "fiscalia_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/fiscalia/SubirFotoDetenido.tsx:L6 | neighbors=[SubirFotoDetenido.tsx]
+- "fiscalia_tabasegurados_props": "Props" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L8 | neighbors=[TabAsegurados.tsx]
+- "fiscalia_tabasegurados_tabbase": "tabBase" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L14 | neighbors=[TabAsegurados.tsx]
+- "fiscalia_tabasegurados_tdsx": "tdSx" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L37 | neighbors=[TabAsegurados.tsx]
+- "fiscalia_tabasegurados_thsx": "thSx" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L25 | neighbors=[TabAsegurados.tsx]
+- "fiscalia_tabsolicitudes_props": "Props" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L9 | neighbors=[TabSolicitudes.tsx]
+- "fiscalia_tabsolicitudes_tab": "Tab" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L16 | neighbors=[TabSolicitudes.tsx]
+- "fiscalia_tabsolicitudes_tabs": "tabs" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L18 | neighbors=[TabSolicitudes.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-063.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-063.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

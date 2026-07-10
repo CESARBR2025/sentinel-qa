@@ -18,3 +18,4 @@
 | 10 | [Formato N](Formato%20N.md) | ✅ Documentada | Envío de formatos a coordinación |
 | 11 | [Reporte Campo](Reporte%20Campo.md) | ✅ Documentada | Reportes de oficiales en campo |
 | 12 | [Rol Servicios](Rol%20Servicios.md) | ✅ Documentada | Servicios y estado de fuerza |
+| 13 | [Flujos por Rol](Flujos%20por%20Rol.md) | ✅ Documentada | Flujos operativos, brechas y mejoras por perfil |

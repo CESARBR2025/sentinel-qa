@@ -1,4 +1,4 @@
-# Node Description Batch 62 of 79
+# Node Description Batch 62 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "fiscalia_fiscaliadashboard_avatar_colors": "AVATAR_COLORS" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L13 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_estatusfiscalia": "EstatusFiscalia" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L43 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_fiscaliadashboard": "FiscaliaDashboard()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L70 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_getbadge": "getBadge()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L64 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L24 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L31 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_props": "Props" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L37 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L68 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L52 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L47 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliatable_columns": "columns" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L23 | neighbors=[FiscaliaTable.tsx]
-- "fiscalia_fiscaliatable_datarow": "DataRow" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L5 | neighbors=[FiscaliaTable.tsx]
-- "fiscalia_fiscaliatable_fiscaliatable": "FiscaliaTable()" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L31 | neighbors=[FiscaliaTable.tsx]
-- "fiscalia_fiscaliatable_fiscaliatableprops": "FiscaliaTableProps" | kind=code-symbol | source=components/fiscalia/FiscaliaTable.tsx:L16 | neighbors=[FiscaliaTable.tsx]
-- "fiscalia_formularioasegurado_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L30 | neighbors=[FormularioAsegurado.tsx]
-- "fiscalia_formularioasegurado_inputsx": "inputSx" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L42 | neighbors=[FormularioAsegurado.tsx]
-- "fiscalia_formularioasegurado_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L20 | neighbors=[FormularioAsegurado.tsx]
-- "fiscalia_formularioasegurado_props": "Props" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L13 | neighbors=[FormularioAsegurado.tsx]
-- "fiscalia_formulariopuestadisposicion_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L38 | neighbors=[FormularioPuestaDisposicion.tsx]
-- "fiscalia_formulariopuestadisposicion_inputsx": "inputSx" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L27 | neighbors=[FormularioPuestaDisposicion.tsx]
-- "fiscalia_formulariopuestadisposicion_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L17 | neighbors=[FormularioPuestaDisposicion.tsx]
-- "fiscalia_formulariopuestadisposicion_props": "Props" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L10 | neighbors=[FormularioPuestaDisposicion.tsx]
-- "fiscalia_mapper_bool": "bool()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L8 | neighbors=[mapper.ts]
-- "fiscalia_mapper_rowtoinfracciondetalle": "rowToInfraccionDetalle()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L87 | neighbors=[mapper.ts]
-- "fiscalia_mapper_str": "str()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L3 | neighbors=[mapper.ts]
-- "fiscalia_page_fiscaliadashboardpage": "FiscaliaDashboardPage()" | kind=code-symbol | source=app/fiscalia/page.tsx:L7 | neighbors=[page.tsx]
-- "fiscalia_profiledropdown_props": "Props" | kind=code-symbol | source=components/fiscalia/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
-- "fiscalia_service_obtenerdetalleinfraccionviaservice": "obtenerDetalleInfraccionViaService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L147 | neighbors=[service.ts]
-- "fiscalia_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/fiscalia/SubirFotoDetenido.tsx:L6 | neighbors=[SubirFotoDetenido.tsx]
-- "fiscalia_tabasegurados_props": "Props" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L8 | neighbors=[TabAsegurados.tsx]
-- "fiscalia_tabasegurados_tabbase": "tabBase" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L14 | neighbors=[TabAsegurados.tsx]
-- "fiscalia_tabasegurados_tdsx": "tdSx" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L37 | neighbors=[TabAsegurados.tsx]
-- "fiscalia_tabasegurados_thsx": "thSx" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L25 | neighbors=[TabAsegurados.tsx]
-- "fiscalia_tabsolicitudes_props": "Props" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L9 | neighbors=[TabSolicitudes.tsx]
-- "fiscalia_tabsolicitudes_tab": "Tab" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L16 | neighbors=[TabSolicitudes.tsx]
-- "fiscalia_tabsolicitudes_tabs": "tabs" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L18 | neighbors=[TabSolicitudes.tsx]
-- "fiscalia_types_aseguradocondisposicion": "AseguradoConDisposicion" | kind=code-symbol | source=lib/fiscalia/types.ts:L121 | neighbors=[types.ts]
-- "fiscalia_types_detallegarantia": "DetalleGarantia" | kind=code-symbol | source=lib/fiscalia/types.ts:L338 | neighbors=[types.ts]
-- "fiscalia_types_detalleheader": "DetalleHeader" | kind=code-symbol | source=lib/fiscalia/types.ts:L292 | neighbors=[types.ts]
-- "fiscalia_types_detalleinfraccion": "DetalleInfraccion" | kind=code-symbol | source=lib/fiscalia/types.ts:L312 | neighbors=[types.ts]
+- "denuncias_stored1_d1formactions": "D1FormActions" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L27 | neighbors=[storeD1.ts]
+- "denuncias_stored1_d1formstate": "D1FormState" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L17 | neighbors=[storeD1.ts]
+- "denuncias_stored1_d1formstore": "D1FormStore" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L38 | neighbors=[storeD1.ts]
+- "denuncias_stored1_dir": "Dir" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L12 | neighbors=[storeD1.ts]
+- "denuncias_stored1_horaactual": "horaActual" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L5 | neighbors=[storeD1.ts]
+- "denuncias_stored1_initialstate": "initialState" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L42 | neighbors=[storeD1.ts]
+- "despacho_despachoform_btn": "BTN" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L13 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_btn_sm": "BTN_SM" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L14 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_elemento": "Elemento" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L10 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_err": "ERR" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L16 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_i": "I" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L12 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_lbl": "LBL" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L17 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_tag": "TAG" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L15 | neighbors=[DespachoForm.tsx]
+- "despacho_despachoform_unidad": "Unidad" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L9 | neighbors=[DespachoForm.tsx]
+- "despacho_page_despachopage": "DespachoPage()" | kind=code-symbol | source=app/agente_911/despacho/page.tsx:L9 | neighbors=[page.tsx]
+- "despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/[id]/despacho/route.ts:L7 | neighbors=[route.ts]
+- "despacho_tablondespacho_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L246 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_canalbadge": "CanalBadge()" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L230 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_incrow": "IncRow" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L15 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L247 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_labeltopstyle": "labelTopStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L244 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_tab": "Tab" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L13 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_titlestyle": "titleStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L245 | neighbors=[TablonDespacho.tsx]
+- "detenidos_page_btndetalle": "btnDetalle" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L112 | neighbors=[page.tsx]
+- "detenidos_page_detenidosfiscaliapage": "DetenidosFiscaliaPage()" | kind=code-symbol | source=app/fiscalia/detenidos/page.tsx:L9 | neighbors=[page.tsx]
+- "detenidos_page_detenidosjuzgadopage": "DetenidosJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/detenidos/page.tsx:L10 | neighbors=[page.tsx]
+- "detenidos_page_detenidospage": "DetenidosPage()" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L12 | neighbors=[page.tsx]
+- "detenidos_page_fotobadge": "fotoBadge()" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L119 | neighbors=[page.tsx]
+- "detenidos_page_pagbtn": "pagBtn" | kind=code-symbol | source=app/fiscalia/detenidos/page.tsx:L165 | neighbors=[page.tsx]
+- "editar_campo_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/editar-campo/route.ts:L8 | neighbors=[route.ts]
+- "emails_mailer_mailattachment": "MailAttachment" | kind=code-symbol | source=lib/emails/mailer.ts:L13 | neighbors=[mailer.ts]
+- "emails_mailer_mailoptions": "MailOptions" | kind=code-symbol | source=lib/emails/mailer.ts:L20 | neighbors=[mailer.ts]
+- "emails_mailer_transporter": "transporter" | kind=code-symbol | source=lib/emails/mailer.ts:L3 | neighbors=[mailer.ts]
+- "en_despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/en-despacho/route.ts:L7 | neighbors=[route.ts]
+- "enviar_foto_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/enviar-foto/route.ts:L9 | neighbors=[route.ts]
+- "envio_de_formatos_page_enviodeformatospage": "EnvioDeFormatosPage()" | kind=code-symbol | source=app/envio-de-formatos/page.tsx:L13 | neighbors=[page.tsx]
+- "eslint_config_eslintconfig": "eslintConfig" | kind=code-symbol | source=eslint.config.mjs:L5 | neighbors=[eslint.config.mjs]
+- "estadisticos_page_reportestelefonicospage": "ReportesTelefonicosPage()" | kind=code-symbol | source=app/estadisticos/page.tsx:L14 | neighbors=[page.tsx]
+- "estadisticos_phonepagination_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L51 | neighbors=[PhonePagination.tsx]
+- "estadisticos_phonepagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L4 | neighbors=[PhonePagination.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-061.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-061.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

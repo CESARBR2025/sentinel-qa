@@ -1,4 +1,4 @@
-# Node Description Batch 58 of 79
+# Node Description Batch 58 of 82
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "consolidar_page_fge": "Fge" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L35 | neighbors=[page.tsx]
-- "consolidar_page_fgr": "Fgr" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L36 | neighbors=[page.tsx]
-- "consolidar_page_linkbtn": "linkBtn" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L403 | neighbors=[page.tsx]
-- "consolidar_page_medios": "Medios" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L46 | neighbors=[page.tsx]
-- "consolidar_page_metric": "Metric()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L408 | neighbors=[page.tsx]
-- "consolidar_page_periodo": "Periodo" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L9 | neighbors=[page.tsx]
-- "consolidar_page_periodometricas": "PeriodoMetricas" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L21 | neighbors=[page.tsx]
-- "consolidar_page_periodometricasblocks": "PeriodoMetricasBlocks()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L417 | neighbors=[page.tsx]
-- "consolidar_page_rnd": "Rnd" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L38 | neighbors=[page.tsx]
-- "consolidar_page_tagcapturado": "tagCapturado" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L88 | neighbors=[page.tsx]
-- "consolidar_page_tagsincapturar": "tagSinCapturar" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L93 | neighbors=[page.tsx]
-- "consolidar_page_tdstyle": "tdStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L401 | neighbors=[page.tsx]
-- "consolidar_page_thstyle": "thStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L400 | neighbors=[page.tsx]
-- "consolidar_page_victimas": "Victimas" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L54 | neighbors=[page.tsx]
-- "contestacion_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/contestacion/route.ts:L7 | neighbors=[route.ts]
-- "corralon_actions_tabsolicitudes": "TabSolicitudes" | kind=code-symbol | source=lib/corralon/actions.ts:L26 | neighbors=[actions.ts]
-- "corralon_layout_corralonlayout": "CorralonLayout()" | kind=code-symbol | source=app/corralon/layout.tsx:L6 | neighbors=[layout.tsx]
-- "corralon_page_corralondashboardpage": "CorralonDashboardPage()" | kind=code-symbol | source=app/corralon/page.tsx:L5 | neighbors=[page.tsx]
-- "corralon_permisos_accion": "Accion" | kind=code-symbol | source=lib/corralon/permisos.ts:L5 | neighbors=[permisos.ts]
-- "corralon_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/corralon/permisos.ts:L17 | neighbors=[permisos.ts]
-- "corralon_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/corralon/permisos.ts:L27 | neighbors=[permisos.ts]
-- "corralon_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/corralon/permisos.ts:L9 | neighbors=[permisos.ts]
-- "corralon_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/corralon/permisos.ts:L21 | neighbors=[permisos.ts]
-- "corralon_permisos_permisorow": "PermisoRow" | kind=code-symbol | source=lib/corralon/permisos.ts:L7 | neighbors=[permisos.ts]
-- "corralon_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/corralon/permisos.ts:L6 | neighbors=[permisos.ts]
-- "corralon_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/corralon/permisos.ts:L4 | neighbors=[permisos.ts]
-- "corralon_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/corralon/permisos.ts:L13 | neighbors=[permisos.ts]
-- "corralon_profile_dropdown_props": "Props" | kind=code-symbol | source=app/corralon/profile-dropdown.tsx:L8 | neighbors=[profile-dropdown.tsx]
-- "cuestionario_robo_page_cuestionariorobopage": "CuestionarioRoboPage()" | kind=code-symbol | source=app/auxiliar/cuestionario-robo/page.tsx:L13 | neighbors=[page.tsx]
-- "cuestionario_robo_page_td": "TD" | kind=code-symbol | source=app/auxiliar/cuestionario-robo/page.tsx:L11 | neighbors=[page.tsx]
-- "cuestionario_robo_page_th": "TH" | kind=code-symbol | source=app/auxiliar/cuestionario-robo/page.tsx:L10 | neighbors=[page.tsx]
-- "curp_route_post": "POST()" | kind=code-symbol | source=app/api/via/curp/route.ts:L3 | neighbors=[route.ts]
-- "d1_d1pagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/d1/D1Pagination.tsx:L5 | neighbors=[D1Pagination.tsx]
-- "d1_noiniciada_descargapagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaPagination.tsx:L4 | neighbors=[DescargaPagination.tsx]
-- "d1_noiniciada_page_descargaspage": "DescargasPage()" | kind=code-symbol | source=app/d1_noiniciada/page.tsx:L13 | neighbors=[page.tsx]
-- "d1_page_reportesd1page": "ReportesD1Page()" | kind=code-symbol | source=app/d1/page.tsx:L13 | neighbors=[page.tsx]
-- "d1_service_tostr": "toStr()" | kind=code-symbol | source=lib/d1/service.ts:L3 | neighbors=[service.ts]
-- "dashboard_enable_2fa_card": "Card()" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L145 | neighbors=[enable-2fa.tsx]
-- "dashboard_enable_2fa_s": "s" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L164 | neighbors=[enable-2fa.tsx]
-- "dashboard_enable_2fa_step": "Step" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L5 | neighbors=[enable-2fa.tsx]
+- "auth_layout_authlayout": "AuthLayout()" | kind=code-symbol | source=app/(auth)/layout.tsx:L7 | neighbors=[layout.tsx]
+- "auth_layout_metadata": "metadata" | kind=code-symbol | source=app/(auth)/layout.tsx:L3 | neighbors=[layout.tsx]
+- "auxiliar_actions_bool": "bool()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L17 | neighbors=[actions.ts]
+- "auxiliar_actions_str": "str()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L18 | neighbors=[actions.ts]
+- "auxiliar_page_auxiliarpage": "AuxiliarPage()" | kind=code-symbol | source=app/auxiliar/page.tsx:L11 | neighbors=[page.tsx]
+- "auxiliar_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L17 | neighbors=[permisos.ts]
+- "auxiliar_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L25 | neighbors=[permisos.ts]
+- "auxiliar_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L9 | neighbors=[permisos.ts]
+- "auxiliar_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L21 | neighbors=[permisos.ts]
+- "auxiliar_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L7 | neighbors=[permisos.ts]
+- "auxiliar_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L30 | neighbors=[permisos.ts]
+- "auxiliar_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L5 | neighbors=[permisos.ts]
+- "auxiliar_profiledropdownauxiliar_props": "Props" | kind=code-symbol | source=components/auxiliar/ProfileDropdownAuxiliar.tsx:L8 | neighbors=[ProfileDropdownAuxiliar.tsx]
+- "buscar_orden_route_get": "GET()" | kind=code-symbol | source=app/api/via/sa7/buscar-orden/route.ts:L6 | neighbors=[route.ts]
+- "busquedas_page_busquedaspage": "BusquedasPage()" | kind=code-symbol | source=app/prevencion/busquedas/page.tsx:L14 | neighbors=[page.tsx]
+- "busquedas_page_tipo_cfg": "TIPO_CFG" | kind=code-symbol | source=app/prevencion/busquedas/page.tsx:L9 | neighbors=[page.tsx]
+- "busquedas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/busquedas/route.ts:L8 | neighbors=[route.ts]
+- "busquedas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/route.ts:L22 | neighbors=[route.ts]
+- "c4_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/c4/route.ts:L7 | neighbors=[route.ts]
+- "calcular_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fge/calcular/route.ts:L7 | neighbors=[route.ts]
+- "camara_service_tostr": "toStr()" | kind=code-symbol | source=lib/camara/service.ts:L3 | neighbors=[service.ts]
+- "cancelar_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/[id]/cancelar/route.ts:L7 | neighbors=[route.ts]
+- "captura_page_capturapage": "CapturaPage()" | kind=code-symbol | source=app/infracciones/captura/page.tsx:L10 | neighbors=[page.tsx]
+- "checklist_page_checklistpage": "ChecklistPage()" | kind=code-symbol | source=app/auxiliar/checklist/page.tsx:L9 | neighbors=[page.tsx]
+- "ciudadano_formulario911_formulario911": "Formulario911()" | kind=code-symbol | source=app/agente_911/ciudadano/Formulario911.tsx:L11 | neighbors=[Formulario911.tsx]
+- "ciudadano_formulario911_libraries": "libraries" | kind=code-symbol | source=app/agente_911/ciudadano/Formulario911.tsx:L9 | neighbors=[Formulario911.tsx]
+- "ciudadano_page_ciudadano911page": "Ciudadano911Page()" | kind=code-symbol | source=app/agente_911/ciudadano/page.tsx:L16 | neighbors=[page.tsx]
+- "complementos_repository_gruarow": "GruaRow" | kind=code-symbol | source=lib/complementos/repository.ts:L3 | neighbors=[repository.ts]
+- "completar_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/solicitudes/[id]/completar/route.ts:L7 | neighbors=[route.ts]
+- "completar_solicitud_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/completar-solicitud/route.ts:L7 | neighbors=[route.ts]
+- "components_buttonverdetalles_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L6 | neighbors=[ButtonVerDetalles.tsx]
+- "components_capturardatostitularsection_capturardatostitularsection": "CapturarDatosTitularSection()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L15 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_field": "Field()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L671 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_fieldname": "FieldName" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L33 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L9 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_validatefield": "validateField()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L35 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturarinfractorsection_capturarinfractorsection": "CapturarInfractorSection()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L42 | neighbors=[CapturarInfractorSection.tsx]
+- "components_capturarinfractorsection_field": "Field()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L15 | neighbors=[CapturarInfractorSection.tsx]
+- "components_capturarinfractorsection_props": "Props" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L8 | neighbors=[CapturarInfractorSection.tsx]
+- "components_formularioinfraccion_addressdata": "AddressData" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L9 | neighbors=[FormularioInfraccion.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-057.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-057.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is
