@@ -10,13 +10,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { tieneAccesoSeccion } from "@/lib/911/permisos";
+import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
 
 export default async function DetalleWhatsAppPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
+
+    const rolNombre = await obtenerRolNombre(session.user.id)
+    const backHref = rolNombre === 'agente_911' ? '/agente_911' : '/dashboard'
+    const backLabel = rolNombre === 'agente_911' ? 'Panel 911' : 'Dashboard'
 
     const data = await getIncidenteConExtras(id) as any;
     if (!data) notFound();
@@ -25,11 +29,11 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
             <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');` }} />
-            <DashboardHeader user={session.user as any} />
+            <DashboardHeader user={session.user as any} backHref={backHref} backLabel={backLabel} />
             
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
                 
-                <Link href="/911/whatsapp/incidentes" style={btnBackStyle}>
+                <Link href="/agente_911/whatsapp/incidentes" style={btnBackStyle}>
                     <ArrowLeft size={14} /> VOLVER AL LISTADO GENERAL
                 </Link>
 

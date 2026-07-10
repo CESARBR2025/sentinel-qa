@@ -9,16 +9,14 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { tienePermiso } from '@/lib/reportes/permisos'
 import { getIncidentesCount, getEnvioFormatosCount } from '@/lib/reportes/repository'
 
 export default async function GestionPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 

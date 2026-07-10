@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_actions_validarenum": "validarEnum()" | kind=code-symbol | source=lib/incidentes/actions.ts:L41 | neighbors=[actions.ts, addPersonaAfectada(), createIncidente(), insertarIncidente()]
 - "incidentes_mapper_rowtoalarmaescolar": "rowToAlarmaEscolar()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L154 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
 - "incidentes_mapper_rowtoincidentecondespachobase": "rowToIncidenteConDespachoBase()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L54 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
 - "incidentes_mapper_rowtoincidentependiente": "rowToIncidentePendiente()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L74 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
@@ -42,10 +43,11 @@ one-sentence description — no prose, no markdown fences.
 - "oficial_mapper_rowtoreportecampo": "rowToReporteCampo()" | kind=code-symbol | source=lib/oficial/mapper.ts:L9 | neighbors=[mapper.ts, parseJsonField(), toStr(), rowToReporteDetalle()]
 - "oficial_mapper_rowtoreportedetalle": "rowToReporteDetalle()" | kind=code-symbol | source=lib/oficial/mapper.ts:L111 | neighbors=[mapper.ts, rowToD1(), rowToReporteCampo(), repository.ts]
 - "oficial_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/oficial/mapper.ts:L64 | neighbors=[mapper.ts, rowToD1(), rowToReporteCampo(), rowToReporteResumen()]
-- "oficial_service_crearreporte": "crearReporte()" | kind=code-symbol | source=lib/oficial/service.ts:L92 | neighbors=[actions.ts, service.ts, generarFolioUnico(), num()]
+- "oficial_service_crearreporte": "crearReporte()" | kind=code-symbol | source=lib/oficial/service.ts:L94 | neighbors=[actions.ts, service.ts, generarFolioUnico(), num()]
 - "oficial_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/oficial/ToastExito.tsx:L6 | neighbors=[page.tsx, page.tsx, page.tsx, ToastExito.tsx]
+- "oficial_types_ofidetenido": "OfiDetenido" | kind=code-symbol | source=lib/oficial/types.ts:L18 | neighbors=[mapper.ts, service.ts, store.ts, types.ts]
 - "oficial_types_ofioficial": "OfiOficial" | kind=code-symbol | source=lib/oficial/types.ts:L1 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "oficial_types_ofireporteresumen": "OfiReporteResumen" | kind=code-symbol | source=lib/oficial/types.ts:L121 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "oficial_types_ofireporteresumen": "OfiReporteResumen" | kind=code-symbol | source=lib/oficial/types.ts:L123 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
 - "permisos_core_guardarpermisosseccionesaction": "guardarPermisosSeccionesAction()" | kind=code-symbol | source=lib/permisos/core.ts:L161 | neighbors=[page.tsx, core.ts, guardarPermiso(), requireAdmin()]
 - "permisos_core_guardarplantillaseccionesaction": "guardarPlantillaSeccionesAction()" | kind=code-symbol | source=lib/permisos/core.ts:L184 | neighbors=[core.ts, guardarPlantillaSeccion(), requireAdmin(), page.tsx]
 - "permisos_core_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/permisos/core.ts:L32 | neighbors=[page.tsx, core.ts, mapaDefault(), tienePermiso()]
@@ -55,8 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "prevencion_prorrogaviewermodal": "ProrrogaViewerModal.tsx" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L1 | neighbors=[0e33bf6 feat: módulo Admin, Prórroga, F…, page.tsx, ProrrogaViewerModal(), ProrrogaViewerModalProps]
 - "reportes_formato_n_atencion_victimas_service_obteneratencionvictimasporfechaperiodo": "obtenerAtencionVictimasPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L64 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts, rowTo(), formato-n-consolidado-service.ts]
 - "reportes_formato_n_fge_service_obtenerfgeporfechaperiodo": "obtenerFgePorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L73 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-fge-service.ts, rowTo()]
-- "reportes_formato_n_fgr_service_obtenerfgrporfechaperiodo": "obtenerFgrPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L72 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-fgr-service.ts, rowTo()]
-- "reportes_formato_n_medios_alternativos_service_obtenermediosalternativosporfechaperiodo": "obtenerMediosAlternativosPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L60 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-medios-alternativos-service.ts, rowTo()]
 
 ## Instructions
 

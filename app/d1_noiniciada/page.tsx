@@ -8,7 +8,7 @@ import { styles } from '@/components/reportes/d1_noiniciada/styles';
 import { DescargaFilters } from '@/components/reportes/d1_noiniciada/DescargaFilters';
 import { DescargaTable } from '@/components/reportes/d1_noiniciada/DescargaTable';
 import { listarSinD1 } from '@/lib/reportes-sin-d1/service'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function DescargasPage({
   searchParams,
@@ -18,9 +18,7 @@ export default async function DescargasPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) redirect('/dashboard')
 
 
   const user = session.user as { name: string; email: string; image?: string }

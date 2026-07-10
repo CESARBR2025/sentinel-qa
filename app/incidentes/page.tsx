@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getUserWithRole } from "@/lib/auth/helpers";
 import { listarIncidentesRecientes } from "@/lib/911/repository";
 import { DashboardHeader } from "@/components/partials/Header";
 import { auth } from "@/lib/auth";
@@ -13,14 +12,10 @@ import {
 import Link from "next/link";
 import React from "react";
 
-const ROLES_PERMITIDOS = ['Administrador', 'Operador', 'Oficial de Campo']
-
 export default async function BitacoraIncidentesPage() {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
 
-    const userWithRole = await getUserWithRole(session.user.id)
-    if (!userWithRole || !ROLES_PERMITIDOS.includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
     if (!(await tienePermiso(session.user.id, 'incidentes', 'ver'))) redirect('/dashboard')
 
     const listaIncidentes = await listarIncidentesRecientes(100)

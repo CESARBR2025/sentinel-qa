@@ -10,11 +10,15 @@ interface DashboardHeaderProps {
     email: string;
   };
   children?: React.ReactNode;
+  backHref?: string;
+  backLabel?: string;
 }
 
 export function DashboardHeader({
   user,
   children,
+  backHref = '/dashboard',
+  backLabel = 'Dashboard',
 }: DashboardHeaderProps) {
   return (
     <div
@@ -42,9 +46,9 @@ export function DashboardHeader({
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
         
-        {/* BOTÓN REGRESAR (TÚ LO PEDISTE) */}
+        {/* BOTÓN REGRESAR */}
         <Link
-          href="/dashboard"
+          href={backHref}
           style={{ 
             fontFamily: 'JetBrains Mono,monospace', 
             fontSize: 10, 
@@ -55,10 +59,10 @@ export function DashboardHeader({
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            marginBottom: 8 // Para alinear con el logo
+            marginBottom: 8
           }}
         >
-          <ArrowLeft size={14} /> Dashboard
+          <ArrowLeft size={14} /> {backLabel}
         </Link>
 
         <div style={{ width: 1, height: 32, background: '#e2e8f0', marginBottom: 8 }} />

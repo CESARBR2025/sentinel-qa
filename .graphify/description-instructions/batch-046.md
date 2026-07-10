@@ -17,7 +17,6 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "reportes_formato_n_fge_service_formatonfge": "FormatoNFge" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L8 | neighbors=[formato-n-consolidado-service.ts, formato-n-fge-service.ts]
 - "reportes_formato_n_fge_service_parseperiodo": "parsePeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L25 | neighbors=[formato-n-fge-service.ts, rowTo()]
 - "reportes_formato_n_fgr_service_actualizarfgr": "actualizarFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L110 | neighbors=[route.ts, formato-n-fgr-service.ts]
 - "reportes_formato_n_fgr_service_crearfgr": "crearFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L96 | neighbors=[route.ts, formato-n-fgr-service.ts]
@@ -57,6 +56,7 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_repository_getincidentescount": "getIncidentesCount()" | kind=code-symbol | source=lib/reportes/repository.ts:L25 | neighbors=[page.tsx, repository.ts]
 - "reportes_sin_d1_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-sin-d1/mapper.ts:L3 | neighbors=[mapper.ts, rowToSinD1()]
 - "reportes_sin_d1_repository_obtenersind1": "obtenerSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "reportes_sin_novedad_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-sin-novedad/mapper.ts:L3 | neighbors=[mapper.ts, rowToSinNovedad()]
 
 ## Instructions
 

@@ -1,7 +1,6 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { listarParesReporte } from '@/lib/auxiliar/service'
 import { ArrowLeft, CheckCircle2, Circle } from 'lucide-react'
 import Link from 'next/link'
@@ -11,9 +10,6 @@ export default async function ChecklistPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const pares = await listarParesReporte()

@@ -9,7 +9,6 @@ import pool from '@/lib/db'
 import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
 import { crearReporteCampo } from './service'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { tienePermiso, Accion } from '@/lib/incidentes/permisos'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 
@@ -18,10 +17,6 @@ async function requireOperador(accion: Accion = 'crear') {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const u = await getUserWithRole(session.user.id)
-
-  const rolesPermitidos = ['Administrador', 'Operador', 'Oficial de Campo']
-  if (!u?.rolNombre || !rolesPermitidos.includes(u.rolNombre)) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'incidentes', accion))) redirect('/dashboard')
 
   return session

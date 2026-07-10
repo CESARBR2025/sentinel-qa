@@ -6,17 +6,11 @@ import { format }    from 'date-fns'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
 import { tienePermiso } from '@/lib/prevencion/permisos'
 import { listarSolicitudesJuridico } from '@/lib/prevencion/repository'
-import { getUserWithRole } from '@/lib/auth/helpers'
 
 export default async function JuridicoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  const isJuridico = userWithRole?.rolNombre === 'Jurídico'
-  const isAdmin = userWithRole?.rolNombre === 'Administrador'
-  if (!isJuridico && !isAdmin) redirect('/prevencion/medidas')
   if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/prevencion/medidas')
 
   const solicitudes = await listarSolicitudesJuridico()
