@@ -1,7 +1,9 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+
 <!-- END:nextjs-agent-rules -->
 
 # Bóveda de Conocimiento
@@ -10,6 +12,40 @@ This version has breaking changes — APIs, conventions, and file structure may 
 La bóveda en `boveda/` es la única fuente de documentación. No crear documentación suelta fuera de ella.
 
 El archivo `.opencode/context-map.yaml` mapea cada dominio del proyecto a sus archivos relevantes, documentación y query de Graphify. Usarlo para cargar contexto en una tarea nueva.
+
+# Consultas a BD en tiempo real
+
+Cuando necesites información sobre esquemas, tablas, columnas, tipos, funciones, vistas, políticas RLS o cualquier estructura de la base de datos, **consulta directamente a PostgreSQL** usando `node -e` con el driver `pg` y `DATABASE_URL` del `.env`. No pierdas tiempo buscando en bóveda o graphify — la fuente de verdad es la BD.
+
+Script base para explorar:
+
+```bash
+node -e "
+const { Pool } = require('pg');
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+require('dotenv').config({ path: '.env' });
+async function q() {
+  const c = await pool.connect();
+  try {
+    // --- Reemplazar query aquí ---
+    const r = await c.query('SELECT ...');
+    console.log(JSON.stringify(r.rows, null, 2));
+  } finally { c.release(); await pool.end(); }
+}
+q().catch(e => { console.error(e.message); process.exit(1); });
+"
+```
+
+Ejemplos de queries útiles:
+
+- **Tablas y columnas**: `SELECT table_name, column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema NOT IN ('information_schema','pg_catalog') ORDER BY table_name, ordinal_position`
+- **Funciones**: `SELECT n.nspname AS schema, p.proname AS name, pg_get_function_result(p.oid) AS return_type, pg_get_function_arguments(p.oid) AS args FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid WHERE n.nspname NOT IN ('information_schema','pg_catalog','pg_toast') AND p.prokind = 'f'`
+- **Vistas**: `SELECT table_schema, table_name, view_definition FROM information_schema.views WHERE table_schema NOT IN ('information_schema','pg_catalog')`
+- **Políticas RLS**: `SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual FROM pg_policies`
+- **Secuencias**: `SELECT sequence_schema, sequence_name FROM information_schema.sequences WHERE sequence_schema NOT IN ('information_schema','pg_catalog')`
+- **Índices**: `SELECT schemaname, tablename, indexname, indexdef FROM pg_indexes WHERE schemaname NOT IN ('information_schema','pg_catalog')`
+
+Para queries ad-hoc rápidas usa el script inline. Si la consulta es recurrente, considérala para un comando en `.opencode/commands.json`.
 
 # No Drizzle — raw pg only (except better-auth)
 
@@ -29,7 +65,8 @@ lib/<module>/
 ```
 
 ### Rules
-- **Page files (`app/**/page.tsx`)** must NOT import `query` from `@/lib/db` directly. All DB reads go through a `lib/<module>/repository.ts` or `lib/<module>/service.ts`.
+
+- **Page files (`app/**/page.tsx`)** must NOT import `query`from`@/lib/db`directly. All DB reads go through a`lib/<module>/repository.ts`or`lib/<module>/service.ts`.
 - **Mapper functions** always accept `Record<string, unknown>` (the raw pg row) and return a typed interface with **camelCase** properties. DB columns are **snake_case**, mapper converts them.
 - **Repository functions** never import mappers from other domains. Cross-domain data composition happens in service layer.
 - **Service functions** re-export repository functions (thin pass-through) unless business logic is needed.
@@ -39,25 +76,30 @@ lib/<module>/
 All server actions use `tryAction` / `tryActionRaw` from `@/lib/error-handler`:
 
 ```ts
-import { tryAction, tryActionRaw, ValidationError, NotFoundError } from '@/lib/error-handler'
+import {
+  tryAction,
+  tryActionRaw,
+  ValidationError,
+  NotFoundError,
+} from "@/lib/error-handler";
 
 // For data-fetching actions (returns { success, data } | { success, error }):
 export async function obtenerAlgo(id: string) {
   return tryAction(async () => {
-    const data = await repositoryFn(id)
-    if (!data) throw new NotFoundError('Algo no encontrado')
-    return data
-  })
+    const data = await repositoryFn(id);
+    if (!data) throw new NotFoundError("Algo no encontrado");
+    return data;
+  });
 }
 
 // For mutation actions (re-throws, caller must handle):
 export async function crearAlgo(formData: FormData) {
   return tryActionRaw(async () => {
-    const val = formData.get('campo')
-    if (!val) throw new ValidationError('Campo requerido')
-    await repositoryInsert(val)
-    revalidatePath('/ruta')
-  })
+    const val = formData.get("campo");
+    if (!val) throw new ValidationError("Campo requerido");
+    await repositoryInsert(val);
+    revalidatePath("/ruta");
+  });
 }
 ```
 
@@ -66,6 +108,7 @@ Error classes: `AppError`, `NotFoundError` (404), `ValidationError` (400), `Unau
 API routes should use `apiHandler`, `apiSuccess`, `apiError` from the same module.
 
 # Page file rules
+
 - **Never** import `query` from `@/lib/db` in `app/**/page.tsx`
 - **Never** import `query` from `@/lib/db` in `app/**/layout.tsx`
 - **Never** import `query` from `@/lib/db` in `app/api/**/route.ts`
@@ -101,6 +144,7 @@ Al completar cualquier cambio (nueva feature, bugfix, refactor):
 This project has a graphify knowledge graph at .graphify/.
 
 Rules:
+
 - For codebase or architecture questions, when `.graphify/graph.json` exists, first run `graphify query "<question>"` (or `graphify path "<A>" "<B>"` / `graphify explain "<concept>"`); these return a scoped subgraph, usually much smaller than `GRAPH_REPORT.md` or raw grep output
 - If .graphify/wiki/index.md exists, navigate it instead of reading raw files
 - If .graphify/graph.json is missing but graphify-out/graph.json exists, run `graphify migrate-state --dry-run` first; if tracked legacy artifacts are reported, ask before using the recommended `git mv -f graphify-out .graphify` and commit message
