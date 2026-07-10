@@ -9,7 +9,7 @@ import { styles } from '@/components/reportes/modulo_incidentes/styles'
 import { PhoneStatsCards } from '@/components/reportes/estadisticos/PhoneStatsCards'
 import { PhoneReportsTable } from '@/components/reportes/estadisticos/PhoneReportsTable'
 import { obtenerDatosTelefonicos } from '@/lib/reportes-operativos/service'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function ReportesTelefonicosPage({
   searchParams,
@@ -19,9 +19,7 @@ export default async function ReportesTelefonicosPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }
   const sp = await searchParams

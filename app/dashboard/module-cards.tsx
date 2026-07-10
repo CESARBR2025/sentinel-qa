@@ -41,16 +41,7 @@ const MODULES: Module[] = [
     status: 'active',
     stats: [{ label: 'Pendientes', value: '—' }, { label: 'Hoy', value: '—' }]
   },
-   { 
-    id: '911',
-    label: 'Gestión 911', 
-    sub: 'Reportes Ciudadanos · Gestión', 
-    icon: <ShieldIcon />, 
-    href: '/911',
-    size: 'large',
-    status: 'active'
-  },
-  { 
+  {
     id: 'incidentes',
     label: 'Incidentes',            
     sub: 'Registro y despacho',             

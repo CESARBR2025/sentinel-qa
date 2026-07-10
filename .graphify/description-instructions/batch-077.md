@@ -17,6 +17,9 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "steps_pasoinfraccion_pasoinfraccionprops": "PasoInfraccionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L9 | neighbors=[PasoInfraccion.tsx]
+- "steps_pasopago_infraccioncreada": "InfraccionCreada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L19 | neighbors=[PasoPago.tsx]
+- "steps_pasopago_pasopago": "PasoPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L40 | neighbors=[PasoPago.tsx]
 - "steps_pasopago_pasopagoprops": "PasoPagoProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L24 | neighbors=[PasoPago.tsx]
 - "steps_pasoubicacion_pasoubicacion": "PasoUbicacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L12 | neighbors=[PasoUbicacion.tsx]
 - "steps_pasoubicacion_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L8 | neighbors=[PasoUbicacion.tsx]
@@ -54,9 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "types_detalleinfraccion_detalleinfraccion": "DetalleInfraccion" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L21 | neighbors=[detalleInfraccion.ts]
 - "types_detalleinfraccion_detalleinfractor": "DetalleInfractor" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L28 | neighbors=[detalleInfraccion.ts]
 - "types_detalleinfraccion_detalleubicacion": "DetalleUbicacion" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L51 | neighbors=[detalleInfraccion.ts]
-- "types_detalleinfraccion_detallevehiculo": "DetalleVehiculo" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L38 | neighbors=[detalleInfraccion.ts]
-- "ui_customselect_customselectprops": "CustomSelectProps" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L9 | neighbors=[CustomSelect.tsx]
-- "ui_customselect_option": "Option" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L4 | neighbors=[CustomSelect.tsx]
 
 ## Instructions
 

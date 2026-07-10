@@ -17,6 +17,9 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_types_incidentebasico": "IncidenteBasico" | kind=code-symbol | source=lib/incidentes/types.ts:L180 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentecondespacho": "IncidenteConDespacho" | kind=code-symbol | source=lib/incidentes/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentedetallecompleto": "IncidenteDetalleCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L129 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentelistitem": "IncidenteListItem" | kind=code-symbol | source=lib/incidentes/types.ts:L9 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=lib/incidentes/types.ts:L42 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_personaafectadarow": "PersonaAfectadaRow" | kind=code-symbol | source=lib/incidentes/types.ts:L58 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -54,9 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_types_iphdetenido": "IphDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L131 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "monitorista_types_prellenadocompleto": "PrellenadoCompleto" | kind=code-symbol | source=lib/monitorista/types.ts:L149 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "notificaciones_repository_listarnotificacionesnoleidas": "listarNotificacionesNoLeidas()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L5 | neighbors=[repository.ts, route.ts, layout.tsx]
-- "notificaciones_types_notificacion": "Notificacion" | kind=code-symbol | source=lib/notificaciones/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "oficial_mapper_rowtod1": "rowToD1()" | kind=code-symbol | source=lib/oficial/mapper.ts:L87 | neighbors=[mapper.ts, toStr(), rowToReporteDetalle()]
-- "oficial_mapper_rowtoreporteresumen": "rowToReporteResumen()" | kind=code-symbol | source=lib/oficial/mapper.ts:L70 | neighbors=[mapper.ts, toStr(), repository.ts]
 
 ## Instructions
 

@@ -17,7 +17,12 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "dashboard_module_cards_modulecard": "ModuleCard()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L85 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_alerticon": "AlertIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L17 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_bookicon": "BookIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L19 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_cameraicon": "CameraIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L21 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_charticon": "ChartIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L18 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_module": "Module" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L5 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_modulecard": "ModuleCard()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L76 | neighbors=[module-cards.tsx]
 - "dashboard_module_cards_modules": "MODULES" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L23 | neighbors=[module-cards.tsx]
 - "dashboard_module_cards_settingsicon": "SettingsIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L20 | neighbors=[module-cards.tsx]
 - "dashboard_module_cards_shieldicon": "ShieldIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L16 | neighbors=[module-cards.tsx]
@@ -52,11 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "denuncias_formulariod1_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L437 | neighbors=[FormularioD1.tsx]
 - "denuncias_formulariod1_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L20 | neighbors=[FormularioD1.tsx]
 - "denuncias_formulariod1_subpanelstyle": "subPanelStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L438 | neighbors=[FormularioD1.tsx]
-- "denuncias_formulariod1_subtitlestyle": "subTitleStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L448 | neighbors=[FormularioD1.tsx]
-- "denuncias_stored1_ahora": "ahora" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L3 | neighbors=[storeD1.ts]
-- "denuncias_stored1_center": "center" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L40 | neighbors=[storeD1.ts]
-- "denuncias_stored1_coord": "Coord" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L7 | neighbors=[storeD1.ts]
-- "denuncias_stored1_d1formactions": "D1FormActions" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L27 | neighbors=[storeD1.ts]
 
 ## Instructions
 

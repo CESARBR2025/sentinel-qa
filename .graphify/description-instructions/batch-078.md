@@ -17,6 +17,9 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "types_detalleinfraccion_detallevehiculo": "DetalleVehiculo" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L38 | neighbors=[detalleInfraccion.ts]
+- "ui_customselect_customselectprops": "CustomSelectProps" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L9 | neighbors=[CustomSelect.tsx]
+- "ui_customselect_option": "Option" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L4 | neighbors=[CustomSelect.tsx]
 - "ui_radioinput_radiooption": "RadioOption()" | kind=code-symbol | source=features/via/infracciones/components/ui/RadioInput.tsx:L1 | neighbors=[RadioInput.tsx]
 - "ui_segmentedcontrol_option": "Option" | kind=code-symbol | source=features/via/infracciones/components/ui/SegmentedControl.tsx:L3 | neighbors=[SegmentedControl.tsx]
 - "ui_segmentedcontrol_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/ui/SegmentedControl.tsx:L10 | neighbors=[SegmentedControl.tsx]
@@ -30,7 +33,6 @@ one-sentence description — no prose, no markdown fences.
 - "visitas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/medidas/[id]/visitas/route.ts:L22 | neighbors=[route.ts]
 - "whatsapp_formsection_formsection": "FormSection()" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L6 | neighbors=[FormSection.tsx]
 - "whatsapp_formsection_sectionprops": "SectionProps" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L1 | neighbors=[FormSection.tsx]
-- "whatsapp_page_registroincidentepage": "RegistroIncidentePage()" | kind=code-symbol | source=app/911/whatsapp/page.tsx:L9 | neighbors=[page.tsx]
 - "whatsapp_registroincidenteform_libraries": "libraries" | kind=code-symbol | source=components/911/whatsapp/RegistroIncidenteForm.tsx:L13 | neighbors=[RegistroIncidenteForm.tsx]
 - "whatsapp_registroincidenteform_registroincidentezen": "RegistroIncidenteZen()" | kind=code-symbol | source=components/911/whatsapp/RegistroIncidenteForm.tsx:L15 | neighbors=[RegistroIncidenteForm.tsx]
 - "wireframes_shared_arrow": "Arrow()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L65 | neighbors=[shared.jsx]

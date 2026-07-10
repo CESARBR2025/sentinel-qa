@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "analisis_generarpresentacion_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L306 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_btnfinishstyle": "btnFinishStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L311 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_btnnextstyle": "btnNextStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L300 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_cardstyle": "cardStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L296 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_labelstyle": "labelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L298 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_mapboxstyle": "mapBoxStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L305 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_registrodetenidoform": "RegistroDetenidoForm()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L13 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L250 | neighbors=[generarPresentacion.tsx]
 - "analisis_generarpresentacion_sentinelfilefield": "SentinelFileField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L271 | neighbors=[generarPresentacion.tsx]
 - "analisis_generarpresentacion_sublabelstyle": "subLabelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L299 | neighbors=[generarPresentacion.tsx]
 - "analisis_generarpresentacion_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L297 | neighbors=[generarPresentacion.tsx]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "analisis_tablonanalisis_tdstyle": "tdStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L156 | neighbors=[TablonAnalisis.tsx]
 - "analisis_tablonanalisis_thstyle": "thStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L155 | neighbors=[TablonAnalisis.tsx]
 - "analisis_tablonanalisis_trstyle": "trStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L157 | neighbors=[TablonAnalisis.tsx]
-- "app_layout_metadata": "metadata" | kind=code-symbol | source=app/layout.tsx:L5 | neighbors=[layout.tsx]
-- "app_layout_rootlayout": "RootLayout()" | kind=code-symbol | source=app/layout.tsx:L10 | neighbors=[layout.tsx]
-- "app_page_rootpage": "RootPage()" | kind=code-symbol | source=app/page.tsx:L3 | neighbors=[page.tsx]
-- "asegurados_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/fiscalia/asegurados/page.tsx:L5 | neighbors=[page.tsx]
-- "asegurados_page_juzgadoaseguradospage": "JuzgadoAseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/page.tsx:L5 | neighbors=[page.tsx]
-- "atendidos_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/atendidos/route.ts:L7 | neighbors=[route.ts]
-- "auth_helpers_userwithrole": "UserWithRole" | kind=code-symbol | source=lib/auth/helpers.ts:L3 | neighbors=[helpers.ts]
-- "auth_layout_authlayout": "AuthLayout()" | kind=code-symbol | source=app/(auth)/layout.tsx:L7 | neighbors=[layout.tsx]
 
 ## Instructions
 

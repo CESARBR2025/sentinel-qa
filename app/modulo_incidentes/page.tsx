@@ -8,7 +8,6 @@ import { ReportFilters } from '@/components/reportes/modulo_incidentes/ReportFil
 import { ReportesTabs } from '@/components/reportes/modulo_incidentes/ReportesTabs'
 import { styles } from '@/components/reportes/modulo_incidentes/styles'
 import { obtenerDatosOperativos } from '@/lib/reportes-operativos/service'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { tienePermiso } from '@/lib/incidentes/permisos'
 
 export default async function ReportesOperativosPage({
@@ -19,9 +18,6 @@ export default async function ReportesOperativosPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'modulo_incidentes', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }

@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { query } from '@/lib/db'
 import * as core from '@/lib/permisos/core'
 
 export const SECCIONES = ['analisis'] as const
@@ -23,20 +22,12 @@ export async function guardarPlantillaSeccion(rolId: number, seccion: Seccion, p
   return core.guardarPlantillaSeccion(rolId, seccion, permiso)
 }
 
-const ROLES_PERMITIDOS = ['Administrador', 'Investigador']
-
 export async function tieneAccesoAnalisis(usuarioId: string): Promise<boolean> {
-  const r = await query<{ nombre: string }>(
-    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [usuarioId],
-  )
-  return ROLES_PERMITIDOS.includes(r.rows[0]?.nombre ?? '')
+  return core.tienePermiso(usuarioId, 'analisis', 'ver')
 }
 
 export async function verificarAccesoAnalisisApi(usuarioId: string, accion: Accion): Promise<NextResponse | null> {
-  if (!(await tieneAccesoAnalisis(usuarioId))) {
-    return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
-  }
-  if (!(await tienePermiso(usuarioId, 'analisis', accion))) {
+  if (!(await core.tienePermiso(usuarioId, 'analisis', accion))) {
     return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
   }
   return null

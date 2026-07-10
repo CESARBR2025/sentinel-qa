@@ -1,7 +1,6 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { listarParesReporte } from '@/lib/auxiliar/service'
 import { upsertChecklistAction } from '@/lib/auxiliar/actions'
 import { ToastExito } from '@/components/oficial/ToastExito'
@@ -35,9 +34,6 @@ export default async function ChecklistFormPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const { id }    = await params

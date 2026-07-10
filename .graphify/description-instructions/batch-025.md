@@ -24,6 +24,8 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_service_finalizarprocesojuzgadosvc": "finalizarProcesoJuzgadoSvc()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L88 | neighbors=[actions.ts, service.ts, route.ts]
+- "agente_juzgado_service_iniciarprocesojuzgadosvc": "iniciarProcesoJuzgadoSvc()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L84 | neighbors=[actions.ts, service.ts, route.ts]
 - "agente_juzgado_service_obtenerdatosasegurado": "obtenerDatosAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L64 | neighbors=[actions.ts, service.ts, page.tsx]
 - "agente_juzgado_service_verificarroljuzgado": "verificarRolJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L22 | neighbors=[actions.ts, service.ts, page.tsx]
 - "agente_juzgado_types_evidenciamonitorista": "EvidenciaMonitorista" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L1 | neighbors=[DetallesAseguradoView.tsx, repository.ts, types.ts]
@@ -44,7 +46,8 @@ one-sentence description — no prose, no markdown fences.
 - "camara_mapper_rowtototalescamara": "rowToTotalesCamara()" | kind=code-symbol | source=lib/camara/mapper.ts:L42 | neighbors=[mapper.ts, toNumNullable(), repository.ts]
 - "camara_repository_obtenertotalescamara": "obtenerTotalesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L34 | neighbors=[repository.ts, service.ts, route.ts]
 - "camara_types_totalescamara": "TotalesCamara" | kind=code-symbol | source=lib/camara/types.ts:L20 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "commit:repo:github.com/presidenciaSJR/seguridad_publica@e211eefd572dbc8a9bedcdde8eb32d55fe19b171": "e211eef upload AGENTS" | kind=Commit | source=git | neighbors=[514a705 refactorizacion sql, conexion, ad3ec5f mejorando esto]
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@6488a30d265406604e860f95a0a52143a16960c5": "6488a30 Formulario sin backend de 911 listo" | kind=Commit | source=git | neighbors=[testing, 283f342 Merge branch 'feature/testing' …, a24949a Merge branch 'feature/testing' …]
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@cd4b9bb2c3db63fa3e047fac808109a397e2832a": "cd4b9bb Carpeta creada" | kind=Commit | source=git | neighbors=[testing, b68a2b7 Merge branch 'feature/testing' …, d3e6d95 Update SeguimientoTimeline.tsx]
 - "components_buttonverdetalles_botonverdetalle": "BotonVerDetalle()" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L11 | neighbors=[InfraccionesDashboard.tsx, LiberacionesDashboard.tsx, ButtonVerDetalles.tsx]
 - "components_mapadireccionregistro_cleancolonianame": "cleanColoniaName()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L37 | neighbors=[MapaDireccionRegistro.tsx, normalizeUpper(), extractNeighborhoodFromComponents()]
 - "components_mapadireccionregistro_extractneighborhoodfromcomponents": "extractNeighborhoodFromComponents()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L60 | neighbors=[MapaDireccionRegistro.tsx, extractAddress(), cleanColoniaName()]
@@ -61,9 +64,6 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_actions_accionpedirevidencias": "accionPedirEvidencias()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L78 | neighbors=[actions.ts, PedirEvidenciasModal.tsx, PedirEvidenciasModal.tsx]
 - "fiscalia_actions_obtenerdetalleinfraccionviaaction": "obtenerDetalleInfraccionViaAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L285 | neighbors=[actions.ts, FiscaliaDashboard.tsx, page.tsx]
 - "fiscalia_capturardetallesform_capturardetallesform": "CapturarDetallesForm()" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L62 | neighbors=[CapturarDetallesForm.tsx, emptyItem(), page.tsx]
-- "fiscalia_expediente_subirarchivofiscalia": "subirArchivoFiscalia()" | kind=code-symbol | source=lib/fiscalia/expediente.ts:L42 | neighbors=[actions.ts, expediente.ts, obtenerTokenFiscalia()]
-- "fiscalia_formularioasegurado_formularioasegurado": "FormularioAsegurado()" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L63 | neighbors=[FormularioAsegurado.tsx, displayVal(), page.tsx]
-- "fiscalia_mapper_rowtoasegurado": "rowToAsegurado()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L165 | neighbors=[repository.ts, mapper.ts, repository.ts]
 
 ## Instructions
 

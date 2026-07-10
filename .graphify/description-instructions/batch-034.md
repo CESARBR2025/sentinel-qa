@@ -17,6 +17,8 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_repository_obtenerdetalleasegurado": "obtenerDetalleAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L177 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenerdetalleinfraccionviajuzgado": "obtenerDetalleInfraccionViaJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L316 | neighbors=[repository.ts, service.ts]
 - "agente_juzgado_repository_obtenerevidenciasmonitorista": "obtenerEvidenciasMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L160 | neighbors=[repository.ts, page.tsx]
 - "agente_juzgado_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L12 | neighbors=[repository.ts, service.ts]
 - "agente_juzgado_repository_obtenersolicitudescerradas": "obtenerSolicitudesCerradas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L72 | neighbors=[repository.ts, service.ts]
@@ -55,8 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_liberaciones_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L1 | neighbors=[actions.ts, types.ts]
 - "analisis_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/analisis/permisos.ts:L5 | neighbors=[permisos.ts, registro.ts]
 - "auth_helpers_rowtouserwithrole": "rowToUserWithRole()" | kind=code-symbol | source=lib/auth/helpers.ts:L13 | neighbors=[helpers.ts, getUserWithRole()]
-- "auxiliar_actions_requireauxiliar": "requireAuxiliar()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L11 | neighbors=[actions.ts, upsertChecklistAction()]
-- "auxiliar_permisos_accion": "Accion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L7 | neighbors=[actions.ts, permisos.ts]
 
 ## Instructions
 

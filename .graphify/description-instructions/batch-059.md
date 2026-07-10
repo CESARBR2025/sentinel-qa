@@ -17,6 +17,11 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "denuncias_formulariod1_subtitlestyle": "subTitleStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L448 | neighbors=[FormularioD1.tsx]
+- "denuncias_stored1_ahora": "ahora" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L3 | neighbors=[storeD1.ts]
+- "denuncias_stored1_center": "center" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L40 | neighbors=[storeD1.ts]
+- "denuncias_stored1_coord": "Coord" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L7 | neighbors=[storeD1.ts]
+- "denuncias_stored1_d1formactions": "D1FormActions" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L27 | neighbors=[storeD1.ts]
 - "denuncias_stored1_d1formstate": "D1FormState" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L17 | neighbors=[storeD1.ts]
 - "denuncias_stored1_d1formstore": "D1FormStore" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L38 | neighbors=[storeD1.ts]
 - "denuncias_stored1_dir": "Dir" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L12 | neighbors=[storeD1.ts]
@@ -30,7 +35,6 @@ one-sentence description — no prose, no markdown fences.
 - "despacho_despachoform_lbl": "LBL" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L17 | neighbors=[DespachoForm.tsx]
 - "despacho_despachoform_tag": "TAG" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L15 | neighbors=[DespachoForm.tsx]
 - "despacho_despachoform_unidad": "Unidad" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L9 | neighbors=[DespachoForm.tsx]
-- "despacho_page_despachopage": "DespachoPage()" | kind=code-symbol | source=app/911/despacho/page.tsx:L9 | neighbors=[page.tsx]
 - "despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/[id]/despacho/route.ts:L7 | neighbors=[route.ts]
 - "despacho_tablondespacho_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L246 | neighbors=[TablonDespacho.tsx]
 - "despacho_tablondespacho_canalbadge": "CanalBadge()" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L230 | neighbors=[TablonDespacho.tsx]
@@ -38,6 +42,7 @@ one-sentence description — no prose, no markdown fences.
 - "despacho_tablondespacho_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L247 | neighbors=[TablonDespacho.tsx]
 - "despacho_tablondespacho_labeltopstyle": "labelTopStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L244 | neighbors=[TablonDespacho.tsx]
 - "despacho_tablondespacho_tab": "Tab" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L13 | neighbors=[TablonDespacho.tsx]
+- "despacho_tablondespacho_tablondespacho": "TablonDespacho()" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L27 | neighbors=[TablonDespacho.tsx]
 - "despacho_tablondespacho_titlestyle": "titleStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L245 | neighbors=[TablonDespacho.tsx]
 - "detenidos_page_btndetalle": "btnDetalle" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L112 | neighbors=[page.tsx]
 - "detenidos_page_detenidosfiscaliapage": "DetenidosFiscaliaPage()" | kind=code-symbol | source=app/fiscalia/detenidos/page.tsx:L9 | neighbors=[page.tsx]
@@ -52,11 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "en_despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/en-despacho/route.ts:L7 | neighbors=[route.ts]
 - "enviar_foto_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/enviar-foto/route.ts:L9 | neighbors=[route.ts]
 - "envio_de_formatos_page_enviodeformatospage": "EnvioDeFormatosPage()" | kind=code-symbol | source=app/envio-de-formatos/page.tsx:L13 | neighbors=[page.tsx]
-- "eslint_config_eslintconfig": "eslintConfig" | kind=code-symbol | source=eslint.config.mjs:L5 | neighbors=[eslint.config.mjs]
-- "estadisticos_page_reportestelefonicospage": "ReportesTelefonicosPage()" | kind=code-symbol | source=app/estadisticos/page.tsx:L14 | neighbors=[page.tsx]
-- "estadisticos_phonepagination_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L51 | neighbors=[PhonePagination.tsx]
-- "estadisticos_phonepagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L4 | neighbors=[PhonePagination.tsx]
-- "estadisticos_phonepagination_phonepagination": "PhonePagination()" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L10 | neighbors=[PhonePagination.tsx]
 
 ## Instructions
 

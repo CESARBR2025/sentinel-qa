@@ -8,7 +8,7 @@ import { styles } from '@/components/reportes/sin_robos/styles';
 import { TablaReportesLimpios } from '@/components/reportes/sin_robos/ReporteSinRobos';
 import { ReportFilters } from '@/components/reportes/sin_robos/ReportFilters';
 import { listarReportesSinNovedad } from '@/lib/reportes-sin-novedad/service'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function ReportesLimpiosPage({
   searchParams,
@@ -18,9 +18,7 @@ export default async function ReportesLimpiosPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }
   const sp = await searchParams

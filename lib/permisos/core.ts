@@ -19,7 +19,7 @@ export interface PermisoRow extends PermisoSeccion {
   seccion: string
 }
 
-export const PERMISO_TOTAL: PermisoSeccion = { puede_ver: true, puede_crear: true, puede_editar: true, puede_eliminar: true }
+export const PERMISO_TOTAL: PermisoSeccion = { puede_ver: false, puede_crear: false, puede_editar: false, puede_eliminar: false }
 
 function mapaDefault<S extends string>(secciones: readonly S[]): Record<S, PermisoSeccion> {
   const mapa = {} as Record<S, PermisoSeccion>

@@ -17,21 +17,6 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "medidas_page_medidaspage": "MedidasPage()" | kind=code-symbol | source=app/prevencion/medidas/page.tsx:L20 | neighbors=[page.tsx]
-- "medidas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/medidas/route.ts:L8 | neighbors=[route.ts]
-- "medidas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/medidas/route.ts:L22 | neighbors=[route.ts]
-- "modulo_incidentes_page_reportesoperativospage": "ReportesOperativosPage()" | kind=code-symbol | source=app/modulo_incidentes/page.tsx:L14 | neighbors=[page.tsx]
-- "modulo_incidentes_reporttables_operationaltableprops": "OperationalTableProps" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportTables.tsx:L6 | neighbors=[ReportTables.tsx]
-- "monitorista_accionesdetenido_accionesdetenido": "AccionesDetenido()" | kind=code-symbol | source=components/monitorista/AccionesDetenido.tsx:L9 | neighbors=[AccionesDetenido.tsx]
-- "monitorista_actions_solicitarevidencia": "solicitarEvidencia()" | kind=code-symbol | source=lib/monitorista/actions.ts:L19 | neighbors=[actions.ts]
-- "monitorista_bandejasolicitudes_btndetalle": "btnDetalle" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L154 | neighbors=[BandejaSolicitudes.tsx]
-- "monitorista_bandejasolicitudes_btnprimary": "btnPrimary" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L142 | neighbors=[BandejaSolicitudes.tsx]
-- "monitorista_bandejasolicitudes_btnsuccess": "btnSuccess" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L148 | neighbors=[BandejaSolicitudes.tsx]
-- "monitorista_bandejasolicitudes_origenbadge": "origenBadge" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L160 | neighbors=[BandejaSolicitudes.tsx]
-- "monitorista_bandejasolicitudes_solicitudrow": "SolicitudRow" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L11 | neighbors=[BandejaSolicitudes.tsx]
-- "monitorista_bandejasolicitudes_statusbadge": "statusBadge()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L166 | neighbors=[BandejaSolicitudes.tsx]
-- "monitorista_botongenerarppt_inputstyle": "inputStyle" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L135 | neighbors=[BotonGenerarPpt.tsx]
-- "monitorista_botongenerarppt_label": "Label()" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L131 | neighbors=[BotonGenerarPpt.tsx]
 - "monitorista_buscadorevento_opciones": "OPCIONES" | kind=code-symbol | source=components/monitorista/BuscadorEvento.tsx:L6 | neighbors=[BuscadorEvento.tsx]
 - "monitorista_cardenviofoto_etiquetas": "ETIQUETAS" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L10 | neighbors=[CardEnvioFoto.tsx]
 - "monitorista_filaincidentecamara_td": "Td()" | kind=code-symbol | source=components/monitorista/FilaIncidenteCamara.tsx:L61 | neighbors=[FilaIncidenteCamara.tsx]
@@ -57,6 +42,21 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_repository_rechazarfoto": "rechazarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L609 | neighbors=[repository.ts]
 - "monitorista_subirevidenciamodal_btncancel": "btnCancel" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L252 | neighbors=[SubirEvidenciaModal.tsx]
 - "monitorista_subirevidenciamodal_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L8 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_limites": "LIMITES" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L45 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_modal": "modal" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L247 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_overlay": "overlay" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L242 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L8 | neighbors=[SubirFotoDetenido.tsx]
+- "monitorista_tabladetenidos_btndetalle": "btnDetalle" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L104 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_detenidorow": "DetenidoRow" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L14 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_fotobadge": "fotoBadge()" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L111 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_fotoinfo": "FotoInfo" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L8 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_types_fichainteligenciadata": "FichaInteligenciaData" | kind=code-symbol | source=lib/monitorista/types.ts:L172 | neighbors=[types.ts]
+- "monitorista_types_monitoristastats": "MonitoristaStats" | kind=code-symbol | source=lib/monitorista/types.ts:L1 | neighbors=[types.ts]
+- "next_config_nextconfig": "nextConfig" | kind=code-symbol | source=next.config.ts:L3 | neighbors=[next.config.ts]
+- "notificaciones_campanillanotificaciones_alerttoast": "AlertToast()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L101 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_bellicon": "BellIcon()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L20 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_injectkeyframes": "injectKeyframes()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L92 | neighbors=[CampanillaNotificaciones.tsx]
+- "notificaciones_campanillanotificaciones_notificacion": "Notificacion" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L7 | neighbors=[CampanillaNotificaciones.tsx]
 
 ## Instructions
 

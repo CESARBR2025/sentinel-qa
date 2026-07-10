@@ -17,7 +17,6 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "monitorista_service_crearregistro": "crearRegistro()" | kind=code-symbol | source=lib/monitorista/service.ts:L142 | neighbors=[incidentes-camara-service.ts, service.ts]
 - "monitorista_service_listarregistros": "listarRegistros()" | kind=code-symbol | source=lib/monitorista/service.ts:L127 | neighbors=[incidentes-camara-service.ts, service.ts]
 - "monitorista_service_obtenerdenunciaporid": "obtenerDenunciaPorId()" | kind=code-symbol | source=lib/monitorista/service.ts:L35 | neighbors=[denuncia-service.ts, service.ts]
 - "monitorista_service_obtenerdenunciasatendidas": "obtenerDenunciasAtendidas()" | kind=code-symbol | source=lib/monitorista/service.ts:L30 | neighbors=[denuncia-service.ts, service.ts]
@@ -53,8 +52,9 @@ one-sentence description — no prose, no markdown fences.
 - "oficial_mapper_parsejsonfield": "parseJsonField()" | kind=code-symbol | source=lib/oficial/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteCampo()]
 - "oficial_mapper_rowtooficial": "rowToOficial()" | kind=code-symbol | source=lib/oficial/mapper.ts:L45 | neighbors=[mapper.ts, repository.ts]
 - "oficial_modalseleccionarunidad_modalseleccionarunidad": "ModalSeleccionarUnidad()" | kind=code-symbol | source=components/oficial/ModalSeleccionarUnidad.tsx:L14 | neighbors=[ModalSeleccionarUnidad.tsx, UnidadAsignadaSection.tsx]
-- "oficial_repository_actualizarpatrullaoficial": "actualizarPatrullaOficial()" | kind=code-symbol | source=lib/oficial/repository.ts:L322 | neighbors=[actions.ts, repository.ts]
+- "oficial_repository_actualizarpatrullaoficial": "actualizarPatrullaOficial()" | kind=code-symbol | source=lib/oficial/repository.ts:L337 | neighbors=[actions.ts, repository.ts]
 - "oficial_repository_contardenunciaspendientes": "contarDenunciasPendientes()" | kind=code-symbol | source=lib/oficial/repository.ts:L164 | neighbors=[repository.ts, service.ts]
+- "oficial_repository_insertardetallesasegurados": "insertarDetallesAsegurados()" | kind=code-symbol | source=lib/oficial/repository.ts:L322 | neighbors=[repository.ts, service.ts]
 - "oficial_repository_insertarreportecampo": "insertarReporteCampo()" | kind=code-symbol | source=lib/oficial/repository.ts:L38 | neighbors=[repository.ts, service.ts]
 - "oficial_repository_listarreportescampo": "listarReportesCampo()" | kind=code-symbol | source=lib/oficial/repository.ts:L301 | neighbors=[repository.ts, route.ts]
 

@@ -4,12 +4,16 @@ import { headers }         from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import { TablonDespacho }  from '@/components/911/despacho/TablonDespacho'
-import { tieneAccesoSeccion } from '@/lib/911/permisos'
+import { tieneAccesoSeccion, obtenerRolNombre } from '@/lib/911/permisos'
 
 export default async function DespachoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
   if (!(await tieneAccesoSeccion(session.user.id, '911_despacho'))) redirect('/dashboard')
+
+  const rolNombre = await obtenerRolNombre(session.user.id)
+  const backHref = rolNombre === 'agente_despacho' ? '/agente_despacho' : '/dashboard'
+  const backLabel = rolNombre === 'agente_despacho' ? 'Panel Despacho' : 'Dashboard'
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
@@ -19,7 +23,7 @@ export default async function DespachoPage() {
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}} />
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} backHref={backHref} backLabel={backLabel} />
       <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
         <TablonDespacho />
         <div style={{ marginTop: 40 }}><DashboardFooter /></div>

@@ -17,6 +17,11 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "eslint_config_eslintconfig": "eslintConfig" | kind=code-symbol | source=eslint.config.mjs:L5 | neighbors=[eslint.config.mjs]
+- "estadisticos_page_reportestelefonicospage": "ReportesTelefonicosPage()" | kind=code-symbol | source=app/estadisticos/page.tsx:L14 | neighbors=[page.tsx]
+- "estadisticos_phonepagination_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L51 | neighbors=[PhonePagination.tsx]
+- "estadisticos_phonepagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L4 | neighbors=[PhonePagination.tsx]
+- "estadisticos_phonepagination_phonepagination": "PhonePagination()" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L10 | neighbors=[PhonePagination.tsx]
 - "estadisticos_phonereportstable_phonereport": "PhoneReport" | kind=code-symbol | source=components/reportes/estadisticos/PhoneReportsTable.tsx:L6 | neighbors=[PhoneReportsTable.tsx]
 - "expediente_proxy_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/expediente-proxy/route.ts:L8 | neighbors=[route.ts]
 - "exportar_excel_route_get": "GET()" | kind=code-symbol | source=app/api/reportes-operativos/exportar-excel/route.ts:L7 | neighbors=[route.ts]
@@ -52,11 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_detallesaseguradoview_esimagen": "esImagen()" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L36 | neighbors=[DetallesAseguradoView.tsx]
 - "fiscalia_detallesaseguradoview_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L8 | neighbors=[DetallesAseguradoView.tsx]
 - "fiscalia_detallesaseguradoview_props": "Props" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L30 | neighbors=[DetallesAseguradoView.tsx]
-- "fiscalia_fiscaliadashboard_avatar_colors": "AVATAR_COLORS" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L13 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_estatusfiscalia": "EstatusFiscalia" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L43 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_fiscaliadashboard": "FiscaliaDashboard()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L70 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_getbadge": "getBadge()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L64 | neighbors=[FiscaliaDashboard.tsx]
-- "fiscalia_fiscaliadashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/fiscalia/FiscaliaDashboard.tsx:L24 | neighbors=[FiscaliaDashboard.tsx]
 
 ## Instructions
 

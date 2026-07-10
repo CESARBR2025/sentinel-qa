@@ -3,7 +3,6 @@
 import { auth }           from '@/lib/auth'
 import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 import { guardarChecklist } from './service'
 import { tienePermiso, Accion } from '@/lib/auxiliar/permisos'
@@ -11,9 +10,6 @@ import { tienePermiso, Accion } from '@/lib/auxiliar/permisos'
 async function requireAuxiliar(accion: Accion = 'crear') {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  const u = await getUserWithRole(session.user.id)
-  const permitidos = ['Administrador', 'Auxiliar de Novedades', 'Auxiliar']
-  if (!u?.rolNombre || !permitidos.includes(u.rolNombre)) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', accion))) redirect('/dashboard')
   return session
 }

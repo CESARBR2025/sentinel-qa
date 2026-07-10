@@ -6,7 +6,7 @@ import { DashboardHeader } from "@/components/partials/Header";
 import { Eye, Plus, Calendar, MapPin, Hash, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/911/Pagination";
-import { tieneAccesoSeccion } from "@/lib/911/permisos";
+import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
 
 export default async function ListadoWhatsAppPage({
     searchParams,
@@ -22,6 +22,10 @@ export default async function ListadoWhatsAppPage({
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
 
+    const rolNombre = await obtenerRolNombre(session.user.id)
+    const backHref = rolNombre === 'agente_911' ? '/agente_911' : '/dashboard'
+    const backLabel = rolNombre === 'agente_911' ? 'Panel 911' : 'Dashboard'
+
     // 2. Consultas paginadas via servicio
     const { rows: listado, total: totalCount } = await getIncidentesPaginados('whatsapp', page, pageSize);
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -31,7 +35,7 @@ export default async function ListadoWhatsAppPage({
             {/* Carga de fuentes Sentinel */}
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-            <DashboardHeader user={session.user as any} />
+            <DashboardHeader user={session.user as any} backHref={backHref} backLabel={backLabel} />
 
             <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 48px' }}>
 
@@ -54,7 +58,7 @@ export default async function ListadoWhatsAppPage({
                         </h1>
                     </div>
 
-                    <Link href="/911/whatsapp" style={btnNuevoStyle}>
+                    <Link href="/agente_911/whatsapp" style={btnNuevoStyle}>
                         <Plus size={14} color="#3b82f6" />
                         <span>NUEVO REGISTRO</span>
                     </Link>
@@ -123,7 +127,7 @@ export default async function ListadoWhatsAppPage({
                         totalPages={totalPages}
                         totalCount={totalCount}
                         pageSize={pageSize}
-                        baseUrl="/911/whatsapp/incidentes"
+                        baseUrl="/agente_911/whatsapp/incidentes"
                     />
                 </div>
             </main>

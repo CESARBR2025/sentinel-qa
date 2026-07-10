@@ -17,6 +17,8 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_detallesaseguradoview_detallesaseguradoview": "DetallesAseguradoView()" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L40 | neighbors=[DetallesAseguradoView.tsx, page.tsx]
+- "fiscalia_expediente_obtenertokenfiscalia": "obtenerTokenFiscalia()" | kind=code-symbol | source=lib/fiscalia/expediente.ts:L10 | neighbors=[expediente.ts, subirArchivoFiscalia()]
 - "fiscalia_formularioasegurado_displayval": "displayVal()" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L59 | neighbors=[FormularioAsegurado.tsx, FormularioAsegurado()]
 - "fiscalia_formulariopuestadisposicion_formulariopuestadisposicion": "FormularioPuestaDisposicion()" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L45 | neighbors=[FormularioPuestaDisposicion.tsx, page.tsx]
 - "fiscalia_mapper_num": "num()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L15 | neighbors=[mapper.ts, rowToSolicitud()]
@@ -55,8 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_service_verificarroljuzgado": "verificarRolJuzgado()" | kind=code-symbol | source=lib/fiscalia/service.ts:L30 | neighbors=[actions.ts, service.ts]
 - "fiscalia_subirfotodetenido_subirfotodetenido": "SubirFotoDetenido()" | kind=code-symbol | source=components/fiscalia/SubirFotoDetenido.tsx:L33 | neighbors=[SubirFotoDetenido.tsx, page.tsx]
 - "fiscalia_tabasegurados_tabasegurados": "TabAsegurados()" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L45 | neighbors=[page.tsx, TabAsegurados.tsx]
-- "fiscalia_tabsolicitudes_tabsolicitudes": "TabSolicitudes()" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L25 | neighbors=[TabSolicitudes.tsx, page.tsx]
-- "fiscalia_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/fiscalia/ToastExito.tsx:L6 | neighbors=[page.tsx, ToastExito.tsx]
 
 ## Instructions
 
