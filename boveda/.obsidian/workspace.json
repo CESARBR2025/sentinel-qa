@@ -11,10 +11,14 @@
             "id": "aa19c212fa3a4d41",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Vista gráfica"
+              "type": "markdown",
+              "state": {
+                "file": "📦 Datos/Esquema BD.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Esquema BD"
             }
           }
         ]
@@ -40,7 +44,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Explorador de archivos"
+              "title": "Files"
             }
           },
           {
@@ -167,42 +171,42 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Abrir selector rápido": false,
-      "graph:Abrir vista gráfica": false,
-      "canvas:Crear nuevo lienzo": false,
-      "daily-notes:Abrir la nota de hoy": false,
-      "templates:Insertar plantilla": false,
-      "command-palette:Abrir paleta de comandos": false,
-      "bases:Crear nueva base": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
     }
   },
-  "active": "aa19c212fa3a4d41",
+  "active": "9cb9ebeeaeb4c97f",
   "lastOpenFiles": [
-    "🗺 Roadmap/Troubleshooting.md",
-    "🏗 Arquitectura/Crear Modulo.md",
-    "Home.md",
-    "🗺 Roadmap/Pendientes.md",
-    "🗺 Roadmap/Changelog.md",
+    "🛠 Stack/Alexandria.md",
     "📡 API/Server Actions.md",
     "📡 API/API Routes.md",
+    "🗺 Roadmap/Pendientes.md",
+    "🗺 Roadmap/Changelog.md",
+    "🧩 Features/Formato N.md",
+    "🧩 Features/Admin.md",
+    "🧩 Features/911.md",
     "🛠 Stack/Variables de Entorno.md",
     "🛠 Stack/Librerias.md",
     "🛠 Stack/Convenciones.md",
     "🛠 Stack/Comandos.md",
+    "Home.md",
+    "🏗 Arquitectura/Middleware y Auth.md",
+    "🏗 Arquitectura/Crear Modulo.md",
+    "🏗 Arquitectura/Decisiones.md",
+    "🏗 Arquitectura/Estructura.md",
+    "🗺 Roadmap/Troubleshooting.md",
     "🧩 Features/Rol Servicios.md",
     "🧩 Features/Reporte Campo.md",
     "🧩 Features/Prevencion.md",
     "🧩 Features/Monitorista.md",
     "🧩 Features/Liberaciones.md",
     "🧩 Features/Juzgado.md",
-    "🧩 Features/Formato N.md",
     "🧩 Features/Flota.md",
-    "🧩 Features/Fiscalia.md",
-    "🧩 Features/Infracciones.md",
-    "📚 Referencias/Glosario.md",
-    "🧩 Features/Admin.md",
-    "🧩 Features/911.md",
-    "🧩 Features/Index.md",
-    "🏗 Arquitectura/Middleware y Auth.md"
+    "🧩 Features/Fiscalia.md"
   ]
 }
