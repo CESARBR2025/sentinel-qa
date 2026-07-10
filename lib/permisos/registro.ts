@@ -36,21 +36,23 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
     },
   },
   'Oficial de Campo': {
-    labelModulo: 'Incidentes',
+    labelModulo: 'Incidentes y Oficial',
     secciones: SECCIONES_INCIDENTES,
     seccionLabels: {
       incidentes: 'Incidentes (bitácora y despacho)',
       incidentes_camaras: 'Incidentes por Cámara (reporte)',
       modulo_incidentes: 'Módulo de Resumen de Incidentes',
+      oficial_campo: 'Panel Oficial de Campo',
     },
   },
   Reportante: {
-    labelModulo: 'Incidentes',
-    secciones: SECCIONES_INCIDENTES,
+    labelModulo: 'Reportes',
+    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano'] as const,
     seccionLabels: {
       incidentes: 'Incidentes (bitácora y despacho)',
       incidentes_camaras: 'Incidentes por Cámara (reporte)',
       modulo_incidentes: 'Módulo de Resumen de Incidentes',
+      reportes_ciudadano: 'Reportes y Estadísticas',
     },
   },
   'Operador Víctimas': {
@@ -84,7 +86,7 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
       auxiliar_cuestionario_robo: 'Cuestionario Único de Robo',
     },
   },
-  'Operador 911': {
+  agente_911: {
     labelModulo: '911 (Captura Ciudadano/WhatsApp)',
     secciones: ['911_ciudadano', '911_whatsapp'] satisfies readonly (typeof SECCIONES_911)[number][],
     seccionLabels: {
@@ -92,18 +94,21 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
       '911_whatsapp': 'WhatsApp',
     },
   },
-  Despachador: {
-    labelModulo: '911 (Despacho)',
-    secciones: ['911_despacho'] satisfies readonly (typeof SECCIONES_911)[number][],
+  agente_despacho: {
+    labelModulo: '911 (Despacho y Rondín)',
+    secciones: ['911_rondin', '911_despacho'] satisfies readonly (typeof SECCIONES_911)[number][],
     seccionLabels: {
+      '911_rondin': 'Rondín / Recorrido',
       '911_despacho': 'Despacho de Unidades',
     },
   },
-  Bitacorista: {
-    labelModulo: '911 (Rondín)',
-    secciones: ['911_rondin'] satisfies readonly (typeof SECCIONES_911)[number][],
+  agente_bitacorista: {
+    labelModulo: 'Incidentes',
+    secciones: SECCIONES_INCIDENTES,
     seccionLabels: {
-      '911_rondin': 'Rondín / Recorrido',
+      incidentes: 'Incidentes (bitácora y despacho)',
+      incidentes_camaras: 'Incidentes por Cámara (reporte)',
+      modulo_incidentes: 'Módulo de Resumen de Incidentes',
     },
   },
   Investigador: {
@@ -132,6 +137,41 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
     secciones: SECCIONES_CORRALON,
     seccionLabels: {
       corralon_solicitudes: 'Solicitudes de Liberación/Cierre',
+    },
+  },
+  agente_fiscalia: {
+    labelModulo: 'Fiscalía',
+    secciones: ['fiscalia'],
+    seccionLabels: {
+      fiscalia: 'Módulo Fiscalía',
+    },
+  },
+  agente_juzgado: {
+    labelModulo: 'Juzgado',
+    secciones: ['juzgado'],
+    seccionLabels: {
+      juzgado: 'Módulo Juzgado',
+    },
+  },
+  agente_liberaciones: {
+    labelModulo: 'Liberaciones',
+    secciones: ['liberaciones'],
+    seccionLabels: {
+      liberaciones: 'Módulo Liberaciones',
+    },
+  },
+  agente_infracciones: {
+    labelModulo: 'Infracciones',
+    secciones: ['infracciones'],
+    seccionLabels: {
+      infracciones: 'Módulo Infracciones',
+    },
+  },
+  admin_transito: {
+    labelModulo: 'Administración de Tránsito',
+    secciones: ['admin_transito'],
+    seccionLabels: {
+      admin_transito: 'Admin Tránsito',
     },
   },
 }

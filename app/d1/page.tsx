@@ -8,7 +8,7 @@ import { styles } from '@/components/reportes/d1/styles';
 import { D1Filters } from '@/components/reportes/d1/D1Filters';
 import { D1ReportsTable } from '@/components/reportes/d1/D1ReportsTable';
 import { listarReportesD1 } from '@/lib/d1/service'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function ReportesD1Page({
     searchParams,
@@ -18,9 +18,7 @@ export default async function ReportesD1Page({
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) redirect('/login')
 
-    const userWithRole = await getUserWithRole(session.user.id)
-
-    if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
+    if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) redirect('/dashboard')
 
     const user = session.user as { name: string; email: string; image?: string }
     const sp = await searchParams

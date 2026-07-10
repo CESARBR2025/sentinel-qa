@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_formularioaseguradojuzgado_props": "Props" | kind=code-symbol | source=components/agente_juzgado/FormularioAseguradoJuzgado.tsx:L13 | neighbors=[FormularioAseguradoJuzgado.tsx]
+- "agente_juzgado_juzgadodashboard_avatar_colors": "AVATAR_COLORS" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L13 | neighbors=[JuzgadoDashboard.tsx]
+- "agente_juzgado_juzgadodashboard_estatusjuzgado": "EstatusJuzgado" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L43 | neighbors=[JuzgadoDashboard.tsx]
+- "agente_juzgado_juzgadodashboard_getbadge": "getBadge()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L65 | neighbors=[JuzgadoDashboard.tsx]
+- "agente_juzgado_juzgadodashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L24 | neighbors=[JuzgadoDashboard.tsx]
+- "agente_juzgado_juzgadodashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L31 | neighbors=[JuzgadoDashboard.tsx]
+- "agente_juzgado_juzgadodashboard_juzgadodashboard": "JuzgadoDashboard()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L71 | neighbors=[JuzgadoDashboard.tsx]
+- "agente_juzgado_juzgadodashboard_props": "Props" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L37 | neighbors=[JuzgadoDashboard.tsx]
 - "agente_juzgado_juzgadodashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L69 | neighbors=[JuzgadoDashboard.tsx]
 - "agente_juzgado_juzgadodashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L52 | neighbors=[JuzgadoDashboard.tsx]
 - "agente_juzgado_juzgadodashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L47 | neighbors=[JuzgadoDashboard.tsx]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_liberaciones_liberacionesdashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L28 | neighbors=[LiberacionesDashboard.tsx]
 - "agente_liberaciones_liberacionesdashboard_liberacionesdashboard": "LiberacionesDashboard()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L81 | neighbors=[LiberacionesDashboard.tsx]
 - "agente_liberaciones_liberacionesdashboard_props": "Props" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L34 | neighbors=[LiberacionesDashboard.tsx]
-- "agente_liberaciones_liberacionesdashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L79 | neighbors=[LiberacionesDashboard.tsx]
-- "agente_liberaciones_liberacionesdashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L55 | neighbors=[LiberacionesDashboard.tsx]
-- "agente_liberaciones_liberacionesdashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L47 | neighbors=[LiberacionesDashboard.tsx]
-- "agente_liberaciones_liberacionesdashboard_tipo_liberacion_opts": "TIPO_LIBERACION_OPTS" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L72 | neighbors=[LiberacionesDashboard.tsx]
-- "agente_liberaciones_liberacionestable_columns": "columns" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L23 | neighbors=[LiberacionesTable.tsx]
-- "agente_liberaciones_liberacionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L5 | neighbors=[LiberacionesTable.tsx]
-- "agente_liberaciones_liberacionestable_liberacionestable": "LiberacionesTable()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L31 | neighbors=[LiberacionesTable.tsx]
-- "agente_liberaciones_liberacionestable_liberacionestableprops": "LiberacionesTableProps" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L16 | neighbors=[LiberacionesTable.tsx]
 
 ## Instructions
 

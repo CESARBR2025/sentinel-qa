@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_liberaciones_liberacionesdashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L79 | neighbors=[LiberacionesDashboard.tsx]
+- "agente_liberaciones_liberacionesdashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L55 | neighbors=[LiberacionesDashboard.tsx]
+- "agente_liberaciones_liberacionesdashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L47 | neighbors=[LiberacionesDashboard.tsx]
+- "agente_liberaciones_liberacionesdashboard_tipo_liberacion_opts": "TIPO_LIBERACION_OPTS" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L72 | neighbors=[LiberacionesDashboard.tsx]
+- "agente_liberaciones_liberacionestable_columns": "columns" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L23 | neighbors=[LiberacionesTable.tsx]
+- "agente_liberaciones_liberacionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L5 | neighbors=[LiberacionesTable.tsx]
+- "agente_liberaciones_liberacionestable_liberacionestable": "LiberacionesTable()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L31 | neighbors=[LiberacionesTable.tsx]
+- "agente_liberaciones_liberacionestable_liberacionestableprops": "LiberacionesTableProps" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L16 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_liberaciones/mapper.ts:L3 | neighbors=[mapper.ts]
 - "agente_liberaciones_page_liberacionesdashboardpage": "LiberacionesDashboardPage()" | kind=code-symbol | source=app/agente_liberaciones/page.tsx:L5 | neighbors=[page.tsx]
 - "agente_liberaciones_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_liberaciones/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "analisis_formanalisis_stepindicator": "StepIndicator()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L779 | neighbors=[formAnalisis.tsx]
 - "analisis_formanalisis_subcard": "subCard" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L827 | neighbors=[formAnalisis.tsx]
 - "analisis_formanalisis_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L795 | neighbors=[formAnalisis.tsx]
-- "analisis_generarpresentacion_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L306 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_btnfinishstyle": "btnFinishStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L311 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_btnnextstyle": "btnNextStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L300 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_cardstyle": "cardStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L296 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_labelstyle": "labelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L298 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_mapboxstyle": "mapBoxStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L305 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_registrodetenidoform": "RegistroDetenidoForm()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L13 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L250 | neighbors=[generarPresentacion.tsx]
 
 ## Instructions
 

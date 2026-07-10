@@ -17,6 +17,9 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_expediente_subirarchivofiscalia": "subirArchivoFiscalia()" | kind=code-symbol | source=lib/fiscalia/expediente.ts:L42 | neighbors=[actions.ts, expediente.ts, obtenerTokenFiscalia()]
+- "fiscalia_formularioasegurado_formularioasegurado": "FormularioAsegurado()" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L63 | neighbors=[FormularioAsegurado.tsx, displayVal(), page.tsx]
+- "fiscalia_mapper_rowtoasegurado": "rowToAsegurado()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L165 | neighbors=[repository.ts, mapper.ts, repository.ts]
 - "fiscalia_mapper_rowtosolicitud": "rowToSolicitud()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L21 | neighbors=[mapper.ts, num(), service.ts]
 - "fiscalia_service_guardardetallesaseguradosservice": "guardarDetallesAseguradosService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L134 | neighbors=[actions.ts, actions.ts, service.ts]
 - "fiscalia_service_guardarpuestadisposicionservice": "guardarPuestaDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L159 | neighbors=[actions.ts, actions.ts, service.ts]
@@ -27,7 +30,7 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_types_detalledetenidoguardado": "DetalleDetenidoGuardado" | kind=code-symbol | source=lib/fiscalia/types.ts:L81 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "fiscalia_types_evidenciamonitorista": "EvidenciaMonitorista" | kind=code-symbol | source=lib/fiscalia/types.ts:L11 | neighbors=[DetallesAseguradoView.tsx, repository.ts, types.ts]
 - "fiscalia_types_liberacionrow": "LiberacionRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L206 | neighbors=[actions.ts, repository.ts, types.ts]
-- "flota_service_obtenerflota": "obtenerFlota()" | kind=code-symbol | source=lib/flota/service.ts:L31 | neighbors=[service.ts, listarPatrullasParaAsignacion(), extraerVehiculos()]
+- "flota_service_obtenerflota": "obtenerFlota()" | kind=code-symbol | source=lib/flota/service.ts:L47 | neighbors=[service.ts, listarPatrullasParaAsignacion(), extraerVehiculos()]
 - "flota_types_flotavehiculoraw": "FlotaVehiculoRaw" | kind=code-symbol | source=lib/flota/types.ts:L1 | neighbors=[repository.ts, service.ts, types.ts]
 - "flota_types_patrulla": "Patrulla" | kind=code-symbol | source=lib/flota/types.ts:L12 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "guardar_docs_route_post": "POST()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L48 | neighbors=[route.ts, subirArchivo(), validarArchivo()]
@@ -54,9 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "incidentes_types_despachorow": "DespachoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L67 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_despachounidadrow": "DespachoUnidadRow" | kind=code-symbol | source=lib/incidentes/types.ts:L167 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_extorsionrow": "ExtorsionRow" | kind=code-symbol | source=lib/incidentes/types.ts:L100 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "incidentes_types_incidentebasico": "IncidenteBasico" | kind=code-symbol | source=lib/incidentes/types.ts:L180 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "incidentes_types_incidentecondespacho": "IncidenteConDespacho" | kind=code-symbol | source=lib/incidentes/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "incidentes_types_incidentedetallecompleto": "IncidenteDetalleCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L129 | neighbors=[mapper.ts, repository.ts, types.ts]
 
 ## Instructions
 

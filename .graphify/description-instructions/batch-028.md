@@ -17,11 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "oficial_service_generarfoliounico": "generarFolioUnico()" | kind=code-symbol | source=lib/oficial/service.ts:L49 | neighbors=[service.ts, crearReporte(), generarFolio()]
+- "notificaciones_types_notificacion": "Notificacion" | kind=code-symbol | source=lib/notificaciones/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "oficial_mapper_rowtod1": "rowToD1()" | kind=code-symbol | source=lib/oficial/mapper.ts:L87 | neighbors=[mapper.ts, toStr(), rowToReporteDetalle()]
+- "oficial_mapper_rowtoreporteresumen": "rowToReporteResumen()" | kind=code-symbol | source=lib/oficial/mapper.ts:L70 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "oficial_service_generarfoliounico": "generarFolioUnico()" | kind=code-symbol | source=lib/oficial/service.ts:L51 | neighbors=[service.ts, crearReporte(), generarFolio()]
 - "oficial_store_useoficialformstore": "useOficialFormStore" | kind=code-symbol | source=lib/oficial/store.ts:L137 | neighbors=[FormularioD1.tsx, FormularioRecorrido.tsx, store.ts]
-- "oficial_types_catalogoitem": "CatalogoItem" | kind=code-symbol | source=lib/oficial/types.ts:L162 | neighbors=[repository.ts, service.ts, types.ts]
-- "oficial_types_crearreportecampoinput": "CrearReporteCampoInput" | kind=code-symbol | source=lib/oficial/types.ts:L72 | neighbors=[repository.ts, service.ts, types.ts]
-- "oficial_types_ofireportecampo": "OfiReporteCampo" | kind=code-symbol | source=lib/oficial/types.ts:L38 | neighbors=[mapper.ts, types.ts, OfiReporteDetalle]
+- "oficial_types_catalogoitem": "CatalogoItem" | kind=code-symbol | source=lib/oficial/types.ts:L164 | neighbors=[repository.ts, service.ts, types.ts]
+- "oficial_types_crearreportecampoinput": "CrearReporteCampoInput" | kind=code-symbol | source=lib/oficial/types.ts:L74 | neighbors=[repository.ts, service.ts, types.ts]
+- "oficial_types_ofireportecampo": "OfiReporteCampo" | kind=code-symbol | source=lib/oficial/types.ts:L40 | neighbors=[mapper.ts, types.ts, OfiReporteDetalle]
 - "permisos_core_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/permisos/core.ts:L78 | neighbors=[core.ts, aplicarPlantillaRol(), guardarPermisosSeccionesAction()]
 - "permisos_core_mapadefault": "mapaDefault()" | kind=code-symbol | source=lib/permisos/core.ts:L24 | neighbors=[core.ts, obtenerPermisosUsuario(), obtenerPlantillaRol()]
 - "permisos_core_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/permisos/core.ts:L92 | neighbors=[core.ts, mapaDefault(), page.tsx]
@@ -54,9 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "prevencion_types_contestacion": "Contestacion" | kind=code-symbol | source=lib/prevencion/types.ts:L99 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_fichabusquedadetalle": "FichaBusquedaDetalle" | kind=code-symbol | source=lib/prevencion/types.ts:L62 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_medidadetalle": "MedidaDetalle" | kind=code-symbol | source=lib/prevencion/types.ts:L36 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "prevencion_types_seguimientobusqueda": "SeguimientoBusqueda" | kind=code-symbol | source=lib/prevencion/types.ts:L80 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "prevencion_types_solicitudc4": "SolicitudC4" | kind=code-symbol | source=lib/prevencion/types.ts:L90 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "prevencion_types_solicitudinformacion": "SolicitudInformacion" | kind=code-symbol | source=lib/prevencion/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
 
 ## Instructions
 

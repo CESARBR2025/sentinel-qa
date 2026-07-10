@@ -17,7 +17,6 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "prevencion_repository_obtenermedidadetalle": "obtenerMedidaDetalle()" | kind=code-symbol | source=lib/prevencion/repository.ts:L67 | neighbors=[page.tsx, repository.ts]
 - "prevencion_repository_obtenermedidadetallecompleto": "obtenerMedidaDetalleCompleto()" | kind=code-symbol | source=lib/prevencion/repository.ts:L130 | neighbors=[route.ts, repository.ts]
 - "prevencion_repository_obtenersolicitud": "obtenerSolicitud()" | kind=code-symbol | source=lib/prevencion/repository.ts:L43 | neighbors=[page.tsx, repository.ts]
 - "prevencion_repository_obtenersolicituddetalle": "obtenerSolicitudDetalle()" | kind=code-symbol | source=lib/prevencion/repository.ts:L213 | neighbors=[route.ts, repository.ts]
@@ -57,6 +56,7 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_formato_n_fge_service_calcularconteosporfecha": "calcularConteosPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L94 | neighbors=[route.ts, formato-n-fge-service.ts]
 - "reportes_formato_n_fge_service_crearfge": "crearFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L127 | neighbors=[route.ts, formato-n-fge-service.ts]
 - "reportes_formato_n_fge_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L30 | neighbors=[formato-n-fge-service.ts, rowTo()]
+- "reportes_formato_n_fge_service_formatonfge": "FormatoNFge" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L8 | neighbors=[formato-n-consolidado-service.ts, formato-n-fge-service.ts]
 
 ## Instructions
 

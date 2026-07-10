@@ -17,6 +17,11 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "consolidar_page_fge": "Fge" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L35 | neighbors=[page.tsx]
+- "consolidar_page_fgr": "Fgr" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L36 | neighbors=[page.tsx]
+- "consolidar_page_linkbtn": "linkBtn" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L403 | neighbors=[page.tsx]
+- "consolidar_page_medios": "Medios" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L46 | neighbors=[page.tsx]
+- "consolidar_page_metric": "Metric()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L408 | neighbors=[page.tsx]
 - "consolidar_page_periodo": "Periodo" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L9 | neighbors=[page.tsx]
 - "consolidar_page_periodometricas": "PeriodoMetricas" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L21 | neighbors=[page.tsx]
 - "consolidar_page_periodometricasblocks": "PeriodoMetricasBlocks()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L417 | neighbors=[page.tsx]
@@ -52,11 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "dashboard_enable_2fa_card": "Card()" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L145 | neighbors=[enable-2fa.tsx]
 - "dashboard_enable_2fa_s": "s" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L164 | neighbors=[enable-2fa.tsx]
 - "dashboard_enable_2fa_step": "Step" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L5 | neighbors=[enable-2fa.tsx]
-- "dashboard_module_cards_alerticon": "AlertIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L17 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_bookicon": "BookIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L19 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_cameraicon": "CameraIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L21 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_charticon": "ChartIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L18 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_module": "Module" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L5 | neighbors=[module-cards.tsx]
 
 ## Instructions
 

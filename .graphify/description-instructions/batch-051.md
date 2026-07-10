@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_infracciones_infraccionesdashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L55 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L47 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionestable_columns": "columns" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L23 | neighbors=[InfraccionesTable.tsx]
+- "agente_infracciones_infraccionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L5 | neighbors=[InfraccionesTable.tsx]
+- "agente_infracciones_infraccionestable_infraccionestable": "InfraccionesTable()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L31 | neighbors=[InfraccionesTable.tsx]
+- "agente_infracciones_infraccionestable_infraccionestableprops": "InfraccionesTableProps" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L16 | neighbors=[InfraccionesTable.tsx]
+- "agente_infracciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L3 | neighbors=[mapper.ts]
+- "agente_infracciones_modalentregargarantia_props": "Props" | kind=code-symbol | source=components/agente_infracciones/ModalEntregarGarantia.tsx:L11 | neighbors=[ModalEntregarGarantia.tsx]
 - "agente_infracciones_page_infraccionesdashboardpage": "InfraccionesDashboardPage()" | kind=code-symbol | source=app/agente_infracciones/page.tsx:L5 | neighbors=[page.tsx]
 - "agente_infracciones_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_infracciones/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
 - "agente_infracciones_repository_infraccionupdaterow": "InfraccionUpdateRow" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L39 | neighbors=[repository.ts]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_juzgado_detallesaseguradoview_props": "Props" | kind=code-symbol | source=components/agente_juzgado/DetallesAseguradoView.tsx:L30 | neighbors=[DetallesAseguradoView.tsx]
 - "agente_juzgado_formularioaseguradojuzgado_disabledsx": "disabledSx" | kind=code-symbol | source=components/agente_juzgado/FormularioAseguradoJuzgado.tsx:L39 | neighbors=[FormularioAseguradoJuzgado.tsx]
 - "agente_juzgado_formularioaseguradojuzgado_labelsx": "labelSx" | kind=code-symbol | source=components/agente_juzgado/FormularioAseguradoJuzgado.tsx:L29 | neighbors=[FormularioAseguradoJuzgado.tsx]
-- "agente_juzgado_formularioaseguradojuzgado_props": "Props" | kind=code-symbol | source=components/agente_juzgado/FormularioAseguradoJuzgado.tsx:L13 | neighbors=[FormularioAseguradoJuzgado.tsx]
-- "agente_juzgado_juzgadodashboard_avatar_colors": "AVATAR_COLORS" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L13 | neighbors=[JuzgadoDashboard.tsx]
-- "agente_juzgado_juzgadodashboard_estatusjuzgado": "EstatusJuzgado" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L43 | neighbors=[JuzgadoDashboard.tsx]
-- "agente_juzgado_juzgadodashboard_getbadge": "getBadge()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L65 | neighbors=[JuzgadoDashboard.tsx]
-- "agente_juzgado_juzgadodashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L24 | neighbors=[JuzgadoDashboard.tsx]
-- "agente_juzgado_juzgadodashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L31 | neighbors=[JuzgadoDashboard.tsx]
-- "agente_juzgado_juzgadodashboard_juzgadodashboard": "JuzgadoDashboard()" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L71 | neighbors=[JuzgadoDashboard.tsx]
-- "agente_juzgado_juzgadodashboard_props": "Props" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L37 | neighbors=[JuzgadoDashboard.tsx]
 
 ## Instructions
 

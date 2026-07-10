@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "app_layout_metadata": "metadata" | kind=code-symbol | source=app/layout.tsx:L5 | neighbors=[layout.tsx]
+- "app_layout_rootlayout": "RootLayout()" | kind=code-symbol | source=app/layout.tsx:L10 | neighbors=[layout.tsx]
+- "app_page_rootpage": "RootPage()" | kind=code-symbol | source=app/page.tsx:L3 | neighbors=[page.tsx]
+- "asegurados_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/fiscalia/asegurados/page.tsx:L5 | neighbors=[page.tsx]
+- "asegurados_page_juzgadoaseguradospage": "JuzgadoAseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/page.tsx:L5 | neighbors=[page.tsx]
+- "atendidos_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/atendidos/route.ts:L7 | neighbors=[route.ts]
+- "auth_helpers_userwithrole": "UserWithRole" | kind=code-symbol | source=lib/auth/helpers.ts:L3 | neighbors=[helpers.ts]
+- "auth_layout_authlayout": "AuthLayout()" | kind=code-symbol | source=app/(auth)/layout.tsx:L7 | neighbors=[layout.tsx]
 - "auth_layout_metadata": "metadata" | kind=code-symbol | source=app/(auth)/layout.tsx:L3 | neighbors=[layout.tsx]
 - "auxiliar_actions_bool": "bool()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L21 | neighbors=[actions.ts]
 - "auxiliar_actions_str": "str()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L22 | neighbors=[actions.ts]
@@ -40,9 +48,6 @@ one-sentence description — no prose, no markdown fences.
 - "cancelar_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/[id]/cancelar/route.ts:L7 | neighbors=[route.ts]
 - "captura_page_capturapage": "CapturaPage()" | kind=code-symbol | source=app/infracciones/captura/page.tsx:L10 | neighbors=[page.tsx]
 - "checklist_page_checklistpage": "ChecklistPage()" | kind=code-symbol | source=app/auxiliar/checklist/page.tsx:L10 | neighbors=[page.tsx]
-- "ciudadano_formulario911_formulario911": "Formulario911()" | kind=code-symbol | source=app/911/ciudadano/Formulario911.tsx:L11 | neighbors=[Formulario911.tsx]
-- "ciudadano_formulario911_libraries": "libraries" | kind=code-symbol | source=app/911/ciudadano/Formulario911.tsx:L9 | neighbors=[Formulario911.tsx]
-- "ciudadano_page_ciudadano911page": "Ciudadano911Page()" | kind=code-symbol | source=app/911/ciudadano/page.tsx:L16 | neighbors=[page.tsx]
 - "complementos_repository_gruarow": "GruaRow" | kind=code-symbol | source=lib/complementos/repository.ts:L3 | neighbors=[repository.ts]
 - "completar_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/solicitudes/[id]/completar/route.ts:L7 | neighbors=[route.ts]
 - "completar_solicitud_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/completar-solicitud/route.ts:L7 | neighbors=[route.ts]
@@ -52,11 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "components_capturardatostitularsection_fieldname": "FieldName" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L33 | neighbors=[CapturarDatosTitularSection.tsx]
 - "components_capturardatostitularsection_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L9 | neighbors=[CapturarDatosTitularSection.tsx]
 - "components_capturardatostitularsection_validatefield": "validateField()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L35 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturarinfractorsection_capturarinfractorsection": "CapturarInfractorSection()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L42 | neighbors=[CapturarInfractorSection.tsx]
-- "components_capturarinfractorsection_field": "Field()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L15 | neighbors=[CapturarInfractorSection.tsx]
-- "components_capturarinfractorsection_props": "Props" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L8 | neighbors=[CapturarInfractorSection.tsx]
-- "components_formularioinfraccion_addressdata": "AddressData" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L9 | neighbors=[FormularioInfraccion.tsx]
-- "components_formularioinfraccion_formularioinfraccion": "FormularioInfraccion()" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L71 | neighbors=[FormularioInfraccion.tsx]
 
 ## Instructions
 

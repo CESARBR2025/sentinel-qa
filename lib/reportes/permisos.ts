@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { query } from '@/lib/db'
 import * as core from '@/lib/permisos/core'
 
-export const SECCIONES = ['formato_n_coordinacion'] as const
+export const SECCIONES = ['formato_n_coordinacion', 'reportes_ciudadano'] as const
 export type Seccion = typeof SECCIONES[number]
 export type Accion = core.Accion
 export type PermisoSeccion = core.PermisoSeccion
@@ -23,21 +22,12 @@ export async function guardarPlantillaSeccion(rolId: number, seccion: Seccion, p
   return core.guardarPlantillaSeccion(rolId, seccion, permiso)
 }
 
-// Formato N a Coordinación: gestionado desde el panel de administración.
-const ROLES_PERMITIDOS = ['Administrador', 'Analisis']
-
 export async function tieneAccesoFormatoN(usuarioId: string): Promise<boolean> {
-  const r = await query<{ nombre: string }>(
-    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [usuarioId],
-  )
-  return ROLES_PERMITIDOS.includes(r.rows[0]?.nombre ?? '')
+  return core.tienePermiso(usuarioId, 'formato_n_coordinacion', 'ver')
 }
 
 export async function verificarAccesoFormatoNApi(usuarioId: string, accion: Accion): Promise<NextResponse | null> {
-  if (!(await tieneAccesoFormatoN(usuarioId))) {
-    return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
-  }
-  if (!(await tienePermiso(usuarioId, 'formato_n_coordinacion', accion))) {
+  if (!(await core.tienePermiso(usuarioId, 'formato_n_coordinacion', accion))) {
     return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
   }
   return null

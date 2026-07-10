@@ -21,6 +21,9 @@ export default async function DashboardPage() {
   if (userWithRole?.rolNombre === 'Monitorista') redirect('/monitorista')
   if (userWithRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
   if (userWithRole?.rolNombre === 'Reportante') redirect('/reportes')
+  if (userWithRole?.rolNombre === 'agente_911') redirect('/agente_911')
+  if (userWithRole?.rolNombre === 'agente_despacho') redirect('/agente_despacho')
+  if (userWithRole?.rolNombre === 'agente_bitacorista') redirect('/agente_bitacorista')
   if (userWithRole?.rolNombre === 'corralon_mw' || userWithRole?.rolNombre === 'corralon_mejia') redirect('/corralon')
 
   const user = session.user as {

@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "admin_transito_nuevooficialform_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L8 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_nuevooficialform_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L29 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_nuevooficialform_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L19 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_nuevooficialform_nuevooficialform": "NuevoOficialForm()" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L46 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_nuevooficialform_props": "Props" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L14 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_nuevooficialform_selectstyle": "selectStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L41 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_oficialestable_accionmodal": "AccionModal" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L38 | neighbors=[OficialesTable.tsx]
+- "admin_transito_oficialestable_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L11 | neighbors=[OficialesTable.tsx]
 - "admin_transito_oficialestable_oficial": "Oficial" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L17 | neighbors=[OficialesTable.tsx]
 - "admin_transito_oficialestable_oficialestable": "OficialesTable()" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L52 | neighbors=[OficialesTable.tsx]
 - "admin_transito_oficialestable_props": "Props" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L32 | neighbors=[OficialesTable.tsx]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_infraccionesdashboard_infraccionesdashboard": "InfraccionesDashboard()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L76 | neighbors=[InfraccionesDashboard.tsx]
 - "agente_infracciones_infraccionesdashboard_props": "Props" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L34 | neighbors=[InfraccionesDashboard.tsx]
 - "agente_infracciones_infraccionesdashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L74 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L55 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L47 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionestable_columns": "columns" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L23 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_infraccionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L5 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_infraccionestable_infraccionestable": "InfraccionesTable()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L31 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_infraccionestable_infraccionestableprops": "InfraccionesTableProps" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L16 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L3 | neighbors=[mapper.ts]
-- "agente_infracciones_modalentregargarantia_props": "Props" | kind=code-symbol | source=components/agente_infracciones/ModalEntregarGarantia.tsx:L11 | neighbors=[ModalEntregarGarantia.tsx]
 
 ## Instructions
 

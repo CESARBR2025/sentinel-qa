@@ -1,8 +1,8 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import Link from 'next/link'
+import { tienePermiso } from '@/lib/auxiliar/permisos'
 import { ClipboardList, CheckSquare } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { ProfileDropdownAuxiliar } from '@/components/auxiliar/ProfileDropdownAuxiliar'
@@ -12,9 +12,7 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
   const params = await searchParams

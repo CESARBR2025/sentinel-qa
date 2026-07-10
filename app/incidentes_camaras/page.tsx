@@ -8,7 +8,6 @@ import { ReportFilters }   from '@/components/reportes/deteccion_camara/ReportFi
 import { ReportTable }     from '@/components/reportes/deteccion_camara/ReportTables'
 import { styles }          from '@/components/reportes/deteccion_camara/styles'
 import { listarIncidentesCamara } from '@/lib/camara/service'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { tienePermiso } from '@/lib/incidentes/permisos'
 
 export default async function ReportesDeteccionCamaraPage({
@@ -19,9 +18,6 @@ export default async function ReportesDeteccionCamaraPage({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Reportante'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'incidentes_camaras', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }

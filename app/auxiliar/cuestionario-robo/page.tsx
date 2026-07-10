@@ -1,7 +1,6 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { listarCuestionariosRobo } from '@/lib/auxiliar/service'
 import { ArrowLeft, Download } from 'lucide-react'
 import Link from 'next/link'
@@ -14,9 +13,6 @@ export default async function CuestionarioRoboPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const userWithRole = await getUserWithRole(session.user.id)
-
-  if (!userWithRole || !['Administrador', 'Auxiliar de Novedades', 'Auxiliar'].includes(userWithRole.rolNombre ?? '')) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'auxiliar_cuestionario_robo', 'ver'))) redirect('/dashboard')
 
   const datos = await listarCuestionariosRobo()
