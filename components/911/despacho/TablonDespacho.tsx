@@ -22,6 +22,7 @@ interface IncRow {
   elementos: { nombre: string | null; nomina: string | null }[]
   accionesRealizadas?: string | null
   hayDetencion?: boolean | null
+  d1Pendiente?: boolean
 }
 
 export function TablonDespacho() {
@@ -193,6 +194,11 @@ export function TablonDespacho() {
                           CON DETENCIÓN
                         </span>
                       )}
+                      {inc.d1Pendiente && (
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fff7ed', color: '#c2410c', border: '1px solid #fed7aa', borderRadius: 2 }}>
+                          D1 PENDIENTE
+                        </span>
+                      )}
                       {inc.accionesRealizadas && (
                         <div style={{ flex: 1 }}>
                           <label style={labelStyle}>ACCIONES REALIZADAS</label>
@@ -204,7 +210,7 @@ export function TablonDespacho() {
 
                   {/* Link a ficha completa */}
                   <div>
-                    <Link href={inc.canal === 'whatsapp' ? `/911/whatsapp/incidentes/${inc.id}` : inc.canal === 'radio' ? `/911/rondin/incidentes/${inc.id}` : `/911/ciudadano/incidentes/${inc.id}`}
+                    <Link href={inc.canal === 'whatsapp' ? `/agente_911/whatsapp/incidentes/${inc.id}` : inc.canal === 'radio' ? `/agente_911/rondin/incidentes/${inc.id}` : `/agente_911/ciudadano/incidentes/${inc.id}`}
                       style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.1em' }}>
                       VER FICHA COMPLETA →
                     </Link>

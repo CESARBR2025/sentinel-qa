@@ -11,6 +11,8 @@ import {
   contarDenunciasPendientes,
   obtenerReportesOficial,
   obtenerReporteDetalle,
+  obtenerDespachosAsignados,
+  contarDespachosAsignados,
 } from './repository'
 import { query } from '@/lib/db'
 import type {
@@ -20,6 +22,7 @@ import type {
   OfiReporteResumen,
   OfiReporteDetalle,
   CatalogoItem,
+  DespachoAsignado,
 } from './types'
 
 function str(fd: FormData, key: string): string | null {
@@ -138,6 +141,7 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
   const longitud = str(formData, 'ofi_longitud')
 
   const input: CrearReporteCampoInput = {
+    incidenteId: str(formData, 'incidente_id'),
     folioReporteCampo: folio,
     ofiFolioCad: str(formData, 'ofi_folio_cad') ?? 'S/C',
     ofiNombreReportante: str(formData, 'ofi_nombre_reportante'),
@@ -149,6 +153,8 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiContenidoReporte: str(formData, 'ofi_contenido_reporte'),
     ofiCalle: calle,
     ofiColonia: colonia,
+    ofiEntreCalles: str(formData, 'ofi_entre_calles'),
+    ofiReferencia: str(formData, 'ofi_referencia'),
     ofiLatitud: num(formData, 'ofi_latitud'),
     ofiLongitud: num(formData, 'ofi_longitud'),
     ofiDatosPn: str(formData, 'ofi_datos_pn'),
@@ -156,6 +162,8 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiHayDetencion: bool(formData, 'ofi_hay_detencion'),
     ofiDetenidos: detenidosArr,
     ofiAutoridadRecibe: str(formData, 'ofi_autoridad_recibe'),
+    expedienteCi: str(formData, 'expediente_ci'),
+    personalIngresoCi: str(formData, 'personal_ingreso_ci'),
     ofiMontoRobo: num(formData, 'ofi_monto_robo'),
     ofiHayRobo: bool(formData, 'ofi_hay_robo'),
     ofiObjetosRecuperados: str(formData, 'ofi_objetos_recuperados'),
@@ -195,6 +203,14 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
 
 export async function listarReportesOficial(userId: string): Promise<OfiReporteResumen[]> {
   return obtenerReportesOficial(userId)
+}
+
+export async function listarDespachosAsignados(userId: string): Promise<DespachoAsignado[]> {
+  return obtenerDespachosAsignados(userId)
+}
+
+export async function contarDespachosAsignadosOficial(userId: string): Promise<number> {
+  return contarDespachosAsignados(userId)
 }
 
 export async function verReporteDetalle(

@@ -68,6 +68,7 @@ export function rowToIncidenteConDespachoBase(row: Record<string, unknown>): Omi
     fechaHoraDespacho: toStr(row.despacho_fecha_hora),
     accionesRealizadas: toStr(row.acciones_realizadas),
     hayDetencion: toBool(row.hay_detencion),
+    d1Pendiente: Boolean(row.d1_pendiente),
   }
 }
 
@@ -184,6 +185,7 @@ export function rowToDespachoElemento(row: Record<string, unknown>): DespachoEle
     elementoExtId: toStr(row.elemento_ext_id),
     elementoNomina: toStr(row.elemento_nomina),
     elementoNombre: toStr(row.elemento_nombre),
+    oficialId: toStr(row.oficial_id),
   }
 }
 
@@ -221,6 +223,7 @@ export function rowToIncidenteDetalleCompletoBase(row: Record<string, unknown>):
     grupoWhatsapp: toStr(row.grupo_whatsapp),
     nombreOficial: toStr(row.nombre_oficial),
     requiereDespacho: toBool(row.requiere_despacho),
+    origenRondin: toBool(row.origen_rondin),
     creadoEn: toStr(row.creado_en) ?? '',
     tipoIncidente: toStr(row.tipo_incidente_nombre),
     tipoEmergencia: toStr(row.tipo_emergencia_nombre),

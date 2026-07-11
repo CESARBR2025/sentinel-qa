@@ -62,8 +62,8 @@ export async function createIncidente(formData: FormData) {
     throw new ValidationError('fechaHoraFin no puede ser anterior a fechaHoraInicio');
 
 
-  // Estatus inicial según canal
-  const estatus = canal === 'radio' ? 'en_despacho' : 'sin_despachar'
+  // Estatus inicial: todo incidente nace sin despachar (rondín incluido — siempre escala)
+  const estatus = 'sin_despachar'
 
   const { folio, consecutivo } = await generarFolioIncidente()
 
@@ -138,16 +138,16 @@ export async function createIncidente(formData: FormData) {
 
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId })
 
-  let targetPath = `/911/ciudadano/incidentes/${incidenteId}`;
+  let targetPath = `/agente_911/ciudadano/incidentes/${incidenteId}`;
   if (canal === 'whatsapp') {
-    targetPath = `/911/whatsapp/incidentes/${incidenteId}`;
+    targetPath = `/agente_911/whatsapp/incidentes/${incidenteId}`;
   } else if (canal === 'radio') {
-    targetPath = `/911/rondin/incidentes/${incidenteId}`;
+    targetPath = `/agente_911/rondin/incidentes/${incidenteId}`;
   }
 
-  revalidatePath('/911/whatsapp');
-  revalidatePath('/911/rondin');
-  revalidatePath('/911/ciudadano');
+  revalidatePath('/agente_911/whatsapp');
+  revalidatePath('/agente_911/rondin');
+  revalidatePath('/agente_911/ciudadano');
   revalidatePath('/incidentes');
 
   redirect(targetPath);
@@ -202,6 +202,60 @@ export async function deletePersonaAfectada(formData: FormData) {
 }
 
 
+/**
+ * Rondín escalado — REGLA DE NEGOCIO: todo reporte de rondín genera solicitud
+ * de despacho. El resultado (acciones, detenidos, cateo) lo captura el oficial
+ * despachado al cerrar con su reporte de campo (ofi_reportes_campo).
+ */
+export async function createRondinEscalado(formData: FormData) {
+  const session = await requireOperador()
+
+  const fechaHoraInicio = req(formData, 'fechaHoraInicio')
+  const { folio, consecutivo } = await generarFolioIncidente()
+
+  const lat = formData.get('latitud') ? String(formData.get('latitud')) : null
+  const lng = formData.get('longitud') ? String(formData.get('longitud')) : null
+
+  const anonimo = bool(formData, 'anonimo')
+
+  const incidenteId = await tryActionRaw(async () => {
+    const inc = await query<{ id: string }>(
+      `INSERT INTO incidentes (
+        folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
+        anonimo, calle, colonia, entre_calles, referencia_ubicacion,
+        municipio, latitud, longitud,
+        tipo_emergencia_id, tipo_incidente_id, prioridad_id,
+        descripcion, observaciones, fecha_hora_inicio,
+        nombre_oficial, requiere_despacho, estatus, origen_rondin, capturado_por
+      ) VALUES ($1,$2,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,true,'sin_despachar',true,$19)
+      RETURNING id`,
+      [
+        folio, consecutivo,
+        anonimo ? null : str(formData, 'nombreReportante'),
+        anonimo,
+        str(formData, 'calle'), str(formData, 'colonia'),
+        str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
+        str(formData, 'municipio') ?? 'San Juan del Río',
+        lat, lng,
+        num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
+        str(formData, 'descripcion'), str(formData, 'observaciones'),
+        fechaHoraInicio,
+        str(formData, 'nombreOficial'),
+        session.user.id,
+      ],
+    )
+    return inc.rows[0].id
+  })
+
+  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId, payload: { origen: 'rondin_escalado' } })
+
+  revalidatePath('/agente_911/rondin')
+  revalidatePath('/incidentes')
+
+  redirect(`/agente_911/rondin/incidentes/${incidenteId}`)
+}
+
+/** @deprecated El rondín ya no se auto-cierra: usar createRondinEscalado. Se conserva solo por referencia histórica. */
 export async function createRecorridoCompleto(formData: FormData) {
   const session = await requireOperador()
 
@@ -311,8 +365,10 @@ export async function createDespacho(formData: FormData) {
       }
 
       for (const e of elementos) {
+        // Match automático nómina → oficial con cuenta en el sistema (NULL si es elemento externo)
         await cliente.query(
-          `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre) VALUES ($1, $2, $3, $4)`,
+          `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id)
+           VALUES ($1, $2, $3, $4, (SELECT id FROM ofi_oficiales WHERE no_nomina = $3 AND ofi_estatus = 'activo' LIMIT 1))`,
           [despachoId, e.extId, e.nomina, e.nombre],
         )
       }

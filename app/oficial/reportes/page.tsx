@@ -39,7 +39,7 @@ export default async function MisReportesPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {reportes.map(r => {
               const tieneDenuncia = !!r.d1Id
-              const pendienteDenu = r.quiereDenuncia && !r.d1Id
+              const pendienteDenu = (r.quiereDenuncia || r.d1Pendiente) && !r.d1Id
               return (
                 <Link key={r.id} href={`/oficial/reportes/${r.id}`} style={{
                   background: '#ffffff',

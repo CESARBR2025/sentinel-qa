@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import ReporteRecorridoZen from "@/components/911/radio/FormSection"; 
+import { FormRondinEscalado } from "@/components/911/radio/FormRondinEscalado";
 
 import { getCatalogos } from "@/lib/911/service";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
@@ -21,8 +21,10 @@ export default async function ReporteRecorridoPage() {
    const catalogos = await getCatalogos();
 
 
-  return  <ReporteRecorridoZen 
-      user={session.user} 
-      catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades, canalizaciones: catalogos.canalizaciones }} 
+  return (
+    <FormRondinEscalado
+      catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
+      backHref="/agente_911"
     />
+  )
 }

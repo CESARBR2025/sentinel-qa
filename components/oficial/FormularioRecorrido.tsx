@@ -51,7 +51,16 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
   )
 }
 
-export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos: any }) {
+interface PrefillDespacho {
+  folioCad?: string
+  descripcion?: string
+  calle?: string
+  colonia?: string
+  tipoIncidente?: string
+  prioridad?: string
+}
+
+export function FormularioRecorrido({ user, catalogos, incidenteId, prefill }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho }) {
   const formRef = useRef<HTMLFormElement>(null)
   const store = useOficialFormStore()
   const s = useOficialFormStore.getState()
@@ -97,15 +106,18 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
 
   useEffect(() => {
     store.reset()
-    store.setField('tipoIncidente', defaults.dIncidente)
+    store.setField('tipoIncidente', prefill?.tipoIncidente ?? defaults.dIncidente)
     store.setField('tipoEmergenciaId', defaults.dEmergencia)
-    store.setField('prioridadId', defaults.dPrioridad)
-    store.setField('descripcion', defaults.dDescripcion)
+    store.setField('prioridadId', prefill?.prioridad ?? defaults.dPrioridad)
+    store.setField('descripcion', prefill?.descripcion ?? defaults.dDescripcion)
     store.setField('contenidoReporte', defaults.dContenido)
     store.setField('datosPositivosNegativos', defaults.dDatosPN)
     store.setField('accionesRealizadas', defaults.dAcciones)
     store.setField('objetosRecuperados', defaults.dObjetos)
     store.setField('resultadoCateo', defaults.dResultado)
+    if (prefill?.folioCad) store.setField('folioCad', prefill.folioCad)
+    if (prefill?.calle) store.setField('calle', prefill.calle)
+    if (prefill?.colonia) store.setField('colonia', prefill.colonia)
 
     const onPageShow = (e: PageTransitionEvent) => {
       if (e.persisted) {
@@ -194,6 +206,9 @@ export function FormularioRecorrido({ user, catalogos }: { user: any, catalogos:
       }
     })
     fd.set('ofi_vehiculos', partes.join('|'))
+
+    // Reporte vinculado a solicitud de despacho: su registro cierra el incidente
+    if (incidenteId) fd.set('incidente_id', incidenteId)
 
     crearReporteCampoOficial(fd)
   }

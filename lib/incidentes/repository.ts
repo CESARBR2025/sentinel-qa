@@ -10,12 +10,14 @@ function toStr(val: unknown): string | null {
 export async function listarIncidentesConFiltros(filtros: IncidenteFiltros): Promise<IncidenteListItem[]> {
   const conditions: string[] = []
   const params: unknown[] = []
-  const { canal, estatus, desde, hasta, folio } = filtros
+  const { canal, estatus, desde, hasta, folio, tipoIncidenteId, prioridadId } = filtros
   if (canal) { conditions.push(`i.canal = $${params.length + 1}`); params.push(canal) }
   if (estatus) { conditions.push(`i.estatus = $${params.length + 1}`); params.push(estatus) }
   if (desde) { conditions.push(`i.fecha_hora_inicio >= $${params.length + 1}`); params.push(desde) }
   if (hasta) { conditions.push(`i.fecha_hora_inicio <= $${params.length + 1}`); params.push(hasta) }
   if (folio) { conditions.push(`i.folio ILIKE $${params.length + 1}`); params.push(`%${folio}%`) }
+  if (tipoIncidenteId) { conditions.push(`i.tipo_incidente_id = $${params.length + 1}`); params.push(tipoIncidenteId) }
+  if (prioridadId) { conditions.push(`i.prioridad_id = $${params.length + 1}`); params.push(prioridadId) }
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
 
   const result = await query<Record<string, unknown>>(
@@ -26,8 +28,24 @@ export async function listarIncidentesConFiltros(filtros: IncidenteFiltros): Pro
 }
 
 export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[]> {
+  // Cierre actual: ofi_reportes_campo (orc). Fallback legacy: incidente_reporte_campo (rc).
   const result = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre, d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora, rc.acciones_realizadas, rc.hay_detencion FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON i.id = d.incidente_id LEFT JOIN incidente_reporte_campo rc ON i.id = rc.incidente_id WHERE i.estatus = 'atendido' ORDER BY i.creado_en DESC LIMIT 100`,
+    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion,
+      cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre,
+      d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora,
+      COALESCE(orc.ofi_acciones, rc.acciones_realizadas) AS acciones_realizadas,
+      COALESCE(orc.ofi_hay_detencion, rc.hay_detencion) AS hay_detencion,
+      (orc.ofi_hay_detencion = true AND NOT EXISTS (
+        SELECT 1 FROM ofi_reporte_denuncia den WHERE den.reporte_campo_id = orc.id
+      )) AS d1_pendiente
+    FROM incidentes i
+    LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+    LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+    LEFT JOIN users u ON i.capturado_por = u.id
+    LEFT JOIN incidente_despacho d ON i.id = d.incidente_id
+    LEFT JOIN ofi_reportes_campo orc ON i.id = orc.incidente_id
+    LEFT JOIN incidente_reporte_campo rc ON i.id = rc.incidente_id
+    WHERE i.estatus = 'atendido' ORDER BY i.creado_en DESC LIMIT 100`,
   )
   const rows = result.rows.map(rowToIncidenteConDespachoBase)
   return Promise.all(rows.map(async (inc) => {
@@ -69,7 +87,7 @@ export async function listarIncidentesPendientesDespacho(): Promise<IncidentePen
 
 export async function obtenerIncidenteCompleto(id: string): Promise<IncidenteDetalleCompleto | null> {
   const incResult = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.tipo_reporte, i.estatus, i.nombre_reportante, i.anonimo, i.sexo, i.edad, i.es_usuario_frecuente, i.es_persona_afectada, i.es_migrante, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.municipio, i.descripcion, i.observaciones, i.fecha_hora_inicio, i.fecha_hora_fin, i.grupo_whatsapp, i.nombre_oficial, i.requiere_despacho, i.creado_en, cti.nombre AS tipo_incidente_nombre, cte.nombre AS tipo_emergencia_nombre, cp.nombre AS prioridad_nombre, cmc.nombre AS medio_canalizacion_nombre, u.name AS capturado_por_nombre FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN cat_medios_canalizacion cmc ON i.medio_canalizacion_id = cmc.id LEFT JOIN users u ON i.capturado_por = u.id WHERE i.id = $1 LIMIT 1`,
+    `SELECT i.id, i.folio, i.canal, i.tipo_reporte, i.estatus, i.nombre_reportante, i.anonimo, i.sexo, i.edad, i.es_usuario_frecuente, i.es_persona_afectada, i.es_migrante, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.municipio, i.descripcion, i.observaciones, i.fecha_hora_inicio, i.fecha_hora_fin, i.grupo_whatsapp, i.nombre_oficial, i.requiere_despacho, i.origen_rondin, i.creado_en, cti.nombre AS tipo_incidente_nombre, cte.nombre AS tipo_emergencia_nombre, cp.nombre AS prioridad_nombre, cmc.nombre AS medio_canalizacion_nombre, u.name AS capturado_por_nombre FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN cat_medios_canalizacion cmc ON i.medio_canalizacion_id = cmc.id LEFT JOIN users u ON i.capturado_por = u.id WHERE i.id = $1 LIMIT 1`,
     [id],
   )
   if (!incResult.rows[0]) return null
@@ -128,7 +146,7 @@ export async function obtenerUnidadesDeDespacho(despachoId: string): Promise<Des
 
 export async function obtenerElementosDeDespacho(despachoId: string): Promise<DespachoElementoRow[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT id, elemento_ext_id, elemento_nomina, elemento_nombre FROM incidente_despacho_elementos WHERE despacho_id = $1`,
+    `SELECT id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id FROM incidente_despacho_elementos WHERE despacho_id = $1`,
     [despachoId],
   )
   return result.rows.map(rowToDespachoElemento)
@@ -269,8 +287,12 @@ export async function verificarReporteCampo(incidenteId: string) {
         `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
         [incidenteId]
     )
+    // Cierre vigente (ofi_reportes_campo) o legacy (incidente_reporte_campo)
     const existeResult = await query<{ id: string }>(
-        `SELECT id FROM incidente_reporte_campo WHERE incidente_id = $1 LIMIT 1`,
+        `SELECT id FROM ofi_reportes_campo WHERE incidente_id = $1
+         UNION ALL
+         SELECT id FROM incidente_reporte_campo WHERE incidente_id = $1
+         LIMIT 1`,
         [incidenteId]
     )
     return {

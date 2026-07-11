@@ -39,6 +39,7 @@ export interface OfiCateo {
 
 export interface OfiReporteCampo {
   id: string;
+  incidenteId: string | null;
   folioReporteCampo: string | null;
   ofiFolioCad: string;
   ofiNombreReportante: string | null;
@@ -50,6 +51,8 @@ export interface OfiReporteCampo {
   ofiContenidoReporte: string | null;
   ofiCalle: string | null;
   ofiColonia: string | null;
+  ofiEntreCalles: string | null;
+  ofiReferencia: string | null;
   ofiLatitud: number | null;
   ofiLongitud: number | null;
   ofiDatosPn: string | null;
@@ -57,6 +60,8 @@ export interface OfiReporteCampo {
   ofiHayDetencion: boolean;
   ofiDetenidos: OfiDetenido[];
   ofiAutoridadRecibe: string | null;
+  expedienteCi: string | null;
+  personalIngresoCi: string | null;
   ofiMontoRobo: number | null;
   ofiObjetosRecuperados: string | null;
   ofiHayVehiculo: boolean;
@@ -72,6 +77,7 @@ export interface OfiReporteCampo {
 }
 
 export interface CrearReporteCampoInput {
+  incidenteId: string | null;
   folioReporteCampo: string;
   ofiFolioCad: string;
   ofiNombreReportante: string | null;
@@ -83,6 +89,8 @@ export interface CrearReporteCampoInput {
   ofiContenidoReporte: string | null;
   ofiCalle: string | null;
   ofiColonia: string | null;
+  ofiEntreCalles: string | null;
+  ofiReferencia: string | null;
   ofiLatitud: number | null;
   ofiLongitud: number | null;
   ofiDatosPn: string | null;
@@ -90,6 +98,8 @@ export interface CrearReporteCampoInput {
   ofiHayDetencion: boolean;
   ofiDetenidos: OfiDetenido[];
   ofiAutoridadRecibe: string | null;
+  expedienteCi: string | null;
+  personalIngresoCi: string | null;
   ofiMontoRobo: number | null;
   ofiHayRobo: boolean
   ofiObjetosRecuperados: string | null;
@@ -133,6 +143,24 @@ export interface OfiReporteResumen {
   createdAt: string;
   d1Id: string | null;
   d1Folio: string | null;
+  d1Pendiente: boolean;
+}
+
+export interface DespachoAsignado {
+  incidenteId: string;
+  folio: string;
+  canal: string;
+  descripcion: string | null;
+  calle: string | null;
+  colonia: string | null;
+  entreCalles: string | null;
+  referenciaUbicacion: string | null;
+  tipoIncidente: string | null;
+  prioridad: string | null;
+  fechaHoraInicio: string;
+  fechaHoraDespacho: string | null;
+  despachadorNombre: string | null;
+  unidades: string[];
 }
 
 export interface OfiD1Vinculada {

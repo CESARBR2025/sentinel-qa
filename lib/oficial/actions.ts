@@ -16,6 +16,11 @@ export async function crearReporteCampoOficial(formData: FormData) {
     await tryActionRaw(async () => crearReporte(session.user.id, formData))
 
   revalidatePath('/oficial')
+  // Si el reporte cerró una solicitud de despacho, refrescar vistas de despacho
+  if (formData.get('incidente_id')) {
+    revalidatePath('/oficial/despachos')
+    revalidatePath('/incidentes')
+  }
 
   if (quiereDenuncia) {
     const params = new URLSearchParams({

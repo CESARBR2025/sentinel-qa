@@ -4,6 +4,8 @@ export interface IncidenteFiltros {
   desde?: string | null
   hasta?: string | null
   folio?: string | null
+  tipoIncidenteId?: number | null
+  prioridadId?: number | null
 }
 
 export interface IncidenteListItem {
@@ -35,6 +37,7 @@ export interface IncidenteConDespacho {
   fechaHoraDespacho: string | null
   accionesRealizadas: string | null
   hayDetencion: boolean | null
+  d1Pendiente: boolean
   unidades: { placa: string }[]
   elementos: { nombre: string; nomina: string }[]
 }
@@ -151,6 +154,7 @@ export interface IncidenteDetalleCompleto {
   grupoWhatsapp: string | null
   nombreOficial: string | null
   requiereDespacho: boolean | null
+  origenRondin: boolean | null
   creadoEn: string
   tipoIncidente: string | null
   tipoEmergencia: string | null
@@ -175,6 +179,7 @@ export interface DespachoElementoRow {
   elementoExtId: string | null
   elementoNomina: string | null
   elementoNombre: string | null
+  oficialId: string | null
 }
 
 export interface IncidenteBasico {
@@ -230,4 +235,51 @@ export interface ReporteCampoDetalle {
 export interface ReporteDetalleResponse {
   incidente: IncidenteBasico
   reporte: ReporteCampoDetalle
+}
+
+// ─── Historial generativo (timeline 911 → despacho → campo → D1) ────────────
+
+export interface HistorialGeneracion {
+  folio: string
+  canal: string
+  origenRondin: boolean
+  nombreReportante: string | null
+  descripcion: string | null
+  tipoIncidente: string | null
+  prioridad: string | null
+  calle: string | null
+  colonia: string | null
+  fechaHoraInicio: string
+  capturadoPorNombre: string | null
+}
+
+export interface HistorialDespacho {
+  fechaHoraDespacho: string | null
+  despachadorNombre: string | null
+  unidades: DespachoUnidadRow[]
+  elementos: DespachoElementoRow[]
+}
+
+export interface HistorialCierre {
+  reporteCampoId: string
+  folioReporteCampo: string | null
+  acciones: string | null
+  hayDetencion: boolean
+  autoridadRecibe: string | null
+  oficialNombre: string | null
+  fechaCierre: string
+  legacy: boolean
+}
+
+export interface HistorialD1 {
+  folioDenuncia: string
+  estadoTramite: string | null
+  fechaCreacion: string | null
+}
+
+export interface HistorialIncidente {
+  generacion: HistorialGeneracion
+  despacho: HistorialDespacho | null
+  cierre: HistorialCierre | null
+  d1: HistorialD1 | null
 }

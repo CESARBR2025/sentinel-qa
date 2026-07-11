@@ -1,24 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { listarIncidentesRecientes } from "@/lib/911/repository";
+import { listarConFiltros } from "@/lib/incidentes/service";
+import { getCatalogos } from "@/lib/911/service";
 import { DashboardHeader } from "@/components/partials/Header";
+import { FiltrosIncidentes } from "@/components/911/FiltrosIncidentes";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { tienePermiso } from "@/lib/incidentes/permisos";
-import {
-    Search, MapPin, Clock, Eye, Radio, MessageSquare, AlertTriangle,
-    Phone
-} from "lucide-react";
+import { MapPin, Clock, Eye, Radio, MessageSquare, Phone } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-export default async function BitacoraIncidentesPage() {
+interface SearchParams {
+    canal?: string;
+    estatus?: string;
+    desde?: string;
+    hasta?: string;
+    folio?: string;
+    tipoIncidenteId?: string;
+    prioridadId?: string;
+}
+
+export default async function BitacoraIncidentesPage({
+    searchParams,
+}: {
+    searchParams: Promise<SearchParams>;
+}) {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
 
     if (!(await tienePermiso(session.user.id, 'incidentes', 'ver'))) redirect('/dashboard')
 
-    const listaIncidentes = await listarIncidentesRecientes(100)
+    const sp = await searchParams;
+
+    const [listaIncidentes, catalogos] = await Promise.all([
+        listarConFiltros({
+            canal: sp.canal || null,
+            estatus: sp.estatus || null,
+            desde: sp.desde || null,
+            hasta: sp.hasta ? `${sp.hasta}T23:59:59` : null,
+            folio: sp.folio || null,
+            tipoIncidenteId: sp.tipoIncidenteId ? Number(sp.tipoIncidenteId) : null,
+            prioridadId: sp.prioridadId ? Number(sp.prioridadId) : null,
+        }),
+        getCatalogos(),
+    ]);
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -29,7 +54,7 @@ export default async function BitacoraIncidentesPage() {
                 .sentinel-table tr:hover { background-color: #f1f5f9 !important; }
             `}} />
 
-            <DashboardHeader user={session.user as any} />
+            <DashboardHeader user={session.user as { name: string; apellido?: string; email: string }} />
 
             <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
 
@@ -39,6 +64,8 @@ export default async function BitacoraIncidentesPage() {
                         <h1 style={titleStyle}>BITÁCORA GENERAL DE <span style={{ color: '#3b82f6' }}>INCIDENTES</span></h1>
                     </div>
                 </div>
+
+                <FiltrosIncidentes tiposIncidente={catalogos.incidentes} prioridades={catalogos.prioridades} />
 
                 <div style={tableWrapperStyle}>
                     <table className="sentinel-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -54,16 +81,19 @@ export default async function BitacoraIncidentesPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {listaIncidentes.map((item: any) => {
-                                let urlDetalle = "";
-
-                                if (item.canal === 'radio') {
-                                    urlDetalle = `/911/rondin/incidentes/${item.id}`;
-                                } else if (item.canal === 'whatsapp') {
-                                    urlDetalle = `/911/whatsapp/incidentes/${item.id}`;
-                                } else {
-                                    urlDetalle = `/911/ciudadano/incidentes/${item.id}`;
-                                }
+                            {listaIncidentes.length === 0 && (
+                                <tr>
+                                    <td colSpan={7} style={{ ...tdStyle, textAlign: 'center', padding: '48px 24px', color: '#94a3b8', fontFamily: 'JetBrains Mono', fontSize: 11 }}>
+                                        SIN RESULTADOS PARA LOS FILTROS APLICADOS
+                                    </td>
+                                </tr>
+                            )}
+                            {listaIncidentes.map((item) => {
+                                const urlDetalle = item.canal === 'radio'
+                                    ? `/agente_911/rondin/incidentes/${item.id}`
+                                    : item.canal === 'whatsapp'
+                                        ? `/agente_911/whatsapp/incidentes/${item.id}`
+                                        : `/agente_911/ciudadano/incidentes/${item.id}`;
 
                                 return (
                                     <tr key={item.id}>
@@ -87,9 +117,9 @@ export default async function BitacoraIncidentesPage() {
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                <span style={{ fontSize: '13px', fontWeight: 600 }}>{item.tipo_incidente_nombre || 'S/C'}</span>
+                                                <span style={{ fontSize: '13px', fontWeight: 600 }}>{item.tipoIncidente || 'S/C'}</span>
                                                 <span style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase' }}>
-                                                    PRIORIDAD: {item.prioridad_nombre || 'N/A'}
+                                                    PRIORIDAD: {item.prioridad || 'N/A'}
                                                 </span>
                                             </div>
                                         </td>
@@ -102,7 +132,7 @@ export default async function BitacoraIncidentesPage() {
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
                                                 <Clock size={12} color="#64748b" />
-                                                {new Date(item.fecha_hora_inicio).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(item.fechaHoraInicio).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </td>
                                         <td style={tdStyle}>

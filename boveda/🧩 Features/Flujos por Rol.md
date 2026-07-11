@@ -8,22 +8,26 @@
 
 ```mermaid
 flowchart LR
-  C[Ciudadano / WhatsApp / Radio] --> A911[Agente 911]
+  C[Ciudadano / WhatsApp] --> A911[Agente 911]
+  RONDIN[Rondín / Radio] --> A911
   A911 -->|sin_despachar| DES[Agente de despacho]
   DES -->|en_despacho| OFI[Oficial de campo]
-  OFI -->|reporte, D1 y detenidos| AUX[Auxiliar]
+  OFI -->|reporte de campo cierra despacho → atendido| DES
+  OFI -->|D1 y detenidos| AUX[Auxiliar]
   OFI -->|Fiscalía / Juzgado| FIS[Fiscalía]
   OFI -->|Fiscalía / Juzgado| JUZ[Juzgado]
   FIS -->|solicitud de evidencia| MON[Monitorista]
   JUZ -->|solicitud de evidencia| MON
   MON -->|evidencia / fotos| FIS
   MON -->|evidencia / fotos| JUZ
-  OFI -->|datos consolidados| ANA[Análisis]
+  OFI -->|detenidos/analítica| ANA[Análisis]
   FIS --> REP[Reportante]
   JUZ --> REP
   AUX --> REP
   REP --> COOR[Coordinación]
 ```
+
+**Nota**: todo incidente (incluido rondín) nace `sin_despachar` y escala a despacho. El rondín SIEMPRE genera solicitud de despacho — ya no se auto-cierra. El oficial cierra la solicitud al capturar su reporte de campo (`estatus → atendido`). Ver [[Plan Flujo Despacho]].
 
 ## 1. Agente 911 (`agente_911`)
 
@@ -35,7 +39,7 @@ flowchart LR
 2. Captura reportante —o marca anónimo—, ubicación, referencias, descripción, tipo de emergencia, tipo de incidente, prioridad, horarios y observaciones.
 3. Para WhatsApp, registra el grupo; este dato solo aplica a dicho canal.
 4. Para 911 puede registrar folio CAD, personas afectadas, usuario frecuente, migrante/paisano y medio de canalización.
-5. El sistema genera el folio y deja el incidente en `sin_despachar`; para radio/rondín se crea en `en_despacho`.
+5. El sistema genera el folio y deja el incidente en `sin_despachar` — todos los canales, incluido rondín, escalan a despacho.
 6. Si es extorsión o alarma escolar, se completa su registro especializado asociado al incidente.
 7. El incidente pasa al tablero de despacho cuando requiere unidad.
 
@@ -71,7 +75,7 @@ flowchart LR
 2. Llena el reporte paso a paso: datos generales y mapa, incidente/emergencia, narrativa y acciones, detenidos/vehículos/cateo, y bienes especiales (armas, drogas, hidrocarburos u órdenes).
 3. Registra positivos/negativos, resultado, autoridad receptora, delito o falta, objetos/vehículos recuperados y, si aplica, detención o cateo.
 4. Decide si requiere denuncia D1. Si sí, se crea una denuncia vinculada; si hay detenidos, se generan solicitudes de fotos frontal, derecha e izquierda.
-5. El reporte queda `registrado` y puede avanzar a Fiscalía/Juzgado según la autoridad receptora, hasta `cerrado`.
+5. El reporte queda `registrado`. El trámite avanza vía `ofi_reporte_denuncia.estado_tramite`: `RECIBIDA → EN_ANALISIS → EN_REVISION_JUZGADO → CERRADO`, según autoridad receptora (Fiscalía o Juzgado).
 
 **Pendiente / mejora**
 
@@ -90,7 +94,7 @@ flowchart LR
 
 **Pendiente / mejora**
 
-- Implementar el alta completa de Cuestionario Único (folio de incidente/reporte/cuestionario, fecha/hora y responsable). Actualmente está documentada la consulta/exportación, no una captura completa persistente.
+- Implementar el alta completa de Cuestionario Único (folio de incidente/reporte/cuestionario, fecha/hora y responsable). Consulta/exportación existe como página y endpoint, pero **falta formulario de captura** persistente.
 - Sustituir la detección textual de “robo” por un tipo de incidente/delito catalogado para evitar falsos positivos y omisiones.
 
 ## 5. Agente Bitacorista (`agente_bitacorista`)
@@ -178,13 +182,14 @@ flowchart LR
 - El “envío de formatos” hoy solo guarda información; faltan generación de archivo, destinatario, acuse, fecha de envío y reenvío.
 - Diseñar el reporte diario y el registro por turno como productos con definición de corte, fuente, responsable y versión, para que no dependan de exportaciones manuales.
 
-## 10. Área de Análisis (`analisis`)
+## 10. Área de Análisis (`Analisis`)
 
 **Objetivo esperado**: enriquecer información de detenidos y producir análisis/inteligencia.
 
 **Estado actual**
 
 - Tiene permisos y pantallas de pendientes, formulario de ingreso, IPH y generación de presentación.
+- **No tiene redirect en dashboard** — usuario con rol `Analisis` cae en dashboard genérico con ModuleCards, no en `/analisis`.
 - El levantamiento solicita un Excel/datos complementarios del detenido (domicilio, nacimiento, edad, género, alias, origen, falta y Registro Nacional de Detenidos), pero no existe documentación de dominio equivalente en la bóveda.
 
 **Flujo propuesto para validación**
@@ -221,6 +226,8 @@ Estos roles se separan del flujo de incidentes, aunque comparten oficiales y, en
 5. **P1 — Medición operativa**: SLA por prioridad, tiempos de despacho/arribo/cierre, evidencias vencidas y carga por rol/turno.
 6. **P2 — Entregables externos**: automatizar envío de Formato N, Excel y presentaciones con versión, acuse y control de acceso.
 7. **P2 — Seguridad y auditoría**: permisos mínimos, motivo de acceso a evidencia sensible, retención de archivos y bitácora inmutable de acciones relevantes.
+
+> **Info — cat_estatus_evento**: Existe en BD una máquina de 11 estados con `area_responsable` (NUEVO→VALIDADO→DESPACHADO→EN_ATENCION→ATENDIDO→EN_BITACORA→EN_NOVEDADES→CLASIFICADO→INVESTIGADO→GEOREFERENCIADO→CERRADO). No está integrada al flujo principal de incidentes/reportes. Considerar si unificarla con la máquina del P0.
 
 ## Decisiones necesarias con operación
 

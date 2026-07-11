@@ -480,6 +480,7 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 4 | `elemento_nomina` | `character varying` | SÍ | — |
 | 5 | `elemento_nombre` | `character varying` | SÍ | — |
 | 6 | `creado_en` | `timestamp with time zone` | NO | now() |
+| 7 | `oficial_id` | `uuid` | SÍ | — (FK → ofi_oficiales.id; match por nómina en despacho) |
 
 ### \`incidente_despacho_unidades\`
 
@@ -613,6 +614,7 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 34 | `longitud` | `numeric` | SÍ | — |
 | 35 | `numero_exterior` | `character varying` | SÍ | — |
 | 36 | `numero_interior` | `character varying` | SÍ | — |
+| 37 | `origen_rondin` | `boolean` | SÍ | false (marca incidentes escalados desde rondín) |
 
 ### \`incidentes_camara\`
 
@@ -1013,6 +1015,11 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 55 | `ofi_apoyo_cateos_fge` | `boolean` | SÍ | false |
 | 56 | `ofi_armas_blancas` | `jsonb` | SÍ | '[]'::jsonb |
 | 57 | `ofi_hay_arma_blanca` | `boolean` | SÍ | false |
+| 58 | `incidente_id` | `uuid` | SÍ | — (FK → incidentes.id; su INSERT cierra la solicitud de despacho; índice único parcial) |
+| 59 | `ofi_entre_calles` | `character varying` | SÍ | — |
+| 60 | `ofi_referencia` | `character varying` | SÍ | — |
+| 61 | `expediente_ci` | `character varying` | SÍ | — |
+| 62 | `personal_ingreso_ci` | `character varying` | SÍ | — |
 
 ### \`permisos\`
 

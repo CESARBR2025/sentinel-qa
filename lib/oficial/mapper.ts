@@ -1,4 +1,4 @@
-import type { OfiReporteCampo, OfiOficial, OfiDetenido, OfiVehiculo, OfiCateo, OfiReporteResumen, OfiD1Vinculada, OfiReporteDetalle } from './types'
+import type { OfiReporteCampo, OfiOficial, OfiDetenido, OfiVehiculo, OfiCateo, OfiReporteResumen, OfiD1Vinculada, OfiReporteDetalle, DespachoAsignado } from './types'
 
 function parseJsonField<T>(val: unknown): T {
   if (!val) return (typeof val === 'string' ? JSON.parse(val) : val) ?? ([] as unknown as T)
@@ -9,6 +9,7 @@ function parseJsonField<T>(val: unknown): T {
 export function rowToReporteCampo(row: Record<string, unknown>): OfiReporteCampo {
   return {
     id: String(row.id ?? ''),
+    incidenteId: (row.incidente_id as string) ?? null,
     folioReporteCampo: (row.folio_reporte_campo as string) ?? null,
     ofiFolioCad: String(row.ofi_folio_cad ?? ''),
     ofiNombreReportante: (row.ofi_nombre_reportante as string) ?? null,
@@ -20,6 +21,8 @@ export function rowToReporteCampo(row: Record<string, unknown>): OfiReporteCampo
     ofiContenidoReporte: (row.ofi_contenido_reporte as string) ?? null,
     ofiCalle: (row.ofi_calle as string) ?? null,
     ofiColonia: (row.ofi_colonia as string) ?? null,
+    ofiEntreCalles: (row.ofi_entre_calles as string) ?? null,
+    ofiReferencia: (row.ofi_referencia as string) ?? null,
     ofiLatitud: row.ofi_latitud ? Number(row.ofi_latitud) : null,
     ofiLongitud: row.ofi_longitud ? Number(row.ofi_longitud) : null,
     ofiDatosPn: (row.ofi_datos_pn as string) ?? null,
@@ -27,6 +30,8 @@ export function rowToReporteCampo(row: Record<string, unknown>): OfiReporteCampo
     ofiHayDetencion: Boolean(row.ofi_hay_detencion),
     ofiDetenidos: parseJsonField<OfiDetenido[]>(row.ofi_detenidos),
     ofiAutoridadRecibe: (row.ofi_autoridad_recibe as string) ?? null,
+    expedienteCi: (row.expediente_ci as string) ?? null,
+    personalIngresoCi: (row.personal_ingreso_ci as string) ?? null,
     ofiMontoRobo: row.ofi_monto_robo ? Number(row.ofi_monto_robo) : null,
     ofiObjetosRecuperados: (row.ofi_objetos_recuperados as string) ?? null,
     ofiHayVehiculo: Boolean(row.ofi_hay_vehiculo),
@@ -81,6 +86,26 @@ export function rowToReporteResumen(row: Record<string, unknown>): OfiReporteRes
     createdAt: toStr(row.created_at) ?? '',
     d1Id: (row.d1_id as string) ?? null,
     d1Folio: (row.d1_folio as string) ?? null,
+    d1Pendiente: Boolean(row.ofi_hay_detencion) && !row.d1_id,
+  }
+}
+
+export function rowToDespachoAsignado(row: Record<string, unknown>): DespachoAsignado {
+  return {
+    incidenteId: String(row.incidente_id ?? ''),
+    folio: String(row.folio ?? ''),
+    canal: String(row.canal ?? ''),
+    descripcion: (row.descripcion as string) ?? null,
+    calle: (row.calle as string) ?? null,
+    colonia: (row.colonia as string) ?? null,
+    entreCalles: (row.entre_calles as string) ?? null,
+    referenciaUbicacion: (row.referencia_ubicacion as string) ?? null,
+    tipoIncidente: (row.tipo_incidente_nombre as string) ?? null,
+    prioridad: (row.prioridad_nombre as string) ?? null,
+    fechaHoraInicio: toStr(row.fecha_hora_inicio) ?? '',
+    fechaHoraDespacho: toStr(row.fecha_hora_despacho),
+    despachadorNombre: (row.despachador_nombre as string) ?? null,
+    unidades: Array.isArray(row.unidades) ? (row.unidades as string[]).filter(Boolean) : [],
   }
 }
 

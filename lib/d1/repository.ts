@@ -11,6 +11,16 @@ export async function verificarFolioDenunciaUnico(folio: string): Promise<boolea
 }
 
 export async function insertarReporteDenuncia(params: Record<string, unknown>): Promise<string> {
+  // Herencia: si la D1 nace de un reporte de campo vinculado a despacho,
+  // el incidente_id se hereda para limpiar la bandera "D1 pendiente"
+  if (!params.incidenteId && params.reporteCampoId) {
+    const rc = await query<{ incidente_id: string | null }>(
+      `SELECT incidente_id FROM ofi_reportes_campo WHERE id = $1 LIMIT 1`,
+      [params.reporteCampoId],
+    )
+    params.incidenteId = rc.rows[0]?.incidente_id ?? null
+  }
+
   const result = await query<{ id: string }>(
     `INSERT INTO ofi_reporte_denuncia (
       folio_denuncia, iph, folio_cu, corporacion, sector, grupo_adscripcion,
