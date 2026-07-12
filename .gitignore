@@ -58,5 +58,9 @@ doc/flujo_prevencion_delito.html
 doc/tutorial_prevencion_delito.html
 graphify-visual/
 
-# Alexandria — vault de conocimiento personal, no del repo
+# Alexandria — vault y config MCP personal (rutas locales, no del repo)
 KnowledgeVault/
+.vault.json
+.mcp.json
+/opencode.json
+.vscode/mcp.json
