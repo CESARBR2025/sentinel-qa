@@ -23,6 +23,7 @@ export default function RootLayout({
             richColors
             closeButton
             duration={4000}
+            style={{ zIndex: 2147483647 }}
             toastOptions={{
               style: {
                 fontFamily: 'JetBrains Mono, monospace',

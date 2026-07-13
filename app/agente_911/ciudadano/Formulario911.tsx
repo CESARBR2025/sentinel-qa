@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { createIncidenteCliente } from "@/lib/incidentes/actions";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { toast } from "sonner"
@@ -9,13 +10,14 @@ import { toast } from "sonner"
 const libraries: ("places")[] = ["places"];
 
 export default function Formulario911({ user, catalogos }: {
-    user: { name: string; apellido?: string }, catalogos: {
+    user: { name: string; apellido?: string },     catalogos: {
         emergencias: any[],
         incidentes: any[],
         prioridades: any[],
         canalizaciones: any[]
     }
 }) {
+    const router = useRouter()
     const [anonimo, setAnonimo] = useState(false);
     const [tipoReporte, setTipoReporte] = useState("normal");
 
@@ -144,8 +146,7 @@ export default function Formulario911({ user, catalogos }: {
 
             const result = await createIncidenteCliente(fd)
             setModalAbierto(false)
-            toast.success(`Reporte generado: ${result.folio}`)
-            setTimeout(() => window.location.href = '/agente_911/ciudadano/incidentes', 2000)
+            router.push(`/agente_911/ciudadano/incidentes?creado=true&folio=${encodeURIComponent(result.folio)}`)
         } catch (e: any) {
             toast.error(e?.message || 'Error al guardar el reporte')
             setEnviando(false)

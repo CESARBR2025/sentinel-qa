@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { getIncidentesPaginados } from "@/lib/911/service";
 import { headers } from "next/headers";
@@ -7,6 +8,7 @@ import { Eye, Plus, Calendar, MapPin, Hash, AlertTriangle, Clock } from "lucide-
 import Link from "next/link";
 import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
+import ToastOnLoad from "./ToastOnLoad";
 
 export default async function Listado911Page({
     searchParams,
@@ -32,6 +34,7 @@ export default async function Listado911Page({
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+            <Suspense fallback={null}><ToastOnLoad /></Suspense>
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
             <DashboardHeader user={session.user as any} backHref={backHref} backLabel={backLabel} />
