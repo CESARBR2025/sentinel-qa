@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "admin_transito_modalreactivaroficial_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L38 | neighbors=[ModalReactivarOficial.tsx]
 - "admin_transito_modalreactivaroficial_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L28 | neighbors=[ModalReactivarOficial.tsx]
 - "admin_transito_modalreactivaroficial_modalreactivaroficial": "ModalReactivarOficial()" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L262 | neighbors=[ModalReactivarOficial.tsx]
 - "admin_transito_modalreactivaroficial_patrullaselect": "PatrullaSelect()" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L55 | neighbors=[ModalReactivarOficial.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "admin_transito_repository_obtenerroloficialcampo": "obtenerRolOficialCampo()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L24 | neighbors=[repository.ts]
 - "admin_transito_repository_reactivaroficial": "reactivarOficial()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L103 | neighbors=[repository.ts]
 - "agente_911_page_agente911dashboardpage": "Agente911DashboardPage()" | kind=code-symbol | source=app/agente_911/page.tsx:L10 | neighbors=[page.tsx]
-- "agente_bitacorista_page_agentebitacoristadashboardpage": "AgenteBitacoristaDashboardPage()" | kind=code-symbol | source=app/agente_bitacorista/page.tsx:L10 | neighbors=[page.tsx]
 
 ## Instructions
 

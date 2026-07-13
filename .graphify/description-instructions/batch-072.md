@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "legalidad_repository_articulosrepository_obtenerarticulos": ".obtenerArticulos()" | kind=code-symbol | source=features/via/legalidad/repository.ts:L4 | neighbors=[ArticulosRepository]
 - "legalidad_repository_articulosrepository_obtenerfraccionesporarticulo": ".obtenerFraccionesPorArticulo()" | kind=code-symbol | source=features/via/legalidad/repository.ts:L27 | neighbors=[ArticulosRepository]
 - "legalidad_service_articulosservice_obtenerfraccionesporarticulo": ".obtenerFraccionesPorArticulo()" | kind=code-symbol | source=features/via/legalidad/service.ts:L16 | neighbors=[ArticulosService]
 - "lib_auth_authuser": "AuthUser" | kind=code-symbol | source=lib/auth.ts:L63 | neighbors=[auth.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "login_desing_design_canvas_dcsection": "DCSection()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L333 | neighbors=[design-canvas.jsx]
 - "login_desing_design_canvas_dcviewport": "DCViewport()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L182 | neighbors=[design-canvas.jsx]
 - "login_desing_design_canvas_designcanvas": "DesignCanvas()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L71 | neighbors=[design-canvas.jsx]
-- "login_desing_login_app_app": "App()" | kind=code-symbol | source=login-desing/login-app.jsx:L180 | neighbors=[login-app.jsx]
 
 ## Instructions
 

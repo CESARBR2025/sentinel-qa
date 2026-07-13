@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_liberaciones_liberacionestable_liberacionestableprops": "LiberacionesTableProps" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L16 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_liberaciones/mapper.ts:L3 | neighbors=[mapper.ts]
 - "agente_liberaciones_page_liberacionesdashboardpage": "LiberacionesDashboardPage()" | kind=code-symbol | source=app/agente_liberaciones/page.tsx:L5 | neighbors=[page.tsx]
 - "agente_liberaciones_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L5 | neighbors=[permisos.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "analisis_formanalisis_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L15 | neighbors=[formAnalisis.tsx]
 - "analisis_formanalisis_stepindicator": "StepIndicator()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L779 | neighbors=[formAnalisis.tsx]
 - "analisis_formanalisis_subcard": "subCard" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L827 | neighbors=[formAnalisis.tsx]
-- "analisis_formanalisis_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L795 | neighbors=[formAnalisis.tsx]
 
 ## Instructions
 

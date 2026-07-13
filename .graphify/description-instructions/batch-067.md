@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "formato_n_atencion_victimas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L7 | neighbors=[route.ts]
 - "formato_n_atencion_victimas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L20 | neighbors=[route.ts]
 - "formato_n_consolidado_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-consolidado/route.ts:L9 | neighbors=[route.ts]
 - "formato_n_eventos_page_formatoneventospage": "FormatoNEventosPage()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L12 | neighbors=[page.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "historial_page_thstyle": "thStyle" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L78 | neighbors=[page.tsx]
 - "historial_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/historial/route.ts:L7 | neighbors=[route.ts]
 - "hooks_usedespacho_despachodetalle": "DespachoDetalle" | kind=code-symbol | source=hooks/useDespacho.ts:L23 | neighbors=[useDespacho.ts]
-- "hooks_usedespacho_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useDespacho.ts:L9 | neighbors=[useDespacho.ts]
 
 ## Instructions
 

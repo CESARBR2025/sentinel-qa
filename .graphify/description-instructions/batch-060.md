@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "components_capturardatostitularsection_field": "Field()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L671 | neighbors=[CapturarDatosTitularSection.tsx]
 - "components_capturardatostitularsection_fieldname": "FieldName" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L33 | neighbors=[CapturarDatosTitularSection.tsx]
 - "components_capturardatostitularsection_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L9 | neighbors=[CapturarDatosTitularSection.tsx]
 - "components_capturardatostitularsection_validatefield": "validateField()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L35 | neighbors=[CapturarDatosTitularSection.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "configuracion_page_configuracionperfilpage": "ConfiguracionPerfilPage()" | kind=code-symbol | source=app/oficial/configuracion/page.tsx:L11 | neighbors=[page.tsx]
 - "consolidar_page_arma": "Arma" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L64 | neighbors=[page.tsx]
 - "consolidar_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L84 | neighbors=[page.tsx]
-- "consolidar_page_consolidado": "Consolidado" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L73 | neighbors=[page.tsx]
 
 ## Instructions
 

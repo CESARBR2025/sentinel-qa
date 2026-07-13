@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "analisis_tablonanalisis_trstyle": "trStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L157 | neighbors=[TablonAnalisis.tsx]
 - "app_layout_metadata": "metadata" | kind=code-symbol | source=app/layout.tsx:L6 | neighbors=[layout.tsx]
 - "app_layout_rootlayout": "RootLayout()" | kind=code-symbol | source=app/layout.tsx:L11 | neighbors=[layout.tsx]
 - "app_page_rootpage": "RootPage()" | kind=code-symbol | source=app/page.tsx:L3 | neighbors=[page.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "completar_solicitud_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/completar-solicitud/route.ts:L7 | neighbors=[route.ts]
 - "components_buttonverdetalles_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L6 | neighbors=[ButtonVerDetalles.tsx]
 - "components_capturardatostitularsection_capturardatostitularsection": "CapturarDatosTitularSection()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L15 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_field": "Field()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L671 | neighbors=[CapturarDatosTitularSection.tsx]
 
 ## Instructions
 

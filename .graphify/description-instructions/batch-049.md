@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_formato_n_rnd_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L14 | neighbors=[formato-n-rnd-service.ts, rowTo()]
 - "reportes_formato_n_rnd_service_formatonrnd": "FormatoNRnd" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L3 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_obtenerrndporfecha": "obtenerRndPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L44 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
 - "reportes_incidentes_repository_obtenerreportediario": "obtenerReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/repository.ts:L5 | neighbors=[repository.ts, service.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "rol_servicios_catalogos_actions_toggleradio": "toggleRadio()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L59 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
 - "rol_servicios_catalogos_actions_togglesector": "toggleSector()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L46 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
 - "rol_servicios_catalogos_actions_toggletipoemergencia": "toggleTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L111 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_catalogos_actions_toggletipoobservacion": "toggleTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L98 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
 
 ## Instructions
 

@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "consolidar_page_consolidado": "Consolidado" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L73 | neighbors=[page.tsx]
 - "consolidar_page_consolidarformatonpage": "ConsolidarFormatoNPage()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L98 | neighbors=[page.tsx]
 - "consolidar_page_diaconsolidado": "DiaConsolidado()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L178 | neighbors=[page.tsx]
 - "consolidar_page_evento": "Evento" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L11 | neighbors=[page.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "d1_noiniciada_descargapagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaPagination.tsx:L4 | neighbors=[DescargaPagination.tsx]
 - "d1_noiniciada_page_descargaspage": "DescargasPage()" | kind=code-symbol | source=app/d1_noiniciada/page.tsx:L13 | neighbors=[page.tsx]
 - "d1_page_reportesd1page": "ReportesD1Page()" | kind=code-symbol | source=app/d1/page.tsx:L13 | neighbors=[page.tsx]
-- "d1_service_tostr": "toStr()" | kind=code-symbol | source=lib/d1/service.ts:L3 | neighbors=[service.ts]
 
 ## Instructions
 

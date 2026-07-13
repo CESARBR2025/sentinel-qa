@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "rol_servicios_mapper_rowtotipoobservacion": "rowToTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L134 | neighbors=[mapper.ts, toBool(), repository.ts]
 - "rol_servicios_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L12 | neighbors=[mapper.ts, rowToRolAsignacion(), rowToRolServicio()]
 - "rol_servicios_repository_getrolbyid": "getRolById()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L13 | neighbors=[actions.ts, repository.ts, service.ts]
 - "rol_servicios_repository_getuserrolename": "getUserRoleName()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L88 | neighbors=[catalogos-actions.ts, repository.ts, service.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "911_permisos_tieneaccesohub": "tieneAccesoHub()" | kind=code-symbol | source=lib/911/permisos.ts:L46 | neighbors=[permisos.ts, obtenerRolNombre()]
 - "911_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/911/permisos.ts:L9 | neighbors=[permisos.ts, tieneAccesoSeccion()]
 - "911_repository_contarporestatus": "contarPorEstatus()" | kind=code-symbol | source=lib/911/repository.ts:L144 | neighbors=[repository.ts, service.ts]
-- "911_repository_listarincidentes": "listarIncidentes()" | kind=code-symbol | source=lib/911/repository.ts:L42 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 

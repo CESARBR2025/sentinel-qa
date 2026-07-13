@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_incidentes_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteDiario(), rowToReporteSemanal()]
 - "reportes_incidentes_types_reportediariorow": "ReporteDiarioRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "reportes_incidentes_types_reportesemanalrow": "ReporteSemanalRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L8 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "reportes_menuoption_optionsquare": "OptionSquare()" | kind=code-symbol | source=components/reportes/menuOption.tsx:L19 | neighbors=[page.tsx, menuOption.tsx, page.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "rol_servicios_mapper_rowtorolobservacion": "rowToRolObservacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L86 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "rol_servicios_mapper_rowtosector": "rowToSector()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L95 | neighbors=[mapper.ts, toBool(), repository.ts]
 - "rol_servicios_mapper_rowtotipoemergencia": "rowToTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L143 | neighbors=[mapper.ts, toBool(), repository.ts]
-- "rol_servicios_mapper_rowtotipoobservacion": "rowToTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L134 | neighbors=[mapper.ts, toBool(), repository.ts]
 
 ## Instructions
 

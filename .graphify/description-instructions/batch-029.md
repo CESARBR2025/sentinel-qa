@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_types_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=lib/incidentes/types.ts:L46 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_personaafectadarow": "PersonaAfectadaRow" | kind=code-symbol | source=lib/incidentes/types.ts:L62 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_reportecampodetalle": "ReporteCampoDetalle" | kind=code-symbol | source=lib/incidentes/types.ts:L207 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_reportecamporow": "ReporteCampoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L79 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "oficial_formulariorecorrido_formulariorecorrido": "FormularioRecorrido()" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L64 | neighbors=[page.tsx, page.tsx, FormularioRecorrido.tsx]
 - "oficial_mapper_rowtod1": "rowToD1()" | kind=code-symbol | source=lib/oficial/mapper.ts:L113 | neighbors=[mapper.ts, toStr(), rowToReporteDetalle()]
 - "oficial_mapper_rowtodespachoasignado": "rowToDespachoAsignado()" | kind=code-symbol | source=lib/oficial/mapper.ts:L93 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "oficial_mapper_rowtoreporteresumen": "rowToReporteResumen()" | kind=code-symbol | source=lib/oficial/mapper.ts:L75 | neighbors=[mapper.ts, toStr(), repository.ts]
 
 ## Instructions
 

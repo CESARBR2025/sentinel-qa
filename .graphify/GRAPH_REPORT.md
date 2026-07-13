@@ -1,24 +1,24 @@
 # Graph Report - .  (2026-07-13)
 
 ## Corpus Check
-- Large corpus: 783 files · ~558,515 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
+- Large corpus: 784 files · ~559,284 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
 
 ## Summary
-- 3443 nodes · 11379 edges · 127 communities detected
+- 3444 nodes · 11382 edges · 127 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
-- Edge kinds: MODIFIES: 3757 · contains: 2590 · imports: 1828 · imports_from: 1222 · ON_BRANCH: 1209 · calls: 367 · PARENT_OF: 309 · re_exports: 52 · method: 29 · references: 9 · inherits: 7
+- Edge kinds: MODIFIES: 3758 · contains: 2590 · imports: 1828 · imports_from: 1222 · ON_BRANCH: 1210 · calls: 367 · PARENT_OF: 310 · re_exports: 52 · method: 29 · references: 9 · inherits: 7
 
 
 ## Input Scope
 - Requested: auto
 - Resolved: committed (source: default-auto)
-- Included files: 783 · Candidates: 838
-- Excluded: 1 untracked · 73602 ignored · 0 sensitive · 30 missing committed
+- Included files: 784 · Candidates: 839
+- Excluded: 0 untracked · 73848 ignored · 0 sensitive · 30 missing committed
 - Recommendation: Use --scope all or graphify.yaml inputs.corpus for a knowledge-base folder.
 
 ## Graph Freshness
-- Built from Git commit: `11ee4f2`
+- Built from Git commit: `6c646af`
 - Compare this hash to `git rev-parse HEAD` before trusting freshness-sensitive graph output.
 ## God Nodes (most connected - your core abstractions)
 1. `auth` - 135 edges
@@ -107,16 +107,16 @@ Cohesion: 0.08
 Nodes (47): 290d651 feat(despacho): flujo integral 911 → despacho → oficial → D1 → legal, ec1b658 implementando layaredArchitecture para rol de oficial, parseJsonField(), rowToD1(), rowToDespachoAsignado(), rowToOficial(), rowToReporteCampo(), rowToReporteDetalle() (+39 more)
 
 ### Community 15 - "Community 15"
+Cohesion: 0.05
+Nodes (48): 11ee4f2 mejorando flujo de 911, 6c646af fix loader bug en login, CONTEXT_MAP, __dirname, extractDomain(), KEYWORDS, loadKeywords(), ROOT (+40 more)
+
+### Community 16 - "Community 16"
 Cohesion: 0.08
 Nodes (33): 126b4d1 Monitorista V1, 44ebbc4 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into testing, 46b2c89 Merge branch 'testing' into juzgado, 5d179c0 Apartado de reportes, 8e6c8c6 Apartado de reportes, da33516 Merge pull request #3 from presidenciaSJR/feature/monitorista, BandejaSolicitudes(), btnDetalle (+25 more)
 
-### Community 16 - "Community 16"
+### Community 17 - "Community 17"
 Cohesion: 0.06
 Nodes (47): num(), rowToAsegurado(), rowToDetalleDetenidoGuardado(), rowToPuestaDisposicion(), rowToSolicitud(), actualizarDetallesAsegurado(), actualizarEstadoSolicitud(), actualizarSolicitudConEvidencias() (+39 more)
-
-### Community 17 - "Community 17"
-Cohesion: 0.05
-Nodes (47): 11ee4f2 mejorando flujo de 911, CONTEXT_MAP, __dirname, extractDomain(), KEYWORDS, loadKeywords(), ROOT, buildInstructions() (+39 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.06
@@ -589,9 +589,9 @@ Nodes (1): config
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `auth` connect `Community 2` to `Community 33`, `Community 1`, `Community 55`, `Community 56`, `Community 25`, `Community 6`, `Community 24`, `Community 34`, `Community 48`, `Community 50`, `Community 0`, `Community 57`, `Community 15`, `Community 29`, `Community 9`, `Community 12`, `Community 14`, `Community 19`, `Community 39`, `Community 40`, `Community 43`, `Community 28`, `Community 13`, `Community 58`, `Community 18`, `Community 75`, `Community 63`, `Community 84`, `Community 3`, `Community 27`, `Community 49`, `Community 68`, `Community 32`, `Community 23`, `Community 21`, `Community 123`, `Community 41`, `Community 121`, `Community 65`, `Community 8`, `Community 85`, `Community 5`?**
+- **Why does `auth` connect `Community 2` to `Community 33`, `Community 1`, `Community 55`, `Community 56`, `Community 25`, `Community 6`, `Community 24`, `Community 34`, `Community 48`, `Community 50`, `Community 0`, `Community 57`, `Community 16`, `Community 29`, `Community 9`, `Community 12`, `Community 14`, `Community 19`, `Community 39`, `Community 40`, `Community 43`, `Community 28`, `Community 13`, `Community 58`, `Community 18`, `Community 75`, `Community 63`, `Community 84`, `Community 3`, `Community 27`, `Community 49`, `Community 68`, `Community 32`, `Community 23`, `Community 21`, `Community 123`, `Community 41`, `Community 121`, `Community 65`, `Community 8`, `Community 85`, `Community 5`?**
   _High betweenness centrality (0.034) - this node is a cross-community bridge._
-- **Why does `query()` connect `Community 18` to `Community 2`, `Community 69`, `Community 37`, `Community 55`, `Community 46`, `Community 30`, `Community 6`, `Community 24`, `Community 52`, `Community 71`, `Community 43`, `Community 56`, `Community 9`, `Community 82`, `Community 16`, `Community 29`, `Community 66`, `Community 27`, `Community 7`, `Community 41`, `Community 77`, `Community 19`, `Community 4`, `Community 32`, `Community 14`, `Community 61`, `Community 12`, `Community 1`, `Community 22`, `Community 121`, `Community 0`, `Community 75`, `Community 64`, `Community 26`, `Community 92`, `Community 33`, `Community 8`, `Community 50`, `Community 34`, `Community 48`?**
+- **Why does `query()` connect `Community 18` to `Community 2`, `Community 69`, `Community 37`, `Community 55`, `Community 46`, `Community 30`, `Community 6`, `Community 24`, `Community 52`, `Community 71`, `Community 43`, `Community 56`, `Community 9`, `Community 82`, `Community 17`, `Community 29`, `Community 66`, `Community 27`, `Community 7`, `Community 41`, `Community 77`, `Community 19`, `Community 4`, `Community 32`, `Community 14`, `Community 61`, `Community 12`, `Community 1`, `Community 22`, `Community 121`, `Community 0`, `Community 75`, `Community 64`, `Community 26`, `Community 92`, `Community 33`, `Community 8`, `Community 50`, `Community 34`, `Community 48`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `SA7Repository` connect `Community 50` to `Community 63`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._

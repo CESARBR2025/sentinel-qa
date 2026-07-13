@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "id_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L222 | neighbors=[page.tsx]
 - "id_page_fieldwithicon": "FieldWithIcon()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L395 | neighbors=[page.tsx]
 - "id_page_footercardstyle": "footerCardStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L160 | neighbors=[page.tsx]
 - "id_page_g3": "G3" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L13 | neighbors=[page.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "id_route_patch": "PATCH()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/[id]/route.ts:L21 | neighbors=[route.ts]
 - "id_route_put": "PUT()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/route.ts:L25 | neighbors=[route.ts]
 - "imprimir_page_printrow": "PrintRow()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L161 | neighbors=[page.tsx]
-- "incidentes_actions_bool": "bool()" | kind=code-symbol | source=lib/incidentes/actions.ts:L28 | neighbors=[actions.ts]
 
 ## Instructions
 

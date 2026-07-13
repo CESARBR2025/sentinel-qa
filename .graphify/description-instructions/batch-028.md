@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_service_verificarrolfiscalia": "verificarRolFiscalia()" | kind=code-symbol | source=lib/fiscalia/service.ts:L25 | neighbors=[actions.ts, service.ts, page.tsx]
 - "fiscalia_types_detalledetenidoguardado": "DetalleDetenidoGuardado" | kind=code-symbol | source=lib/fiscalia/types.ts:L81 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "fiscalia_types_evidenciamonitorista": "EvidenciaMonitorista" | kind=code-symbol | source=lib/fiscalia/types.ts:L11 | neighbors=[DetallesAseguradoView.tsx, repository.ts, types.ts]
 - "fiscalia_types_liberacionrow": "LiberacionRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L206 | neighbors=[actions.ts, repository.ts, types.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "incidentes_types_incidentecondespacho": "IncidenteConDespacho" | kind=code-symbol | source=lib/incidentes/types.ts:L24 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentedetallecompleto": "IncidenteDetalleCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L133 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentefiltros": "IncidenteFiltros" | kind=code-symbol | source=lib/incidentes/types.ts:L1 | neighbors=[repository.ts, service.ts, types.ts]
-- "incidentes_types_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=lib/incidentes/types.ts:L46 | neighbors=[mapper.ts, repository.ts, types.ts]
 
 ## Instructions
 

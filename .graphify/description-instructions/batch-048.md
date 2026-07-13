@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_formato_n_armas_aseguradas_service_creararmaasegurada": "crearArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L95 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts]
 - "reportes_formato_n_armas_aseguradas_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L49 | neighbors=[formato-n-armas-aseguradas-service.ts, rowTo()]
 - "reportes_formato_n_armas_aseguradas_service_formatonarmaasegurada": "FormatoNArmaAsegurada" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L37 | neighbors=[formato-n-armas-aseguradas-service.ts, formato-n-consolidado-service.ts]
 - "reportes_formato_n_armas_aseguradas_service_obtenerarmasaseguradasporfecha": "obtenerArmasAseguradasPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L80 | neighbors=[formato-n-armas-aseguradas-service.ts, formato-n-consolidado-service.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_formato_n_rnd_service_actualizarrnd": "actualizarRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L98 | neighbors=[route.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_buscardetencionesporrango": "buscarDetencionesPorRango()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L76 | neighbors=[route.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_crearrnd": "crearRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L58 | neighbors=[route.ts, formato-n-rnd-service.ts]
-- "reportes_formato_n_rnd_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L14 | neighbors=[formato-n-rnd-service.ts, rowTo()]
 
 ## Instructions
 

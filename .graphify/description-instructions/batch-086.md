@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "wireframes_wf_b_wireframeb": "WireframeB()" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L4 | neighbors=[wf-b.jsx]
 - "wireframes_wf_c_wireframec": "WireframeC()" | kind=code-symbol | source=login-desing/wireframes/wf-c.jsx:L4 | neighbors=[wf-c.jsx]
 - "wireframes_wf_d_wireframed": "WireframeD()" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L4 | neighbors=[wf-d.jsx]
 - "wireframes_wf_e_wireframee": "WireframeE()" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L4 | neighbors=[wf-e.jsx]

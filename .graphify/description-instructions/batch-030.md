@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "oficial_mapper_rowtoreporteresumen": "rowToReporteResumen()" | kind=code-symbol | source=lib/oficial/mapper.ts:L75 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "oficial_service_generarfoliounico": "generarFolioUnico()" | kind=code-symbol | source=lib/oficial/service.ts:L54 | neighbors=[service.ts, crearReporte(), generarFolio()]
 - "oficial_service_listardespachosasignados": "listarDespachosAsignados()" | kind=code-symbol | source=lib/oficial/service.ts:L210 | neighbors=[page.tsx, page.tsx, service.ts]
 - "oficial_service_obtenermiperfil": "obtenerMiPerfil()" | kind=code-symbol | source=lib/oficial/service.ts:L79 | neighbors=[page.tsx, service.ts, page.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "prevencion_types_contestacion": "Contestacion" | kind=code-symbol | source=lib/prevencion/types.ts:L99 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_fichabusquedadetalle": "FichaBusquedaDetalle" | kind=code-symbol | source=lib/prevencion/types.ts:L62 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_medidadetalle": "MedidaDetalle" | kind=code-symbol | source=lib/prevencion/types.ts:L36 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "prevencion_types_seguimientobusqueda": "SeguimientoBusqueda" | kind=code-symbol | source=lib/prevencion/types.ts:L80 | neighbors=[mapper.ts, repository.ts, types.ts]
 
 ## Instructions
 

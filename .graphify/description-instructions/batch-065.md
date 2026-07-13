@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_confirmacionmodal_variantes": "VARIANTES" | kind=code-symbol | source=components/fiscalia/ConfirmacionModal.tsx:L17 | neighbors=[ConfirmacionModal.tsx]
 - "fiscalia_detallesaseguradoview_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L18 | neighbors=[DetallesAseguradoView.tsx]
 - "fiscalia_detallesaseguradoview_esimagen": "esImagen()" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L36 | neighbors=[DetallesAseguradoView.tsx]
 - "fiscalia_detallesaseguradoview_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L8 | neighbors=[DetallesAseguradoView.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L3 | neighbors=[permisos.ts]
 - "fiscalia_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L8 | neighbors=[permisos.ts]
 - "fiscalia_profiledropdown_props": "Props" | kind=code-symbol | source=components/fiscalia/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
-- "fiscalia_service_obtenerdetalleinfraccionviaservice": "obtenerDetalleInfraccionViaService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L147 | neighbors=[service.ts]
 
 ## Instructions
 

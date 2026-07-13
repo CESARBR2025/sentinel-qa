@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "steps_pasoconfirmacion_pasoconfirmacionprops": "PasoConfirmacionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L15 | neighbors=[PasoConfirmacion.tsx]
 - "steps_pasoconfirmacion_seccionestructurada": "SeccionEstructurada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L20 | neighbors=[PasoConfirmacion.tsx]
 - "steps_pasoconfirmacionpago_pasoconfirmacionpago": "PasoConfirmacionPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L8 | neighbors=[PasoConfirmacionPago.tsx]
 - "steps_pasoconfirmacionpago_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L3 | neighbors=[PasoConfirmacionPago.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "stores_usetoaststore_toasttype": "ToastType" | kind=code-symbol | source=stores/useToastStore.ts:L5 | neighbors=[useToastStore.ts]
 - "subir_foto_detenido_route_post": "POST()" | kind=code-symbol | source=app/api/expediente/subir-foto-detenido/route.ts:L8 | neighbors=[route.ts]
 - "subir_foto_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/subir-foto/route.ts:L10 | neighbors=[route.ts]
-- "tabladevinfracciones_detalleinfraccionmodal_detalleinfraccionmodal": "DetalleInfraccionModal()" | kind=code-symbol | source=features/depInfracciones/components/TablaDevInfracciones/DetalleInfraccionModal.tsx:L19 | neighbors=[DetalleInfraccionModal.tsx]
 
 ## Instructions
 

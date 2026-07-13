@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "d1_service_tostr": "toStr()" | kind=code-symbol | source=lib/d1/service.ts:L3 | neighbors=[service.ts]
 - "dashboard_enable_2fa_card": "Card()" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L145 | neighbors=[enable-2fa.tsx]
 - "dashboard_enable_2fa_s": "s" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L164 | neighbors=[enable-2fa.tsx]
 - "dashboard_enable_2fa_step": "Step" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L5 | neighbors=[enable-2fa.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "denuncias_formulariod1_loaderstyle": "loaderStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L467 | neighbors=[FormularioD1.tsx]
 - "denuncias_formulariod1_mapcontainerstyle": "mapContainerStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L17 | neighbors=[FormularioD1.tsx]
 - "denuncias_formulariod1_mapwrapperstyle": "mapWrapperStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L459 | neighbors=[FormularioD1.tsx]
-- "denuncias_formulariod1_prefill": "Prefill" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L38 | neighbors=[FormularioD1.tsx]
 
 ## Instructions
 

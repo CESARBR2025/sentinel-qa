@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "tabladevinfracciones_detalleinfraccionmodal_detalleinfraccionmodal": "DetalleInfraccionModal()" | kind=code-symbol | source=features/depInfracciones/components/TablaDevInfracciones/DetalleInfraccionModal.tsx:L19 | neighbors=[DetalleInfraccionModal.tsx]
 - "tabladevinfracciones_detalleinfraccionmodal_detalleinfraccionmodalprops": "DetalleInfraccionModalProps" | kind=code-symbol | source=features/depInfracciones/components/TablaDevInfracciones/DetalleInfraccionModal.tsx:L12 | neighbors=[DetalleInfraccionModal.tsx]
 - "tabladevinfracciones_detalleinfraccionmodal_infracciondetalle": "InfraccionDetalle" | kind=code-symbol | source=features/depInfracciones/components/TablaDevInfracciones/DetalleInfraccionModal.tsx:L3 | neighbors=[DetalleInfraccionModal.tsx]
 - "token_guest_route_post": "POST()" | kind=code-symbol | source=app/api/auth/token-guest/route.ts:L5 | neighbors=[route.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "wireframes_shared_statusbar": "StatusBar()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L166 | neighbors=[shared.jsx]
 - "wireframes_shared_wf": "WF" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L5 | neighbors=[shared.jsx]
 - "wireframes_wf_a_wireframea": "WireframeA()" | kind=code-symbol | source=login-desing/wireframes/wf-a.jsx:L6 | neighbors=[wf-a.jsx]
-- "wireframes_wf_b_wireframeb": "WireframeB()" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L4 | neighbors=[wf-b.jsx]
 
 ## Instructions
 

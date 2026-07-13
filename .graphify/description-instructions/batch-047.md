@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "prevencion_permisos_accion": "Accion" | kind=code-symbol | source=lib/prevencion/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
 - "prevencion_permisos_obtenerrolnombre": "obtenerRolNombre()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L38 | neighbors=[permisos.ts, tieneAccesoSeccion()]
 - "prevencion_printbutton_printbutton": "PrintButton()" | kind=code-symbol | source=components/prevencion/PrintButton.tsx:L3 | neighbors=[page.tsx, PrintButton.tsx]
 - "prevencion_prorrogamodal_prorrogamodal": "ProrrogaModal()" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L6 | neighbors=[page.tsx, ProrrogaModal.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_d1_route_post": "POST()" | kind=code-symbol | source=app/api/reportes-d1/route.ts:L32 | neighbors=[route.ts, generarFolioDenunciaUnico()]
 - "reportes_form_styles_btntiny": "btnTiny" | kind=code-symbol | source=components/reportes/form-styles.ts:L9 | neighbors=[page.tsx, form-styles.ts]
 - "reportes_formato_n_armas_aseguradas_service_actualizararmaasegurada": "actualizarArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L104 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts]
-- "reportes_formato_n_armas_aseguradas_service_creararmaasegurada": "crearArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L95 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts]
 
 ## Instructions
 

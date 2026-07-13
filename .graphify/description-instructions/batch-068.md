@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "hooks_usedespacho_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useDespacho.ts:L9 | neighbors=[useDespacho.ts]
 - "hooks_usedespacho_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=hooks/useDespacho.ts:L14 | neighbors=[useDespacho.ts]
 - "hooks_usedespacho_vehiculooption": "VehiculoOption" | kind=code-symbol | source=hooks/useDespacho.ts:L4 | neighbors=[useDespacho.ts]
 - "hooks_useempleado_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useEmpleado.ts:L4 | neighbors=[useEmpleado.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "id_page_editarformatonrndpage": "EditarFormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/[id]/page.tsx:L11 | neighbors=[page.tsx]
 - "id_page_editaroficialpage": "EditarOficialPage()" | kind=code-symbol | source=app/admin-transito/oficiales/[id]/page.tsx:L62 | neighbors=[page.tsx]
 - "id_page_editarusuariopage": "EditarUsuarioPage()" | kind=code-symbol | source=app/admin/usuarios/[id]/page.tsx:L13 | neighbors=[page.tsx]
-- "id_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L222 | neighbors=[page.tsx]
 
 ## Instructions
 

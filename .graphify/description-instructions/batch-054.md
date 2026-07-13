@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_bitacorista_page_agentebitacoristadashboardpage": "AgenteBitacoristaDashboardPage()" | kind=code-symbol | source=app/agente_bitacorista/page.tsx:L10 | neighbors=[page.tsx]
 - "agente_despacho_page_agentedespachodashboardpage": "AgenteDespachoDashboardPage()" | kind=code-symbol | source=app/agente_despacho/page.tsx:L10 | neighbors=[page.tsx]
 - "agente_infracciones_capturardatosinfractormodal_capturardatosinfractormodal": "CapturarDatosInfractorModal()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L36 | neighbors=[CapturarDatosInfractorModal.tsx]
 - "agente_infracciones_capturardatosinfractormodal_datosform": "DatosForm()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L80 | neighbors=[CapturarDatosInfractorModal.tsx]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_storecapturainfractor_capturainfractoractions": "CapturaInfractorActions" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L20 | neighbors=[storeCapturaInfractor.ts]
 - "agente_infracciones_storecapturainfractor_capturainfractorstate": "CapturaInfractorState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L5 | neighbors=[storeCapturaInfractor.ts]
 - "agente_infracciones_storecapturainfractor_capturainfractorstore": "CapturaInfractorStore" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L36 | neighbors=[storeCapturaInfractor.ts]
-- "agente_infracciones_storecapturainfractor_initialstate": "initialState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L38 | neighbors=[storeCapturaInfractor.ts]
 
 ## Instructions
 

@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_infracciones_storecapturainfractor_initialstate": "initialState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L38 | neighbors=[storeCapturaInfractor.ts]
 - "agente_juzgado_actions_aseguradosjuzgadodata": "AseguradosJuzgadoData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L365 | neighbors=[actions.ts]
 - "agente_juzgado_actions_liberacionesdata": "LiberacionesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L249 | neighbors=[actions.ts]
 - "agente_juzgado_actions_obtenerdatosaseguradoaction": "obtenerDatosAseguradoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L165 | neighbors=[actions.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_juzgado_juzgadotable_datarow": "DataRow" | kind=code-symbol | source=components/agente_juzgado/JuzgadoTable.tsx:L5 | neighbors=[JuzgadoTable.tsx]
 - "agente_juzgado_juzgadotable_juzgadotableprops": "JuzgadoTableProps" | kind=code-symbol | source=components/agente_juzgado/JuzgadoTable.tsx:L16 | neighbors=[JuzgadoTable.tsx]
 - "agente_juzgado_mapper_bool": "bool()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L8 | neighbors=[mapper.ts]
-- "agente_juzgado_mapper_str": "str()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L3 | neighbors=[mapper.ts]
 
 ## Instructions
 

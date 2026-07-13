@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "911_repository_listarincidentes": "listarIncidentes()" | kind=code-symbol | source=lib/911/repository.ts:L42 | neighbors=[repository.ts, service.ts]
 - "911_repository_listarincidentesrecientes": "listarIncidentesRecientes()" | kind=code-symbol | source=lib/911/repository.ts:L122 | neighbors=[repository.ts, page.tsx]
 - "911_repository_obtenercatalogos": "obtenerCatalogos()" | kind=code-symbol | source=lib/911/repository.ts:L5 | neighbors=[repository.ts, service.ts]
 - "911_repository_obtenerincidente": "obtenerIncidente()" | kind=code-symbol | source=lib/911/repository.ts:L89 | neighbors=[repository.ts, service.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_modalentregargarantia_modalentregargarantia": "ModalEntregarGarantia()" | kind=code-symbol | source=components/agente_infracciones/ModalEntregarGarantia.tsx:L25 | neighbors=[ModalEntregarGarantia.tsx, getGarantiaInfo()]
 - "agente_infracciones_profiledropdown_profiledropdown": "ProfileDropdown()" | kind=code-symbol | source=components/agente_infracciones/ProfileDropdown.tsx:L14 | neighbors=[page.tsx, ProfileDropdown.tsx]
 - "agente_infracciones_repository_actualizardatosinfractor": "actualizarDatosInfractor()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L46 | neighbors=[repository.ts, service.ts]
-- "agente_infracciones_repository_actualizardatosinfractoriniciarproceso": "actualizarDatosInfractorIniciarProceso()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L211 | neighbors=[repository.ts, route.ts]
 
 ## Instructions
 

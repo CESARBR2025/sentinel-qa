@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_infracciones_repository_actualizardatosinfractoriniciarproceso": "actualizarDatosInfractorIniciarProceso()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L211 | neighbors=[repository.ts, route.ts]
 - "agente_infracciones_repository_actualizarestatusdependenciamesacontrol": "actualizarEstatusDependenciaMesaControl()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L338 | neighbors=[repository.ts, route.ts]
 - "agente_infracciones_repository_actualizarestatuspendientepagoinfraccion": "actualizarEstatusPendientePagoInfraccion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L254 | neighbors=[repository.ts, route.ts]
 - "agente_infracciones_repository_actualizarestatussolicitudliberacion": "actualizarEstatusSolicitudLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L331 | neighbors=[repository.ts, route.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_juzgado_actions_guardarpuestadisposicionjuzgadoaction": "guardarPuestaDisposicionJuzgadoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L449 | neighbors=[actions.ts, page.tsx]
 - "agente_juzgado_actions_obteneraseguradosjuzgadoaction": "obtenerAseguradosJuzgadoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L370 | neighbors=[actions.ts, page.tsx]
 - "agente_juzgado_actions_obtenerdetalleaseguradocompletojuzgadoaction": "obtenerDetalleAseguradoCompletoJuzgadoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L385 | neighbors=[actions.ts, page.tsx]
-- "agente_juzgado_actions_obtenerliberacionesaction": "obtenerLiberacionesAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L254 | neighbors=[actions.ts, page.tsx]
 
 ## Instructions
 

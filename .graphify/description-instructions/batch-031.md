@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "prevencion_types_seguimientobusqueda": "SeguimientoBusqueda" | kind=code-symbol | source=lib/prevencion/types.ts:L80 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_solicitudc4": "SolicitudC4" | kind=code-symbol | source=lib/prevencion/types.ts:L90 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_solicitudinformacion": "SolicitudInformacion" | kind=code-symbol | source=lib/prevencion/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_visitadomiciliaria": "VisitaDomiciliaria" | kind=code-symbol | source=lib/prevencion/types.ts:L111 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_formato_n_rnd_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L20 | neighbors=[formato-n-rnd-service.ts, obtenerRnd(), formatFecha()]
 - "reportes_incidentes_mapper_rowtoreportediario": "rowToReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L11 | neighbors=[mapper.ts, toNum(), repository.ts]
 - "reportes_incidentes_mapper_rowtoreportesemanal": "rowToReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L20 | neighbors=[mapper.ts, toNum(), repository.ts]
-- "reportes_incidentes_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteDiario(), rowToReporteSemanal()]
 
 ## Instructions
 

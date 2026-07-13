@@ -17,6 +17,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_mapper_str": "str()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L3 | neighbors=[mapper.ts]
 - "agente_juzgado_page_juzgadodashboardpage": "JuzgadoDashboardPage()" | kind=code-symbol | source=app/agente_juzgado/page.tsx:L8 | neighbors=[page.tsx]
 - "agente_juzgado_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L5 | neighbors=[permisos.ts]
 - "agente_juzgado_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L12 | neighbors=[permisos.ts]
@@ -56,7 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_liberaciones_liberacionestable_columns": "columns" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L23 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_liberacionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L5 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_liberacionestable_liberacionestable": "LiberacionesTable()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L31 | neighbors=[LiberacionesTable.tsx]
-- "agente_liberaciones_liberacionestable_liberacionestableprops": "LiberacionesTableProps" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L16 | neighbors=[LiberacionesTable.tsx]
 
 ## Instructions
 
