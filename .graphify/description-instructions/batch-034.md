@@ -1,4 +1,4 @@
-# Node Description Batch 35 of 84
+# Node Description Batch 35 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "admin_page": "page.tsx" | kind=code-symbol | source=app/admin/page.tsx:L1 | neighbors=[AdminPage(), 0e33bf6 feat: módulo Admin, Prórroga, F…]
+- "admin_repository_actualizarusuario": "actualizarUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L78 | neighbors=[actions.ts, repository.ts]
+- "admin_repository_asignarrolusuario": "asignarRolUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L88 | neighbors=[actions.ts, repository.ts]
+- "admin_repository_crearrol": "crearRol()" | kind=code-symbol | source=lib/admin/repository.ts:L60 | neighbors=[repository.ts, route.ts]
+- "admin_repository_eliminarsesion": "eliminarSesion()" | kind=code-symbol | source=lib/admin/repository.ts:L92 | neighbors=[actions.ts, repository.ts]
+- "admin_repository_existerolpornombre": "existeRolPorNombre()" | kind=code-symbol | source=lib/admin/repository.ts:L52 | neighbors=[repository.ts, route.ts]
+- "admin_repository_listarroles": "listarRoles()" | kind=code-symbol | source=lib/admin/repository.ts:L37 | neighbors=[repository.ts, page.tsx]
+- "admin_repository_listarusuarios": "listarUsuarios()" | kind=code-symbol | source=lib/admin/repository.ts:L5 | neighbors=[repository.ts, page.tsx]
+- "admin_repository_obtenerrol": "obtenerRol()" | kind=code-symbol | source=lib/admin/repository.ts:L44 | neighbors=[repository.ts, page.tsx]
+- "admin_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L70 | neighbors=[actions.ts, repository.ts]
+- "admin_repository_obtenerusuario": "obtenerUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L16 | neighbors=[repository.ts, page.tsx]
+- "admin_transito_actions_buscarusuariosreincorporar": "buscarUsuariosReincorporar()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L295 | neighbors=[actions.ts, requireAdminTransito()]
+- "admin_transito_repository_obteneroficialexistente": "obtenerOficialExistente()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L36 | neighbors=[repository.ts, upsertOficial()]
+- "admin_transito_repository_upsertoficial": "upsertOficial()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L44 | neighbors=[repository.ts, obtenerOficialExistente()]
+- "admin_transito_types_userwithrole": "UserWithRole" | kind=code-symbol | source=lib/admin-transito/types.ts:L1 | neighbors=[mapper.ts, types.ts]
+- "agente_911_service_verificarrolagente911": "verificarRolAgente911()" | kind=code-symbol | source=lib/agente_911/service.ts:L3 | neighbors=[page.tsx, service.ts]
+- "agente_bitacorista_service_verificarrolagentebitacorista": "verificarRolAgenteBitacorista()" | kind=code-symbol | source=lib/agente_bitacorista/service.ts:L3 | neighbors=[page.tsx, service.ts]
+- "agente_despacho_service_verificarrolagentedespacho": "verificarRolAgenteDespacho()" | kind=code-symbol | source=lib/agente_despacho/service.ts:L3 | neighbors=[page.tsx, service.ts]
+- "agente_infracciones_actions_capturarinfractorinfraccionesaction": "capturarInfractorInfraccionesAction()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L61 | neighbors=[actions.ts, CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_actions_liberargarantiainfraccionesaction": "liberarGarantiaInfraccionesAction()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L79 | neighbors=[actions.ts, ModalEntregarGarantia.tsx]
 - "agente_infracciones_actions_obtenerdashboardinfracciones": "obtenerDashboardInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L10 | neighbors=[actions.ts, page.tsx]
 - "agente_infracciones_actions_obtenerinfracciones": "obtenerInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L26 | neighbors=[actions.ts, page.tsx]
 - "agente_infracciones_mapper_nvl": "nvl()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L23 | neighbors=[mapper.ts, inputToDbParams()]
@@ -37,26 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_repository_insertarordenpagosa7": "insertarOrdenPagoSa7()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L106 | neighbors=[repository.ts, service.ts]
 - "agente_infracciones_repository_insertarsolicitudliberacion": "insertarSolicitudLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L307 | neighbors=[repository.ts, route.ts]
 - "agente_infracciones_repository_liberargarantia": "liberarGarantia()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L94 | neighbors=[repository.ts, service.ts]
-- "agente_infracciones_repository_liberarinfraccioninstante": "liberarInfraccionInstante()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L274 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_marcargarantiaentregada": "marcarGarantiaEntregada()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L283 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_marcarordenpagopagada": "marcarOrdenPagoPagada()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L139 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_marcarplacaretenidaentransito": "marcarPlacaRetenidaEnTransito()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L261 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_obtenerconceptoid": "obtenerConceptoId()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L83 | neighbors=[repository.ts, service.ts]
-- "agente_infracciones_repository_obtenerdatosordensalida": "obtenerDatosOrdenSalida()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L156 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_obtenerdocumentosliberacion": "obtenerDocumentosLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L182 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_obtenerliberaciones": "obtenerLiberaciones()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L17 | neighbors=[repository.ts, service.ts]
-- "agente_infracciones_repository_obtenermotivoretencion": "obtenerMotivoRetencion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L148 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "agente_infracciones_repository_obtenersolicitudliberacion": "obtenerSolicitudLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L171 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_service_listarliberaciones": "listarLiberaciones()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L14 | neighbors=[actions.ts, service.ts]
-- "agente_infracciones_service_procesarcapturainfractor": "procesarCapturaInfractor()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L19 | neighbors=[actions.ts, service.ts]
-- "agente_infracciones_service_procesarliberargarantia": "procesarLiberarGarantia()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L122 | neighbors=[actions.ts, service.ts]
-- "agente_infracciones_service_verificarrolinfracciones": "verificarRolInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L9 | neighbors=[actions.ts, service.ts]
-- "agente_infracciones_storecapturainfractor_usecapturainfractorstore": "useCapturaInfractorStore" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L53 | neighbors=[CapturarDatosInfractorModal.tsx, storeCapturaInfractor.ts]
-- "agente_infracciones_types_liberacionesresponse": "LiberacionesResponse" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L24 | neighbors=[actions.ts, types.ts]
-- "agente_infracciones_types_rolrow": "RolRow" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L7 | neighbors=[repository.ts, types.ts]
-- "agente_infracciones_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L1 | neighbors=[actions.ts, types.ts]
-- "agente_juzgado_actions_accioncerrarcaso": "accionCerrarCaso()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L139 | neighbors=[actions.ts, CerrarCasoModal.tsx]
 
 ## Instructions
 

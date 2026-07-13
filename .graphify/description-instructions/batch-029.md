@@ -1,4 +1,4 @@
-# Node Description Batch 30 of 84
+# Node Description Batch 30 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,18 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "legalidad_service_articulosservice": "ArticulosService" | kind=code-symbol | source=features/via/legalidad/service.ts:L6 | neighbors=[actions.ts, service.ts, .obtenerFraccionesPorArticulo()]
+- "legalidad_types_fraccionley": "FraccionLey" | kind=code-symbol | source=features/via/legalidad/types.ts:L1 | neighbors=[mapper.ts, service.ts, types.ts]
+- "lib_detenidos_compartido_listardetenidospararol": "listarDetenidosParaRol()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L47 | neighbors=[page.tsx, detenidos-compartido.ts, nombreDetenido()]
+- "lib_detenidos_compartido_nombredetenido": "nombreDetenido()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L39 | neighbors=[detenidos-compartido.ts, listarDetenidosParaRol(), obtenerDetenidoParaRol()]
+- "lib_detenidos_compartido_obtenerdetenidopararol": "obtenerDetenidoParaRol()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L111 | neighbors=[page.tsx, detenidos-compartido.ts, nombreDetenido()]
+- "lib_error_handler_conflicterror": "ConflictError" | kind=code-symbol | source=lib/error-handler.ts:L36 | neighbors=[error-handler.ts, AppError, .constructor()]
+- "monitorista_bandejasolicitudes_bandejasolicitudes": "BandejaSolicitudes()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L25 | neighbors=[BandejaSolicitudes.tsx, tabStyle(), page.tsx]
+- "monitorista_cardenviofoto_cardenviofoto": "CardEnvioFoto()" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L16 | neighbors=[page.tsx, CardEnvioFoto.tsx, estadoBadge()]
+- "monitorista_mapper_num": "num()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L13 | neighbors=[mapper.ts, rowToIncidenteCamara(), rowToSolicitudEvidencia()]
+- "monitorista_mapper_rowtodenunciadetalle": "rowToDenunciaDetalle()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L91 | neighbors=[mapper.ts, parseSolicitudesJson(), service.ts]
+- "monitorista_mapper_rowtoreportedetenido": "rowToReporteDetenido()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L152 | neighbors=[mapper.ts, parseDetenidos(), service.ts]
+- "monitorista_mapper_rowtosolicitudevidencia": "rowToSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L51 | neighbors=[mapper.ts, num(), repository.ts]
 - "monitorista_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/monitorista/repository.ts:L117 | neighbors=[route.ts, actions.ts, repository.ts]
 - "monitorista_repository_crearsolicitudevidencia": "crearSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L155 | neighbors=[actions.ts, repository.ts, route.ts]
 - "monitorista_repository_getrolusuario": "getRolUsuario()" | kind=code-symbol | source=lib/monitorista/repository.ts:L601 | neighbors=[actions.ts, repository.ts, route.ts]
@@ -45,18 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "oficial_types_crearreportecampoinput": "CrearReporteCampoInput" | kind=code-symbol | source=lib/oficial/types.ts:L79 | neighbors=[repository.ts, service.ts, types.ts]
 - "oficial_types_ofireportecampo": "OfiReporteCampo" | kind=code-symbol | source=lib/oficial/types.ts:L40 | neighbors=[mapper.ts, types.ts, OfiReporteDetalle]
 - "permisos_core_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/permisos/core.ts:L78 | neighbors=[core.ts, aplicarPlantillaRol(), guardarPermisosSeccionesAction()]
-- "permisos_core_mapadefault": "mapaDefault()" | kind=code-symbol | source=lib/permisos/core.ts:L24 | neighbors=[core.ts, obtenerPermisosUsuario(), obtenerPlantillaRol()]
-- "permisos_core_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/permisos/core.ts:L92 | neighbors=[core.ts, mapaDefault(), page.tsx]
-- "permisos_core_requireadmin": "requireAdmin()" | kind=code-symbol | source=lib/permisos/core.ts:L149 | neighbors=[core.ts, guardarPermisosSeccionesAction(), guardarPlantillaSeccionesAction()]
-- "prevencion_actions_addautoridadmedida": "addAutoridadMedida()" | kind=code-symbol | source=lib/prevencion/actions.ts:L72 | neighbors=[actions.ts, requireAcceso(), AgregarAutoridadForm.tsx]
-- "prevencion_actions_cancelarficha": "cancelarFicha()" | kind=code-symbol | source=lib/prevencion/actions.ts:L188 | neighbors=[actions.ts, requireAcceso(), CancelacionModal.tsx]
-- "prevencion_actions_createcontestacion": "createContestacion()" | kind=code-symbol | source=lib/prevencion/actions.ts:L256 | neighbors=[actions.ts, requireAcceso(), ContestacionForm.tsx]
-- "prevencion_actions_createficha": "createFicha()" | kind=code-symbol | source=lib/prevencion/actions.ts:L130 | neighbors=[page.tsx, actions.ts, requireAcceso()]
-- "prevencion_actions_createmedida": "createMedida()" | kind=code-symbol | source=lib/prevencion/actions.ts:L21 | neighbors=[page.tsx, actions.ts, requireAcceso()]
-- "prevencion_actions_createprorroga": "createProrroga()" | kind=code-symbol | source=lib/prevencion/actions.ts:L89 | neighbors=[actions.ts, requireAcceso(), ProrrogaModal.tsx]
-- "prevencion_actions_createseguimiento": "createSeguimiento()" | kind=code-symbol | source=lib/prevencion/actions.ts:L162 | neighbors=[actions.ts, requireAcceso(), SeguimientoTimeline.tsx]
-- "prevencion_actions_createsolicitud": "createSolicitud()" | kind=code-symbol | source=lib/prevencion/actions.ts:L209 | neighbors=[page.tsx, actions.ts, requireAcceso()]
-- "prevencion_actions_createsolicitudc4": "createSolicitudC4()" | kind=code-symbol | source=lib/prevencion/actions.ts:L238 | neighbors=[actions.ts, requireAcceso(), SolicitudC4Form.tsx]
 
 ## Instructions
 

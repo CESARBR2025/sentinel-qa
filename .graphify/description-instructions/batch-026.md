@@ -1,4 +1,4 @@
-# Node Description Batch 27 of 84
+# Node Description Batch 27 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "admin_repository_listarrolesactivos": "listarRolesActivos()" | kind=code-symbol | source=lib/admin/repository.ts:L29 | neighbors=[repository.ts, page.tsx, page.tsx]
+- "admin_transito_actions_actualizaroficial": "actualizarOficial()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L253 | neighbors=[actions.ts, requireAdminTransito(), page.tsx]
+- "admin_transito_actions_crearoficial": "crearOficial()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L26 | neighbors=[actions.ts, requireAdminTransito(), NuevoOficialForm.tsx]
+- "admin_transito_actions_destituiroficial": "destituirOficial()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L157 | neighbors=[actions.ts, requireAdminTransito(), ModalDestituirOficial.tsx]
+- "admin_transito_actions_obteneroficialeslista": "obtenerOficialesLista()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L120 | neighbors=[actions.ts, requireAdminTransito(), page.tsx]
+- "admin_transito_actions_obteneroficialporid": "obtenerOficialPorId()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L211 | neighbors=[actions.ts, requireAdminTransito(), page.tsx]
+- "admin_transito_actions_reactivaroficialcondatos": "reactivarOficialConDatos()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L174 | neighbors=[actions.ts, requireAdminTransito(), ModalReactivarOficial.tsx]
+- "admin_transito_mapper_rowtodepartamento": "rowToDepartamento()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L20 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "admin_transito_mapper_rowtooficiallista": "rowToOficialLista()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L28 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "admin_transito_mapper_rowtouserbasico": "rowToUserBasico()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L48 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "admin_transito_types_departamento": "Departamento" | kind=code-symbol | source=lib/admin-transito/types.ts:L11 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "admin_transito_types_oficiallista": "OficialLista" | kind=code-symbol | source=lib/admin-transito/types.ts:L17 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "admin_transito_types_userbasico": "UserBasico" | kind=code-symbol | source=lib/admin-transito/types.ts:L35 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "admin_types_rolitem": "RolItem" | kind=code-symbol | source=lib/admin/types.ts:L15 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "auxiliar_service_listarcuestionariosrobo": "listarCuestionariosRobo()" | kind=code-symbol | source=lib/auxiliar/service.ts:L9 | neighbors=[service.ts, page.tsx, route.ts]
 - "auxiliar_service_listarparesreporte": "listarParesReporte()" | kind=code-symbol | source=lib/auxiliar/service.ts:L5 | neighbors=[service.ts, page.tsx, page.tsx]
 - "auxiliar_types_auxchecklist": "AuxChecklist" | kind=code-symbol | source=lib/auxiliar/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "auxiliar_types_auxcuestionariorobo": "AuxCuestionarioRobo" | kind=code-symbol | source=lib/auxiliar/types.ts:L36 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "auxiliar_types_auxparreporte": "AuxParReporte" | kind=code-symbol | source=lib/auxiliar/types.ts:L21 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "auxiliar_types_upsertchecklistinput": "UpsertChecklistInput" | kind=code-symbol | source=lib/auxiliar/types.ts:L51 | neighbors=[repository.ts, service.ts, types.ts]
-- "camara_mapper_rowtototalescamara": "rowToTotalesCamara()" | kind=code-symbol | source=lib/camara/mapper.ts:L42 | neighbors=[mapper.ts, toNumNullable(), repository.ts]
-- "camara_repository_obtenertotalescamara": "obtenerTotalesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L34 | neighbors=[repository.ts, service.ts, route.ts]
-- "camara_types_totalescamara": "TotalesCamara" | kind=code-symbol | source=lib/camara/types.ts:L20 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "components_buttonverdetalles_botonverdetalle": "BotonVerDetalle()" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L11 | neighbors=[InfraccionesDashboard.tsx, LiberacionesDashboard.tsx, ButtonVerDetalles.tsx]
-- "components_mapadireccionregistro_cleancolonianame": "cleanColoniaName()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L37 | neighbors=[MapaDireccionRegistro.tsx, normalizeUpper(), extractNeighborhoodFromComponents()]
-- "components_mapadireccionregistro_extractneighborhoodfromcomponents": "extractNeighborhoodFromComponents()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L60 | neighbors=[MapaDireccionRegistro.tsx, extractAddress(), cleanColoniaName()]
-- "components_mapadireccionregistro_normalizeupper": "normalizeUpper()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L30 | neighbors=[MapaDireccionRegistro.tsx, cleanColoniaName(), getMunicipioEstado()]
-- "corralon_actions_obtenerdashboardcorralon": "obtenerDashboardCorralon()" | kind=code-symbol | source=lib/corralon/actions.ts:L10 | neighbors=[actions.ts, page.tsx, page.tsx]
 
 ## Instructions
 

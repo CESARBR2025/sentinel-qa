@@ -1,4 +1,4 @@
-# Node Description Batch 31 of 84
+# Node Description Batch 31 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,18 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "permisos_core_mapadefault": "mapaDefault()" | kind=code-symbol | source=lib/permisos/core.ts:L24 | neighbors=[core.ts, obtenerPermisosUsuario(), obtenerPlantillaRol()]
+- "permisos_core_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/permisos/core.ts:L92 | neighbors=[core.ts, mapaDefault(), page.tsx]
+- "permisos_core_requireadmin": "requireAdmin()" | kind=code-symbol | source=lib/permisos/core.ts:L149 | neighbors=[core.ts, guardarPermisosSeccionesAction(), guardarPlantillaSeccionesAction()]
+- "prevencion_actions_addautoridadmedida": "addAutoridadMedida()" | kind=code-symbol | source=lib/prevencion/actions.ts:L72 | neighbors=[actions.ts, requireAcceso(), AgregarAutoridadForm.tsx]
+- "prevencion_actions_cancelarficha": "cancelarFicha()" | kind=code-symbol | source=lib/prevencion/actions.ts:L188 | neighbors=[actions.ts, requireAcceso(), CancelacionModal.tsx]
+- "prevencion_actions_createcontestacion": "createContestacion()" | kind=code-symbol | source=lib/prevencion/actions.ts:L256 | neighbors=[actions.ts, requireAcceso(), ContestacionForm.tsx]
+- "prevencion_actions_createficha": "createFicha()" | kind=code-symbol | source=lib/prevencion/actions.ts:L130 | neighbors=[page.tsx, actions.ts, requireAcceso()]
+- "prevencion_actions_createmedida": "createMedida()" | kind=code-symbol | source=lib/prevencion/actions.ts:L21 | neighbors=[page.tsx, actions.ts, requireAcceso()]
+- "prevencion_actions_createprorroga": "createProrroga()" | kind=code-symbol | source=lib/prevencion/actions.ts:L89 | neighbors=[actions.ts, requireAcceso(), ProrrogaModal.tsx]
+- "prevencion_actions_createseguimiento": "createSeguimiento()" | kind=code-symbol | source=lib/prevencion/actions.ts:L162 | neighbors=[actions.ts, requireAcceso(), SeguimientoTimeline.tsx]
+- "prevencion_actions_createsolicitud": "createSolicitud()" | kind=code-symbol | source=lib/prevencion/actions.ts:L209 | neighbors=[page.tsx, actions.ts, requireAcceso()]
+- "prevencion_actions_createsolicitudc4": "createSolicitudC4()" | kind=code-symbol | source=lib/prevencion/actions.ts:L238 | neighbors=[actions.ts, requireAcceso(), SolicitudC4Form.tsx]
 - "prevencion_actions_createvisita": "createVisita()" | kind=code-symbol | source=lib/prevencion/actions.ts:L53 | neighbors=[actions.ts, requireAcceso(), VisitaModal.tsx]
 - "prevencion_mapper_rowtoautoridadadicional": "rowToAutoridadAdicional()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L154 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "prevencion_mapper_rowtocontestacion": "rowToContestacion()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L127 | neighbors=[mapper.ts, toStr(), repository.ts]
@@ -45,18 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_d1_route_generarfoliodenunciaunico": "generarFolioDenunciaUnico()" | kind=code-symbol | source=app/api/reportes-d1/route.ts:L23 | neighbors=[route.ts, generarFolioDenuncia(), POST()]
 - "reportes_form_styles_btnprimario": "btnPrimario()" | kind=code-symbol | source=components/reportes/form-styles.ts:L7 | neighbors=[page.tsx, page.tsx, form-styles.ts]
 - "reportes_form_styles_btnsecundario": "btnSecundario" | kind=code-symbol | source=components/reportes/form-styles.ts:L5 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_form_styles_inputstyle": "inputStyle" | kind=code-symbol | source=components/reportes/form-styles.ts:L3 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_form_styles_label": "Label()" | kind=code-symbol | source=components/reportes/form-styles.ts:L13 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_form_styles_sectionbody": "sectionBody" | kind=code-symbol | source=components/reportes/form-styles.ts:L22 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_form_styles_sectioncard": "sectionCard" | kind=code-symbol | source=components/reportes/form-styles.ts:L19 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_form_styles_sectionheader": "sectionHeader" | kind=code-symbol | source=components/reportes/form-styles.ts:L20 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_form_styles_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/reportes/form-styles.ts:L21 | neighbors=[page.tsx, page.tsx, form-styles.ts]
-- "reportes_formato_n_armas_aseguradas_service_listararmasaseguradas": "listarArmasAseguradas()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L69 | neighbors=[page.tsx, route.ts, formato-n-armas-aseguradas-service.ts]
-- "reportes_formato_n_armas_aseguradas_service_obtenerarmaasegurada": "obtenerArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L74 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts, rowTo()]
-- "reportes_formato_n_armas_aseguradas_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L55 | neighbors=[formato-n-armas-aseguradas-service.ts, obtenerArmaAsegurada(), formatFecha()]
-- "reportes_formato_n_atencion_victimas_service_listaratencionvictimas": "listarAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L46 | neighbors=[page.tsx, route.ts, formato-n-atencion-victimas-service.ts]
-- "reportes_formato_n_atencion_victimas_service_obteneratencionvictimas": "obtenerAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L58 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts, rowTo()]
-- "reportes_formato_n_atencion_victimas_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-atencion-victimas-service.ts]
 
 ## Instructions
 

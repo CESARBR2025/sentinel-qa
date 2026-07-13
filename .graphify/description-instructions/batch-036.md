@@ -1,4 +1,4 @@
-# Node Description Batch 37 of 84
+# Node Description Batch 37 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L83 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_actualizarsolicitudconevidencias": "actualizarSolicitudConEvidencias()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L105 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_finalizarprocesojuzgado": "finalizarProcesoJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L399 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_iniciarprocesojuzgado": "iniciarProcesoJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L390 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_listaraseguradosjuzgado": "listarAseguradosJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L462 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_listarliberacionesjuzgado": "listarLiberacionesJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L277 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenerdetalleasegurado": "obtenerDetalleAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L177 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenerdetalleinfraccionviajuzgado": "obtenerDetalleInfraccionViaJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L316 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenerevidenciasmonitorista": "obtenerEvidenciasMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L160 | neighbors=[repository.ts, page.tsx]
+- "agente_juzgado_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L12 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenersolicitudescerradas": "obtenerSolicitudesCerradas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L72 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenersolicitudescompletadas": "obtenerSolicitudesCompletadas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L60 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenersolicitudesconmonitorista": "obtenerSolicitudesConMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L48 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenersolicitudesenrevision": "obtenerSolicitudesEnRevision()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L36 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_repository_obtenersolicitudesrecepcionadas": "obtenerSolicitudesRecepcionadas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L24 | neighbors=[repository.ts, service.ts]
+- "agente_juzgado_service_cerrarcaso": "cerrarCaso()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L60 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_guardardetallesasegurado": "guardarDetallesAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L68 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_listaraseguradosjuzgadosvc": "listarAseguradosJuzgadoSvc()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L92 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_listarsolicitudescompletadas": "listarSolicitudesCompletadas()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L42 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_listarsolicitudesconmonitorista": "listarSolicitudesConMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L37 | neighbors=[actions.ts, service.ts]
 - "agente_juzgado_service_listarsolicitudesenrevision": "listarSolicitudesEnRevision()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L32 | neighbors=[actions.ts, service.ts]
 - "agente_juzgado_service_listarsolicitudesrecepcionadas": "listarSolicitudesRecepcionadas()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L27 | neighbors=[actions.ts, service.ts]
 - "agente_juzgado_service_obtenerliberacionesjuzgado": "obtenerLiberacionesJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L76 | neighbors=[actions.ts, service.ts]
@@ -37,26 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_liberaciones_repository_obtenerliberaciones": "obtenerLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L16 | neighbors=[repository.ts, service.ts]
 - "agente_liberaciones_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L4 | neighbors=[repository.ts, service.ts]
 - "agente_liberaciones_service_listarliberaciones": "listarLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/service.ts:L10 | neighbors=[actions.ts, service.ts]
-- "agente_liberaciones_service_verificarrolliberaciones": "verificarRolLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/service.ts:L5 | neighbors=[actions.ts, service.ts]
-- "agente_liberaciones_types_liberacionesresponse": "LiberacionesResponse" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L24 | neighbors=[actions.ts, types.ts]
-- "agente_liberaciones_types_rolrow": "RolRow" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L7 | neighbors=[repository.ts, types.ts]
-- "agente_liberaciones_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L1 | neighbors=[actions.ts, types.ts]
-- "analisis_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/analisis/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
-- "auth_helpers_rowtouserwithrole": "rowToUserWithRole()" | kind=code-symbol | source=lib/auth/helpers.ts:L13 | neighbors=[helpers.ts, getUserWithRole()]
-- "auxiliar_actions_requireauxiliar": "requireAuxiliar()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L10 | neighbors=[actions.ts, upsertChecklistAction()]
-- "auxiliar_permisos_accion": "Accion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
-- "auxiliar_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
-- "auxiliar_profiledropdownauxiliar_profiledropdownauxiliar": "ProfileDropdownAuxiliar()" | kind=code-symbol | source=components/auxiliar/ProfileDropdownAuxiliar.tsx:L14 | neighbors=[page.tsx, ProfileDropdownAuxiliar.tsx]
-- "auxiliar_repository_obtenercuestionariosrobo": "obtenerCuestionariosRobo()" | kind=code-symbol | source=lib/auxiliar/repository.ts:L47 | neighbors=[repository.ts, service.ts]
-- "auxiliar_repository_obtenerparesreporte": "obtenerParesReporte()" | kind=code-symbol | source=lib/auxiliar/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "auxiliar_repository_upsertchecklist": "upsertChecklist()" | kind=code-symbol | source=lib/auxiliar/repository.ts:L72 | neighbors=[repository.ts, service.ts]
-- "auxiliar_service_guardarchecklist": "guardarChecklist()" | kind=code-symbol | source=lib/auxiliar/service.ts:L13 | neighbors=[actions.ts, service.ts]
-- "camara_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/camara/mapper.ts:L9 | neighbors=[mapper.ts, rowToIncidenteCamara()]
-- "camara_mapper_tonumnullable": "toNumNullable()" | kind=code-symbol | source=lib/camara/mapper.ts:L15 | neighbors=[mapper.ts, rowToTotalesCamara()]
-- "camara_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/camara/mapper.ts:L3 | neighbors=[mapper.ts, rowToIncidenteCamara()]
-- "camara_repository_obtenerconcentradodiario": "obtenerConcentradoDiario()" | kind=code-symbol | source=lib/camara/repository.ts:L68 | neighbors=[repository.ts, route.ts]
-- "camara_repository_obtenerincidentescamara": "obtenerIncidentesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "camara_repository_obtenerporturno": "obtenerPorTurno()" | kind=code-symbol | source=lib/camara/repository.ts:L54 | neighbors=[repository.ts, route.ts]
 
 ## Instructions
 

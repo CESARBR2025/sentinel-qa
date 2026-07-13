@@ -1,4 +1,4 @@
-# Node Description Batch 6 of 84
+# Node Description Batch 6 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -26,6 +26,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "partials_header_dashboardheader": "DashboardHeader()" | kind=code-symbol | source=components/partials/Header.tsx:L17 | neighbors=[page.tsx, page.tsx, page.tsx, page.tsx, page.tsx, page.tsx] | lang=en
 - "reportes_formato_n_eventos_service": "formato-n-eventos-service.ts" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L1 | neighbors=[06c55f5 Merge branch 'feature/testing' …, 41ea169 Merge branch 'testing' into con…, 8355ac0 Merge branch 'feature/testing' …, a2e0623 Consolidado de formatos N y Sub…, bb10dcd Formatos V1, c95f412 Merge branch 'feature/testing' …] | lang=en
 - "reportes_formato_n_rnd_service": "formato-n-rnd-service.ts" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L1 | neighbors=[06c55f5 Merge branch 'feature/testing' …, 41ea169 Merge branch 'testing' into con…, 8355ac0 Merge branch 'feature/testing' …, a2e0623 Consolidado de formatos N y Sub…, bb10dcd Formatos V1, c95f412 Merge branch 'feature/testing' …] | lang=en
 - "agente_juzgado_mapper": "mapper.ts" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L1 | neighbors=[bool(), num(), rowToInfraccionDetalle(), rowToSolicitud(), str(), types.ts] | lang=en
@@ -57,15 +58,14 @@ one-sentence description — no prose, no markdown fences.
 - "cuestionario_robo_page": "page.tsx" | kind=code-symbol | source=app/auxiliar/cuestionario-robo/page.tsx:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 27dcb21 Merge branch 'feature/testing' …, 514a705 refactorizacion sql, 5618308 guardado e evidencias con ed, 5f13b34 Merge branch 'feature/testing' …] | lang=en
 - "infracciones_service": "service.ts" | kind=code-symbol | source=features/via/infracciones/service.ts:L1 | neighbors=[067c4de arreglando flujo de fiscalia  a…, 16a63d4 Merge branch 'feature/testing' …, 23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, ac48eb1 Merge pull request #17 from pre…, b5233a8 implementando via como modulo d…] | lang=en
 - "lib_error_handler": "error-handler.ts" | kind=code-symbol | source=lib/error-handler.ts:L1 | neighbors=[actions.ts, actions.ts, c27a9ee fase prefinal, actions.ts, ActionResult, apiError()] | lang=en
+- "plugins_context_loader": "context-loader.js" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L1 | neighbors=[0d9172a mejorando flujo de 911-despacho, BUDGET_WARN_MSG(), checkBudget(), checkpoint(), CHECKPOINT_SCRIPT, ContextLoaderPlugin()] | lang=en
 - "subir_foto_route": "route.ts" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/subir-foto/route.ts:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 388b997 Apartados para subir fotografia…, 5618308 guardado e evidencias con ed, 672bab5 libearciones para juzgado, 77ddf58 Merge branch 'feature/testing' …, ad3ec5f mejorando esto] | lang=en
 - "subir_route": "route.ts" | kind=code-symbol | source=app/api/monitorista/evidencias/subir/route.ts:L1 | neighbors=[126b4d1 Monitorista V1, 44ebbc4 Merge branch 'feature/testing' …, 46b2c89 Merge branch 'testing' into juz…, 5d179c0 Apartado de reportes, 5f13b34 Merge branch 'feature/testing' …, 8e6c8c6 Apartado de reportes] | lang=en
+- "911_repository": "repository.ts" | kind=code-symbol | source=lib/911/repository.ts:L1 | neighbors=[mapper.ts, rowToCatalogo(), rowToIncidenteDetalle(), contarPorEstatus(), listarIncidentes(), listarIncidentesRecientes()] | lang=en
 - "admin_transito_actions": "actions.ts" | kind=code-symbol | source=lib/admin-transito/actions.ts:L1 | neighbors=[actualizarOficial(), buscarUsuariosReincorporar(), crearOficial(), destituirOficial(), obtenerOficialesLista(), obtenerOficialPorId()] | lang=en
 - "agente_juzgado_juzgadodashboard": "JuzgadoDashboard.tsx" | kind=code-symbol | source=components/agente_juzgado/JuzgadoDashboard.tsx:L1 | neighbors=[actions.ts, obtenerDetalleInfraccionViaActionJuzgad…, BotonVerDetalle.tsx, BotonVerDetalle(), CargarOficioSection.tsx, ConfirmacionModal.tsx] | lang=en
 - "agente_juzgado_tabsolicitudes": "TabSolicitudes.tsx" | kind=code-symbol | source=components/agente_juzgado/TabSolicitudes.tsx:L1 | neighbors=[actions.ts, accionPedirEvidencias(), parseEvidencias(), Props, Tab, tabs] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@712c11643da54b46f9f1ab29c123432854a6a9dc": "712c116 Merge branch 'testing' into conexion" | kind=Commit | source=git | neighbors=[5ef7cf3 Agregar los campos faltantes, conexion, testing, 51e682b mejorando flujo de liberaciones, DescargaFilters.tsx, DescargaPagination.tsx] | lang=en
-- "commit:repo:github.com/presidenciaSJR/seguridad_publica@ff6d3c2eb2a562855f19a14395c044964623a263": "ff6d3c2 juzgado" | kind=Commit | source=git | neighbors=[5f13b34 Merge branch 'feature/testing' …, conexion, testing, 5bbdda8 Merge pull request #8 from pres…, abrirDocumento.ts, actions.ts] | lang=en
-- "components_revisiondocumentossection": "RevisionDocumentosSection.tsx" | kind=code-symbol | source=features/liberaciones/components/RevisionDocumentosSection.tsx:L1 | neighbors=[LiberacionesDashboard.tsx, 0b210fa Merge pull request #12 from pre…, 16a63d4 Merge branch 'feature/testing' …, 1acddac Merge branch 'feature/testing' …, 1dbd480 flujo de liberaciones completado, 4400923 Merge branch 'feature/testing' …] | lang=en
-- "d1_repository": "repository.ts" | kind=code-symbol | source=lib/d1/repository.ts:L1 | neighbors=[067c4de arreglando flujo de fiscalia  a…, 07543de Conexion de reportes con d1 y l…, 16a63d4 Merge branch 'feature/testing' …, 290d651 feat(despacho): flujo integral …, 552d291 Merge branch 'testing' into con…, ac48eb1 Merge pull request #17 from pre…] | lang=en
 
 ## Instructions
 

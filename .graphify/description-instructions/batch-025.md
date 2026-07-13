@@ -1,4 +1,4 @@
-# Node Description Batch 26 of 84
+# Node Description Batch 26 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,12 +17,23 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "rol_servicios_mapper_rowtorolservicio": "rowToRolServicio()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L36 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "rol_servicios_types_bodycam": "BodyCam" | kind=code-symbol | source=lib/rol-servicios/types.ts:L79 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_estadofuerzaconcepto": "EstadoFuerzaConcepto" | kind=code-symbol | source=lib/rol-servicios/types.ts:L86 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_mediocanalizacion": "MedioCanalizacion" | kind=code-symbol | source=lib/rol-servicios/types.ts:L109 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_radio": "Radio" | kind=code-symbol | source=lib/rol-servicios/types.ts:L71 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_rolasignacion": "RolAsignacion" | kind=code-symbol | source=lib/rol-servicios/types.ts:L34 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_rolestadofuerza": "RolEstadoFuerza" | kind=code-symbol | source=lib/rol-servicios/types.ts:L50 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_rolobservacion": "RolObservacion" | kind=code-symbol | source=lib/rol-servicios/types.ts:L57 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "rol_servicios_types_rolservicio": "RolServicio" | kind=code-symbol | source=lib/rol-servicios/types.ts:L13 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
 - "rol_servicios_types_sector": "Sector" | kind=code-symbol | source=lib/rol-servicios/types.ts:L64 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
 - "rol_servicios_types_tipoemergencia": "TipoEmergencia" | kind=code-symbol | source=lib/rol-servicios/types.ts:L102 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
 - "rol_servicios_types_tipoobservacion": "TipoObservacion" | kind=code-symbol | source=lib/rol-servicios/types.ts:L95 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
 - "sasiete_service_sa7service": "SA7Service" | kind=code-symbol | source=features/via/saSiete/service.ts:L8 | neighbors=[service.ts, .buscarOrdenPorInfraccion(), .generarOrdenPago(), .obtenerConceptoId()]
 - "scripts_exportar_schema_main": "main()" | kind=code-symbol | source=scripts/exportar-schema.ts:L60 | neighbors=[exportar-schema.ts, getColumns(), getEnums(), getTables()]
 - "scripts_load_context_main": "main()" | kind=code-symbol | source=scripts/load-context.mjs:L116 | neighbors=[load-context.mjs, buildInstructions(), extractDomain(), queryGraph()]
+- "scripts_session_checkpoint_formatevent": "formatEvent()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L26 | neighbors=[session-checkpoint.mjs, last(), pendingDecisions(), summary()]
+- "scripts_session_checkpoint_getsessionid": "getSessionId()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L199 | neighbors=[session-checkpoint.mjs, addDecision(), parseEvent(), pendingDecisions()]
 - "services_analisisservice_analisisservice": "analisisService" | kind=code-symbol | source=services/analisisService.ts:L2 | neighbors=[formAnalisis.tsx, generarPresentacion.tsx, TablonAnalisis.tsx, analisisService.ts]
 - "setup_2fa_page": "page.tsx" | kind=code-symbol | source=app/(auth)/login/setup-2fa/page.tsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, auth-client.ts, authClient, Setup2FAPage()]
 - "shared_detalleinfraccionview_formatdate": "formatDate()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L102 | neighbors=[DetalleInfraccionView.tsx, DocumentacionSection(), SummaryBar(), timeAgo()]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "admin_mapper_rowtorol": "rowToRol()" | kind=code-symbol | source=lib/admin/mapper.ts:L24 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "admin_mapper_rowtousuariolista": "rowToUsuarioLista()" | kind=code-symbol | source=lib/admin/mapper.ts:L8 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "admin_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/admin/mapper.ts:L3 | neighbors=[mapper.ts, rowToRol(), rowToUsuarioLista()]
-- "admin_repository_listarrolesactivos": "listarRolesActivos()" | kind=code-symbol | source=lib/admin/repository.ts:L29 | neighbors=[repository.ts, page.tsx, page.tsx]
-- "admin_transito_actions_actualizaroficial": "actualizarOficial()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L253 | neighbors=[actions.ts, requireAdminTransito(), page.tsx]
-- "admin_transito_actions_crearoficial": "crearOficial()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L26 | neighbors=[actions.ts, requireAdminTransito(), NuevoOficialForm.tsx]
-- "admin_transito_actions_destituiroficial": "destituirOficial()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L157 | neighbors=[actions.ts, requireAdminTransito(), ModalDestituirOficial.tsx]
-- "admin_transito_actions_obteneroficialeslista": "obtenerOficialesLista()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L120 | neighbors=[actions.ts, requireAdminTransito(), page.tsx]
-- "admin_transito_actions_obteneroficialporid": "obtenerOficialPorId()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L211 | neighbors=[actions.ts, requireAdminTransito(), page.tsx]
-- "admin_transito_actions_reactivaroficialcondatos": "reactivarOficialConDatos()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L174 | neighbors=[actions.ts, requireAdminTransito(), ModalReactivarOficial.tsx]
-- "admin_transito_mapper_rowtodepartamento": "rowToDepartamento()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L20 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "admin_transito_mapper_rowtooficiallista": "rowToOficialLista()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L28 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "admin_transito_mapper_rowtouserbasico": "rowToUserBasico()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L48 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "admin_transito_types_departamento": "Departamento" | kind=code-symbol | source=lib/admin-transito/types.ts:L11 | neighbors=[mapper.ts, repository.ts, types.ts]
 
 ## Instructions
 

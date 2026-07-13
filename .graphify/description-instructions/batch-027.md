@@ -1,4 +1,4 @@
-# Node Description Batch 28 of 84
+# Node Description Batch 28 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "auxiliar_types_auxcuestionariorobo": "AuxCuestionarioRobo" | kind=code-symbol | source=lib/auxiliar/types.ts:L36 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "auxiliar_types_auxparreporte": "AuxParReporte" | kind=code-symbol | source=lib/auxiliar/types.ts:L21 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "auxiliar_types_upsertchecklistinput": "UpsertChecklistInput" | kind=code-symbol | source=lib/auxiliar/types.ts:L51 | neighbors=[repository.ts, service.ts, types.ts]
+- "camara_mapper_rowtototalescamara": "rowToTotalesCamara()" | kind=code-symbol | source=lib/camara/mapper.ts:L42 | neighbors=[mapper.ts, toNumNullable(), repository.ts]
+- "camara_repository_obtenertotalescamara": "obtenerTotalesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L34 | neighbors=[repository.ts, service.ts, route.ts]
+- "camara_types_totalescamara": "TotalesCamara" | kind=code-symbol | source=lib/camara/types.ts:L20 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "components_buttonverdetalles_botonverdetalle": "BotonVerDetalle()" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L11 | neighbors=[InfraccionesDashboard.tsx, LiberacionesDashboard.tsx, ButtonVerDetalles.tsx]
+- "components_mapadireccionregistro_cleancolonianame": "cleanColoniaName()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L37 | neighbors=[MapaDireccionRegistro.tsx, normalizeUpper(), extractNeighborhoodFromComponents()]
+- "components_mapadireccionregistro_extractneighborhoodfromcomponents": "extractNeighborhoodFromComponents()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L60 | neighbors=[MapaDireccionRegistro.tsx, extractAddress(), cleanColoniaName()]
+- "components_mapadireccionregistro_normalizeupper": "normalizeUpper()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L30 | neighbors=[MapaDireccionRegistro.tsx, cleanColoniaName(), getMunicipioEstado()]
+- "corralon_actions_obtenerdashboardcorralon": "obtenerDashboardCorralon()" | kind=code-symbol | source=lib/corralon/actions.ts:L10 | neighbors=[actions.ts, page.tsx, page.tsx]
 - "corralon_actions_obtenersolicitudes": "obtenerSolicitudes()" | kind=code-symbol | source=lib/corralon/actions.ts:L31 | neighbors=[actions.ts, page.tsx, page.tsx]
 - "corralon_mapper_rowtosolicitud": "rowToSolicitud()" | kind=code-symbol | source=lib/corralon/mapper.ts:L8 | neighbors=[mapper.ts, toStr(), service.ts]
 - "corralon_module_card": "module-card.tsx" | kind=code-symbol | source=app/corralon/module-card.tsx:L1 | neighbors=[5a1b5d5 empezando corralon, ModuleCard(), page.tsx]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "flota_types_patrulla": "Patrulla" | kind=code-symbol | source=lib/flota/types.ts:L12 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "guardar_docs_route_post": "POST()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L48 | neighbors=[route.ts, subirArchivo(), validarArchivo()]
 - "hooks_useempleado_useempleado": "useEmpleado()" | kind=code-symbol | source=hooks/useEmpleado.ts:L12 | neighbors=[DespachoForm.tsx, useEmpleado.ts, FormSection.tsx]
-- "hooks_useincidente": "useIncidente.ts" | kind=code-symbol | source=hooks/useIncidente.ts:L1 | neighbors=[IncidenteDetalle, useIncidente(), 6feefe2 BackEnd completo para hacer la …]
-- "hooks_usepolling": "usePolling.ts" | kind=code-symbol | source=hooks/usePolling.ts:L1 | neighbors=[511fea4 Modulo de despacho, TablonDespacho.tsx, usePolling()]
-- "hooks_usereportecampo": "useReporteCampo.ts" | kind=code-symbol | source=hooks/useReporteCampo.ts:L1 | neighbors=[a58a0f7 Despachos, ReporteCampoDetalle, useReporteCampo()]
-- "id_page_detalledenunciapage": "DetalleDenunciaPage()" | kind=code-symbol | source=app/monitorista/denuncias/[id]/page.tsx:L10 | neighbors=[page.tsx, estadoBadge(), statusBadge()]
-- "id_page_fichadetailpage": "FichaDetailPage()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/page.tsx:L26 | neighbors=[page.tsx, fmtDT(), toISO()]
-- "id_page_formatdate": "formatDate()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L28 | neighbors=[page.tsx, InfraccionCiudadanoPage(), timeAgo()]
-- "id_page_timeago": "timeAgo()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L38 | neighbors=[page.tsx, InfraccionCiudadanoPage(), formatDate()]
-- "incidentes_actions_deletepersonaafectada": "deletePersonaAfectada()" | kind=code-symbol | source=lib/incidentes/actions.ts:L288 | neighbors=[actions.ts, req(), requireOperador()]
-- "incidentes_audit_registraraudit": "registrarAudit()" | kind=code-symbol | source=lib/incidentes/audit.ts:L6 | neighbors=[route.ts, actions.ts, audit.ts]
-- "incidentes_mapper_rowtodespacho": "rowToDespacho()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L105 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "incidentes_mapper_rowtodespachoelemento": "rowToDespachoElemento()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L183 | neighbors=[mapper.ts, toStr(), repository.ts]
 
 ## Instructions
 

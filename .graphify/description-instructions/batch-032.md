@@ -1,4 +1,4 @@
-# Node Description Batch 33 of 84
+# Node Description Batch 33 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,18 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_operativos_mapper_rowtoextorsion": "rowToExtorsion()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L96 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "reportes_operativos_mapper_rowtohidrocarburo": "rowToHidrocarburo()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L69 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "reportes_operativos_mapper_rowtoordenaprehension": "rowToOrdenAprehension()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L60 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "reportes_operativos_mapper_rowtovehiculo": "rowToVehiculo()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L21 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "reportes_operativos_repository_obtenerarmas": "obtenerArmas()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L167 | neighbors=[formato-n-armas-aseguradas-service.ts, repository.ts, service.ts]
+- "reportes_operativos_repository_obtenercateos": "obtenerCateos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L44 | neighbors=[formato-n-fge-service.ts, repository.ts, service.ts]
+- "reportes_operativos_repository_obtenerdetenidos": "obtenerDetenidos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L75 | neighbors=[formato-n-fge-service.ts, repository.ts, service.ts]
+- "reportes_operativos_repository_obtenervehiculos": "obtenerVehiculos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L13 | neighbors=[formato-n-fge-service.ts, repository.ts, service.ts]
+- "reportes_operativos_service_obtenerdatosexcel": "obtenerDatosExcel()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L154 | neighbors=[route.ts, service.ts, obtenerDatosOperativos()]
+- "reportes_operativos_service_obtenerdatosoperativos": "obtenerDatosOperativos()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L24 | neighbors=[page.tsx, service.ts, obtenerDatosExcel()]
+- "reportes_operativos_service_obtenerdatostelefonicos": "obtenerDatosTelefonicos()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L280 | neighbors=[page.tsx, route.ts, service.ts]
+- "reportes_operativos_types_detencionincrow": "DetencionIncRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L24 | neighbors=[mapper.ts, service.ts, types.ts]
 - "reportes_operativos_types_detencionofirow": "DetencionOfiRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L16 | neighbors=[mapper.ts, service.ts, types.ts]
 - "reportes_sin_d1_mapper_rowtosind1": "rowToSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/mapper.ts:L11 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "reportes_sin_d1_service_listarsind1": "listarSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/service.ts:L6 | neighbors=[page.tsx, route.ts, service.ts]
@@ -44,19 +56,7 @@ one-sentence description — no prose, no markdown fences.
 - "sasiete_mapper_maprowtoordenpago": "mapRowToOrdenPago()" | kind=code-symbol | source=features/via/saSiete/mapper.ts:L23 | neighbors=[mapper.ts, repository.ts, service.ts]
 - "sasiete_types_ordenpagosa7": "OrdenPagoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L9 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "scripts_load_context_buildinstructions": "buildInstructions()" | kind=code-symbol | source=scripts/load-context.mjs:L78 | neighbors=[load-context.mjs, resolvePath(), main()]
-- "services_analistaservice_analistaservice": "analistaService" | kind=code-symbol | source=services/analistaService.ts:L2 | neighbors=[formAnalisis.tsx, BitacoraIPH.tsx, analistaService.ts]
-- "shared_detalleinfraccionview_timeago": "timeAgo()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L126 | neighbors=[DetalleInfraccionView.tsx, SummaryBar(), formatDate()]
-- "shared_direcciongooglemaps_direccion": "Direccion" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L6 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm.tsx, DireccionGoogleMaps.tsx]
-- "shared_direcciongooglemaps_direcciongooglemaps": "DireccionGoogleMaps()" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L18 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm.tsx, DireccionGoogleMaps.tsx]
-- "shared_infracciones_obtenertokenguest": "obtenerTokenGuest()" | kind=code-symbol | source=lib/shared/infracciones.ts:L5 | neighbors=[service.ts, actions.ts, infracciones.ts]
-- "shared_infracciones_viainfracciondetalle": "ViaInfraccionDetalle" | kind=code-symbol | source=lib/shared/infracciones.ts:L128 | neighbors=[types.ts, types.ts, infracciones.ts]
-- "steps_procesomodal_procesomodal": "ProcesoModal()" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L85 | neighbors=[FormularioInfraccion.tsx, ProcesoModal.tsx, getStepIndex()]
-- "templates_layout_emaillayout": "emailLayout()" | kind=code-symbol | source=lib/emails/templates/layout.ts:L56 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
-- "templates_layout_emailstyles": "emailStyles" | kind=code-symbol | source=lib/emails/templates/layout.ts:L1 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
-- "templates_layout_inlinestyles": "inlineStyles()" | kind=code-symbol | source=lib/emails/templates/layout.ts:L50 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
-- "types_detalleinfraccion_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L61 | neighbors=[CapturarDatosTitularSection.tsx, ModalEntregarGarantia.tsx, detalleInfraccion.ts]
-- "via_sa7_consultarestatussa7": "consultarEstatusSA7()" | kind=code-symbol | source=lib/via/sa7.ts:L3 | neighbors=[route.ts, pagos.ts, sa7.ts]
-- "whatsapp_formsection": "FormSection.tsx" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L1 | neighbors=[FormSection(), SectionProps, 519716a Formulario para registro de wha…]
+- "scripts_session_checkpoint_adddecision": "addDecision()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L188 | neighbors=[session-checkpoint.mjs, ensureDir(), getSessionId()]
 
 ## Instructions
 

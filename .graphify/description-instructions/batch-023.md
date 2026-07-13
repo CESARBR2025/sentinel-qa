@@ -1,4 +1,4 @@
-# Node Description Batch 24 of 84
+# Node Description Batch 24 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,15 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "camara_mapper_rowtoincidentecamara": "rowToIncidenteCamara()" | kind=code-symbol | source=lib/camara/mapper.ts:L21 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "camara_types_incidentecamara": "IncidenteCamara" | kind=code-symbol | source=lib/camara/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts, route.ts]
+- "corralon_types_solicitudrow": "SolicitudRow" | kind=code-symbol | source=lib/corralon/types.ts:L7 | neighbors=[actions.ts, mapper.ts, service.ts, types.ts]
+- "d1_types": "types.ts" | kind=code-symbol | source=lib/d1/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, mapper.ts, repository.ts, ReporteD1]
+- "deteccion_camara_reportstat_reportstat": "ReportStat()" | kind=code-symbol | source=components/reportes/deteccion_camara/ReportStat.tsx:L2 | neighbors=[ReportStat.tsx, PhoneStatsCards.tsx, page.tsx, page.tsx]
+- "fiscalia_repository_generarfolioasegurados": "generarFolioAsegurados()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L486 | neighbors=[actions.ts, actions.ts, repository.ts, service.ts]
+- "fiscalia_service_obtenerdetalleaseguradocompletoservice": "obtenerDetalleAseguradoCompletoService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L87 | neighbors=[actions.ts, actions.ts, service.ts, parseDetenidos()]
+- "fiscalia_types_actas_checklist": "ACTAS_CHECKLIST" | kind=code-symbol | source=lib/fiscalia/types.ts:L361 | neighbors=[FormularioAseguradoJuzgado.tsx, FormularioPuestaDisposicion.tsx, types.ts, page.tsx]
+- "fiscalia_types_datosaseguradoinput": "DatosAseguradoInput" | kind=code-symbol | source=lib/fiscalia/types.ts:L17 | neighbors=[actions.ts, repository.ts, service.ts, types.ts]
 - "fiscalia_types_viainfracciondetalle": "ViaInfraccionDetalle" | kind=code-symbol | source=lib/fiscalia/types.ts:L281 | neighbors=[actions.ts, FiscaliaDashboard.tsx, mapper.ts, types.ts]
 - "flota_mapper_rowtopatrulla": "rowToPatrulla()" | kind=code-symbol | source=lib/flota/mapper.ts:L14 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
 - "hooks_useincidentes": "useIncidentes.ts" | kind=code-symbol | source=hooks/useIncidentes.ts:L1 | neighbors=[Filtros, IncidenteResumen, useIncidentes(), 6feefe2 BackEnd completo para hacer la …]
@@ -48,15 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_types_evidenciaarchivo": "EvidenciaArchivo" | kind=code-symbol | source=lib/monitorista/types.ts:L73 | neighbors=[denuncia-service.ts, mapper.ts, service.ts, types.ts]
 - "monitorista_types_historialentry": "HistorialEntry" | kind=code-symbol | source=lib/monitorista/types.ts:L31 | neighbors=[page.tsx, mapper.ts, repository.ts, types.ts]
 - "monitorista_types_reportedetenido": "ReporteDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L93 | neighbors=[detenido-service.ts, mapper.ts, service.ts, types.ts]
-- "monitorista_types_solicitudevidencia": "SolicitudEvidencia" | kind=code-symbol | source=lib/monitorista/types.ts:L10 | neighbors=[mapper.ts, repository.ts, types.ts, page.tsx]
-- "monitorista_types_solicitudfoto": "SolicitudFoto" | kind=code-symbol | source=lib/monitorista/types.ts:L86 | neighbors=[detenido-service.ts, mapper.ts, service.ts, types.ts]
-- "monitorista_types_turno": "Turno" | kind=code-symbol | source=lib/monitorista/types.ts:L111 | neighbors=[incidentes-camara-service.ts, mapper.ts, service.ts, types.ts]
-- "notificaciones_checker_generaralertasbusquedas": "generarAlertasBusquedas()" | kind=code-symbol | source=lib/notificaciones/checker.ts:L7 | neighbors=[actions.ts, checker.ts, route.ts, layout.tsx]
-- "notificaciones_types": "types.ts" | kind=code-symbol | source=lib/notificaciones/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, mapper.ts, repository.ts, Notificacion]
-- "oficial_mapper_rowtoreportecampo": "rowToReporteCampo()" | kind=code-symbol | source=lib/oficial/mapper.ts:L9 | neighbors=[mapper.ts, parseJsonField(), toStr(), rowToReporteDetalle()]
-- "oficial_mapper_rowtoreportedetalle": "rowToReporteDetalle()" | kind=code-symbol | source=lib/oficial/mapper.ts:L137 | neighbors=[mapper.ts, rowToD1(), rowToReporteCampo(), repository.ts]
-- "oficial_service_crearreporte": "crearReporte()" | kind=code-symbol | source=lib/oficial/service.ts:L97 | neighbors=[actions.ts, service.ts, generarFolioUnico(), num()]
-- "oficial_service_obtenercatalogos": "obtenerCatalogos()" | kind=code-symbol | source=lib/oficial/service.ts:L83 | neighbors=[page.tsx, page.tsx, service.ts, page.tsx]
 
 ## Instructions
 

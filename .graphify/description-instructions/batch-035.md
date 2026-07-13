@@ -1,4 +1,4 @@
-# Node Description Batch 36 of 84
+# Node Description Batch 36 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_infracciones_repository_liberarinfraccioninstante": "liberarInfraccionInstante()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L274 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_marcargarantiaentregada": "marcarGarantiaEntregada()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L283 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_marcarordenpagopagada": "marcarOrdenPagoPagada()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L139 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_marcarplacaretenidaentransito": "marcarPlacaRetenidaEnTransito()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L261 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_obtenerconceptoid": "obtenerConceptoId()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L83 | neighbors=[repository.ts, service.ts]
+- "agente_infracciones_repository_obtenerdatosordensalida": "obtenerDatosOrdenSalida()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L156 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_obtenerdocumentosliberacion": "obtenerDocumentosLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L182 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_obtenerliberaciones": "obtenerLiberaciones()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L17 | neighbors=[repository.ts, service.ts]
+- "agente_infracciones_repository_obtenermotivoretencion": "obtenerMotivoRetencion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L148 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "agente_infracciones_repository_obtenersolicitudliberacion": "obtenerSolicitudLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L171 | neighbors=[repository.ts, route.ts]
+- "agente_infracciones_service_listarliberaciones": "listarLiberaciones()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L14 | neighbors=[actions.ts, service.ts]
+- "agente_infracciones_service_procesarcapturainfractor": "procesarCapturaInfractor()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L19 | neighbors=[actions.ts, service.ts]
+- "agente_infracciones_service_procesarliberargarantia": "procesarLiberarGarantia()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L122 | neighbors=[actions.ts, service.ts]
+- "agente_infracciones_service_verificarrolinfracciones": "verificarRolInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L9 | neighbors=[actions.ts, service.ts]
+- "agente_infracciones_storecapturainfractor_usecapturainfractorstore": "useCapturaInfractorStore" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L53 | neighbors=[CapturarDatosInfractorModal.tsx, storeCapturaInfractor.ts]
+- "agente_infracciones_types_liberacionesresponse": "LiberacionesResponse" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L24 | neighbors=[actions.ts, types.ts]
+- "agente_infracciones_types_rolrow": "RolRow" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L7 | neighbors=[repository.ts, types.ts]
+- "agente_infracciones_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L1 | neighbors=[actions.ts, types.ts]
+- "agente_juzgado_actions_accioncerrarcaso": "accionCerrarCaso()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L139 | neighbors=[actions.ts, CerrarCasoModal.tsx]
 - "agente_juzgado_actions_accionpedirevidencias": "accionPedirEvidencias()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L107 | neighbors=[actions.ts, TabSolicitudes.tsx]
 - "agente_juzgado_actions_acciontomarcaso": "accionTomarCaso()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L81 | neighbors=[actions.ts, TomarCasoModal.tsx]
 - "agente_juzgado_actions_guardardetallesaseguradoaction": "guardarDetallesAseguradoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L187 | neighbors=[actions.ts, CapturarDetallesForm.tsx]
@@ -37,26 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_juzgado_mapper_num": "num()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L15 | neighbors=[mapper.ts, rowToSolicitud()]
 - "agente_juzgado_mapper_rowtoinfracciondetalle": "rowToInfraccionDetalle()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L87 | neighbors=[mapper.ts, service.ts]
 - "agente_juzgado_repository_actualizardetallesasegurado": "actualizarDetallesAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L120 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L83 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_actualizarsolicitudconevidencias": "actualizarSolicitudConEvidencias()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L105 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_finalizarprocesojuzgado": "finalizarProcesoJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L399 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_iniciarprocesojuzgado": "iniciarProcesoJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L390 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_listaraseguradosjuzgado": "listarAseguradosJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L462 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_listarliberacionesjuzgado": "listarLiberacionesJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L277 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenerdetalleasegurado": "obtenerDetalleAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L177 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenerdetalleinfraccionviajuzgado": "obtenerDetalleInfraccionViaJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L316 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenerevidenciasmonitorista": "obtenerEvidenciasMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L160 | neighbors=[repository.ts, page.tsx]
-- "agente_juzgado_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L12 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenersolicitudescerradas": "obtenerSolicitudesCerradas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L72 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenersolicitudescompletadas": "obtenerSolicitudesCompletadas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L60 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenersolicitudesconmonitorista": "obtenerSolicitudesConMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L48 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenersolicitudesenrevision": "obtenerSolicitudesEnRevision()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L36 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_repository_obtenersolicitudesrecepcionadas": "obtenerSolicitudesRecepcionadas()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L24 | neighbors=[repository.ts, service.ts]
-- "agente_juzgado_service_cerrarcaso": "cerrarCaso()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L60 | neighbors=[actions.ts, service.ts]
-- "agente_juzgado_service_guardardetallesasegurado": "guardarDetallesAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L68 | neighbors=[actions.ts, service.ts]
-- "agente_juzgado_service_listaraseguradosjuzgadosvc": "listarAseguradosJuzgadoSvc()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L92 | neighbors=[actions.ts, service.ts]
-- "agente_juzgado_service_listarsolicitudescompletadas": "listarSolicitudesCompletadas()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L42 | neighbors=[actions.ts, service.ts]
-- "agente_juzgado_service_listarsolicitudesconmonitorista": "listarSolicitudesConMonitorista()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L37 | neighbors=[actions.ts, service.ts]
 
 ## Instructions
 

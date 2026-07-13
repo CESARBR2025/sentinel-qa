@@ -1,4 +1,4 @@
-# Node Description Batch 32 of 84
+# Node Description Batch 32 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,18 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_form_styles_inputstyle": "inputStyle" | kind=code-symbol | source=components/reportes/form-styles.ts:L3 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_form_styles_label": "Label()" | kind=code-symbol | source=components/reportes/form-styles.ts:L13 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_form_styles_sectionbody": "sectionBody" | kind=code-symbol | source=components/reportes/form-styles.ts:L22 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_form_styles_sectioncard": "sectionCard" | kind=code-symbol | source=components/reportes/form-styles.ts:L19 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_form_styles_sectionheader": "sectionHeader" | kind=code-symbol | source=components/reportes/form-styles.ts:L20 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_form_styles_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/reportes/form-styles.ts:L21 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_formato_n_armas_aseguradas_service_listararmasaseguradas": "listarArmasAseguradas()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L69 | neighbors=[page.tsx, route.ts, formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_armas_aseguradas_service_obtenerarmaasegurada": "obtenerArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L74 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts, rowTo()]
+- "reportes_formato_n_armas_aseguradas_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L55 | neighbors=[formato-n-armas-aseguradas-service.ts, obtenerArmaAsegurada(), formatFecha()]
+- "reportes_formato_n_atencion_victimas_service_listaratencionvictimas": "listarAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L46 | neighbors=[page.tsx, route.ts, formato-n-atencion-victimas-service.ts]
+- "reportes_formato_n_atencion_victimas_service_obteneratencionvictimas": "obtenerAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L58 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts, rowTo()]
+- "reportes_formato_n_atencion_victimas_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-atencion-victimas-service.ts]
 - "reportes_formato_n_consolidado_service_obtenerformatonconsolidadorango": "obtenerFormatoNConsolidadoRango()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L57 | neighbors=[route.ts, formato-n-consolidado-service.ts, enumerarFechas()]
 - "reportes_formato_n_eventos_service_listareventos": "listarEventos()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L37 | neighbors=[page.tsx, route.ts, formato-n-eventos-service.ts]
 - "reportes_formato_n_eventos_service_obtenerevento": "obtenerEvento()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L42 | neighbors=[route.ts, formato-n-eventos-service.ts, rowTo()]
@@ -45,18 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_operativos_mapper_rowtodetencioninc": "rowToDetencionInc()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L50 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "reportes_operativos_mapper_rowtodetencionofi": "rowToDetencionOfi()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L40 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "reportes_operativos_mapper_rowtodroga": "rowToDroga()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L87 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtoextorsion": "rowToExtorsion()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L96 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtohidrocarburo": "rowToHidrocarburo()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L69 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtoordenaprehension": "rowToOrdenAprehension()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L60 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtovehiculo": "rowToVehiculo()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L21 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_repository_obtenerarmas": "obtenerArmas()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L167 | neighbors=[formato-n-armas-aseguradas-service.ts, repository.ts, service.ts]
-- "reportes_operativos_repository_obtenercateos": "obtenerCateos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L44 | neighbors=[formato-n-fge-service.ts, repository.ts, service.ts]
-- "reportes_operativos_repository_obtenerdetenidos": "obtenerDetenidos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L75 | neighbors=[formato-n-fge-service.ts, repository.ts, service.ts]
-- "reportes_operativos_repository_obtenervehiculos": "obtenerVehiculos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L13 | neighbors=[formato-n-fge-service.ts, repository.ts, service.ts]
-- "reportes_operativos_service_obtenerdatosexcel": "obtenerDatosExcel()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L154 | neighbors=[route.ts, service.ts, obtenerDatosOperativos()]
-- "reportes_operativos_service_obtenerdatosoperativos": "obtenerDatosOperativos()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L24 | neighbors=[page.tsx, service.ts, obtenerDatosExcel()]
-- "reportes_operativos_service_obtenerdatostelefonicos": "obtenerDatosTelefonicos()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L280 | neighbors=[page.tsx, route.ts, service.ts]
-- "reportes_operativos_types_detencionincrow": "DetencionIncRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L24 | neighbors=[mapper.ts, service.ts, types.ts]
 
 ## Instructions
 

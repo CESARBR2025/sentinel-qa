@@ -3,9 +3,10 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { getCatalogos } from "@/lib/911/service";
-
-import { DashboardHeader } from "@/components/partials/Header";
+import { ProfileDropdown } from "@/components/oficial/ProfileDropdown"
 import { DashboardFooter } from "@/components/partials/Footer";
 import Formulario911 from "./Formulario911";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
@@ -62,7 +63,41 @@ export default async function Ciudadano911Page() {
         }
       `}} />
 
-      <DashboardHeader user={user} />
+      {/* Header */}
+            <div style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+                padding: '24px 48px', borderBottom: '1px solid #e2e8f0', position: 'relative',
+                background: '#ffffff',
+            }}>
+                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#2563eb' }} />
+
+                <div>
+                    <Link href="/agente_911/ciudadano/incidentes" style={{
+                        fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em',
+                        color: '#94a3b8', textTransform: 'uppercase', textDecoration: 'none',
+                        display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
+                    }}>
+                        <ArrowLeft size={14} /> Bitácora
+                    </Link>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                        <img src="/logo_sentinel.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
+                        <div>
+                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }} />
+                                Sistema de Atención de Emergencias
+                            </div>
+                            <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
+                                Reporte de Llamada <span style={{ color: '#2563eb' }}>al 911</span>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                    <ProfileDropdown name={user.name} apellido={user.apellido} email={user.email} rolLabel="Agente 911" mostrarPerfil={false} />
+                </div>
+            </div>
       
       <div
         className="sentinel-label-fix"
@@ -84,56 +119,16 @@ export default async function Ciudadano911Page() {
             boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
           }}
         >
-          {/* ENCABEZADO ESTILO SENTINEL */}
-          <div
-            style={{
-              marginBottom: "40px",
-              borderBottom: "1px solid #f1f5f9",
-              paddingBottom: "24px"
-            }}
-          >
-            <div
-              style={{
-                color: "#2563eb",
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "11px",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.25em",
-              }}
-            >
-              Sistema de Atención de Emergencias
-            </div>
-
-            <h1
-              style={{
-                margin: "12px 0",
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: "38px",
-                fontWeight: 800,
-                color: "#0f172a",
-                textTransform: "uppercase",
-                letterSpacing: "0.02em",
-              }}
-            >
-              Reporte de Llamada <span style={{ color: "#3b82f6" }}>al 911</span>
-            </h1>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '4px', height: '16px', background: '#3b82f6' }} />
-                <p
-                  style={{
-                    margin: 0,
-                    fontFamily: "'Inter', sans-serif",
-                    color: "#64748b",
-                    fontSize: "14px",
-                    fontWeight: 500
-                  }}
-                >
-                  Registro inicial de incidentes reportados por la ciudadanía.
+          {/* ENCABEZADO */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 32 }}>
+                <div style={{ width: '4px', height: '16px', background: '#2563eb' }} />
+                <p style={{
+                    margin: 0, fontFamily: "'Inter', sans-serif",
+                    color: "#64748b", fontSize: "14px", fontWeight: 500
+                }}>
+                    Registro inicial de incidentes reportados por la ciudadanía.
                 </p>
             </div>
-          </div>
 
           {/* AQUÍ VA EL FORMULARIO DE TU AMIGO */}
           <Formulario911 

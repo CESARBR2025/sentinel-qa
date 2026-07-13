@@ -1,4 +1,4 @@
-import { obtenerCatalogos, obtenerStats, listarIncidentes, obtenerIncidente, obtenerIncidenteConExtras, obtenerTiposIncidente } from './repository'
+import { obtenerCatalogos, obtenerStats, listarIncidentes, obtenerIncidente, obtenerIncidenteConExtras, obtenerTiposIncidente, contarPorEstatus } from './repository'
 import type { CatalogoItem, IncidenteDetalle, IncidenteStats } from './types'
 
 export async function getCatalogos() {
@@ -13,8 +13,9 @@ export async function getIncidentesPaginados(
   canal: string | null,
   page: number = 1,
   pageSize: number = 20,
+  estatus?: string | null,
 ) {
-  return listarIncidentes(canal, page, pageSize)
+  return listarIncidentes(canal, page, pageSize, estatus)
 }
 
 export async function getIncidente(id: string): Promise<IncidenteDetalle | null> {
@@ -27,4 +28,8 @@ export async function getIncidenteConExtras(id: string) {
 
 export async function getTiposIncidente(): Promise<CatalogoItem[]> {
   return obtenerTiposIncidente()
+}
+
+export async function getConteoEstatus(canal: string) {
+  return contarPorEstatus(canal)
 }

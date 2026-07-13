@@ -1,4 +1,4 @@
-# Node Description Batch 2 of 84
+# Node Description Batch 2 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -49,7 +49,7 @@ one-sentence description — no prose, no markdown fences.
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@03f8b2a0f704f60c437edc742d964aae35445ff0": "03f8b2a implementado rbac" | kind=Commit | source=git | neighbors=[permisos.ts, permisos.ts, page.tsx, service.ts, page.tsx, service.ts] | lang=pt
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@55587511b4ee8287ffcaf4b0c7723daeed5c0b5b": "5558751 feat: módulo Prevención del Delito completo + fix flujo autenticación 2…" | kind=Commit | source=git | neighbors=[route.ts, layout.tsx, main, page.tsx, route.ts, route.ts] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@c95f412847e8915bbb91b5fbc2848cb64e57ebc2": "c95f412 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seg…" | kind=Commit | source=git | neighbors=[06c55f5 Merge branch 'feature/testing' …, baae82f diseño de medidas de proteccion, conexion, testing, route.ts, c1ed4c3 cambios en busquedas] | lang=en
-- "oficial_types": "types.ts" | kind=code-symbol | source=lib/oficial/types.ts:L1 | neighbors=[067c4de arreglando flujo de fiscalia  a…, 0c31cc2 Merge branch 'testing' into juz…, 13f7f39 Reporte-incidentes, 16a63d4 Merge branch 'feature/testing' …, 22b7b54 Merge branch 'feature/reportes'…, 290d651 feat(despacho): flujo integral …] | lang=en
+- "oficial_types": "types.ts" | kind=code-symbol | source=lib/oficial/types.ts:L1 | neighbors=[067c4de arreglando flujo de fiscalia  a…, 0c31cc2 Merge branch 'testing' into juz…, 0d9172a mejorando flujo de 911-despacho, 13f7f39 Reporte-incidentes, 16a63d4 Merge branch 'feature/testing' …, 22b7b54 Merge branch 'feature/reportes'…] | lang=en
 - "permisos_core": "core.ts" | kind=code-symbol | source=lib/permisos/core.ts:L1 | neighbors=[permisos.ts, permisos.ts, permisos.ts, permisos.ts, permisos.ts, permisos.ts] | lang=en
 - "reportes_permisos": "permisos.ts" | kind=code-symbol | source=lib/reportes/permisos.ts:L1 | neighbors=[route.ts, 03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@9faf222a5f0d4eaaea5805ee9b412b41b8fe3050": "9faf222 Merge branch 'feature/testing' into feature/reportes" | kind=Commit | source=git | neighbors=[8355ac0 Merge branch 'feature/testing' …, actions.ts, FormularioAseguradoJuzgado.tsx, page.tsx, repository.ts, service.ts] | lang=en
@@ -64,8 +64,8 @@ one-sentence description — no prose, no markdown fences.
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@5d179c0781f151d3144b7f36607dd488f2d4cbd8": "5d179c0 Apartado de reportes" | kind=Commit | source=git | neighbors=[conexion, testing, 77a125d Merge branch 'feature/monitoris…, route.ts, route.ts, page.tsx] | lang=nl
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@8e6c8c679f186e64d153cc1602969fd5a1a88b03": "8e6c8c6 Apartado de reportes" | kind=Commit | source=git | neighbors=[44ebbc4 Merge branch 'feature/testing' …, conexion, testing, 77a125d Merge branch 'feature/monitoris…, route.ts, route.ts] | lang=nl
 - "rol_servicios_repository": "repository.ts" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L1 | neighbors=[c27a9ee fase prefinal, actions.ts, catalogos-actions.ts, db.ts, query(), mapper.ts] | lang=en
+- "oficial_actions": "actions.ts" | kind=code-symbol | source=lib/oficial/actions.ts:L1 | neighbors=[0c31cc2 Merge branch 'testing' into juz…, 0d9172a mejorando flujo de 911-despacho, 16a63d4 Merge branch 'feature/testing' …, 290d651 feat(despacho): flujo integral …, 388b997 Apartados para subir fotografia…, 44ebbc4 Merge branch 'feature/testing' …] | lang=en
 - "prevencion_permisos": "permisos.ts" | kind=code-symbol | source=lib/prevencion/permisos.ts:L1 | neighbors=[route.ts, page.tsx, route.ts, route.ts, route.ts, 03f8b2a implementado rbac] | lang=en
-- "reportes_operativos_service": "service.ts" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L1 | neighbors=[067c4de arreglando flujo de fiscalia  a…, 07543de Conexion de reportes con d1 y l…, 16a63d4 Merge branch 'feature/testing' …, 4400923 Merge branch 'feature/testing' …, 552d291 Merge branch 'testing' into con…, ac48eb1 Merge pull request #17 from pre…] | lang=en
 
 ## Instructions
 

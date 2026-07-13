@@ -1,4 +1,4 @@
-# Node Description Batch 5 of 84
+# Node Description Batch 5 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -26,12 +26,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "formato_n_medios_alternativos_page": "page.tsx" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L1 | neighbors=[06c55f5 Merge branch 'feature/testing' …, 27dcb21 Merge branch 'feature/testing' …, 41ea169 Merge branch 'testing' into con…, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, 8355ac0 Merge branch 'feature/testing' …] | lang=en
+- "historial_page": "page.tsx" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 388b997 Apartados para subir fotografia…, 514a705 refactorizacion sql, 5618308 guardado e evidencias con ed, 5d179c0 Apartado de reportes, 5f13b34 Merge branch 'feature/testing' …] | lang=en
+- "rol_servicios_catalogos_actions": "catalogos-actions.ts" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L1 | neighbors=[11be750 Fase 1 de correccion - completa…, c27a9ee fase prefinal, auth.ts, auth, db.ts, query()] | lang=en
 - "rol_servicios_service": "service.ts" | kind=code-symbol | source=lib/rol-servicios/service.ts:L1 | neighbors=[c27a9ee fase prefinal, repository.ts, getAsignacionesByRolId(), getBodyCams(), getEstadoFuerzaByRolId(), getEstadoFuerzaConceptos()] | lang=en
 - "agente_infracciones_actions": "actions.ts" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L1 | neighbors=[capturarInfractorInfraccionesAction(), liberarGarantiaInfraccionesAction(), obtenerDashboardInfracciones(), obtenerDetalleInfraccionInfracciones(), obtenerInfracciones(), service.ts] | lang=en
 - "agente_liberaciones_liberacionesdashboard": "LiberacionesDashboard.tsx" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesDashboard.tsx:L1 | neighbors=[AVATAR_COLORS, EstatusLiberaciones, getBadge(), getInitials(), hashColor(), LiberacionesDashboard()] | lang=en
 - "analisis_page": "page.tsx" | kind=code-symbol | source=app/analisis/page.tsx:L1 | neighbors=[actionTextStyle, cardContentStyle, cardDescStyle, cardStyle, cardTitleStyle, decoratorLine] | lang=en
 - "analisis_permisos": "permisos.ts" | kind=code-symbol | source=lib/analisis/permisos.ts:L1 | neighbors=[Accion, guardarPermiso(), guardarPlantillaSeccion(), obtenerPlantillaRol(), PermisoSeccion, Seccion] | lang=en
-- "ciudadano_formulario911": "Formulario911.tsx" | kind=code-symbol | source=app/agente_911/ciudadano/Formulario911.tsx:L1 | neighbors=[Formulario911(), libraries, actions.ts, createIncidenteCliente(), page.tsx, 03f8b2a implementado rbac] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@290d6510777c2423d2c3dd73960c82ce2f471b16": "290d651 feat(despacho): flujo integral 911 → despacho → oficial → D1 → legal" | kind=Commit | source=git | neighbors=[FiltrosIncidentes.tsx, conexion, testing, fcdb169 chore(graphify): actualiza graf…, repository.ts, TablonDespacho.tsx] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@93dd3eacbbe61c248cb181e56601565285e2e91d": "93dd3ea Merge pull request #1 from presidenciaSJR/juzgado" | kind=Commit | source=git | neighbors=[458bbfb registro de reporte de campo - …, 917002a Guardado de policia a cargo, conexion, testing, aaddee5 Merge branch 'feature/testing' …, ecebe38 Guardado de longitud y latitud …] | lang=en
 - "incidentes_camara_route": "route.ts" | kind=code-symbol | source=app/api/monitorista/incidentes-camara/route.ts:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 388b997 Apartados para subir fotografia…, 50101e2 Merge pull request #6 from pres…, 5311c24 Editar Registros, 5618308 guardado e evidencias con ed, 5d179c0 Apartado de reportes] | lang=en
@@ -43,7 +45,6 @@ one-sentence description — no prose, no markdown fences.
 - "rol_servicios_actions": "actions.ts" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L1 | neighbors=[11be750 Fase 1 de correccion - completa…, c27a9ee fase prefinal, auth.ts, auth, db.ts, query()] | lang=en
 - "rondin_page": "page.tsx" | kind=code-symbol | source=app/oficial/rondin/page.tsx:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 290d651 feat(despacho): flujo integral …, ac9ad49 Merge branch 'feature/testing' …, permisos.ts, tieneAccesoSeccion()] | lang=en
 - "solicitudid_page": "page.tsx" | kind=code-symbol | source=app/fiscalia/solicitudes/[solicitudId]/page.tsx:L1 | neighbors=[5f13b34 Merge branch 'feature/testing' …, 6109a7a replicando flujo para fiscalia, 92393e7 flujo completado de juzgado, a7218bd Merge pull request #4 from pres…, ce84893 Merge branch 'feature/testing' …, CapturarDetallesForm.tsx] | lang=en
-- "911_service": "service.ts" | kind=code-symbol | source=lib/911/service.ts:L1 | neighbors=[repository.ts, listarIncidentes(), obtenerCatalogos(), obtenerIncidente(), obtenerIncidenteConExtras(), obtenerStats()] | lang=en
 - "agente_infracciones_service": "service.ts" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L1 | neighbors=[actions.ts, mapper.ts, rowToLiberacion(), repository.ts, actualizarDatosInfractor(), insertarOrdenPagoSa7()] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@75e03e918ed8bad195c1e4a6f670808f02c16944": "75e03e9 puliendo flujo de juzgado-liberaciones-vehiculos-" | kind=Commit | source=git | neighbors=[actions.ts, BotonVerDetalle.tsx, CargarOficioSection.tsx, ConfirmacionModal.tsx, JuzgadoDashboard.tsx, JuzgadoTable.tsx] | lang=nl
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@92393e79eeb8bd73e39875946addf69135d1e790": "92393e7 flujo completado de juzgado" | kind=Commit | source=git | neighbors=[actions.ts, CapturarDetallesForm.tsx, DetallesAseguradoView.tsx, mapper.ts, repository.ts, service.ts] | lang=nl
@@ -65,7 +66,6 @@ one-sentence description — no prose, no markdown fences.
 - "formato_n_rnd_page": "page.tsx" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L1 | neighbors=[06c55f5 Merge branch 'feature/testing' …, 27dcb21 Merge branch 'feature/testing' …, 41ea169 Merge branch 'testing' into con…, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, 8355ac0 Merge branch 'feature/testing' …] | lang=en
 - "monitorista_bandejasolicitudes": "BandejaSolicitudes.tsx" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L1 | neighbors=[126b4d1 Monitorista V1, 27dcb21 Merge branch 'feature/testing' …, 44ebbc4 Merge branch 'feature/testing' …, 46b2c89 Merge branch 'testing' into juz…, 5618308 guardado e evidencias con ed, 5d179c0 Apartado de reportes] | lang=en
 - "monitorista_types": "types.ts" | kind=code-symbol | source=lib/monitorista/types.ts:L1 | neighbors=[c27a9ee fase prefinal, page.tsx, denuncia-service.ts, detenido-service.ts, incidentes-camara-service.ts, mapper.ts] | lang=en
-- "partials_header_dashboardheader": "DashboardHeader()" | kind=code-symbol | source=components/partials/Header.tsx:L17 | neighbors=[page.tsx, page.tsx, page.tsx, page.tsx, page.tsx, page.tsx] | lang=en
 
 ## Instructions
 

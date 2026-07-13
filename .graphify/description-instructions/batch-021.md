@@ -1,4 +1,4 @@
-# Node Description Batch 22 of 84
+# Node Description Batch 22 of 86
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -26,6 +26,13 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "911_modulecard": "ModuleCard.tsx" | kind=code-symbol | source=components/911/ModuleCard.tsx:L1 | neighbors=[ModuleCard(), ModuleCardProps, Stat, a24949a Merge branch 'feature/testing' …, a667064 Page de seleccion de registro] | lang=en
+- "admin_admin_styles_cardstyle": "cardStyle" | kind=code-symbol | source=app/admin/admin-styles.ts:L28 | neighbors=[admin-styles.ts, page.tsx, page.tsx, page.tsx, page.tsx] | lang=en
+- "admin_types": "types.ts" | kind=code-symbol | source=lib/admin/types.ts:L1 | neighbors=[mapper.ts, repository.ts, RolItem, UsuarioLista, 12aab65 fase 4] | lang=en
+- "agente_infracciones_types_capturainfractorinput": "CapturaInfractorInput" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L33 | neighbors=[actions.ts, mapper.ts, repository.ts, service.ts, types.ts] | lang=en
+- "agente_juzgado_botonverdetalle": "BotonVerDetalle.tsx" | kind=code-symbol | source=components/agente_juzgado/BotonVerDetalle.tsx:L1 | neighbors=[BotonVerDetalle(), BotonVerDetalleProps, JuzgadoDashboard.tsx, 75e03e9 puliendo flujo de juzgado-liber…, ff3622b Merge pull request #11 from pre…] | lang=en
+- "agente_juzgado_types_solicitudevidencia": "SolicitudEvidencia" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L135 | neighbors=[actions.ts, mapper.ts, service.ts, TabSolicitudes.tsx, types.ts] | lang=en
+- "agente_juzgado_types_viainfracciondetalle": "ViaInfraccionDetalle" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L125 | neighbors=[actions.ts, JuzgadoDashboard.tsx, mapper.ts, service.ts, types.ts] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@54d7324d5800f2fc2db384689934b3f092a82bb5": "54d7324 chore: dejar de versionar config MCP local de Alexandria" | kind=Commit | source=git | neighbors=[conexion, testing, 0caf5dd Fixes, fcdb169 chore(graphify): actualiza graf…, feature/testing] | lang=nl
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@6594f4a7d3f2e0fa3674302b4ae412dfd576f203": "6594f4a Flujos por Rol" | kind=Commit | source=git | neighbors=[conexion, testing, 290d651 feat(despacho): flujo integral …, ac9ad49 Merge branch 'feature/testing' …, feature/testing] | lang=pt
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@a7a7f2e084cd75996841e4eeb0019d3671cacfde": "a7a7f2e boveda" | kind=Commit | source=git | neighbors=[conexion, testing, a21f03f fix bugs reporte denuncia, e6bffc9 boveda conectada, feature/testing] | lang=pt
@@ -59,13 +66,6 @@ one-sentence description — no prose, no markdown fences.
 - "next_config": "next.config.ts" | kind=code-symbol | source=next.config.ts:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, 75ca4b2 Merge pull request #9 from pres…, 90da1ca Initial commit from Create Next…, 953d38a implementando vista de fiscalia, nextConfig] | lang=en
 - "notificaciones_mapper": "mapper.ts" | kind=code-symbol | source=lib/notificaciones/mapper.ts:L1 | neighbors=[ad3ec5f mejorando esto, rowToNotificacion(), types.ts, Notificacion, repository.ts] | lang=en
 - "oficial_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/oficial/mapper.ts:L69 | neighbors=[mapper.ts, rowToD1(), rowToDespachoAsignado(), rowToReporteCampo(), rowToReporteResumen()] | lang=en
-- "oficial_types_ofireportedetalle": "OfiReporteDetalle" | kind=code-symbol | source=lib/oficial/types.ts:L188 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts, OfiReporteCampo] | lang=en
-- "oficiales_repository_oficialesviarepository": "OficialesViaRepository" | kind=code-symbol | source=features/via/oficiales/repository.ts:L4 | neighbors=[repository.ts, .obtenerOficialIdPorUserId(), .obtenerOficialPorId(), .obtenerOficialPorUserId(), service.ts] | lang=en
-- "oficiales_service_oficialesviaservice": "OficialesViaService" | kind=code-symbol | source=features/via/oficiales/service.ts:L3 | neighbors=[service.ts, .obtenerMiPerfil(), .obtenerOficialId(), .obtenerPorId(), route.ts] | lang=en
-- "path_route": "route.ts" | kind=code-symbol | source=app/api/uploads/[...path]/route.ts:L1 | neighbors=[0e33bf6 feat: módulo Admin, Prórroga, F…, auth.ts, auth, GET(), MIME] | lang=en
-- "permisos_core_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/permisos/core.ts:L52 | neighbors=[actions.ts, layout.tsx, core.ts, obtenerPermisosUsuario(), route.ts] | lang=en
-- "prevencion_autoridadbadge_autoridadbadge": "AutoridadBadge()" | kind=code-symbol | source=components/prevencion/AutoridadBadge.tsx:L8 | neighbors=[page.tsx, page.tsx, page.tsx, AgregarAutoridadForm.tsx, AutoridadBadge.tsx] | lang=en
-- "reportes_formato_n_atencion_victimas_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L31 | neighbors=[formato-n-atencion-victimas-service.ts, obtenerAtencionVictimas(), obtenerAtencionVictimasPorFechaPeriodo(), formatFecha(), parsePeriodo()] | lang=en
 
 ## Instructions
 

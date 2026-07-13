@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { MapPin, User, Clock, AlertTriangle, ArrowLeft, Phone, School, Info } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function DetalleCiudadanoCompletoPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -15,9 +15,8 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
 
-    const rolNombre = await obtenerRolNombre(session.user.id)
-    const backHref = rolNombre === 'agente_911' ? '/agente_911' : '/dashboard'
-    const backLabel = rolNombre === 'agente_911' ? 'Panel 911' : 'Dashboard'
+    const backHref = '/agente_911/ciudadano/incidentes'
+    const backLabel = 'Bitácora'
 
     const data = await getIncidenteConExtras(id) as any;
     if (!data) notFound();
