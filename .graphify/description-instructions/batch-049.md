@@ -1,4 +1,4 @@
-# Node Description Batch 50 of 86
+# Node Description Batch 50 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_formato_n_rnd_service_formatonrnd": "FormatoNRnd" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L3 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
+- "reportes_formato_n_rnd_service_obtenerrndporfecha": "obtenerRndPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L44 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
+- "reportes_incidentes_repository_obtenerreportediario": "obtenerReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "reportes_incidentes_repository_obtenerreportesemanal": "obtenerReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/repository.ts:L34 | neighbors=[repository.ts, service.ts]
+- "reportes_incidentes_service_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L4 | neighbors=[service.ts, combinar()]
+- "reportes_incidentes_service_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L5 | neighbors=[service.ts, combinar()]
+- "reportes_incidentes_types_reporteincidentecombinado": "ReporteIncidenteCombinado" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L25 | neighbors=[service.ts, types.ts]
+- "reportes_operativos_mapper_rowtoreportecampogeneral": "rowToReporteCampoGeneral()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L105 | neighbors=[mapper.ts, toStr()]
+- "reportes_operativos_mapper_rowtoreportecampoincidentegeneral": "rowToReporteCampoIncidenteGeneral()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L130 | neighbors=[mapper.ts, toStr()]
+- "reportes_operativos_repository_obtenerdrogas": "obtenerDrogas()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L196 | neighbors=[repository.ts, service.ts]
+- "reportes_operativos_repository_obtenerextorsiones": "obtenerExtorsiones()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L225 | neighbors=[repository.ts, service.ts]
 - "reportes_operativos_repository_obtenerhidrocarburos": "obtenerHidrocarburos()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L138 | neighbors=[repository.ts, service.ts]
 - "reportes_operativos_repository_obtenerordenesaprehension": "obtenerOrdenesAprehension()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L109 | neighbors=[repository.ts, service.ts]
 - "reportes_operativos_types_detencionresult": "DetencionResult" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L32 | neighbors=[repository.ts, types.ts]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "rol_servicios_catalogos_actions_togglesector": "toggleSector()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L46 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
 - "rol_servicios_catalogos_actions_toggletipoemergencia": "toggleTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L111 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
 - "rol_servicios_catalogos_actions_toggletipoobservacion": "toggleTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L98 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_mapper_rowtorolestadofuerza": "rowToRolEstadoFuerza()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L77 | neighbors=[mapper.ts, repository.ts]
-- "rol_servicios_repository_getasignacionesbyrolid": "getAsignacionesByRolId()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L21 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getbodycams": "getBodyCams()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L55 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getestadofuerzabyrolid": "getEstadoFuerzaByRolId()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L29 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getestadofuerzaconceptos": "getEstadoFuerzaConceptos()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L60 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getmedioscanalizacion": "getMediosCanalizacion()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L81 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getobservacionesbyrolid": "getObservacionesByRolId()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L37 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getradios": "getRadios()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L50 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_getsectores": "getSectores()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L45 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_gettiposemergencia": "getTiposEmergencia()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L74 | neighbors=[repository.ts, service.ts]
-- "rol_servicios_repository_gettiposobservacion": "getTiposObservacion()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L67 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 

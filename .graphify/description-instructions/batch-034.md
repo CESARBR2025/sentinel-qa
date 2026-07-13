@@ -1,4 +1,4 @@
-# Node Description Batch 35 of 86
+# Node Description Batch 35 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "911_repository_listarincidentesrecientes": "listarIncidentesRecientes()" | kind=code-symbol | source=lib/911/repository.ts:L122 | neighbors=[repository.ts, page.tsx]
+- "911_repository_obtenercatalogos": "obtenerCatalogos()" | kind=code-symbol | source=lib/911/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "911_repository_obtenerincidente": "obtenerIncidente()" | kind=code-symbol | source=lib/911/repository.ts:L89 | neighbors=[repository.ts, service.ts]
+- "911_repository_obtenerincidenteconextras": "obtenerIncidenteConExtras()" | kind=code-symbol | source=lib/911/repository.ts:L103 | neighbors=[repository.ts, service.ts]
+- "911_repository_obtenerstats": "obtenerStats()" | kind=code-symbol | source=lib/911/repository.ts:L25 | neighbors=[repository.ts, service.ts]
+- "911_repository_obtenertiposincidente": "obtenerTiposIncidente()" | kind=code-symbol | source=lib/911/repository.ts:L136 | neighbors=[repository.ts, service.ts]
+- "911_service_getconteoestatus": "getConteoEstatus()" | kind=code-symbol | source=lib/911/service.ts:L33 | neighbors=[service.ts, page.tsx]
+- "911_service_getincidenteconextras": "getIncidenteConExtras()" | kind=code-symbol | source=lib/911/service.ts:L25 | neighbors=[service.ts, page.tsx]
+- "911_service_getincidentespaginados": "getIncidentesPaginados()" | kind=code-symbol | source=lib/911/service.ts:L12 | neighbors=[service.ts, page.tsx]
+- "911_service_gettiposincidente": "getTiposIncidente()" | kind=code-symbol | source=lib/911/service.ts:L29 | neighbors=[service.ts, page.tsx]
+- "911_types_incidenteresumen": "IncidenteResumen" | kind=code-symbol | source=lib/911/types.ts:L1 | neighbors=[mapper.ts, types.ts]
 - "admin_page": "page.tsx" | kind=code-symbol | source=app/admin/page.tsx:L1 | neighbors=[AdminPage(), 0e33bf6 feat: módulo Admin, Prórroga, F…]
 - "admin_repository_actualizarusuario": "actualizarUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L78 | neighbors=[actions.ts, repository.ts]
 - "admin_repository_asignarrolusuario": "asignarRolUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L88 | neighbors=[actions.ts, repository.ts]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_profiledropdown_profiledropdown": "ProfileDropdown()" | kind=code-symbol | source=components/agente_infracciones/ProfileDropdown.tsx:L14 | neighbors=[page.tsx, ProfileDropdown.tsx]
 - "agente_infracciones_repository_actualizardatosinfractor": "actualizarDatosInfractor()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L46 | neighbors=[repository.ts, service.ts]
 - "agente_infracciones_repository_actualizardatosinfractoriniciarproceso": "actualizarDatosInfractorIniciarProceso()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L211 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_actualizarestatusdependenciamesacontrol": "actualizarEstatusDependenciaMesaControl()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L338 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_actualizarestatuspendientepagoinfraccion": "actualizarEstatusPendientePagoInfraccion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L254 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_actualizarestatussolicitudliberacion": "actualizarEstatusSolicitudLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L331 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_actualizarevidenciasinfraccion": "actualizarEvidenciasInfraccion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L363 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_actualizarurlordensalida": "actualizarUrlOrdenSalida()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L204 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_actualizarurlsdocumentosinfraccion": "actualizarUrlsDocumentosInfraccion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L347 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_cerrarinfraccion": "cerrarInfraccion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L197 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_insertardocumentoliberacion": "insertarDocumentoLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L294 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_insertarordenpagosa7": "insertarOrdenPagoSa7()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L106 | neighbors=[repository.ts, service.ts]
-- "agente_infracciones_repository_insertarsolicitudliberacion": "insertarSolicitudLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L307 | neighbors=[repository.ts, route.ts]
-- "agente_infracciones_repository_liberargarantia": "liberarGarantia()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L94 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 

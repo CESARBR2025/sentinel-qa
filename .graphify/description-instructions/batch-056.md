@@ -1,4 +1,4 @@
-# Node Description Batch 57 of 86
+# Node Description Batch 57 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_page_juzgadodashboardpage": "JuzgadoDashboardPage()" | kind=code-symbol | source=app/agente_juzgado/page.tsx:L8 | neighbors=[page.tsx]
+- "agente_juzgado_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L5 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L12 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L20 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L16 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L6 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L4 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L3 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L8 | neighbors=[permisos.ts]
+- "agente_juzgado_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_juzgado/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
+- "agente_juzgado_repository_actualizaroficiojuzgado": "actualizarOficioJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L408 | neighbors=[repository.ts]
+- "agente_juzgado_service_listarsolicitudescerradas": "listarSolicitudesCerradas()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L47 | neighbors=[service.ts]
+- "agente_juzgado_service_obtenerdetalleinfraccionviaservicejuzgado": "obtenerDetalleInfraccionViaServiceJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L80 | neighbors=[service.ts]
+- "agente_juzgado_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/agente_juzgado/SubirFotoDetenido.tsx:L6 | neighbors=[SubirFotoDetenido.tsx]
+- "agente_juzgado_tabsolicitudes_parseevidencias": "parseEvidencias()" | kind=code-symbol | source=components/agente_juzgado/TabSolicitudes.tsx:L26 | neighbors=[TabSolicitudes.tsx]
+- "agente_juzgado_tabsolicitudes_props": "Props" | kind=code-symbol | source=components/agente_juzgado/TabSolicitudes.tsx:L10 | neighbors=[TabSolicitudes.tsx]
+- "agente_juzgado_tabsolicitudes_tab": "Tab" | kind=code-symbol | source=components/agente_juzgado/TabSolicitudes.tsx:L17 | neighbors=[TabSolicitudes.tsx]
+- "agente_juzgado_tabsolicitudes_tabs": "tabs" | kind=code-symbol | source=components/agente_juzgado/TabSolicitudes.tsx:L19 | neighbors=[TabSolicitudes.tsx]
+- "agente_juzgado_types_viainfracciongarantia": "ViaInfraccionGarantia" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L111 | neighbors=[types.ts]
 - "agente_juzgado_types_viainfraccionheader": "ViaInfraccionHeader" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L62 | neighbors=[types.ts]
 - "agente_juzgado_types_viainfraccioninfractor": "ViaInfraccionInfractor" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L87 | neighbors=[types.ts]
 - "agente_juzgado_types_viainfraccionlegal": "ViaInfraccionLegal" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L77 | neighbors=[types.ts]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_liberaciones_liberacionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L5 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_liberacionestable_liberacionestable": "LiberacionesTable()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L31 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_liberacionestable_liberacionestableprops": "LiberacionesTableProps" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L16 | neighbors=[LiberacionesTable.tsx]
-- "agente_liberaciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_liberaciones/mapper.ts:L3 | neighbors=[mapper.ts]
-- "agente_liberaciones_page_liberacionesdashboardpage": "LiberacionesDashboardPage()" | kind=code-symbol | source=app/agente_liberaciones/page.tsx:L5 | neighbors=[page.tsx]
-- "agente_liberaciones_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L5 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L12 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L20 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L16 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L6 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L4 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L3 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L8 | neighbors=[permisos.ts]
-- "agente_liberaciones_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_liberaciones/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
-- "agente_liberaciones_repository_actualizarinfraccionestatus": "actualizarInfraccionEstatus()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L155 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_actualizarinfractor": "actualizarInfractor()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L39 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_actualizarrevisiondocumento": "actualizarRevisionDocumento()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L105 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_actualizarsolicitudestatus": "actualizarSolicitudEstatus()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L166 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_insertarordenpago": "insertarOrdenPago()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L175 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_obtenerconceptoporfraccion": "obtenerConceptoPorFraccion()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L68 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_obtenerdocumentosporsolicitud": "obtenerDocumentosPorSolicitud()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L91 | neighbors=[repository.ts]
-- "agente_liberaciones_repository_obtenerestatusdocumentosporsolicitud": "obtenerEstatusDocumentosPorSolicitud()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L132 | neighbors=[repository.ts]
 
 ## Instructions
 

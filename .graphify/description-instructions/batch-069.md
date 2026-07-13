@@ -1,4 +1,4 @@
-# Node Description Batch 70 of 86
+# Node Description Batch 70 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "id_page_fieldwithicon": "FieldWithIcon()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L395 | neighbors=[page.tsx]
+- "id_page_footercardstyle": "footerCardStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L160 | neighbors=[page.tsx]
+- "id_page_g3": "G3" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L13 | neighbors=[page.tsx]
+- "id_page_headerstyle": "headerStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L157 | neighbors=[page.tsx]
+- "id_page_infogridstyle": "infoGridStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L153 | neighbors=[page.tsx]
+- "id_page_inp": "INP" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L13 | neighbors=[page.tsx]
+- "id_page_inputstyle": "inputStyle" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L157 | neighbors=[page.tsx]
+- "id_page_itemgroupstyle": "itemGroupStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L152 | neighbors=[page.tsx]
+- "id_page_juzgadoaseguradodetallepage": "JuzgadoAseguradoDetallePage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/[id]/page.tsx:L32 | neighbors=[page.tsx]
+- "id_page_juzgadopuestadisposicionpage": "JuzgadoPuestaDisposicionPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/puesta-disposicion/[id]/page.tsx:L10 | neighbors=[page.tsx]
+- "id_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L153 | neighbors=[page.tsx]
+- "id_page_labelstyle": "labelStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L150 | neighbors=[page.tsx]
+- "id_page_labelsx": "labelSx" | kind=code-symbol | source=app/fiscalia/asegurados/[id]/page.tsx:L12 | neighbors=[page.tsx]
+- "id_page_labeltopstyle": "labelTopStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L158 | neighbors=[page.tsx]
+- "id_page_lbl": "LBL" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L9 | neighbors=[page.tsx]
+- "id_page_marcastyle": "marcaStyle" | kind=code-symbol | source=app/monitorista/detenidos/[id]/page.tsx:L129 | neighbors=[page.tsx]
+- "id_page_medidadetailpage": "MedidaDetailPage()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L15 | neighbors=[page.tsx]
+- "id_page_montorow": "MontoRow()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L409 | neighbors=[page.tsx]
+- "id_page_narrativaboxstyle": "narrativaBoxStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L154 | neighbors=[page.tsx]
 - "id_page_periodos": "PERIODOS" | kind=code-symbol | source=app/formato-n-medios-alternativos/[id]/page.tsx:L11 | neighbors=[page.tsx]
 - "id_page_props": "Props" | kind=code-symbol | source=app/fiscalia/asegurados/puesta-disposicion/[id]/page.tsx:L6 | neighbors=[page.tsx]
 - "id_page_puestadisposicionpage": "PuestaDisposicionPage()" | kind=code-symbol | source=app/fiscalia/asegurados/puesta-disposicion/[id]/page.tsx:L10 | neighbors=[page.tsx]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "id_route_put": "PUT()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/route.ts:L25 | neighbors=[route.ts]
 - "imprimir_page_printrow": "PrintRow()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L161 | neighbors=[page.tsx]
 - "incidentes_actions_bool": "bool()" | kind=code-symbol | source=lib/incidentes/actions.ts:L28 | neighbors=[actions.ts]
-- "incidentes_actions_canales": "CANALES" | kind=code-symbol | source=lib/incidentes/actions.ts:L31 | neighbors=[actions.ts]
-- "incidentes_actions_estatus": "ESTATUS" | kind=code-symbol | source=lib/incidentes/actions.ts:L33 | neighbors=[actions.ts]
-- "incidentes_actions_estatus_incidente": "ESTATUS_INCIDENTE" | kind=code-symbol | source=lib/incidentes/actions.ts:L33 | neighbors=[actions.ts]
-- "incidentes_actions_estatusincidente": "EstatusIncidente" | kind=code-symbol | source=lib/incidentes/actions.ts:L34 | neighbors=[actions.ts]
-- "incidentes_actions_sexos": "SEXOS" | kind=code-symbol | source=lib/incidentes/actions.ts:L35 | neighbors=[actions.ts]
-- "incidentes_actions_str": "str()" | kind=code-symbol | source=lib/incidentes/actions.ts:L25 | neighbors=[actions.ts]
-- "incidentes_actions_tipos_reporte": "TIPOS_REPORTE" | kind=code-symbol | source=lib/incidentes/actions.ts:L32 | neighbors=[actions.ts]
-- "incidentes_audit_accion": "Accion" | kind=code-symbol | source=lib/incidentes/audit.ts:L4 | neighbors=[audit.ts]
-- "incidentes_camara_page_th": "Th()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L125 | neighbors=[page.tsx]
-- "incidentes_camara_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/incidentes-camara/route.ts:L8 | neighbors=[route.ts]
-- "incidentes_camara_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/incidentes-camara/route.ts:L20 | neighbors=[route.ts]
-- "incidentes_camaras_page_reportesdeteccioncamarapage": "ReportesDeteccionCamaraPage()" | kind=code-symbol | source=app/incidentes_camaras/page.tsx:L13 | neighbors=[page.tsx]
-- "incidentes_historialincidente_badge": "Badge()" | kind=code-symbol | source=components/incidentes/HistorialIncidente.tsx:L138 | neighbors=[HistorialIncidente.tsx]
-- "incidentes_historialincidente_dato": "Dato()" | kind=code-symbol | source=components/incidentes/HistorialIncidente.tsx:L129 | neighbors=[HistorialIncidente.tsx]
-- "incidentes_historialincidente_fmt": "fmt()" | kind=code-symbol | source=components/incidentes/HistorialIncidente.tsx:L5 | neighbors=[HistorialIncidente.tsx]
-- "incidentes_historialincidente_pendiente": "Pendiente()" | kind=code-symbol | source=components/incidentes/HistorialIncidente.tsx:L146 | neighbors=[HistorialIncidente.tsx]
-- "incidentes_page_bitacoraincidentespage": "BitacoraIncidentesPage()" | kind=code-symbol | source=app/incidentes/page.tsx:L23 | neighbors=[page.tsx]
-- "incidentes_page_btnnuevostyle": "btnNuevoStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/page.tsx:L167 | neighbors=[page.tsx]
-- "incidentes_page_btnviewstyle": "btnViewStyle" | kind=code-symbol | source=app/incidentes/page.tsx:L165 | neighbors=[page.tsx]
 
 ## Instructions
 

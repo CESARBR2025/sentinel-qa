@@ -1,4 +1,4 @@
-# Node Description Batch 8 of 86
+# Node Description Batch 8 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -26,6 +26,7 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@a58a0f77049ab34a6a5b10e85183163716785b7d": "a58a0f7 Despachos" | kind=Commit | source=git | neighbors=[71912a4 Bitacora incluida, testing, 511fea4 Modulo de despacho, route.ts, route.ts, useDespacho.ts] | lang=pt
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@ec1b6584fcf4cc89f42581bdcc1f53587a5c5aaa": "ec1b658 implementando layaredArchitecture para rol de oficial" | kind=Commit | source=git | neighbors=[9ec6056 flujo de juzgado-monitorista co…, conexion, testing, 92393e7 flujo completado de juzgado, FormularioD1.tsx, page.tsx] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@ff9f8c2cf5f985441183c8ff42a3a0ae0fdc6baa": "ff9f8c2 Modulo de Auxiliares" | kind=Commit | source=git | neighbors=[160d1e1 Monitorista V1.1, actions.ts, mapper.ts, page.tsx, repository.ts, service.ts] | lang=nl
 - "emails_server": "server.ts" | kind=code-symbol | source=lib/emails/server.ts:L1 | neighbors=[service.ts, actions.ts, 16a63d4 Merge branch 'feature/testing' …, 1dbd480 flujo de liberaciones completado, 75ca4b2 Merge pull request #9 from pres…, 953d38a implementando vista de fiscalia] | lang=en
@@ -65,7 +66,6 @@ one-sentence description — no prose, no markdown fences.
 - "configuracion_page": "page.tsx" | kind=code-symbol | source=app/oficial/configuracion/page.tsx:L1 | neighbors=[16a63d4 Merge branch 'feature/testing' …, ac48eb1 Merge pull request #17 from pre…, c27a9ee fase prefinal, dc063f3 gestion de oficiales correctame…, ConfiguracionPerfilPage(), service.ts] | lang=en
 - "corralon_actions": "actions.ts" | kind=code-symbol | source=lib/corralon/actions.ts:L1 | neighbors=[16df128 flujo de corralones listo, 5a1b5d5 empezando corralon, obtenerDashboardCorralon(), obtenerSolicitudes(), TabSolicitudes, service.ts] | lang=en
 - "despacho_despachoform": "DespachoForm.tsx" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L1 | neighbors=[511fea4 Modulo de despacho, BTN, BTN_SM, DespachoForm(), Elemento, ERR] | lang=en
-- "despacho_route": "route.ts" | kind=code-symbol | source=app/api/incidentes/[id]/despacho/route.ts:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, a58a0f7 Despachos, ad3ec5f mejorando esto, f2c66e6 Extender roles y permisos finos…] | lang=en
 
 ## Instructions
 

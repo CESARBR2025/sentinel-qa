@@ -1,4 +1,4 @@
-# Node Description Batch 4 of 86
+# Node Description Batch 4 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -46,6 +46,7 @@ one-sentence description — no prose, no markdown fences.
 - "rol_servicios_mapper": "mapper.ts" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L1 | neighbors=[c27a9ee fase prefinal, rowToBodyCam(), rowToEstadoFuerzaConcepto(), rowToMedioCanalizacion(), rowToRadio(), rowToRolAsignacion()] | lang=en
 - "solicitudes_route": "route.ts" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L1 | neighbors=[126b4d1 Monitorista V1, 27dcb21 Merge branch 'feature/testing' …, 44ebbc4 Merge branch 'feature/testing' …, 46b2c89 Merge branch 'testing' into juz…, 5558751 feat: módulo Prevención del Del…, 5618308 guardado e evidencias con ed] | lang=en
 - "911_permisos": "permisos.ts" | kind=code-symbol | source=lib/911/permisos.ts:L1 | neighbors=[Accion, guardarPermiso(), guardarPlantillaSeccion(), obtenerPlantillaRol(), obtenerRolNombre(), PermisoSeccion] | lang=en
+- "911_service": "service.ts" | kind=code-symbol | source=lib/911/service.ts:L1 | neighbors=[repository.ts, contarPorEstatus(), listarIncidentes(), obtenerCatalogos(), obtenerIncidente(), obtenerIncidenteConExtras()] | lang=en
 - "admin_repository": "repository.ts" | kind=code-symbol | source=lib/admin/repository.ts:L1 | neighbors=[actions.ts, mapper.ts, rowToRol(), rowToUsuarioLista(), actualizarUsuario(), asignarRolUsuario()] | lang=en
 - "auth_helpers": "helpers.ts" | kind=code-symbol | source=lib/auth/helpers.ts:L1 | neighbors=[actions.ts, layout.tsx, layout.tsx, getUserWithRole(), rowToUserWithRole(), UserWithRole] | lang=en
 - "auxiliar_permisos": "permisos.ts" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L1 | neighbors=[actions.ts, page.tsx, Accion, guardarPermiso(), guardarPlantillaSeccion(), obtenerPermisosUsuario()] | lang=en
@@ -57,7 +58,6 @@ one-sentence description — no prose, no markdown fences.
 - "incidentes_types": "types.ts" | kind=code-symbol | source=lib/incidentes/types.ts:L1 | neighbors=[0d9172a mejorando flujo de 911-despacho, 290d651 feat(despacho): flujo integral …, ad3ec5f mejorando esto, HistorialIncidente.tsx, mapper.ts, repository.ts] | lang=en
 - "juridico_page": "page.tsx" | kind=code-symbol | source=app/prevencion/juridico/page.tsx:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 06c55f5 Merge branch 'feature/testing' …, 27dcb21 Merge branch 'feature/testing' …, 41ea169 Merge branch 'testing' into con…, 514a705 refactorizacion sql] | lang=en
 - "permisos_registro": "registro.ts" | kind=code-symbol | source=lib/permisos/registro.ts:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 5a1b5d5 empezando corralon, 77ddf58 Merge branch 'feature/testing' …] | lang=en
-- "911_service": "service.ts" | kind=code-symbol | source=lib/911/service.ts:L1 | neighbors=[repository.ts, contarPorEstatus(), listarIncidentes(), obtenerCatalogos(), obtenerIncidente(), obtenerIncidenteConExtras()] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@22b7b54fd301460187e0de0fea19c2647daf780e": "22b7b54 Merge branch 'feature/reportes' into feature/testing" | kind=Commit | source=git | neighbors=[18f5bac llamada en card, conexion, testing, 2516723 Modulo de permisos, 2dde720 Merge pull request #14 from pre…, 552d291 Merge branch 'testing' into con…] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@388b99707848ef0e0e02349ce0d31614ef0719ae": "388b997 Apartados para subir fotografias de los detenidos" | kind=Commit | source=git | neighbors=[page.tsx, SubirFotoDetenido.tsx, conexion, testing, de5682f Merge pull request #10 from pre…, FilaDetenidoRol.tsx] | lang=es
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@821abe04c3a968d9bb8106fe453d78e2df8be143": "821abe0 replicando flujo de fiscalia-> juzgado" | kind=Commit | source=git | neighbors=[11e8817 Merge branch 'testing' into juz…, actions.ts, actions.ts, CerrarCasoModal.tsx, mapper.ts, page.tsx] | lang=nl

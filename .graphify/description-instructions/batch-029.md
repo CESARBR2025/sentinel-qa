@@ -1,4 +1,4 @@
-# Node Description Batch 30 of 86
+# Node Description Batch 30 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_types_personaafectadarow": "PersonaAfectadaRow" | kind=code-symbol | source=lib/incidentes/types.ts:L62 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_reportecampodetalle": "ReporteCampoDetalle" | kind=code-symbol | source=lib/incidentes/types.ts:L207 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_reportecamporow": "ReporteCampoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L79 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "infracciones_service_generarfolioinfraccion": "generarFolioInfraccion()" | kind=code-symbol | source=features/via/infracciones/service.ts:L22 | neighbors=[service.ts, rellenarBase36(), .registrarNuevaInfraccionSV()]
+- "infracciones_service_rellenarbase36": "rellenarBase36()" | kind=code-symbol | source=features/via/infracciones/service.ts:L12 | neighbors=[service.ts, generarFolioInfraccion(), randomBase36Char()]
+- "infracciones_types_crearinfracciondto": "CrearInfraccionDTO" | kind=code-symbol | source=features/via/infracciones/types.ts:L1 | neighbors=[mapper.ts, service.ts, types.ts]
+- "infracciones_types_procesoestado": "ProcesoEstado" | kind=code-symbol | source=features/via/infracciones/types.ts:L160 | neighbors=[FormularioInfraccion.tsx, types.ts, ProcesoModal.tsx]
+- "legalidad_mapper_articulosmapper": "ArticulosMapper" | kind=code-symbol | source=features/via/legalidad/mapper.ts:L16 | neighbors=[mapper.ts, .toDomain(), service.ts]
 - "legalidad_service_articulosservice": "ArticulosService" | kind=code-symbol | source=features/via/legalidad/service.ts:L6 | neighbors=[actions.ts, service.ts, .obtenerFraccionesPorArticulo()]
 - "legalidad_types_fraccionley": "FraccionLey" | kind=code-symbol | source=features/via/legalidad/types.ts:L1 | neighbors=[mapper.ts, service.ts, types.ts]
 - "lib_detenidos_compartido_listardetenidospararol": "listarDetenidosParaRol()" | kind=code-symbol | source=lib/detenidos-compartido.ts:L47 | neighbors=[page.tsx, detenidos-compartido.ts, nombreDetenido()]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "oficial_mapper_rowtod1": "rowToD1()" | kind=code-symbol | source=lib/oficial/mapper.ts:L113 | neighbors=[mapper.ts, toStr(), rowToReporteDetalle()]
 - "oficial_mapper_rowtodespachoasignado": "rowToDespachoAsignado()" | kind=code-symbol | source=lib/oficial/mapper.ts:L93 | neighbors=[mapper.ts, toStr(), repository.ts]
 - "oficial_mapper_rowtoreporteresumen": "rowToReporteResumen()" | kind=code-symbol | source=lib/oficial/mapper.ts:L75 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "oficial_service_generarfoliounico": "generarFolioUnico()" | kind=code-symbol | source=lib/oficial/service.ts:L54 | neighbors=[service.ts, crearReporte(), generarFolio()]
-- "oficial_service_listardespachosasignados": "listarDespachosAsignados()" | kind=code-symbol | source=lib/oficial/service.ts:L210 | neighbors=[page.tsx, page.tsx, service.ts]
-- "oficial_service_obtenermiperfil": "obtenerMiPerfil()" | kind=code-symbol | source=lib/oficial/service.ts:L79 | neighbors=[page.tsx, service.ts, page.tsx]
-- "oficial_store_useoficialformstore": "useOficialFormStore" | kind=code-symbol | source=lib/oficial/store.ts:L137 | neighbors=[FormularioD1.tsx, FormularioRecorrido.tsx, store.ts]
-- "oficial_types_catalogoitem": "CatalogoItem" | kind=code-symbol | source=lib/oficial/types.ts:L193 | neighbors=[repository.ts, service.ts, types.ts]
-- "oficial_types_crearreportecampoinput": "CrearReporteCampoInput" | kind=code-symbol | source=lib/oficial/types.ts:L79 | neighbors=[repository.ts, service.ts, types.ts]
-- "oficial_types_ofireportecampo": "OfiReporteCampo" | kind=code-symbol | source=lib/oficial/types.ts:L40 | neighbors=[mapper.ts, types.ts, OfiReporteDetalle]
-- "permisos_core_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/permisos/core.ts:L78 | neighbors=[core.ts, aplicarPlantillaRol(), guardarPermisosSeccionesAction()]
 
 ## Instructions
 

@@ -186,15 +186,11 @@ function LoginContent() {
   const [failed,  setFailed]  = useState<'credentials'|'otp'|null>(null)
   const [focusOtpInput, setFocusOtpInput] = useState(false)
 
-  // Flujo de éxito: overlay (2800ms) → loader (1200ms) → dashboard
+  // Flujo de éxito: navegación directa sin loader overlay
   useEffect(() => {
     if (phase !== 'success') return
-    const t1 = setTimeout(() => {
-      ;(window as unknown as { __showLoader?: (msg: string, minMs?: number) => void })
-        .__showLoader?.('Cargando tablero...', 99999)
-    }, 2800)
-    const t2 = setTimeout(() => { window.location.href = fromPath }, 2800 + 1200)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
+    const t = setTimeout(() => { window.location.href = fromPath }, 1200)
+    return () => clearTimeout(t)
   }, [phase, fromPath])
 
   // Limpiar overlay en OTP mode para reintentos

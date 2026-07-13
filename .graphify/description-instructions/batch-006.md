@@ -1,4 +1,4 @@
-# Node Description Batch 7 of 86
+# Node Description Batch 7 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -33,6 +33,7 @@ one-sentence description — no prose, no markdown fences.
 - "liberaciones_page": "page.tsx" | kind=code-symbol | source=app/fiscalia/liberaciones/page.tsx:L1 | neighbors=[5bbdda8 Merge pull request #8 from pres…, 75ca4b2 Merge pull request #9 from pres…, 75e03e9 puliendo flujo de juzgado-liber…, 953d38a implementando vista de fiscalia, ff3622b Merge pull request #11 from pre…, ff6d3c2 juzgado] | lang=en
 - "roles_route": "route.ts" | kind=code-symbol | source=app/api/admin/roles/route.ts:L1 | neighbors=[11be750 Fase 1 de correccion - completa…, 27dcb21 Merge branch 'feature/testing' …, 356d3a7 Subir rol agregado, falta darle…, 44a01c3 fase 3-4-5, 44ebbc4 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed] | lang=en
 - "scripts_session_checkpoint": "session-checkpoint.mjs" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L1 | neighbors=[0d9172a mejorando flujo de 911-despacho, addDecision(), append(), args, budget(), budgetReport()] | lang=en
+- "scripts_trace_server": "trace-server.mjs" | kind=code-symbol | source=scripts/trace-server.mjs:L1 | neighbors=[11ee4f2 mejorando flujo de 911, __dirname, dirty, escapeRegex(), EXTENSIONS, fileMap] | lang=en
 - "steps_secciongarantia": "SeccionGarantia.tsx" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionGarantia.tsx:L1 | neighbors=[067c4de arreglando flujo de fiscalia  a…, 16a63d4 Merge branch 'feature/testing' …, 23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, ac48eb1 Merge pull request #17 from pre…, b5233a8 implementando via como modulo d…] | lang=en
 - "steps_seccionmotivo": "SeccionMotivo.tsx" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionMotivo.tsx:L1 | neighbors=[23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, b5233a8 implementando via como modulo d…, f7b1aac Merge branch 'feature/testing' …, PasoInfraccion.tsx, actions.ts] | lang=en
 - "subir_archivo_route": "route.ts" | kind=code-symbol | source=app/api/via/ciudadano/subir-archivo/route.ts:L1 | neighbors=[16a63d4 Merge branch 'feature/testing' …, 16df128 flujo de corralones listo, 1dbd480 flujo de liberaciones completado, 91c36bf validando orden de pago, ac48eb1 Merge pull request #17 from pre…, ad3ec5f mejorando esto] | lang=en
@@ -63,9 +64,8 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_infraccionesdashboard": "InfraccionesDashboard.tsx" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L1 | neighbors=[CapturarDatosInfractorModal.tsx, AVATAR_COLORS, EstatusInfracciones, getBadge(), getInitials(), hashColor()] | lang=en
 - "agente_juzgado_capturardetallesform": "CapturarDetallesForm.tsx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L1 | neighbors=[actions.ts, guardarDetallesAseguradoAction(), CapturarDetallesForm(), disabledSx, emptyItem(), EvidenciaItem] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@13f7f399992e81fb151dbac5fefc1deb171b965c": "13f7f39 Reporte-incidentes" | kind=Commit | source=git | neighbors=[conexion, testing, 27dcb21 Merge branch 'feature/testing' …, route.ts, actions.ts, FiltrosIncidencias.tsx] | lang=en
-- "commit:repo:github.com/presidenciaSJR/seguridad_publica@511fea4852dac57d7ddd8e358852e232259c8c75": "511fea4 Modulo de despacho" | kind=Commit | source=git | neighbors=[route.ts, conexion, testing, 0fe445e vista de oficial, aaab50d Merge branch 'main' of https://…, bf354f1 Nombre completo de quien captura] | lang=nl
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@511fea4852dac57d7ddd8e358852e232259c8c75": "511fea4 Modulo de despacho" | kind=Commit | source=git | neighbors=[route.ts, testing, 0fe445e vista de oficial, aaab50d Merge branch 'main' of https://…, bf354f1 Nombre completo de quien captura, ed748a6 fORMULARIO DE DENUNCIA CONCLUIDO] | lang=nl
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@6109a7ac819aa22f0e87f9e6347104c452537239": "6109a7a replicando flujo para fiscalia" | kind=Commit | source=git | neighbors=[TabSolicitudes.tsx, conexion, testing, a7218bd Merge pull request #4 from pres…, actions.ts, CapturarDetallesForm.tsx] | lang=pt
-- "commit:repo:github.com/presidenciaSJR/seguridad_publica@a58a0f77049ab34a6a5b10e85183163716785b7d": "a58a0f7 Despachos" | kind=Commit | source=git | neighbors=[71912a4 Bitacora incluida, testing, 511fea4 Modulo de despacho, route.ts, route.ts, useDespacho.ts] | lang=pt
 
 ## Instructions
 

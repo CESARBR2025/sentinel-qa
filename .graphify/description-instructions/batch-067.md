@@ -1,4 +1,4 @@
-# Node Description Batch 68 of 86
+# Node Description Batch 68 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "formato_n_atencion_victimas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_consolidado_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-consolidado/route.ts:L9 | neighbors=[route.ts]
+- "formato_n_eventos_page_formatoneventospage": "FormatoNEventosPage()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L12 | neighbors=[page.tsx]
+- "formato_n_eventos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L78 | neighbors=[page.tsx]
+- "formato_n_eventos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L74 | neighbors=[page.tsx]
+- "formato_n_eventos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_eventos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L17 | neighbors=[route.ts]
+- "formato_n_fge_page_td": "Td()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L108 | neighbors=[page.tsx]
+- "formato_n_fge_page_th": "Th()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L104 | neighbors=[page.tsx]
+- "formato_n_fge_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fge/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_fge_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-fge/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_fgr_page_td": "Td()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L108 | neighbors=[page.tsx]
+- "formato_n_fgr_page_th": "Th()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L104 | neighbors=[page.tsx]
+- "formato_n_fgr_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fgr/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_fgr_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-fgr/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_medios_alternativos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L96 | neighbors=[page.tsx]
+- "formato_n_medios_alternativos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L92 | neighbors=[page.tsx]
+- "formato_n_medios_alternativos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-medios-alternativos/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_medios_alternativos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-medios-alternativos/route.ts:L20 | neighbors=[route.ts]
 - "formato_n_rnd_page_formatonrndpage": "FormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L12 | neighbors=[page.tsx]
 - "formato_n_rnd_page_td": "Td()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L76 | neighbors=[page.tsx]
 - "formato_n_rnd_page_th": "Th()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L72 | neighbors=[page.tsx]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "historial_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/historial/route.ts:L7 | neighbors=[route.ts]
 - "hooks_usedespacho_despachodetalle": "DespachoDetalle" | kind=code-symbol | source=hooks/useDespacho.ts:L23 | neighbors=[useDespacho.ts]
 - "hooks_usedespacho_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useDespacho.ts:L9 | neighbors=[useDespacho.ts]
-- "hooks_usedespacho_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=hooks/useDespacho.ts:L14 | neighbors=[useDespacho.ts]
-- "hooks_usedespacho_vehiculooption": "VehiculoOption" | kind=code-symbol | source=hooks/useDespacho.ts:L4 | neighbors=[useDespacho.ts]
-- "hooks_useempleado_empleadoresult": "EmpleadoResult" | kind=code-symbol | source=hooks/useEmpleado.ts:L4 | neighbors=[useEmpleado.ts]
-- "hooks_useflota_filtrosflota": "FiltrosFlota" | kind=code-symbol | source=hooks/useFlota.ts:L9 | neighbors=[useFlota.ts]
-- "hooks_useflota_vehiculooption": "VehiculoOption" | kind=code-symbol | source=hooks/useFlota.ts:L4 | neighbors=[useFlota.ts]
-- "hooks_useincidente_incidentedetalle": "IncidenteDetalle" | kind=code-symbol | source=hooks/useIncidente.ts:L4 | neighbors=[useIncidente.ts]
-- "hooks_useincidente_useincidente": "useIncidente()" | kind=code-symbol | source=hooks/useIncidente.ts:L23 | neighbors=[useIncidente.ts]
-- "hooks_useincidentes_filtros": "Filtros" | kind=code-symbol | source=hooks/useIncidentes.ts:L10 | neighbors=[useIncidentes.ts]
-- "hooks_useincidentes_incidenteresumen": "IncidenteResumen" | kind=code-symbol | source=hooks/useIncidentes.ts:L4 | neighbors=[useIncidentes.ts]
-- "hooks_useincidentes_useincidentes": "useIncidentes()" | kind=code-symbol | source=hooks/useIncidentes.ts:L14 | neighbors=[useIncidentes.ts]
-- "hooks_usereportecampo_reportecampodetalle": "ReporteCampoDetalle" | kind=code-symbol | source=hooks/useReporteCampo.ts:L4 | neighbors=[useReporteCampo.ts]
-- "hooks_usereportecampo_usereportecampo": "useReporteCampo()" | kind=code-symbol | source=hooks/useReporteCampo.ts:L35 | neighbors=[useReporteCampo.ts]
-- "id_page_aseguradodetallepage": "AseguradoDetallePage()" | kind=code-symbol | source=app/fiscalia/asegurados/[id]/page.tsx:L31 | neighbors=[page.tsx]
-- "id_page_atenderdespachopage": "AtenderDespachoPage()" | kind=code-symbol | source=app/oficial/despachos/[id]/page.tsx:L13 | neighbors=[page.tsx]
-- "id_page_btn": "BTN" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L14 | neighbors=[page.tsx]
-- "id_page_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L156 | neighbors=[page.tsx]
-- "id_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L158 | neighbors=[page.tsx]
-- "id_page_campo": "Campo()" | kind=code-symbol | source=app/monitorista/detenidos/[id]/page.tsx:L117 | neighbors=[page.tsx]
-- "id_page_campos": "CAMPOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L16 | neighbors=[page.tsx]
 
 ## Instructions
 

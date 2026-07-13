@@ -1,4 +1,4 @@
-# Node Description Batch 53 of 86
+# Node Description Batch 53 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "wireframes_wf_d": "wf-d.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeD()]
+- "wireframes_wf_e": "wf-e.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeE()]
+- "2fa_page_twofactorpage": "TwoFactorPage()" | kind=code-symbol | source=app/(auth)/login/2fa/page.tsx:L6 | neighbors=[page.tsx]
+- "911_filtrosincidentes_btnbuscarstyle": "btnBuscarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L128 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_btnlimpiarstyle": "btnLimpiarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L129 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_canales": "CANALES" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L15 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_catalogoitem": "CatalogoItem" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L8 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_estatus": "ESTATUS" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L21 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_fieldstyle": "fieldStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L125 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_inputstyle": "inputStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L127 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L126 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_props": "Props" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L10 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_wrapperstyle": "wrapperStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L124 | neighbors=[FiltrosIncidentes.tsx]
+- "911_modulecard_modulecard": "ModuleCard()" | kind=code-symbol | source=components/911/ModuleCard.tsx:L19 | neighbors=[ModuleCard.tsx]
+- "911_modulecard_modulecardprops": "ModuleCardProps" | kind=code-symbol | source=components/911/ModuleCard.tsx:L11 | neighbors=[ModuleCard.tsx]
+- "911_modulecard_stat": "Stat" | kind=code-symbol | source=components/911/ModuleCard.tsx:L6 | neighbors=[ModuleCard.tsx]
+- "911_pagination_arrowbtnstyle": "arrowBtnStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L130 | neighbors=[Pagination.tsx]
+- "911_pagination_containerstyle": "containerStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L109 | neighbors=[Pagination.tsx]
+- "911_pagination_infostyle": "infoStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L118 | neighbors=[Pagination.tsx]
 - "911_pagination_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L127 | neighbors=[Pagination.tsx]
 - "911_pagination_pagenumberstyle": "pageNumberStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L140 | neighbors=[Pagination.tsx]
 - "911_pagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/911/Pagination.tsx:L5 | neighbors=[Pagination.tsx]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "admin_transito_modaldestituiroficial_props": "Props" | kind=code-symbol | source=components/admin-transito/ModalDestituirOficial.tsx:L7 | neighbors=[ModalDestituirOficial.tsx]
 - "admin_transito_modalreactivaroficial_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L9 | neighbors=[ModalReactivarOficial.tsx]
 - "admin_transito_modalreactivaroficial_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L38 | neighbors=[ModalReactivarOficial.tsx]
-- "admin_transito_modalreactivaroficial_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L28 | neighbors=[ModalReactivarOficial.tsx]
-- "admin_transito_modalreactivaroficial_modalreactivaroficial": "ModalReactivarOficial()" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L262 | neighbors=[ModalReactivarOficial.tsx]
-- "admin_transito_modalreactivaroficial_patrullaselect": "PatrullaSelect()" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L55 | neighbors=[ModalReactivarOficial.tsx]
-- "admin_transito_modalreactivaroficial_props": "Props" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L15 | neighbors=[ModalReactivarOficial.tsx]
-- "admin_transito_modalreactivaroficial_selectstyle": "selectStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L50 | neighbors=[ModalReactivarOficial.tsx]
-- "admin_transito_nuevooficialform_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L8 | neighbors=[NuevoOficialForm.tsx]
-- "admin_transito_nuevooficialform_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L29 | neighbors=[NuevoOficialForm.tsx]
-- "admin_transito_nuevooficialform_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L19 | neighbors=[NuevoOficialForm.tsx]
-- "admin_transito_nuevooficialform_nuevooficialform": "NuevoOficialForm()" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L46 | neighbors=[NuevoOficialForm.tsx]
-- "admin_transito_nuevooficialform_props": "Props" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L14 | neighbors=[NuevoOficialForm.tsx]
-- "admin_transito_nuevooficialform_selectstyle": "selectStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L41 | neighbors=[NuevoOficialForm.tsx]
-- "admin_transito_oficialestable_accionmodal": "AccionModal" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L38 | neighbors=[OficialesTable.tsx]
-- "admin_transito_oficialestable_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L11 | neighbors=[OficialesTable.tsx]
-- "admin_transito_oficialestable_oficial": "Oficial" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L17 | neighbors=[OficialesTable.tsx]
-- "admin_transito_oficialestable_oficialestable": "OficialesTable()" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L52 | neighbors=[OficialesTable.tsx]
-- "admin_transito_oficialestable_props": "Props" | kind=code-symbol | source=components/admin-transito/OficialesTable.tsx:L32 | neighbors=[OficialesTable.tsx]
-- "admin_transito_page_admintransitodashboardpage": "AdminTransitoDashboardPage()" | kind=code-symbol | source=app/admin-transito/page.tsx:L4 | neighbors=[page.tsx]
-- "admin_transito_patrullaselector_patrullaselector": "PatrullaSelector()" | kind=code-symbol | source=components/admin-transito/PatrullaSelector.tsx:L12 | neighbors=[PatrullaSelector.tsx]
-- "admin_transito_patrullaselector_props": "Props" | kind=code-symbol | source=components/admin-transito/PatrullaSelector.tsx:L7 | neighbors=[PatrullaSelector.tsx]
 
 ## Instructions
 

@@ -1,4 +1,4 @@
-# Node Description Batch 48 of 86
+# Node Description Batch 48 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "prevencion_permisos_obtenerrolnombre": "obtenerRolNombre()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L38 | neighbors=[permisos.ts, tieneAccesoSeccion()]
+- "prevencion_printbutton_printbutton": "PrintButton()" | kind=code-symbol | source=components/prevencion/PrintButton.tsx:L3 | neighbors=[page.tsx, PrintButton.tsx]
+- "prevencion_prorrogamodal_prorrogamodal": "ProrrogaModal()" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L6 | neighbors=[page.tsx, ProrrogaModal.tsx]
+- "prevencion_prorrogaviewermodal_prorrogaviewermodal": "ProrrogaViewerModal()" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L9 | neighbors=[page.tsx, ProrrogaViewerModal.tsx]
+- "prevencion_repository_getfichasactivas": "getFichasActivas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L162 | neighbors=[route.ts, repository.ts]
+- "prevencion_repository_getfichasbusqueda": "getFichasBusqueda()" | kind=code-symbol | source=lib/prevencion/repository.ts:L40 | neighbors=[page.tsx, repository.ts]
+- "prevencion_repository_getfichasbusquedafiltradas": "getFichasBusquedaFiltradas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L177 | neighbors=[route.ts, repository.ts]
+- "prevencion_repository_getmedidas": "getMedidas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L5 | neighbors=[page.tsx, repository.ts]
+- "prevencion_repository_getmedidasfiltradas": "getMedidasFiltradas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L124 | neighbors=[route.ts, repository.ts]
+- "prevencion_repository_getmedidasstats": "getMedidasStats()" | kind=code-symbol | source=lib/prevencion/repository.ts:L28 | neighbors=[page.tsx, repository.ts]
+- "prevencion_repository_getseguimientotipos": "getSeguimientoTipos()" | kind=code-symbol | source=lib/prevencion/repository.ts:L169 | neighbors=[route.ts, repository.ts]
 - "prevencion_repository_getvisitamedidaids": "getVisitaMedidaIds()" | kind=code-symbol | source=lib/prevencion/repository.ts:L23 | neighbors=[page.tsx, repository.ts]
 - "prevencion_repository_listarautoridadesadicionales": "listarAutoridadesAdicionales()" | kind=code-symbol | source=lib/prevencion/repository.ts:L93 | neighbors=[page.tsx, repository.ts]
 - "prevencion_repository_listarseguimientos": "listarSeguimientos()" | kind=code-symbol | source=lib/prevencion/repository.ts:L109 | neighbors=[page.tsx, repository.ts]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_form_styles_btntiny": "btnTiny" | kind=code-symbol | source=components/reportes/form-styles.ts:L9 | neighbors=[page.tsx, form-styles.ts]
 - "reportes_formato_n_armas_aseguradas_service_actualizararmaasegurada": "actualizarArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L104 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts]
 - "reportes_formato_n_armas_aseguradas_service_creararmaasegurada": "crearArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L95 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts]
-- "reportes_formato_n_armas_aseguradas_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L49 | neighbors=[formato-n-armas-aseguradas-service.ts, rowTo()]
-- "reportes_formato_n_armas_aseguradas_service_formatonarmaasegurada": "FormatoNArmaAsegurada" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L37 | neighbors=[formato-n-armas-aseguradas-service.ts, formato-n-consolidado-service.ts]
-- "reportes_formato_n_armas_aseguradas_service_obtenerarmasaseguradasporfecha": "obtenerArmasAseguradasPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L80 | neighbors=[formato-n-armas-aseguradas-service.ts, formato-n-consolidado-service.ts]
-- "reportes_formato_n_atencion_victimas_service_actualizaratencionvictimas": "actualizarAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L93 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts]
-- "reportes_formato_n_atencion_victimas_service_crearatencionvictimas": "crearAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L84 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts]
-- "reportes_formato_n_atencion_victimas_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L25 | neighbors=[formato-n-atencion-victimas-service.ts, rowTo()]
-- "reportes_formato_n_atencion_victimas_service_formatonatencionvictimas": "FormatoNAtencionVictimas" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L7 | neighbors=[formato-n-atencion-victimas-service.ts, formato-n-consolidado-service.ts]
-- "reportes_formato_n_atencion_victimas_service_parseperiodo": "parsePeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L20 | neighbors=[formato-n-atencion-victimas-service.ts, rowTo()]
-- "reportes_formato_n_atencion_victimas_service_periodos": "PERIODOS" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L3 | neighbors=[page.tsx, formato-n-atencion-victimas-service.ts]
-- "reportes_formato_n_consolidado_service_enumerarfechas": "enumerarFechas()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L46 | neighbors=[formato-n-consolidado-service.ts, obtenerFormatoNConsolidadoRango()]
-- "reportes_formato_n_consolidado_service_obtenerformatonconsolidado": "obtenerFormatoNConsolidado()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L32 | neighbors=[formato-n-consolidado-service.ts, porPeriodos()]
 
 ## Instructions
 

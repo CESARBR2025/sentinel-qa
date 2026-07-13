@@ -1,4 +1,4 @@
-# Node Description Batch 34 of 86
+# Node Description Batch 34 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,11 +17,22 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "rol_servicios_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L12 | neighbors=[mapper.ts, rowToRolAsignacion(), rowToRolServicio()]
+- "rol_servicios_repository_getrolbyid": "getRolById()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L13 | neighbors=[actions.ts, repository.ts, service.ts]
+- "rol_servicios_repository_getuserrolename": "getUserRoleName()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L88 | neighbors=[catalogos-actions.ts, repository.ts, service.ts]
+- "rol_servicios_rolinputs_rolfield": "RolField()" | kind=code-symbol | source=components/rol_servicios/RolInputs.tsx:L9 | neighbors=[page.tsx, RolInputs.tsx, RegistroIncidenteForm.tsx]
+- "sasiete_mapper_maprowtoordenpago": "mapRowToOrdenPago()" | kind=code-symbol | source=features/via/saSiete/mapper.ts:L23 | neighbors=[mapper.ts, repository.ts, service.ts]
+- "sasiete_types_ordenpagosa7": "OrdenPagoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L9 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "scripts_load_context_buildinstructions": "buildInstructions()" | kind=code-symbol | source=scripts/load-context.mjs:L79 | neighbors=[load-context.mjs, resolvePath(), main()]
+- "scripts_session_checkpoint_adddecision": "addDecision()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L188 | neighbors=[session-checkpoint.mjs, ensureDir(), getSessionId()]
 - "scripts_session_checkpoint_budgetreport": "budgetReport()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L160 | neighbors=[session-checkpoint.mjs, budget(), formatNum()]
 - "scripts_session_checkpoint_ensuredir": "ensureDir()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L22 | neighbors=[session-checkpoint.mjs, addDecision(), append()]
 - "scripts_session_checkpoint_last": "last()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L56 | neighbors=[session-checkpoint.mjs, formatEvent(), parseEvent()]
 - "scripts_session_checkpoint_parseevent": "parseEvent()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L31 | neighbors=[session-checkpoint.mjs, getSessionId(), last()]
 - "scripts_session_checkpoint_pendingdecisions": "pendingDecisions()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L209 | neighbors=[session-checkpoint.mjs, formatEvent(), getSessionId()]
+- "scripts_trace_server_findmatchingbrace": "findMatchingBrace()" | kind=code-symbol | source=scripts/trace-server.mjs:L147 | neighbors=[trace-server.mjs, findFunctionBodyFallback(), isInsideLiteral()]
+- "scripts_trace_utils_checkdirtyfiles": "checkDirtyFiles()" | kind=code-symbol | source=scripts/trace-utils.mjs:L43 | neighbors=[trace-components.mjs, trace-server.mjs, trace-utils.mjs]
+- "scripts_trace_utils_restorebackups": "restoreBackups()" | kind=code-symbol | source=scripts/trace-utils.mjs:L69 | neighbors=[trace-components.mjs, trace-server.mjs, trace-utils.mjs]
 - "services_analistaservice_analistaservice": "analistaService" | kind=code-symbol | source=services/analistaService.ts:L2 | neighbors=[formAnalisis.tsx, BitacoraIPH.tsx, analistaService.ts]
 - "shared_detalleinfraccionview_timeago": "timeAgo()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L126 | neighbors=[DetalleInfraccionView.tsx, SummaryBar(), formatDate()]
 - "shared_direcciongooglemaps_direccion": "Direccion" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L6 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm.tsx, DireccionGoogleMaps.tsx]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "911_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/911/permisos.ts:L9 | neighbors=[permisos.ts, tieneAccesoSeccion()]
 - "911_repository_contarporestatus": "contarPorEstatus()" | kind=code-symbol | source=lib/911/repository.ts:L144 | neighbors=[repository.ts, service.ts]
 - "911_repository_listarincidentes": "listarIncidentes()" | kind=code-symbol | source=lib/911/repository.ts:L42 | neighbors=[repository.ts, service.ts]
-- "911_repository_listarincidentesrecientes": "listarIncidentesRecientes()" | kind=code-symbol | source=lib/911/repository.ts:L122 | neighbors=[repository.ts, page.tsx]
-- "911_repository_obtenercatalogos": "obtenerCatalogos()" | kind=code-symbol | source=lib/911/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "911_repository_obtenerincidente": "obtenerIncidente()" | kind=code-symbol | source=lib/911/repository.ts:L89 | neighbors=[repository.ts, service.ts]
-- "911_repository_obtenerincidenteconextras": "obtenerIncidenteConExtras()" | kind=code-symbol | source=lib/911/repository.ts:L103 | neighbors=[repository.ts, service.ts]
-- "911_repository_obtenerstats": "obtenerStats()" | kind=code-symbol | source=lib/911/repository.ts:L25 | neighbors=[repository.ts, service.ts]
-- "911_repository_obtenertiposincidente": "obtenerTiposIncidente()" | kind=code-symbol | source=lib/911/repository.ts:L136 | neighbors=[repository.ts, service.ts]
-- "911_service_getconteoestatus": "getConteoEstatus()" | kind=code-symbol | source=lib/911/service.ts:L33 | neighbors=[service.ts, page.tsx]
-- "911_service_getincidenteconextras": "getIncidenteConExtras()" | kind=code-symbol | source=lib/911/service.ts:L25 | neighbors=[service.ts, page.tsx]
-- "911_service_getincidentespaginados": "getIncidentesPaginados()" | kind=code-symbol | source=lib/911/service.ts:L12 | neighbors=[service.ts, page.tsx]
-- "911_service_gettiposincidente": "getTiposIncidente()" | kind=code-symbol | source=lib/911/service.ts:L29 | neighbors=[service.ts, page.tsx]
-- "911_types_incidenteresumen": "IncidenteResumen" | kind=code-symbol | source=lib/911/types.ts:L1 | neighbors=[mapper.ts, types.ts]
 
 ## Instructions
 

@@ -1,4 +1,4 @@
-# Node Description Batch 32 of 86
+# Node Description Batch 32 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,14 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "prevencion_types_solicitudc4": "SolicitudC4" | kind=code-symbol | source=lib/prevencion/types.ts:L90 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "prevencion_types_solicitudinformacion": "SolicitudInformacion" | kind=code-symbol | source=lib/prevencion/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "prevencion_types_visitadomiciliaria": "VisitaDomiciliaria" | kind=code-symbol | source=lib/prevencion/types.ts:L111 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "radio_formrondinescalado_formrondinescalado": "FormRondinEscalado()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L27 | neighbors=[FormRondinEscalado.tsx, ahoraLocal(), page.tsx]
+- "radio_input": "Input.tsx" | kind=code-symbol | source=components/911/radio/Input.tsx:L1 | neighbors=[InputProps, SentinelInput(), 4d4a9b7 formulario de notificaciones po…]
+- "reportes_d1_route_generarfoliodenunciaunico": "generarFolioDenunciaUnico()" | kind=code-symbol | source=app/api/reportes-d1/route.ts:L23 | neighbors=[route.ts, generarFolioDenuncia(), POST()]
+- "reportes_form_styles_btnprimario": "btnPrimario()" | kind=code-symbol | source=components/reportes/form-styles.ts:L7 | neighbors=[page.tsx, page.tsx, form-styles.ts]
+- "reportes_form_styles_btnsecundario": "btnSecundario" | kind=code-symbol | source=components/reportes/form-styles.ts:L5 | neighbors=[page.tsx, page.tsx, form-styles.ts]
 - "reportes_form_styles_inputstyle": "inputStyle" | kind=code-symbol | source=components/reportes/form-styles.ts:L3 | neighbors=[page.tsx, page.tsx, form-styles.ts]
 - "reportes_form_styles_label": "Label()" | kind=code-symbol | source=components/reportes/form-styles.ts:L13 | neighbors=[page.tsx, page.tsx, form-styles.ts]
 - "reportes_form_styles_sectionbody": "sectionBody" | kind=code-symbol | source=components/reportes/form-styles.ts:L22 | neighbors=[page.tsx, page.tsx, form-styles.ts]
@@ -49,14 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_incidentes_mapper_rowtoreportediario": "rowToReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L11 | neighbors=[mapper.ts, toNum(), repository.ts]
 - "reportes_incidentes_mapper_rowtoreportesemanal": "rowToReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L20 | neighbors=[mapper.ts, toNum(), repository.ts]
 - "reportes_incidentes_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteDiario(), rowToReporteSemanal()]
-- "reportes_incidentes_types_reportediariorow": "ReporteDiarioRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "reportes_incidentes_types_reportesemanalrow": "ReporteSemanalRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L8 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "reportes_menuoption_optionsquare": "OptionSquare()" | kind=code-symbol | source=components/reportes/menuOption.tsx:L19 | neighbors=[page.tsx, menuOption.tsx, page.tsx]
-- "reportes_operativos_mapper_rowtoarma": "rowToArma()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L78 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtocateo": "rowToCateo()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L30 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtodetencioninc": "rowToDetencionInc()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L50 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtodetencionofi": "rowToDetencionOfi()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L40 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_operativos_mapper_rowtodroga": "rowToDroga()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L87 | neighbors=[mapper.ts, toStr(), repository.ts]
 
 ## Instructions
 

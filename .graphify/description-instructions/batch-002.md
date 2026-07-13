@@ -1,4 +1,4 @@
-# Node Description Batch 3 of 86
+# Node Description Batch 3 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -58,13 +58,13 @@ one-sentence description — no prose, no markdown fences.
 - "incidentes_service": "service.ts" | kind=code-symbol | source=lib/incidentes/service.ts:L1 | neighbors=[0d9172a mejorando flujo de 911-despacho, 13f7f39 Reporte-incidentes, 22b7b54 Merge branch 'feature/reportes'…, 290d651 feat(despacho): flujo integral …, 552d291 Merge branch 'testing' into con…, 5ef7cf3 Agregar los campos faltantes] | lang=en
 - "monitorista_permisos": "permisos.ts" | kind=code-symbol | source=lib/monitorista/permisos.ts:L1 | neighbors=[actions.ts, 27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, f2c66e6 Extender roles y permisos finos…, route.ts] | lang=en
 - "oficial_store": "store.ts" | kind=code-symbol | source=lib/oficial/store.ts:L1 | neighbors=[0c31cc2 Merge branch 'testing' into juz…, 0d9172a mejorando flujo de 911-despacho, 13f7f39 Reporte-incidentes, 22b7b54 Merge branch 'feature/reportes'…, 44ebbc4 Merge branch 'feature/testing' …, 458bbfb registro de reporte de campo - …] | lang=en
+- "ciudadano_page": "page.tsx" | kind=code-symbol | source=app/agente_911/ciudadano/page.tsx:L1 | neighbors=[permisos.ts, tieneAccesoSeccion(), service.ts, getCatalogos(), Formulario911.tsx, Ciudadano911Page()] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@0b210fa6152f4caa2943cf28b5e12d813c87664c": "0b210fa Merge pull request #12 from presidenciaSJR/conexion" | kind=Commit | source=git | neighbors=[actions.ts, mapper.ts, types.ts, actions.ts, LiberacionesDashboard.tsx, LiberacionesTable.tsx] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@dc063f37c7d04fa2a7c98be48e93ed98a58c35b5": "dc063f3 gestion de oficiales correctamente" | kind=Commit | source=git | neighbors=[91c36bf validando orden de pago, actions.ts, layout.tsx, ModalDestituirOficial.tsx, ModalReactivarOficial.tsx, NuevoOficialForm.tsx] | lang=nl
 - "d1_noiniciada_page": "page.tsx" | kind=code-symbol | source=app/d1_noiniciada/page.tsx:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 22b7b54 Merge branch 'feature/reportes'…, 2516723 Modulo de permisos, 41ea169 Merge branch 'testing' into con…, 4c9fa8a vista de reporte de d1 no inici…] | lang=en
 - "dashboard_module_cards": "module-cards.tsx" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 06c55f5 Merge branch 'feature/testing' …, 0e33bf6 feat: módulo Admin, Prórroga, F…, 11e8817 Merge branch 'testing' into juz…, 126b4d1 Monitorista V1] | lang=en
 - "sin_robos_page": "page.tsx" | kind=code-symbol | source=app/sin_robos/page.tsx:L1 | neighbors=[03f8b2a implementado rbac, 046f18c Merge pull request #19 from pre…, 156c925 vista de reporte de sin robos, 1acddac Merge branch 'feature/testing' …, 22b7b54 Merge branch 'feature/reportes'…, 2516723 Modulo de permisos] | lang=en
 - "agente_liberaciones_repository": "repository.ts" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L1 | neighbors=[actualizarInfraccionEstatus(), actualizarInfractor(), actualizarRevisionDocumento(), actualizarSolicitudEstatus(), insertarOrdenPago(), obtenerConceptoPorFraccion()] | lang=en
-- "ciudadano_page": "page.tsx" | kind=code-symbol | source=app/agente_911/ciudadano/page.tsx:L1 | neighbors=[permisos.ts, tieneAccesoSeccion(), service.ts, getCatalogos(), Formulario911.tsx, Ciudadano911Page()] | lang=en
 - "commit:repo:github.com/presidenciaSJR/seguridad_publica@090c4dd6c28d10a74ad8eec7001e6fa9a4b5e8b5": "090c4dd vista de fiscalia" | kind=Commit | source=git | neighbors=[actions.ts, page.tsx, ProfileDropdown.tsx, repository.ts, service.ts, ToastExito.tsx] | lang=nl
 
 ## Instructions

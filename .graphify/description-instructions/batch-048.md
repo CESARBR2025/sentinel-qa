@@ -1,4 +1,4 @@
-# Node Description Batch 49 of 86
+# Node Description Batch 49 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_formato_n_armas_aseguradas_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L49 | neighbors=[formato-n-armas-aseguradas-service.ts, rowTo()]
+- "reportes_formato_n_armas_aseguradas_service_formatonarmaasegurada": "FormatoNArmaAsegurada" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L37 | neighbors=[formato-n-armas-aseguradas-service.ts, formato-n-consolidado-service.ts]
+- "reportes_formato_n_armas_aseguradas_service_obtenerarmasaseguradasporfecha": "obtenerArmasAseguradasPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L80 | neighbors=[formato-n-armas-aseguradas-service.ts, formato-n-consolidado-service.ts]
+- "reportes_formato_n_atencion_victimas_service_actualizaratencionvictimas": "actualizarAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L93 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts]
+- "reportes_formato_n_atencion_victimas_service_crearatencionvictimas": "crearAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L84 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts]
+- "reportes_formato_n_atencion_victimas_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L25 | neighbors=[formato-n-atencion-victimas-service.ts, rowTo()]
+- "reportes_formato_n_atencion_victimas_service_formatonatencionvictimas": "FormatoNAtencionVictimas" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L7 | neighbors=[formato-n-atencion-victimas-service.ts, formato-n-consolidado-service.ts]
+- "reportes_formato_n_atencion_victimas_service_parseperiodo": "parsePeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L20 | neighbors=[formato-n-atencion-victimas-service.ts, rowTo()]
+- "reportes_formato_n_atencion_victimas_service_periodos": "PERIODOS" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L3 | neighbors=[page.tsx, formato-n-atencion-victimas-service.ts]
+- "reportes_formato_n_consolidado_service_enumerarfechas": "enumerarFechas()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L46 | neighbors=[formato-n-consolidado-service.ts, obtenerFormatoNConsolidadoRango()]
+- "reportes_formato_n_consolidado_service_obtenerformatonconsolidado": "obtenerFormatoNConsolidado()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L32 | neighbors=[formato-n-consolidado-service.ts, porPeriodos()]
 - "reportes_formato_n_consolidado_service_porperiodos": "porPeriodos()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L20 | neighbors=[formato-n-consolidado-service.ts, obtenerFormatoNConsolidado()]
 - "reportes_formato_n_eventos_service_actualizarevento": "actualizarEvento()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L106 | neighbors=[route.ts, formato-n-eventos-service.ts]
 - "reportes_formato_n_eventos_service_buscarincidentesporrango": "buscarIncidentesPorRango()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L82 | neighbors=[route.ts, formato-n-eventos-service.ts]
@@ -46,17 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_formato_n_rnd_service_buscardetencionesporrango": "buscarDetencionesPorRango()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L76 | neighbors=[route.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_crearrnd": "crearRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L58 | neighbors=[route.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L14 | neighbors=[formato-n-rnd-service.ts, rowTo()]
-- "reportes_formato_n_rnd_service_formatonrnd": "FormatoNRnd" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L3 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
-- "reportes_formato_n_rnd_service_obtenerrndporfecha": "obtenerRndPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L44 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
-- "reportes_incidentes_repository_obtenerreportediario": "obtenerReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "reportes_incidentes_repository_obtenerreportesemanal": "obtenerReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/repository.ts:L34 | neighbors=[repository.ts, service.ts]
-- "reportes_incidentes_service_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L4 | neighbors=[service.ts, combinar()]
-- "reportes_incidentes_service_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L5 | neighbors=[service.ts, combinar()]
-- "reportes_incidentes_types_reporteincidentecombinado": "ReporteIncidenteCombinado" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L25 | neighbors=[service.ts, types.ts]
-- "reportes_operativos_mapper_rowtoreportecampogeneral": "rowToReporteCampoGeneral()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L105 | neighbors=[mapper.ts, toStr()]
-- "reportes_operativos_mapper_rowtoreportecampoincidentegeneral": "rowToReporteCampoIncidenteGeneral()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L130 | neighbors=[mapper.ts, toStr()]
-- "reportes_operativos_repository_obtenerdrogas": "obtenerDrogas()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L196 | neighbors=[repository.ts, service.ts]
-- "reportes_operativos_repository_obtenerextorsiones": "obtenerExtorsiones()" | kind=code-symbol | source=lib/reportes-operativos/repository.ts:L225 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 

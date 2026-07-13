@@ -1,4 +1,4 @@
-# Node Description Batch 62 of 86
+# Node Description Batch 62 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "consolidar_page_consolidarformatonpage": "ConsolidarFormatoNPage()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L98 | neighbors=[page.tsx]
+- "consolidar_page_diaconsolidado": "DiaConsolidado()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L178 | neighbors=[page.tsx]
+- "consolidar_page_evento": "Evento" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L11 | neighbors=[page.tsx]
+- "consolidar_page_fge": "Fge" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L35 | neighbors=[page.tsx]
+- "consolidar_page_fgr": "Fgr" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L36 | neighbors=[page.tsx]
+- "consolidar_page_linkbtn": "linkBtn" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L403 | neighbors=[page.tsx]
+- "consolidar_page_medios": "Medios" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L46 | neighbors=[page.tsx]
+- "consolidar_page_metric": "Metric()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L408 | neighbors=[page.tsx]
+- "consolidar_page_periodo": "Periodo" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L9 | neighbors=[page.tsx]
+- "consolidar_page_periodometricas": "PeriodoMetricas" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L21 | neighbors=[page.tsx]
+- "consolidar_page_periodometricasblocks": "PeriodoMetricasBlocks()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L417 | neighbors=[page.tsx]
+- "consolidar_page_rnd": "Rnd" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L38 | neighbors=[page.tsx]
+- "consolidar_page_tagcapturado": "tagCapturado" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L88 | neighbors=[page.tsx]
+- "consolidar_page_tagsincapturar": "tagSinCapturar" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L93 | neighbors=[page.tsx]
+- "consolidar_page_tdstyle": "tdStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L401 | neighbors=[page.tsx]
+- "consolidar_page_thstyle": "thStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L400 | neighbors=[page.tsx]
+- "consolidar_page_victimas": "Victimas" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L54 | neighbors=[page.tsx]
+- "contestacion_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/contestacion/route.ts:L7 | neighbors=[route.ts]
+- "corralon_actions_tabsolicitudes": "TabSolicitudes" | kind=code-symbol | source=lib/corralon/actions.ts:L26 | neighbors=[actions.ts]
 - "corralon_layout_corralonlayout": "CorralonLayout()" | kind=code-symbol | source=app/corralon/layout.tsx:L6 | neighbors=[layout.tsx]
 - "corralon_page_corralondashboardpage": "CorralonDashboardPage()" | kind=code-symbol | source=app/corralon/page.tsx:L5 | neighbors=[page.tsx]
 - "corralon_permisos_accion": "Accion" | kind=code-symbol | source=lib/corralon/permisos.ts:L5 | neighbors=[permisos.ts]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "d1_noiniciada_page_descargaspage": "DescargasPage()" | kind=code-symbol | source=app/d1_noiniciada/page.tsx:L13 | neighbors=[page.tsx]
 - "d1_page_reportesd1page": "ReportesD1Page()" | kind=code-symbol | source=app/d1/page.tsx:L13 | neighbors=[page.tsx]
 - "d1_service_tostr": "toStr()" | kind=code-symbol | source=lib/d1/service.ts:L3 | neighbors=[service.ts]
-- "dashboard_enable_2fa_card": "Card()" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L145 | neighbors=[enable-2fa.tsx]
-- "dashboard_enable_2fa_s": "s" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L164 | neighbors=[enable-2fa.tsx]
-- "dashboard_enable_2fa_step": "Step" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L5 | neighbors=[enable-2fa.tsx]
-- "dashboard_module_cards_alerticon": "AlertIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L17 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_bookicon": "BookIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L19 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_cameraicon": "CameraIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L21 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_charticon": "ChartIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L18 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_module": "Module" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L5 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_modulecard": "ModuleCard()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L76 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_modules": "MODULES" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L23 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_settingsicon": "SettingsIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L20 | neighbors=[module-cards.tsx]
-- "dashboard_module_cards_shieldicon": "ShieldIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L16 | neighbors=[module-cards.tsx]
-- "dashboard_page_dashboardpage": "DashboardPage()" | kind=code-symbol | source=app/dashboard/page.tsx:L9 | neighbors=[page.tsx]
-- "db_create_admin_admin": "ADMIN" | kind=code-symbol | source=lib/db/create-admin.ts:L14 | neighbors=[create-admin.ts]
-- "db_create_admin_main": "main()" | kind=code-symbol | source=lib/db/create-admin.ts:L21 | neighbors=[create-admin.ts]
-- "db_create_admin_pool": "pool" | kind=code-symbol | source=lib/db/create-admin.ts:L12 | neighbors=[create-admin.ts]
-- "db_schema_accounts": "accounts" | kind=code-symbol | source=lib/db/schema.ts:L43 | neighbors=[schema.ts]
-- "db_schema_sessions": "sessions" | kind=code-symbol | source=lib/db/schema.ts:L25 | neighbors=[schema.ts]
-- "db_schema_twofactors": "twoFactors" | kind=code-symbol | source=lib/db/schema.ts:L74 | neighbors=[schema.ts]
 
 ## Instructions
 

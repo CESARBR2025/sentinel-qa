@@ -1,4 +1,4 @@
-# Node Description Batch 55 of 86
+# Node Description Batch 55 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_despacho_page_agentedespachodashboardpage": "AgenteDespachoDashboardPage()" | kind=code-symbol | source=app/agente_despacho/page.tsx:L10 | neighbors=[page.tsx]
+- "agente_infracciones_capturardatosinfractormodal_capturardatosinfractormodal": "CapturarDatosInfractorModal()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L36 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_capturardatosinfractormodal_datosform": "DatosForm()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L80 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_capturardatosinfractormodal_field": "Field()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L538 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_capturardatosinfractormodal_fieldname": "FieldName" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L18 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_capturardatosinfractormodal_isnodata": "isNoData()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L20 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_capturardatosinfractormodal_props": "Props" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L12 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_capturardatosinfractormodal_validatefield": "validateField()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L24 | neighbors=[CapturarDatosInfractorModal.tsx]
+- "agente_infracciones_infraccionesdashboard_avatar_colors": "AVATAR_COLORS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L10 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_estatusinfracciones": "EstatusInfracciones" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L40 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_getbadge": "getBadge()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L70 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L21 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L28 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_infraccionesdashboard": "InfraccionesDashboard()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L76 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_props": "Props" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L34 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L74 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L55 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionesdashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L47 | neighbors=[InfraccionesDashboard.tsx]
+- "agente_infracciones_infraccionestable_columns": "columns" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L23 | neighbors=[InfraccionesTable.tsx]
 - "agente_infracciones_infraccionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L5 | neighbors=[InfraccionesTable.tsx]
 - "agente_infracciones_infraccionestable_infraccionestable": "InfraccionesTable()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L31 | neighbors=[InfraccionesTable.tsx]
 - "agente_infracciones_infraccionestable_infraccionestableprops": "InfraccionesTableProps" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L16 | neighbors=[InfraccionesTable.tsx]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_infracciones_storecapturainfractor_capturainfractorstate": "CapturaInfractorState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L5 | neighbors=[storeCapturaInfractor.ts]
 - "agente_infracciones_storecapturainfractor_capturainfractorstore": "CapturaInfractorStore" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L36 | neighbors=[storeCapturaInfractor.ts]
 - "agente_infracciones_storecapturainfractor_initialstate": "initialState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L38 | neighbors=[storeCapturaInfractor.ts]
-- "agente_juzgado_actions_aseguradosjuzgadodata": "AseguradosJuzgadoData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L365 | neighbors=[actions.ts]
-- "agente_juzgado_actions_liberacionesdata": "LiberacionesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L249 | neighbors=[actions.ts]
-- "agente_juzgado_actions_obtenerdatosaseguradoaction": "obtenerDatosAseguradoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L165 | neighbors=[actions.ts]
-- "agente_juzgado_actions_solicitudesdata": "SolicitudesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L56 | neighbors=[actions.ts]
-- "agente_juzgado_botonverdetalle_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=components/agente_juzgado/BotonVerDetalle.tsx:L6 | neighbors=[BotonVerDetalle.tsx]
-- "agente_juzgado_capturardetallesform_disabledsx": "disabledSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L33 | neighbors=[CapturarDetallesForm.tsx]
-- "agente_juzgado_capturardetallesform_evidenciaitem": "EvidenciaItem" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L45 | neighbors=[CapturarDetallesForm.tsx]
-- "agente_juzgado_capturardetallesform_inputsx": "inputSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L21 | neighbors=[CapturarDetallesForm.tsx]
-- "agente_juzgado_capturardetallesform_labelsx": "labelSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L11 | neighbors=[CapturarDetallesForm.tsx]
-- "agente_juzgado_capturardetallesform_props": "Props" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L57 | neighbors=[CapturarDetallesForm.tsx]
-- "agente_juzgado_cargaroficiosection_campo": "Campo()" | kind=code-symbol | source=components/agente_juzgado/CargarOficioSection.tsx:L455 | neighbors=[CargarOficioSection.tsx]
-- "agente_juzgado_cargaroficiosection_cargaroficiosection": "CargarOficioSection()" | kind=code-symbol | source=components/agente_juzgado/CargarOficioSection.tsx:L23 | neighbors=[CargarOficioSection.tsx]
-- "agente_juzgado_cargaroficiosection_cargaroficiosectionprops": "CargarOficioSectionProps" | kind=code-symbol | source=components/agente_juzgado/CargarOficioSection.tsx:L9 | neighbors=[CargarOficioSection.tsx]
-- "agente_juzgado_cargaroficiosection_fileupload": "FileUpload()" | kind=code-symbol | source=components/agente_juzgado/CargarOficioSection.tsx:L470 | neighbors=[CargarOficioSection.tsx]
-- "agente_juzgado_cerrarcasomodal_cerrarcasoboton": "CerrarCasoBoton()" | kind=code-symbol | source=components/agente_juzgado/CerrarCasoModal.tsx:L6 | neighbors=[CerrarCasoModal.tsx]
-- "agente_juzgado_confirmacionmodal_confirmacionmodal": "ConfirmacionModal()" | kind=code-symbol | source=components/agente_juzgado/ConfirmacionModal.tsx:L38 | neighbors=[ConfirmacionModal.tsx]
-- "agente_juzgado_confirmacionmodal_confirmacionmodalprops": "ConfirmacionModalProps" | kind=code-symbol | source=components/agente_juzgado/ConfirmacionModal.tsx:L5 | neighbors=[ConfirmacionModal.tsx]
-- "agente_juzgado_confirmacionmodal_variantes": "VARIANTES" | kind=code-symbol | source=components/agente_juzgado/ConfirmacionModal.tsx:L17 | neighbors=[ConfirmacionModal.tsx]
-- "agente_juzgado_detallesaseguradoview_disabledsx": "disabledSx" | kind=code-symbol | source=components/agente_juzgado/DetallesAseguradoView.tsx:L18 | neighbors=[DetallesAseguradoView.tsx]
 
 ## Instructions
 

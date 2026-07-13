@@ -1,4 +1,4 @@
-# Node Description Batch 60 of 86
+# Node Description Batch 60 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "app_layout_metadata": "metadata" | kind=code-symbol | source=app/layout.tsx:L6 | neighbors=[layout.tsx]
+- "app_layout_rootlayout": "RootLayout()" | kind=code-symbol | source=app/layout.tsx:L11 | neighbors=[layout.tsx]
+- "app_page_rootpage": "RootPage()" | kind=code-symbol | source=app/page.tsx:L3 | neighbors=[page.tsx]
+- "asegurados_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/fiscalia/asegurados/page.tsx:L5 | neighbors=[page.tsx]
+- "asegurados_page_juzgadoaseguradospage": "JuzgadoAseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/page.tsx:L5 | neighbors=[page.tsx]
+- "atendidos_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/atendidos/route.ts:L7 | neighbors=[route.ts]
+- "auth_helpers_userwithrole": "UserWithRole" | kind=code-symbol | source=lib/auth/helpers.ts:L3 | neighbors=[helpers.ts]
+- "auth_layout_authlayout": "AuthLayout()" | kind=code-symbol | source=app/(auth)/layout.tsx:L7 | neighbors=[layout.tsx]
+- "auth_layout_metadata": "metadata" | kind=code-symbol | source=app/(auth)/layout.tsx:L3 | neighbors=[layout.tsx]
+- "auxiliar_actions_bool": "bool()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L17 | neighbors=[actions.ts]
+- "auxiliar_actions_str": "str()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L18 | neighbors=[actions.ts]
+- "auxiliar_page_auxiliarpage": "AuxiliarPage()" | kind=code-symbol | source=app/auxiliar/page.tsx:L11 | neighbors=[page.tsx]
+- "auxiliar_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L17 | neighbors=[permisos.ts]
+- "auxiliar_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L25 | neighbors=[permisos.ts]
+- "auxiliar_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L9 | neighbors=[permisos.ts]
+- "auxiliar_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L21 | neighbors=[permisos.ts]
+- "auxiliar_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L7 | neighbors=[permisos.ts]
+- "auxiliar_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L30 | neighbors=[permisos.ts]
+- "auxiliar_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L5 | neighbors=[permisos.ts]
 - "auxiliar_profiledropdownauxiliar_props": "Props" | kind=code-symbol | source=components/auxiliar/ProfileDropdownAuxiliar.tsx:L8 | neighbors=[ProfileDropdownAuxiliar.tsx]
 - "buscar_orden_route_get": "GET()" | kind=code-symbol | source=app/api/via/sa7/buscar-orden/route.ts:L6 | neighbors=[route.ts]
 - "busquedas_page_busquedaspage": "BusquedasPage()" | kind=code-symbol | source=app/prevencion/busquedas/page.tsx:L14 | neighbors=[page.tsx]
@@ -38,25 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "components_buttonverdetalles_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L6 | neighbors=[ButtonVerDetalles.tsx]
 - "components_capturardatostitularsection_capturardatostitularsection": "CapturarDatosTitularSection()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L15 | neighbors=[CapturarDatosTitularSection.tsx]
 - "components_capturardatostitularsection_field": "Field()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L671 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_fieldname": "FieldName" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L33 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L9 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_validatefield": "validateField()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L35 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturarinfractorsection_capturarinfractorsection": "CapturarInfractorSection()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L42 | neighbors=[CapturarInfractorSection.tsx]
-- "components_capturarinfractorsection_field": "Field()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L15 | neighbors=[CapturarInfractorSection.tsx]
-- "components_capturarinfractorsection_props": "Props" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L8 | neighbors=[CapturarInfractorSection.tsx]
-- "components_formularioinfraccion_addressdata": "AddressData" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L9 | neighbors=[FormularioInfraccion.tsx]
-- "components_formularioinfraccion_formularioinfraccion": "FormularioInfraccion()" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L71 | neighbors=[FormularioInfraccion.tsx]
-- "components_loadingprovider_getbasepath": "getBasePath()" | kind=code-symbol | source=components/LoadingProvider.tsx:L8 | neighbors=[LoadingProvider.tsx]
-- "components_loadingprovider_loadingprovider": "LoadingProvider()" | kind=code-symbol | source=components/LoadingProvider.tsx:L16 | neighbors=[LoadingProvider.tsx]
-- "components_loadingprovider_main_routes": "MAIN_ROUTES" | kind=code-symbol | source=components/LoadingProvider.tsx:L6 | neighbors=[LoadingProvider.tsx]
-- "components_mapadireccionregistro_containerstyle": "containerStyle" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L11 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapadireccionregistro_default_center": "DEFAULT_CENTER" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L7 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapadireccionregistro_libraries": "LIBRARIES" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L9 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapadireccionregistro_mapadireccionregistroprops": "MapaDireccionRegistroProps" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L17 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapsectionciudadano_containerstyle": "containerStyle" | kind=code-symbol | source=features/via/infracciones/components/MapSectionCiudadano.tsx:L7 | neighbors=[MapSectionCiudadano.tsx]
-- "components_mapsectionciudadano_mapsectionciudadano": "MapSectionCiudadano()" | kind=code-symbol | source=features/via/infracciones/components/MapSectionCiudadano.tsx:L14 | neighbors=[MapSectionCiudadano.tsx]
-- "components_mapsectionciudadano_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/MapSectionCiudadano.tsx:L9 | neighbors=[MapSectionCiudadano.tsx]
-- "components_modalentregargarantia_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/ModalEntregarGarantia.tsx:L8 | neighbors=[ModalEntregarGarantia.tsx]
 
 ## Instructions
 
