@@ -2,6 +2,7 @@ import type { AutoridadAdicional, BusquedaItem, Contestacion, FichaBusquedaDetal
 
 function toStr(val: unknown): string | null {
   if (val === null || val === undefined) return null
+  if (val instanceof Date) return val.toISOString()
   return String(val)
 }
 

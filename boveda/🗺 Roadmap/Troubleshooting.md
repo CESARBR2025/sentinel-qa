@@ -199,3 +199,26 @@ const { isLoaded } = useJsApiLoader({
 - `components/maps/GoogleMapPicker.tsx`
 - `components/911/whatsapp/RegistroIncidenteForm.tsx`
 - `app/911/ciudadano/Formulario911.tsx`
+
+---
+
+## TypeError: dateString.split is not a function
+
+**Síntoma**: `TypeError: dateString.split is not a function` en `calcularSemaforoVigencia` al llamar a `parseISO(fechaVencimiento)`.
+
+**Causa raíz**: El valor obtenido de la base de datos (e.g. `fecha_vencimiento`) es devuelto por el driver `pg` como un objeto `Date` de JavaScript. Al no pasar por un mapper (o cuando la función espera una fecha sin procesar), `parseISO` de `date-fns` recibe el objeto `Date` directamente y falla al intentar llamar a `split` (método de string).
+
+**Fix**:
+1. Modificar `calcularSemaforoVigencia` (`lib/prevencion/semaforo.ts`) para aceptar tanto `string` como `Date` (y `null`/`undefined`), y usar `parseISO` solo cuando sea de tipo `string`.
+2. Actualizar la función auxiliar `toStr` en `lib/prevencion/mapper.ts` para que convierta las instancias de `Date` a string usando `val.toISOString()` en lugar del comportamiento por defecto `String(val)`.
+
+---
+
+## Error: Objects are not valid as a React child (found: [object Date])
+
+**Síntoma**: `Error: Objects are not valid as a React child (found: [object Date])` al intentar renderizar `/prevencion/medidas`.
+
+**Causa raíz**: Las funciones `getMedidas` y `getMedidasStats` en `lib/prevencion/repository.ts` devolvían las filas resultantes de la consulta PostgreSQL directamente (`result.rows`) sin mapear. Dado que `node-postgres` devuelve las columnas de tipo `DATE` como objetos `Date` nativos, el motor de React fallaba al intentar renderizar `{r.fecha_vencimiento}` directamente en el JSX de la tabla de la página.
+
+**Fix**:
+1. Actualizar `getMedidas` y `getMedidasStats` en `lib/prevencion/repository.ts` para mapear el campo `fecha_vencimiento` explícitamente a un string ISO (`YYYY-MM-DD`) cuando es una instancia de `Date`, asegurando que no se entreguen objetos `Date` a los componentes de presentación de la página.

@@ -12,7 +12,12 @@ export async function getMedidas(filters: {
   if (filters.prorrogadas === '1') { values.push(true); sql += ` AND prorrogada = $${values.length}` }
   sql += ` ORDER BY creado_en DESC`
   const result = await query<Record<string, unknown>>(sql, values)
-  return result.rows
+  return result.rows.map(row => ({
+    ...row,
+    fecha_vencimiento: row.fecha_vencimiento instanceof Date 
+      ? row.fecha_vencimiento.toISOString().split('T')[0] 
+      : (row.fecha_vencimiento ? String(row.fecha_vencimiento) : null)
+  }))
 }
 
 export async function getVisitaMedidaIds(): Promise<string[]> {
@@ -20,11 +25,16 @@ export async function getVisitaMedidaIds(): Promise<string[]> {
   return result.rows.map(v => v.medida_id)
 }
 
-export async function getMedidasStats(): Promise<{ fecha_vencimiento: string; status: string }[]> {
-  const result = await query<{ fecha_vencimiento: string; status: string }>(
+export async function getMedidasStats(): Promise<{ fecha_vencimiento: string | null; status: string }[]> {
+  const result = await query<{ fecha_vencimiento: unknown; status: string }>(
     `SELECT fecha_vencimiento, status FROM medidas_proteccion`
   )
-  return result.rows
+  return result.rows.map(row => ({
+    fecha_vencimiento: row.fecha_vencimiento instanceof Date 
+      ? row.fecha_vencimiento.toISOString().split('T')[0] 
+      : (row.fecha_vencimiento ? String(row.fecha_vencimiento) : null),
+    status: String(row.status ?? '')
+  }))
 }
 
 export async function getFichasBusqueda(): Promise<any[]> {
