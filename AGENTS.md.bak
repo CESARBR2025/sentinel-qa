@@ -1,9 +1,52 @@
-<!-- BEGIN:nextjs-agent-rules -->
+<!-- BEGIN:youmindag -->
+# ⚡ Reglas de oro — leer antes de cada instrucción
 
+1. 📖 **Leer AGENTS.md + `boveda/Home.md` + `.youmindag/session.jsonl`** siempre al recibir una nueva instrucción
+
+2. 🔎 **Graphify primero, grep después.** Si `.graphify/graph.json` existe:
+   - Para orientación rápida: `graphify summary --graph .graphify/graph.json`
+   - Para buscar archivos: `graphify query "..."` 
+   - Para flujos entre módulos: `graphify path "A" "B"`
+   - Si graphify no está disponible → `boveda/🏗 Arquitectura/Estructura.md` como fallback
+
+3. 🗄 **BD real sobre documentación.** Si el proyecto tiene BD:
+   - Consultar la BD real (credenciales en `boveda/🛠 Stack/Variables de Entorno.md`)
+   - No adivinar esquemas ni confiar solo en la bóveda
+
+4. ✅ **Verificar cambios.** Al completar, ejecutar comandos de `boveda/🛠 Stack/Comandos.md` + `npx graphify update`
+
+---
+
+# 🔧 Verificación y subagentes
+
+- Después de cada cambio, ejecutar verificación (build/lint/typecheck). **No esperar a que el usuario lo pida.**
+- Para investigación del código base, usar `graphify query` o subagentes. **No leer archivos masivamente.**
+- Si el contexto se compacta, ejecutar `node scripts/session-checkpoint.mjs --summary` para recuperar el hilo.
+- Monitorear presupuesto de tokens: `node scripts/session-checkpoint.mjs --budget`.
+- Si el scope de la tarea crece más de lo previsto (muchos archivos para tarea pequeña), **pausar y consultar al usuario** antes de seguir.
+- Después de 10+ file edits, ejecutar `npx graphify update` para mantener el grafo sincronizado.
+- Registrar decisiones técnicas importantes: `node scripts/session-checkpoint.mjs --decision "..."`
+
+---
+
+## Cambio automático a build mode
+
+Si el usuario usa frases imperativas de acción, **cambia automáticamente a build mode y comienza a implementar sin pedir confirmación**:
+
+Frases que activan build mode:
+- "implementa", "implementalo", "implementar", "codifícalo"
+- "hazlo", "haz los cambios", "haz el cambio", "ejecuta los cambios"
+- "dale", "aplica", "aplica los cambios", "aplica el plan"
+- "ejecuta", "construye", "genera el código", "escribe el código"
+
+Si la instrucción es clara y contiene una de estas frases, **no preguntes** "¿quieres que lo implemente?" o "¿procedo?". Simplemente haz el cambio.
+
+---
+
+<!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-
 <!-- END:nextjs-agent-rules -->
 
 # Bóveda de Conocimiento
@@ -13,141 +56,104 @@ La bóveda en `boveda/` es la única fuente de documentación. No crear document
 
 El archivo `.opencode/context-map.yaml` mapea cada dominio del proyecto a sus archivos relevantes, documentación y query de Graphify. Usarlo para cargar contexto en una tarea nueva.
 
-# Consultas a BD en tiempo real
+# Modelos recomendados
 
-Cuando necesites información sobre esquemas, tablas, columnas, tipos, funciones, vistas, políticas RLS o cualquier estructura de la base de datos, **consulta directamente a PostgreSQL** usando `node -e` con el driver `pg` y `DATABASE_URL` del `.env`. No pierdas tiempo buscando en bóveda o graphify — la fuente de verdad es la BD.
+La calidad del poblado automático de la bóveda (ver sección siguiente) depende del modelo AI. YouMindAG está optimizado para estos modelos (ordenados por calidad de resultado):
 
-Script base para explorar:
+| Modelo | Calidad esperada | Notas |
+|--------|-----------------|-------|
+| **Claude Sonnet 4** (Anthropic) | ⭐ 10/10 | Mejor seguimiento de instrucciones AGENTS.md |
+| **DeepSeek V4** | ⭐ 10/10 | Razonamiento profundo para análisis de arquitectura |
+| **GPT-4o / GPT-4.1** (OpenAI) | ⭐ 9/10 | Excelente para detección de patrones |
+| **Gemini 2.5 Pro** (Google) | ⭐ 9/10 | Muy bueno para extracción de vocabulario y glosarios |
+| Otros modelos (Llama 4, Mistral, etc.) | ⭐ 7-8/10 | Resultados funcionales pero menos precisos |
 
-```bash
-node -e "
-const { Pool } = require('pg');
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-require('dotenv').config({ path: '.env' });
-async function q() {
-  const c = await pool.connect();
-  try {
-    // --- Reemplazar query aquí ---
-    const r = await c.query('SELECT ...');
-    console.log(JSON.stringify(r.rows, null, 2));
-  } finally { c.release(); await pool.end(); }
-}
-q().catch(e => { console.error(e.message); process.exit(1); });
-"
-```
+El poblado factual durante install (Comandos, Librerías, Env Vars, Estructura, API Routes, Server Actions, Middleware) es 10/10 independientemente del modelo porque se genera con datos duros del proyecto.
 
-Ejemplos de queries útiles:
+# Auto-poblado de bóveda
 
-- **Tablas y columnas**: `SELECT table_name, column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema NOT IN ('information_schema','pg_catalog') ORDER BY table_name, ordinal_position`
-- **Funciones**: `SELECT n.nspname AS schema, p.proname AS name, pg_get_function_result(p.oid) AS return_type, pg_get_function_arguments(p.oid) AS args FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid WHERE n.nspname NOT IN ('information_schema','pg_catalog','pg_toast') AND p.prokind = 'f'`
-- **Vistas**: `SELECT table_schema, table_name, view_definition FROM information_schema.views WHERE table_schema NOT IN ('information_schema','pg_catalog')`
-- **Políticas RLS**: `SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual FROM pg_policies`
-- **Secuencias**: `SELECT sequence_schema, sequence_name FROM information_schema.sequences WHERE sequence_schema NOT IN ('information_schema','pg_catalog')`
-- **Índices**: `SELECT schemaname, tablename, indexname, indexdef FROM pg_indexes WHERE schemaname NOT IN ('information_schema','pg_catalog')`
+Si al leer `boveda/` encuentras archivos con "Pendiente de documentar" o contenido placeholder, debes analizar el proyecto y llenarlos automáticamente antes de comenzar a trabajar. El objetivo es que la bóveda refleje el estado real del proyecto.
 
-Para queries ad-hoc rápidas usa el script inline. Si la consulta es recurrente, considérala para un comando en `.opencode/commands.json`.
+Para cada sección pendiente:
 
-# No Drizzle — raw pg only (except better-auth)
+1. **`🏗 Arquitectura/Estructura.md`** — ✅ Ya poblado durante install con el árbol de directorios.
+2. **`🏗 Arquitectura/Middleware y Auth.md`** — ⚠️ Parcialmente poblado (archivo + librerías detectadas). Completar con análisis del flujo de autenticación, rutas protegidas, roles.
+3. **`🏗 Arquitectura/Decisiones.md`** — Crear ADRs iniciales para decisiones obvias del stack detectado (ej: "Por qué framework X", "Por qué BD Y", etc.). Si no hay decisiones claras, dejarlo como template.
+4. **`🧩 Features/Index.md`** — ✅ Ya poblado durante install con módulos detectados. Completar la descripción de cada módulo analizando su estructura y propósito.
+5. **`🧩 Features/[nombre].md`** — Para cada módulo/feature detectado, crear su archivo de documentación individual usando `Feature Example.md` como template. Usar `graphify summary` para identificar módulos.
+6. **`🛠 Stack/Comandos.md`** — ✅ Ya poblado desde package.json. Si faltan comandos, agregarlos.
+7. **`🛠 Stack/Convenciones.md`** — Inferir patrones del código existente (naming, estructura de carpetas, imports, testing, etc.). Ejecutar `graphify query "conventions and patterns"` para apoyo.
+8. **`🛠 Stack/Librerias.md`** — ✅ Ya poblado desde package.json.
+9. **`🛠 Stack/Variables de Entorno.md`** — ✅ Ya poblado desde .env si existe.
+10. **`📦 Datos/Esquema BD.md`** — Si hay base de datos, ejecutar `npm run db:schema`. Si no hay DB conectada, dejarlo como está.
+11. **`📡 API/API Routes.md`** — ✅ Ya poblado con rutas y métodos HTTP detectados. Completar descripciones de cada endpoint.
+12. **`📡 API/Server Actions.md`** — ✅ Ya poblado con archivos `"use server"` detectados. Completar descripción de cada acción.
+13. **`🗺 Roadmap/Changelog.md`** — Si hay commits recientes en git, generar un changelog inicial con `git log --oneline --max-count=30`.
+14. **`🗺 Roadmap/Pendientes.md`** — Revisar TODO/FIXME/HACK en el código, issues de git, y documentar.
+15. **`🗺 Roadmap/Troubleshooting.md`** — Si hay errores conocidos en el código o configuraciones problemáticas, documentarlos.
+16. **`📚 Referencias/Glosario.md`** — Extraer términos del dominio del código fuente. Ejecutar `graphify summary --graph .graphify/graph.json` para identificar naming consistente y extraer vocabulario del negocio.
 
-Never use Drizzle ORM (`drizzle-orm`, `db.insert`, `db.select`, etc.) in application code. All database access is via raw SQL with the `query` export from `@/lib/db`. The only exception is `lib/auth.ts` which uses Drizzle internally for `better-auth`. The `@/lib/db/index.ts` drizzle instance is used exclusively by better-auth and must never be imported in application code.
+Usar `graphify query` y `graphify summary --graph .graphify/graph.json` para entender la arquitectura antes de escribir documentación. Para cambios en la bóveda, seguir las mismas convenciones de markdown que los archivos existentes.
 
-# Architecture — Layered Domain Pattern
+Después de poblar la bóveda, ejecutar el checklist post-cambio (sección siguiente).
+
+# Architecture — Layered Domain Pattern (si aplica)
 
 Every domain module follows a strict layered architecture in `lib/<module>/`:
 
 ```
 lib/<module>/
 ├── types.ts      — TypeScript interfaces (camelCase properties)
-├── mapper.ts     — rowTo* functions convert Record<string,unknown> → typed objects
+├── mapper.ts     — rowTo* functions convert raw → typed objects
 ├── repository.ts — raw SQL queries, returns typed objects via mappers
-├── service.ts    — business logic / orchestration (optional, often thin)
-└── actions.ts    — server actions (mutations only, reads go direct to pages)
+├── service.ts    — business logic / orchestration (optional)
+└── actions.ts    — server actions (mutations only)
 ```
 
-### Rules
+Adaptar esta estructura al lenguaje/framework del proyecto.
 
-- **Page files (`app/**/page.tsx`)** must NOT import `query`from`@/lib/db`directly. All DB reads go through a`lib/<module>/repository.ts`or`lib/<module>/service.ts`.
-- **Mapper functions** always accept `Record<string, unknown>` (the raw pg row) and return a typed interface with **camelCase** properties. DB columns are **snake_case**, mapper converts them.
-- **Repository functions** never import mappers from other domains. Cross-domain data composition happens in service layer.
-- **Service functions** re-export repository functions (thin pass-through) unless business logic is needed.
+# Error handling — centralized (si aplica)
 
-# Error handling — centralized
-
-All server actions use `tryAction` / `tryActionRaw` from `@/lib/error-handler`:
+Todas las server actions / handlers deben usar un sistema de errores centralizado:
 
 ```ts
-import {
-  tryAction,
-  tryActionRaw,
-  ValidationError,
-  NotFoundError,
-} from "@/lib/error-handler";
+import { AppError, NotFoundError, ValidationError } from '@/lib/error-handler'
 
-// For data-fetching actions (returns { success, data } | { success, error }):
 export async function obtenerAlgo(id: string) {
-  return tryAction(async () => {
-    const data = await repositoryFn(id);
-    if (!data) throw new NotFoundError("Algo no encontrado");
-    return data;
-  });
-}
-
-// For mutation actions (re-throws, caller must handle):
-export async function crearAlgo(formData: FormData) {
-  return tryActionRaw(async () => {
-    const val = formData.get("campo");
-    if (!val) throw new ValidationError("Campo requerido");
-    await repositoryInsert(val);
-    revalidatePath("/ruta");
-  });
+  // ...
+  if (!data) throw new NotFoundError('No encontrado')
+  return data
 }
 ```
 
-Error classes: `AppError`, `NotFoundError` (404), `ValidationError` (400), `UnauthorizedError` (401), `ForbiddenError` (403), `ConflictError` (409).
-
-API routes should use `apiHandler`, `apiSuccess`, `apiError` from the same module.
-
-# Page file rules
-
-- **Never** import `query` from `@/lib/db` in `app/**/page.tsx`
-- **Never** import `query` from `@/lib/db` in `app/**/layout.tsx`
-- **Never** import `query` from `@/lib/db` in `app/api/**/route.ts`
-- **Never** import `db` from `@/lib/db/index` (that's for better-auth only)
-- **Never** import from `@/lib/db/schema` in app code (only used by better-auth in `lib/auth.ts`)
-- For role checks: use `getUserWithRole()` from `@/lib/auth/helpers`
-- For domain data: use the corresponding `lib/<module>/service.ts` or `repository.ts`
-- JSX references must match the **camelCase** properties from the types/interfaces, NOT the snake_case DB columns
+# Page / Route file rules (adaptar al framework)
+- **Nunca** importar la BD directamente en páginas/rutas
+- **Nunca** usar el ORM directamente en código de aplicación
+- **Siempre** pasar por una capa de repository/service
+- **Siempre** usar el helper de autenticación centralizado para role checks
 
 # Checklist post-cambio
 
 Al completar cualquier cambio (nueva feature, bugfix, refactor):
 
-1. **TypeCheck**: `npx tsc --noEmit` — 0 errores
-2. **Build**: `npm run build` — exit 0
-3. **Si el módulo es nuevo**: seguir [Crear Modulo.md](boveda/🏗%20Arquitectura/Crear%20Modulo.md)
+1. **TypeCheck**: `npx tsc --noEmit` (o equivalente del lenguaje)
+2. **Build**: `npm run build` (o equivalente)
+3. **Si el módulo es nuevo**: crear `boveda/🧩 Features/[nombre].md` + actualizar `Index.md`
 4. **Actualizar bóveda**:
-   - Feature nueva → `boveda/🧩 Features/[nombre].md` + actualizar `Index.md`
+   - Feature nueva → `boveda/🧩 Features/[nombre].md`
    - Bug fix → agregar entrada en `boveda/🗺 Roadmap/Troubleshooting.md`
    - Cambio en BD → actualizar `boveda/📦 Datos/Esquema BD.md`
    - Decisión técnica → ADR en `boveda/🏗 Arquitectura/Decisiones.md`
-   - Cambio en dependencias → `boveda/🛠 Stack/Librerias.md`
-5. **Verificar nomenclatura**:
-   - JSX props en camelCase (no snake_case de BD)
-   - Pages sin `import { query }` directo
-   - Role checks con `getUserWithRole()`
-   - Errores con AppError/tryAction
+5. **Verificar nomenclatura**: consistencia con el resto del proyecto
 6. **Graphify**: `npx graphify update` para mantener el grafo sincronizado
-7. **Si hay cambios en BD**: `npm run db:schema` para refrescar `boveda/📦 Datos/Esquema BD.md`
+7. **Si hay cambios en BD**: `npm run db:schema` para refrescar esquema
 
 ## graphify
 
 This project has a graphify knowledge graph at .graphify/.
 
 Rules:
-
 - For codebase or architecture questions, when `.graphify/graph.json` exists, first run `graphify query "<question>"` (or `graphify path "<A>" "<B>"` / `graphify explain "<concept>"`); these return a scoped subgraph, usually much smaller than `GRAPH_REPORT.md` or raw grep output
-- If .graphify/wiki/index.md exists, navigate it instead of reading raw files
-- If .graphify/graph.json is missing but graphify-out/graph.json exists, run `graphify migrate-state --dry-run` first; if tracked legacy artifacts are reported, ask before using the recommended `git mv -f graphify-out .graphify` and commit message
 - If .graphify/needs_update exists or .graphify/branch.json has stale=true, warn before relying on semantic results and run the graphify skill with --update when appropriate
 - If the user asks to build, update, query, path, or explain the graph, use the installed `graphify` skill instead of ad-hoc file traversal
 - Before proposing or committing .graphify artifacts, run `graphify portable-check .graphify`; commit-safe graph artifacts must use repo-relative paths, and never commit .graphify/branch.json, .graphify/worktree.json, .graphify/needs_update, or .graphify/cache/. If a repo already tracks any of them, first add them to .gitignore, then propose `git rm --cached .graphify/branch.json .graphify/worktree.json .graphify/needs_update` and `git rm -r --cached .graphify/cache`; never mutate git state without asking
@@ -155,3 +161,4 @@ Rules:
 - For review impact on changed files, use `graphify review-delta --graph .graphify/graph.json` instead of generic traversal
 - Read `.graphify/GRAPH_REPORT.md` only for broad architecture review or when `query` / `path` / `explain` do not surface enough context
 - After modifying code files in this session, run `npx graphify hook-rebuild` to keep the graph current
+<!-- END:youmindag -->

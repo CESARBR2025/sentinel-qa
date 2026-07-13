@@ -1,4 +1,4 @@
-# Context Map — SeguridadPublica
+# Context Map — [Nombre del Proyecto]
 # Mapea cada dominio a su contexto mínimo.
 # El agente debe cargar estos archivos + ejecutar graphify query al iniciar una tarea.
 

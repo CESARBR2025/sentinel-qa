@@ -1,41 +1,52 @@
 // scripts/extract-domain.mjs
 // Extrae el dominio de una tarea del usuario basado en .opencode/context-map.yaml
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import yaml from 'js-yaml'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
+const CONTEXT_MAP = join(ROOT, '.opencode', 'context-map.yaml')
 
-const KEYWORDS = {
-  monitorista: ['monitorista', 'evidencia', 'solicitud', 'detenido', 'foto', 'cámara', 'incidente_camara'],
-  incidentes: ['911', 'incidente', 'despacho', 'emergencia', 'atencion', 'ciudadano', 'whatsapp', 'rondin', 'bitácora'],
-  prevencion: ['prevencion', 'medida', 'busqueda', 'juridico', 'alba', 'ambar', 'solicitud_informacion'],
-  admin: ['admin', 'usuario', 'rol', 'permiso', 'administrador'],
-  fiscalia: ['fiscalia', 'asegurado', 'puesta_disposicion', 'fge'],
-  juzgado: ['juzgado', 'cívico', 'proceso_judicial'],
-  infracciones: ['infraccion', 'via', 'corralon', 'garantia', 'pago', 'liberacion_vehiculo'],
-  liberaciones: ['liberacion', 'revision_documental', 'orden_pago', 'sa7'],
-  flota: ['flota', 'patrulla', 'vehiculo', 'unidad'],
-  reportes: ['reporte', 'estadistica', 'formato_n', 'd1', 'sin_novedad', 'camara'],
-  oficial: ['oficial', 'reporte_campo', 'recorrido'],
-  'rol-servicios': ['rol_servicio', 'estado_fuerza', 'sector', 'radio', 'bodycam'],
-  auxiliar: ['auxiliar', 'checklist', 'novedades', 'cuestionario_robo'],
+let _keywords = null
+
+function loadKeywords() {
+  if (_keywords) return _keywords
+  if (!existsSync(CONTEXT_MAP)) {
+    _keywords = {}
+    return _keywords
+  }
+  const raw = readFileSync(CONTEXT_MAP, 'utf-8')
+  const map = yaml.load(raw)
+  _keywords = {}
+  for (const [domain, entry] of Object.entries(map)) {
+    const kws = [domain]
+    if (entry.label) {
+      const words = entry.label
+        .toLowerCase()
+        .replace(/[—\-–,]/g, ' ')
+        .split(/\s+/)
+        .filter(w => w.length > 2)
+      kws.push(...words)
+    }
+    _keywords[domain] = [...new Set(kws)]
+  }
+  return _keywords
 }
 
 export function extractDomain(task) {
   if (!task) return null
   const t = task.toLowerCase()
+  const keywords = loadKeywords()
 
-  // 1. Búsqueda exacta por nombre de módulo
-  for (const [domain, keywords] of Object.entries(KEYWORDS)) {
-    for (const kw of keywords) {
+  for (const [domain, kws] of Object.entries(keywords)) {
+    for (const kw of kws) {
       if (t.includes(kw)) return domain
     }
   }
 
-  // 2. Búsqueda por nombre de archivo/lib
-  const libMatch = t.match(/lib\/([\w-]+)/)
+  const libMatch = task.match(/lib\/([\w-]+)/)
   if (libMatch) return libMatch[1]
 
   return null

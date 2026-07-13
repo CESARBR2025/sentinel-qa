@@ -11,27 +11,28 @@ const ROOT = join(__dirname, '..')
 const CONTEXT_MAP = join(ROOT, '.opencode', 'context-map.yaml')
 const GRAPH_JSON = join(ROOT, '.graphify', 'graph.json')
 
-const KEYWORDS = {
-  monitorista: ['monitorista', 'evidencia', 'solicitud', 'detenido', 'foto', 'cámara', 'incidente_camara'],
-  incidentes: ['911', 'incidente', 'despacho', 'emergencia', 'ciudadano', 'whatsapp', 'rondin', 'bitácora'],
-  prevencion: ['prevencion', 'medida', 'busqueda', 'juridico', 'alba', 'ambar', 'solicitud_informacion'],
-  admin: ['admin', 'usuario', 'rol', 'permiso', 'administrador'],
-  fiscalia: ['fiscalia', 'asegurado', 'puesta_disposicion', 'fge'],
-  juzgado: ['juzgado', 'cívico', 'proceso_judicial'],
-  infracciones: ['infraccion', 'via', 'corralon', 'garantia', 'pago', 'liberacion_vehiculo'],
-  liberaciones: ['liberacion', 'revision_documental', 'orden_pago', 'sa7'],
-  flota: ['flota', 'patrulla', 'vehiculo'],
-  reportes: ['reporte', 'estadistica', 'formato_n', 'd1', 'sin_novedad', 'camara'],
-  oficial: ['oficial', 'reporte_campo', 'recorrido'],
-  'rol-servicios': ['rol_servicio', 'estado_fuerza', 'sector'],
-  auxiliar: ['auxiliar', 'checklist', 'novedades', 'cuestionario_robo'],
+function buildKeywords(map) {
+  const keywords = {}
+  for (const [domain, entry] of Object.entries(map)) {
+    const kws = [domain]
+    if (entry.label) {
+      const words = entry.label
+        .toLowerCase()
+        .replace(/[—\-–,]/g, ' ')
+        .split(/\s+/)
+        .filter(w => w.length > 2)
+      kws.push(...words)
+    }
+    keywords[domain] = [...new Set(kws)]
+  }
+  return keywords
 }
 
-function extractDomain(task) {
+function extractDomain(task, keywords) {
   if (!task) return null
   const t = task.toLowerCase()
-  for (const [domain, keywords] of Object.entries(KEYWORDS)) {
-    for (const kw of keywords) {
+  for (const [domain, kws] of Object.entries(keywords)) {
+    for (const kw of kws) {
       if (t.includes(kw)) return domain
     }
   }
@@ -120,7 +121,14 @@ function main() {
     process.exit(1)
   }
 
-  const domain = extractDomain(task)
+  let keywords = {}
+  if (existsSync(CONTEXT_MAP)) {
+    const raw = readFileSync(CONTEXT_MAP, 'utf-8')
+    const map = yaml.load(raw)
+    keywords = buildKeywords(map)
+  }
+
+  const domain = extractDomain(task, keywords)
   if (!domain) {
     console.log('[context-loader] Dominio no detectado. Ejecutar skill context-loader para carga manual.')
     process.exit(0)
