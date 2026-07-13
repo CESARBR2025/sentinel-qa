@@ -1,4 +1,4 @@
-# Node Description Batch 80 of 82
+# Node Description Batch 80 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "sin_robos_page_reporteslimpiospage": "ReportesLimpiosPage()" | kind=code-symbol | source=app/sin_robos/page.tsx:L13 | neighbors=[page.tsx]
-- "sin_robos_paginacionsinrobos_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L89 | neighbors=[PaginacionSinRobos.tsx]
-- "sin_robos_paginacionsinrobos_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L5 | neighbors=[PaginacionSinRobos.tsx]
-- "solicitudes_page_solicitudespage": "SolicitudesPage()" | kind=code-symbol | source=app/monitorista/solicitudes/page.tsx:L13 | neighbors=[page.tsx]
-- "solicitudes_page_statcard": "StatCard()" | kind=code-symbol | source=app/monitorista/solicitudes/page.tsx:L86 | neighbors=[page.tsx]
-- "solicitudes_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L8 | neighbors=[route.ts]
-- "solicitudes_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L22 | neighbors=[route.ts]
-- "solicitudes_solicitudes_client_estatusbg": "estatusBg()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L344 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_estatuscolor": "estatusColor()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L351 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_estatuslabels": "estatusLabels" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L8 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_formatdate": "formatDate()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L18 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_tdstyle": "tdStyle" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L369 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_thstyle": "thStyle" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L358 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_subir_oficio_modal_props": "Props" | kind=code-symbol | source=app/corralon/solicitudes/subir-oficio-modal.tsx:L6 | neighbors=[subir-oficio-modal.tsx]
-- "solicitudes_ver_documento_modal_props": "Props" | kind=code-symbol | source=app/corralon/solicitudes/ver-documento-modal.tsx:L5 | neighbors=[ver-documento-modal.tsx]
-- "solicitudid_page_aseguradosfiscaliapage": "AseguradosFiscaliaPage()" | kind=code-symbol | source=app/fiscalia/solicitudes/[solicitudId]/page.tsx:L11 | neighbors=[page.tsx]
-- "solicitudid_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/solicitudes/[solicitudId]/page.tsx:L11 | neighbors=[page.tsx]
-- "steps_pasociudadano_pasociudadano": "PasoCiudadano()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadano.tsx:L16 | neighbors=[PasoCiudadano.tsx]
-- "steps_pasociudadano_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadano.tsx:L11 | neighbors=[PasoCiudadano.tsx]
-- "steps_pasociudadanoconductor_pasociudadanoconductor": "PasoCiudadanoConductor()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadanoConductor.tsx:L14 | neighbors=[PasoCiudadanoConductor.tsx]
-- "steps_pasociudadanoconductor_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadanoConductor.tsx:L6 | neighbors=[PasoCiudadanoConductor.tsx]
-- "steps_pasoconductor_pasoconductor": "PasoConductor()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConductor.tsx:L21 | neighbors=[PasoConductor.tsx]
-- "steps_pasoconductor_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConductor.tsx:L13 | neighbors=[PasoConductor.tsx]
-- "steps_pasoconfirmacion_pasoconfirmacion": "PasoConfirmacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L27 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacion_pasoconfirmacionprops": "PasoConfirmacionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L15 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacion_seccionestructurada": "SeccionEstructurada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L20 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacionpago_pasoconfirmacionpago": "PasoConfirmacionPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L8 | neighbors=[PasoConfirmacionPago.tsx]
-- "steps_pasoconfirmacionpago_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L3 | neighbors=[PasoConfirmacionPago.tsx]
-- "steps_pasodescuentos_archivofield": "ArchivoField" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L27 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_fileuploadzone": "FileUploadZone()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L196 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_pasodecuentos": "PasoDecuentos()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L32 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L22 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasoevidencias_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoEvidencias.tsx:L8 | neighbors=[PasoEvidencias.tsx]
-- "steps_pasoinfraccion_pasoinfraccion": "PasoInfraccion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L19 | neighbors=[PasoInfraccion.tsx]
-- "steps_pasoinfraccion_pasoinfraccionprops": "PasoInfraccionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L9 | neighbors=[PasoInfraccion.tsx]
-- "steps_pasopago_infraccioncreada": "InfraccionCreada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L19 | neighbors=[PasoPago.tsx]
-- "steps_pasopago_pasopago": "PasoPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L40 | neighbors=[PasoPago.tsx]
-- "steps_pasopago_pasopagoprops": "PasoPagoProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L24 | neighbors=[PasoPago.tsx]
-- "steps_pasoubicacion_pasoubicacion": "PasoUbicacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L12 | neighbors=[PasoUbicacion.tsx]
-- "steps_pasoubicacion_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L8 | neighbors=[PasoUbicacion.tsx]
+- "roles_formulariorol_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L218 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L9 | neighbors=[FormularioRol.tsx]
+- "roles_page_rolespage": "RolesPage()" | kind=code-symbol | source=app/admin/roles/page.tsx:L6 | neighbors=[page.tsx]
+- "roles_route_post": "POST()" | kind=code-symbol | source=app/api/admin/roles/route.ts:L7 | neighbors=[route.ts]
+- "rondin_page_reporterecorridopage": "ReporteRecorridoPage()" | kind=code-symbol | source=app/agente_911/rondin/page.tsx:L9 | neighbors=[page.tsx]
+- "rondin_page_rondinoficialpage": "RondinOficialPage()" | kind=code-symbol | source=app/oficial/rondin/page.tsx:L7 | neighbors=[page.tsx]
+- "sasiete_mapper_ordenpagorow": "OrdenPagoRow" | kind=code-symbol | source=features/via/saSiete/mapper.ts:L3 | neighbors=[mapper.ts]
+- "sasiete_repository_sa7repository_actualizarordenpago": ".actualizarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L65 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_buscarordenporinfraccionid": ".buscarOrdenPorInfraccionId()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L57 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_insertarordenpago": ".insertarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L14 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_obtenerconceptoidporclasificacion": ".obtenerConceptoIdPorClasificacion()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L6 | neighbors=[SA7Repository]
+- "sasiete_service_sa7service_buscarordenporinfraccion": ".buscarOrdenPorInfraccion()" | kind=code-symbol | source=features/via/saSiete/service.ts:L87 | neighbors=[SA7Service]
+- "sasiete_service_sa7service_generarordenpago": ".generarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/service.ts:L13 | neighbors=[SA7Service]
+- "sasiete_service_sa7service_obtenerconceptoid": ".obtenerConceptoId()" | kind=code-symbol | source=features/via/saSiete/service.ts:L9 | neighbors=[SA7Service]
+- "sasiete_types_catalogoconceptosa7": "CatalogoConceptoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L1 | neighbors=[types.ts]
+- "scripts_exportar_schema_columninfo": "ColumnInfo" | kind=code-symbol | source=scripts/exportar-schema.ts:L6 | neighbors=[exportar-schema.ts]
+- "scripts_exportar_schema_schemas": "SCHEMAS" | kind=code-symbol | source=scripts/exportar-schema.ts:L4 | neighbors=[exportar-schema.ts]
+- "scripts_exportar_schema_typetoreadable": "typeToReadable()" | kind=code-symbol | source=scripts/exportar-schema.ts:L53 | neighbors=[exportar-schema.ts]
+- "scripts_extract_domain_dirname": "__dirname" | kind=code-symbol | source=scripts/extract-domain.mjs:L7 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_extractdomain": "extractDomain()" | kind=code-symbol | source=scripts/extract-domain.mjs:L26 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/extract-domain.mjs:L10 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_root": "ROOT" | kind=code-symbol | source=scripts/extract-domain.mjs:L8 | neighbors=[extract-domain.mjs]
+- "scripts_load_context_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/load-context.mjs:L11 | neighbors=[load-context.mjs]
+- "scripts_load_context_dirname": "__dirname" | kind=code-symbol | source=scripts/load-context.mjs:L9 | neighbors=[load-context.mjs]
+- "scripts_load_context_graph_json": "GRAPH_JSON" | kind=code-symbol | source=scripts/load-context.mjs:L12 | neighbors=[load-context.mjs]
+- "scripts_load_context_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/load-context.mjs:L14 | neighbors=[load-context.mjs]
+- "scripts_load_context_root": "ROOT" | kind=code-symbol | source=scripts/load-context.mjs:L10 | neighbors=[load-context.mjs]
+- "seguimientos_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/[id]/seguimientos/route.ts:L7 | neighbors=[route.ts]
+- "setup_2fa_page_setup2fapage": "Setup2FAPage()" | kind=code-symbol | source=app/(auth)/login/setup-2fa/page.tsx:L7 | neighbors=[page.tsx]
+- "shared_detalleinfraccionview_fieldwithicon": "FieldWithIcon()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L464 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_getstatusstyle": "getStatusStyle()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L96 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infracciondetalle": "InfraccionDetalle" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L77 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infracciongarantia": "InfraccionGarantia" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L63 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionheader": "InfraccionHeader" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L15 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccioninfractor": "InfraccionInfractor" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L41 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionlegal": "InfraccionLegal" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L31 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionoficial": "InfraccionOficial" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L47 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionubicacion": "InfraccionUbicacion" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L67 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_infraccionvehiculo": "InfraccionVehiculo" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L54 | neighbors=[DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_props": "Props" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L142 | neighbors=[DetalleInfraccionView.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-079.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-079.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

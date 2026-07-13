@@ -52,8 +52,8 @@ export async function insertarReporteCampo(
         [data.incidenteId],
       );
       if (!inc.rows[0]) throw new NotFoundError("Incidente no encontrado");
-      if (inc.rows[0].estatus !== "en_despacho")
-        throw new ValidationError("El incidente no está en despacho; no se puede cerrar");
+      if (inc.rows[0].estatus !== "en_despacho" && inc.rows[0].estatus !== "en_sitio")
+        throw new ValidationError("El incidente debe estar en_despacho o en_sitio para cerrar");
 
       const existe = await cliente.query<{ id: string }>(
         `SELECT id FROM ofi_reportes_campo WHERE incidente_id = $1 LIMIT 1`,
@@ -149,7 +149,7 @@ export async function insertarReporteCampo(
       ],
     );
 
-    if (data.incidenteId) {
+    if (data.incidenteId && !data.ofiHayDetencion) {
       await cliente.query(
         `UPDATE incidentes SET estatus = 'atendido', actualizado_en = NOW() WHERE id = $1`,
         [data.incidenteId],
@@ -224,7 +224,7 @@ export async function obtenerDespachosAsignados(
 ): Promise<DespachoAsignado[]> {
   const result = await query<Record<string, unknown>>(
     `SELECT
-       i.id AS incidente_id, i.folio, i.canal, i.descripcion,
+       i.id AS incidente_id, i.folio, i.canal, i.estatus, i.descripcion,
        i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion,
        i.fecha_hora_inicio,
        cti.nombre AS tipo_incidente_nombre,
@@ -241,9 +241,9 @@ export async function obtenerDespachosAsignados(
      LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
      LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
      LEFT JOIN users u ON d.despachado_por = u.id
-     WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
-       AND i.estatus = 'en_despacho'
-     ORDER BY cp.orden NULLS LAST, d.fecha_hora_despacho DESC`,
+      WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+        AND i.estatus IN ('en_despacho', 'en_sitio')
+      ORDER BY cp.orden NULLS LAST, d.fecha_hora_despacho DESC`,
     [userId],
   );
   return result.rows.map(rowToDespachoAsignado);
@@ -255,8 +255,8 @@ export async function contarDespachosAsignados(userId: string): Promise<number> 
      FROM incidente_despacho_elementos de
      JOIN incidente_despacho d ON d.id = de.despacho_id
      JOIN incidentes i ON i.id = d.incidente_id
-     WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
-       AND i.estatus = 'en_despacho'`,
+      WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+        AND i.estatus IN ('en_despacho', 'en_sitio')`,
     [userId],
   );
   return parseInt(result.rows[0].count, 10);

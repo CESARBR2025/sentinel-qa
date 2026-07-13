@@ -1,4 +1,4 @@
-# Node Description Batch 76 of 82
+# Node Description Batch 76 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "prevencion_autoridadbadge_cfg": "CFG" | kind=code-symbol | source=components/prevencion/AutoridadBadge.tsx:L1 | neighbors=[AutoridadBadge.tsx]
-- "prevencion_cancelacionmodal_inputfield": "InputField()" | kind=code-symbol | source=components/prevencion/CancelacionModal.tsx:L73 | neighbors=[CancelacionModal.tsx]
-- "prevencion_cancelacionmodal_textareafield": "TextareaField()" | kind=code-symbol | source=components/prevencion/CancelacionModal.tsx:L85 | neighbors=[CancelacionModal.tsx]
-- "prevencion_contestacionform_formfield": "FormField()" | kind=code-symbol | source=components/prevencion/ContestacionForm.tsx:L93 | neighbors=[ContestacionForm.tsx]
-- "prevencion_contestacionform_inputstyle": "inputStyle" | kind=code-symbol | source=components/prevencion/ContestacionForm.tsx:L82 | neighbors=[ContestacionForm.tsx]
-- "prevencion_layout_prevencionlayout": "PrevencionLayout()" | kind=code-symbol | source=app/prevencion/layout.tsx:L10 | neighbors=[layout.tsx]
-- "prevencion_medidasfiltros_autoridades": "AUTORIDADES" | kind=code-symbol | source=components/prevencion/MedidasFiltros.tsx:L14 | neighbors=[MedidasFiltros.tsx]
-- "prevencion_medidasfiltros_estados": "ESTADOS" | kind=code-symbol | source=components/prevencion/MedidasFiltros.tsx:L6 | neighbors=[MedidasFiltros.tsx]
-- "prevencion_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L17 | neighbors=[permisos.ts]
-- "prevencion_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L25 | neighbors=[permisos.ts]
-- "prevencion_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L9 | neighbors=[permisos.ts]
-- "prevencion_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L21 | neighbors=[permisos.ts]
-- "prevencion_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/prevencion/permisos.ts:L7 | neighbors=[permisos.ts]
-- "prevencion_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/prevencion/permisos.ts:L32 | neighbors=[permisos.ts]
-- "prevencion_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/prevencion/permisos.ts:L4 | neighbors=[permisos.ts]
-- "prevencion_prevencionnav_alertas": "Alertas" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L39 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_icons": "ICONS" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L37 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_nav": "NAV" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L7 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_prevencionnav": "PrevencionNav()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L41 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_scaleicon": "ScaleIcon()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L26 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_searchicon": "SearchIcon()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L19 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prevencionnav_shieldicon": "ShieldIcon()" | kind=code-symbol | source=app/prevencion/PrevencionNav.tsx:L13 | neighbors=[PrevencionNav.tsx]
-- "prevencion_prorrogamodal_i": "I" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L127 | neighbors=[ProrrogaModal.tsx]
-- "prevencion_prorrogamodal_l": "L" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L123 | neighbors=[ProrrogaModal.tsx]
-- "prevencion_prorrogaviewermodal_prorrogaviewermodalprops": "ProrrogaViewerModalProps" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L5 | neighbors=[ProrrogaViewerModal.tsx]
-- "prevencion_seguimientotimeline_props": "Props" | kind=code-symbol | source=components/prevencion/SeguimientoTimeline.tsx:L8 | neighbors=[SeguimientoTimeline.tsx]
-- "prevencion_semaforovigencia_cfg": "CFG" | kind=code-symbol | source=components/prevencion/SemaforoVigencia.tsx:L3 | neighbors=[SemaforoVigencia.tsx]
-- "prevencion_timeline_tiposeguimiento": "TipoSeguimiento" | kind=code-symbol | source=lib/prevencion/timeline.ts:L8 | neighbors=[timeline.ts]
-- "prevencion_visitamodal_checkboxfield": "CheckboxField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L110 | neighbors=[VisitaModal.tsx]
-- "prevencion_visitamodal_inputfield": "InputField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L86 | neighbors=[VisitaModal.tsx]
-- "prevencion_visitamodal_textareafield": "TextareaField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L98 | neighbors=[VisitaModal.tsx]
-- "proxy_config": "config" | kind=code-symbol | source=proxy.ts:L40 | neighbors=[proxy.ts]
-- "proxy_public_paths": "PUBLIC_PATHS" | kind=code-symbol | source=proxy.ts:L6 | neighbors=[proxy.ts]
-- "proxy_route_get": "GET()" | kind=code-symbol | source=app/api/expediente/proxy/route.ts:L6 | neighbors=[route.ts]
-- "radio_formsection_reporterecorridozen": "ReporteRecorridoZen()" | kind=code-symbol | source=components/911/radio/FormSection.tsx:L49 | neighbors=[FormSection.tsx]
-- "radio_formsection_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/911/radio/FormSection.tsx:L16 | neighbors=[FormSection.tsx]
-- "radio_input_inputprops": "InputProps" | kind=code-symbol | source=components/911/radio/Input.tsx:L5 | neighbors=[Input.tsx]
-- "radio_input_sentinelinput": "SentinelInput()" | kind=code-symbol | source=components/911/radio/Input.tsx:L11 | neighbors=[Input.tsx]
-- "registrar_route_post": "POST()" | kind=code-symbol | source=app/api/via/infracciones/registrar/route.ts:L8 | neighbors=[route.ts]
-- "reporte_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/[id]/reporte/route.ts:L7 | neighbors=[route.ts]
+- "oficial_modalseleccionarunidad_props": "Props" | kind=code-symbol | source=components/oficial/ModalSeleccionarUnidad.tsx:L8 | neighbors=[ModalSeleccionarUnidad.tsx]
+- "oficial_page_oficialdashboardpage": "OficialDashboardPage()" | kind=code-symbol | source=app/oficial/page.tsx:L10 | neighbors=[page.tsx]
+- "oficial_permisos_accion": "Accion" | kind=code-symbol | source=lib/oficial/permisos.ts:L5 | neighbors=[permisos.ts]
+- "oficial_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/oficial/permisos.ts:L12 | neighbors=[permisos.ts]
+- "oficial_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/oficial/permisos.ts:L20 | neighbors=[permisos.ts]
+- "oficial_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/oficial/permisos.ts:L16 | neighbors=[permisos.ts]
+- "oficial_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/oficial/permisos.ts:L6 | neighbors=[permisos.ts]
+- "oficial_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/oficial/permisos.ts:L4 | neighbors=[permisos.ts]
+- "oficial_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/oficial/permisos.ts:L3 | neighbors=[permisos.ts]
+- "oficial_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/oficial/permisos.ts:L8 | neighbors=[permisos.ts]
+- "oficial_profiledropdown_props": "Props" | kind=code-symbol | source=components/oficial/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
+- "oficial_repository_cierrereportecamporow": "CierreReporteCampoRow" | kind=code-symbol | source=lib/oficial/repository.ts:L169 | neighbors=[repository.ts]
+- "oficial_service_bool": "bool()" | kind=code-symbol | source=lib/oficial/service.ts:L32 | neighbors=[service.ts]
+- "oficial_service_str": "str()" | kind=code-symbol | source=lib/oficial/service.ts:L28 | neighbors=[service.ts]
+- "oficial_store_initialstate": "initialState" | kind=code-symbol | source=lib/oficial/store.ts:L83 | neighbors=[store.ts]
+- "oficial_store_oficialformactions": "OficialFormActions" | kind=code-symbol | source=lib/oficial/store.ts:L66 | neighbors=[store.ts]
+- "oficial_store_oficialformstate": "OficialFormState" | kind=code-symbol | source=lib/oficial/store.ts:L12 | neighbors=[store.ts]
+- "oficial_store_oficialformstore": "OficialFormStore" | kind=code-symbol | source=lib/oficial/store.ts:L81 | neighbors=[store.ts]
+- "oficial_store_vehiculostate": "VehiculoState" | kind=code-symbol | source=lib/oficial/store.ts:L4 | neighbors=[store.ts]
+- "oficial_unidadasignadasection_props": "Props" | kind=code-symbol | source=components/oficial/UnidadAsignadaSection.tsx:L8 | neighbors=[UnidadAsignadaSection.tsx]
+- "oficiales_mapper_ofioficialrow": "OfiOficialRow" | kind=code-symbol | source=features/via/oficiales/mapper.ts:L3 | neighbors=[mapper.ts]
+- "oficiales_page_oficialespage": "OficialesPage()" | kind=code-symbol | source=app/admin-transito/oficiales/page.tsx:L8 | neighbors=[page.tsx]
+- "oficiales_repository_oficialesviarepository_obteneroficialidporuserid": ".obtenerOficialIdPorUserId()" | kind=code-symbol | source=features/via/oficiales/repository.ts:L5 | neighbors=[OficialesViaRepository]
+- "oficiales_repository_oficialesviarepository_obteneroficialporid": ".obtenerOficialPorId()" | kind=code-symbol | source=features/via/oficiales/repository.ts:L21 | neighbors=[OficialesViaRepository]
+- "oficiales_repository_oficialesviarepository_obteneroficialporuserid": ".obtenerOficialPorUserId()" | kind=code-symbol | source=features/via/oficiales/repository.ts:L13 | neighbors=[OficialesViaRepository]
+- "oficiales_service_oficialesviaservice_obtenermiperfil": ".obtenerMiPerfil()" | kind=code-symbol | source=features/via/oficiales/service.ts:L12 | neighbors=[OficialesViaService]
+- "oficiales_service_oficialesviaservice_obteneroficialid": ".obtenerOficialId()" | kind=code-symbol | source=features/via/oficiales/service.ts:L4 | neighbors=[OficialesViaService]
+- "oficiales_service_oficialesviaservice_obtenerporid": ".obtenerPorId()" | kind=code-symbol | source=features/via/oficiales/service.ts:L20 | neighbors=[OficialesViaService]
+- "partials_header_dashboardheaderprops": "DashboardHeaderProps" | kind=code-symbol | source=components/partials/Header.tsx:L6 | neighbors=[Header.tsx]
+- "partials_subheader_subheaderprops": "SubHeaderProps" | kind=code-symbol | source=components/partials/SubHeader.tsx:L8 | neighbors=[SubHeader.tsx]
+- "path_route_get": "GET()" | kind=code-symbol | source=app/api/uploads/[...path]/route.ts:L16 | neighbors=[route.ts]
+- "path_route_mime": "MIME" | kind=code-symbol | source=app/api/uploads/[...path]/route.ts:L7 | neighbors=[route.ts]
+- "pendiente_analisis_page_analisispage": "AnalisisPage()" | kind=code-symbol | source=app/analisis/pendiente-analisis/page.tsx:L9 | neighbors=[page.tsx]
+- "pendientes_despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/pendientes-despacho/route.ts:L7 | neighbors=[route.ts]
+- "permisos_core_accion": "Accion" | kind=code-symbol | source=lib/permisos/core.ts:L7 | neighbors=[core.ts]
+- "permisos_core_listarpermisosporusuario": "listarPermisosPorUsuario()" | kind=code-symbol | source=lib/permisos/core.ts:L62 | neighbors=[core.ts]
+- "permisos_core_permiso_total": "PERMISO_TOTAL" | kind=code-symbol | source=lib/permisos/core.ts:L22 | neighbors=[core.ts]
+- "permisos_core_tieneplantillarol": "tienePlantillaRol()" | kind=code-symbol | source=lib/permisos/core.ts:L112 | neighbors=[core.ts]
+- "permisos_registro_modulopermisos": "ModuloPermisos" | kind=code-symbol | source=lib/permisos/registro.ts:L10 | neighbors=[registro.ts]
+- "plantilla_permisos_page_plantillapermisosrolpage": "PlantillaPermisosRolPage()" | kind=code-symbol | source=app/admin/roles/[id]/plantilla-permisos/page.tsx:L9 | neighbors=[page.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-075.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-075.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

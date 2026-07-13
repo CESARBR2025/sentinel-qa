@@ -1,4 +1,4 @@
-# Node Description Batch 46 of 82
+# Node Description Batch 46 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,32 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "oficial_service_contardenunciaspendientesoficial": "contarDenunciasPendientesOficial()" | kind=code-symbol | source=lib/oficial/service.ts:L93 | neighbors=[page.tsx, service.ts]
+- "oficial_service_contardespachosasignadosoficial": "contarDespachosAsignadosOficial()" | kind=code-symbol | source=lib/oficial/service.ts:L214 | neighbors=[page.tsx, service.ts]
+- "oficial_service_generarfolio": "generarFolio()" | kind=code-symbol | source=lib/oficial/service.ts:L40 | neighbors=[service.ts, generarFolioUnico()]
+- "oficial_service_listarreportesoficial": "listarReportesOficial()" | kind=code-symbol | source=lib/oficial/service.ts:L206 | neighbors=[service.ts, page.tsx]
+- "oficial_service_num": "num()" | kind=code-symbol | source=lib/oficial/service.ts:L35 | neighbors=[service.ts, crearReporte()]
+- "oficial_service_obtenerplacapatrulla": "obtenerPlacaPatrulla()" | kind=code-symbol | source=lib/oficial/service.ts:L63 | neighbors=[page.tsx, service.ts]
+- "oficial_service_verreportedetalle": "verReporteDetalle()" | kind=code-symbol | source=lib/oficial/service.ts:L218 | neighbors=[page.tsx, service.ts]
+- "oficial_types_ofiarmafuego": "OfiArmaFuego" | kind=code-symbol | source=lib/oficial/types.ts:L216 | neighbors=[store.ts, types.ts]
+- "oficial_types_oficateo": "OfiCateo" | kind=code-symbol | source=lib/oficial/types.ts:L32 | neighbors=[mapper.ts, types.ts]
+- "oficial_types_ofid1vinculada": "OfiD1Vinculada" | kind=code-symbol | source=lib/oficial/types.ts:L167 | neighbors=[mapper.ts, types.ts]
+- "oficial_types_ofidroga": "OfiDroga" | kind=code-symbol | source=lib/oficial/types.ts:L224 | neighbors=[store.ts, types.ts]
+- "oficial_types_ofihidrocarburo": "OfiHidrocarburo" | kind=code-symbol | source=lib/oficial/types.ts:L206 | neighbors=[store.ts, types.ts]
+- "oficial_types_ofiordenaprehension": "OfiOrdenAprehension" | kind=code-symbol | source=lib/oficial/types.ts:L198 | neighbors=[store.ts, types.ts]
+- "oficial_types_ofivehiculo": "OfiVehiculo" | kind=code-symbol | source=lib/oficial/types.ts:L24 | neighbors=[mapper.ts, types.ts]
+- "oficial_unidadasignadasection_unidadasignadasection": "UnidadAsignadaSection()" | kind=code-symbol | source=components/oficial/UnidadAsignadaSection.tsx:L13 | neighbors=[page.tsx, UnidadAsignadaSection.tsx]
+- "oficiales_mapper_maprowtooficialviadto": "mapRowToOficialViaDTO()" | kind=code-symbol | source=features/via/oficiales/mapper.ts:L20 | neighbors=[mapper.ts, repository.ts]
+- "oficiales_types_ofioficialviadto": "OfiOficialViaDTO" | kind=code-symbol | source=features/via/oficiales/types.ts:L1 | neighbors=[mapper.ts, types.ts]
+- "ordensalida_generarordensalida_drawwatermark": "drawWatermark()" | kind=code-symbol | source=lib/ordenSalida/generarOrdenSalida.ts:L25 | neighbors=[generarOrdenSalida.ts, generarOrdenSalidaVehiculo()]
+- "ordensalida_generarordensalida_formatearfecha": "formatearFecha()" | kind=code-symbol | source=lib/ordenSalida/generarOrdenSalida.ts:L3 | neighbors=[generarOrdenSalida.ts, generarOrdenSalidaVehiculo()]
+- "ordensalida_generarordensalida_formatearoficio": "formatearOficio()" | kind=code-symbol | source=lib/ordenSalida/generarOrdenSalida.ts:L10 | neighbors=[generarOrdenSalida.ts, generarOrdenSalidaVehiculo()]
+- "ordensalida_generarordensalida_loadimageasbase64": "loadImageAsBase64()" | kind=code-symbol | source=lib/ordenSalida/generarOrdenSalida.ts:L14 | neighbors=[generarOrdenSalida.ts, generarOrdenSalidaVehiculo()]
+- "ordensalida_generarordensalida_parrafomixtoconwrap": "parrafoMixtoConWrap()" | kind=code-symbol | source=lib/ordenSalida/generarOrdenSalida.ts:L33 | neighbors=[generarOrdenSalida.ts, generarOrdenSalidaVehiculo()]
+- "permisos_core_aplicarplantillarol": "aplicarPlantillaRol()" | kind=code-symbol | source=lib/permisos/core.ts:L133 | neighbors=[core.ts, guardarPermiso()]
+- "permisos_core_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/permisos/core.ts:L117 | neighbors=[core.ts, guardarPlantillaSeccionesAction()]
+- "permisos_core_permisorow": "PermisoRow" | kind=code-symbol | source=lib/permisos/core.ts:L16 | neighbors=[core.ts, PermisoSeccion]
+- "permisos_core_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/permisos/core.ts:L9 | neighbors=[core.ts, PermisoRow]
 - "postcss_config": "postcss.config.mjs" | kind=code-symbol | source=postcss.config.mjs:L1 | neighbors=[90da1ca Initial commit from Create Next…, config]
 - "prevencion_actions_cancelarfichaapi": "cancelarFichaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L375 | neighbors=[route.ts, actions.ts]
 - "prevencion_actions_createcontestacionapi": "createContestacionApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L435 | neighbors=[route.ts, actions.ts]
@@ -31,37 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "prevencion_actions_updatemedidastatusapi": "updateMedidaStatusApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L322 | neighbors=[route.ts, actions.ts]
 - "prevencion_actions_updatesolicitudapi": "updateSolicitudApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L401 | neighbors=[route.ts, actions.ts]
 - "prevencion_agregarautoridadform_agregarautoridadform": "AgregarAutoridadForm()" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L26 | neighbors=[page.tsx, AgregarAutoridadForm.tsx]
-- "prevencion_cancelacionmodal_cancelacionmodal": "CancelacionModal()" | kind=code-symbol | source=components/prevencion/CancelacionModal.tsx:L6 | neighbors=[page.tsx, CancelacionModal.tsx]
-- "prevencion_contestacionform_contestacionform": "ContestacionForm()" | kind=code-symbol | source=components/prevencion/ContestacionForm.tsx:L6 | neighbors=[page.tsx, ContestacionForm.tsx]
-- "prevencion_mapper_rowtobusqueda": "rowToBusqueda()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L27 | neighbors=[mapper.ts, toStr()]
-- "prevencion_mapper_rowtomedida": "rowToMedida()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L14 | neighbors=[mapper.ts, toStr()]
-- "prevencion_medidasfiltros_medidasfiltros": "MedidasFiltros()" | kind=code-symbol | source=components/prevencion/MedidasFiltros.tsx:L22 | neighbors=[page.tsx, MedidasFiltros.tsx]
-- "prevencion_permisos_accion": "Accion" | kind=code-symbol | source=lib/prevencion/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
-- "prevencion_permisos_obtenerrolnombre": "obtenerRolNombre()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L38 | neighbors=[permisos.ts, tieneAccesoSeccion()]
-- "prevencion_printbutton_printbutton": "PrintButton()" | kind=code-symbol | source=components/prevencion/PrintButton.tsx:L3 | neighbors=[page.tsx, PrintButton.tsx]
-- "prevencion_prorrogamodal_prorrogamodal": "ProrrogaModal()" | kind=code-symbol | source=components/prevencion/ProrrogaModal.tsx:L6 | neighbors=[page.tsx, ProrrogaModal.tsx]
-- "prevencion_prorrogaviewermodal_prorrogaviewermodal": "ProrrogaViewerModal()" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L9 | neighbors=[page.tsx, ProrrogaViewerModal.tsx]
-- "prevencion_repository_getfichasactivas": "getFichasActivas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L152 | neighbors=[route.ts, repository.ts]
-- "prevencion_repository_getfichasbusqueda": "getFichasBusqueda()" | kind=code-symbol | source=lib/prevencion/repository.ts:L30 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_getfichasbusquedafiltradas": "getFichasBusquedaFiltradas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L167 | neighbors=[route.ts, repository.ts]
-- "prevencion_repository_getmedidas": "getMedidas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L5 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_getmedidasfiltradas": "getMedidasFiltradas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L114 | neighbors=[route.ts, repository.ts]
-- "prevencion_repository_getmedidasstats": "getMedidasStats()" | kind=code-symbol | source=lib/prevencion/repository.ts:L23 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_getseguimientotipos": "getSeguimientoTipos()" | kind=code-symbol | source=lib/prevencion/repository.ts:L159 | neighbors=[route.ts, repository.ts]
-- "prevencion_repository_getvisitamedidaids": "getVisitaMedidaIds()" | kind=code-symbol | source=lib/prevencion/repository.ts:L18 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarautoridadesadicionales": "listarAutoridadesAdicionales()" | kind=code-symbol | source=lib/prevencion/repository.ts:L83 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarseguimientos": "listarSeguimientos()" | kind=code-symbol | source=lib/prevencion/repository.ts:L99 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarsolicitudesc4": "listarSolicitudesC4()" | kind=code-symbol | source=lib/prevencion/repository.ts:L51 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarsolicitudesfiltradas": "listarSolicitudesFiltradas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L197 | neighbors=[repository.ts, route.ts]
-- "prevencion_repository_listarsolicitudesjuridico": "listarSolicitudesJuridico()" | kind=code-symbol | source=lib/prevencion/repository.ts:L35 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarvisitas": "listarVisitas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L75 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarvisitasconalias": "listarVisitasConAlias()" | kind=code-symbol | source=lib/prevencion/repository.ts:L144 | neighbors=[repository.ts, route.ts]
-- "prevencion_repository_obtenercontestacion": "obtenerContestacion()" | kind=code-symbol | source=lib/prevencion/repository.ts:L59 | neighbors=[page.tsx, repository.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-045.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-045.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

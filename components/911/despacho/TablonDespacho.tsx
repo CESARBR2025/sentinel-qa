@@ -22,6 +22,7 @@ interface IncRow {
   elementos: { nombre: string | null; nomina: string | null }[]
   accionesRealizadas?: string | null
   hayDetencion?: boolean | null
+  ofiAutoridadRecibe?: string | null
   d1Pendiente?: boolean
 }
 
@@ -188,10 +189,25 @@ export function TablonDespacho() {
 
                   {/* Reporte de campo (solo atendidos) */}
                   {tab === 'atendidos' && (
-                    <div style={{ display: 'flex', gap: 12 }}>
-                      {inc.hayDetencion && (
-                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 2 }}>
-                          CON DETENCIÓN
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                      {inc.estatus === 'atendido' && !inc.hayDetencion && (
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+                          CERRADO / ATENDIDO
+                        </span>
+                      )}
+                      {inc.ofiAutoridadRecibe === 'FISCALIA' && (
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>
+                          DERIVADO A FGE
+                        </span>
+                      )}
+                      {inc.ofiAutoridadRecibe === 'FGR' && (
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#faf5ff', color: '#7c3aed', border: '1px solid #e9d5ff', borderRadius: 2 }}>
+                          DERIVADO A FGR
+                        </span>
+                      )}
+                      {inc.ofiAutoridadRecibe === 'JUZGADO_CIVICO' && (
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fefce8', color: '#a16207', border: '1px solid #fef08a', borderRadius: 2 }}>
+                          DERIVADO A JUZGADO CÍVICO
                         </span>
                       )}
                       {inc.d1Pendiente && (

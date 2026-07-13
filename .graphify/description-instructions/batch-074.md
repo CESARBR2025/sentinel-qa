@@ -1,4 +1,4 @@
-# Node Description Batch 75 of 82
+# Node Description Batch 75 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "oficial_service_str": "str()" | kind=code-symbol | source=lib/oficial/service.ts:L25 | neighbors=[service.ts]
-- "oficial_store_initialstate": "initialState" | kind=code-symbol | source=lib/oficial/store.ts:L83 | neighbors=[store.ts]
-- "oficial_store_oficialformactions": "OficialFormActions" | kind=code-symbol | source=lib/oficial/store.ts:L66 | neighbors=[store.ts]
-- "oficial_store_oficialformstate": "OficialFormState" | kind=code-symbol | source=lib/oficial/store.ts:L12 | neighbors=[store.ts]
-- "oficial_store_oficialformstore": "OficialFormStore" | kind=code-symbol | source=lib/oficial/store.ts:L81 | neighbors=[store.ts]
-- "oficial_store_vehiculostate": "VehiculoState" | kind=code-symbol | source=lib/oficial/store.ts:L4 | neighbors=[store.ts]
-- "oficial_unidadasignadasection_props": "Props" | kind=code-symbol | source=components/oficial/UnidadAsignadaSection.tsx:L8 | neighbors=[UnidadAsignadaSection.tsx]
-- "oficiales_mapper_ofioficialrow": "OfiOficialRow" | kind=code-symbol | source=features/via/oficiales/mapper.ts:L3 | neighbors=[mapper.ts]
-- "oficiales_page_oficialespage": "OficialesPage()" | kind=code-symbol | source=app/admin-transito/oficiales/page.tsx:L8 | neighbors=[page.tsx]
-- "oficiales_repository_oficialesviarepository_obteneroficialidporuserid": ".obtenerOficialIdPorUserId()" | kind=code-symbol | source=features/via/oficiales/repository.ts:L5 | neighbors=[OficialesViaRepository]
-- "oficiales_repository_oficialesviarepository_obteneroficialporid": ".obtenerOficialPorId()" | kind=code-symbol | source=features/via/oficiales/repository.ts:L21 | neighbors=[OficialesViaRepository]
-- "oficiales_repository_oficialesviarepository_obteneroficialporuserid": ".obtenerOficialPorUserId()" | kind=code-symbol | source=features/via/oficiales/repository.ts:L13 | neighbors=[OficialesViaRepository]
-- "oficiales_service_oficialesviaservice_obtenermiperfil": ".obtenerMiPerfil()" | kind=code-symbol | source=features/via/oficiales/service.ts:L12 | neighbors=[OficialesViaService]
-- "oficiales_service_oficialesviaservice_obteneroficialid": ".obtenerOficialId()" | kind=code-symbol | source=features/via/oficiales/service.ts:L4 | neighbors=[OficialesViaService]
-- "oficiales_service_oficialesviaservice_obtenerporid": ".obtenerPorId()" | kind=code-symbol | source=features/via/oficiales/service.ts:L20 | neighbors=[OficialesViaService]
-- "partials_header_dashboardheaderprops": "DashboardHeaderProps" | kind=code-symbol | source=components/partials/Header.tsx:L6 | neighbors=[Header.tsx]
-- "partials_subheader_subheaderprops": "SubHeaderProps" | kind=code-symbol | source=components/partials/SubHeader.tsx:L8 | neighbors=[SubHeader.tsx]
-- "path_route_get": "GET()" | kind=code-symbol | source=app/api/uploads/[...path]/route.ts:L16 | neighbors=[route.ts]
-- "path_route_mime": "MIME" | kind=code-symbol | source=app/api/uploads/[...path]/route.ts:L7 | neighbors=[route.ts]
-- "pendiente_analisis_page_analisispage": "AnalisisPage()" | kind=code-symbol | source=app/analisis/pendiente-analisis/page.tsx:L9 | neighbors=[page.tsx]
-- "pendientes_despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/pendientes-despacho/route.ts:L7 | neighbors=[route.ts]
-- "permisos_core_accion": "Accion" | kind=code-symbol | source=lib/permisos/core.ts:L7 | neighbors=[core.ts]
-- "permisos_core_listarpermisosporusuario": "listarPermisosPorUsuario()" | kind=code-symbol | source=lib/permisos/core.ts:L62 | neighbors=[core.ts]
-- "permisos_core_permiso_total": "PERMISO_TOTAL" | kind=code-symbol | source=lib/permisos/core.ts:L22 | neighbors=[core.ts]
-- "permisos_core_tieneplantillarol": "tienePlantillaRol()" | kind=code-symbol | source=lib/permisos/core.ts:L112 | neighbors=[core.ts]
-- "permisos_registro_modulopermisos": "ModuloPermisos" | kind=code-symbol | source=lib/permisos/registro.ts:L10 | neighbors=[registro.ts]
-- "plantilla_permisos_page_plantillapermisosrolpage": "PlantillaPermisosRolPage()" | kind=code-symbol | source=app/admin/roles/[id]/plantilla-permisos/page.tsx:L9 | neighbors=[page.tsx]
-- "plugins_graphify_context_map_path": "CONTEXT_MAP_PATH" | kind=code-symbol | source=.opencode/plugins/graphify.js:L10 | neighbors=[graphify.js]
-- "plugins_graphify_dirname": "__dirname" | kind=code-symbol | source=.opencode/plugins/graphify.js:L8 | neighbors=[graphify.js]
-- "plugins_graphify_graph_json": "GRAPH_JSON" | kind=code-symbol | source=.opencode/plugins/graphify.js:L11 | neighbors=[graphify.js]
-- "plugins_graphify_graphifyplugin": "GraphifyPlugin()" | kind=code-symbol | source=.opencode/plugins/graphify.js:L15 | neighbors=[graphify.js]
-- "plugins_graphify_loader_script": "LOADER_SCRIPT" | kind=code-symbol | source=.opencode/plugins/graphify.js:L12 | neighbors=[graphify.js]
-- "plugins_graphify_root": "ROOT" | kind=code-symbol | source=.opencode/plugins/graphify.js:L9 | neighbors=[graphify.js]
-- "plugins_graphify_skill_path": "SKILL_PATH" | kind=code-symbol | source=.opencode/plugins/graphify.js:L13 | neighbors=[graphify.js]
-- "postcss_config_config": "config" | kind=code-symbol | source=postcss.config.mjs:L1 | neighbors=[postcss.config.mjs]
-- "prevencion_agregarautoridadform_autoridad": "Autoridad" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L8 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_autoridades": "AUTORIDADES" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L7 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_i": "I" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L20 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_l": "L" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L16 | neighbors=[AgregarAutoridadForm.tsx]
-- "prevencion_agregarautoridadform_props": "Props" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L10 | neighbors=[AgregarAutoridadForm.tsx]
+- "notificaciones_route_get": "GET()" | kind=code-symbol | source=app/api/notificaciones/route.ts:L7 | neighbors=[route.ts]
+- "nueva_page_autoridades": "AUTORIDADES" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L8 | neighbors=[page.tsx]
+- "nueva_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L94 | neighbors=[page.tsx]
+- "nueva_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L132 | neighbors=[page.tsx]
+- "nueva_page_nuevafichapage": "NuevaFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L14 | neighbors=[page.tsx]
+- "nueva_page_nuevamedidapage": "NuevaMedidaPage()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L15 | neighbors=[page.tsx]
+- "nueva_page_nuevasolicitudpage": "NuevaSolicitudPage()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/nueva/page.tsx:L15 | neighbors=[page.tsx]
+- "nueva_page_row": "Row()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L124 | neighbors=[page.tsx]
+- "nueva_page_section": "Section()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L111 | neighbors=[page.tsx]
+- "nueva_page_selectfield": "SelectField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L148 | neighbors=[page.tsx]
+- "nueva_page_textareafield": "TextareaField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L166 | neighbors=[page.tsx]
+- "nueva_page_tipos": "TIPOS" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L8 | neighbors=[page.tsx]
+- "nuevo_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L150 | neighbors=[page.tsx]
+- "nuevo_page_campos": "CAMPOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L16 | neighbors=[page.tsx]
+- "nuevo_page_campos_calculables": "CAMPOS_CALCULABLES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L17 | neighbors=[page.tsx]
+- "nuevo_page_campos_manuales": "CAMPOS_MANUALES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L26 | neighbors=[page.tsx]
+- "nuevo_page_fuentedetencion": "FuenteDetencion" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L11 | neighbors=[page.tsx]
+- "nuevo_page_fuenteincidente": "FuenteIncidente" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
+- "nuevo_page_inputstyle": "inputStyle" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L149 | neighbors=[page.tsx]
+- "nuevo_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L145 | neighbors=[page.tsx]
+- "nuevo_page_nuevadenunciad1page": "NuevaDenunciaD1Page()" | kind=code-symbol | source=app/denuncia/nuevo/page.tsx:L12 | neighbors=[page.tsx]
+- "nuevo_page_nuevaformatonarmaaseguradapage": "NuevaFormatoNArmaAseguradaPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/nuevo/page.tsx:L11 | neighbors=[page.tsx]
+- "nuevo_page_nuevoformatonatencionvictimaspage": "NuevoFormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/nuevo/page.tsx:L17 | neighbors=[page.tsx]
+- "nuevo_page_nuevoformatoneventopage": "NuevoFormatoNEventoPage()" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L20 | neighbors=[page.tsx]
+- "nuevo_page_nuevoformatonfgepage": "NuevoFormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L32 | neighbors=[page.tsx]
+- "nuevo_page_nuevoformatonfgrpage": "NuevoFormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/nuevo/page.tsx:L29 | neighbors=[page.tsx]
+- "nuevo_page_nuevoformatonmediosalternativospage": "NuevoFormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L17 | neighbors=[page.tsx]
+- "nuevo_page_nuevoformatonrndpage": "NuevoFormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L20 | neighbors=[page.tsx]
+- "nuevo_page_nuevooficialpage": "NuevoOficialPage()" | kind=code-symbol | source=app/admin-transito/oficiales/nuevo/page.tsx:L7 | neighbors=[page.tsx]
+- "nuevo_page_nuevoreporteoficialpage": "NuevoReporteOficialPage()" | kind=code-symbol | source=app/oficial/nuevo/page.tsx:L7 | neighbors=[page.tsx]
+- "nuevo_page_nuevousuariopage": "NuevoUsuarioPage()" | kind=code-symbol | source=app/admin/usuarios/nuevo/page.tsx:L6 | neighbors=[page.tsx]
+- "nuevo_page_periodos": "PERIODOS" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
+- "nuevo_page_turnos": "TURNOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L10 | neighbors=[page.tsx]
+- "oficial_actions_marcarensitiooficial": "marcarEnSitioOficial()" | kind=code-symbol | source=lib/oficial/actions.ts:L45 | neighbors=[actions.ts]
+- "oficial_formulariorecorrido_prefilldespacho": "PrefillDespacho" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L55 | neighbors=[FormularioRecorrido.tsx]
+- "oficial_formulariorecorrido_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L24 | neighbors=[FormularioRecorrido.tsx]
+- "oficial_formulariorecorrido_steps": "STEPS" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L14 | neighbors=[FormularioRecorrido.tsx]
+- "oficial_mapapinfijo_pin_icons": "PIN_ICONS" | kind=code-symbol | source=components/oficial/MapaPinFijo.tsx:L12 | neighbors=[MapaPinFijo.tsx]
+- "oficial_mapapinfijo_props": "Props" | kind=code-symbol | source=components/oficial/MapaPinFijo.tsx:L5 | neighbors=[MapaPinFijo.tsx]
+- "oficial_mapaubicacion_locationdata": "LocationData" | kind=code-symbol | source=components/oficial/MapaUbicacion.tsx:L6 | neighbors=[MapaUbicacion.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-074.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-074.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

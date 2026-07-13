@@ -1,4 +1,4 @@
-# Node Description Batch 37 of 82
+# Node Description Batch 37 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,32 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_service_listarsolicitudesenrevision": "listarSolicitudesEnRevision()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L32 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_listarsolicitudesrecepcionadas": "listarSolicitudesRecepcionadas()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L27 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_obtenerliberacionesjuzgado": "obtenerLiberacionesJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L76 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_pedirevidencias": "pedirEvidencias()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L56 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_service_tomarcaso": "tomarCaso()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L52 | neighbors=[actions.ts, service.ts]
+- "agente_juzgado_subirfotodetenido_subirfotodetenido": "SubirFotoDetenido()" | kind=code-symbol | source=components/agente_juzgado/SubirFotoDetenido.tsx:L33 | neighbors=[SubirFotoDetenido.tsx, page.tsx]
+- "agente_juzgado_tabsolicitudes_tabsolicitudes": "TabSolicitudes()" | kind=code-symbol | source=components/agente_juzgado/TabSolicitudes.tsx:L35 | neighbors=[TabSolicitudes.tsx, page.tsx]
+- "agente_juzgado_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/agente_juzgado/ToastExito.tsx:L6 | neighbors=[page.tsx, ToastExito.tsx]
+- "agente_juzgado_tomarcasomodal_tomarcasoboton": "TomarCasoBoton()" | kind=code-symbol | source=components/agente_juzgado/TomarCasoModal.tsx:L6 | neighbors=[TabSolicitudes.tsx, TomarCasoModal.tsx]
+- "agente_juzgado_types_rolrow": "RolRow" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L46 | neighbors=[repository.ts, types.ts]
+- "agente_juzgado_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L40 | neighbors=[actions.ts, types.ts]
+- "agente_liberaciones_actions_capturarinfractoraction": "capturarInfractorAction()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L38 | neighbors=[actions.ts, CapturarInfractorSection.tsx]
+- "agente_liberaciones_actions_finalizarrevisionaction": "finalizarRevisionAction()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L216 | neighbors=[actions.ts, RevisionDocumentosSection.tsx]
+- "agente_liberaciones_actions_obtenerdetalleinfraccionliberaciones": "obtenerDetalleInfraccionLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L336 | neighbors=[actions.ts, page.tsx]
+- "agente_liberaciones_actions_obtenerdocumentosliberacion": "obtenerDocumentosLiberacion()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L124 | neighbors=[actions.ts, RevisionDocumentosSection.tsx]
+- "agente_liberaciones_actions_revisardocumentoaction": "revisarDocumentoAction()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L181 | neighbors=[actions.ts, RevisionDocumentosSection.tsx]
+- "agente_liberaciones_mapper_rowtoliberacion": "rowToLiberacion()" | kind=code-symbol | source=lib/agente_liberaciones/mapper.ts:L8 | neighbors=[mapper.ts, service.ts]
+- "agente_liberaciones_repository_obtenerliberaciones": "obtenerLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L16 | neighbors=[repository.ts, service.ts]
+- "agente_liberaciones_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L4 | neighbors=[repository.ts, service.ts]
+- "agente_liberaciones_service_listarliberaciones": "listarLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/service.ts:L10 | neighbors=[actions.ts, service.ts]
+- "agente_liberaciones_service_verificarrolliberaciones": "verificarRolLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/service.ts:L5 | neighbors=[actions.ts, service.ts]
+- "agente_liberaciones_types_liberacionesresponse": "LiberacionesResponse" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L24 | neighbors=[actions.ts, types.ts]
+- "agente_liberaciones_types_rolrow": "RolRow" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L7 | neighbors=[repository.ts, types.ts]
+- "agente_liberaciones_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L1 | neighbors=[actions.ts, types.ts]
+- "analisis_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/analisis/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
+- "auth_helpers_rowtouserwithrole": "rowToUserWithRole()" | kind=code-symbol | source=lib/auth/helpers.ts:L13 | neighbors=[helpers.ts, getUserWithRole()]
 - "auxiliar_actions_requireauxiliar": "requireAuxiliar()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L10 | neighbors=[actions.ts, upsertChecklistAction()]
 - "auxiliar_permisos_accion": "Accion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
 - "auxiliar_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
@@ -31,37 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "camara_repository_obtenerconcentradodiario": "obtenerConcentradoDiario()" | kind=code-symbol | source=lib/camara/repository.ts:L68 | neighbors=[repository.ts, route.ts]
 - "camara_repository_obtenerincidentescamara": "obtenerIncidentesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L5 | neighbors=[repository.ts, service.ts]
 - "camara_repository_obtenerporturno": "obtenerPorTurno()" | kind=code-symbol | source=lib/camara/repository.ts:L54 | neighbors=[repository.ts, route.ts]
-- "camara_service_listarincidentescamara": "listarIncidentesCamara()" | kind=code-symbol | source=lib/camara/service.ts:L5 | neighbors=[service.ts, page.tsx]
-- "complementos_repository_listargruasactivas": "listarGruasActivas()" | kind=code-symbol | source=lib/complementos/repository.ts:L9 | neighbors=[repository.ts, route.ts]
-- "components_capturardatostitularsection_isnodata": "isNoData()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L29 | neighbors=[CapturarDatosTitularSection.tsx, TitularForm()]
-- "components_capturardatostitularsection_titularform": "TitularForm()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L47 | neighbors=[CapturarDatosTitularSection.tsx, isNoData()]
-- "components_filadetenidorol_filadetenidorol": "FilaDetenidoRol()" | kind=code-symbol | source=components/FilaDetenidoRol.tsx:L5 | neighbors=[FilaDetenidoRol.tsx, page.tsx]
-- "components_mapadireccionregistro_extractaddress": "extractAddress()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L111 | neighbors=[MapaDireccionRegistro.tsx, extractNeighborhoodFromComponents()]
-- "components_mapadireccionregistro_getmunicipioestado": "getMunicipioEstado()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L125 | neighbors=[MapaDireccionRegistro.tsx, normalizeUpper()]
-- "components_mapadireccionregistro_mapadireccionregistro": "MapaDireccionRegistro()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L141 | neighbors=[MapaDireccionRegistro.tsx, PasoUbicacion.tsx]
-- "components_modalentregargarantia_getgarantiainfo": "getGarantiaInfo()" | kind=code-symbol | source=features/via/infracciones/components/ModalEntregarGarantia.tsx:L14 | neighbors=[ModalEntregarGarantia.tsx, ModalEntregarGarantia()]
-- "components_modalentregargarantia_modalentregargarantia": "ModalEntregarGarantia()" | kind=code-symbol | source=features/via/infracciones/components/ModalEntregarGarantia.tsx:L22 | neighbors=[ModalEntregarGarantia.tsx, getGarantiaInfo()]
-- "components_seccionliberacion_getestatusconfig": "getEstatusConfig()" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L87 | neighbors=[SeccionLiberacion.tsx, SeccionLiberacion()]
-- "components_seccionliberacion_seccionliberacion": "SeccionLiberacion()" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L136 | neighbors=[SeccionLiberacion.tsx, getEstatusConfig()]
-- "corralon_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/corralon/mapper.ts:L3 | neighbors=[mapper.ts, rowToSolicitud()]
-- "corralon_module_card_modulecard": "ModuleCard()" | kind=code-symbol | source=app/corralon/module-card.tsx:L6 | neighbors=[module-card.tsx, page.tsx]
-- "corralon_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/corralon/permisos.ts:L3 | neighbors=[permisos.ts, registro.ts]
-- "corralon_repository_finalizarinfraccioncorralon": "finalizarInfraccionCorralon()" | kind=code-symbol | source=lib/corralon/repository.ts:L35 | neighbors=[repository.ts, route.ts]
-- "corralon_repository_obtenerestatusinfraccion": "obtenerEstatusInfraccion()" | kind=code-symbol | source=lib/corralon/repository.ts:L27 | neighbors=[repository.ts, route.ts]
-- "corralon_repository_obtenersolicitudesfinalizadas": "obtenerSolicitudesFinalizadas()" | kind=code-symbol | source=lib/corralon/repository.ts:L47 | neighbors=[repository.ts, service.ts]
-- "corralon_repository_obtenersolicitudespendientes": "obtenerSolicitudesPendientes()" | kind=code-symbol | source=lib/corralon/repository.ts:L3 | neighbors=[repository.ts, service.ts]
-- "corralon_service_listarsolicitudesfinalizadas": "listarSolicitudesFinalizadas()" | kind=code-symbol | source=lib/corralon/service.ts:L10 | neighbors=[actions.ts, service.ts]
-- "corralon_service_listarsolicitudespendientes": "listarSolicitudesPendientes()" | kind=code-symbol | source=lib/corralon/service.ts:L5 | neighbors=[actions.ts, service.ts]
-- "corralon_types_tabsolicitudes": "TabSolicitudes" | kind=code-symbol | source=lib/corralon/types.ts:L24 | neighbors=[types.ts, solicitudes-client.tsx]
-- "corralon_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/corralon/types.ts:L1 | neighbors=[actions.ts, types.ts]
-- "d1_d1filters_d1filters": "D1Filters()" | kind=code-symbol | source=components/reportes/d1/D1Filters.tsx:L7 | neighbors=[D1Filters.tsx, page.tsx]
-- "d1_d1pagination_d1pagination": "D1Pagination()" | kind=code-symbol | source=components/reportes/d1/D1Pagination.tsx:L14 | neighbors=[D1Pagination.tsx, D1ReportsTable.tsx]
-- "d1_d1reportstable_d1reportstable": "D1ReportsTable()" | kind=code-symbol | source=components/reportes/d1/D1ReportsTable.tsx:L7 | neighbors=[D1ReportsTable.tsx, page.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-036.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-036.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

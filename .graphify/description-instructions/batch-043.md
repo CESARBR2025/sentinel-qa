@@ -1,4 +1,4 @@
-# Node Description Batch 44 of 82
+# Node Description Batch 44 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,31 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "monitorista_repository_listarhistorialconfiltros": "listarHistorialConFiltros()" | kind=code-symbol | source=lib/monitorista/repository.ts:L187 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_listariphdetenidos": "listarIphDetenidos()" | kind=code-symbol | source=lib/monitorista/repository.ts:L246 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_listarregistrosraw": "listarRegistrosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L405 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_listarreportescondetenidosraw": "listarReportesConDetenidosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L358 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_listarsolicitudesconfiltro": "listarSolicitudesConFiltro()" | kind=code-symbol | source=lib/monitorista/repository.ts:L127 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_listarsolicitudesevidencia": "listarSolicitudesEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L31 | neighbors=[repository.ts, page.tsx]
+- "monitorista_repository_marcarsolicitudatendida": "marcarSolicitudAtendida()" | kind=code-symbol | source=lib/monitorista/repository.ts:L616 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerdenunciaporidraw": "obtenerDenunciaPorIdRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L328 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerdenunciasatendidasraw": "obtenerDenunciasAtendidasRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L316 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerdenunciaspendientesraw": "obtenerDenunciasPendientesRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L305 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerevidenciasdenunciaraw": "obtenerEvidenciasDenunciaRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L340 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerfolioreportecampo": "obtenerFolioReporteCampo()" | kind=code-symbol | source=lib/monitorista/repository.ts:L170 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_obteneriphdetenido": "obtenerIphDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L238 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_obtenerobtenersolicitudfoto": "obtenerObtenerSolicitudFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L499 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_obtenerprellenadocompleto": "obtenerPrellenadoCompleto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L253 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_obtenerregistroporfechaturnoraw": "obtenerRegistroPorFechaTurnoRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L425 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerregistroraw": "obtenerRegistroRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L417 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerreporteporidraw": "obtenerReportePorIdRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L378 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenersolicitudconevidencias": "obtenerSolicitudConEvidencias()" | kind=code-symbol | source=lib/monitorista/repository.ts:L138 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_obtenersolicitudconincidente": "obtenerSolicitudConIncidente()" | kind=code-symbol | source=lib/monitorista/repository.ts:L104 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_obtenersolicitudevidencia": "obtenerSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L69 | neighbors=[page.tsx, repository.ts]
+- "monitorista_repository_obtenersolicitudfotosraw": "obtenerSolicitudFotosRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L397 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_registrarfichainteligencia": "registrarFichaInteligencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L575 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_registrariphdetenido": "registrarIphDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L533 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_subirfotodetenido": "subirFotoDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L469 | neighbors=[repository.ts, route.ts]
 - "monitorista_service_cameltosnake": "camelToSnake()" | kind=code-symbol | source=lib/monitorista/service.ts:L210 | neighbors=[service.ts, actualizarRegistro()]
 - "monitorista_service_crearregistro": "crearRegistro()" | kind=code-symbol | source=lib/monitorista/service.ts:L142 | neighbors=[incidentes-camara-service.ts, service.ts]
 - "monitorista_service_listarregistros": "listarRegistros()" | kind=code-symbol | source=lib/monitorista/service.ts:L127 | neighbors=[incidentes-camara-service.ts, service.ts]
@@ -32,36 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_subirevidenciamodal_btnsubmit": "btnSubmit()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L257 | neighbors=[SubirEvidenciaModal.tsx, SubirEvidenciaModal()]
 - "monitorista_subirevidenciamodal_formatsize": "formatSize()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L39 | neighbors=[SubirEvidenciaModal.tsx, SubirEvidenciaModal()]
 - "monitorista_tabladetenidos_tabladetenidos": "TablaDetenidos()" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L25 | neighbors=[TablaDetenidos.tsx, tabStyle()]
-- "monitorista_tabladetenidos_tabstyle": "tabStyle()" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L93 | neighbors=[TablaDetenidos.tsx, TablaDetenidos()]
-- "monitorista_types_solicitudevidenciajson": "SolicitudEvidenciaJson" | kind=code-symbol | source=lib/monitorista/types.ts:L44 | neighbors=[mapper.ts, types.ts]
-- "notificaciones_actions_generaralertasdebug": "generarAlertasDebug()" | kind=code-symbol | source=lib/notificaciones/actions.ts:L32 | neighbors=[actions.ts, CampanillaNotificaciones.tsx]
-- "notificaciones_actions_marcarleida": "marcarLeida()" | kind=code-symbol | source=lib/notificaciones/actions.ts:L10 | neighbors=[actions.ts, CampanillaNotificaciones.tsx]
-- "notificaciones_actions_marcartodasleidas": "marcarTodasLeidas()" | kind=code-symbol | source=lib/notificaciones/actions.ts:L21 | neighbors=[actions.ts, CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_campanillanotificaciones": "CampanillaNotificaciones()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L191 | neighbors=[CampanillaNotificaciones.tsx, layout.tsx]
-- "notificaciones_mapper_rowtonotificacion": "rowToNotificacion()" | kind=code-symbol | source=lib/notificaciones/mapper.ts:L3 | neighbors=[mapper.ts, repository.ts]
-- "notificaciones_repository_eliminaralertasbusqueda": "eliminarAlertasBusqueda()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L27 | neighbors=[actions.ts, repository.ts]
-- "notificaciones_repository_marcarnotificacionleida": "marcarNotificacionLeida()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L13 | neighbors=[actions.ts, repository.ts]
-- "notificaciones_repository_marcartodasnotificacionesleidas": "marcarTodasNotificacionesLeidas()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L20 | neighbors=[actions.ts, repository.ts]
-- "nueva_page_btnprimario": "btnPrimario()" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L95 | neighbors=[page.tsx, NuevaDetenidoPage()]
-- "nueva_page_nuevadetenidopage": "NuevaDetenidoPage()" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L11 | neighbors=[page.tsx, btnPrimario()]
-- "nuevo_page_btnprimario": "btnPrimario()" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L151 | neighbors=[page.tsx, NuevoIncidenteCamaraPage()]
-- "nuevo_page_nuevoincidentecamarapage": "NuevoIncidenteCamaraPage()" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L30 | neighbors=[page.tsx, btnPrimario()]
-- "oficial_actions_asignarpatrulla": "asignarPatrulla()" | kind=code-symbol | source=lib/oficial/actions.ts:L39 | neighbors=[actions.ts, ModalSeleccionarUnidad.tsx]
-- "oficial_actions_crearreportecampooficial": "crearReporteCampoOficial()" | kind=code-symbol | source=lib/oficial/actions.ts:L11 | neighbors=[actions.ts, FormularioRecorrido.tsx]
-- "oficial_formulariorecorrido_formulariorecorrido": "FormularioRecorrido()" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L54 | neighbors=[page.tsx, FormularioRecorrido.tsx]
-- "oficial_mapapinfijo_mapapinfijo": "MapaPinFijo()" | kind=code-symbol | source=components/oficial/MapaPinFijo.tsx:L18 | neighbors=[page.tsx, MapaPinFijo.tsx]
-- "oficial_mapaubicacion_mapaubicacion": "MapaUbicacion()" | kind=code-symbol | source=components/oficial/MapaUbicacion.tsx:L15 | neighbors=[FormularioRecorrido.tsx, MapaUbicacion.tsx]
-- "oficial_mapper_parsejsonfield": "parseJsonField()" | kind=code-symbol | source=lib/oficial/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteCampo()]
-- "oficial_mapper_rowtooficial": "rowToOficial()" | kind=code-symbol | source=lib/oficial/mapper.ts:L45 | neighbors=[mapper.ts, repository.ts]
-- "oficial_modalseleccionarunidad_modalseleccionarunidad": "ModalSeleccionarUnidad()" | kind=code-symbol | source=components/oficial/ModalSeleccionarUnidad.tsx:L14 | neighbors=[ModalSeleccionarUnidad.tsx, UnidadAsignadaSection.tsx]
-- "oficial_repository_actualizarpatrullaoficial": "actualizarPatrullaOficial()" | kind=code-symbol | source=lib/oficial/repository.ts:L337 | neighbors=[actions.ts, repository.ts]
-- "oficial_repository_contardenunciaspendientes": "contarDenunciasPendientes()" | kind=code-symbol | source=lib/oficial/repository.ts:L164 | neighbors=[repository.ts, service.ts]
-- "oficial_repository_insertardetallesasegurados": "insertarDetallesAsegurados()" | kind=code-symbol | source=lib/oficial/repository.ts:L322 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-043.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-043.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

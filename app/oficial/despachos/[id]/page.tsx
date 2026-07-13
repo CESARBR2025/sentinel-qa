@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { verificarRolOficial, listarDespachosAsignados, obtenerCatalogos } from '@/lib/oficial/service'
 import { obtenerHistorialCompleto } from '@/lib/incidentes/service'
+import { obtenerIncidenteBasico } from '@/lib/incidentes/repository'
 import { HistorialIncidente } from '@/components/incidentes/HistorialIncidente'
 import { FormularioRecorrido } from '@/components/oficial/FormularioRecorrido'
+import { MarcarEnSitioButton } from '@/components/oficial/MarcarEnSitioButton'
 
 export default async function AtenderDespachoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -22,11 +24,12 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
   const asignacion = asignados.find(d => d.incidenteId === id)
   if (!asignacion) notFound()
 
-  const [historial, catalogos] = await Promise.all([
+  const [historial, catalogos, incidenteBasico] = await Promise.all([
     obtenerHistorialCompleto(id),
     obtenerCatalogos(),
+    obtenerIncidenteBasico(id),
   ])
-  if (!historial) notFound()
+  if (!historial || !incidenteBasico) notFound()
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
@@ -39,6 +42,24 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
 
         <div style={{ marginBottom: 24 }}>
           <HistorialIncidente historial={historial} />
+
+          <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span style={{
+              fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
+              padding: '4px 12px', borderRadius: 2,
+              ...(incidenteBasico.estatus === 'en_despacho'
+                ? { background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }
+                : incidenteBasico.estatus === 'en_sitio'
+                ? { background: '#f0fdfa', color: '#0f766e', border: '1px solid #ccfbf1' }
+                : { background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }),
+            }}>
+              {incidenteBasico.estatus === 'en_despacho' ? 'UNIDADES ASIGNADAS' :
+               incidenteBasico.estatus === 'en_sitio' ? 'EN SITIO' :
+               incidenteBasico.estatus.toUpperCase()}
+            </span>
+
+            <MarcarEnSitioButton incidenteId={id} estatusActual={incidenteBasico.estatus} />
+          </div>
         </div>
       </main>
 

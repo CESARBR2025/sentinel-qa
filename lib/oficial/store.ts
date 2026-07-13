@@ -94,7 +94,7 @@ const initialState: OficialFormState = {
   objetosRecuperados: '',
   resultadoCateo: '',
   tieneDetencion: 'false',
-  autoridadRecibe: 'FISCALIA',
+  autoridadRecibe: '',
   tieneCateo: 'false',
   domicilioCateado: '',
   detenidos: [{ nombre: '', apellidoPaterno: '', apellidoMaterno: '' }],

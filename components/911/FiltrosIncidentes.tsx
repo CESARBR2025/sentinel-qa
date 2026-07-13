@@ -21,7 +21,9 @@ const CANALES = [
 const ESTATUS = [
   { value: 'sin_despachar', label: 'Sin despachar' },
   { value: 'en_despacho', label: 'En despacho' },
+  { value: 'en_sitio', label: 'En sitio' },
   { value: 'atendido', label: 'Atendido' },
+  { value: 'cerrado_detencion', label: 'Cerrado por detención' },
 ]
 
 export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {

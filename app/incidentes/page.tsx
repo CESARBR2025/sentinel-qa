@@ -169,7 +169,9 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' };
         case 'en_despacho': return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' };
+        case 'en_sitio': return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' };
         case 'atendido': return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' };
+        case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' };
         default: return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
     }
 }

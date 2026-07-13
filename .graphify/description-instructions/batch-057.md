@@ -1,4 +1,4 @@
-# Node Description Batch 58 of 82
+# Node Description Batch 58 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "analisis_generarpresentacion_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L297 | neighbors=[generarPresentacion.tsx]
+- "analisis_page_actiontextstyle": "actionTextStyle" | kind=code-symbol | source=app/analisis/page.tsx:L161 | neighbors=[page.tsx]
+- "analisis_page_cardcontentstyle": "cardContentStyle" | kind=code-symbol | source=app/analisis/page.tsx:L144 | neighbors=[page.tsx]
+- "analisis_page_carddescstyle": "cardDescStyle" | kind=code-symbol | source=app/analisis/page.tsx:L159 | neighbors=[page.tsx]
+- "analisis_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/analisis/page.tsx:L135 | neighbors=[page.tsx]
+- "analisis_page_cardtitlestyle": "cardTitleStyle" | kind=code-symbol | source=app/analisis/page.tsx:L158 | neighbors=[page.tsx]
+- "analisis_page_decoratorline": "decoratorLine" | kind=code-symbol | source=app/analisis/page.tsx:L172 | neighbors=[page.tsx]
+- "analisis_page_iconboxstyle": "iconBoxStyle" | kind=code-symbol | source=app/analisis/page.tsx:L146 | neighbors=[page.tsx]
+- "analisis_page_menuanalisispage": "MenuAnalisisPage()" | kind=code-symbol | source=app/analisis/page.tsx:L9 | neighbors=[page.tsx]
+- "analisis_page_systemstatusstyle": "systemStatusStyle" | kind=code-symbol | source=app/analisis/page.tsx:L174 | neighbors=[page.tsx]
+- "analisis_page_titlestyle": "titleStyle" | kind=code-symbol | source=app/analisis/page.tsx:L133 | neighbors=[page.tsx]
+- "analisis_page_toplabelstyle": "topLabelStyle" | kind=code-symbol | source=app/analisis/page.tsx:L132 | neighbors=[page.tsx]
+- "analisis_permisos_accion": "Accion" | kind=code-symbol | source=lib/analisis/permisos.ts:L6 | neighbors=[permisos.ts]
+- "analisis_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/analisis/permisos.ts:L13 | neighbors=[permisos.ts]
+- "analisis_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/analisis/permisos.ts:L21 | neighbors=[permisos.ts]
+- "analisis_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/analisis/permisos.ts:L17 | neighbors=[permisos.ts]
+- "analisis_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/analisis/permisos.ts:L7 | neighbors=[permisos.ts]
+- "analisis_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/analisis/permisos.ts:L26 | neighbors=[permisos.ts]
+- "analisis_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/analisis/permisos.ts:L5 | neighbors=[permisos.ts]
+- "analisis_tablonanalisis_btnstyle": "btnStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L159 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_containerstyle": "containerStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L153 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_headerrowstyle": "headerRowStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L154 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_loadingstyle": "loadingStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L158 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_pagebuttonstyle": "pageButtonStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L168 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_paginationcontainerstyle": "paginationContainerStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L161 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_resultbadge": "ResultBadge()" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L140 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_tablonanalisis": "TablonAnalisis()" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L8 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_tdstyle": "tdStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L156 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_thstyle": "thStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L155 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_trstyle": "trStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L157 | neighbors=[TablonAnalisis.tsx]
+- "app_layout_metadata": "metadata" | kind=code-symbol | source=app/layout.tsx:L6 | neighbors=[layout.tsx]
+- "app_layout_rootlayout": "RootLayout()" | kind=code-symbol | source=app/layout.tsx:L11 | neighbors=[layout.tsx]
+- "app_page_rootpage": "RootPage()" | kind=code-symbol | source=app/page.tsx:L3 | neighbors=[page.tsx]
+- "asegurados_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/fiscalia/asegurados/page.tsx:L5 | neighbors=[page.tsx]
+- "asegurados_page_juzgadoaseguradospage": "JuzgadoAseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/page.tsx:L5 | neighbors=[page.tsx]
+- "atendidos_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/atendidos/route.ts:L7 | neighbors=[route.ts]
+- "auth_helpers_userwithrole": "UserWithRole" | kind=code-symbol | source=lib/auth/helpers.ts:L3 | neighbors=[helpers.ts]
 - "auth_layout_authlayout": "AuthLayout()" | kind=code-symbol | source=app/(auth)/layout.tsx:L7 | neighbors=[layout.tsx]
 - "auth_layout_metadata": "metadata" | kind=code-symbol | source=app/(auth)/layout.tsx:L3 | neighbors=[layout.tsx]
 - "auxiliar_actions_bool": "bool()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L17 | neighbors=[actions.ts]
-- "auxiliar_actions_str": "str()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L18 | neighbors=[actions.ts]
-- "auxiliar_page_auxiliarpage": "AuxiliarPage()" | kind=code-symbol | source=app/auxiliar/page.tsx:L11 | neighbors=[page.tsx]
-- "auxiliar_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L17 | neighbors=[permisos.ts]
-- "auxiliar_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L25 | neighbors=[permisos.ts]
-- "auxiliar_permisos_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L9 | neighbors=[permisos.ts]
-- "auxiliar_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L21 | neighbors=[permisos.ts]
-- "auxiliar_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L7 | neighbors=[permisos.ts]
-- "auxiliar_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L30 | neighbors=[permisos.ts]
-- "auxiliar_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/auxiliar/permisos.ts:L5 | neighbors=[permisos.ts]
-- "auxiliar_profiledropdownauxiliar_props": "Props" | kind=code-symbol | source=components/auxiliar/ProfileDropdownAuxiliar.tsx:L8 | neighbors=[ProfileDropdownAuxiliar.tsx]
-- "buscar_orden_route_get": "GET()" | kind=code-symbol | source=app/api/via/sa7/buscar-orden/route.ts:L6 | neighbors=[route.ts]
-- "busquedas_page_busquedaspage": "BusquedasPage()" | kind=code-symbol | source=app/prevencion/busquedas/page.tsx:L14 | neighbors=[page.tsx]
-- "busquedas_page_tipo_cfg": "TIPO_CFG" | kind=code-symbol | source=app/prevencion/busquedas/page.tsx:L9 | neighbors=[page.tsx]
-- "busquedas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/busquedas/route.ts:L8 | neighbors=[route.ts]
-- "busquedas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/route.ts:L22 | neighbors=[route.ts]
-- "c4_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/c4/route.ts:L7 | neighbors=[route.ts]
-- "calcular_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fge/calcular/route.ts:L7 | neighbors=[route.ts]
-- "camara_service_tostr": "toStr()" | kind=code-symbol | source=lib/camara/service.ts:L3 | neighbors=[service.ts]
-- "cancelar_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/[id]/cancelar/route.ts:L7 | neighbors=[route.ts]
-- "captura_page_capturapage": "CapturaPage()" | kind=code-symbol | source=app/infracciones/captura/page.tsx:L10 | neighbors=[page.tsx]
-- "checklist_page_checklistpage": "ChecklistPage()" | kind=code-symbol | source=app/auxiliar/checklist/page.tsx:L9 | neighbors=[page.tsx]
-- "ciudadano_formulario911_formulario911": "Formulario911()" | kind=code-symbol | source=app/agente_911/ciudadano/Formulario911.tsx:L11 | neighbors=[Formulario911.tsx]
-- "ciudadano_formulario911_libraries": "libraries" | kind=code-symbol | source=app/agente_911/ciudadano/Formulario911.tsx:L9 | neighbors=[Formulario911.tsx]
-- "ciudadano_page_ciudadano911page": "Ciudadano911Page()" | kind=code-symbol | source=app/agente_911/ciudadano/page.tsx:L16 | neighbors=[page.tsx]
-- "complementos_repository_gruarow": "GruaRow" | kind=code-symbol | source=lib/complementos/repository.ts:L3 | neighbors=[repository.ts]
-- "completar_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/solicitudes/[id]/completar/route.ts:L7 | neighbors=[route.ts]
-- "completar_solicitud_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/completar-solicitud/route.ts:L7 | neighbors=[route.ts]
-- "components_buttonverdetalles_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L6 | neighbors=[ButtonVerDetalles.tsx]
-- "components_capturardatostitularsection_capturardatostitularsection": "CapturarDatosTitularSection()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L15 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_field": "Field()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L671 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_fieldname": "FieldName" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L33 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L9 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturardatostitularsection_validatefield": "validateField()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L35 | neighbors=[CapturarDatosTitularSection.tsx]
-- "components_capturarinfractorsection_capturarinfractorsection": "CapturarInfractorSection()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L42 | neighbors=[CapturarInfractorSection.tsx]
-- "components_capturarinfractorsection_field": "Field()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L15 | neighbors=[CapturarInfractorSection.tsx]
-- "components_capturarinfractorsection_props": "Props" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L8 | neighbors=[CapturarInfractorSection.tsx]
-- "components_formularioinfraccion_addressdata": "AddressData" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L9 | neighbors=[FormularioInfraccion.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-057.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-057.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

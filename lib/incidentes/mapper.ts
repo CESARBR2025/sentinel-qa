@@ -68,6 +68,7 @@ export function rowToIncidenteConDespachoBase(row: Record<string, unknown>): Omi
     fechaHoraDespacho: toStr(row.despacho_fecha_hora),
     accionesRealizadas: toStr(row.acciones_realizadas),
     hayDetencion: toBool(row.hay_detencion),
+    ofiAutoridadRecibe: toStr(row.ofi_autoridad_recibe),
     d1Pendiente: Boolean(row.d1_pendiente),
   }
 }

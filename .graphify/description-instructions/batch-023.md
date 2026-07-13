@@ -1,4 +1,4 @@
-# Node Description Batch 24 of 82
+# Node Description Batch 24 of 84
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,7 +17,24 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "incidentes_mapper_rowtopersonaafectada": "rowToPersonaAfectada()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L92 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "fiscalia_types_viainfracciondetalle": "ViaInfraccionDetalle" | kind=code-symbol | source=lib/fiscalia/types.ts:L281 | neighbors=[actions.ts, FiscaliaDashboard.tsx, mapper.ts, types.ts]
+- "flota_mapper_rowtopatrulla": "rowToPatrulla()" | kind=code-symbol | source=lib/flota/mapper.ts:L14 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
+- "hooks_useincidentes": "useIncidentes.ts" | kind=code-symbol | source=hooks/useIncidentes.ts:L1 | neighbors=[Filtros, IncidenteResumen, useIncidentes(), 6feefe2 BackEnd completo para hacer la …]
+- "id_page_fmtdt": "fmtDT()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/[id]/page.tsx:L16 | neighbors=[page.tsx, FichaDetailPage(), toDate(), SolicitudDetailPage()]
+- "id_page_getstatusbadgestyle": "getStatusBadgeStyle()" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L162 | neighbors=[page.tsx, DetalleCiudadanoCompletoPage(), DetalleRondinCompletoPage(), DetalleWhatsAppPage()]
+- "incidentes_actions_addpersonaafectada": "addPersonaAfectada()" | kind=code-symbol | source=lib/incidentes/actions.ts:L261 | neighbors=[actions.ts, req(), requireOperador(), validarEnum()]
+- "incidentes_actions_createdespacho": "createDespacho()" | kind=code-symbol | source=lib/incidentes/actions.ts:L432 | neighbors=[DespachoForm.tsx, actions.ts, req(), requireOperador()]
+- "incidentes_actions_createrecorridocompleto": "createRecorridoCompleto()" | kind=code-symbol | source=lib/incidentes/actions.ts:L365 | neighbors=[actions.ts, num(), requireOperador(), FormSection.tsx]
+- "incidentes_actions_createreportecampo": "createReporteCampo()" | kind=code-symbol | source=lib/incidentes/actions.ts:L546 | neighbors=[actions.ts, num(), req(), requireOperador()]
+- "incidentes_actions_createrondinescalado": "createRondinEscalado()" | kind=code-symbol | source=lib/incidentes/actions.ts:L316 | neighbors=[actions.ts, req(), requireOperador(), FormRondinEscalado.tsx]
+- "incidentes_actions_insertarincidente": "insertarIncidente()" | kind=code-symbol | source=lib/incidentes/actions.ts:L610 | neighbors=[actions.ts, num(), req(), validarEnum()]
+- "incidentes_mapper_rowtoalarmaescolar": "rowToAlarmaEscolar()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L156 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "incidentes_mapper_rowtoincidentecondespachobase": "rowToIncidenteConDespachoBase()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L54 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
+- "incidentes_mapper_rowtoincidentependiente": "rowToIncidentePendiente()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L76 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "incidentes_mapper_rowtopersonaafectada": "rowToPersonaAfectada()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L94 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "incidentes_repository_obtenerdespachodeincidente": "obtenerDespachoDeIncidente()" | kind=code-symbol | source=lib/incidentes/repository.ts:L124 | neighbors=[route.ts, repository.ts, toStr(), service.ts]
+- "incidentes_repository_obtenerincidentebasico": "obtenerIncidenteBasico()" | kind=code-symbol | source=lib/incidentes/repository.ts:L116 | neighbors=[route.ts, page.tsx, repository.ts, route.ts]
+- "incidentes_types_incidentelistitem": "IncidenteListItem" | kind=code-symbol | source=lib/incidentes/types.ts:L11 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
 - "legalidad_repository_articulosrepository": "ArticulosRepository" | kind=code-symbol | source=features/via/legalidad/repository.ts:L3 | neighbors=[repository.ts, .obtenerArticulos(), .obtenerFraccionesPorArticulo(), service.ts]
 - "manual_migrations_0009_rename_permisos": "0009_rename_permisos.sql" | kind=code-symbol | source=lib/db/manual-migrations/0009_rename_permisos.sql:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, f2c66e6 Extender roles y permisos finos…]
 - "manual_migrations_0010_permisos_seccion_libre": "0010_permisos_seccion_libre.sql" | kind=code-symbol | source=lib/db/manual-migrations/0010_permisos_seccion_libre.sql:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, f2c66e6 Extender roles y permisos finos…]
@@ -37,31 +54,14 @@ one-sentence description — no prose, no markdown fences.
 - "notificaciones_checker_generaralertasbusquedas": "generarAlertasBusquedas()" | kind=code-symbol | source=lib/notificaciones/checker.ts:L7 | neighbors=[actions.ts, checker.ts, route.ts, layout.tsx]
 - "notificaciones_types": "types.ts" | kind=code-symbol | source=lib/notificaciones/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, mapper.ts, repository.ts, Notificacion]
 - "oficial_mapper_rowtoreportecampo": "rowToReporteCampo()" | kind=code-symbol | source=lib/oficial/mapper.ts:L9 | neighbors=[mapper.ts, parseJsonField(), toStr(), rowToReporteDetalle()]
-- "oficial_mapper_rowtoreportedetalle": "rowToReporteDetalle()" | kind=code-symbol | source=lib/oficial/mapper.ts:L111 | neighbors=[mapper.ts, rowToD1(), rowToReporteCampo(), repository.ts]
-- "oficial_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/oficial/mapper.ts:L64 | neighbors=[mapper.ts, rowToD1(), rowToReporteCampo(), rowToReporteResumen()]
-- "oficial_service_crearreporte": "crearReporte()" | kind=code-symbol | source=lib/oficial/service.ts:L94 | neighbors=[actions.ts, service.ts, generarFolioUnico(), num()]
-- "oficial_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/oficial/ToastExito.tsx:L6 | neighbors=[page.tsx, page.tsx, page.tsx, ToastExito.tsx]
-- "oficial_types_ofidetenido": "OfiDetenido" | kind=code-symbol | source=lib/oficial/types.ts:L18 | neighbors=[mapper.ts, service.ts, store.ts, types.ts]
-- "oficial_types_ofioficial": "OfiOficial" | kind=code-symbol | source=lib/oficial/types.ts:L1 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "oficial_types_ofireporteresumen": "OfiReporteResumen" | kind=code-symbol | source=lib/oficial/types.ts:L123 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "permisos_core_guardarpermisosseccionesaction": "guardarPermisosSeccionesAction()" | kind=code-symbol | source=lib/permisos/core.ts:L161 | neighbors=[page.tsx, core.ts, guardarPermiso(), requireAdmin()]
-- "permisos_core_guardarplantillaseccionesaction": "guardarPlantillaSeccionesAction()" | kind=code-symbol | source=lib/permisos/core.ts:L184 | neighbors=[core.ts, guardarPlantillaSeccion(), requireAdmin(), page.tsx]
-- "permisos_core_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/permisos/core.ts:L32 | neighbors=[page.tsx, core.ts, mapaDefault(), tienePermiso()]
-- "permisos_registro_modulos_por_rol": "MODULOS_POR_ROL" | kind=code-symbol | source=lib/permisos/registro.ts:L18 | neighbors=[page.tsx, registro.ts, page.tsx, page.tsx]
-- "prevencion_mapper_rowtomedidadetalle": "rowToMedidaDetalle()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L55 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
-- "prevencion_mapper_rowtovisita": "rowToVisita()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L140 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
-- "prevencion_prorrogaviewermodal": "ProrrogaViewerModal.tsx" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L1 | neighbors=[0e33bf6 feat: módulo Admin, Prórroga, F…, page.tsx, ProrrogaViewerModal(), ProrrogaViewerModalProps]
-- "reportes_formato_n_atencion_victimas_service_obteneratencionvictimasporfechaperiodo": "obtenerAtencionVictimasPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L64 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts, rowTo(), formato-n-consolidado-service.ts]
-- "reportes_formato_n_fge_service_obtenerfgeporfechaperiodo": "obtenerFgePorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L73 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-fge-service.ts, rowTo()]
-- "reportes_formato_n_fgr_service_obtenerfgrporfechaperiodo": "obtenerFgrPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L72 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-fgr-service.ts, rowTo()]
-- "reportes_formato_n_medios_alternativos_service_obtenermediosalternativosporfechaperiodo": "obtenerMediosAlternativosPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L60 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-medios-alternativos-service.ts, rowTo()]
-- "reportes_incidentes_service_listarreportediario": "listarReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L40 | neighbors=[route.ts, page.tsx, service.ts, combinar()]
-- "reportes_incidentes_service_listarreportesemanal": "listarReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L47 | neighbors=[route.ts, page.tsx, service.ts, combinar()]
+- "oficial_mapper_rowtoreportedetalle": "rowToReporteDetalle()" | kind=code-symbol | source=lib/oficial/mapper.ts:L137 | neighbors=[mapper.ts, rowToD1(), rowToReporteCampo(), repository.ts]
+- "oficial_service_crearreporte": "crearReporte()" | kind=code-symbol | source=lib/oficial/service.ts:L97 | neighbors=[actions.ts, service.ts, generarFolioUnico(), num()]
+- "oficial_service_obtenercatalogos": "obtenerCatalogos()" | kind=code-symbol | source=lib/oficial/service.ts:L83 | neighbors=[page.tsx, page.tsx, service.ts, page.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-023.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-023.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is
