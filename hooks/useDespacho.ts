@@ -18,6 +18,9 @@ export interface IncidentePendiente {
   descripcion: string | null; tipoIncidente: string | null
   prioridad: string | null; prioridadOrden: number | null
   capturadoPor: string | null
+  origenRondin: boolean
+  prioritarioNombre: string | null
+  prioritarioNomina: string | null
 }
 
 export interface DespachoDetalle {

@@ -70,6 +70,7 @@ export function rowToIncidenteConDespachoBase(row: Record<string, unknown>): Omi
     hayDetencion: toBool(row.hay_detencion),
     ofiAutoridadRecibe: toStr(row.ofi_autoridad_recibe),
     d1Pendiente: Boolean(row.d1_pendiente),
+    origenRondin: Boolean(row.origen_rondin),
   }
 }
 
@@ -88,6 +89,9 @@ export function rowToIncidentePendiente(row: Record<string, unknown>): Incidente
     prioridad: toStr(row.prioridad_nombre),
     prioridadOrden: toNum(row.prioridad_orden),
     capturadoPor: toStr(row.capturado_por_nombre),
+    origenRondin: Boolean(row.origen_rondin),
+    prioritarioNombre: toStr(row.prioritario_nombre),
+    prioritarioNomina: toStr(row.prioritario_nomina),
   }
 }
 

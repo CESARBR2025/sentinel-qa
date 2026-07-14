@@ -1,30 +1,41 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { verificarRolOficial, obtenerCatalogos, obtenerMiPerfil } from '@/lib/oficial/service'
-import { FormRondinEscalado } from '@/components/911/radio/FormRondinEscalado'
+import { verificarRolOficial, obtenerCatalogos, obtenerMiPerfil, listarRondinesOficial } from '@/lib/oficial/service'
+import { generarFolioIncidente } from '@/lib/incidentes/folio'
+import { ToastExito } from '@/components/oficial/ToastExito'
+import { RondinPageClient } from '@/components/oficial/rondin/RondinPageClient'
 
-export default async function RondinOficialPage() {
+export default async function RondinOficialPage({ searchParams }: { searchParams: Promise<{ exito?: string; folio?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
   const esOficial = await verificarRolOficial(session.user.id)
   if (!esOficial) redirect('/dashboard')
 
-  const [catalogos, perfil] = await Promise.all([
+  const [catalogos, perfil, folioData, rondines] = await Promise.all([
     obtenerCatalogos(),
     obtenerMiPerfil(session.user.id),
+    generarFolioIncidente(),
+    listarRondinesOficial(session.user.id),
   ])
 
   const nombreOficial = perfil
     ? `${perfil.ofiNombre} ${perfil.ofiApPaterno}`.trim()
     : (session.user as { name: string }).name
 
+  const params = await searchParams
+
   return (
-    <FormRondinEscalado
-      catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
-      backHref="/oficial"
-      nombreOficialDefault={nombreOficial}
-    />
+    <>
+      <ToastExito show={params.exito === '1'} folio={params.folio} />
+      <RondinPageClient
+        rondines={rondines}
+        catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
+        nombreOficial={nombreOficial}
+        folio={folioData.folio}
+        folioConsecutivo={folioData.consecutivo}
+      />
+    </>
   )
 }

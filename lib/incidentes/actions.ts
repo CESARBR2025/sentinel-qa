@@ -23,7 +23,11 @@ async function requireOperador(accion: Accion = 'crear') {
 }
 
 const str = (fd: FormData, k: string) => (fd.get(k) as string | null)?.trim() || null
-const req = (fd: FormData, k: string) => (fd.get(k) as string).trim()
+const req = (fd: FormData, k: string) => {
+  const v = fd.get(k)
+  if (!v) throw new ValidationError(`Campo requerido: ${k}`)
+  return String(v).trim()
+}
 const num = (fd: FormData, k: string) => { const v = fd.get(k); return v ? Number(v) : null }
 const bool = (fd: FormData, k: string) => fd.get(k) === 'true' || fd.get(k) === 'on'
 
@@ -314,89 +318,119 @@ export async function deletePersonaAfectada(formData: FormData) {
  * despachado al cerrar con su reporte de campo (ofi_reportes_campo).
  */
 export async function createRondinEscalado(formData: FormData) {
-  const session = await requireOperador()
+  console.log('[RONDIN] ===== INICIO =====')
+  console.log('[RONDIN] formData keys:', [...formData.keys()].join(', '))
+  console.log('[RONDIN] formData entries:', JSON.stringify(Object.fromEntries(formData.entries())))
 
-  const fechaHoraInicio = req(formData, 'fechaHoraInicio')
-  const { folio, consecutivo } = await generarFolioIncidente()
+  try {
+    const session = await requireOperador()
+    console.log('[RONDIN] session OK:', session.user.id)
 
-  const lat = formData.get('latitud') ? String(formData.get('latitud')) : null
-  const lng = formData.get('longitud') ? String(formData.get('longitud')) : null
+    const fechaHoraInicio = req(formData, 'fechaHoraInicio')
+    console.log('[RONDIN] fechaHoraInicio:', fechaHoraInicio)
 
-  const anonimo = bool(formData, 'anonimo')
-  const nombreOficial = str(formData, 'nombreOficial')
+    const folioForm = str(formData, 'folio')
+    const consecutivoForm = num(formData, 'folioConsecutivo')
+    console.log('[RONDIN] folioForm:', folioForm, 'consecutivoForm:', consecutivoForm)
+    const { folio, consecutivo } = (folioForm && consecutivoForm)
+      ? { folio: folioForm, consecutivo: consecutivoForm }
+      : await generarFolioIncidente()
+    console.log('[RONDIN] folio usado:', folio, 'consecutivo:', consecutivo)
 
-  const { incidenteId, esOficial } = await tryActionRaw(async () => {
-    const cliente = await pool.connect()
-    try {
-      await cliente.query('BEGIN')
+    const lat = formData.get('latitud') ? String(formData.get('latitud')) : null
+    const lng = formData.get('longitud') ? String(formData.get('longitud')) : null
 
-      // Oficial que reporta el rondín: ya está en sitio, entra como PRIORITARIO.
-      const inc = await cliente.query<{ id: string }>(
-        `INSERT INTO incidentes (
-          folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
-          anonimo, calle, colonia, entre_calles, referencia_ubicacion,
-          municipio, latitud, longitud,
-          tipo_emergencia_id, tipo_incidente_id, prioridad_id,
-          descripcion, observaciones, fecha_hora_inicio,
-          nombre_oficial, requiere_despacho, estatus, origen_rondin, capturado_por
-        ) VALUES ($1,$2,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,true,'en_sitio',true,$19)
-        RETURNING id`,
-        [
-          folio, consecutivo,
-          anonimo ? null : str(formData, 'nombreReportante'),
-          anonimo,
-          str(formData, 'calle'), str(formData, 'colonia'),
-          str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
-          str(formData, 'municipio') ?? 'San Juan del Río',
-          lat, lng,
-          num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
-          str(formData, 'descripcion'), str(formData, 'observaciones'),
-          fechaHoraInicio,
-          nombreOficial,
-          session.user.id,
-        ],
-      )
-      const incId = inc.rows[0].id
+    const anonimo = bool(formData, 'anonimo')
+    const nombreOficial = str(formData, 'nombreOficial')
+    console.log('[RONDIN] anonimo:', anonimo, 'nombreOficial:', nombreOficial)
 
-      // Resolver al oficial en sesión (si el rondín lo levanta el propio oficial).
-      const ofi = await cliente.query<{ id: string; no_nomina: string | null }>(
-        `SELECT id, no_nomina FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
-        [session.user.id],
-      )
-      const oficialId = ofi.rows[0]?.id ?? null
-      const oficialNomina = ofi.rows[0]?.no_nomina ?? null
+    const { incidenteId, esOficial } = await tryActionRaw(async () => {
+      const cliente = await pool.connect()
+      try {
+        await cliente.query('BEGIN')
 
-      // El rondín ya está desplegado: se crea su despacho con el oficial reportante como PRIORITARIO.
-      const despacho = await cliente.query<{ id: string }>(
-        `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
-        [incId, session.user.id],
-      )
-      await cliente.query(
-        `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_prioritario)
-         VALUES ($1, $2, $3, $4, $5, true)`,
-        [despacho.rows[0].id, oficialNomina, oficialNomina, nombreOficial, oficialId],
-      )
+        const inc = await cliente.query<{ id: string }>(
+          `INSERT INTO incidentes (
+            folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
+            anonimo, calle, colonia, entre_calles, referencia_ubicacion,
+            municipio, latitud, longitud,
+            tipo_emergencia_id, tipo_incidente_id, prioridad_id,
+            descripcion, observaciones, fecha_hora_inicio,
+            nombre_oficial, requiere_despacho, estatus, origen_rondin, capturado_por
+          ) VALUES ($1,$2,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,true,'sin_despachar',true,$19)
+          RETURNING id`,
+          [
+            folio, consecutivo,
+            anonimo ? null : str(formData, 'nombreReportante'),
+            anonimo,
+            str(formData, 'calle'), str(formData, 'colonia'),
+            str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
+            str(formData, 'municipio') ?? 'San Juan del Río',
+            lat, lng,
+            num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
+            str(formData, 'descripcion'), str(formData, 'observaciones'),
+            fechaHoraInicio,
+            nombreOficial,
+            session.user.id,
+          ],
+        )
+        const incId = inc.rows[0].id
+        console.log('[RONDIN] incidente creado ID:', incId)
 
-      await cliente.query('COMMIT')
-      return { incidenteId: incId, esOficial: oficialId !== null }
-    } catch (err) {
-      await cliente.query('ROLLBACK')
-      throw err
-    } finally {
-      cliente.release()
-    }
-  })
+        const ofi = await cliente.query<{ id: string; no_nomina: string | null }>(
+          `SELECT id, no_nomina FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
+          [session.user.id],
+        )
+        const oficialId = ofi.rows[0]?.id ?? null
+        const oficialNomina = ofi.rows[0]?.no_nomina ?? null
+        console.log('[RONDIN] oficial match:', { oficialId, oficialNomina })
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId, payload: { origen: 'rondin_escalado', prioritario: nombreOficial } })
+        const despacho = await cliente.query<{ id: string }>(
+          `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
+          [incId, session.user.id],
+        )
+        await cliente.query(
+          `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_prioritario)
+           VALUES ($1, $2, $3, $4, $5, true)`,
+          [despacho.rows[0].id, oficialNomina, oficialNomina, nombreOficial, oficialId],
+        )
+        console.log('[RONDIN] despacho + elementos INSERT OK')
 
-  revalidatePath('/agente_911/rondin')
-  revalidatePath('/oficial/despachos')
-  revalidatePath('/incidentes')
+        await cliente.query('COMMIT')
+        console.log('[RONDIN] TRANSACTION COMMITTED')
+        return { incidenteId: incId, esOficial: oficialId !== null }
+      } catch (err) {
+        await cliente.query('ROLLBACK')
+        console.error('[RONDIN] TRANSACTION ROLLBACK:', err)
+        throw err
+      } finally {
+        cliente.release()
+      }
+    })
 
-  // El oficial reportante aterriza en SU vista del despacho (puede ver/atender);
-  // un operador 911 va a la ficha del rondín en su módulo.
-  if (esOficial) redirect(`/oficial/despachos/${incidenteId}`)
-  redirect(`/agente_911/rondin/incidentes/${incidenteId}`)
+    console.log('[RONDIN] tryActionRaw result:', { incidenteId, esOficial })
+
+    await registrarAudit({
+      userId: session.user.id,
+      accion: 'CREATE',
+      entidad: 'incidentes',
+      entidadId: incidenteId,
+      payload: { origen: 'rondin_escalado', prioritario: nombreOficial },
+    })
+    console.log('[RONDIN] audit registrado')
+
+    revalidatePath('/agente_911/rondin')
+    revalidatePath('/oficial/despachos')
+    revalidatePath('/incidentes')
+
+    console.log('[RONDIN] redirigiendo a:', esOficial ? `/oficial/rondin?exito=1&folio=${encodeURIComponent(folio)}` : `/agente_911/rondin/incidentes/${incidenteId}`)
+    if (esOficial) redirect(`/oficial/rondin?exito=1&folio=${encodeURIComponent(folio)}`)
+    redirect(`/agente_911/rondin/incidentes/${incidenteId}`)
+  } catch (err) {
+    if (err instanceof Error && 'digest' in err && String(err.digest).startsWith('NEXT_REDIRECT')) throw err
+    console.error('[RONDIN] ERROR GLOBAL:', err)
+    throw err
+  }
 }
 
 /** @deprecated El rondín ya no se auto-cierra: usar createRondinEscalado. Se conserva solo por referencia histórica. */
@@ -485,21 +519,25 @@ export async function createDespacho(formData: FormData) {
         `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
         [incidenteId],
       )
-      if (existe.rows[0]) throw new ValidationError('El incidente ya tiene un despacho asignado')
 
       const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
       const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
 
-      if (unidades.length === 0) throw new ValidationError('Se requiere al menos una unidad')
-      if (elementos.length === 0) throw new ValidationError('Se requiere al menos un elemento')
-
       await cliente.query('BEGIN')
 
-      const despacho = await cliente.query<{ id: string }>(
-        `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
-        [incidenteId, session.user.id],
-      )
-      const despachoId = despacho.rows[0].id
+      // Si ya existe un despacho (rondín con prioritario), reusarlo; si no, crear uno nuevo
+      let despachoId: string
+      if (existe.rows[0]) {
+        despachoId = existe.rows[0].id
+      } else {
+        if (unidades.length === 0) throw new ValidationError('Se requiere al menos una unidad')
+        if (elementos.length === 0) throw new ValidationError('Se requiere al menos un elemento')
+        const despacho = await cliente.query<{ id: string }>(
+          `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
+          [incidenteId, session.user.id],
+        )
+        despachoId = despacho.rows[0].id
+      }
 
       for (const u of unidades) {
         await cliente.query(
@@ -532,7 +570,8 @@ export async function createDespacho(formData: FormData) {
   })
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'sin_despachar', estatus_nuevo: 'en_despacho' } })
-  revalidatePath(`/incidentes/${incidenteId}`)
+  revalidatePath('/incidentes')
+  revalidatePath('/agente_911/despacho')
 }
 
 // ─── Refuerzos ────────────────────────────────────────────────────────────────
