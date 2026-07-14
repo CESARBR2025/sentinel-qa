@@ -1,9 +1,9 @@
 import {
   obtenerRolUsuario,
   obtenerSolicitudesPendientes,
-  obtenerSolicitudesEnProceso,
-  obtenerSolicitudesConMonitorista,
-  obtenerSolicitudesCompletadas,
+  obtenerSolicitudesSinEvidencias,
+  obtenerSolicitudesConEvidencias,
+  obtenerSolicitudesFinalizadas,
   actualizarEstadoSolicitud,
   actualizarSolicitudConEvidencias,
   obtenerDetalleAsegurado,
@@ -37,23 +37,23 @@ export async function listarSolicitudesPendientes(): Promise<SolicitudEvidencia[
   return rows.map(rowToSolicitud)
 }
 
-export async function listarSolicitudesEnProceso(): Promise<SolicitudEvidencia[]> {
-  const rows = await obtenerSolicitudesEnProceso()
+export async function listarSolicitudesSinEvidencias(): Promise<SolicitudEvidencia[]> {
+  const rows = await obtenerSolicitudesSinEvidencias()
+  return rows.map(rowToSolicitud)
+}
+
+export async function listarSolicitudesFinalizadas(): Promise<SolicitudEvidencia[]> {
+  const rows = await obtenerSolicitudesFinalizadas()
+  return rows.map(rowToSolicitud)
+}
+
+export async function listarSolicitudesConEvidencias(): Promise<SolicitudEvidencia[]> {
+  const rows = await obtenerSolicitudesConEvidencias()
   return rows.map(rowToSolicitud)
 }
 
 export async function tomarCaso(id: string): Promise<void> {
   await actualizarEstadoSolicitud(id, 'EN_ANALISIS', 'SIN_SOLICITUD')
-}
-
-export async function listarSolicitudesConMonitorista(): Promise<SolicitudEvidencia[]> {
-  const rows = await obtenerSolicitudesConMonitorista()
-  return rows.map(rowToSolicitud)
-}
-
-export async function listarSolicitudesCompletadas(): Promise<SolicitudEvidencia[]> {
-  const rows = await obtenerSolicitudesCompletadas()
-  return rows.map(rowToSolicitud)
 }
 
 export async function pedirEvidencias(id: string, evidencias: string): Promise<void> {
@@ -64,8 +64,8 @@ export async function obtenerDatosAsegurado(solicitudId: string): Promise<Detall
   return obtenerDetalleAsegurado(solicitudId)
 }
 
-export async function guardarDetallesAsegurado(id: string, datos: DatosAseguradoInput, evidenciasJson?: string | null): Promise<void> {
-  await actualizarDetallesAsegurado(id, datos, evidenciasJson)
+export async function guardarDetallesAsegurado(id: string, datos: DatosAseguradoInput): Promise<void> {
+  await actualizarDetallesAsegurado(id, datos)
 }
 
 function parseDetenidos(raw: unknown): { nombre?: string }[] {

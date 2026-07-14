@@ -153,10 +153,11 @@ export async function insertarReporteCampo(
       ],
     );
 
-    if (data.incidenteId && !data.ofiHayDetencion) {
+    if (data.incidenteId) {
+      const nuevoEstatus = data.ofiHayDetencion ? 'cerrado_detencion' : 'atendido'
       await cliente.query(
-        `UPDATE incidentes SET estatus = 'atendido', actualizado_en = NOW() WHERE id = $1`,
-        [data.incidenteId],
+        `UPDATE incidentes SET estatus = $1, actualizado_en = NOW() WHERE id = $2 AND estatus IN ('en_despacho', 'en_sitio')`,
+        [nuevoEstatus, data.incidenteId],
       );
     }
 
@@ -245,9 +246,10 @@ export async function obtenerDespachosAsignados(
      LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
      LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
      LEFT JOIN users u ON d.despachado_por = u.id
-      WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
-        AND i.estatus IN ('en_despacho', 'en_sitio')
-      ORDER BY cp.orden NULLS LAST, d.fecha_hora_despacho DESC`,
+       WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+         AND i.estatus IN ('en_despacho', 'en_sitio')
+         AND NOT EXISTS (SELECT 1 FROM ofi_reportes_campo WHERE incidente_id = i.id)
+       ORDER BY cp.orden NULLS LAST, d.fecha_hora_despacho DESC`,
     [userId],
   );
   return result.rows.map(rowToDespachoAsignado);
@@ -259,8 +261,9 @@ export async function contarDespachosAsignados(userId: string): Promise<number> 
      FROM incidente_despacho_elementos de
      JOIN incidente_despacho d ON d.id = de.despacho_id
      JOIN incidentes i ON i.id = d.incidente_id
-      WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
-        AND i.estatus IN ('en_despacho', 'en_sitio')`,
+       WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+         AND i.estatus IN ('en_despacho', 'en_sitio')
+         AND NOT EXISTS (SELECT 1 FROM ofi_reportes_campo WHERE incidente_id = i.id)`,
     [userId],
   );
   return parseInt(result.rows[0].count, 10);

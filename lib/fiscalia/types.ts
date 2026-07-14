@@ -122,7 +122,14 @@ export type AseguradoConDisposicion = AseguradoRow & {
   puestaDisposicionId: string | null
 }
 
+export interface DetenidoNombre {
+  nombre?: string
+  apellidoPaterno?: string
+  apellidoMaterno?: string
+}
+
 export interface DetalleAsegurado {
+  reporteCampoId: string | null;
   folioDenuncia: string | null;
   folioReporteCampo: string | null;
   iph: string | null;
@@ -142,6 +149,86 @@ export interface DetalleAsegurado {
   domicilioNumero: string | null;
   domicilioColonia: string | null;
   domicilioMunicipio: string | null;
+  estadoEvidencia: string | null;
+  detenidosLista: DetenidoNombre[]
+  // Objetos asegurados (desde ofi_reportes_campo)
+  hayArmaFuego: boolean | null
+  armasFuego: unknown
+  hayArmaBlanca: boolean | null
+  armasBlancas: unknown
+  hayDroga: boolean | null
+  drogas: unknown
+  hayVehiculo: boolean | null
+  vehiculos: unknown
+  hayHidrocarburo: boolean | null
+  hidrocarburos: unknown
+  objetosRecuperados: string | null
+}
+
+export interface FotoDetenido {
+  id: number
+  url: string
+  tipoFoto: string
+  detenidoIndex: number | null
+}
+
+export interface ExpedienteExp {
+  raw: Record<string, unknown>
+  detenidosDirecciones: DetalleDetenidoGuardado[]
+  fotos: FotoDetenido[]
+  evidencias: EvidenciaMonitorista[]
+}
+
+export interface ExpedienteCompleto {
+  // Incidente
+  incidenteFolio: string | null
+  incidenteCanal: string | null
+  incidenteEstatus: string | null
+  incidenteFechaHoraInicio: string | null
+  incidenteDescripcion: string | null
+  incidenteCalle: string | null
+  incidenteColonia: string | null
+  incidenteMunicipio: string | null
+  incidenteOrigenRondin: boolean
+  incidenteTipo: string | null
+  incidentePrioridad: string | null
+  // Reporte Campo
+  reporteCampoId: string | null
+  reporteCampoFolio: string | null
+  reporteCampoDescripcion: string | null
+  reporteCampoDetenidos: unknown
+  reporteCampoHayDetencion: boolean | null
+  reporteCampoAutoridadRecibe: string | null
+  reporteCampoFolioAsegurados: string | null
+  // D1
+  d1Id: string | null
+  d1FolioDenuncia: string | null
+  d1Iph: string | null
+  d1FolioCu: string | null
+  d1Corporacion: string | null
+  d1Sector: string | null
+  d1GrupoAdscripcion: string | null
+  d1FechaReporte: string | null
+  d1HoraReporte: string | null
+  d1Delito: string | null
+  d1Violencia: boolean | null
+  d1LugarHecho: string | null
+  d1ColoniaHecho: string | null
+  d1FolioSija: string | null
+  d1FolioRemision: string | null
+  d1MarcoLegal: string | null
+  d1EstadoTramite: string | null
+  d1EstadoEvidencia: string | null
+  d1Observaciones: string | null
+  // Detalles asegurados
+  detenidosDirecciones: DetalleDetenidoGuardado[]
+  // Fotos
+  fotosDetenidos: FotoDetenido[]
+  // Puesta disposicion
+  puestaDisposicionId: string | null
+  puestaDisposicion: PuestaDisposicionRow | null
+  // Evidencias
+  evidencias: EvidenciaMonitorista[]
 }
 
 export interface SolicitudEvidencia {

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User, Shield, BadgeCheck, UserCheck, ScrollText, Gavel, MapPin, Map, Plus, X, Camera } from 'lucide-react'
+import { Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User, Shield, BadgeCheck, UserCheck, ScrollText, Gavel, MapPin, Map } from 'lucide-react'
 import { DireccionGoogleMaps } from '@/components/shared/DireccionGoogleMaps'
 import { guardarDetallesAseguradoAction } from '@/lib/fiscalia/actions'
 import type { DetalleAsegurado } from '@/lib/fiscalia/types'
@@ -42,18 +42,6 @@ const disabledSx: React.CSSProperties = {
   boxSizing: 'border-box',
 }
 
-interface EvidenciaItem {
-  colonia: string
-  calle: string
-  numero: string
-  horaInicio: string
-  horaFin: string
-}
-
-function emptyItem(): EvidenciaItem {
-  return { colonia: '', calle: '', numero: '', horaInicio: '', horaFin: '' }
-}
-
 interface Props {
   solicitudId: string
   data: DetalleAsegurado
@@ -74,16 +62,9 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
   const [guardando, setGuardando] = useState(false)
   const [errorGuardar, setErrorGuardar] = useState<string | null>(null)
 
-  const [requiereEvidencias, setRequiereEvidencias] = useState(false)
-  const [evidenciaItems, setEvidenciaItems] = useState<EvidenciaItem[]>([emptyItem()])
-
   const handleGuardar = async () => {
     setGuardando(true)
     setErrorGuardar(null)
-
-    const evidencias = requiereEvidencias
-      ? evidenciaItems.filter(it => it.colonia.trim() && it.calle.trim() && it.numero.trim() && it.horaInicio.trim() && it.horaFin.trim())
-      : undefined
 
     const res = await guardarDetallesAseguradoAction(
       solicitudId,
@@ -97,7 +78,6 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
         marcoLegal,
         registroTableta,
       },
-      evidencias && evidencias.length > 0 ? evidencias : undefined,
     )
 
     setGuardando(false)
@@ -105,7 +85,7 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
       setErrorGuardar(res.error)
       return
     }
-    router.push('/agente_juzgado/solicitudes')
+    router.push('/fiscalia/solicitudes')
   }
 
   const handleDireccionChange = (d: Direccion) => {
@@ -115,22 +95,10 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
     setMunicipio(d.municipio)
   }
 
-  function updateEvItem(i: number, field: keyof EvidenciaItem, value: string) {
-    setEvidenciaItems(prev => prev.map((it, idx) => idx === i ? { ...it, [field]: value } : it))
-  }
-
-  function addEvItem() {
-    setEvidenciaItems(prev => [...prev, emptyItem()])
-  }
-
-  function removeEvItem(i: number) {
-    setEvidenciaItems(prev => prev.filter((_, idx) => idx !== i))
-  }
-
   const displayVal = (val: string | null | undefined): string => val ?? '—'
 
   return (
-    <>
+    <div>
       <div style={{ marginBottom: 24 }}>
         <div style={{
           fontFamily: 'JetBrains Mono,monospace',
@@ -240,265 +208,50 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
           <div>
             <label style={labelSx}><User size={10} style={{ marginRight: 4 }} /> Quien ingresó el registro</label>
             <div style={disabledSx}>{displayVal(data.capturadoPorNombre)}</div>
-          </div>
         </div>
       </div>
+      </div>
 
-      {/* SECCIÓN 2: Datos por capturar (required) */}
-      <div style={{
-        padding: '16px 20px',
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #dc2626',
-        marginBottom: 24,
-      }}>
-        <div style={{
-          fontFamily: 'Barlow Condensed,sans-serif',
-          fontSize: 15,
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          color: '#1e293b',
-          marginBottom: 16,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-        }}>
-          <BookOpen size={16} color="#dc2626" />
-          Datos por Capturar
-          <span style={{
-            fontFamily: 'JetBrains Mono,monospace',
-            fontSize: 8,
-            color: '#dc2626',
-            letterSpacing: '0.1em',
-            fontWeight: 400,
-            marginLeft: 8,
-          }}>
-            (REQUERIDOS)
-          </span>
+      {/* SECCIÓN 2: Datos por Capturar */}
+      <div style={{ padding: '16px 20px', border: '1px solid #e2e8f0', borderLeft: '3px solid #dc2626', marginBottom: 24 }}>
+        <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 15, fontWeight: 700, textTransform: 'uppercase', color: '#1e293b', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <BookOpen size={16} color="#dc2626" /> Datos por Capturar
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, color: '#dc2626', letterSpacing: '0.1em', fontWeight: 400, marginLeft: 8 }}>(REQUERIDOS)</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           <div>
-            <label style={labelSx}>
-              <BookOpen size={10} style={{ marginRight: 4 }} /> Folio SIJA <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={folioSija} onChange={e => setFolioSija(e.target.value)} required placeholder="Capturar folio SIJA..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><BookOpen size={10} style={{ marginRight: 4 }} /> Folio SIJA <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={folioSija} onChange={e => setFolioSija(e.target.value)} required placeholder="Capturar folio SIJA..." style={inputSx} />
           </div>
           <div style={{ gridColumn: 'span 2' }}>
-            <label style={labelSx}>
-              <MapPin size={10} style={{ marginRight: 4 }} /> Domicilio del Detenido <span style={{ color: '#dc2626' }}>*</span>
-            </label>
+            <label style={labelSx}><MapPin size={10} style={{ marginRight: 4 }} /> Domicilio del Detenido <span style={{ color: '#dc2626' }}>*</span></label>
             <DireccionGoogleMaps value={dir} onChange={handleDireccionChange} />
           </div>
           <div>
-            <label style={labelSx}>
-              <Map size={10} style={{ marginRight: 4 }} /> Calle <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={calle} onChange={e => setCalle(e.target.value)} required placeholder="Calle..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><Map size={10} style={{ marginRight: 4 }} /> Calle <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={calle} onChange={e => setCalle(e.target.value)} required placeholder="Calle..." style={inputSx} />
           </div>
           <div>
-            <label style={labelSx}>
-              <Map size={10} style={{ marginRight: 4 }} /> Número <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={numero} onChange={e => setNumero(e.target.value)} required placeholder="Número..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><Map size={10} style={{ marginRight: 4 }} /> Número <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={numero} onChange={e => setNumero(e.target.value)} required placeholder="Número..." style={inputSx} />
           </div>
           <div>
-            <label style={labelSx}>
-              <Map size={10} style={{ marginRight: 4 }} /> Colonia <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={colonia} onChange={e => setColonia(e.target.value)} required placeholder="Colonia..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><Map size={10} style={{ marginRight: 4 }} /> Colonia <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={colonia} onChange={e => setColonia(e.target.value)} required placeholder="Colonia..." style={inputSx} />
           </div>
           <div>
-            <label style={labelSx}>
-              <ScrollText size={10} style={{ marginRight: 4 }} /> Folio Remisión <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={folioRemision} onChange={e => setFolioRemision(e.target.value)} required placeholder="Capturar folio..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><ScrollText size={10} style={{ marginRight: 4 }} /> Folio Remisión <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={folioRemision} onChange={e => setFolioRemision(e.target.value)} required placeholder="Capturar folio..." style={inputSx} />
           </div>
           <div>
-            <label style={labelSx}>
-              <Gavel size={10} style={{ marginRight: 4 }} /> Marco Legal <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={marcoLegal} onChange={e => setMarcoLegal(e.target.value)} required placeholder="Capturar marco legal..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><Gavel size={10} style={{ marginRight: 4 }} /> Marco Legal <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={marcoLegal} onChange={e => setMarcoLegal(e.target.value)} required placeholder="Capturar marco legal..." style={inputSx} />
           </div>
           <div>
-            <label style={labelSx}>
-              <Map size={10} style={{ marginRight: 4 }} /> Municipio <span style={{ color: '#dc2626' }}>*</span>
-            </label>
-            <input value={municipio} onChange={e => setMunicipio(e.target.value)} required placeholder="Municipio..." style={inputSx} onFocus={e => e.currentTarget.style.borderColor = '#7c3aed'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
+            <label style={labelSx}><Map size={10} style={{ marginRight: 4 }} /> Municipio <span style={{ color: '#dc2626' }}>*</span></label>
+            <input value={municipio} onChange={e => setMunicipio(e.target.value)} required placeholder="Municipio..." style={inputSx} />
           </div>
         </div>
-      </div>
-
-      {/* SECCIÓN 3: Evidencias Fotográficas */}
-      <div style={{
-        padding: '16px 20px',
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #0891b2',
-        marginBottom: 24,
-      }}>
-        <div style={{
-          fontFamily: 'Barlow Condensed,sans-serif',
-          fontSize: 15,
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          color: '#1e293b',
-          marginBottom: 16,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-        }}>
-          <Camera size={16} color="#0891b2" />
-          Evidencias Fotográficas
-        </div>
-
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: requiereEvidencias ? 20 : 0,
-        }}>
-          <span style={{
-            fontFamily: 'Inter,sans-serif',
-            fontSize: 12,
-            color: '#334155',
-          }}>
-            ¿Requiere evidencias fotográficas?
-          </span>
-          <div style={{ display: 'flex' }}>
-            <button
-              type="button"
-              onClick={() => setRequiereEvidencias(true)}
-              style={{
-                fontFamily: 'JetBrains Mono,monospace',
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                padding: '6px 20px',
-                border: `1px solid ${requiereEvidencias ? '#0891b2' : '#e2e8f0'}`,
-                background: requiereEvidencias ? '#0891b2' : '#ffffff',
-                color: requiereEvidencias ? '#ffffff' : '#94a3b8',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              SÍ
-            </button>
-            <div style={{ width: 1, background: '#e2e8f0' }}></div>
-            <button
-              type="button"
-              onClick={() => setRequiereEvidencias(false)}
-              style={{
-                fontFamily: 'JetBrains Mono,monospace',
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                padding: '6px 20px',
-                border: `1px solid ${!requiereEvidencias ? '#0891b2' : '#e2e8f0'}`,
-                background: !requiereEvidencias ? '#0891b2' : '#ffffff',
-                color: !requiereEvidencias ? '#ffffff' : '#94a3b8',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              NO
-            </button>
-          </div>
-        </div>
-
-        {requiereEvidencias && (
-          <div>
-            <p style={{
-              fontFamily: 'Inter,sans-serif',
-              fontSize: 11,
-              color: '#64748b',
-              margin: '0 0 16px 0',
-              lineHeight: 1.5,
-            }}>
-              Especifique las ubicaciones y horarios donde el monitorista debe tomar las fotografías.
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 16 }}>
-              {evidenciaItems.map((it, i) => (
-                <div
-                  key={i}
-                  style={{
-                    border: '1px solid #e2e8f0',
-                    padding: 20,
-                    position: 'relative',
-                  }}
-                >
-                  {evidenciaItems.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeEvItem(i)}
-                      style={{
-                        position: 'absolute', top: 8, right: 8,
-                        background: 'none', border: 'none',
-                        cursor: 'pointer', color: '#94a3b8',
-                        padding: 4,
-                      }}
-                    >
-                      <X size={14} />
-                    </button>
-                  )}
-
-                  <div style={{
-                    fontFamily: 'JetBrains Mono,monospace',
-                    fontSize: 9,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: '#0891b2',
-                    marginBottom: 12,
-                  }}>
-                    Ubicación {i + 1}
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Colonia</label>
-                      <input value={it.colonia} onChange={e => updateEvItem(i, 'colonia', e.target.value)} placeholder="Ej. Centro" style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#334155', outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.currentTarget.style.borderColor = '#0891b2'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Calle</label>
-                      <input value={it.calle} onChange={e => updateEvItem(i, 'calle', e.target.value)} placeholder="Ej. Av. Juárez" style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#334155', outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.currentTarget.style.borderColor = '#0891b2'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Número</label>
-                      <input value={it.numero} onChange={e => updateEvItem(i, 'numero', e.target.value)} placeholder="Ej. 123" style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#334155', outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.currentTarget.style.borderColor = '#0891b2'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Hora Inicio</label>
-                      <input type="time" value={it.horaInicio} onChange={e => updateEvItem(i, 'horaInicio', e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#334155', outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.currentTarget.style.borderColor = '#0891b2'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Hora Fin</label>
-                      <input type="time" value={it.horaFin} onChange={e => updateEvItem(i, 'horaFin', e.target.value)} style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#334155', outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.currentTarget.style.borderColor = '#0891b2'} onBlur={e => e.currentTarget.style.borderColor = '#e2e8f0'} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={addEvItem}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace',
-                fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase',
-                padding: '8px 16px', border: '1px dashed #cbd5e1', background: 'transparent',
-                color: '#64748b', cursor: 'pointer', width: '100%', justifyContent: 'center', marginBottom: 0,
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#0891b2'; e.currentTarget.style.color = '#0891b2'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.color = '#64748b'; }}
-            >
-              <Plus size={14} />
-              Agregar otra ubicación
-            </button>
-          </div>
-        )}
       </div>
 
       {errorGuardar && (
@@ -514,7 +267,7 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
       <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
         <button
           type="button"
-          onClick={() => router.push('/agente_juzgado/solicitudes')}
+          onClick={() => router.push('/fiscalia/solicitudes')}
           disabled={guardando}
           style={{
             fontFamily: 'Inter,sans-serif',
@@ -544,9 +297,9 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
             cursor: guardando ? 'not-allowed' : 'pointer',
           }}
         >
-          {guardando ? 'Guardando...' : 'Guardar Detalles'}
+          {guardando ? 'Guardando...' : 'Guardar Datos'}
         </button>
       </div>
-    </>
+    </div>
   )
 }

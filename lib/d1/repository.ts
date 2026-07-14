@@ -74,7 +74,7 @@ export async function insertarReporteDenuncia(params: Record<string, unknown>): 
       $37, $38, $39,
       $40, $41, $42::uuid, $43::uuid,
       $44::uuid,
-      'EN_REVISION_JUZGADO',
+      'RECIBIDA',
       'SIN_SOLICITUD'
     )
     RETURNING id`,

@@ -35,72 +35,39 @@ export async function obtenerSolicitudesPendientes() {
   return result.rows;
 }
 
-[
-  {
-    calle: "Av de las garzas",
-    numero: "1",
-    colonia: "Centro",
-    atendida: false,
-    hora_fin: "12:20",
-    hora_inicio: "12:00",
-    solicitud_id: 1,
-    fecha_peticion: "2026-06-26T18:20:50.864Z",
-  },
-  {
-    calle: "Av de las garzas",
-    numero: "2",
-    colonia: "Centro",
-    atendida: false,
-    hora_fin: "13:20",
-    hora_inicio: "12:20",
-    solicitud_id: 2,
-    fecha_peticion: "2026-06-26T18:20:50.864Z",
-  },
-];
-
-[
-  { solicitud_id: 1, colonia: "Centro", calle: "Av. Juárez", atendida: true },
-  {
-    solicitud_id: 2,
-    colonia: "Zona Industrial",
-    calle: "Eje Central",
-    atendida: true,
-  },
-];
-export async function obtenerSolicitudesEnProceso() {
+export async function obtenerSolicitudesSinEvidencias() {
   const result = await query<Record<string, unknown>>(
     `SELECT rd.*
      FROM ofi_reporte_denuncia rd
      JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
      WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
        AND rd.estado_tramite = 'EN_ANALISIS'
-       AND rd.estado_evidencia = 'SIN_SOLICITUD'
-     ORDER BY rd.created_at DESC`,
+       AND rd.estado_evidencia = 'SIN_EVIDENCIA_REQUERIDA'
+     ORDER BY rd.updated_at DESC`,
   );
   return result.rows;
 }
 
-export async function obtenerSolicitudesConMonitorista() {
+export async function obtenerSolicitudesFinalizadas() {
   const result = await query<Record<string, unknown>>(
     `SELECT rd.*
      FROM ofi_reporte_denuncia rd
      JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
      WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
-       AND rd.estado_tramite = 'EN_ANALISIS'
-       AND rd.estado_evidencia = 'PENDIENTE_MONITORISTA'
-     ORDER BY rd.created_at DESC`,
+       AND rd.folio_sija IS NOT NULL
+     ORDER BY rd.updated_at DESC`,
   );
   return result.rows;
 }
 
-export async function obtenerSolicitudesCompletadas() {
+export async function obtenerSolicitudesConEvidencias() {
   const result = await query<Record<string, unknown>>(
     `SELECT rd.*
      FROM ofi_reporte_denuncia rd
      JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
      WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
        AND rd.estado_tramite = 'EN_ANALISIS'
-       AND (rd.estado_evidencia = 'EVIDENCIA_ENVIADA' OR rd.estado_evidencia = 'SIN_EVIDENCIA_REQUERIDA')
+       AND (rd.estado_evidencia = 'PENDIENTE_MONITORISTA' OR rd.estado_evidencia = 'EVIDENCIA_ENVIADA')
      ORDER BY rd.updated_at DESC`,
   );
   return result.rows;
@@ -125,12 +92,24 @@ export async function obtenerDetalleAsegurado(
   const result = await query<Record<string, unknown>>(
     `SELECT
        rd.folio_denuncia,
+       rd.reporte_campo_id,
        rc.folio_reporte_campo,
        rd.iph,
        rd.fecha_reporte,
        rd.hora_reporte,
-       rc.ofi_detenidos,
-        p.numero_unidad AS ofi_placa_unidad_asignada,
+        rc.ofi_detenidos,
+        rc.ofi_hay_arma_fuego,
+        rc.ofi_armas_fuego,
+        rc.ofi_hay_arma_blanca,
+        rc.ofi_armas_blancas,
+        rc.ofi_hay_droga,
+        rc.ofi_drogas,
+        rc.ofi_hay_vehiculo,
+        rc.ofi_vehiculos,
+        rc.ofi_hay_hidrocarburo,
+        rc.ofi_hidrocarburos,
+        rc.ofi_objetos_recuperados,
+         p.numero_unidad AS ofi_placa_unidad_asignada,
         CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
         o.no_nomina,
         rc.ofi_calle,
@@ -143,7 +122,8 @@ export async function obtenerDetalleAsegurado(
         rd.domicilio_calle,
         rd.domicilio_numero,
         rd.domicilio_colonia,
-        rd.domicilio_municipio
+        rd.domicilio_municipio,
+        rd.estado_evidencia
       FROM ofi_reporte_denuncia rd
       JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
@@ -160,13 +140,17 @@ export async function obtenerDetalleAsegurado(
   const row = result.rows[0];
 
   let nombreDetenido: string | null = null;
+  let detenidosLista: { nombre?: string; apellidoPaterno?: string; apellidoMaterno?: string }[] = []
   try {
     const detenidos =
       typeof row.ofi_detenidos === "string"
         ? JSON.parse(row.ofi_detenidos)
         : row.ofi_detenidos;
-    if (Array.isArray(detenidos) && detenidos.length > 0) {
-      nombreDetenido = detenidos[0]?.nombre ?? null;
+    if (Array.isArray(detenidos)) {
+      detenidosLista = detenidos
+      if (detenidos.length > 0) {
+        nombreDetenido = detenidos[0]?.nombre ?? null;
+      }
     }
   } catch {
     /* ignore parse errors */
@@ -179,6 +163,7 @@ export async function obtenerDetalleAsegurado(
   const nombrePolicia = row.ofi_oficial_nombre ? String(row.ofi_oficial_nombre) : null;
 
   return {
+    reporteCampoId: row.reporte_campo_id ? String(row.reporte_campo_id) : null,
     folioDenuncia: row.folio_denuncia ? String(row.folio_denuncia) : null,
     folioReporteCampo: row.folio_reporte_campo
       ? String(row.folio_reporte_campo)
@@ -208,18 +193,26 @@ export async function obtenerDetalleAsegurado(
     domicilioMunicipio: row.domicilio_municipio
       ? String(row.domicilio_municipio)
       : null,
+    estadoEvidencia: row.estado_evidencia ? String(row.estado_evidencia) : null,
+    detenidosLista,
+    hayArmaFuego: row.ofi_hay_arma_fuego === true || row.ofi_hay_arma_fuego === 'true',
+    armasFuego: row.ofi_armas_fuego ?? null,
+    hayArmaBlanca: row.ofi_hay_arma_blanca === true || row.ofi_hay_arma_blanca === 'true',
+    armasBlancas: row.ofi_armas_blancas ?? null,
+    hayDroga: row.ofi_hay_droga === true || row.ofi_hay_droga === 'true',
+    drogas: row.ofi_drogas ?? null,
+    hayVehiculo: row.ofi_hay_vehiculo === true || row.ofi_hay_vehiculo === 'true',
+    vehiculos: row.ofi_vehiculos ?? null,
+    hayHidrocarburo: row.ofi_hay_hidrocarburo === true || row.ofi_hay_hidrocarburo === 'true',
+    hidrocarburos: row.ofi_hidrocarburos ?? null,
+    objetosRecuperados: row.ofi_objetos_recuperados ? String(row.ofi_objetos_recuperados) : null,
   };
 }
 
 export async function actualizarDetallesAsegurado(
   id: string,
   datos: DatosAseguradoInput,
-  evidenciasJson?: string | null,
 ): Promise<void> {
-  const estadoEvidencia = evidenciasJson
-    ? "PENDIENTE_MONITORISTA"
-    : "SIN_EVIDENCIA_REQUERIDA";
-
   await query(
     `UPDATE ofi_reporte_denuncia
      SET folio_sija = $1,
@@ -231,10 +224,9 @@ export async function actualizarDetallesAsegurado(
          marco_legal = $7,
          registro_tableta = $8::boolean,
          estado_tramite = 'EN_ANALISIS',
-         estado_evidencia = $9,
-         monitorista_fechas_requeridas = $10::jsonb,
+         estado_evidencia = 'SIN_EVIDENCIA_REQUERIDA',
          updated_at = NOW()
-     WHERE id = $11`,
+     WHERE id = $9`,
     [
       datos.folioSija || null,
       datos.calle || null,
@@ -244,8 +236,6 @@ export async function actualizarDetallesAsegurado(
       datos.folioRemision || null,
       datos.marcoLegal || null,
       datos.registroTableta || "false",
-      estadoEvidencia,
-      evidenciasJson ?? null,
       id,
     ],
   );
@@ -577,6 +567,95 @@ export async function obtenerPuestaDisposicionPorReporte(reporteCampoId: string)
     [reporteCampoId],
   );
   return result.rows[0] ? rowToPuestaDisposicion(result.rows[0]) : null;
+}
+
+export async function insertarFotoFiscalia(
+  reporteCampoId: string,
+  tipoFoto: string,
+  urlArchivo: string,
+  nombreArchivo: string,
+  subidoPor: string,
+  detenidoIndex: number | null,
+  tipoContenido: string,
+) {
+  await query(
+    `INSERT INTO evidencias_detenido (reporte_campo_id, tipo_foto, url_archivo, nombre_archivo, subido_por, detenido_index, tipo_contenido)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [reporteCampoId, tipoFoto, urlArchivo, nombreArchivo, subidoPor, detenidoIndex, tipoContenido],
+  )
+}
+
+export async function obtenerFotosDetenidos(reporteCampoId: string): Promise<{ id: string; url_archivo: string; tipo_foto: string; nombre_archivo: string | null; detenido_index: number | null; tipo_contenido: string | null }[]> {
+  const result = await query<{ id: string; url_archivo: string; tipo_foto: string; nombre_archivo: string | null; detenido_index: number | null; tipo_contenido: string | null }>(
+    `SELECT id, url_archivo, tipo_foto, nombre_archivo, detenido_index, tipo_contenido FROM evidencias_detenido WHERE reporte_campo_id = $1 ORDER BY detenido_index, tipo_foto`,
+    [reporteCampoId],
+  )
+  return result.rows
+}
+
+export async function obtenerExpedienteCompleto(solicitudId: string): Promise<Record<string, unknown> | null> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       i.folio                           AS inc_folio,
+       i.canal                           AS inc_canal,
+       i.estatus                         AS inc_estatus,
+       i.fecha_hora_inicio               AS inc_fecha_hora_inicio,
+       i.descripcion                     AS inc_descripcion,
+       i.calle                           AS inc_calle,
+       i.colonia                         AS inc_colonia,
+       i.municipio                       AS inc_municipio,
+       i.origen_rondin                   AS inc_origen_rondin,
+       cti.nombre                        AS inc_tipo,
+       cp.nombre                         AS inc_prioridad,
+       rc.id                             AS rc_id,
+       rc.folio_reporte_campo            AS rc_folio,
+       rc.ofi_descripcion                AS rc_descripcion,
+       rc.ofi_detenidos                  AS rc_detenidos,
+       rc.ofi_hay_detencion              AS rc_hay_detencion,
+       rc.ofi_autoridad_recibe           AS rc_autoridad_recibe,
+       rc.folio_reporte_asegurados       AS rc_folio_asegurados,
+       rd.id                             AS d1_id,
+       rd.folio_denuncia                 AS d1_folio_denuncia,
+       rd.iph                            AS d1_iph,
+       rd.folio_cu                       AS d1_folio_cu,
+       rd.corporacion                    AS d1_corporacion,
+       rd.sector                         AS d1_sector,
+       rd.grupo_adscripcion              AS d1_grupo_adscripcion,
+       rd.fecha_reporte                  AS d1_fecha_reporte,
+       rd.hora_reporte                   AS d1_hora_reporte,
+       rd.delito                         AS d1_delito,
+       rd.violencia                      AS d1_violencia,
+       rd.lugar_hecho                    AS d1_lugar_hecho,
+       rd.colonia_hecho                  AS d1_colonia_hecho,
+       rd.folio_sija                     AS d1_folio_sija,
+       rd.folio_remision                 AS d1_folio_remision,
+       rd.marco_legal                    AS d1_marco_legal,
+       rd.estado_tramite                 AS d1_estado_tramite,
+       rd.estado_evidencia               AS d1_estado_evidencia,
+       rd.observaciones                  AS d1_observaciones,
+       pd.id                             AS pd_id,
+       pd.gestion_interna                AS pd_gestion_interna,
+       pd.dependencia_externa            AS pd_dependencia_externa,
+       pd.actas                          AS pd_actas,
+       pd.otros_actos                    AS pd_otros_actos,
+       pd.hora_inicio_traslado           AS pd_hora_inicio_traslado,
+       pd.hora_llegada_sede              AS pd_hora_llegada_sede,
+       pd.tiempo_traslado_total          AS pd_tiempo_traslado_total,
+       pd.hora_puesta_disposicion        AS pd_hora_puesta_disposicion,
+       pd.creado_por                     AS pd_creado_por,
+       pd.creado_en                      AS pd_creado_en,
+       pd.completado_en                  AS pd_completado_en
+     FROM ofi_reporte_denuncia rd
+     LEFT JOIN ofi_reportes_campo rc ON rc.id = rd.reporte_campo_id
+     LEFT JOIN incidentes i ON i.id = COALESCE(rd.incidente_id, rc.incidente_id)
+     LEFT JOIN cat_tipos_incidente cti ON cti.id = i.tipo_incidente_id
+     LEFT JOIN cat_prioridades cp ON cp.id = i.prioridad_id
+     LEFT JOIN ofi_puesta_disposicion pd ON pd.reporte_campo_id = rc.id
+     WHERE rd.id = $1
+     LIMIT 1`,
+    [solicitudId],
+  )
+  return result.rows[0] ?? null
 }
 
 export async function guardarPuestaDisposicion(
