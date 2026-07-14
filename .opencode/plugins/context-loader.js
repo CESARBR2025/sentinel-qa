@@ -1,4 +1,4 @@
-// context-loader OpenCode plugin — v1.6.0 Context Armor
+// context-loader OpenCode plugin — v2.5.0 Context Armor
 // Features:
 //   A) Auto checkpoint: registra tareas, build, typecheck, file_reads
 //   B) Graphify-first: ejecuta graphify query automáticamente
@@ -12,13 +12,35 @@
 //  F7) Graphify stale guard: advierte cuando grafo no se ha actualizado tras 10+ edits
 //  D1) Pre-load enhanced: carga decisions pendientes + session summary al iniciar
 //
-import { existsSync, readFileSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, mkdirSync, writeFileSync, appendFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..");
+
+// Heartbeat: prueba definitiva de que el plugin se cargó
+try {
+  mkdirSync(join(ROOT, ".youmindag"), { recursive: true });
+  appendFileSync(join(ROOT, ".youmindag", "plugin-heartbeat.log"),
+    `[${new Date().toISOString()}] v2.5.4 loaded | ROOT=${ROOT} | __dirname=${__dirname}\n`);
+} catch {}
+
+const TOKEN_LOG = join(ROOT, ".youmindag", "token-usage.jsonl")
+
+function estimateTokens(text) {
+  if (!text || typeof text !== "string") return 0
+  return Math.round(text.length / 4)
+}
+
+function logToken(data) {
+  try {
+    mkdirSync(join(ROOT, ".youmindag"), { recursive: true })
+    appendFileSync(TOKEN_LOG, JSON.stringify(data) + "\n")
+  } catch {}
+}
+
 const GRAPH_PATH = join(ROOT, ".graphify", "graph.json");
 const CHECKPOINT_SCRIPT = join(ROOT, "scripts", "session-checkpoint.mjs");
 const REINJECT_INTERVAL = 12;
@@ -29,6 +51,19 @@ const SCOPE_CREEP_THRESHOLD = 5;
 const GRAPHIFY_DEBOUNCE_MS = 30000;
 const GRAPHIFY_TIMEOUT_MS = 10000;
 const CACHE_TTL_MS = 60000;
+
+const YM_LOG = process.env.YOUMINDAG_DEBUG === "1"
+  ? join(ROOT, ".youmindag", "ym-debug.log")
+  : null;
+const YM_DEBUG = !!YM_LOG;
+
+function ymDebug(msg) {
+  if (!YM_LOG) return;
+  try {
+    mkdirSync(join(ROOT, ".youmindag"), { recursive: true });
+    appendFileSync(YM_LOG, `[${new Date().toISOString()}] ${msg}\n`);
+  } catch {}
+}
 
 const graphifyCache = new Map()
 
@@ -61,13 +96,23 @@ function cacheClear() {
   graphifyCache.clear()
 }
 
+function isGraphifyAvailable() {
+  return existsSync(GRAPH_PATH);
+}
+
 const STATE_FILE = join(ROOT, '.youmindag', 'plugin-state.json')
 const STATE_SAVE_INTERVAL = 5
 
 function loadPluginState() {
   if (!existsSync(STATE_FILE)) return {}
   try {
-    return JSON.parse(readFileSync(STATE_FILE, 'utf-8'))
+    const data = JSON.parse(readFileSync(STATE_FILE, 'utf-8'))
+    if (data._graphifyCache) {
+      for (const [key, entry] of Object.entries(data._graphifyCache)) {
+        graphifyCache.set(parseInt(key), entry)
+      }
+    }
+    return data
   } catch {
     return {}
   }
@@ -76,6 +121,11 @@ function loadPluginState() {
 function savePluginState(state) {
   try {
     mkdirSync(join(ROOT, '.youmindag'), { recursive: true })
+    const serialized = {}
+    for (const [key, entry] of graphifyCache) {
+      serialized[key] = { result: entry.result, ts: entry.ts }
+    }
+    state._graphifyCache = serialized
     writeFileSync(STATE_FILE, JSON.stringify(state, null, 2))
   } catch {}
 }
@@ -113,8 +163,21 @@ const VERIFY_COMMANDS = /\b(tsc|typecheck|npm run build|next build|lint|eslint|n
 
 const DECISION_PATTERNS = /\b(decid[ií]|opt[aá]mos por|en vez de|la raz[oó]n es|porque|la causa es|el motivo|prefer[ií]|eleg[ií])\b/i;
 
+const STOP_WORDS = new Set([
+  "implement", "create", "add", "build", "make", "fix", "update", "change",
+  "remove", "delete", "get", "set", "find", "search", "para", "con", "por",
+  "del", "los", "las", "que", "una", "como", "mas", "esta", "entre", "sobre",
+  "tiene", "este", "todo", "cada", "muy", "sin", "desde", "hasta",
+  "import", "export", "require", "from", "const", "let", "var",
+  "function", "return", "async", "await", "default", "react",
+  "true", "false", "null", "undefined", "type", "interface",
+  "class", "extends", "implements", "new", "this", "super",
+  "try", "catch", "throw", "if", "else", "for", "while",
+  "switch", "case", "break", "continue",
+]);
+
 function graphifyQuery(task, directory) {
-  if (!existsSync(GRAPH_PATH)) return null;
+  if (!isGraphifyAvailable()) return null;
   const cached = cacheGet(task)
   if (cached) return cached
   try {
@@ -137,7 +200,7 @@ function graphifyQuery(task, directory) {
 }
 
 function graphifySummary(directory) {
-  if (!existsSync(GRAPH_PATH)) return null;
+  if (!isGraphifyAvailable()) return null;
   const SUMMARY_KEY = "summary:__graphify_summary__"
   const cached = cacheGet(SUMMARY_KEY)
   if (cached) return cached
@@ -157,6 +220,29 @@ function graphifySummary(directory) {
   } catch {
     return null;
   }
+}
+
+function extractKeywords(task) {
+  if (!task) return [];
+  const tokens = [];
+  tokens.push(...(task.match(/\b[A-Z][a-z]+[A-Z]\w+\b/g) || []));
+  tokens.push(...(task.match(/\b[a-z]+-[a-z]+\b/g) || []));
+  tokens.push(...(task.match(/\b[a-z]+_[a-z]+\b/g) || []));
+  tokens.push(...(task.match(/\b\w{4,}\b/g)?.filter(w =>
+    !STOP_WORDS.has(w.toLowerCase())
+  ) || []));
+  return [...new Set(tokens)];
+}
+
+function buildGraphifyQuery(task, keywords) {
+  if (!keywords || keywords.length === 0) return task.slice(0, 200);
+  const parts = ["describe project"];
+  const kws = keywords.filter(k => k.length > 2);
+  if (kws.length > 0) {
+    parts.push(`files related to ${kws.slice(0, 4).join(" ")}`);
+    parts.push(`deps of ${kws[0]}`);
+  }
+  return parts.join(", ").slice(0, 200);
 }
 
 function isGenericTask(text) {
@@ -255,7 +341,7 @@ function shouldShowGraphifyResult(text) {
   return text.length > 15 && !noisePatterns.test(text.trim());
 }
 
-export const ContextLoaderPlugin = async ({ directory }) => {
+export const ContextLoaderPlugin = async ({ project, client, $, directory, worktree }) => {
   const saved = loadPluginState();
   let toolCallCount = saved.toolCallCount || 0;
   let lastTask = saved.lastTask || "";
@@ -263,29 +349,93 @@ export const ContextLoaderPlugin = async ({ directory }) => {
   let pendingContext = "";
   let pendingSession = "";
   let pendingWarnings = "";
+  let pendingD1Echo = "";
   let lastCheckpointKey = saved.lastCheckpointKey || "";
   let editsSinceLastCheck = saved.editsSinceLastCheck || 0;
   let editsSinceGraphifyUpdate = saved.editsSinceGraphifyUpdate || 0;
+  let grepCount = 0;
+  let graphifyQueryCount = 0;
   let wasCompacted = false;
   let preLoaded = false;
+  let currentUserText = "";
+  let primarySessionID = null;
 
   return {
-    "plugin.tool-execute.before": async (input, output) => {
-      const task = input?.text || "";
-      const cmd = (input?.args?.command || "").toLowerCase();
-      const isNewTask = task && task !== lastTask && task.length > 15;
-      const now = Date.now();
+    "chat.message": async (input, output) => {
+      if (!primarySessionID) primarySessionID = input.sessionID;
+      if (YM_DEBUG) {
+        ymDebug(`chat.message sid:${input.sessionID} primary:${primarySessionID} match:${input.sessionID === primarySessionID}`);
+      }
+      if (input.sessionID !== primarySessionID) return;
+      const textParts = (output.parts || [])
+        .filter(p => p.type === "text")
+        .map(p => p.text)
+        .join("\n");
+      if (textParts) {
+        currentUserText = textParts
+        logToken({ ts: new Date().toISOString(), event: "user_message", sessionID: input.sessionID, tokens: estimateTokens(textParts), preview: textParts.slice(0, 80) })
+      }
+    },
+
+    "tool.execute.before": async (input, output) => {
+      const toolName = input?.tool || "";
       toolCallCount++;
 
-      if (toolCallCount % STATE_SAVE_INTERVAL === 0) {
-        savePluginState({ toolCallCount, lastTask, lastCheckpointKey, editsSinceLastCheck, editsSinceGraphifyUpdate });
+      // Token tracking — log input size for task/bash/read/grep calls
+      if (/^(task|bash|read|grep|glob|write|edit)$/.test(toolName)) {
+        const argsStr = JSON.stringify(output?.args || {})
+        logToken({ ts: new Date().toISOString(), event: "tool_before", tool: toolName, sessionID: input.sessionID, tokens: estimateTokens(argsStr) })
       }
 
-      // D1: Pre-load session summary + pending decisions on first call
+      // Debug log on first tool call to inspect input structure
+      if (toolCallCount === 1) {
+        console.error(`[YouMindAG] DEBUG tool:${toolName} text:${JSON.stringify(input?.text)} args_keys:${JSON.stringify(Object.keys(input?.args||{}))} input_keys:${JSON.stringify(Object.keys(input||{}))}`);
+      }
+
+      // ─── Tool-agnostic: grep/glob tracking ───
+      if (toolName === "grep" || toolName === "glob") {
+        grepCount++;
+        if (YM_DEBUG) ymDebug(`grep/glob detectado tool:${toolName} sessionID:${input.sessionID} grepCount:${grepCount}`);
+      }
+
+      // ─── Tool-agnostic: periodic state save ───
+      if (toolCallCount % STATE_SAVE_INTERVAL === 0) {
+        savePluginState({ toolCallCount, lastTask, lastCheckpointKey, editsSinceLastCheck, editsSinceGraphifyUpdate, grepCount, graphifyQueryCount });
+      }
+
+      // ─── E1: Subagent graphify context injection ───
+      if (toolName === "task" && YM_DEBUG) {
+        ymDebug(`task tool detectado, prompt_len:${output.args?.prompt?.length} graphify_disponible:${isGraphifyAvailable()}`);
+      }
+      if (toolName === "task" && output.args?.prompt?.length > 20 && isGraphifyAvailable()) {
+        const subPrompt = output.args.prompt;
+        const keywords = extractKeywords(subPrompt);
+        if (YM_DEBUG) {
+          ymDebug(`keywords:${JSON.stringify(keywords)}`);
+        }
+        if (keywords.length > 0) {
+          const compoundQuery = buildGraphifyQuery(subPrompt, keywords);
+          const gfResult = graphifyQuery(compoundQuery, directory);
+          if (YM_DEBUG) {
+            ymDebug(`gfResult:${gfResult ? "SI len=" + gfResult.length : "NO"}`);
+          }
+          if (gfResult) {
+            graphifyQueryCount++;
+            output.args.prompt = [
+              `[graphify] Contexto precargado para esta investigación (usa graphify query en vez de grep/glob):`,
+              gfResult,
+              `---`,
+              subPrompt
+            ].join("\n\n");
+          }
+        }
+        return;
+      }
+
+      // ─── D1: Pre-load — runs on first call regardless of tool ───
       if (!preLoaded) {
         preLoaded = true;
 
-        // Auto-init session file if it doesn't exist
         const sessionDir = join(directory || ROOT, ".youmindag");
         const sessionJson = join(sessionDir, "session.jsonl");
         mkdirSync(sessionDir, { recursive: true });
@@ -304,10 +454,29 @@ export const ContextLoaderPlugin = async ({ directory }) => {
           preload += (preload ? " && " : "") + `echo "[decisions] Decisiones pendientes:" && echo ${JSON.stringify("\\n" + pd)}`;
         }
 
-        if (preload) {
-          output.args.command = preload + " && " + (output.args.command || "true");
+        const prevGrep = saved.grepCount || 0;
+        const prevGraphify = saved.graphifyQueryCount || 0;
+        if (prevGrep > 0 || prevGraphify > 0) {
+          const report = `[graphify] 📊 Resumen de sesión anterior: ${prevGraphify} graphify queries, ${prevGrep} grep/glob.`;
+          preload += (preload ? " && " : "") + `echo ${JSON.stringify(report)}`;
+          saved.grepCount = 0;
+          saved.graphifyQueryCount = 0;
+          savePluginState(saved);
         }
+
+        pendingD1Echo = preload;
       }
+
+      // ─── Bash-only features below ───
+      if (toolName !== "bash") return;
+
+      const rawCmd = output?.args?.command || "";
+      const task = currentUserText || "";
+      const cmd = rawCmd.toLowerCase();
+      const isNewTask = task && task !== lastTask && task.length > 15;
+      const now = Date.now();
+
+      // Quick query shortcut: graphify q "query" → npx graphify query "query"
 
       // F2: Compaction recovery — detect context reset
       if (toolCallCount === 1 && lastTask) {
@@ -341,7 +510,7 @@ export const ContextLoaderPlugin = async ({ directory }) => {
 
       if (isNewTask) {
         lastTask = task;
-        savePluginState({ toolCallCount, lastTask, lastCheckpointKey, editsSinceLastCheck, editsSinceGraphifyUpdate });
+        savePluginState({ toolCallCount, lastTask, lastCheckpointKey, editsSinceLastCheck, editsSinceGraphifyUpdate, grepCount, graphifyQueryCount });
         pendingContext = "";
         pendingSession = "";
         pendingWarnings = "";
@@ -356,20 +525,25 @@ export const ContextLoaderPlugin = async ({ directory }) => {
           pendingSession = summary;
         }
 
-        // B: Graphify-first (debounced) — use summary for generic tasks
-        if (shouldShowGraphifyResult(task) && (now - lastGraphifyAt) > GRAPHIFY_DEBOUNCE_MS) {
+        // B: Graphify-first v2 — query compuesta + summary (máx 2)
+        if (shouldShowGraphifyResult(task) && isGraphifyAvailable() && (now - lastGraphifyAt) > GRAPHIFY_DEBOUNCE_MS) {
           lastGraphifyAt = now;
-          if (isGenericTask(task)) {
-            const gfSummary = graphifySummary(directory);
-            if (gfSummary) {
-              pendingContext = `\n[graphify summary] Orientación del proyecto:\n${gfSummary}`;
-            }
-          } else {
-            const gfResult = graphifyQuery(task, directory);
+          const keywords = extractKeywords(task);
+          const gfSummary = graphifySummary(directory);
+          let ctx = "";
+          if (gfSummary) {
+            ctx += `\n[graphify summary] Orientación del proyecto:\n${gfSummary}`;
+          }
+          // Para tasks específicas, también query compuesta con keywords
+          if (!isGenericTask(task) && keywords.length > 0) {
+            const compoundQuery = buildGraphifyQuery(task, keywords);
+            const gfResult = graphifyQuery(compoundQuery, directory);
             if (gfResult) {
-              pendingContext = `\n[graphify] Resultados para: "${task.slice(0, 60)}${task.length > 60 ? "..." : ""}"\n${gfResult}`;
+              graphifyQueryCount++;
+              ctx += `\n[graphify query] ${compoundQuery}\n${gfResult}`;
             }
           }
+          if (ctx) pendingContext = ctx;
         }
 
         // F4: Subagent suggestion for research-heavy tasks
@@ -421,10 +595,10 @@ export const ContextLoaderPlugin = async ({ directory }) => {
       }
 
       // Prepend pending messages
-      if (pendingSession || pendingContext || pendingWarnings) {
-        let prefix = "";
+      if (pendingD1Echo || pendingSession || pendingContext || pendingWarnings) {
+        let prefix = pendingD1Echo || ""; pendingD1Echo = "";
         if (pendingSession) {
-          prefix += `echo "[session] Sesión anterior:" && echo ${JSON.stringify(pendingSession)}`;
+          prefix += (prefix ? " && " : "") + `echo "[session] Sesión anterior:" && echo ${JSON.stringify(pendingSession)}`;
           pendingSession = "";
         }
         if (pendingContext) {
@@ -441,7 +615,17 @@ export const ContextLoaderPlugin = async ({ directory }) => {
       }
     },
 
-    "plugin.tool-execute.after": async (input, output) => {
+    "tool.execute.after": async (input, output) => {
+      const toolName = input?.tool || "";
+
+      // Token tracking — log output size for all relevant tools
+      if (/^(task|bash|read|grep|glob|write|edit)$/.test(toolName)) {
+        const resultStr = JSON.stringify(output?.result || output?.output || output || {})
+        logToken({ ts: new Date().toISOString(), event: "tool_after", tool: toolName, sessionID: input.sessionID, tokens: estimateTokens(resultStr) })
+      }
+
+      if (toolName !== "bash") return;
+
       const cmd = (input?.args?.command || "").toLowerCase();
       const exitOk = output?.result?.exitCode === 0;
 
@@ -468,6 +652,7 @@ export const ContextLoaderPlugin = async ({ directory }) => {
           editsSinceLastCheck = 0;
           editsSinceGraphifyUpdate = 0;
           cacheClear();
+          savePluginState({ toolCallCount, lastTask, lastCheckpointKey, editsSinceLastCheck, editsSinceGraphifyUpdate, grepCount, graphifyQueryCount });
         }
       }
 
