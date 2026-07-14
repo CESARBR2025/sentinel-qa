@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation'
 interface Props {
   incidenteId: string
   estatusActual: string
+  onMarcado?: () => void
 }
 
-export function MarcarEnSitioButton({ incidenteId, estatusActual }: Props) {
+export function MarcarEnSitioButton({ incidenteId, estatusActual, onMarcado }: Props) {
   const [pending, startTransition] = useTransition()
   const router = useRouter()
 
@@ -18,6 +19,7 @@ export function MarcarEnSitioButton({ incidenteId, estatusActual }: Props) {
   const handleClick = () => {
     startTransition(async () => {
       await marcarEnSitioOficial(incidenteId)
+      onMarcado?.()
       router.refresh()
     })
   }

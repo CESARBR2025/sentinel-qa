@@ -804,16 +804,16 @@
     "video": []
   },
   "total_files": 794,
-  "total_words": 570102,
+  "total_words": 569804,
   "needs_graph": true,
-  "warning": "Large corpus: 794 files · ~570,102 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.",
+  "warning": "Large corpus: 794 files · ~569,804 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.",
   "skipped_sensitive": [
     "scripts/token-summary.mjs"
   ],
   "graphifyignore_patterns": 46,
   "git": {
     "source_owner": "git",
-    "source_hash": "dd2f306f814de4496fceabe50f717a947be4aa75",
+    "source_hash": "54a87f1d329f459f1b266afb4b406706c78f8e78",
     "branches": [
       "feature/monitorista",
       "feature/monitorista-reportes",
@@ -832,11 +832,11 @@
     "source": "default-auto",
     "root": ".",
     "git_root": ".",
-    "head": "dd2f306f814de4496fceabe50f717a947be4aa75",
+    "head": "54a87f1d329f459f1b266afb4b406706c78f8e78",
     "candidate_count": 854,
     "included_count": 794,
-    "excluded_untracked_count": 0,
-    "excluded_ignored_count": 72893,
+    "excluded_untracked_count": 1,
+    "excluded_ignored_count": 72996,
     "excluded_sensitive_count": 1,
     "missing_committed_count": 30,
     "warnings": [],

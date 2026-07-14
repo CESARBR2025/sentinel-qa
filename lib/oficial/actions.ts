@@ -63,6 +63,7 @@ export async function marcarEnSitioOficial(incidenteId: string) {
   })
 
   revalidatePath('/oficial/despachos')
+  revalidatePath(`/oficial/despachos/${incidenteId}`)
   revalidatePath('/incidentes')
 }
 

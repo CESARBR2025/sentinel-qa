@@ -1,24 +1,24 @@
 # Graph Report - .  (2026-07-14)
 
 ## Corpus Check
-- Large corpus: 794 files · ~570,102 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
+- Large corpus: 794 files · ~569,804 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
 
 ## Summary
-- 3576 nodes · 11691 edges · 131 communities detected
+- 3577 nodes · 11695 edges · 130 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
-- Edge kinds: MODIFIES: 3859 · contains: 2703 · imports: 1851 · imports_from: 1234 · ON_BRANCH: 1226 · calls: 398 · PARENT_OF: 322 · re_exports: 52 · method: 29 · references: 9 · inherits: 8
+- Edge kinds: MODIFIES: 3861 · contains: 2703 · imports: 1851 · imports_from: 1234 · ON_BRANCH: 1227 · calls: 398 · PARENT_OF: 323 · re_exports: 52 · method: 29 · references: 9 · inherits: 8
 
 
 ## Input Scope
 - Requested: auto
 - Resolved: committed (source: default-auto)
 - Included files: 794 · Candidates: 854
-- Excluded: 0 untracked · 72893 ignored · 1 sensitive · 30 missing committed
+- Excluded: 1 untracked · 72996 ignored · 1 sensitive · 30 missing committed
 - Recommendation: Use --scope all or graphify.yaml inputs.corpus for a knowledge-base folder.
 
 ## Graph Freshness
-- Built from Git commit: `dd2f306`
+- Built from Git commit: `54a87f1`
 - Compare this hash to `git rev-parse HEAD` before trusting freshness-sensitive graph output.
 ## God Nodes (most connected - your core abstractions)
 1. `auth` - 135 edges
@@ -79,28 +79,28 @@ Cohesion: 0.05
 Nodes (58): 6109a7a replicando flujo para fiscalia, AseguradosData, LiberacionesData, SolicitudesData, num(), rowToAsegurado(), rowToDetalleDetenidoGuardado(), rowToPuestaDisposicion() (+50 more)
 
 ### Community 8 - "Community 8"
+Cohesion: 0.07
+Nodes (55): HistorialIncidente(), rowToAlarmaEscolar(), rowToDespacho(), rowToDespachoElemento(), rowToDespachoUnidad(), rowToExtorsion(), rowToIncidenteBasico(), rowToIncidenteConDespachoBase() (+47 more)
+
+### Community 9 - "Community 9"
 Cohesion: 0.08
 Nodes (57): createBodyCam(), createConcepto(), createMedioCanalizacion(), createRadio(), createSector(), createTipoEmergencia(), createTipoObservacion(), req() (+49 more)
 
-### Community 9 - "Community 9"
+### Community 10 - "Community 10"
 Cohesion: 0.06
 Nodes (50): accionCerrarCaso(), accionTomarCaso(), AseguradosJuzgadoData, LiberacionesData, obtenerSolicitudes(), SolicitudesData, num(), rowToInfraccionDetalle() (+42 more)
 
-### Community 10 - "Community 10"
+### Community 11 - "Community 11"
 Cohesion: 0.05
 Nodes (42): 09a02d5 Fix Reporte Rondin, 435348e corrigiendo flujo de rondin, f0089cf Merge pull request #21 from presidenciaSJR/conexion, f4cf76c Actualización Rondin, BTN, BTN_SM, DespachoForm(), Elemento (+34 more)
 
-### Community 11 - "Community 11"
+### Community 12 - "Community 12"
 Cohesion: 0.11
 Nodes (56): conexion, feature/testing, testing, 0c8695c Cambios en filtros, 0caf5dd Fixes, 11ee4f2 mejorando flujo de 911, 1265204 paginacion por tablas, 160d1e1 Monitorista V1.1 (+48 more)
 
-### Community 12 - "Community 12"
+### Community 13 - "Community 13"
 Cohesion: 0.06
 Nodes (36): insertarDocumentoLiberacion(), 16df128 flujo de corralones listo, 5a1b5d5 empezando corralon, obtenerDashboardCorralon(), obtenerSolicitudes(), TabSolicitudes, rowToSolicitud(), toStr() (+28 more)
-
-### Community 13 - "Community 13"
-Cohesion: 0.08
-Nodes (53): rowToAlarmaEscolar(), rowToDespacho(), rowToDespachoElemento(), rowToDespachoUnidad(), rowToExtorsion(), rowToIncidenteBasico(), rowToIncidenteConDespachoBase(), rowToIncidenteDetalleCompletoBase() (+45 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.05
@@ -383,32 +383,32 @@ Cohesion: 0.22
 Nodes (10): 14fd73a Update FormSection.tsx, 305b0bd se quitan campos, 5795f74 Búsqueda de nombre de policía por nómina, 81b9829 Cambios para guardado de persinas afectadas, 917002a Guardado de policia a cargo, bf354f1 Nombre completo de quien captura, d5e0e56 Campo para agregar detenidos de forma dinámica y eliminación de campos extras, d665f95 Camo dinamico y cambio a select en datos positivos (+2 more)
 
 ### Community 84 - "Community 84"
+Cohesion: 0.19
+Nodes (12): 54a87f1 Fix oficial/despachos, cd92b01 Update .gitignore, dd2f306 Fix Mapa, getMapsWindow(), GoogleMapsNamespace, GoogleMapsWindow, loadGoogleMaps(), waitForGoogle() (+4 more)
+
+### Community 85 - "Community 85"
 Cohesion: 0.15
 Nodes (11): DocConfig, DOCS_ACCIDENTE, DOCS_DELITO, DOCS_EMPRESA, DOCS_INFRACCION, getEstatusConfig(), MOTIVO_TO_SUBTIPO, Props (+3 more)
 
-### Community 85 - "Community 85"
+### Community 86 - "Community 86"
 Cohesion: 0.23
 Nodes (9): rowToReporteD1(), toBool(), toNum(), toStr(), insertarReporteDenuncia(), obtenerReportesD1(), verificarFolioDenunciaUnico(), listarReportesD1() (+1 more)
 
-### Community 86 - "Community 86"
+### Community 87 - "Community 87"
 Cohesion: 0.14
 Nodes (9): obtenerDetalleInfraccionViaAction(), BotonVerDetalle(), AVATAR_COLORS, EstatusFiscalia, Props, SORTABLE_KEYS, STATUS_BADGE, STATUS_TABS (+1 more)
 
-### Community 87 - "Community 87"
+### Community 88 - "Community 88"
 Cohesion: 0.14
 Nodes (8): tdStyle, thStyle, Accion, obtenerPermisosUsuario(), PermisoRow, PermisoSeccion, Seccion, listarHistorial()
 
-### Community 88 - "Community 88"
+### Community 89 - "Community 89"
 Cohesion: 0.18
 Nodes (13): buildHelperCode(), components, __dirname, dirty, EXTENSIONS, fileMap, filesToModify, findReactImportWithTS() (+5 more)
 
-### Community 89 - "Community 89"
+### Community 90 - "Community 90"
 Cohesion: 0.33
 Nodes (7): 156c925 vista de reporte de sin robos, PaginacionSinRobos(), paginationButtonStyle, PaginationProps, TablaReportesLimpios(), ReportFilters(), styles
-
-### Community 90 - "Community 90"
-Cohesion: 0.21
-Nodes (11): cd92b01 Update .gitignore, dd2f306 Fix Mapa, getMapsWindow(), GoogleMapsNamespace, GoogleMapsWindow, loadGoogleMaps(), waitForGoogle(), Window (+3 more)
 
 ### Community 91 - "Community 91"
 Cohesion: 0.18
@@ -515,58 +515,54 @@ Cohesion: 0.36
 Nodes (6): ColumnInfo, getColumns(), getEnums(), getTables(), main(), SCHEMAS
 
 ### Community 117 - "Community 117"
-Cohesion: 0.29
-Nodes (2): HistorialIncidente(), HistorialIncidente
-
-### Community 118 - "Community 118"
 Cohesion: 0.33
 Nodes (5): btnDetalle, DetenidoRow, FotoInfo, TablaDetenidos(), tabStyle()
 
-### Community 119 - "Community 119"
+### Community 118 - "Community 118"
 Cohesion: 0.52
 Nodes (6): drawWatermark(), formatearFecha(), formatearOficio(), generarOrdenSalidaVehiculo(), loadImageAsBase64(), parrafoMixtoConWrap()
 
-### Community 120 - "Community 120"
+### Community 119 - "Community 119"
 Cohesion: 0.33
 Nodes (6): CONTEXT_MAP, __dirname, extractDomain(), KEYWORDS, loadKeywords(), ROOT
 
-### Community 121 - "Community 121"
+### Community 120 - "Community 120"
 Cohesion: 0.29
 Nodes (3): PasoConfirmacionProps, SeccionEstructurada, Props
 
-### Community 122 - "Community 122"
+### Community 121 - "Community 121"
 Cohesion: 0.40
 Nodes (5): Session, config, isPublic(), proxy(), PUBLIC_PATHS
 
-### Community 123 - "Community 123"
+### Community 122 - "Community 122"
 Cohesion: 0.40
 Nodes (4): calcularSemaforoVigencia(), SemaforoColor, CFG, SemaforoVigencia()
 
-### Community 124 - "Community 124"
+### Community 123 - "Community 123"
 Cohesion: 0.40
 Nodes (2): cancelarFicha(), CancelacionModal()
 
-### Community 125 - "Community 125"
+### Community 124 - "Community 124"
 Cohesion: 0.40
 Nodes (4): createProrroga(), I, L, ProrrogaModal()
 
-### Community 126 - "Community 126"
+### Community 125 - "Community 125"
 Cohesion: 0.50
 Nodes (1): MAIN_ROUTES
 
-### Community 127 - "Community 127"
+### Community 126 - "Community 126"
 Cohesion: 0.50
 Nodes (2): ADMIN, pool
 
-### Community 128 - "Community 128"
+### Community 127 - "Community 127"
 Cohesion: 1.00
 Nodes (2): obtenerTokenFiscalia(), subirArchivoFiscalia()
 
-### Community 130 - "Community 130"
+### Community 129 - "Community 129"
 Cohesion: 1.00
 Nodes (1): eslintConfig
 
-### Community 131 - "Community 131"
+### Community 130 - "Community 130"
 Cohesion: 1.00
 Nodes (1): config
 
@@ -583,27 +579,25 @@ Nodes (1): config
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 111`** (1 nodes): `TWEAKS`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 117`** (2 nodes): `HistorialIncidente()`, `HistorialIncidente`
+- **Thin community `Community 123`** (2 nodes): `cancelarFicha()`, `CancelacionModal()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 124`** (2 nodes): `cancelarFicha()`, `CancelacionModal()`
+- **Thin community `Community 125`** (1 nodes): `MAIN_ROUTES`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 126`** (1 nodes): `MAIN_ROUTES`
+- **Thin community `Community 126`** (2 nodes): `ADMIN`, `pool`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 127`** (2 nodes): `ADMIN`, `pool`
+- **Thin community `Community 127`** (2 nodes): `obtenerTokenFiscalia()`, `subirArchivoFiscalia()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 128`** (2 nodes): `obtenerTokenFiscalia()`, `subirArchivoFiscalia()`
+- **Thin community `Community 129`** (1 nodes): `eslintConfig`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 130`** (1 nodes): `eslintConfig`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 131`** (1 nodes): `config`
+- **Thin community `Community 130`** (1 nodes): `config`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `auth` connect `Community 3` to `Community 19`, `Community 53`, `Community 54`, `Community 18`, `Community 25`, `Community 9`, `Community 24`, `Community 32`, `Community 1`, `Community 47`, `Community 0`, `Community 55`, `Community 16`, `Community 29`, `Community 12`, `Community 15`, `Community 2`, `Community 17`, `Community 35`, `Community 38`, `Community 41`, `Community 27`, `Community 7`, `Community 56`, `Community 76`, `Community 77`, `Community 78`, `Community 61`, `Community 87`, `Community 4`, `Community 33`, `Community 46`, `Community 67`, `Community 52`, `Community 23`, `Community 39`, `Community 64`, `Community 8`, `Community 10`, `Community 89`, `Community 22`, `Community 5`?**
+- **Why does `auth` connect `Community 3` to `Community 19`, `Community 53`, `Community 54`, `Community 18`, `Community 25`, `Community 10`, `Community 24`, `Community 32`, `Community 1`, `Community 47`, `Community 0`, `Community 55`, `Community 16`, `Community 29`, `Community 13`, `Community 15`, `Community 2`, `Community 17`, `Community 35`, `Community 38`, `Community 41`, `Community 27`, `Community 7`, `Community 56`, `Community 76`, `Community 77`, `Community 78`, `Community 61`, `Community 88`, `Community 4`, `Community 33`, `Community 46`, `Community 67`, `Community 52`, `Community 23`, `Community 39`, `Community 64`, `Community 9`, `Community 11`, `Community 90`, `Community 22`, `Community 5`?**
   _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Why does `query()` connect `Community 18` to `Community 68`, `Community 37`, `Community 53`, `Community 44`, `Community 3`, `Community 30`, `Community 9`, `Community 24`, `Community 49`, `Community 70`, `Community 41`, `Community 54`, `Community 12`, `Community 85`, `Community 7`, `Community 29`, `Community 65`, `Community 33`, `Community 10`, `Community 13`, `Community 39`, `Community 80`, `Community 17`, `Community 6`, `Community 52`, `Community 2`, `Community 59`, `Community 15`, `Community 1`, `Community 21`, `Community 0`, `Community 76`, `Community 77`, `Community 78`, `Community 62`, `Community 26`, `Community 99`, `Community 19`, `Community 8`, `Community 47`, `Community 32`?**
+- **Why does `query()` connect `Community 18` to `Community 68`, `Community 37`, `Community 53`, `Community 44`, `Community 3`, `Community 30`, `Community 10`, `Community 24`, `Community 49`, `Community 70`, `Community 41`, `Community 54`, `Community 13`, `Community 86`, `Community 7`, `Community 29`, `Community 65`, `Community 33`, `Community 11`, `Community 8`, `Community 39`, `Community 80`, `Community 17`, `Community 6`, `Community 52`, `Community 2`, `Community 59`, `Community 15`, `Community 1`, `Community 21`, `Community 0`, `Community 76`, `Community 77`, `Community 78`, `Community 62`, `Community 26`, `Community 99`, `Community 19`, `Community 9`, `Community 47`, `Community 32`?**
   _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Why does `SA7Repository` connect `Community 47` to `Community 61`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
