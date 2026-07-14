@@ -61,7 +61,7 @@ interface PrefillDespacho {
   prioridad?: string
 }
 
-export function FormularioRecorrido({ user, catalogos, incidenteId, prefill }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho }) {
+export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, embedded = false }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho, embedded?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null)
   const store = useOficialFormStore()
   const s = useOficialFormStore.getState()
@@ -220,29 +220,35 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill }: {
     crearReporteCampoOficial(fd)
   }
 
+  const Wrapper: any = embedded ? 'div' : 'main'
+  const wrapperStyle = embedded
+    ? { paddingTop: 32 }
+    : { maxWidth: '900px', margin: '0 auto', padding: '40px 48px' }
+
   return (
-    <form ref={formRef} onSubmit={(e) => e.preventDefault()} style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+    <form ref={formRef} onSubmit={(e) => e.preventDefault()} style={embedded ? { color: '#1e293b' } : { minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
 
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 48px' }}>
+      <Wrapper style={wrapperStyle}>
 
-        {/* Header */}
-        <div style={{ marginBottom: '32px' }}>
-          <a href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
-            <ArrowLeft size={14} /> Volver al panel
-          </a>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
-            Oficial en Campo
-          </span>
-          <h1 style={{
-            fontFamily: 'Barlow Condensed, sans-serif',
-            fontWeight: 800, fontSize: 32, letterSpacing: '0.02em',
-            textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a'
-          }}>
-            Reporte de <span style={{ color: '#2563eb' }}>Recorrido</span>
-          </h1>
-        </div>
+        {!embedded && (
+          <div style={{ marginBottom: '32px' }}>
+            <a href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
+              <ArrowLeft size={14} /> Volver al panel
+            </a>
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+              Oficial en Campo
+            </span>
+            <h1 style={{
+              fontFamily: 'Barlow Condensed, sans-serif',
+              fontWeight: 800, fontSize: 32, letterSpacing: '0.02em',
+              textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a'
+            }}>
+              Reporte de <span style={{ color: '#2563eb' }}>Recorrido</span>
+            </h1>
+          </div>
+        )}
 
         {/* Stepper */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 40, padding: '0 4px' }}>
@@ -908,11 +914,9 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill }: {
           )}
         </div>
 
-        <footer style={{ padding: '24px 0 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', marginTop: 40 }}>
-          SSPM · SAN JUAN DEL RÍO · SENTINEL v0.1 · OFICIAL
-        </footer>
+   
 
-      </main>
+      </Wrapper>
 
       <style>{`
         .of-card {

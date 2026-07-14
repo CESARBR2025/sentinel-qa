@@ -1,14 +1,13 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
 import { verificarRolOficial, listarDespachosAsignados, obtenerCatalogos } from '@/lib/oficial/service'
 import { obtenerHistorialCompleto } from '@/lib/incidentes/service'
 import { obtenerIncidenteBasico } from '@/lib/incidentes/repository'
 import { HistorialIncidente } from '@/components/incidentes/HistorialIncidente'
 import { FormularioRecorrido } from '@/components/oficial/FormularioRecorrido'
 import { MarcarEnSitioButton } from '@/components/oficial/MarcarEnSitioButton'
+import { DashboardHeader } from '@/components/partials/Header'
 
 export default async function AtenderDespachoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -32,15 +31,34 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
   if (!historial || !incidenteBasico) notFound()
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 48px 0 48px' }}>
-        <Link href="/oficial/despachos" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
-          <ArrowLeft size={14} /> Mis despachos
-        </Link>
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/oficial/despachos"
+        backLabel="Mis despachos"
+      />
 
-        <div style={{ marginBottom: 24 }}>
+      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 48px 64px' }}>
+
+    <FormularioRecorrido
+          embedded
+          user={session.user}
+          catalogos={catalogos}
+          incidenteId={id}
+          prefill={{
+            folioCad: asignacion.folio,
+            descripcion: asignacion.descripcion ?? undefined,
+            calle: asignacion.calle ?? undefined,
+            colonia: asignacion.colonia ?? undefined,
+            tipoIncidente: asignacion.tipoIncidente ?? undefined,
+            prioridad: asignacion.prioridad ?? undefined,
+          }}
+        />
+
+
+        <div style={{ marginBottom: 24 , marginTop: 24}}>
           <HistorialIncidente historial={historial} />
 
           <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -61,21 +79,12 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
             <MarcarEnSitioButton incidenteId={id} estatusActual={incidenteBasico.estatus} />
           </div>
         </div>
+  <footer style={{ padding: '24px 0 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', marginTop: 40 }}>
+          SSPM · SAN JUAN DEL RÍO · SENTINEL v0.1 · OFICIAL
+        </footer>
+        
       </main>
-
-      <FormularioRecorrido
-        user={session.user}
-        catalogos={catalogos}
-        incidenteId={id}
-        prefill={{
-          folioCad: asignacion.folio,
-          descripcion: asignacion.descripcion ?? undefined,
-          calle: asignacion.calle ?? undefined,
-          colonia: asignacion.colonia ?? undefined,
-          tipoIncidente: asignacion.tipoIncidente ?? undefined,
-          prioridad: asignacion.prioridad ?? undefined,
-        }}
-      />
+         
     </div>
   )
 }
