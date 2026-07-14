@@ -222,3 +222,70 @@ const { isLoaded } = useJsApiLoader({
 
 **Fix**:
 1. Actualizar `getMedidas` y `getMedidasStats` en `lib/prevencion/repository.ts` para mapear el campo `fecha_vencimiento` explícitamente a un string ISO (`YYYY-MM-DD`) cuando es una instancia de `Date`, asegurando que no se entreguen objetos `Date` a los componentes de presentación de la página.
+
+---
+
+## Sonner toast desaparece al navegar entre rutas (App Router)
+
+**Síntoma**: `toast.success()` se ejecuta correctamente (console.log confirma), pero el toast no se muestra visualmente después de una navegación con `router.push()`.
+
+**Causa raíz**: El componente `<Toaster />` de sonner se renderiza en el root layout (`app/layout.tsx`). Durante la navegación cliente con `router.push()`, el layout se re-renderiza con nuevos `children`. En ciertas condiciones (especialmente con un `LoadingProvider` que condiciona `{children}`), el `<Toaster />` se remonta y pierde el estado global de sonner, descartando cualquier toast añadido durante la transición.
+
+**Fix**: No usar sonner para notificaciones que deben persistir a través de navegaciones. En su lugar, inyectar un elemento DOM directamente en `<body>`:
+
+```tsx
+const el = document.createElement('div')
+el.textContent = `✓ Reporte generado: ${folio}`
+Object.assign(el.style, {
+  position: 'fixed', top: '20px', right: '20px', zIndex: '2147483647',
+  background: '#16a34a', color: '#fff', padding: '16px 24px',
+  borderRadius: '4px', fontFamily: 'JetBrains Mono, monospace',
+  fontSize: '13px', fontWeight: '600',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+})
+document.body.appendChild(el)
+setTimeout(() => el.remove(), 5000)
+```
+
+**Archivo**: `app/agente_911/ciudadano/incidentes/ToastOnLoad.tsx`
+
+**Alternativas fallidas**: `router.replace` (remonta el componente, pierde `useRef`), `window.history.replaceState` (no remonta pero sonner igual no muestra la toast).
+
+---
+
+## Login se queda cargando eternamente y no redirige al dashboard/rol
+
+**Síntoma**: Al hacer login exitoso (`POST /api/auth/sign-in/email 200`), el navegador se queda congelado mostrando "Cargando tablero..." o el overlay de éxito, y nunca llega a cargar la página de destino. El servidor **nunca recibe** `GET /dashboard`. Afecta a todos los perfiles.
+
+**Causa raíz**: Dos capas independientes que bloquean la navegación post-login:
+
+1. **`app/dashboard/loading.tsx` crea un Suspense boundary** que envuelve `page.tsx`. Cuando el server component ejecuta `redirect('/agente_911')` (u otro rol), el `NEXT_REDIRECT` lanzado dentro del Suspense boundary no se propaga correctamente en algunos escenarios, dejando la página en loading perpetuo.
+
+2. **`window.__showLoader()` desde el login** — el `useEffect` del login llama a `window.__showLoader('Cargando tablero...', 99999)` (definido por `LoadingProvider`). El `setInterval` interno del `LoadingProvider` para animar la barra de progreso causa re-renders del árbol completo, interfiriendo con los `setTimeout` de navegación del login.
+
+**Fix**:
+
+1. Eliminar `app/dashboard/loading.tsx` si existe (no es parte del código base original — nunca fue commiteado).
+
+2. En `app/(auth)/login/page.tsx`, reemplazar el `useEffect` de éxito que usa `__showLoader` por una navegación directa con delay simple:
+
+```tsx
+// Antes (roto):
+useEffect(() => {
+    if (phase !== 'success') return
+    const t1 = setTimeout(() => {
+      window.__showLoader?.('Cargando tablero...', 99999)
+    }, 2800)
+    const t2 = setTimeout(() => { window.location.href = fromPath }, 4000)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+}, [phase, fromPath])
+
+// Después (funciona):
+useEffect(() => {
+    if (phase !== 'success') return
+    const t = setTimeout(() => { window.location.href = fromPath }, 1200)
+    return () => clearTimeout(t)
+}, [phase, fromPath])
+```
+
+El overlay de éxito cyberpunk del propio login ("Acceso concedido") ya da suficiente feedback visual durante el 1.2s de transición. No se necesita un loader externo.

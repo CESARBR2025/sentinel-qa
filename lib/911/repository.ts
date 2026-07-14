@@ -43,23 +43,33 @@ export async function listarIncidentes(
   canal: string | null,
   page: number,
   pageSize: number,
+  estatus?: string | null,
 ): Promise<{ rows: IncidenteDetalle[]; total: number }> {
   const offset = (page - 1) * pageSize
-  let where = ''
+  const conditions: string[] = []
   const params: unknown[] = []
+  let idx = 0
+
   if (canal) {
-    where = 'WHERE i.canal = $1'
+    idx++
+    conditions.push(`i.canal = $${idx}`)
     params.push(canal)
   }
+  if (estatus) {
+    idx++
+    conditions.push(`i.estatus = $${idx}`)
+    params.push(estatus)
+  }
+
+  const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : ''
 
   const countResult = await query<{ value: number }>(
-    `SELECT count(*)::int AS value FROM incidentes i ${where}`,
+    `SELECT count(*)::int AS value FROM incidentes i ${whereClause}`,
     params,
   )
   const total = countResult.rows[0].value
 
-  const dataParams = canal ? [canal, pageSize, offset] : [pageSize, offset]
-  const dataWhere = canal ? 'WHERE i.canal = $1' : ''
+  const dataParams = [...params, pageSize, offset]
 
   const dataResult = await query<Record<string, unknown>>(
     `SELECT i.*, cti.nombre AS tipo_nombre, cp.nombre AS prioridad_nombre, cte.nombre AS emergencia_nombre
@@ -67,9 +77,9 @@ export async function listarIncidentes(
      LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
      LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
      LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
-     ${dataWhere}
-     ORDER BY i.fecha_hora_inicio DESC
-     LIMIT $${canal ? 2 : 1} OFFSET $${canal ? 3 : 2}`,
+     ${whereClause}
+     ORDER BY i.fecha_hora_inicio DESC, i.creado_en DESC
+     LIMIT $${idx + 1} OFFSET $${idx + 2}`,
     dataParams,
   )
 
@@ -129,4 +139,12 @@ export async function obtenerTiposIncidente(): Promise<CatalogoItem[]> {
     [true],
   )
   return result.rows.map(rowToCatalogo)
+}
+
+export async function contarPorEstatus(canal: string): Promise<{ estatus: string; count: number }[]> {
+  const result = await query<{ estatus: string; count: number }>(
+    `SELECT estatus, count(*)::int as count FROM incidentes WHERE canal = $1 GROUP BY estatus`,
+    [canal],
+  )
+  return result.rows
 }

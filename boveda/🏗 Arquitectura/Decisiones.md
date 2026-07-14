@@ -33,3 +33,8 @@
 - **Contexto**: La documentación estaba regada en AGENTS.md, docs/, y varios archivos sueltos. Difícil de mantener y navegar.
 - **Decisión**: Toda la documentación del proyecto vive en `boveda/` como vault de Obsidian/Markdown. AGENTS.md solo redirige a Home.md.
 - **Consecuencia**: Documentación centralizada, navegable, versionada con el código.
+
+## ADR-007: Notificaciones DOM directas en vez de sonner para toasts post-navegación
+- **Contexto**: Sonner es la librería de toasts del proyecto (layout raíz). En el flujo de creación de incidentes, se necesita mostrar un toast de éxito en la página de destino después de una navegación con `router.push()`. El `<Toaster />` de sonner pierde el estado global durante la transición, descartando el toast.
+- **Decisión**: Para notificaciones que deben persistir a través de navegaciones cliente (App Router), inyectar un elemento DOM directamente en `<body>` en lugar de usar el API de sonner. El toast se limpia con `setTimeout()`.
+- **Consecuencia**: Funciona consistentemente sin depender del estado de React/sonner. Ligeramente más código manual, pero aislado en un solo componente (`ToastOnLoad.tsx`). No reemplaza a sonner para toasts dentro de la misma página (esos siguen funcionando correctamente).

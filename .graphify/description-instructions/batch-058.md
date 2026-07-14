@@ -1,4 +1,4 @@
-# Node Description Batch 59 of 82
+# Node Description Batch 59 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "components_formularioinfraccion_formularioinfraccion": "FormularioInfraccion()" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L71 | neighbors=[FormularioInfraccion.tsx]
-- "components_loadingprovider_getbasepath": "getBasePath()" | kind=code-symbol | source=components/LoadingProvider.tsx:L8 | neighbors=[LoadingProvider.tsx]
-- "components_loadingprovider_loadingprovider": "LoadingProvider()" | kind=code-symbol | source=components/LoadingProvider.tsx:L16 | neighbors=[LoadingProvider.tsx]
-- "components_loadingprovider_main_routes": "MAIN_ROUTES" | kind=code-symbol | source=components/LoadingProvider.tsx:L6 | neighbors=[LoadingProvider.tsx]
-- "components_mapadireccionregistro_containerstyle": "containerStyle" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L11 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapadireccionregistro_default_center": "DEFAULT_CENTER" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L7 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapadireccionregistro_libraries": "LIBRARIES" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L9 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapadireccionregistro_mapadireccionregistroprops": "MapaDireccionRegistroProps" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L17 | neighbors=[MapaDireccionRegistro.tsx]
-- "components_mapsectionciudadano_containerstyle": "containerStyle" | kind=code-symbol | source=features/via/infracciones/components/MapSectionCiudadano.tsx:L7 | neighbors=[MapSectionCiudadano.tsx]
-- "components_mapsectionciudadano_mapsectionciudadano": "MapSectionCiudadano()" | kind=code-symbol | source=features/via/infracciones/components/MapSectionCiudadano.tsx:L14 | neighbors=[MapSectionCiudadano.tsx]
-- "components_mapsectionciudadano_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/MapSectionCiudadano.tsx:L9 | neighbors=[MapSectionCiudadano.tsx]
-- "components_modalentregargarantia_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/ModalEntregarGarantia.tsx:L8 | neighbors=[ModalEntregarGarantia.tsx]
-- "components_pagoinfraccion_pagoinfraccion": "PagoInfraccion()" | kind=code-symbol | source=features/via/infracciones/components/PagoInfraccion.tsx:L16 | neighbors=[PagoInfraccion.tsx]
-- "components_pagoinfraccion_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/PagoInfraccion.tsx:L7 | neighbors=[PagoInfraccion.tsx]
-- "components_revisiondocumentossection_doc_icons": "DOC_ICONS" | kind=code-symbol | source=features/liberaciones/components/RevisionDocumentosSection.tsx:L22 | neighbors=[RevisionDocumentosSection.tsx]
-- "components_revisiondocumentossection_doc_labels": "DOC_LABELS" | kind=code-symbol | source=features/liberaciones/components/RevisionDocumentosSection.tsx:L34 | neighbors=[RevisionDocumentosSection.tsx]
-- "components_revisiondocumentossection_documento": "Documento" | kind=code-symbol | source=features/liberaciones/components/RevisionDocumentosSection.tsx:L14 | neighbors=[RevisionDocumentosSection.tsx]
-- "components_revisiondocumentossection_revisiondocumentossection": "RevisionDocumentosSection()" | kind=code-symbol | source=features/liberaciones/components/RevisionDocumentosSection.tsx:L46 | neighbors=[RevisionDocumentosSection.tsx]
-- "components_seccionliberacion_docconfig": "DocConfig" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L24 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_docs_accidente": "DOCS_ACCIDENTE" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L52 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_docs_delito": "DOCS_DELITO" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L47 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_docs_empresa": "DOCS_EMPRESA" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L33 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_docs_infraccion": "DOCS_INFRACCION" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L40 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_docuploadrow": "DocUploadRow()" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L941 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_infoitem2": "InfoItem2()" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L1015 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_motivo_to_subtipo": "MOTIVO_TO_SUBTIPO" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L63 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L70 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_subtipos_titular": "SUBTIPOS_TITULAR" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L57 | neighbors=[SeccionLiberacion.tsx]
-- "components_seccionliberacion_subtipotitular": "SubtipoTitular" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L31 | neighbors=[SeccionLiberacion.tsx]
-- "configuracion_page_configuracionperfilpage": "ConfiguracionPerfilPage()" | kind=code-symbol | source=app/oficial/configuracion/page.tsx:L11 | neighbors=[page.tsx]
-- "consolidar_page_arma": "Arma" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L64 | neighbors=[page.tsx]
-- "consolidar_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L84 | neighbors=[page.tsx]
-- "consolidar_page_consolidado": "Consolidado" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L73 | neighbors=[page.tsx]
-- "consolidar_page_consolidarformatonpage": "ConsolidarFormatoNPage()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L98 | neighbors=[page.tsx]
-- "consolidar_page_diaconsolidado": "DiaConsolidado()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L178 | neighbors=[page.tsx]
-- "consolidar_page_evento": "Evento" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L11 | neighbors=[page.tsx]
-- "consolidar_page_fge": "Fge" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L35 | neighbors=[page.tsx]
-- "consolidar_page_fgr": "Fgr" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L36 | neighbors=[page.tsx]
-- "consolidar_page_linkbtn": "linkBtn" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L403 | neighbors=[page.tsx]
-- "consolidar_page_medios": "Medios" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L46 | neighbors=[page.tsx]
+- "analisis_formanalisis_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L795 | neighbors=[formAnalisis.tsx]
+- "analisis_generarpresentacion_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L306 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_btnfinishstyle": "btnFinishStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L311 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_btnnextstyle": "btnNextStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L300 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_cardstyle": "cardStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L296 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_labelstyle": "labelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L298 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_mapboxstyle": "mapBoxStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L305 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_registrodetenidoform": "RegistroDetenidoForm()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L13 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L250 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_sentinelfilefield": "SentinelFileField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L271 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_sublabelstyle": "subLabelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L299 | neighbors=[generarPresentacion.tsx]
+- "analisis_generarpresentacion_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L297 | neighbors=[generarPresentacion.tsx]
+- "analisis_page_actiontextstyle": "actionTextStyle" | kind=code-symbol | source=app/analisis/page.tsx:L161 | neighbors=[page.tsx]
+- "analisis_page_cardcontentstyle": "cardContentStyle" | kind=code-symbol | source=app/analisis/page.tsx:L144 | neighbors=[page.tsx]
+- "analisis_page_carddescstyle": "cardDescStyle" | kind=code-symbol | source=app/analisis/page.tsx:L159 | neighbors=[page.tsx]
+- "analisis_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/analisis/page.tsx:L135 | neighbors=[page.tsx]
+- "analisis_page_cardtitlestyle": "cardTitleStyle" | kind=code-symbol | source=app/analisis/page.tsx:L158 | neighbors=[page.tsx]
+- "analisis_page_decoratorline": "decoratorLine" | kind=code-symbol | source=app/analisis/page.tsx:L172 | neighbors=[page.tsx]
+- "analisis_page_iconboxstyle": "iconBoxStyle" | kind=code-symbol | source=app/analisis/page.tsx:L146 | neighbors=[page.tsx]
+- "analisis_page_menuanalisispage": "MenuAnalisisPage()" | kind=code-symbol | source=app/analisis/page.tsx:L9 | neighbors=[page.tsx]
+- "analisis_page_systemstatusstyle": "systemStatusStyle" | kind=code-symbol | source=app/analisis/page.tsx:L174 | neighbors=[page.tsx]
+- "analisis_page_titlestyle": "titleStyle" | kind=code-symbol | source=app/analisis/page.tsx:L133 | neighbors=[page.tsx]
+- "analisis_page_toplabelstyle": "topLabelStyle" | kind=code-symbol | source=app/analisis/page.tsx:L132 | neighbors=[page.tsx]
+- "analisis_permisos_accion": "Accion" | kind=code-symbol | source=lib/analisis/permisos.ts:L6 | neighbors=[permisos.ts]
+- "analisis_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/analisis/permisos.ts:L13 | neighbors=[permisos.ts]
+- "analisis_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/analisis/permisos.ts:L21 | neighbors=[permisos.ts]
+- "analisis_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/analisis/permisos.ts:L17 | neighbors=[permisos.ts]
+- "analisis_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/analisis/permisos.ts:L7 | neighbors=[permisos.ts]
+- "analisis_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/analisis/permisos.ts:L26 | neighbors=[permisos.ts]
+- "analisis_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/analisis/permisos.ts:L5 | neighbors=[permisos.ts]
+- "analisis_tablonanalisis_btnstyle": "btnStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L159 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_containerstyle": "containerStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L153 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_headerrowstyle": "headerRowStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L154 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_loadingstyle": "loadingStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L158 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_pagebuttonstyle": "pageButtonStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L168 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_paginationcontainerstyle": "paginationContainerStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L161 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_resultbadge": "ResultBadge()" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L140 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_tablonanalisis": "TablonAnalisis()" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L8 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_tdstyle": "tdStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L156 | neighbors=[TablonAnalisis.tsx]
+- "analisis_tablonanalisis_thstyle": "thStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L155 | neighbors=[TablonAnalisis.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-058.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-058.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

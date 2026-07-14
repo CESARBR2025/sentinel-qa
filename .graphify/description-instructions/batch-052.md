@@ -1,4 +1,4 @@
-# Node Description Batch 53 of 82
+# Node Description Batch 53 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "agente_infracciones_capturardatosinfractormodal_validatefield": "validateField()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L24 | neighbors=[CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_infraccionesdashboard_avatar_colors": "AVATAR_COLORS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L10 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_estatusinfracciones": "EstatusInfracciones" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L40 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_getbadge": "getBadge()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L70 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_getinitials": "getInitials()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L21 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_hashcolor": "hashColor()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L28 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_infraccionesdashboard": "InfraccionesDashboard()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L76 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_props": "Props" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L34 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_sortable_keys": "SORTABLE_KEYS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L74 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_status_badge": "STATUS_BADGE" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L55 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionesdashboard_status_tabs": "STATUS_TABS" | kind=code-symbol | source=components/agente_infracciones/InfraccionesDashboard.tsx:L47 | neighbors=[InfraccionesDashboard.tsx]
-- "agente_infracciones_infraccionestable_columns": "columns" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L23 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_infraccionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L5 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_infraccionestable_infraccionestable": "InfraccionesTable()" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L31 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_infraccionestable_infraccionestableprops": "InfraccionesTableProps" | kind=code-symbol | source=components/agente_infracciones/InfraccionesTable.tsx:L16 | neighbors=[InfraccionesTable.tsx]
-- "agente_infracciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L3 | neighbors=[mapper.ts]
-- "agente_infracciones_modalentregargarantia_props": "Props" | kind=code-symbol | source=components/agente_infracciones/ModalEntregarGarantia.tsx:L11 | neighbors=[ModalEntregarGarantia.tsx]
-- "agente_infracciones_page_infraccionesdashboardpage": "InfraccionesDashboardPage()" | kind=code-symbol | source=app/agente_infracciones/page.tsx:L5 | neighbors=[page.tsx]
-- "agente_infracciones_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L5 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L12 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L20 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L16 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L6 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L4 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L3 | neighbors=[permisos.ts]
-- "agente_infracciones_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/agente_infracciones/permisos.ts:L8 | neighbors=[permisos.ts]
-- "agente_infracciones_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_infracciones/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
-- "agente_infracciones_repository_infraccionupdaterow": "InfraccionUpdateRow" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L39 | neighbors=[repository.ts]
-- "agente_infracciones_service_sa7_url": "SA7_URL" | kind=code-symbol | source=lib/agente_infracciones/service.ts:L6 | neighbors=[service.ts]
-- "agente_infracciones_storecapturainfractor_capturainfractoractions": "CapturaInfractorActions" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L20 | neighbors=[storeCapturaInfractor.ts]
-- "agente_infracciones_storecapturainfractor_capturainfractorstate": "CapturaInfractorState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L5 | neighbors=[storeCapturaInfractor.ts]
-- "agente_infracciones_storecapturainfractor_capturainfractorstore": "CapturaInfractorStore" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L36 | neighbors=[storeCapturaInfractor.ts]
-- "agente_infracciones_storecapturainfractor_initialstate": "initialState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L38 | neighbors=[storeCapturaInfractor.ts]
-- "agente_juzgado_actions_aseguradosjuzgadodata": "AseguradosJuzgadoData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L365 | neighbors=[actions.ts]
-- "agente_juzgado_actions_liberacionesdata": "LiberacionesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L249 | neighbors=[actions.ts]
-- "agente_juzgado_actions_obtenerdatosaseguradoaction": "obtenerDatosAseguradoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L165 | neighbors=[actions.ts]
-- "agente_juzgado_actions_solicitudesdata": "SolicitudesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L56 | neighbors=[actions.ts]
-- "agente_juzgado_botonverdetalle_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=components/agente_juzgado/BotonVerDetalle.tsx:L6 | neighbors=[BotonVerDetalle.tsx]
-- "agente_juzgado_capturardetallesform_disabledsx": "disabledSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L33 | neighbors=[CapturarDetallesForm.tsx]
-- "agente_juzgado_capturardetallesform_evidenciaitem": "EvidenciaItem" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L45 | neighbors=[CapturarDetallesForm.tsx]
+- "wireframes_wf_b": "wf-b.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeB()]
+- "wireframes_wf_d": "wf-d.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeD()]
+- "wireframes_wf_e": "wf-e.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeE()]
+- "2fa_page_twofactorpage": "TwoFactorPage()" | kind=code-symbol | source=app/(auth)/login/2fa/page.tsx:L6 | neighbors=[page.tsx]
+- "911_filtrosincidentes_btnbuscarstyle": "btnBuscarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L128 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_btnlimpiarstyle": "btnLimpiarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L129 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_canales": "CANALES" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L15 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_catalogoitem": "CatalogoItem" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L8 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_estatus": "ESTATUS" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L21 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_fieldstyle": "fieldStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L125 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_inputstyle": "inputStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L127 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L126 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_props": "Props" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L10 | neighbors=[FiltrosIncidentes.tsx]
+- "911_filtrosincidentes_wrapperstyle": "wrapperStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L124 | neighbors=[FiltrosIncidentes.tsx]
+- "911_modulecard_modulecard": "ModuleCard()" | kind=code-symbol | source=components/911/ModuleCard.tsx:L19 | neighbors=[ModuleCard.tsx]
+- "911_modulecard_modulecardprops": "ModuleCardProps" | kind=code-symbol | source=components/911/ModuleCard.tsx:L11 | neighbors=[ModuleCard.tsx]
+- "911_modulecard_stat": "Stat" | kind=code-symbol | source=components/911/ModuleCard.tsx:L6 | neighbors=[ModuleCard.tsx]
+- "911_pagination_arrowbtnstyle": "arrowBtnStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L130 | neighbors=[Pagination.tsx]
+- "911_pagination_containerstyle": "containerStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L109 | neighbors=[Pagination.tsx]
+- "911_pagination_infostyle": "infoStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L118 | neighbors=[Pagination.tsx]
+- "911_pagination_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L127 | neighbors=[Pagination.tsx]
+- "911_pagination_pagenumberstyle": "pageNumberStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L140 | neighbors=[Pagination.tsx]
+- "911_pagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/911/Pagination.tsx:L5 | neighbors=[Pagination.tsx]
+- "911_pagination_valuestyle": "valueStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L128 | neighbors=[Pagination.tsx]
+- "911_permisos_accion": "Accion" | kind=code-symbol | source=lib/911/permisos.ts:L6 | neighbors=[permisos.ts]
+- "911_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/911/permisos.ts:L13 | neighbors=[permisos.ts]
+- "911_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/911/permisos.ts:L21 | neighbors=[permisos.ts]
+- "911_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/911/permisos.ts:L17 | neighbors=[permisos.ts]
+- "911_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/911/permisos.ts:L7 | neighbors=[permisos.ts]
+- "911_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/911/permisos.ts:L26 | neighbors=[permisos.ts]
+- "911_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/911/permisos.ts:L5 | neighbors=[permisos.ts]
+- "911_service_getincidente": "getIncidente()" | kind=code-symbol | source=lib/911/service.ts:L21 | neighbors=[service.ts]
+- "admin_admin_styles_pagewrap": "pageWrap" | kind=code-symbol | source=app/admin/admin-styles.ts:L3 | neighbors=[admin-styles.ts]
+- "admin_layout_adminlayout": "AdminLayout()" | kind=code-symbol | source=app/admin/layout.tsx:L7 | neighbors=[layout.tsx]
+- "admin_page_adminpage": "AdminPage()" | kind=code-symbol | source=app/admin/page.tsx:L3 | neighbors=[page.tsx]
+- "admin_transito_layout_admintransitolayout": "AdminTransitoLayout()" | kind=code-symbol | source=app/admin-transito/layout.tsx:L7 | neighbors=[layout.tsx]
+- "admin_transito_mapper_rowtouserwithrole": "rowToUserWithRole()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L8 | neighbors=[mapper.ts]
+- "admin_transito_modaldestituiroficial_modaldestituiroficial": "ModalDestituirOficial()" | kind=code-symbol | source=components/admin-transito/ModalDestituirOficial.tsx:L14 | neighbors=[ModalDestituirOficial.tsx]
+- "admin_transito_modaldestituiroficial_props": "Props" | kind=code-symbol | source=components/admin-transito/ModalDestituirOficial.tsx:L7 | neighbors=[ModalDestituirOficial.tsx]
+- "admin_transito_modalreactivaroficial_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L9 | neighbors=[ModalReactivarOficial.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-052.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-052.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

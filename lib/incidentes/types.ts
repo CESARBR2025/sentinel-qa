@@ -37,6 +37,7 @@ export interface IncidenteConDespacho {
   fechaHoraDespacho: string | null
   accionesRealizadas: string | null
   hayDetencion: boolean | null
+  ofiAutoridadRecibe: string | null
   d1Pendiente: boolean
   unidades: { placa: string }[]
   elementos: { nombre: string; nomina: string }[]

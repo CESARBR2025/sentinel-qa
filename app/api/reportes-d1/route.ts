@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { verificarRolOficial } from "@/lib/oficial/service";
 import { verificarFolioDenunciaUnico, insertarReporteDenuncia } from "@/lib/d1/repository";
+import { query } from "@/lib/db";
 
 function generarFolioDenuncia(): string {
   const hoy = new Date()
@@ -96,6 +97,14 @@ export async function POST(request: Request) {
       reporteCampoId: clean(body.reporteCampoId),
       oficialId: clean(body.oficialId),
     })
+
+    // Si hay incidente vinculado, cerrar por detención
+    if (body.incidenteId) {
+      await query(
+        `UPDATE incidentes SET estatus = 'cerrado_detencion', actualizado_en = NOW() WHERE id = $1 AND estatus IN ('en_sitio', 'en_despacho')`,
+        [body.incidenteId],
+      )
+    }
 
     return NextResponse.json(
       {

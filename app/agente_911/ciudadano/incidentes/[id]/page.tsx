@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { MapPin, User, Clock, AlertTriangle, ArrowLeft, Phone, School, Info } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
+import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function DetalleCiudadanoCompletoPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -15,9 +15,8 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
     if (!session) redirect("/login");
     if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
 
-    const rolNombre = await obtenerRolNombre(session.user.id)
-    const backHref = rolNombre === 'agente_911' ? '/agente_911' : '/dashboard'
-    const backLabel = rolNombre === 'agente_911' ? 'Panel 911' : 'Dashboard'
+    const backHref = '/agente_911/ciudadano/incidentes'
+    const backLabel = 'Bitácora'
 
     const data = await getIncidenteConExtras(id) as any;
     if (!data) notFound();
@@ -134,7 +133,9 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
         case 'en_despacho':   return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }; 
+        case 'en_sitio':      return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' }; 
         case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
+        case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' }; 
         default:              return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
     }
 }

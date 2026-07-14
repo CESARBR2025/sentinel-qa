@@ -1,4 +1,4 @@
-# Node Description Batch 68 of 82
+# Node Description Batch 68 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "id_page_juzgadopuestadisposicionpage": "JuzgadoPuestaDisposicionPage()" | kind=code-symbol | source=app/agente_juzgado/asegurados/puesta-disposicion/[id]/page.tsx:L10 | neighbors=[page.tsx]
-- "id_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L153 | neighbors=[page.tsx]
-- "id_page_labelstyle": "labelStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L150 | neighbors=[page.tsx]
-- "id_page_labelsx": "labelSx" | kind=code-symbol | source=app/fiscalia/asegurados/[id]/page.tsx:L12 | neighbors=[page.tsx]
-- "id_page_labeltopstyle": "labelTopStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L158 | neighbors=[page.tsx]
-- "id_page_lbl": "LBL" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L9 | neighbors=[page.tsx]
-- "id_page_marcastyle": "marcaStyle" | kind=code-symbol | source=app/monitorista/detenidos/[id]/page.tsx:L129 | neighbors=[page.tsx]
-- "id_page_medidadetailpage": "MedidaDetailPage()" | kind=code-symbol | source=app/prevencion/medidas/[id]/page.tsx:L15 | neighbors=[page.tsx]
-- "id_page_montorow": "MontoRow()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L409 | neighbors=[page.tsx]
-- "id_page_narrativaboxstyle": "narrativaBoxStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L154 | neighbors=[page.tsx]
-- "id_page_periodos": "PERIODOS" | kind=code-symbol | source=app/formato-n-medios-alternativos/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_props": "Props" | kind=code-symbol | source=app/fiscalia/asegurados/puesta-disposicion/[id]/page.tsx:L6 | neighbors=[page.tsx]
-- "id_page_puestadisposicionpage": "PuestaDisposicionPage()" | kind=code-symbol | source=app/fiscalia/asegurados/puesta-disposicion/[id]/page.tsx:L10 | neighbors=[page.tsx]
-- "id_page_refboxstyle": "refBoxStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L155 | neighbors=[page.tsx]
-- "id_page_reportedetallepage": "ReporteDetallePage()" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L15 | neighbors=[page.tsx]
-- "id_page_sec": "SEC" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L12 | neighbors=[page.tsx]
-- "id_page_section": "Section()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L379 | neighbors=[page.tsx]
-- "id_page_sectiontitle": "sectionTitle" | kind=code-symbol | source=app/monitorista/solicitudes/[id]/page.tsx:L101 | neighbors=[page.tsx]
-- "id_page_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L148 | neighbors=[page.tsx]
-- "id_page_sel": "SEL" | kind=code-symbol | source=app/auxiliar/checklist/[id]/page.tsx:L12 | neighbors=[page.tsx]
-- "id_page_selectstyle": "selectStyle" | kind=code-symbol | source=app/admin-transito/oficiales/[id]/page.tsx:L30 | neighbors=[page.tsx]
-- "id_page_tipo_cfg": "TIPO_CFG" | kind=code-symbol | source=app/prevencion/busquedas/[id]/page.tsx:L11 | neighbors=[page.tsx]
-- "id_page_titlestyle": "titleStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L159 | neighbors=[page.tsx]
-- "id_page_turnos": "TURNOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/[id]/page.tsx:L10 | neighbors=[page.tsx]
-- "id_page_val": "VAL" | kind=code-symbol | source=app/oficial/reportes/[id]/page.tsx:L10 | neighbors=[page.tsx]
-- "id_page_valuestyle": "valueStyle" | kind=code-symbol | source=app/agente_911/whatsapp/incidentes/[id]/page.tsx:L151 | neighbors=[page.tsx]
-- "id_route_get": "GET()" | kind=code-symbol | source=app/api/via/infracciones/registradas/[id]/route.ts:L4 | neighbors=[route.ts]
-- "id_route_patch": "PATCH()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/[id]/route.ts:L21 | neighbors=[route.ts]
-- "id_route_put": "PUT()" | kind=code-symbol | source=app/api/prevencion/solicitudes/[id]/route.ts:L25 | neighbors=[route.ts]
-- "imprimir_page_printrow": "PrintRow()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L161 | neighbors=[page.tsx]
-- "incidentes_actions_bool": "bool()" | kind=code-symbol | source=lib/incidentes/actions.ts:L28 | neighbors=[actions.ts]
-- "incidentes_actions_canales": "CANALES" | kind=code-symbol | source=lib/incidentes/actions.ts:L31 | neighbors=[actions.ts]
-- "incidentes_actions_estatus": "ESTATUS" | kind=code-symbol | source=lib/incidentes/actions.ts:L33 | neighbors=[actions.ts]
-- "incidentes_actions_sexos": "SEXOS" | kind=code-symbol | source=lib/incidentes/actions.ts:L34 | neighbors=[actions.ts]
-- "incidentes_actions_str": "str()" | kind=code-symbol | source=lib/incidentes/actions.ts:L25 | neighbors=[actions.ts]
-- "incidentes_actions_tipos_reporte": "TIPOS_REPORTE" | kind=code-symbol | source=lib/incidentes/actions.ts:L32 | neighbors=[actions.ts]
-- "incidentes_audit_accion": "Accion" | kind=code-symbol | source=lib/incidentes/audit.ts:L4 | neighbors=[audit.ts]
-- "incidentes_camara_page_th": "Th()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L125 | neighbors=[page.tsx]
-- "incidentes_camara_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/incidentes-camara/route.ts:L8 | neighbors=[route.ts]
-- "incidentes_camara_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/incidentes-camara/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_atencion_victimas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_atencion_victimas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_consolidado_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-consolidado/route.ts:L9 | neighbors=[route.ts]
+- "formato_n_eventos_page_formatoneventospage": "FormatoNEventosPage()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L12 | neighbors=[page.tsx]
+- "formato_n_eventos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L78 | neighbors=[page.tsx]
+- "formato_n_eventos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L74 | neighbors=[page.tsx]
+- "formato_n_eventos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_eventos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L17 | neighbors=[route.ts]
+- "formato_n_fge_page_td": "Td()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L108 | neighbors=[page.tsx]
+- "formato_n_fge_page_th": "Th()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L104 | neighbors=[page.tsx]
+- "formato_n_fge_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fge/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_fge_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-fge/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_fgr_page_td": "Td()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L108 | neighbors=[page.tsx]
+- "formato_n_fgr_page_th": "Th()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L104 | neighbors=[page.tsx]
+- "formato_n_fgr_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-fgr/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_fgr_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-fgr/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_medios_alternativos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L96 | neighbors=[page.tsx]
+- "formato_n_medios_alternativos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L92 | neighbors=[page.tsx]
+- "formato_n_medios_alternativos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-medios-alternativos/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_medios_alternativos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-medios-alternativos/route.ts:L20 | neighbors=[route.ts]
+- "formato_n_rnd_page_formatonrndpage": "FormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L12 | neighbors=[page.tsx]
+- "formato_n_rnd_page_td": "Td()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L76 | neighbors=[page.tsx]
+- "formato_n_rnd_page_th": "Th()" | kind=code-symbol | source=app/formato-n-rnd/page.tsx:L72 | neighbors=[page.tsx]
+- "formato_n_rnd_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/route.ts:L7 | neighbors=[route.ts]
+- "formato_n_rnd_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/route.ts:L17 | neighbors=[route.ts]
+- "formulario_ingreso_page_despachopage": "DespachoPage()" | kind=code-symbol | source=app/analisis/formulario-ingreso/page.tsx:L9 | neighbors=[page.tsx]
+- "fotos_page_fotosdetenidopage": "FotosDetenidoPage()" | kind=code-symbol | source=app/oficial/reportes/[id]/fotos/page.tsx:L10 | neighbors=[page.tsx]
+- "fuente_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/fuente/route.ts:L7 | neighbors=[route.ts]
+- "generar_orden_pago_route_post": "POST()" | kind=code-symbol | source=app/api/via/sa7/generar-orden-pago/route.ts:L9 | neighbors=[route.ts]
+- "generar_ppt_page_registrointeligenciapage": "RegistroInteligenciaPage()" | kind=code-symbol | source=app/analisis/generar-ppt/page.tsx:L9 | neighbors=[page.tsx]
+- "generar_ppt_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/generar-ppt/route.ts:L8 | neighbors=[route.ts]
+- "gruas_route_get": "GET()" | kind=code-symbol | source=app/api/complementos/gruas/route.ts:L4 | neighbors=[route.ts]
+- "guardar_evidencias_route_post": "POST()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-evidencias/route.ts:L7 | neighbors=[route.ts]
+- "health_route_get": "GET()" | kind=code-symbol | source=app/api/health/route.ts:L4 | neighbors=[route.ts]
+- "helpers_abrirdocumento_abrirdocumento": "abrirDocumento()" | kind=code-symbol | source=features/via/expediente/helpers/abrirDocumento.ts:L1 | neighbors=[abrirDocumento.ts]
+- "historial_page_historialpage": "HistorialPage()" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L11 | neighbors=[page.tsx]
+- "historial_page_tdstyle": "tdStyle" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L79 | neighbors=[page.tsx]
+- "historial_page_thstyle": "thStyle" | kind=code-symbol | source=app/monitorista/historial/page.tsx:L78 | neighbors=[page.tsx]
+- "historial_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/historial/route.ts:L7 | neighbors=[route.ts]
+- "hooks_usedespacho_despachodetalle": "DespachoDetalle" | kind=code-symbol | source=hooks/useDespacho.ts:L23 | neighbors=[useDespacho.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-067.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-067.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

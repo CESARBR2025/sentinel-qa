@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
-import { createIncidente } from "@/lib/incidentes/actions";
-import { useCallback, useRef } from "react"; // Ya tienes useState, añade estos
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { createIncidenteCliente } from "@/lib/incidentes/actions";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
+import { toast } from "sonner"
 
 const libraries: ("places")[] = ["places"];
 
 export default function Formulario911({ user, catalogos }: {
-    user: { name: string; apellido?: string }, catalogos: {
+    user: { name: string; apellido?: string },     catalogos: {
         emergencias: any[],
         incidentes: any[],
         prioridades: any[],
         canalizaciones: any[]
     }
 }) {
+    const router = useRouter()
     const [anonimo, setAnonimo] = useState(false);
     const [tipoReporte, setTipoReporte] = useState("normal");
 
@@ -23,19 +25,40 @@ export default function Formulario911({ user, catalogos }: {
         { nombre: "", sexo: "", edad: "" },
     ]);
 
-    const agregarPersona = () => {
-        setPersonas([
-            ...personas,
-            {
-                nombre: "",
-                sexo: "",
-                edad: "",
-            },
-        ]);
-    };
+    const agregarPersona = useCallback(() => {
+        setPersonas(p => [...p, { nombre: "", sexo: "", edad: "" }]);
+    }, []);
 
     const [esLlamadaAlarma, setEsLlamadaAlarma] = useState(false);
-    const [nombreResponsable, setNombreResponsable] = useState(""); // Nuevo estado
+    const [nombreResponsable, setNombreResponsable] = useState("");
+
+    // Estado del modal
+    const [modalAbierto, setModalAbierto] = useState(false)
+    const [enviando, setEnviando] = useState(false)
+    const formRef = useRef<HTMLFormElement>(null)
+
+    // Auto-llenar fecha/hora actual al montar el formulario
+    useEffect(() => {
+        const now = new Date()
+        const offset = now.getTimezoneOffset()
+        const local = new Date(now.getTime() - offset * 60000)
+        const input = document.querySelector<HTMLInputElement>('input[name="fechaHoraInicio"]')
+        if (input && !input.value) {
+            input.value = local.toISOString().slice(0, 16)
+        }
+        // Seleccionar primer item de catálogos si existen
+        const autoSelectFirst = (name: string) => {
+            const sel = document.querySelector<HTMLSelectElement>(`select[name="${name}"]`)
+            if (sel && !sel.value) {
+                const first = sel.querySelector('option:not([value=""])')
+                if (first) sel.value = first.getAttribute('value') || ''
+            }
+        }
+        autoSelectFirst('tipoEmergenciaId')
+        autoSelectFirst('tipoIncidenteId')
+        autoSelectFirst('prioridadId')
+        autoSelectFirst('medioCanalizacionId')
+    }, [catalogos])
 
     // 1. Cargar la API
     const { isLoaded } = useJsApiLoader({
@@ -48,7 +71,7 @@ export default function Formulario911({ user, catalogos }: {
     const [coords, setCoords] = useState({ lat: 20.3889, lng: -99.9961 });
     const [map, setMap] = useState<google.maps.Map | null>(null);
     const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-    const [direccion, setDireccion] = useState({ calle: "", numeroExterior: "", colonia: "" });
+    const [direccion, setDireccion] = useState({ calle: "Av. Juárez", numeroExterior: "104", colonia: "Centro" });
 
     const buscarDireccion = (lat: number, lng: number) => {
         const geocoder = new google.maps.Geocoder();
@@ -109,15 +132,87 @@ export default function Formulario911({ user, catalogos }: {
             });
         }
     };
-    return (
-        <form action={async (fd) => {
-            // ESTO ES LO NUEVO:
+
+    const handleSubmit = () => {
+        setModalAbierto(true)
+    }
+
+    const confirmarEnvio = async () => {
+        setEnviando(true)
+        try {
+            const fd = new FormData(formRef.current!)
             fd.append("latitud", coords.lat.toString());
             fd.append("longitud", coords.lng.toString());
 
-            const inc = await createIncidente(fd);
-            window.location.href = `/incidentes/${inc.id}`;
-        }}>
+            const result = await createIncidenteCliente(fd)
+            setModalAbierto(false)
+            router.push(`/agente_911/ciudadano/incidentes?creado=true&folio=${encodeURIComponent(result.folio)}`)
+        } catch (e: any) {
+            toast.error(e?.message || 'Error al guardar el reporte')
+            setEnviando(false)
+            setModalAbierto(false)
+        }
+    }
+
+    const resumenItems = useCallback(() => {
+        const fd = new FormData(formRef.current ?? undefined)
+        const f = (k: string) => fd.get(k) as string || '—'
+
+        const catNombre = (cat: any[], id: string | null) => {
+            if (!id) return '—'
+            const item = cat.find(c => String(c.id) === id)
+            return item?.nombre || id
+        }
+
+        const items: { label: string; value: string }[] = [
+            { label: 'Canal', value: '911' },
+            { label: 'Folio CAD', value: f('folioCad') },
+            { label: 'Tipo de Reporte', value: f('tipoReporte') },
+            { label: 'Fecha/Hora Inicio', value: f('fechaHoraInicio') },
+            { label: 'Anónimo', value: f('anonimo') === 'true' ? 'Sí' : 'No' },
+            { label: 'Nombre del Reportante', value: f('anonimo') === 'true' ? '[ANÓNIMO]' : f('nombreReportante') },
+            { label: 'Sexo', value: f('sexo') },
+            { label: 'Edad', value: f('edad') },
+            { label: 'Usuario Frecuente', value: f('esUsuarioFrecuente') === 'true' ? 'Sí' : 'No' },
+            { label: 'Persona Afectada', value: f('esPersonaAfectada') === 'true' ? 'Sí' : 'No' },
+            { label: 'Es Migrante', value: f('esMigrante') === 'true' ? 'Sí' : 'No' },
+            { label: 'Calle', value: f('calle') },
+            { label: 'No. Exterior', value: f('numero_exterior') },
+            { label: 'No. Interior', value: f('numero_interior') },
+            { label: 'Colonia', value: f('colonia') },
+            { label: 'Municipio', value: f('municipio') },
+            { label: 'Referencia', value: f('referenciaUbicacion') },
+            { label: 'Tipo de Emergencia', value: catNombre(catalogos.emergencias, f('tipoEmergenciaId')) },
+            { label: 'Tipo de Incidente', value: catNombre(catalogos.incidentes, f('tipoIncidenteId')) },
+            { label: 'Prioridad', value: catNombre(catalogos.prioridades, f('prioridadId')) },
+            { label: 'Descripción', value: f('descripcion') },
+            { label: 'Medio de Canalización', value: catNombre(catalogos.canalizaciones, f('medioCanalizacionId')) },
+            { label: 'Requiere Despacho', value: f('requiereDespacho') === 'true' ? 'Sí' : 'No' },
+            { label: 'Observaciones Operador', value: f('observaciones') },
+        ]
+
+        if (f('tipoReporte') === 'extorsion') {
+            items.push(
+                { label: 'Teléfono Extorsión', value: f('telefonoExtorsion') },
+                { label: 'Grupo Delictivo', value: f('grupoDelictivo') },
+                { label: 'Modus Operandi', value: f('modusOperandi') },
+            )
+        }
+
+        if (f('tipoReporte') === 'alarma_escolar') {
+            items.push(
+                { label: 'Establecimiento', value: f('establecimiento') },
+                { label: 'Nombre Responsable', value: f('nombreResponsable') },
+                { label: 'Inmueble', value: f('inmueble') },
+                { label: 'Activaciones', value: f('numeroActivaciones') },
+            )
+        }
+
+        return items
+    }, [catalogos])
+
+    return (
+        <><form ref={formRef} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
             <input type="hidden" name="canal" value="911" />
             {/* SECCIÓN 01 */}
             <div className="panel">
@@ -129,7 +224,7 @@ export default function Formulario911({ user, catalogos }: {
                     </div>
                     <div>
                         <label>Folio CAD</label>
-                        <input type="text" name="folioCad" placeholder="CAD-0000" />
+                        <input type="text" name="folioCad" defaultValue="CAD-1234" placeholder="CAD-0000" />
                     </div>
                     <div>
                         <label>Tipo de Reporte</label>
@@ -168,6 +263,7 @@ export default function Formulario911({ user, catalogos }: {
                         <input
                             name="nombreReportante"
                             type="text"
+                            defaultValue="Juan Pérez"
                             disabled={anonimo}
                             placeholder={anonimo ? "MODO ANÓNIMO ACTIVO" : "Nombre completo"}
                         />
@@ -185,6 +281,7 @@ export default function Formulario911({ user, catalogos }: {
                         <input
                             type="number"
                             name="edad"
+                            defaultValue="35"
                             disabled={anonimo}
                             placeholder={anonimo ? "N/A" : "00"}
                         />
@@ -229,7 +326,7 @@ export default function Formulario911({ user, catalogos }: {
                             <div>
                                 <label>Nombre</label>
                                 {/* Agregamos name="p_nombre" */}
-                                <input type="text" name="p_nombre" placeholder="Nombre completo" />
+                                <input type="text" name="p_nombre" defaultValue="María López" placeholder="Nombre completo" />
                             </div>
                             <div>
                                 <label>Sexo</label>
@@ -243,7 +340,7 @@ export default function Formulario911({ user, catalogos }: {
                             <div>
                                 <label>Edad</label>
                                 {/* Agregamos name="p_edad" */}
-                                <input type="number" name="p_edad" />
+                                <input type="number" name="p_edad" defaultValue="30" />
                             </div>
                         </div>
                     </div>
@@ -321,6 +418,7 @@ export default function Formulario911({ user, catalogos }: {
                         <input
                             type="text"
                             name="numero_interior" // <--- Importante para el backend
+                            defaultValue="A"
                             placeholder="Depto / Local"
                         />
                     </div>
@@ -352,6 +450,7 @@ export default function Formulario911({ user, catalogos }: {
                     <label>Referencia de la Ubicación</label>
                     <textarea
                         rows={3}
+                        defaultValue="Frente a la plaza principal"
                         placeholder="Frente a..., detrás de..., junto a..."
                         name="referenciaUbicacion"
                     />
@@ -364,15 +463,15 @@ export default function Formulario911({ user, catalogos }: {
                     <div className="grid">
                         <div>
                             <label>Teléfono de Extorsión</label>
-                            <input type="text" name="telefonoExtorsion" placeholder="442..." />
+                            <input type="text" name="telefonoExtorsion" defaultValue="4421234567" placeholder="442..." />
                         </div>
                         <div>
                             <label>Grupo Delictivo</label>
-                            <input type="text" name="grupoDelictivo" />
+                            <input type="text" name="grupoDelictivo" defaultValue="Los Zetas" />
                         </div>
                         <div>
                             <label>Modus Operandi</label>
-                            <input type="text" name="modusOperandi" />
+                            <input type="text" name="modusOperandi" defaultValue="Llamada telefónica amenazando" />
                         </div>
                     </div>
                 </div>
@@ -384,7 +483,7 @@ export default function Formulario911({ user, catalogos }: {
                     <div className="grid">
                         <div>
                             <label>Establecimiento / Escuela</label>
-                            <input type="text" name="establecimiento" />
+                            <input type="text" name="establecimiento" defaultValue="Escuela Primaria Benito Juárez" />
                         </div>
 
                         <div>
@@ -418,7 +517,7 @@ export default function Formulario911({ user, catalogos }: {
 
                         <div>
                             <label>Inmueble</label>
-                            <input type="text" name="inmueble" />
+                            <input type="text" name="inmueble" defaultValue="Edificio principal" />
                         </div>
 
                         {/* NUEVO CAMPO NUMÉRICO */}
@@ -473,10 +572,11 @@ export default function Formulario911({ user, catalogos }: {
                             </div>
 
                             <div style={{ marginTop: "16px" }}>
-                                <label>Descripción del Incidente</label>
+                                    <label>Descripción del Incidente</label>
                                 <textarea
                                     name="descripcion"
                                     rows={5}
+                                    defaultValue="Reporte de prueba – persona sospechosa en via publica"
                                     placeholder="Describa brevemente lo reportado por el ciudadano..."
                                 />
                             </div>
@@ -512,7 +612,7 @@ export default function Formulario911({ user, catalogos }: {
 
                         <div style={{ marginTop: "16px" }}>
                             <label>Observaciones del Operador</label>
-                            <textarea name="observaciones" rows={3} placeholder="Notas internas..." />
+                            <textarea name="observaciones" rows={3} defaultValue="Reporte de prueba para verificar flujo de creación" placeholder="Notas internas..." />
                         </div>
                     </div>
                 </>
@@ -523,9 +623,9 @@ export default function Formulario911({ user, catalogos }: {
             {/* OBSERVACIONES FINAL */}
             <div className="panel">
                 <h2 className="sentinel-title">Observaciones</h2>
-                <textarea rows={4} placeholder="Notas adicionales del operador..." />
+                <textarea rows={4} defaultValue="Sin novedades adicionales" placeholder="Notas adicionales del operador..." />
                 <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
-                    <button type="submit" className="btn-principal">
+                    <button type="button" onClick={handleSubmit} className="btn-principal">
                         PUBLICAR REPORTE EN BITÁCORA
                     </button>
                 </div>
@@ -664,5 +764,71 @@ export default function Formulario911({ user, catalogos }: {
                 }
             `}</style>
         </form>
+
+        {/* Modal de confirmación */}
+        {modalAbierto && (
+            <div style={{
+                position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                background: 'rgba(0,0,0,0.5)', zIndex: 9998,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                padding: 24,
+            }}>
+                <div style={{
+                    background: '#ffffff', borderRadius: 4, maxWidth: 640, width: '100%',
+                    maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 48px rgba(0,0,0,0.2)',
+                }}>
+                    <div style={{
+                        padding: '24px 32px', borderBottom: '1px solid #e2e8f0',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    }}>
+                        <h2 style={{
+                            fontFamily: 'Barlow Condensed, sans-serif', fontSize: 22, fontWeight: 800,
+                            color: '#0f172a', textTransform: 'uppercase', margin: 0,
+                        }}>
+                            Confirmar Reporte
+                        </h2>
+                        <button onClick={() => setModalAbierto(false)} style={{
+                            background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 20,
+                        }}>✕</button>
+                    </div>
+                    <div style={{ padding: '24px 32px', fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#334155', lineHeight: 1.6 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px' }}>
+                            {resumenItems().map((item, i) => (
+                                <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        {item.label}
+                                    </span>
+                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#1e293b', fontWeight: 500 }}>
+                                        {item.value || '—'}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div style={{
+                        padding: '16px 32px', borderTop: '1px solid #e2e8f0',
+                        display: 'flex', justifyContent: 'flex-end', gap: 12,
+                    }}>
+                        <button onClick={() => setModalAbierto(false)} style={{
+                            padding: '10px 24px', background: '#f1f5f9', border: '1px solid #e2e8f0',
+                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                            fontWeight: 600, color: '#475569', cursor: 'pointer',
+                        }}>
+                            CANCELAR
+                        </button>
+                        <button onClick={confirmarEnvio} disabled={enviando} style={{
+                            padding: '10px 32px', background: enviando ? '#94a3b8' : '#0f172a', border: 'none',
+                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                            fontWeight: 700, color: '#ffffff', cursor: enviando ? 'not-allowed' : 'pointer',
+                            letterSpacing: '0.1em',
+                        }}>
+                            {enviando ? 'GUARDANDO...' : 'CONFIRMAR Y GUARDAR'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+
+    </>
     );
 }

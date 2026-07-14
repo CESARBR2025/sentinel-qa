@@ -150,6 +150,7 @@ export interface DespachoAsignado {
   incidenteId: string;
   folio: string;
   canal: string;
+  estatus: string;
   descripcion: string | null;
   calle: string | null;
   colonia: string | null;

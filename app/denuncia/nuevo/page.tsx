@@ -12,7 +12,7 @@ import { verificarRolOficial, obtenerPlacaPatrulla } from '@/lib/oficial/service
 export default async function NuevaDenunciaD1Page({
   searchParams,
 }: {
-  searchParams: Promise<{ incidenteId?: string;reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficialId?: string }>
+  searchParams: Promise<{ incidenteId?: string;reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficialId?: string; destino?: string }>
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
@@ -35,6 +35,7 @@ export default async function NuevaDenunciaD1Page({
     lat:            sp.lat            ? Number(sp.lat) : null,
     lng:            sp.lng            ? Number(sp.lng) : null,
     oficialId:      sp.oficialId      ?? null,
+    destino:        sp.destino        ?? null,
     crp:            placaPatrulla,
   }
 

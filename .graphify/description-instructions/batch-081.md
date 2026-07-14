@@ -1,4 +1,4 @@
-# Node Description Batch 82 of 82
+# Node Description Batch 82 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,39 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "usuarios_page_usuariospage": "UsuariosPage()" | kind=code-symbol | source=app/admin/usuarios/page.tsx:L7 | neighbors=[page.tsx]
-- "utils_generateiphppt_generateiphppt": "generateIPHPPT()" | kind=code-symbol | source=lib/utils/generateIPHPPT.ts:L4 | neighbors=[generateIPHPPT.ts]
-- "via_expediente_limpiarcachetoken": "limpiarCacheToken()" | kind=code-symbol | source=lib/via/expediente.ts:L88 | neighbors=[expediente.ts]
-- "via_online_getsnapshot": "getSnapshot()" | kind=code-symbol | source=lib/via/online.ts:L3 | neighbors=[online.ts]
-- "via_online_subscribe": "subscribe()" | kind=code-symbol | source=lib/via/online.ts:L7 | neighbors=[online.ts]
-- "via_pagos_resultadopago": "ResultadoPago" | kind=code-symbol | source=lib/via/pagos.ts:L4 | neighbors=[pagos.ts]
-- "visitas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/medidas/[id]/visitas/route.ts:L8 | neighbors=[route.ts]
-- "visitas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/medidas/[id]/visitas/route.ts:L22 | neighbors=[route.ts]
-- "whatsapp_formsection_formsection": "FormSection()" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L6 | neighbors=[FormSection.tsx]
-- "whatsapp_formsection_sectionprops": "SectionProps" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L1 | neighbors=[FormSection.tsx]
-- "whatsapp_page_registroincidentepage": "RegistroIncidentePage()" | kind=code-symbol | source=app/agente_911/whatsapp/page.tsx:L9 | neighbors=[page.tsx]
-- "whatsapp_registroincidenteform_libraries": "libraries" | kind=code-symbol | source=components/911/whatsapp/RegistroIncidenteForm.tsx:L13 | neighbors=[RegistroIncidenteForm.tsx]
-- "whatsapp_registroincidenteform_registroincidentezen": "RegistroIncidenteZen()" | kind=code-symbol | source=components/911/whatsapp/RegistroIncidenteForm.tsx:L15 | neighbors=[RegistroIncidenteForm.tsx]
-- "wireframes_shared_arrow": "Arrow()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L65 | neighbors=[shared.jsx]
-- "wireframes_shared_corner": "Corner()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L138 | neighbors=[shared.jsx]
-- "wireframes_shared_darkframe": "DarkFrame()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L123 | neighbors=[shared.jsx]
-- "wireframes_shared_gridbg": "GridBG()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L152 | neighbors=[shared.jsx]
-- "wireframes_shared_inputfield": "InputField()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L81 | neighbors=[shared.jsx]
-- "wireframes_shared_primarybutton": "PrimaryButton()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L105 | neighbors=[shared.jsx]
-- "wireframes_shared_scribble": "Scribble()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L50 | neighbors=[shared.jsx]
-- "wireframes_shared_shieldmark": "ShieldMark()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L28 | neighbors=[shared.jsx]
-- "wireframes_shared_statusbar": "StatusBar()" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L166 | neighbors=[shared.jsx]
-- "wireframes_shared_wf": "WF" | kind=code-symbol | source=login-desing/wireframes/shared.jsx:L5 | neighbors=[shared.jsx]
-- "wireframes_wf_a_wireframea": "WireframeA()" | kind=code-symbol | source=login-desing/wireframes/wf-a.jsx:L6 | neighbors=[wf-a.jsx]
-- "wireframes_wf_b_wireframeb": "WireframeB()" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L4 | neighbors=[wf-b.jsx]
-- "wireframes_wf_c_wireframec": "WireframeC()" | kind=code-symbol | source=login-desing/wireframes/wf-c.jsx:L4 | neighbors=[wf-c.jsx]
-- "wireframes_wf_d_wireframed": "WireframeD()" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L4 | neighbors=[wf-d.jsx]
-- "wireframes_wf_e_wireframee": "WireframeE()" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L4 | neighbors=[wf-e.jsx]
+- "rondin_page_reporterecorridopage": "ReporteRecorridoPage()" | kind=code-symbol | source=app/agente_911/rondin/page.tsx:L9 | neighbors=[page.tsx]
+- "rondin_page_rondinoficialpage": "RondinOficialPage()" | kind=code-symbol | source=app/oficial/rondin/page.tsx:L7 | neighbors=[page.tsx]
+- "sasiete_mapper_ordenpagorow": "OrdenPagoRow" | kind=code-symbol | source=features/via/saSiete/mapper.ts:L3 | neighbors=[mapper.ts]
+- "sasiete_repository_sa7repository_actualizarordenpago": ".actualizarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L65 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_buscarordenporinfraccionid": ".buscarOrdenPorInfraccionId()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L57 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_insertarordenpago": ".insertarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L14 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_obtenerconceptoidporclasificacion": ".obtenerConceptoIdPorClasificacion()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L6 | neighbors=[SA7Repository]
+- "sasiete_service_sa7service_buscarordenporinfraccion": ".buscarOrdenPorInfraccion()" | kind=code-symbol | source=features/via/saSiete/service.ts:L87 | neighbors=[SA7Service]
+- "sasiete_service_sa7service_generarordenpago": ".generarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/service.ts:L13 | neighbors=[SA7Service]
+- "sasiete_service_sa7service_obtenerconceptoid": ".obtenerConceptoId()" | kind=code-symbol | source=features/via/saSiete/service.ts:L9 | neighbors=[SA7Service]
+- "sasiete_types_catalogoconceptosa7": "CatalogoConceptoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L1 | neighbors=[types.ts]
+- "scripts_export_schema_dirname": "__dirname" | kind=code-symbol | source=scripts/export-schema.mjs:L8 | neighbors=[export-schema.mjs]
+- "scripts_export_schema_root": "ROOT" | kind=code-symbol | source=scripts/export-schema.mjs:L9 | neighbors=[export-schema.mjs]
+- "scripts_export_schema_typetoreadable": "typeToReadable()" | kind=code-symbol | source=scripts/export-schema.mjs:L69 | neighbors=[export-schema.mjs]
+- "scripts_exportar_schema_columninfo": "ColumnInfo" | kind=code-symbol | source=scripts/exportar-schema.ts:L6 | neighbors=[exportar-schema.ts]
+- "scripts_exportar_schema_schemas": "SCHEMAS" | kind=code-symbol | source=scripts/exportar-schema.ts:L4 | neighbors=[exportar-schema.ts]
+- "scripts_exportar_schema_typetoreadable": "typeToReadable()" | kind=code-symbol | source=scripts/exportar-schema.ts:L53 | neighbors=[exportar-schema.ts]
+- "scripts_extract_domain_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/extract-domain.mjs:L10 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_dirname": "__dirname" | kind=code-symbol | source=scripts/extract-domain.mjs:L8 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/extract-domain.mjs:L10 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_root": "ROOT" | kind=code-symbol | source=scripts/extract-domain.mjs:L9 | neighbors=[extract-domain.mjs]
+- "scripts_load_context_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/load-context.mjs:L11 | neighbors=[load-context.mjs]
+- "scripts_load_context_dirname": "__dirname" | kind=code-symbol | source=scripts/load-context.mjs:L9 | neighbors=[load-context.mjs]
+- "scripts_load_context_graph_json": "GRAPH_JSON" | kind=code-symbol | source=scripts/load-context.mjs:L12 | neighbors=[load-context.mjs]
+- "scripts_load_context_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/load-context.mjs:L14 | neighbors=[load-context.mjs]
+- "scripts_load_context_root": "ROOT" | kind=code-symbol | source=scripts/load-context.mjs:L10 | neighbors=[load-context.mjs]
+- "scripts_populate_vault_cwd": "CWD" | kind=code-symbol | source=scripts/populate-vault.mjs:L12 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_dirname": "__dirname" | kind=code-symbol | source=scripts/populate-vault.mjs:L11 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_main": "main()" | kind=code-symbol | source=scripts/populate-vault.mjs:L316 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populateapiroutes": "populateAPIRoutes()" | kind=code-symbol | source=scripts/populate-vault.mjs:L142 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populatecomandos": "populateComandos()" | kind=code-symbol | source=scripts/populate-vault.mjs:L18 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populateenvvars": "populateEnvVars()" | kind=code-symbol | source=scripts/populate-vault.mjs:L65 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populateestructura": "populateEstructura()" | kind=code-symbol | source=scripts/populate-vault.mjs:L104 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populatefeatures": "populateFeatures()" | kind=code-symbol | source=scripts/populate-vault.mjs:L194 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populatelibrerias": "populateLibrerias()" | kind=code-symbol | source=scripts/populate-vault.mjs:L34 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populatemiddleware": "populateMiddleware()" | kind=code-symbol | source=scripts/populate-vault.mjs:L271 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_populateserveractions": "populateServerActions()" | kind=code-symbol | source=scripts/populate-vault.mjs:L222 | neighbors=[populate-vault.mjs]
+- "scripts_session_checkpoint_args": "args" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L244 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_clear": "clear()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L126 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_cleardecisions": "clearDecisions()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L238 | neighbors=[session-checkpoint.mjs]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-081.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-081.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

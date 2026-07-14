@@ -1,4 +1,4 @@
-# Node Description Batch 65 of 82
+# Node Description Batch 65 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "fiscalia_types_aseguradocondisposicion": "AseguradoConDisposicion" | kind=code-symbol | source=lib/fiscalia/types.ts:L121 | neighbors=[types.ts]
-- "fiscalia_types_detallegarantia": "DetalleGarantia" | kind=code-symbol | source=lib/fiscalia/types.ts:L338 | neighbors=[types.ts]
-- "fiscalia_types_detalleheader": "DetalleHeader" | kind=code-symbol | source=lib/fiscalia/types.ts:L292 | neighbors=[types.ts]
-- "fiscalia_types_detalleinfraccion": "DetalleInfraccion" | kind=code-symbol | source=lib/fiscalia/types.ts:L312 | neighbors=[types.ts]
-- "fiscalia_types_detalleinfractor": "DetalleInfractor" | kind=code-symbol | source=lib/fiscalia/types.ts:L319 | neighbors=[types.ts]
-- "fiscalia_types_detalleubicacion": "DetalleUbicacion" | kind=code-symbol | source=lib/fiscalia/types.ts:L342 | neighbors=[types.ts]
-- "fiscalia_types_detallevehiculo": "DetalleVehiculo" | kind=code-symbol | source=lib/fiscalia/types.ts:L329 | neighbors=[types.ts]
-- "fiscalia_types_detenidobase": "DetenidoBase" | kind=code-symbol | source=lib/fiscalia/types.ts:L39 | neighbors=[types.ts]
-- "fiscalia_types_viainfracciongarantia": "ViaInfraccionGarantia" | kind=code-symbol | source=lib/fiscalia/types.ts:L267 | neighbors=[types.ts]
-- "fiscalia_types_viainfraccionheader": "ViaInfraccionHeader" | kind=code-symbol | source=lib/fiscalia/types.ts:L218 | neighbors=[types.ts]
-- "fiscalia_types_viainfraccioninfractor": "ViaInfraccionInfractor" | kind=code-symbol | source=lib/fiscalia/types.ts:L243 | neighbors=[types.ts]
-- "fiscalia_types_viainfraccionlegal": "ViaInfraccionLegal" | kind=code-symbol | source=lib/fiscalia/types.ts:L233 | neighbors=[types.ts]
-- "fiscalia_types_viainfraccionoficial": "ViaInfraccionOficial" | kind=code-symbol | source=lib/fiscalia/types.ts:L251 | neighbors=[types.ts]
-- "fiscalia_types_viainfraccionubicacion": "ViaInfraccionUbicacion" | kind=code-symbol | source=lib/fiscalia/types.ts:L271 | neighbors=[types.ts]
-- "fiscalia_types_viainfraccionvehiculo": "ViaInfraccionVehiculo" | kind=code-symbol | source=lib/fiscalia/types.ts:L258 | neighbors=[types.ts]
-- "fiscalia_usetoaststore_generateid": "generateId()" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L19 | neighbors=[useToastStore.ts]
-- "fiscalia_usetoaststore_toast": "Toast" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L7 | neighbors=[useToastStore.ts]
-- "fiscalia_usetoaststore_toaststore": "ToastStore" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L13 | neighbors=[useToastStore.ts]
-- "fiscalia_usetoaststore_toasttype": "ToastType" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L5 | neighbors=[useToastStore.ts]
-- "flota_mapper_rowtopatrullaasignacion": "rowToPatrullaAsignacion()" | kind=code-symbol | source=lib/flota/mapper.ts:L25 | neighbors=[mapper.ts]
-- "flota_route_get": "GET()" | kind=code-symbol | source=app/api/rol-servicios/externos/flota/route.ts:L8 | neighbors=[route.ts]
-- "flota_service_apirowtoflotavehiculo": "apiRowToFlotaVehiculo()" | kind=code-symbol | source=lib/flota/service.ts:L26 | neighbors=[service.ts]
-- "flota_service_flotaapiresponse": "FlotaApiResponse" | kind=code-symbol | source=lib/flota/service.ts:L8 | neighbors=[service.ts]
-- "flota_service_invalidarcache": "invalidarCache()" | kind=code-symbol | source=lib/flota/service.ts:L86 | neighbors=[service.ts]
-- "formato_n_armas_aseguradas_page_formatonarmasaseguradaspage": "FormatoNArmasAseguradasPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L12 | neighbors=[page.tsx]
-- "formato_n_armas_aseguradas_page_td": "Td()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L76 | neighbors=[page.tsx]
-- "formato_n_armas_aseguradas_page_th": "Th()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L72 | neighbors=[page.tsx]
-- "formato_n_armas_aseguradas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-armas-aseguradas/route.ts:L7 | neighbors=[route.ts]
-- "formato_n_armas_aseguradas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-armas-aseguradas/route.ts:L17 | neighbors=[route.ts]
-- "formato_n_atencion_victimas_page_td": "Td()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L98 | neighbors=[page.tsx]
-- "formato_n_atencion_victimas_page_th": "Th()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L94 | neighbors=[page.tsx]
-- "formato_n_atencion_victimas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L7 | neighbors=[route.ts]
-- "formato_n_atencion_victimas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-atencion-victimas/route.ts:L20 | neighbors=[route.ts]
-- "formato_n_consolidado_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-consolidado/route.ts:L9 | neighbors=[route.ts]
-- "formato_n_eventos_page_formatoneventospage": "FormatoNEventosPage()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L12 | neighbors=[page.tsx]
-- "formato_n_eventos_page_td": "Td()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L78 | neighbors=[page.tsx]
-- "formato_n_eventos_page_th": "Th()" | kind=code-symbol | source=app/formato-n-eventos/page.tsx:L74 | neighbors=[page.tsx]
-- "formato_n_eventos_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L7 | neighbors=[route.ts]
-- "formato_n_eventos_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-eventos/route.ts:L17 | neighbors=[route.ts]
-- "formato_n_fge_page_td": "Td()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L108 | neighbors=[page.tsx]
+- "emails_mailer_mailoptions": "MailOptions" | kind=code-symbol | source=lib/emails/mailer.ts:L20 | neighbors=[mailer.ts]
+- "emails_mailer_transporter": "transporter" | kind=code-symbol | source=lib/emails/mailer.ts:L3 | neighbors=[mailer.ts]
+- "en_despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/en-despacho/route.ts:L7 | neighbors=[route.ts]
+- "enviar_foto_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/enviar-foto/route.ts:L9 | neighbors=[route.ts]
+- "envio_de_formatos_page_enviodeformatospage": "EnvioDeFormatosPage()" | kind=code-symbol | source=app/envio-de-formatos/page.tsx:L13 | neighbors=[page.tsx]
+- "eslint_config_eslintconfig": "eslintConfig" | kind=code-symbol | source=eslint.config.mjs:L5 | neighbors=[eslint.config.mjs]
+- "estadisticos_page_reportestelefonicospage": "ReportesTelefonicosPage()" | kind=code-symbol | source=app/estadisticos/page.tsx:L14 | neighbors=[page.tsx]
+- "estadisticos_phonepagination_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L51 | neighbors=[PhonePagination.tsx]
+- "estadisticos_phonepagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L4 | neighbors=[PhonePagination.tsx]
+- "estadisticos_phonepagination_phonepagination": "PhonePagination()" | kind=code-symbol | source=components/reportes/estadisticos/PhonePagination.tsx:L10 | neighbors=[PhonePagination.tsx]
+- "estadisticos_phonereportstable_phonereport": "PhoneReport" | kind=code-symbol | source=components/reportes/estadisticos/PhoneReportsTable.tsx:L6 | neighbors=[PhoneReportsTable.tsx]
+- "expediente_proxy_route_get": "GET()" | kind=code-symbol | source=app/api/monitorista/expediente-proxy/route.ts:L8 | neighbors=[route.ts]
+- "exportar_excel_route_get": "GET()" | kind=code-symbol | source=app/api/reportes-operativos/exportar-excel/route.ts:L7 | neighbors=[route.ts]
+- "exportar_robo_route_get": "GET()" | kind=code-symbol | source=app/api/auxiliar/exportar-robo/route.ts:L8 | neighbors=[route.ts]
+- "exportar_route_cols": "COLS" | kind=code-symbol | source=app/api/camara/exportar/route.ts:L8 | neighbors=[route.ts]
+- "exportar_route_rowvals": "rowVals()" | kind=code-symbol | source=app/api/camara/exportar/route.ts:L17 | neighbors=[route.ts]
+- "exportar_route_widths": "WIDTHS" | kind=code-symbol | source=app/api/camara/exportar/route.ts:L15 | neighbors=[route.ts]
+- "finalizarproceso_route_patch": "PATCH()" | kind=code-symbol | source=app/api/agente_juzgado/finalizarProceso/route.ts:L6 | neighbors=[route.ts]
+- "fiscalia_abrirdocumento_abrirdocumento": "abrirDocumento()" | kind=code-symbol | source=lib/fiscalia/abrirDocumento.ts:L1 | neighbors=[abrirDocumento.ts]
+- "fiscalia_actions_aseguradosdata": "AseguradosData" | kind=code-symbol | source=lib/fiscalia/actions.ts:L179 | neighbors=[actions.ts]
+- "fiscalia_actions_guardarpuestadisposicionjuzgadoaction": "guardarPuestaDisposicionJuzgadoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L495 | neighbors=[actions.ts]
+- "fiscalia_actions_liberacionesdata": "LiberacionesData" | kind=code-symbol | source=lib/fiscalia/actions.ts:L162 | neighbors=[actions.ts]
+- "fiscalia_actions_obteneraseguradosjuzgadoaction": "obtenerAseguradosJuzgadoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L442 | neighbors=[actions.ts]
+- "fiscalia_actions_obtenerdashboardjuzgado": "obtenerDashboardJuzgado()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L426 | neighbors=[actions.ts]
+- "fiscalia_actions_obtenerdatosaseguradoaction": "obtenerDatosAseguradoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L103 | neighbors=[actions.ts]
+- "fiscalia_actions_obtenerdetalleaseguradocompletojuzgadoaction": "obtenerDetalleAseguradoCompletoJuzgadoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L457 | neighbors=[actions.ts]
+- "fiscalia_actions_obtenerpuestadisposicionjuzgadoaction": "obtenerPuestaDisposicionJuzgadoAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L476 | neighbors=[actions.ts]
+- "fiscalia_actions_solicitudesdata": "SolicitudesData" | kind=code-symbol | source=lib/fiscalia/actions.ts:L32 | neighbors=[actions.ts]
+- "fiscalia_buttonverdetalles_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=components/fiscalia/ButtonVerDetalles.tsx:L6 | neighbors=[ButtonVerDetalles.tsx]
+- "fiscalia_capturardetallesform_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L33 | neighbors=[CapturarDetallesForm.tsx]
+- "fiscalia_capturardetallesform_evidenciaitem": "EvidenciaItem" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L45 | neighbors=[CapturarDetallesForm.tsx]
+- "fiscalia_capturardetallesform_inputsx": "inputSx" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L21 | neighbors=[CapturarDetallesForm.tsx]
+- "fiscalia_capturardetallesform_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L11 | neighbors=[CapturarDetallesForm.tsx]
+- "fiscalia_capturardetallesform_props": "Props" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L57 | neighbors=[CapturarDetallesForm.tsx]
+- "fiscalia_cargaroficiosection_campo": "Campo()" | kind=code-symbol | source=components/fiscalia/CargarOficioSection.tsx:L460 | neighbors=[CargarOficioSection.tsx]
+- "fiscalia_cargaroficiosection_cargaroficiosection": "CargarOficioSection()" | kind=code-symbol | source=components/fiscalia/CargarOficioSection.tsx:L24 | neighbors=[CargarOficioSection.tsx]
+- "fiscalia_cargaroficiosection_cargaroficiosectionprops": "CargarOficioSectionProps" | kind=code-symbol | source=components/fiscalia/CargarOficioSection.tsx:L10 | neighbors=[CargarOficioSection.tsx]
+- "fiscalia_cargaroficiosection_fileupload": "FileUpload()" | kind=code-symbol | source=components/fiscalia/CargarOficioSection.tsx:L475 | neighbors=[CargarOficioSection.tsx]
+- "fiscalia_confirmacionmodal_confirmacionmodal": "ConfirmacionModal()" | kind=code-symbol | source=components/fiscalia/ConfirmacionModal.tsx:L38 | neighbors=[ConfirmacionModal.tsx]
+- "fiscalia_confirmacionmodal_confirmacionmodalprops": "ConfirmacionModalProps" | kind=code-symbol | source=components/fiscalia/ConfirmacionModal.tsx:L5 | neighbors=[ConfirmacionModal.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-064.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-064.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

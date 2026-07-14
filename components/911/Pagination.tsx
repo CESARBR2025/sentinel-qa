@@ -30,6 +30,12 @@ export function Pagination({ currentPage, totalPages, baseUrl, totalCount, pageS
         return pages;
     };
 
+    // Determinar separador para query params
+    const qs = (pageNum: number) => {
+        const sep = baseUrl.includes('?') ? '&' : '?'
+        return `${baseUrl}${sep}page=${pageNum}`
+    }
+
     const pages = getPageNumbers();
 
     return (
@@ -54,14 +60,14 @@ export function Pagination({ currentPage, totalPages, baseUrl, totalCount, pageS
             {/* CONTROLES DERECHA */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 {/* Primera Página */}
-                <Link href={`${baseUrl}?page=1`} 
+                <Link href={qs(1)} 
                       className={`pg-btn ${currentPage === 1 ? 'pg-btn-disabled' : ''}`}
                       style={arrowBtnStyle}>
                     <ChevronsLeft size={14} />
                 </Link>
 
                 {/* Anterior */}
-                <Link href={`${baseUrl}?page=${currentPage - 1}`} 
+                <Link href={qs(currentPage - 1)} 
                       className={`pg-btn ${currentPage === 1 ? 'pg-btn-disabled' : ''}`}
                       style={arrowBtnStyle}>
                     <ChevronLeft size={14} />
@@ -72,7 +78,7 @@ export function Pagination({ currentPage, totalPages, baseUrl, totalCount, pageS
                     {pages.map(p => (
                         <Link 
                             key={p}
-                            href={`${baseUrl}?page=${p}`}
+                            href={qs(p)}
                             className={`pg-btn ${currentPage === p ? 'pg-btn-active' : ''}`}
                             style={pageNumberStyle}
                         >
@@ -82,14 +88,14 @@ export function Pagination({ currentPage, totalPages, baseUrl, totalCount, pageS
                 </div>
 
                 {/* Siguiente */}
-                <Link href={`${baseUrl}?page=${currentPage + 1}`} 
+                <Link href={qs(currentPage + 1)} 
                       className={`pg-btn ${currentPage === totalPages ? 'pg-btn-disabled' : ''}`}
                       style={arrowBtnStyle}>
                     <ChevronRight size={14} />
                 </Link>
 
                 {/* Última Página */}
-                <Link href={`${baseUrl}?page=${totalPages}`} 
+                <Link href={qs(totalPages)} 
                       className={`pg-btn ${currentPage === totalPages ? 'pg-btn-disabled' : ''}`}
                       style={arrowBtnStyle}>
                     <ChevronsRight size={14} />

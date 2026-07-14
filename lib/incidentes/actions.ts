@@ -30,7 +30,8 @@ const bool = (fd: FormData, k: string) => fd.get(k) === 'true' || fd.get(k) === 
 // Valores permitidos — validación en servidor, no confiar en cliente
 const CANALES = ['911', 'whatsapp', 'radio'] as const
 const TIPOS_REPORTE = ['normal', 'extorsion', 'alarma_escolar'] as const
-const ESTATUS = ['sin_despachar', 'en_despacho', 'atendido'] as const
+const ESTATUS_INCIDENTE = ['sin_despachar', 'en_despacho', 'en_sitio', 'atendido', 'cerrado_detencion'] as const
+type EstatusIncidente = typeof ESTATUS_INCIDENTE[number]
 const SEXOS = ['M', 'F', 'NE'] as const
 
 function validarEnum<T extends string>(valor: string | null, permitidos: readonly T[], campo: string): T {
@@ -151,7 +152,110 @@ export async function createIncidente(formData: FormData) {
   revalidatePath('/incidentes');
 
   redirect(targetPath);
-  return { id: incidenteId };
+}
+
+/**
+ * Versión para cliente sin redirect — devuelve {id, folio}.
+ * Se usa desde el modal de confirmación (Formulario911).
+ */
+export async function createIncidenteCliente(formData: FormData) {
+  const session = await requireOperador()
+
+  const canal = validarEnum(str(formData, 'canal'), CANALES, 'canal')
+  const tipoReporte = validarEnum(str(formData, 'tipoReporte'), TIPOS_REPORTE, 'tipoReporte')
+
+  const anonimo = bool(formData, 'anonimo')
+  const nombreReportante = anonimo ? null : str(formData, 'nombreReportante')
+
+  const sexoRaw = str(formData, 'sexo')
+  const sexo = sexoRaw ? validarEnum(sexoRaw, SEXOS, 'sexo') : null
+
+  const fechaHoraInicio = req(formData, 'fechaHoraInicio')
+  const fechaHoraFin = str(formData, 'fechaHoraFin')
+
+  if (fechaHoraFin && new Date(fechaHoraFin) < new Date(fechaHoraInicio))
+    throw new ValidationError('fechaHoraFin no puede ser anterior a fechaHoraInicio');
+
+  const estatus = 'sin_despachar'
+
+  const { folio, consecutivo } = await generarFolioIncidente()
+
+  const lat = formData.get('latitud') ? String(formData.get('latitud')) : null;
+  const lng = formData.get('longitud') ? String(formData.get('longitud')) : null;
+
+  const inc = await query<{ id: string }>(
+    `INSERT INTO incidentes (
+      folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
+      anonimo, sexo, edad, es_usuario_frecuente, es_persona_afectada,
+      es_migrante, calle, numero_exterior, numero_interior, colonia,
+      entre_calles, referencia_ubicacion, municipio, latitud, longitud,
+      tipo_emergencia_id, tipo_incidente_id, prioridad_id, descripcion,
+      observaciones, fecha_hora_inicio, fecha_hora_fin, grupo_whatsapp,
+      nombre_oficial, medio_canalizacion_id, requiere_despacho, estatus,
+      capturado_por
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33)
+    RETURNING id`,
+    [
+      folio, consecutivo, canal, tipoReporte, nombreReportante,
+      anonimo, sexo, num(formData, 'edad'),
+      bool(formData, 'esUsuarioFrecuente'), bool(formData, 'esPersonaAfectada'),
+      bool(formData, 'esMigrante'),
+      str(formData, 'calle'), str(formData, 'numero_exterior'), str(formData, 'numero_interior'),
+      str(formData, 'colonia'), str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
+      str(formData, 'municipio') ?? 'San Juan del Río',
+      lat, lng,
+      num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
+      str(formData, 'descripcion'), str(formData, 'observaciones'),
+      fechaHoraInicio, fechaHoraFin,
+      canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
+      canal === 'radio' ? str(formData, 'nombreOficial') : null,
+      num(formData, 'medioCanalizacionId'), bool(formData, 'requiereDespacho'),
+      estatus, session.user.id,
+    ],
+  )
+  const incidenteId = inc.rows[0].id
+
+  const pNombres = formData.getAll('p_nombre') as string[];
+  const pSexos = formData.getAll('p_sexo') as string[];
+  const pEdades = formData.getAll('p_edad') as string[];
+
+  const personasParaInsertar = pNombres.map((nombre, i) => {
+    if (!nombre.trim()) return null;
+    return {
+      incidenteId,
+      nombre: nombre.trim(),
+      sexo: (pSexos[i] as 'M' | 'F' | 'NE') || 'NE',
+      edad: pEdades[i] ? Number(pEdades[i]) : null,
+    };
+  }).filter(Boolean);
+
+  if (personasParaInsertar.length > 0) {
+    const placeholders = personasParaInsertar.map((_, i) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`).join(', ')
+    const values = personasParaInsertar.flatMap(p => [p!.incidenteId, p!.nombre, p!.sexo, p!.edad])
+    await query(
+      `INSERT INTO incidente_personas_afectadas (incidente_id, nombre, sexo, edad) VALUES ${placeholders}`,
+      values,
+    )
+  }
+
+  if (formData.get('tipoReporte') === 'extorsion') {
+    formData.set('incidenteId', incidenteId);
+    await createExtorsion(formData);
+  }
+
+  if (formData.get('tipoReporte') === 'alarma_escolar') {
+    formData.set('incidenteId', incidenteId);
+    await createAlarmaEscolar(formData);
+  }
+
+  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId })
+
+  revalidatePath('/agente_911/whatsapp');
+  revalidatePath('/agente_911/rondin');
+  revalidatePath('/agente_911/ciudadano');
+  revalidatePath('/incidentes');
+
+  return { id: incidenteId, folio }
 }
 // ─── Personas afectadas ───────────────────────────────────────────────────────
 export async function addPersonaAfectada(formData: FormData) {
@@ -167,7 +271,8 @@ export async function addPersonaAfectada(formData: FormData) {
       [incidenteId],
     )
     if (!incResult.rows[0]) throw new NotFoundError('Incidente no encontrado')
-    if (incResult.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
+    const est1 = incResult.rows[0].estatus
+    if (est1 === 'atendido' || est1 === 'cerrado_detencion') throw new ValidationError('No se puede modificar un incidente cerrado')
 
     await query(
       `INSERT INTO incidente_personas_afectadas (incidente_id, nombre, sexo, edad) VALUES ($1, $2, $3, $4)`,
@@ -192,7 +297,8 @@ export async function deletePersonaAfectada(formData: FormData) {
       [incidenteId],
     )
     if (!incResult.rows[0]) throw new NotFoundError('Incidente no encontrado')
-    if (incResult.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
+    const est2 = incResult.rows[0].estatus
+    if (est2 === 'atendido' || est2 === 'cerrado_detencion') throw new ValidationError('No se puede modificar un incidente cerrado')
 
     await query(`DELETE FROM incidente_personas_afectadas WHERE id = $1`, [id])
     await registrarAudit({ userId: session.user.id, accion: 'DELETE', entidad: 'incidente_personas_afectadas', entidadId: id, payload: { incidenteId } })
@@ -391,6 +497,51 @@ export async function createDespacho(formData: FormData) {
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 
+// ─── Marcar en sitio ──────────────────────────────────────────────────────────
+export async function marcarEnSitio(incidenteId: string) {
+  const session = await requireOperador()
+
+  await tryActionRaw(async () => {
+    const inc = await query<{ estatus: string }>(
+      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    if (inc.rows[0].estatus !== 'en_despacho') throw new ValidationError('El incidente debe estar en_despacho para marcar en sitio')
+
+    await query(
+      `UPDATE incidentes SET estatus = 'en_sitio', actualizado_en = NOW() WHERE id = $1`,
+      [incidenteId],
+    )
+  })
+
+  await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'en_despacho', estatus_nuevo: 'en_sitio' } })
+  revalidatePath(`/incidentes/${incidenteId}`)
+}
+
+// ─── Cerrar por detención (desde D1) ──────────────────────────────────────────
+export async function cerrarPorDetencion(incidenteId: string) {
+  const session = await requireOperador()
+
+  await tryActionRaw(async () => {
+    const inc = await query<{ estatus: string }>(
+      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    const est = inc.rows[0].estatus
+    if (est !== 'en_sitio' && est !== 'en_despacho') throw new ValidationError('El incidente no está en estado válido para cierre por detención')
+
+    await query(
+      `UPDATE incidentes SET estatus = 'cerrado_detencion', actualizado_en = NOW() WHERE id = $1`,
+      [incidenteId],
+    )
+  })
+
+  await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_nuevo: 'cerrado_detencion' } })
+  revalidatePath(`/incidentes/${incidenteId}`)
+}
+
 // ─── Reporte de campo ─────────────────────────────────────────────────────────
 export async function createReporteCampo(formData: FormData) {
   const session = await requireOperador()
@@ -528,7 +679,8 @@ export async function createExtorsion(formData: FormData) {
     )
     if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
     if (inc.rows[0].tipo_reporte !== 'extorsion') throw new ValidationError('El incidente no es de tipo extorsion')
-    if (inc.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
+    const est3 = inc.rows[0].estatus
+    if (est3 === 'atendido' || est3 === 'cerrado_detencion') throw new ValidationError('No se puede modificar un incidente cerrado')
 
     await query(
       `INSERT INTO incidente_extorsion (incidente_id, telefono_extorsion, grupo_delictivo, modus_operandi, unidad_resultado, folio_reporte, fecha) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
@@ -559,7 +711,8 @@ export async function createAlarmaEscolar(formData: FormData) {
     )
     if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
     if (inc.rows[0].tipo_reporte !== 'alarma_escolar') throw new ValidationError('El incidente no es de tipo alarma_escolar')
-    if (inc.rows[0].estatus === 'atendido') throw new ValidationError('No se puede modificar un incidente atendido')
+    const est4 = inc.rows[0].estatus
+    if (est4 === 'atendido' || est4 === 'cerrado_detencion') throw new ValidationError('No se puede modificar un incidente cerrado')
 
     const activaciones = num(formData, 'activaciones') ?? 0
     if (activaciones < 0) throw new ValidationError('activaciones no puede ser negativo')

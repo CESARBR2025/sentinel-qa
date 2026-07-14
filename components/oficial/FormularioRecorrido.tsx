@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { crearReporteCampoOficial } from "@/lib/oficial/actions"
 import { MapaUbicacion } from './MapaUbicacion'
+import { SelectorDestinoLegal } from './SelectorDestinoLegal'
 import { useOficialFormStore } from '@/lib/oficial/store'
 
 const STEPS = [
@@ -209,6 +210,12 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill }: {
 
     // Reporte vinculado a solicitud de despacho: su registro cierra el incidente
     if (incidenteId) fd.set('incidente_id', incidenteId)
+
+    // Validar destino legal obligatorio si hay detención
+    if (st.tieneDetencion === 'true' && !st.autoridadRecibe) {
+      alert('Debes seleccionar el destino legal del detenido (FGE, FGR o Juzgado Cívico)')
+      return
+    }
 
     crearReporteCampoOficial(fd)
   }
@@ -430,10 +437,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill }: {
                       </div>
                       <input type="hidden" name="ofi_detenidos" value="" />
                     </div>
-                    <SentinelField label="Autoridad que recibe" name="ofi_autoridad_recibe" as="select" value={autoridadRecibe} onChange={(e: any) => $('autoridadRecibe', e.target.value)}>
-                      <option value="FISCALIA">FISCALIA</option>
-                      <option value="JUZGADO CIVICO">JUZGADO CIVICO</option>
-                    </SentinelField>
+                    <SelectorDestinoLegal value={autoridadRecibe} onChange={(v) => $('autoridadRecibe', v)} />
 
                   </>
                 )}

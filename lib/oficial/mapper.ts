@@ -95,6 +95,7 @@ export function rowToDespachoAsignado(row: Record<string, unknown>): DespachoAsi
     incidenteId: String(row.incidente_id ?? ''),
     folio: String(row.folio ?? ''),
     canal: String(row.canal ?? ''),
+    estatus: String(row.estatus ?? ''),
     descripcion: (row.descripcion as string) ?? null,
     calle: (row.calle as string) ?? null,
     colonia: (row.colonia as string) ?? null,

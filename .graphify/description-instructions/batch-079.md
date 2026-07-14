@@ -1,4 +1,4 @@
-# Node Description Batch 80 of 82
+# Node Description Batch 80 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "sin_robos_page_reporteslimpiospage": "ReportesLimpiosPage()" | kind=code-symbol | source=app/sin_robos/page.tsx:L13 | neighbors=[page.tsx]
-- "sin_robos_paginacionsinrobos_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L89 | neighbors=[PaginacionSinRobos.tsx]
-- "sin_robos_paginacionsinrobos_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L5 | neighbors=[PaginacionSinRobos.tsx]
-- "solicitudes_page_solicitudespage": "SolicitudesPage()" | kind=code-symbol | source=app/monitorista/solicitudes/page.tsx:L13 | neighbors=[page.tsx]
-- "solicitudes_page_statcard": "StatCard()" | kind=code-symbol | source=app/monitorista/solicitudes/page.tsx:L86 | neighbors=[page.tsx]
-- "solicitudes_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L8 | neighbors=[route.ts]
-- "solicitudes_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L22 | neighbors=[route.ts]
-- "solicitudes_solicitudes_client_estatusbg": "estatusBg()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L344 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_estatuscolor": "estatusColor()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L351 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_estatuslabels": "estatusLabels" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L8 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_formatdate": "formatDate()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L18 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_tdstyle": "tdStyle" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L369 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_thstyle": "thStyle" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L358 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_subir_oficio_modal_props": "Props" | kind=code-symbol | source=app/corralon/solicitudes/subir-oficio-modal.tsx:L6 | neighbors=[subir-oficio-modal.tsx]
-- "solicitudes_ver_documento_modal_props": "Props" | kind=code-symbol | source=app/corralon/solicitudes/ver-documento-modal.tsx:L5 | neighbors=[ver-documento-modal.tsx]
-- "solicitudid_page_aseguradosfiscaliapage": "AseguradosFiscaliaPage()" | kind=code-symbol | source=app/fiscalia/solicitudes/[solicitudId]/page.tsx:L11 | neighbors=[page.tsx]
-- "solicitudid_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/solicitudes/[solicitudId]/page.tsx:L11 | neighbors=[page.tsx]
-- "steps_pasociudadano_pasociudadano": "PasoCiudadano()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadano.tsx:L16 | neighbors=[PasoCiudadano.tsx]
-- "steps_pasociudadano_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadano.tsx:L11 | neighbors=[PasoCiudadano.tsx]
-- "steps_pasociudadanoconductor_pasociudadanoconductor": "PasoCiudadanoConductor()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadanoConductor.tsx:L14 | neighbors=[PasoCiudadanoConductor.tsx]
-- "steps_pasociudadanoconductor_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadanoConductor.tsx:L6 | neighbors=[PasoCiudadanoConductor.tsx]
-- "steps_pasoconductor_pasoconductor": "PasoConductor()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConductor.tsx:L21 | neighbors=[PasoConductor.tsx]
-- "steps_pasoconductor_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConductor.tsx:L13 | neighbors=[PasoConductor.tsx]
-- "steps_pasoconfirmacion_pasoconfirmacion": "PasoConfirmacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L27 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacion_pasoconfirmacionprops": "PasoConfirmacionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L15 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacion_seccionestructurada": "SeccionEstructurada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L20 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacionpago_pasoconfirmacionpago": "PasoConfirmacionPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L8 | neighbors=[PasoConfirmacionPago.tsx]
-- "steps_pasoconfirmacionpago_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L3 | neighbors=[PasoConfirmacionPago.tsx]
-- "steps_pasodescuentos_archivofield": "ArchivoField" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L27 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_fileuploadzone": "FileUploadZone()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L196 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_pasodecuentos": "PasoDecuentos()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L32 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L22 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasoevidencias_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoEvidencias.tsx:L8 | neighbors=[PasoEvidencias.tsx]
-- "steps_pasoinfraccion_pasoinfraccion": "PasoInfraccion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L19 | neighbors=[PasoInfraccion.tsx]
-- "steps_pasoinfraccion_pasoinfraccionprops": "PasoInfraccionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L9 | neighbors=[PasoInfraccion.tsx]
-- "steps_pasopago_infraccioncreada": "InfraccionCreada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L19 | neighbors=[PasoPago.tsx]
-- "steps_pasopago_pasopago": "PasoPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L40 | neighbors=[PasoPago.tsx]
-- "steps_pasopago_pasopagoprops": "PasoPagoProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L24 | neighbors=[PasoPago.tsx]
-- "steps_pasoubicacion_pasoubicacion": "PasoUbicacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L12 | neighbors=[PasoUbicacion.tsx]
-- "steps_pasoubicacion_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L8 | neighbors=[PasoUbicacion.tsx]
+- "proxy_config": "config" | kind=code-symbol | source=proxy.ts:L40 | neighbors=[proxy.ts]
+- "proxy_public_paths": "PUBLIC_PATHS" | kind=code-symbol | source=proxy.ts:L6 | neighbors=[proxy.ts]
+- "proxy_route_get": "GET()" | kind=code-symbol | source=app/api/expediente/proxy/route.ts:L6 | neighbors=[route.ts]
+- "radio_formrondinescalado_campo": "Campo()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L145 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_catalogoitem": "CatalogoItem" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L9 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_inputstyle": "inputStyle" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L156 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_props": "Props" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L11 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_seccion": "Seccion()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L132 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formsection_reporterecorridozen": "ReporteRecorridoZen()" | kind=code-symbol | source=components/911/radio/FormSection.tsx:L49 | neighbors=[FormSection.tsx]
+- "radio_formsection_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/911/radio/FormSection.tsx:L16 | neighbors=[FormSection.tsx]
+- "radio_input_inputprops": "InputProps" | kind=code-symbol | source=components/911/radio/Input.tsx:L5 | neighbors=[Input.tsx]
+- "radio_input_sentinelinput": "SentinelInput()" | kind=code-symbol | source=components/911/radio/Input.tsx:L11 | neighbors=[Input.tsx]
+- "registrar_route_post": "POST()" | kind=code-symbol | source=app/api/via/infracciones/registrar/route.ts:L8 | neighbors=[route.ts]
+- "reporte_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/[id]/reporte/route.ts:L7 | neighbors=[route.ts]
+- "reportes_campo_route_get": "GET()" | kind=code-symbol | source=app/api/analisis/reportes-campo/route.ts:L6 | neighbors=[route.ts]
+- "reportes_form_styles_btntinydanger": "btnTinyDanger" | kind=code-symbol | source=components/reportes/form-styles.ts:L11 | neighbors=[form-styles.ts]
+- "reportes_formato_n_armas_aseguradas_service_armafuente": "ArmaFuente" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L4 | neighbors=[formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_armas_aseguradas_service_formatonarmaaseguradainput": "FormatoNArmaAseguradaInput" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L85 | neighbors=[formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_armas_aseguradas_service_obtenerarmasparaformaton": "obtenerArmasParaFormatoN()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L13 | neighbors=[formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_atencion_victimas_service_formatonatencionvictimasinput": "FormatoNAtencionVictimasInput" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L73 | neighbors=[formato-n-atencion-victimas-service.ts]
+- "reportes_formato_n_consolidado_service_formatonconsolidado": "FormatoNConsolidado" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L9 | neighbors=[formato-n-consolidado-service.ts]
+- "reportes_formato_n_eventos_service_formatoneventoinput": "FormatoNEventoInput" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L53 | neighbors=[formato-n-eventos-service.ts]
+- "reportes_formato_n_eventos_service_fuenteincidente": "FuenteIncidente" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L73 | neighbors=[formato-n-eventos-service.ts]
+- "reportes_formato_n_fge_service_conteoscalculados": "ConteosCalculados" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L82 | neighbors=[formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_formatonfgeinput": "FormatoNFgeInput" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L112 | neighbors=[formato-n-fge-service.ts]
+- "reportes_formato_n_fgr_service_formatonfgrinput": "FormatoNFgrInput" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L81 | neighbors=[formato-n-fgr-service.ts]
+- "reportes_formato_n_medios_alternativos_service_formatonmediosalternativosinput": "FormatoNMediosAlternativosInput" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L69 | neighbors=[formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_rnd_service_formatonrndinput": "FormatoNRndInput" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L49 | neighbors=[formato-n-rnd-service.ts]
+- "reportes_formato_n_rnd_service_fuentedetencion": "FuenteDetencion" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L67 | neighbors=[formato-n-rnd-service.ts]
+- "reportes_incidentes_page_reportesincidentespage": "ReportesIncidentesPage()" | kind=code-symbol | source=app/reportes_incidentes/page.tsx:L11 | neighbors=[page.tsx]
+- "reportes_incidentes_service_combo_keys": "COMBO_KEYS" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L10 | neighbors=[service.ts]
+- "reportes_incidentes_types_reporteincidenterow": "ReporteIncidenteRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L23 | neighbors=[types.ts]
+- "reportes_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/reportes/mapper.ts:L13 | neighbors=[mapper.ts]
+- "reportes_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes/mapper.ts:L7 | neighbors=[mapper.ts]
+- "reportes_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/reportes/mapper.ts:L1 | neighbors=[mapper.ts]
+- "reportes_menuoption_optionsquareprops": "OptionSquareProps" | kind=code-symbol | source=components/reportes/menuOption.tsx:L11 | neighbors=[menuOption.tsx]
+- "reportes_menuoption_stat": "Stat" | kind=code-symbol | source=components/reportes/menuOption.tsx:L6 | neighbors=[menuOption.tsx]
+- "reportes_operativos_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-operativos/mapper.ts:L13 | neighbors=[mapper.ts]
+- "reportes_operativos_service_parsejsonb": "parseJsonb()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L13 | neighbors=[service.ts]
+- "reportes_operativos_service_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L22 | neighbors=[service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-079.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-079.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

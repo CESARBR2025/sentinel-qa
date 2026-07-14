@@ -7,8 +7,8 @@ description: >
 instructions: |
   ## Flujo de carga de contexto
 
-  1. **Identificar dominio**: Ejecutar `node scripts/extract-domain.mjs <tarea>` para detectar
-     el módulo afectado (monitorista, incidentes, prevencion, etc.)
+  1. **Identificar dominio**: Ejecutar `node scripts/load-context.mjs <tarea>` para detectar
+     el módulo afectado.
 
   2. **Cargar context-map**: Leer `.opencode/context-map.yaml` y buscar la entrada del dominio
      detectado para obtener:
@@ -23,34 +23,34 @@ instructions: |
   4. **Precargar contexto**: Leer los archivos de `docs` y `lib` indicados en el context-map.
      Esto garantiza que el agente tenga el contexto completo antes de empezar a implementar.
 
-  5. **Para bugs/troubleshooting**: Si el contexto-map no tiene entrada específica, consultar
+  5. **Para bugs/troubleshooting**: Si el context-map no tiene entrada específica, consultar
      `boveda/🗺 Roadmap/Troubleshooting.md` para errores conocidos.
 
   ## Ejemplo
 
   Tarea: "Agregar campo teléfono a solicitudes de monitorista"
 
-  1. `node scripts/extract-domain.mjs "agregar campo telefono a solicitudes de monitorista"`
+  1. `node scripts/load-context.mjs "agregar campo telefono a solicitudes de monitorista"`
      → devuelve: `monitorista`
 
   2. context-map.yaml → monitorista:
      - docs: boveda/🧩 Features/Monitorista.md
-     - lib: lib/monitorista/, lib/error-handler.ts
+     - lib: lib/monitorista/
      - graph_query: deps of lib/monitorista
 
   3. `graphify query "deps of lib/monitorista"` → dependencias
 
   4. Leer: boveda/🧩 Features/Monitorista.md + lib/monitorista/types.ts +
      lib/monitorista/mapper.ts + lib/monitorista/repository.ts +
-     lib/monitorista/service.ts + lib/error-handler.ts
+     lib/monitorista/service.ts
 
   ## Reglas
 
   - Si el dominio no se detecta automáticamente, preguntar al usuario
-  - Siempre ejecutar `npx tsc --noEmit` después de cambios
+  - Siempre ejecutar el typechecker del proyecto después de cambios
   - Siempre ejecutar `npx graphify update` para mantener el grafo sincronizado
-  - Si hay cambios en BD, ejecutar `npm run db:schema`
+  - Si hay cambios en BD, ejecutar el script de esquema correspondiente
 
 resources:
   - ".opencode/context-map.yaml"
-  - "scripts/extract-domain.mjs"
+  - "scripts/load-context.mjs"

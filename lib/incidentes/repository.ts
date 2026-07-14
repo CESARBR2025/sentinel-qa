@@ -35,6 +35,7 @@ export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[
       d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora,
       COALESCE(orc.ofi_acciones, rc.acciones_realizadas) AS acciones_realizadas,
       COALESCE(orc.ofi_hay_detencion, rc.hay_detencion) AS hay_detencion,
+      orc.ofi_autoridad_recibe,
       (orc.ofi_hay_detencion = true AND NOT EXISTS (
         SELECT 1 FROM ofi_reporte_denuncia den WHERE den.reporte_campo_id = orc.id
       )) AS d1_pendiente
@@ -45,7 +46,7 @@ export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[
     LEFT JOIN incidente_despacho d ON i.id = d.incidente_id
     LEFT JOIN ofi_reportes_campo orc ON i.id = orc.incidente_id
     LEFT JOIN incidente_reporte_campo rc ON i.id = rc.incidente_id
-    WHERE i.estatus = 'atendido' ORDER BY i.creado_en DESC LIMIT 100`,
+    WHERE i.estatus IN ('atendido', 'cerrado_detencion') ORDER BY i.creado_en DESC LIMIT 100`,
   )
   const rows = result.rows.map(rowToIncidenteConDespachoBase)
   return Promise.all(rows.map(async (inc) => {
@@ -57,7 +58,7 @@ export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[
 
 export async function listarIncidentesEnDespacho(): Promise<IncidenteConDespacho[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre, d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON i.id = d.incidente_id WHERE i.estatus = 'en_despacho' ORDER BY i.creado_en DESC LIMIT 100`,
+    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre, d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON i.id = d.incidente_id WHERE i.estatus IN ('en_despacho', 'en_sitio') ORDER BY i.creado_en DESC LIMIT 100`,
   )
   const rows = result.rows.map(rowToIncidenteConDespachoBase)
   return Promise.all(rows.map(async (inc) => {
@@ -276,10 +277,12 @@ export async function insertarReporteCampo(params: {
         ]
     )
 
-    await query(
-        `UPDATE incidentes SET estatus = 'atendido', actualizado_en = now() WHERE id = $1`,
-        [params.incidenteId]
-    )
+    if (!params.hayDetencion) {
+        await query(
+            `UPDATE incidentes SET estatus = 'atendido', actualizado_en = now() WHERE id = $1`,
+            [params.incidenteId]
+        )
+    }
 }
 
 export async function verificarReporteCampo(incidenteId: string) {

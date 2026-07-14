@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const folio   = p.get('folio')
 
   const canalesPermitidos = ['911', 'whatsapp', 'radio']
-  const estatusPermitidos = ['sin_despachar', 'en_despacho', 'atendido']
+  const estatusPermitidos = ['sin_despachar', 'en_despacho', 'en_sitio', 'atendido', 'cerrado_detencion']
 
   if (canal   && !canalesPermitidos.includes(canal))   return NextResponse.json({ error: 'canal inválido' }, { status: 400 })
   if (estatus && !estatusPermitidos.includes(estatus)) return NextResponse.json({ error: 'estatus inválido' }, { status: 400 })

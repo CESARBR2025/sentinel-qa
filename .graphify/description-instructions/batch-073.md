@@ -1,4 +1,4 @@
-# Node Description Batch 74 of 82
+# Node Description Batch 74 of 87
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "nueva_page_textareafield": "TextareaField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L166 | neighbors=[page.tsx]
-- "nueva_page_tipos": "TIPOS" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L8 | neighbors=[page.tsx]
-- "nuevo_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L150 | neighbors=[page.tsx]
-- "nuevo_page_campos": "CAMPOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L16 | neighbors=[page.tsx]
-- "nuevo_page_campos_calculables": "CAMPOS_CALCULABLES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_campos_manuales": "CAMPOS_MANUALES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L26 | neighbors=[page.tsx]
-- "nuevo_page_fuentedetencion": "FuenteDetencion" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_fuenteincidente": "FuenteIncidente" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_inputstyle": "inputStyle" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L149 | neighbors=[page.tsx]
-- "nuevo_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L145 | neighbors=[page.tsx]
-- "nuevo_page_nuevadenunciad1page": "NuevaDenunciaD1Page()" | kind=code-symbol | source=app/denuncia/nuevo/page.tsx:L12 | neighbors=[page.tsx]
-- "nuevo_page_nuevaformatonarmaaseguradapage": "NuevaFormatoNArmaAseguradaPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonatencionvictimaspage": "NuevoFormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatoneventopage": "NuevoFormatoNEventoPage()" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L20 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonfgepage": "NuevoFormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L32 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonfgrpage": "NuevoFormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/nuevo/page.tsx:L29 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonmediosalternativospage": "NuevoFormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonrndpage": "NuevoFormatoNRndPage()" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L20 | neighbors=[page.tsx]
-- "nuevo_page_nuevooficialpage": "NuevoOficialPage()" | kind=code-symbol | source=app/admin-transito/oficiales/nuevo/page.tsx:L7 | neighbors=[page.tsx]
-- "nuevo_page_nuevoreporteoficialpage": "NuevoReporteOficialPage()" | kind=code-symbol | source=app/oficial/nuevo/page.tsx:L7 | neighbors=[page.tsx]
-- "nuevo_page_nuevousuariopage": "NuevoUsuarioPage()" | kind=code-symbol | source=app/admin/usuarios/nuevo/page.tsx:L6 | neighbors=[page.tsx]
-- "nuevo_page_periodos": "PERIODOS" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_turnos": "TURNOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L10 | neighbors=[page.tsx]
-- "oficial_formulariorecorrido_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L23 | neighbors=[FormularioRecorrido.tsx]
-- "oficial_formulariorecorrido_steps": "STEPS" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L13 | neighbors=[FormularioRecorrido.tsx]
-- "oficial_mapapinfijo_pin_icons": "PIN_ICONS" | kind=code-symbol | source=components/oficial/MapaPinFijo.tsx:L12 | neighbors=[MapaPinFijo.tsx]
-- "oficial_mapapinfijo_props": "Props" | kind=code-symbol | source=components/oficial/MapaPinFijo.tsx:L5 | neighbors=[MapaPinFijo.tsx]
-- "oficial_mapaubicacion_locationdata": "LocationData" | kind=code-symbol | source=components/oficial/MapaUbicacion.tsx:L6 | neighbors=[MapaUbicacion.tsx]
-- "oficial_modalseleccionarunidad_props": "Props" | kind=code-symbol | source=components/oficial/ModalSeleccionarUnidad.tsx:L8 | neighbors=[ModalSeleccionarUnidad.tsx]
-- "oficial_page_oficialdashboardpage": "OficialDashboardPage()" | kind=code-symbol | source=app/oficial/page.tsx:L10 | neighbors=[page.tsx]
-- "oficial_permisos_accion": "Accion" | kind=code-symbol | source=lib/oficial/permisos.ts:L5 | neighbors=[permisos.ts]
-- "oficial_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/oficial/permisos.ts:L12 | neighbors=[permisos.ts]
-- "oficial_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/oficial/permisos.ts:L20 | neighbors=[permisos.ts]
-- "oficial_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/oficial/permisos.ts:L16 | neighbors=[permisos.ts]
-- "oficial_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/oficial/permisos.ts:L6 | neighbors=[permisos.ts]
-- "oficial_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/oficial/permisos.ts:L4 | neighbors=[permisos.ts]
-- "oficial_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/oficial/permisos.ts:L3 | neighbors=[permisos.ts]
-- "oficial_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/oficial/permisos.ts:L8 | neighbors=[permisos.ts]
-- "oficial_profiledropdown_props": "Props" | kind=code-symbol | source=components/oficial/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
-- "oficial_service_bool": "bool()" | kind=code-symbol | source=lib/oficial/service.ts:L29 | neighbors=[service.ts]
+- "login_desing_login_app_app": "App()" | kind=code-symbol | source=login-desing/login-app.jsx:L180 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconarrow": "IconArrow()" | kind=code-symbol | source=login-desing/login-app.jsx:L21 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconcheck": "IconCheck()" | kind=code-symbol | source=login-desing/login-app.jsx:L24 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconlock": "IconLock()" | kind=code-symbol | source=login-desing/login-app.jsx:L15 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconshield": "IconShield()" | kind=code-symbol | source=login-desing/login-app.jsx:L18 | neighbors=[login-app.jsx]
+- "login_desing_login_app_iconuser": "IconUser()" | kind=code-symbol | source=login-desing/login-app.jsx:L12 | neighbors=[login-app.jsx]
+- "login_desing_login_app_otpinput": "OtpInput()" | kind=code-symbol | source=login-desing/login-app.jsx:L125 | neighbors=[login-app.jsx]
+- "login_desing_login_app_terminal": "Terminal()" | kind=code-symbol | source=login-desing/login-app.jsx:L29 | neighbors=[login-app.jsx]
+- "login_desing_login_app_tweaks": "TWEAKS" | kind=code-symbol | source=login-desing/login-app.jsx:L6 | neighbors=[login-app.jsx]
+- "login_page_iconarrow": "IconArrow()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L16 | neighbors=[page.tsx]
+- "login_page_iconcheck": "IconCheck()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L19 | neighbors=[page.tsx]
+- "login_page_iconlock": "IconLock()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L10 | neighbors=[page.tsx]
+- "login_page_iconshield": "IconShield()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L13 | neighbors=[page.tsx]
+- "login_page_iconuser": "IconUser()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L7 | neighbors=[page.tsx]
+- "login_page_logincontent": "LoginContent()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L180 | neighbors=[page.tsx]
+- "login_page_loginpage": "LoginPage()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L172 | neighbors=[page.tsx]
+- "login_page_logline": "LogLine" | kind=code-symbol | source=app/(auth)/login/page.tsx:L25 | neighbors=[page.tsx]
+- "login_page_logtype": "LogType" | kind=code-symbol | source=app/(auth)/login/page.tsx:L24 | neighbors=[page.tsx]
+- "login_page_otpinput": "OtpInput()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L103 | neighbors=[page.tsx]
+- "login_page_terminal": "Terminal()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L27 | neighbors=[page.tsx]
+- "manual_migrations_0006_formato_n_formato_n_reportes": "formato_n_reportes" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L1 | neighbors=[0006_formato_n.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_armas_aseguradas": "formato_n_armas_aseguradas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L113 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_atencion_victimas": "formato_n_atencion_victimas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L98 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_eventos": "formato_n_eventos" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L23 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_fge": "formato_n_fge" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L36 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_fgr": "formato_n_fgr" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L55 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_medios_alternativos": "formato_n_medios_alternativos" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L85 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_rnd": "formato_n_rnd" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L74 | neighbors=[0007_formato_n_split.sql]
+- "maps_googlemappicker_center": "center" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L8 | neighbors=[GoogleMapPicker.tsx]
+- "maps_googlemappicker_containerstyle": "containerStyle" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L7 | neighbors=[GoogleMapPicker.tsx]
+- "maps_googlemappicker_googlemappicker": "GoogleMapPicker()" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L18 | neighbors=[GoogleMapPicker.tsx]
+- "maps_googlemappicker_props": "Props" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L10 | neighbors=[GoogleMapPicker.tsx]
+- "medidas_page_color_map": "COLOR_MAP" | kind=code-symbol | source=app/prevencion/medidas/page.tsx:L13 | neighbors=[page.tsx]
+- "medidas_page_medidaspage": "MedidasPage()" | kind=code-symbol | source=app/prevencion/medidas/page.tsx:L20 | neighbors=[page.tsx]
+- "medidas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/medidas/route.ts:L8 | neighbors=[route.ts]
+- "medidas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/medidas/route.ts:L22 | neighbors=[route.ts]
+- "modulo_incidentes_page_reportesoperativospage": "ReportesOperativosPage()" | kind=code-symbol | source=app/modulo_incidentes/page.tsx:L13 | neighbors=[page.tsx]
+- "modulo_incidentes_reporttables_operationaltableprops": "OperationalTableProps" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportTables.tsx:L6 | neighbors=[ReportTables.tsx]
+- "monitorista_accionesdetenido_accionesdetenido": "AccionesDetenido()" | kind=code-symbol | source=components/monitorista/AccionesDetenido.tsx:L9 | neighbors=[AccionesDetenido.tsx]
+- "monitorista_actions_solicitarevidencia": "solicitarEvidencia()" | kind=code-symbol | source=lib/monitorista/actions.ts:L19 | neighbors=[actions.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-073.json
+to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-073.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

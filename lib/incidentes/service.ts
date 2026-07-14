@@ -137,8 +137,8 @@ export async function crearReporteCampo(params: {
     const { inc, existe } = await verificarReporteCampo(params.incidenteId)
 
     if (!inc) throw new Error('Incidente no encontrado')
-    if (inc.estatus === 'atendido') throw new Error('El incidente ya está atendido')
-    if (inc.estatus === 'sin_despachar') throw new Error('El incidente debe estar en_despacho antes de reportar')
+    if (inc.estatus === 'atendido' || inc.estatus === 'cerrado_detencion') throw new Error('El incidente ya está cerrado')
+    if (inc.estatus === 'sin_despachar') throw new Error('El incidente debe estar en_despacho o en_sitio antes de reportar')
     if (existe) throw new Error('El incidente ya tiene un reporte de campo')
 
     if (params.montoRobo !== null && (params.montoRobo < 0 || !Number.isInteger(params.montoRobo)))
