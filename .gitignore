@@ -44,10 +44,6 @@ next-env.d.ts
 .claude/
 
 # graphify — cache files, never commit
-.graphify/cache/
-.graphify/branch.json
-.graphify/worktree.json
-.graphify/needs_update
 doc/Analisis_Algoritmos_C4.html
 *.xlsx
 *.docx
@@ -56,7 +52,6 @@ doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Diagrama de Flujo - UDAI.jpeg
 doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Formatos UDAI/FORMATO FICHA DE DETENIDOS.pptx
 doc/flujo_prevencion_delito.html
 doc/tutorial_prevencion_delito.html
-graphify-visual/
 
 # Alexandria — vault y config MCP personal (rutas locales, no del repo)
 KnowledgeVault/
@@ -71,3 +66,7 @@ Alexandria/
 .vscode/mcp.json
 /.youmindag
 .youmindag/plugin-state.json
+
+# YouMindAG — generated knowledge graph
+.graphify/
+graphify-visual/
