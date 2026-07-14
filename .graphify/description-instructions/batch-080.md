@@ -1,4 +1,4 @@
-# Node Description Batch 81 of 87
+# Node Description Batch 81 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "reportes_page_gestionpage": "GestionPage()" | kind=code-symbol | source=app/reportes/page.tsx:L15 | neighbors=[page.tsx]
-- "reportes_page_misreportespage": "MisReportesPage()" | kind=code-symbol | source=app/oficial/reportes/page.tsx:L8 | neighbors=[page.tsx]
-- "reportes_permisos_accion": "Accion" | kind=code-symbol | source=lib/reportes/permisos.ts:L6 | neighbors=[permisos.ts]
-- "reportes_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/reportes/permisos.ts:L13 | neighbors=[permisos.ts]
-- "reportes_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/reportes/permisos.ts:L21 | neighbors=[permisos.ts]
-- "reportes_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/reportes/permisos.ts:L17 | neighbors=[permisos.ts]
-- "reportes_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/reportes/permisos.ts:L7 | neighbors=[permisos.ts]
-- "reportes_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/reportes/permisos.ts:L27 | neighbors=[permisos.ts]
-- "reportes_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/reportes/permisos.ts:L5 | neighbors=[permisos.ts]
-- "reportes_sin_d1_service_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-sin-d1/service.ts:L4 | neighbors=[service.ts]
-- "reportes_sin_novedad_service_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-sin-novedad/service.ts:L4 | neighbors=[service.ts]
-- "retencion_placa_route_patch": "PATCH()" | kind=code-symbol | source=app/api/via/infracciones/retencion-placa/route.ts:L6 | neighbors=[route.ts]
-- "revision_documental_page_revisiondocumentalpage": "RevisionDocumentalPage()" | kind=code-symbol | source=app/agente_liberaciones/revision-documental/page.tsx:L5 | neighbors=[page.tsx]
-- "rh_route_get": "GET()" | kind=code-symbol | source=app/api/rol-servicios/externos/rh/route.ts:L8 | neighbors=[route.ts]
-- "rol_servicios_actions_generarfolio": "generarFolio()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L18 | neighbors=[actions.ts]
-- "rol_servicios_catalogos_actions_str": "str()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L18 | neighbors=[catalogos-actions.ts]
-- "rol_servicios_catalogos_actions_tablacatalogo": "TablaCatalogo" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L23 | neighbors=[catalogos-actions.ts]
-- "rol_servicios_layout_rolservicioslayout": "RolServiciosLayout()" | kind=code-symbol | source=app/rol_servicios/layout.tsx:L6 | neighbors=[layout.tsx]
-- "rol_servicios_mapper_rowtoservicerow": "rowToServiceRow()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L24 | neighbors=[mapper.ts]
-- "rol_servicios_page_modulorolzen": "ModuloRolZen()" | kind=code-symbol | source=app/rol_servicios/page.tsx:L10 | neighbors=[page.tsx]
-- "rol_servicios_rolinputs_props": "Props" | kind=code-symbol | source=components/rol_servicios/RolInputs.tsx:L3 | neighbors=[RolInputs.tsx]
-- "rol_servicios_servicetable_devicebox": "deviceBox" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L232 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_servicetable_inputstyle": "inputStyle" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L203 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_servicetable_labelmono": "labelMono" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L213 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_servicetable_props": "Props" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L6 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_servicetable_selectstyle": "selectStyle" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L220 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_servicetable_tdstyle": "tdStyle" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L198 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_servicetable_thstyle": "thStyle" | kind=code-symbol | source=components/rol_servicios/ServiceTable.tsx:L187 | neighbors=[ServiceTable.tsx]
-- "rol_servicios_signaturemodal_props": "Props" | kind=code-symbol | source=components/rol_servicios/SignatureModal.tsx:L6 | neighbors=[SignatureModal.tsx]
-- "roles_formulariorol_btnsubmitstyle": "btnSubmitStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L229 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_fieldcontainerstyle": "fieldContainerStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L192 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_formulariorol": "FormularioRol()" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L27 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_grid2style": "grid2Style" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L191 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_iconstyle": "iconStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L210 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L201 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L193 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L218 | neighbors=[FormularioRol.tsx]
-- "roles_formulariorol_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L9 | neighbors=[FormularioRol.tsx]
-- "roles_page_rolespage": "RolesPage()" | kind=code-symbol | source=app/admin/roles/page.tsx:L6 | neighbors=[page.tsx]
-- "roles_route_post": "POST()" | kind=code-symbol | source=app/api/admin/roles/route.ts:L7 | neighbors=[route.ts]
+- "prevencion_seguimientotimeline_props": "Props" | kind=code-symbol | source=components/prevencion/SeguimientoTimeline.tsx:L8 | neighbors=[SeguimientoTimeline.tsx]
+- "prevencion_semaforovigencia_cfg": "CFG" | kind=code-symbol | source=components/prevencion/SemaforoVigencia.tsx:L3 | neighbors=[SemaforoVigencia.tsx]
+- "prevencion_timeline_tiposeguimiento": "TipoSeguimiento" | kind=code-symbol | source=lib/prevencion/timeline.ts:L8 | neighbors=[timeline.ts]
+- "prevencion_visitamodal_checkboxfield": "CheckboxField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L110 | neighbors=[VisitaModal.tsx]
+- "prevencion_visitamodal_inputfield": "InputField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L86 | neighbors=[VisitaModal.tsx]
+- "prevencion_visitamodal_textareafield": "TextareaField()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L98 | neighbors=[VisitaModal.tsx]
+- "proxy_config": "config" | kind=code-symbol | source=proxy.ts:L40 | neighbors=[proxy.ts]
+- "proxy_public_paths": "PUBLIC_PATHS" | kind=code-symbol | source=proxy.ts:L6 | neighbors=[proxy.ts]
+- "proxy_route_get": "GET()" | kind=code-symbol | source=app/api/expediente/proxy/route.ts:L6 | neighbors=[route.ts]
+- "radio_formrondinescalado_campo": "Campo()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L145 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_catalogoitem": "CatalogoItem" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L9 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_inputstyle": "inputStyle" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L156 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_props": "Props" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L11 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formrondinescalado_seccion": "Seccion()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L132 | neighbors=[FormRondinEscalado.tsx]
+- "radio_formsection_reporterecorridozen": "ReporteRecorridoZen()" | kind=code-symbol | source=components/911/radio/FormSection.tsx:L49 | neighbors=[FormSection.tsx]
+- "radio_formsection_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/911/radio/FormSection.tsx:L16 | neighbors=[FormSection.tsx]
+- "radio_input_inputprops": "InputProps" | kind=code-symbol | source=components/911/radio/Input.tsx:L5 | neighbors=[Input.tsx]
+- "radio_input_sentinelinput": "SentinelInput()" | kind=code-symbol | source=components/911/radio/Input.tsx:L11 | neighbors=[Input.tsx]
+- "registrar_route_post": "POST()" | kind=code-symbol | source=app/api/via/infracciones/registrar/route.ts:L8 | neighbors=[route.ts]
+- "reporte_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/[id]/reporte/route.ts:L7 | neighbors=[route.ts]
+- "reportes_campo_route_get": "GET()" | kind=code-symbol | source=app/api/analisis/reportes-campo/route.ts:L6 | neighbors=[route.ts]
+- "reportes_form_styles_btntinydanger": "btnTinyDanger" | kind=code-symbol | source=components/reportes/form-styles.ts:L11 | neighbors=[form-styles.ts]
+- "reportes_formato_n_armas_aseguradas_service_armafuente": "ArmaFuente" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L4 | neighbors=[formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_armas_aseguradas_service_formatonarmaaseguradainput": "FormatoNArmaAseguradaInput" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L85 | neighbors=[formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_armas_aseguradas_service_obtenerarmasparaformaton": "obtenerArmasParaFormatoN()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L13 | neighbors=[formato-n-armas-aseguradas-service.ts]
+- "reportes_formato_n_atencion_victimas_service_formatonatencionvictimasinput": "FormatoNAtencionVictimasInput" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L73 | neighbors=[formato-n-atencion-victimas-service.ts]
+- "reportes_formato_n_consolidado_service_formatonconsolidado": "FormatoNConsolidado" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L9 | neighbors=[formato-n-consolidado-service.ts]
+- "reportes_formato_n_eventos_service_formatoneventoinput": "FormatoNEventoInput" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L53 | neighbors=[formato-n-eventos-service.ts]
+- "reportes_formato_n_eventos_service_fuenteincidente": "FuenteIncidente" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L73 | neighbors=[formato-n-eventos-service.ts]
+- "reportes_formato_n_fge_service_conteoscalculados": "ConteosCalculados" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L82 | neighbors=[formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_formatonfgeinput": "FormatoNFgeInput" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L112 | neighbors=[formato-n-fge-service.ts]
+- "reportes_formato_n_fgr_service_formatonfgrinput": "FormatoNFgrInput" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L81 | neighbors=[formato-n-fgr-service.ts]
+- "reportes_formato_n_medios_alternativos_service_formatonmediosalternativosinput": "FormatoNMediosAlternativosInput" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L69 | neighbors=[formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_rnd_service_formatonrndinput": "FormatoNRndInput" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L49 | neighbors=[formato-n-rnd-service.ts]
+- "reportes_formato_n_rnd_service_fuentedetencion": "FuenteDetencion" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L67 | neighbors=[formato-n-rnd-service.ts]
+- "reportes_incidentes_page_reportesincidentespage": "ReportesIncidentesPage()" | kind=code-symbol | source=app/reportes_incidentes/page.tsx:L11 | neighbors=[page.tsx]
+- "reportes_incidentes_service_combo_keys": "COMBO_KEYS" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L10 | neighbors=[service.ts]
+- "reportes_incidentes_types_reporteincidenterow": "ReporteIncidenteRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L23 | neighbors=[types.ts]
+- "reportes_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/reportes/mapper.ts:L13 | neighbors=[mapper.ts]
+- "reportes_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes/mapper.ts:L7 | neighbors=[mapper.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-080.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-080.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

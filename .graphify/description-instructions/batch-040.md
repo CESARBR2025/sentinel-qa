@@ -1,4 +1,4 @@
-# Node Description Batch 41 of 87
+# Node Description Batch 41 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_formulariopuestadisposicion_formulariopuestadisposicion": "FormularioPuestaDisposicion()" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L45 | neighbors=[FormularioPuestaDisposicion.tsx, page.tsx]
+- "fiscalia_mapper_num": "num()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L15 | neighbors=[mapper.ts, rowToSolicitud()]
+- "fiscalia_mapper_rowtodetalledetenidoguardado": "rowToDetalleDetenidoGuardado()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L186 | neighbors=[mapper.ts, repository.ts]
+- "fiscalia_mapper_rowtopuestadisposicion": "rowToPuestaDisposicion()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L201 | neighbors=[mapper.ts, repository.ts]
+- "fiscalia_repository_actualizardetallesasegurado": "actualizarDetallesAsegurado()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L214 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L109 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_actualizarsolicitudconevidencias": "actualizarSolicitudConEvidencias()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L271 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_guardardetenidosdirecciones": "guardarDetenidosDirecciones()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L435 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_guardarpuestadisposicion": "guardarPuestaDisposicion()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L582 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_listarasegurados": "listarAsegurados()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L361 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_listaraseguradoscondisposicion": "listarAseguradosConDisposicion()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L544 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_listarliberaciones": "listarLiberaciones()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L505 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenerdetalleasegurado": "obtenerDetalleAsegurado()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L122 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenerdetalleaseguradocompleto": "obtenerDetalleAseguradoCompleto()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L390 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenerdetalleinfraccionvia": "obtenerDetalleInfraccionVia()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L286 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenerdetenidosguardados": "obtenerDetenidosGuardados()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L424 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenerevidenciasmonitorista": "obtenerEvidenciasMonitorista()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L254 | neighbors=[repository.ts, page.tsx]
+- "fiscalia_repository_obtenerpuestadisposicionporreporte": "obtenerPuestaDisposicionPorReporte()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L574 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L13 | neighbors=[repository.ts, service.ts]
+- "fiscalia_repository_obtenersolicitudescompletadas": "obtenerSolicitudesCompletadas()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L96 | neighbors=[repository.ts, service.ts]
 - "fiscalia_repository_obtenersolicitudesconmonitorista": "obtenerSolicitudesConMonitorista()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L83 | neighbors=[repository.ts, service.ts]
 - "fiscalia_repository_obtenersolicitudesenproceso": "obtenerSolicitudesEnProceso()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L70 | neighbors=[repository.ts, service.ts]
 - "fiscalia_repository_obtenersolicitudespendientes": "obtenerSolicitudesPendientes()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L25 | neighbors=[repository.ts, service.ts]
@@ -37,31 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_tabsolicitudes_tabsolicitudes": "TabSolicitudes()" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L25 | neighbors=[TabSolicitudes.tsx, page.tsx]
 - "fiscalia_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/fiscalia/ToastExito.tsx:L6 | neighbors=[page.tsx, ToastExito.tsx]
 - "fiscalia_tomarcasomodal_tomarcasoboton": "TomarCasoBoton()" | kind=code-symbol | source=components/fiscalia/TomarCasoModal.tsx:L6 | neighbors=[TabSolicitudes.tsx, TomarCasoModal.tsx]
-- "fiscalia_types_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=lib/fiscalia/types.ts:L352 | neighbors=[FiscaliaDashboard.tsx, types.ts]
-- "fiscalia_types_rolrow": "RolRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L7 | neighbors=[repository.ts, types.ts]
-- "fiscalia_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/fiscalia/types.ts:L1 | neighbors=[actions.ts, types.ts]
-- "fiscalia_usetoaststore_usetoaststore": "useToastStore" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L21 | neighbors=[CargarOficioSection.tsx, useToastStore.ts]
-- "flota_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/flota/mapper.ts:L8 | neighbors=[mapper.ts, rowToPatrulla()]
-- "flota_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/flota/mapper.ts:L3 | neighbors=[mapper.ts, rowToPatrulla()]
-- "flota_repository_estastale": "estaStale()" | kind=code-symbol | source=lib/flota/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "flota_repository_listaractivas": "listarActivas()" | kind=code-symbol | source=lib/flota/repository.ts:L41 | neighbors=[repository.ts, service.ts]
-- "flota_repository_obtenerporid": "obtenerPorId()" | kind=code-symbol | source=lib/flota/repository.ts:L51 | neighbors=[repository.ts, service.ts]
-- "flota_repository_upsertpatrullas": "upsertPatrullas()" | kind=code-symbol | source=lib/flota/repository.ts:L16 | neighbors=[repository.ts, service.ts]
-- "flota_service_extraervehiculos": "extraerVehiculos()" | kind=code-symbol | source=lib/flota/service.ts:L15 | neighbors=[service.ts, obtenerFlota()]
-- "flota_service_obtenerpatrullaporid": "obtenerPatrullaPorId()" | kind=code-symbol | source=lib/flota/service.ts:L111 | neighbors=[page.tsx, service.ts]
-- "formato_n_atencion_victimas_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L102 | neighbors=[page.tsx, FormatoNAtencionVictimasPage()]
-- "formato_n_atencion_victimas_page_formatonatencionvictimaspage": "FormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
-- "formato_n_fge_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L112 | neighbors=[page.tsx, FormatoNFgePage()]
-- "formato_n_fge_page_formatonfgepage": "FormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
-- "formato_n_fgr_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L112 | neighbors=[page.tsx, FormatoNFgrPage()]
-- "formato_n_fgr_page_formatonfgrpage": "FormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
-- "formato_n_medios_alternativos_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L100 | neighbors=[page.tsx, FormatoNMediosAlternativosPage()]
-- "formato_n_medios_alternativos_page_formatonmediosalternativospage": "FormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-040.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-040.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

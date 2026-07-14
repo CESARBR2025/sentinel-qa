@@ -323,37 +323,71 @@ export async function createRondinEscalado(formData: FormData) {
   const lng = formData.get('longitud') ? String(formData.get('longitud')) : null
 
   const anonimo = bool(formData, 'anonimo')
+  const nombreOficial = str(formData, 'nombreOficial')
 
   const incidenteId = await tryActionRaw(async () => {
-    const inc = await query<{ id: string }>(
-      `INSERT INTO incidentes (
-        folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
-        anonimo, calle, colonia, entre_calles, referencia_ubicacion,
-        municipio, latitud, longitud,
-        tipo_emergencia_id, tipo_incidente_id, prioridad_id,
-        descripcion, observaciones, fecha_hora_inicio,
-        nombre_oficial, requiere_despacho, estatus, origen_rondin, capturado_por
-      ) VALUES ($1,$2,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,true,'sin_despachar',true,$19)
-      RETURNING id`,
-      [
-        folio, consecutivo,
-        anonimo ? null : str(formData, 'nombreReportante'),
-        anonimo,
-        str(formData, 'calle'), str(formData, 'colonia'),
-        str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
-        str(formData, 'municipio') ?? 'San Juan del Río',
-        lat, lng,
-        num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
-        str(formData, 'descripcion'), str(formData, 'observaciones'),
-        fechaHoraInicio,
-        str(formData, 'nombreOficial'),
-        session.user.id,
-      ],
-    )
-    return inc.rows[0].id
+    const cliente = await pool.connect()
+    try {
+      await cliente.query('BEGIN')
+
+      // Oficial que reporta el rondín: ya está en sitio, entra como PRIORITARIO.
+      const inc = await cliente.query<{ id: string }>(
+        `INSERT INTO incidentes (
+          folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
+          anonimo, calle, colonia, entre_calles, referencia_ubicacion,
+          municipio, latitud, longitud,
+          tipo_emergencia_id, tipo_incidente_id, prioridad_id,
+          descripcion, observaciones, fecha_hora_inicio,
+          nombre_oficial, requiere_despacho, estatus, origen_rondin, capturado_por
+        ) VALUES ($1,$2,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,true,'en_sitio',true,$19)
+        RETURNING id`,
+        [
+          folio, consecutivo,
+          anonimo ? null : str(formData, 'nombreReportante'),
+          anonimo,
+          str(formData, 'calle'), str(formData, 'colonia'),
+          str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
+          str(formData, 'municipio') ?? 'San Juan del Río',
+          lat, lng,
+          num(formData, 'tipoEmergenciaId'), num(formData, 'tipoIncidenteId'), num(formData, 'prioridadId'),
+          str(formData, 'descripcion'), str(formData, 'observaciones'),
+          fechaHoraInicio,
+          nombreOficial,
+          session.user.id,
+        ],
+      )
+      const incId = inc.rows[0].id
+
+      // Resolver al oficial en sesión (si el rondín lo levanta el propio oficial).
+      const ofi = await cliente.query<{ id: string; no_nomina: string | null }>(
+        `SELECT id, no_nomina FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
+        [session.user.id],
+      )
+      const oficialId = ofi.rows[0]?.id ?? null
+      const oficialNomina = ofi.rows[0]?.no_nomina ?? null
+
+      // El rondín ya está desplegado: se crea su despacho con el oficial reportante como PRIORITARIO.
+      const despacho = await cliente.query<{ id: string }>(
+        `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
+        [incId, session.user.id],
+      )
+      await cliente.query(
+        `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_prioritario)
+         VALUES ($1, $2, $3, $4, $5, true)`,
+        [despacho.rows[0].id, oficialNomina, oficialNomina, nombreOficial, oficialId],
+      )
+
+      await cliente.query('COMMIT')
+      return incId
+    } catch (err) {
+      await cliente.query('ROLLBACK')
+      throw err
+    } finally {
+      cliente.release()
+    }
   })
 
-  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId, payload: { origen: 'rondin_escalado' } })
+  await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId, payload: { origen: 'rondin_escalado', prioritario: nombreOficial } })
 
   revalidatePath('/agente_911/rondin')
   revalidatePath('/incidentes')
@@ -494,6 +528,70 @@ export async function createDespacho(formData: FormData) {
   })
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'sin_despachar', estatus_nuevo: 'en_despacho' } })
+  revalidatePath(`/incidentes/${incidenteId}`)
+}
+
+// ─── Refuerzos ────────────────────────────────────────────────────────────────
+/** Agrega unidades/elementos ADICIONALES a un folio ya activo (911 o rondín) sin re-despachar ni cerrar. */
+export async function enviarRefuerzos(formData: FormData) {
+  const session = await requireOperador()
+  const incidenteId = req(formData, 'incidenteId')
+
+  await tryActionRaw(async () => {
+    const cliente = await pool.connect()
+    try {
+      const inc = await cliente.query<{ estatus: string }>(
+        `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+        [incidenteId],
+      )
+      if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+      if (inc.rows[0].estatus !== 'en_despacho' && inc.rows[0].estatus !== 'en_sitio')
+        throw new ValidationError('Solo se pueden enviar refuerzos a un folio activo (en despacho o en sitio)')
+
+      const desp = await cliente.query<{ id: string }>(
+        `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
+        [incidenteId],
+      )
+      if (!desp.rows[0]) throw new ValidationError('El incidente no tiene despacho para reforzar')
+      const despachoId = desp.rows[0].id
+
+      const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
+      const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
+
+      if (unidades.length === 0 && elementos.length === 0)
+        throw new ValidationError('Agrega al menos una unidad o un elemento de refuerzo')
+
+      await cliente.query('BEGIN')
+
+      for (const u of unidades) {
+        await cliente.query(
+          `INSERT INTO incidente_despacho_unidades (despacho_id, unidad_ext_id, unidad_placa, es_refuerzo) VALUES ($1, $2, $3, true)`,
+          [despachoId, u.extId, u.placa],
+        )
+      }
+      for (const e of elementos) {
+        await cliente.query(
+          `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_refuerzo)
+           VALUES ($1, $2, $3, $4, (SELECT id FROM ofi_oficiales WHERE no_nomina = $3 AND ofi_estatus = 'activo' LIMIT 1), true)`,
+          [despachoId, e.extId, e.nomina, e.nombre],
+        )
+      }
+
+      await cliente.query(
+        `UPDATE incidentes SET actualizado_en = NOW() WHERE id = $1`,
+        [incidenteId],
+      )
+
+      await cliente.query('COMMIT')
+    } catch (err) {
+      await cliente.query('ROLLBACK')
+      throw err
+    } finally {
+      cliente.release()
+    }
+  })
+
+  await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidente_despacho', entidadId: incidenteId, payload: { refuerzo: true } })
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 

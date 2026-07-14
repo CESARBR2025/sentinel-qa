@@ -1,4 +1,4 @@
-# Node Description Batch 30 of 87
+# Node Description Batch 30 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,23 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_mapper_rowtoincidentelistitem": "rowToIncidenteListItem()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L39 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "incidentes_repository_listarincidentesconfiltros": "listarIncidentesConFiltros()" | kind=code-symbol | source=lib/incidentes/repository.ts:L10 | neighbors=[repository.ts, route.ts, service.ts]
+- "incidentes_repository_obtenerelementosdedespacho": "obtenerElementosDeDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L148 | neighbors=[route.ts, repository.ts, service.ts]
+- "incidentes_repository_obtenerincidentecompleto": "obtenerIncidenteCompleto()" | kind=code-symbol | source=lib/incidentes/repository.ts:L89 | neighbors=[route.ts, repository.ts, service.ts]
+- "incidentes_repository_obtenerreportecampodeincidente": "obtenerReporteCampoDeIncidente()" | kind=code-symbol | source=lib/incidentes/repository.ts:L156 | neighbors=[repository.ts, service.ts, route.ts]
+- "incidentes_repository_obtenerunidadesdedespacho": "obtenerUnidadesDeDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L140 | neighbors=[route.ts, repository.ts, service.ts]
+- "incidentes_types_alarmaescolarrow": "AlarmaEscolarRow" | kind=code-symbol | source=lib/incidentes/types.ts:L116 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachocompleto": "DespachoCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L192 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachoelementorow": "DespachoElementoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L178 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachorow": "DespachoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L71 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachounidadrow": "DespachoUnidadRow" | kind=code-symbol | source=lib/incidentes/types.ts:L172 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_extorsionrow": "ExtorsionRow" | kind=code-symbol | source=lib/incidentes/types.ts:L104 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_historialincidente": "HistorialIncidente" | kind=code-symbol | source=lib/incidentes/types.ts:L281 | neighbors=[HistorialIncidente.tsx, service.ts, types.ts]
+- "incidentes_types_incidentebasico": "IncidenteBasico" | kind=code-symbol | source=lib/incidentes/types.ts:L186 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentecondespacho": "IncidenteConDespacho" | kind=code-symbol | source=lib/incidentes/types.ts:L24 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentedetallecompleto": "IncidenteDetalleCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L133 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentefiltros": "IncidenteFiltros" | kind=code-symbol | source=lib/incidentes/types.ts:L1 | neighbors=[repository.ts, service.ts, types.ts]
 - "incidentes_types_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=lib/incidentes/types.ts:L46 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_personaafectadarow": "PersonaAfectadaRow" | kind=code-symbol | source=lib/incidentes/types.ts:L62 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_reportecampodetalle": "ReporteCampoDetalle" | kind=code-symbol | source=lib/incidentes/types.ts:L207 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -40,28 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_mapper_rowtosolicitudevidencia": "rowToSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L51 | neighbors=[mapper.ts, num(), repository.ts]
 - "monitorista_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/monitorista/repository.ts:L117 | neighbors=[route.ts, actions.ts, repository.ts]
 - "monitorista_repository_crearsolicitudevidencia": "crearSolicitudEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L155 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_repository_getrolusuario": "getRolUsuario()" | kind=code-symbol | source=lib/monitorista/repository.ts:L601 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_repository_insertarevidencia": "insertarEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L223 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_repository_obtenersolicitudfolioincidente": "obtenerSolicitudFolioIncidente()" | kind=code-symbol | source=lib/monitorista/repository.ts:L178 | neighbors=[actions.ts, repository.ts, route.ts]
-- "monitorista_service_actualizarregistro": "actualizarRegistro()" | kind=code-symbol | source=lib/monitorista/service.ts:L179 | neighbors=[incidentes-camara-service.ts, service.ts, camelToSnake()]
-- "monitorista_service_listarreportescondetenidos": "listarReportesConDetenidos()" | kind=code-symbol | source=lib/monitorista/service.ts:L90 | neighbors=[detenido-service.ts, service.ts, parseDetenidos()]
-- "monitorista_service_obtenerreporteporid": "obtenerReportePorId()" | kind=code-symbol | source=lib/monitorista/service.ts:L117 | neighbors=[page.tsx, detenido-service.ts, service.ts]
-- "monitorista_service_subirevidenciadenuncia": "subirEvidenciaDenuncia()" | kind=code-symbol | source=lib/monitorista/service.ts:L51 | neighbors=[denuncia-service.ts, service.ts, solicitudIdToUuid()]
-- "monitorista_subirfotodetenido_subirfotodetenido": "SubirFotoDetenido()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L31 | neighbors=[page.tsx, CardEnvioFoto.tsx, SubirFotoDetenido.tsx]
-- "monitorista_types_evidencia": "Evidencia" | kind=code-symbol | source=lib/monitorista/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_evidenciadetenido": "EvidenciaDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L140 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_iphdetenido": "IphDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L131 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_prellenadocompleto": "PrellenadoCompleto" | kind=code-symbol | source=lib/monitorista/types.ts:L149 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "notificaciones_repository_listarnotificacionesnoleidas": "listarNotificacionesNoLeidas()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L5 | neighbors=[repository.ts, route.ts, layout.tsx]
-- "notificaciones_types_notificacion": "Notificacion" | kind=code-symbol | source=lib/notificaciones/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "oficial_formulariorecorrido_formulariorecorrido": "FormularioRecorrido()" | kind=code-symbol | source=components/oficial/FormularioRecorrido.tsx:L64 | neighbors=[page.tsx, page.tsx, FormularioRecorrido.tsx]
-- "oficial_mapper_rowtod1": "rowToD1()" | kind=code-symbol | source=lib/oficial/mapper.ts:L113 | neighbors=[mapper.ts, toStr(), rowToReporteDetalle()]
-- "oficial_mapper_rowtodespachoasignado": "rowToDespachoAsignado()" | kind=code-symbol | source=lib/oficial/mapper.ts:L93 | neighbors=[mapper.ts, toStr(), repository.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-029.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-029.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

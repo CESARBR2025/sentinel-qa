@@ -1,4 +1,4 @@
-# Node Description Batch 85 of 87
+# Node Description Batch 85 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "steps_pasoconfirmacion_pasoconfirmacionprops": "PasoConfirmacionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L15 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacion_seccionestructurada": "SeccionEstructurada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L20 | neighbors=[PasoConfirmacion.tsx]
-- "steps_pasoconfirmacionpago_pasoconfirmacionpago": "PasoConfirmacionPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L8 | neighbors=[PasoConfirmacionPago.tsx]
-- "steps_pasoconfirmacionpago_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacionPago.tsx:L3 | neighbors=[PasoConfirmacionPago.tsx]
-- "steps_pasodescuentos_archivofield": "ArchivoField" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L27 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_fileuploadzone": "FileUploadZone()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L196 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_pasodecuentos": "PasoDecuentos()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L32 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasodescuentos_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoDescuentos.tsx:L22 | neighbors=[PasoDescuentos.tsx]
-- "steps_pasoevidencias_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoEvidencias.tsx:L8 | neighbors=[PasoEvidencias.tsx]
-- "steps_pasoinfraccion_pasoinfraccion": "PasoInfraccion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L19 | neighbors=[PasoInfraccion.tsx]
-- "steps_pasoinfraccion_pasoinfraccionprops": "PasoInfraccionProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoInfraccion.tsx:L9 | neighbors=[PasoInfraccion.tsx]
-- "steps_pasopago_infraccioncreada": "InfraccionCreada" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L19 | neighbors=[PasoPago.tsx]
-- "steps_pasopago_pasopago": "PasoPago()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L40 | neighbors=[PasoPago.tsx]
-- "steps_pasopago_pasopagoprops": "PasoPagoProps" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoPago.tsx:L24 | neighbors=[PasoPago.tsx]
-- "steps_pasoubicacion_pasoubicacion": "PasoUbicacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L12 | neighbors=[PasoUbicacion.tsx]
-- "steps_pasoubicacion_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacion.tsx:L8 | neighbors=[PasoUbicacion.tsx]
-- "steps_pasoubicacionevidencias_pasoubicacionevidencias": "PasoUbicacionEvidencias()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacionEvidencias.tsx:L10 | neighbors=[PasoUbicacionEvidencias.tsx]
-- "steps_pasoubicacionevidencias_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoUbicacionEvidencias.tsx:L5 | neighbors=[PasoUbicacionEvidencias.tsx]
-- "steps_pasovehiculo_colores": "COLORES" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoVehiculo.tsx:L46 | neighbors=[PasoVehiculo.tsx]
-- "steps_pasovehiculo_estados_mexico": "ESTADOS_MEXICO" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoVehiculo.tsx:L11 | neighbors=[PasoVehiculo.tsx]
-- "steps_pasovehiculo_marcas": "MARCAS" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoVehiculo.tsx:L70 | neighbors=[PasoVehiculo.tsx]
-- "steps_pasovehiculo_modelos_por_marca": "MODELOS_POR_MARCA" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoVehiculo.tsx:L136 | neighbors=[PasoVehiculo.tsx]
-- "steps_pasovehiculo_pasovehiculo": "PasoVehiculo()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoVehiculo.tsx:L856 | neighbors=[PasoVehiculo.tsx]
-- "steps_pasovehiculo_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoVehiculo.tsx:L848 | neighbors=[PasoVehiculo.tsx]
-- "steps_procesomodal_config": "config" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L10 | neighbors=[ProcesoModal.tsx]
-- "steps_procesomodal_procesomodalprops": "ProcesoModalProps" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L4 | neighbors=[ProcesoModal.tsx]
-- "steps_procesomodal_steps": "STEPS" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L68 | neighbors=[ProcesoModal.tsx]
-- "steps_secciongarantia_mapa_garantias": "MAPA_GARANTIAS" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionGarantia.tsx:L17 | neighbors=[SeccionGarantia.tsx]
-- "steps_secciongarantia_secciongarantiaprops": "SeccionGarantiaProps" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionGarantia.tsx:L10 | neighbors=[SeccionGarantia.tsx]
-- "steps_seccionmotivo_articulo": "Articulo" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionMotivo.tsx:L20 | neighbors=[SeccionMotivo.tsx]
-- "steps_seccionmotivo_fraccion": "Fraccion" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionMotivo.tsx:L12 | neighbors=[SeccionMotivo.tsx]
-- "steps_seccionmotivo_seccionmotivoprops": "SeccionMotivoProps" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionMotivo.tsx:L26 | neighbors=[SeccionMotivo.tsx]
-- "stores_useinfraccionstore_datosiniciales": "datosIniciales" | kind=code-symbol | source=stores/useInfraccionStore.ts:L54 | neighbors=[useInfraccionStore.ts]
-- "stores_useinfraccionstore_infraccionstore": "InfraccionStore" | kind=code-symbol | source=stores/useInfraccionStore.ts:L105 | neighbors=[useInfraccionStore.ts]
-- "stores_usetoaststore_generateid": "generateId()" | kind=code-symbol | source=stores/useToastStore.ts:L19 | neighbors=[useToastStore.ts]
-- "stores_usetoaststore_toast": "Toast" | kind=code-symbol | source=stores/useToastStore.ts:L7 | neighbors=[useToastStore.ts]
-- "stores_usetoaststore_toaststore": "ToastStore" | kind=code-symbol | source=stores/useToastStore.ts:L13 | neighbors=[useToastStore.ts]
-- "stores_usetoaststore_toasttype": "ToastType" | kind=code-symbol | source=stores/useToastStore.ts:L5 | neighbors=[useToastStore.ts]
-- "subir_foto_detenido_route_post": "POST()" | kind=code-symbol | source=app/api/expediente/subir-foto-detenido/route.ts:L8 | neighbors=[route.ts]
-- "subir_foto_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/subir-foto/route.ts:L10 | neighbors=[route.ts]
+- "scripts_populate_vault_dirname": "__dirname" | kind=code-symbol | source=scripts/populate-vault.mjs:L11 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_main": "main()" | kind=code-symbol | source=scripts/populate-vault.mjs:L338 | neighbors=[populate-vault.mjs]
+- "scripts_session_checkpoint_args": "args" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L244 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_clear": "clear()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L126 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_cleardecisions": "clearDecisions()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L238 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_decisions_file": "DECISIONS_FILE" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L19 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_dirname": "__dirname" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L15 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_root": "ROOT" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L16 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_session_dir": "SESSION_DIR" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L17 | neighbors=[session-checkpoint.mjs]
+- "scripts_session_checkpoint_session_file": "SESSION_FILE" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L18 | neighbors=[session-checkpoint.mjs]
+- "scripts_trace_client_components": "components" | kind=code-symbol | source=scripts/trace-client.mjs:L192 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_dirname": "__dirname" | kind=code-symbol | source=scripts/trace-client.mjs:L16 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_dirty": "dirty" | kind=code-symbol | source=scripts/trace-client.mjs:L214 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_extensions": "EXTENSIONS" | kind=code-symbol | source=scripts/trace-client.mjs:L21 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_filemap": "fileMap" | kind=code-symbol | source=scripts/trace-client.mjs:L203 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_filestomodify": "filesToModify" | kind=code-symbol | source=scripts/trace-client.mjs:L213 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_forceflag": "forceFlag" | kind=code-symbol | source=scripts/trace-client.mjs:L193 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_root": "ROOT" | kind=code-symbol | source=scripts/trace-client.mjs:L17 | neighbors=[trace-client.mjs]
+- "scripts_trace_client_search_dirs": "SEARCH_DIRS" | kind=code-symbol | source=scripts/trace-client.mjs:L20 | neighbors=[trace-client.mjs]
+- "scripts_trace_components_components": "components" | kind=code-symbol | source=scripts/trace-components.mjs:L129 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_dirname": "__dirname" | kind=code-symbol | source=scripts/trace-components.mjs:L14 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_dirty": "dirty" | kind=code-symbol | source=scripts/trace-components.mjs:L151 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_extensions": "EXTENSIONS" | kind=code-symbol | source=scripts/trace-components.mjs:L19 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_filemap": "fileMap" | kind=code-symbol | source=scripts/trace-components.mjs:L140 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_filestomodify": "filesToModify" | kind=code-symbol | source=scripts/trace-components.mjs:L150 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_forceflag": "forceFlag" | kind=code-symbol | source=scripts/trace-components.mjs:L130 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_injecttrace": "injectTrace()" | kind=code-symbol | source=scripts/trace-components.mjs:L21 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_root": "ROOT" | kind=code-symbol | source=scripts/trace-components.mjs:L15 | neighbors=[trace-components.mjs]
+- "scripts_trace_components_search_dirs": "SEARCH_DIRS" | kind=code-symbol | source=scripts/trace-components.mjs:L18 | neighbors=[trace-components.mjs]
+- "scripts_trace_server_dirname": "__dirname" | kind=code-symbol | source=scripts/trace-server.mjs:L17 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_dirty": "dirty" | kind=code-symbol | source=scripts/trace-server.mjs:L241 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_extensions": "EXTENSIONS" | kind=code-symbol | source=scripts/trace-server.mjs:L22 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_filemap": "fileMap" | kind=code-symbol | source=scripts/trace-server.mjs:L227 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_filestomodify": "filesToModify" | kind=code-symbol | source=scripts/trace-server.mjs:L240 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_fnnames": "fnNames" | kind=code-symbol | source=scripts/trace-server.mjs:L216 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_forceflag": "forceFlag" | kind=code-symbol | source=scripts/trace-server.mjs:L217 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_root": "ROOT" | kind=code-symbol | source=scripts/trace-server.mjs:L18 | neighbors=[trace-server.mjs]
+- "scripts_trace_server_search_dirs": "SEARCH_DIRS" | kind=code-symbol | source=scripts/trace-server.mjs:L21 | neighbors=[trace-server.mjs]
+- "scripts_ym_dev_child": "child" | kind=code-symbol | source=scripts/ym-dev.mjs:L47 | neighbors=[ym-dev.mjs]
+- "scripts_ym_dev_log": "LOG" | kind=code-symbol | source=scripts/ym-dev.mjs:L11 | neighbors=[ym-dev.mjs]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-084.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-084.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

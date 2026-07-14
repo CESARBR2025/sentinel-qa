@@ -1,4 +1,4 @@
-# Node Description Batch 74 of 87
+# Node Description Batch 74 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "legalidad_service_articulosservice_obtenerfraccionesporarticulo": ".obtenerFraccionesPorArticulo()" | kind=code-symbol | source=features/via/legalidad/service.ts:L16 | neighbors=[ArticulosService]
+- "lib_auth_authuser": "AuthUser" | kind=code-symbol | source=lib/auth.ts:L63 | neighbors=[auth.ts]
+- "lib_db_createpool": "createPool()" | kind=code-symbol | source=lib/db.ts:L7 | neighbors=[db.ts]
+- "lib_detenidos_compartido_detenidofotodetalle": "DetenidoFotoDetalle" | kind=code-symbol | source=lib/detenidos-compartido.ts:L17 | neighbors=[detenidos-compartido.ts]
+- "lib_detenidos_compartido_detenidofotopendiente": "DetenidoFotoPendiente" | kind=code-symbol | source=lib/detenidos-compartido.ts:L3 | neighbors=[detenidos-compartido.ts]
+- "lib_error_handler_actionresult": "ActionResult" | kind=code-symbol | source=lib/error-handler.ts:L42 | neighbors=[error-handler.ts]
+- "lib_error_handler_apierror": "apiError()" | kind=code-symbol | source=lib/error-handler.ts:L75 | neighbors=[error-handler.ts]
+- "lib_error_handler_apihandler": "ApiHandler" | kind=code-symbol | source=lib/error-handler.ts:L87 | neighbors=[error-handler.ts]
+- "lib_error_handler_apiresponse": "ApiResponse" | kind=code-symbol | source=lib/error-handler.ts:L67 | neighbors=[error-handler.ts]
+- "lib_error_handler_apisuccess": "apiSuccess()" | kind=code-symbol | source=lib/error-handler.ts:L71 | neighbors=[error-handler.ts]
+- "lib_error_handler_apperror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L2 | neighbors=[AppError]
+- "lib_error_handler_conflicterror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L37 | neighbors=[ConflictError]
+- "lib_error_handler_forbiddenerror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L31 | neighbors=[ForbiddenError]
+- "lib_error_handler_notfounderror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L13 | neighbors=[NotFoundError]
+- "lib_error_handler_unauthorizederror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L25 | neighbors=[UnauthorizedError]
+- "lib_error_handler_validationerror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L19 | neighbors=[ValidationError]
+- "liberaciones_page_liberacionesjuzgadopage": "LiberacionesJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/liberaciones/page.tsx:L5 | neighbors=[page.tsx]
+- "liberaciones_page_liberacionespage": "LiberacionesPage()" | kind=code-symbol | source=app/fiscalia/liberaciones/page.tsx:L5 | neighbors=[page.tsx]
+- "liberar_garantia_route_patch": "PATCH()" | kind=code-symbol | source=app/api/via/infracciones/liberar-garantia/route.ts:L4 | neighbors=[route.ts]
+- "listar_route_get": "GET()" | kind=code-symbol | source=app/api/detenidos/listar/route.ts:L6 | neighbors=[route.ts]
+- "login_desing_app_app": "App()" | kind=code-symbol | source=login-desing/app.jsx:L9 | neighbors=[app.jsx]
+- "login_desing_app_applyglobaltweaks": "applyGlobalTweaks()" | kind=code-symbol | source=login-desing/app.jsx:L211 | neighbors=[app.jsx]
+- "login_desing_app_appwitheffects": "AppWithEffects()" | kind=code-symbol | source=login-desing/app.jsx:L223 | neighbors=[app.jsx]
+- "login_desing_app_nextstepscard": "NextStepsCard()" | kind=code-symbol | source=login-desing/app.jsx:L139 | neighbors=[app.jsx]
+- "login_desing_app_palettecard": "PaletteCard()" | kind=code-symbol | source=login-desing/app.jsx:L87 | neighbors=[app.jsx]
+- "login_desing_app_tweaks": "TWEAKS" | kind=code-symbol | source=login-desing/app.jsx:L3 | neighbors=[app.jsx]
+- "login_desing_app_tweakspanel": "TweaksPanel()" | kind=code-symbol | source=login-desing/app.jsx:L167 | neighbors=[app.jsx]
+- "login_desing_app_typecard": "TypeCard()" | kind=code-symbol | source=login-desing/app.jsx:L115 | neighbors=[app.jsx]
+- "login_desing_design_canvas_dc": "DC" | kind=code-symbol | source=login-desing/design-canvas.jsx:L17 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcartboard": "DCArtboard()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L372 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcartboardframe": "DCArtboardFrame()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L374 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcctx": "DCCtx" | kind=code-symbol | source=login-desing/design-canvas.jsx:L57 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dceditable": "DCEditable()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L464 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcfocusoverlay": "DCFocusOverlay()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L480 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcpostit": "DCPostIt()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L607 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcsection": "DCSection()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L333 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_dcviewport": "DCViewport()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L182 | neighbors=[design-canvas.jsx]
+- "login_desing_design_canvas_designcanvas": "DesignCanvas()" | kind=code-symbol | source=login-desing/design-canvas.jsx:L71 | neighbors=[design-canvas.jsx]
 - "login_desing_login_app_app": "App()" | kind=code-symbol | source=login-desing/login-app.jsx:L180 | neighbors=[login-app.jsx]
 - "login_desing_login_app_iconarrow": "IconArrow()" | kind=code-symbol | source=login-desing/login-app.jsx:L21 | neighbors=[login-app.jsx]
-- "login_desing_login_app_iconcheck": "IconCheck()" | kind=code-symbol | source=login-desing/login-app.jsx:L24 | neighbors=[login-app.jsx]
-- "login_desing_login_app_iconlock": "IconLock()" | kind=code-symbol | source=login-desing/login-app.jsx:L15 | neighbors=[login-app.jsx]
-- "login_desing_login_app_iconshield": "IconShield()" | kind=code-symbol | source=login-desing/login-app.jsx:L18 | neighbors=[login-app.jsx]
-- "login_desing_login_app_iconuser": "IconUser()" | kind=code-symbol | source=login-desing/login-app.jsx:L12 | neighbors=[login-app.jsx]
-- "login_desing_login_app_otpinput": "OtpInput()" | kind=code-symbol | source=login-desing/login-app.jsx:L125 | neighbors=[login-app.jsx]
-- "login_desing_login_app_terminal": "Terminal()" | kind=code-symbol | source=login-desing/login-app.jsx:L29 | neighbors=[login-app.jsx]
-- "login_desing_login_app_tweaks": "TWEAKS" | kind=code-symbol | source=login-desing/login-app.jsx:L6 | neighbors=[login-app.jsx]
-- "login_page_iconarrow": "IconArrow()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L16 | neighbors=[page.tsx]
-- "login_page_iconcheck": "IconCheck()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L19 | neighbors=[page.tsx]
-- "login_page_iconlock": "IconLock()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L10 | neighbors=[page.tsx]
-- "login_page_iconshield": "IconShield()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L13 | neighbors=[page.tsx]
-- "login_page_iconuser": "IconUser()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L7 | neighbors=[page.tsx]
-- "login_page_logincontent": "LoginContent()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L180 | neighbors=[page.tsx]
-- "login_page_loginpage": "LoginPage()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L172 | neighbors=[page.tsx]
-- "login_page_logline": "LogLine" | kind=code-symbol | source=app/(auth)/login/page.tsx:L25 | neighbors=[page.tsx]
-- "login_page_logtype": "LogType" | kind=code-symbol | source=app/(auth)/login/page.tsx:L24 | neighbors=[page.tsx]
-- "login_page_otpinput": "OtpInput()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L103 | neighbors=[page.tsx]
-- "login_page_terminal": "Terminal()" | kind=code-symbol | source=app/(auth)/login/page.tsx:L27 | neighbors=[page.tsx]
-- "manual_migrations_0006_formato_n_formato_n_reportes": "formato_n_reportes" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L1 | neighbors=[0006_formato_n.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_armas_aseguradas": "formato_n_armas_aseguradas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L113 | neighbors=[0007_formato_n_split.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_atencion_victimas": "formato_n_atencion_victimas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L98 | neighbors=[0007_formato_n_split.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_eventos": "formato_n_eventos" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L23 | neighbors=[0007_formato_n_split.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_fge": "formato_n_fge" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L36 | neighbors=[0007_formato_n_split.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_fgr": "formato_n_fgr" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L55 | neighbors=[0007_formato_n_split.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_medios_alternativos": "formato_n_medios_alternativos" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L85 | neighbors=[0007_formato_n_split.sql]
-- "manual_migrations_0007_formato_n_split_formato_n_rnd": "formato_n_rnd" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L74 | neighbors=[0007_formato_n_split.sql]
-- "maps_googlemappicker_center": "center" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L8 | neighbors=[GoogleMapPicker.tsx]
-- "maps_googlemappicker_containerstyle": "containerStyle" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L7 | neighbors=[GoogleMapPicker.tsx]
-- "maps_googlemappicker_googlemappicker": "GoogleMapPicker()" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L18 | neighbors=[GoogleMapPicker.tsx]
-- "maps_googlemappicker_props": "Props" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L10 | neighbors=[GoogleMapPicker.tsx]
-- "medidas_page_color_map": "COLOR_MAP" | kind=code-symbol | source=app/prevencion/medidas/page.tsx:L13 | neighbors=[page.tsx]
-- "medidas_page_medidaspage": "MedidasPage()" | kind=code-symbol | source=app/prevencion/medidas/page.tsx:L20 | neighbors=[page.tsx]
-- "medidas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/medidas/route.ts:L8 | neighbors=[route.ts]
-- "medidas_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/medidas/route.ts:L22 | neighbors=[route.ts]
-- "modulo_incidentes_page_reportesoperativospage": "ReportesOperativosPage()" | kind=code-symbol | source=app/modulo_incidentes/page.tsx:L13 | neighbors=[page.tsx]
-- "modulo_incidentes_reporttables_operationaltableprops": "OperationalTableProps" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportTables.tsx:L6 | neighbors=[ReportTables.tsx]
-- "monitorista_accionesdetenido_accionesdetenido": "AccionesDetenido()" | kind=code-symbol | source=components/monitorista/AccionesDetenido.tsx:L9 | neighbors=[AccionesDetenido.tsx]
-- "monitorista_actions_solicitarevidencia": "solicitarEvidencia()" | kind=code-symbol | source=lib/monitorista/actions.ts:L19 | neighbors=[actions.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-073.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-073.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

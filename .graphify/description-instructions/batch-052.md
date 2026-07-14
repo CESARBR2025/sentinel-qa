@@ -1,4 +1,4 @@
-# Node Description Batch 53 of 87
+# Node Description Batch 53 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "shared_detalleinfraccionview_detalleinfraccionview": "DetalleInfraccionView()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L147 | neighbors=[page.tsx, DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_documentacionsection": "DocumentacionSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L661 | neighbors=[DetalleInfraccionView.tsx, formatDate()]
+- "shared_detalleinfraccionview_formatcurrency": "formatCurrency()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L110 | neighbors=[DetalleInfraccionView.tsx, SummaryBar()]
+- "shared_detalleinfraccionview_fundamentolegalsection": "FundamentoLegalSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L580 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_infractorvehiculosection": "InfractorVehiculoSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L521 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_mapgarantia": "mapGarantia()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L121 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_mapsection": "MapSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L207 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_oficialsection": "OficialSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L617 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_infracciones_concatname": "concatName()" | kind=code-symbol | source=lib/shared/infracciones.ts:L152 | neighbors=[infracciones.ts, rowToInfraccionDetalle()]
+- "shared_infracciones_parseevidencias": "parseEvidencias()" | kind=code-symbol | source=lib/shared/infracciones.ts:L138 | neighbors=[infracciones.ts, rowToInfraccionDetalle()]
+- "shared_pedirevidenciasmodal_emptyitem": "emptyItem()" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L26 | neighbors=[PedirEvidenciasModal.tsx, SharedPedirEvidenciasBoton()]
+- "sin_robos_paginacionsinrobos_paginacionsinrobos": "PaginacionSinRobos()" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L12 | neighbors=[PaginacionSinRobos.tsx, ReporteSinRobos.tsx]
+- "sin_robos_reportesinrobos_tablareporteslimpios": "TablaReportesLimpios()" | kind=code-symbol | source=components/reportes/sin_robos/ReporteSinRobos.tsx:L7 | neighbors=[page.tsx, ReporteSinRobos.tsx]
+- "sin_robos_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/sin_robos/ReportFilters.tsx:L7 | neighbors=[page.tsx, ReportFilters.tsx]
+- "solicitudes_solicitudes_client_solicitudesclient": "SolicitudesClient()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L27 | neighbors=[page.tsx, solicitudes-client.tsx]
+- "solicitudes_subir_oficio_modal_subiroficiomodal": "SubirOficioModal()" | kind=code-symbol | source=app/corralon/solicitudes/subir-oficio-modal.tsx:L12 | neighbors=[solicitudes-client.tsx, subir-oficio-modal.tsx]
+- "solicitudes_ver_documento_modal_getextension": "getExtension()" | kind=code-symbol | source=app/corralon/solicitudes/ver-documento-modal.tsx:L11 | neighbors=[ver-documento-modal.tsx, VerDocumentoModal()]
+- "solicitudes_ver_documento_modal_verdocumentomodal": "VerDocumentoModal()" | kind=code-symbol | source=app/corralon/solicitudes/ver-documento-modal.tsx:L17 | neighbors=[ver-documento-modal.tsx, getExtension()]
+- "steps_pasoevidencias_pasoevidencias": "PasoEvidencias()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoEvidencias.tsx:L12 | neighbors=[PasoEvidencias.tsx, PasoUbicacionEvidencias.tsx]
+- "steps_procesomodal_getstepindex": "getStepIndex()" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L76 | neighbors=[ProcesoModal.tsx, ProcesoModal()]
+- "steps_secciongarantia_secciongarantia": "SeccionGarantia()" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionGarantia.tsx:L24 | neighbors=[PasoInfraccion.tsx, SeccionGarantia.tsx]
+- "steps_seccionmotivo_seccionmotivo": "SeccionMotivo()" | kind=code-symbol | source=features/via/infracciones/components/steps/SeccionMotivo.tsx:L33 | neighbors=[PasoInfraccion.tsx, SeccionMotivo.tsx]
+- "stores_useinfraccionstore_datosinfraccion": "DatosInfraccion" | kind=code-symbol | source=stores/useInfraccionStore.ts:L3 | neighbors=[constants.ts, useInfraccionStore.ts]
+- "subir_archivo_route_mapearestatusfinal": "mapearEstatusFinal()" | kind=code-symbol | source=app/api/corralon/subir-archivo/route.ts:L8 | neighbors=[route.ts, POST()]
+- "subir_archivo_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/subir-archivo/route.ts:L6 | neighbors=[route.ts, mapearEstatusFinal()]
+- "subir_route_detectarmime": "detectarMime()" | kind=code-symbol | source=app/api/monitorista/denuncias/subir/route.ts:L6 | neighbors=[route.ts, POST()]
+- "subir_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/evidencias/subir/route.ts:L7 | neighbors=[route.ts, detectarMime()]
+- "templates_asignacion_fiscalia_enviarcorreoasignacionfiscaliaparams": "EnviarCorreoAsignacionFiscaliaParams" | kind=code-symbol | source=lib/emails/templates/asignacion-fiscalia.ts:L3 | neighbors=[server.ts, asignacion-fiscalia.ts]
+- "templates_asignacion_fiscalia_templateasignacionfiscalia": "templateAsignacionFiscalia()" | kind=code-symbol | source=lib/emails/templates/asignacion-fiscalia.ts:L11 | neighbors=[server.ts, asignacion-fiscalia.ts]
+- "templates_orden_liberacion_enviarcorreoordenliberacionparams": "EnviarCorreoOrdenLiberacionParams" | kind=code-symbol | source=lib/emails/templates/orden-liberacion.ts:L3 | neighbors=[server.ts, orden-liberacion.ts]
+- "templates_orden_liberacion_templateordenliberacion": "templateOrdenLiberacion()" | kind=code-symbol | source=lib/emails/templates/orden-liberacion.ts:L11 | neighbors=[server.ts, orden-liberacion.ts]
+- "ui_customselect_customselect": "CustomSelect()" | kind=code-symbol | source=features/via/infracciones/components/ui/CustomSelect.tsx:L20 | neighbors=[SeccionMotivo.tsx, CustomSelect.tsx]
+- "ui_selectwrapper_selectwrapper": "SelectWrapper()" | kind=code-symbol | source=features/via/infracciones/components/ui/SelectWrapper.tsx:L3 | neighbors=[SeccionGarantia.tsx, SelectWrapper.tsx]
+- "ui_toast_toasttipo": "ToastTipo" | kind=code-symbol | source=components/ui/Toast.tsx:L6 | neighbors=[Toast.tsx, ToastAuto.tsx]
+- "utils_generateppt_generatedetenidoppt": "generateDetenidoPPT()" | kind=code-symbol | source=lib/utils/generatePPT.ts:L4 | neighbors=[generarPresentacion.tsx, generatePPT.ts]
+- "via_online_useonlinestatus": "useOnlineStatus()" | kind=code-symbol | source=lib/via/online.ts:L16 | neighbors=[FormularioInfraccion.tsx, online.ts]
+- "via_pagos_confirmarpago": "confirmarPago()" | kind=code-symbol | source=lib/via/pagos.ts:L6 | neighbors=[route.ts, pagos.ts]
+- "wireframes_wf_a": "wf-a.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-a.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeA()]
 - "wireframes_wf_b": "wf-b.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeB()]
 - "wireframes_wf_d": "wf-d.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeD()]
-- "wireframes_wf_e": "wf-e.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeE()]
-- "2fa_page_twofactorpage": "TwoFactorPage()" | kind=code-symbol | source=app/(auth)/login/2fa/page.tsx:L6 | neighbors=[page.tsx]
-- "911_filtrosincidentes_btnbuscarstyle": "btnBuscarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L128 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_btnlimpiarstyle": "btnLimpiarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L129 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_canales": "CANALES" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L15 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_catalogoitem": "CatalogoItem" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L8 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_estatus": "ESTATUS" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L21 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_fieldstyle": "fieldStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L125 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_inputstyle": "inputStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L127 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L126 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_props": "Props" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L10 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_wrapperstyle": "wrapperStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L124 | neighbors=[FiltrosIncidentes.tsx]
-- "911_modulecard_modulecard": "ModuleCard()" | kind=code-symbol | source=components/911/ModuleCard.tsx:L19 | neighbors=[ModuleCard.tsx]
-- "911_modulecard_modulecardprops": "ModuleCardProps" | kind=code-symbol | source=components/911/ModuleCard.tsx:L11 | neighbors=[ModuleCard.tsx]
-- "911_modulecard_stat": "Stat" | kind=code-symbol | source=components/911/ModuleCard.tsx:L6 | neighbors=[ModuleCard.tsx]
-- "911_pagination_arrowbtnstyle": "arrowBtnStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L130 | neighbors=[Pagination.tsx]
-- "911_pagination_containerstyle": "containerStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L109 | neighbors=[Pagination.tsx]
-- "911_pagination_infostyle": "infoStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L118 | neighbors=[Pagination.tsx]
-- "911_pagination_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L127 | neighbors=[Pagination.tsx]
-- "911_pagination_pagenumberstyle": "pageNumberStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L140 | neighbors=[Pagination.tsx]
-- "911_pagination_paginationprops": "PaginationProps" | kind=code-symbol | source=components/911/Pagination.tsx:L5 | neighbors=[Pagination.tsx]
-- "911_pagination_valuestyle": "valueStyle" | kind=code-symbol | source=components/911/Pagination.tsx:L128 | neighbors=[Pagination.tsx]
-- "911_permisos_accion": "Accion" | kind=code-symbol | source=lib/911/permisos.ts:L6 | neighbors=[permisos.ts]
-- "911_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/911/permisos.ts:L13 | neighbors=[permisos.ts]
-- "911_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/911/permisos.ts:L21 | neighbors=[permisos.ts]
-- "911_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/911/permisos.ts:L17 | neighbors=[permisos.ts]
-- "911_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/911/permisos.ts:L7 | neighbors=[permisos.ts]
-- "911_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/911/permisos.ts:L26 | neighbors=[permisos.ts]
-- "911_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/911/permisos.ts:L5 | neighbors=[permisos.ts]
-- "911_service_getincidente": "getIncidente()" | kind=code-symbol | source=lib/911/service.ts:L21 | neighbors=[service.ts]
-- "admin_admin_styles_pagewrap": "pageWrap" | kind=code-symbol | source=app/admin/admin-styles.ts:L3 | neighbors=[admin-styles.ts]
-- "admin_layout_adminlayout": "AdminLayout()" | kind=code-symbol | source=app/admin/layout.tsx:L7 | neighbors=[layout.tsx]
-- "admin_page_adminpage": "AdminPage()" | kind=code-symbol | source=app/admin/page.tsx:L3 | neighbors=[page.tsx]
-- "admin_transito_layout_admintransitolayout": "AdminTransitoLayout()" | kind=code-symbol | source=app/admin-transito/layout.tsx:L7 | neighbors=[layout.tsx]
-- "admin_transito_mapper_rowtouserwithrole": "rowToUserWithRole()" | kind=code-symbol | source=lib/admin-transito/mapper.ts:L8 | neighbors=[mapper.ts]
-- "admin_transito_modaldestituiroficial_modaldestituiroficial": "ModalDestituirOficial()" | kind=code-symbol | source=components/admin-transito/ModalDestituirOficial.tsx:L14 | neighbors=[ModalDestituirOficial.tsx]
-- "admin_transito_modaldestituiroficial_props": "Props" | kind=code-symbol | source=components/admin-transito/ModalDestituirOficial.tsx:L7 | neighbors=[ModalDestituirOficial.tsx]
-- "admin_transito_modalreactivaroficial_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L9 | neighbors=[ModalReactivarOficial.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-052.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-052.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

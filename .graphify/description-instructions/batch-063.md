@@ -1,4 +1,4 @@
-# Node Description Batch 64 of 87
+# Node Description Batch 64 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "dashboard_enable_2fa_s": "s" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L164 | neighbors=[enable-2fa.tsx]
+- "dashboard_enable_2fa_step": "Step" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L5 | neighbors=[enable-2fa.tsx]
+- "dashboard_module_cards_alerticon": "AlertIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L17 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_bookicon": "BookIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L19 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_cameraicon": "CameraIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L21 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_charticon": "ChartIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L18 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_module": "Module" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L5 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_modulecard": "ModuleCard()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L76 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_modules": "MODULES" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L23 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_settingsicon": "SettingsIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L20 | neighbors=[module-cards.tsx]
+- "dashboard_module_cards_shieldicon": "ShieldIcon()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L16 | neighbors=[module-cards.tsx]
+- "dashboard_page_dashboardpage": "DashboardPage()" | kind=code-symbol | source=app/dashboard/page.tsx:L9 | neighbors=[page.tsx]
+- "db_create_admin_admin": "ADMIN" | kind=code-symbol | source=lib/db/create-admin.ts:L14 | neighbors=[create-admin.ts]
+- "db_create_admin_main": "main()" | kind=code-symbol | source=lib/db/create-admin.ts:L21 | neighbors=[create-admin.ts]
+- "db_create_admin_pool": "pool" | kind=code-symbol | source=lib/db/create-admin.ts:L12 | neighbors=[create-admin.ts]
+- "db_schema_accounts": "accounts" | kind=code-symbol | source=lib/db/schema.ts:L43 | neighbors=[schema.ts]
+- "db_schema_sessions": "sessions" | kind=code-symbol | source=lib/db/schema.ts:L25 | neighbors=[schema.ts]
+- "db_schema_twofactors": "twoFactors" | kind=code-symbol | source=lib/db/schema.ts:L74 | neighbors=[schema.ts]
+- "db_schema_users": "users" | kind=code-symbol | source=lib/db/schema.ts:L8 | neighbors=[schema.ts]
+- "db_schema_verifications": "verifications" | kind=code-symbol | source=lib/db/schema.ts:L65 | neighbors=[schema.ts]
+- "db_seed_main": "main()" | kind=code-symbol | source=lib/db/seed.ts:L12 | neighbors=[seed.ts]
+- "db_seed_pool": "pool" | kind=code-symbol | source=lib/db/seed.ts:L10 | neighbors=[seed.ts]
+- "denuncias_formulariod1_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L478 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_btnnextstyle": "btnNextStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L477 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_btnsubmitstyle": "btnSubmitStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L480 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_center": "center" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L18 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_fieldcontainerstyle": "fieldContainerStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L433 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_formulariod1": "FormularioD1()" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L63 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_generarfoliodenuncia": "generarFolioDenuncia()" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L49 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_grid2style": "grid2Style" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L432 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_grid3style": "grid3Style" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L431 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_grid4style": "grid4Style" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L430 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_iconstyle": "iconStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L436 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_inputstyle": "inputStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L435 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_labelstyle": "labelStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L434 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_loaderstyle": "loaderStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L467 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_mapcontainerstyle": "mapContainerStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L17 | neighbors=[FormularioD1.tsx]
+- "denuncias_formulariod1_mapwrapperstyle": "mapWrapperStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L459 | neighbors=[FormularioD1.tsx]
 - "denuncias_formulariod1_prefill": "Prefill" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L38 | neighbors=[FormularioD1.tsx]
 - "denuncias_formulariod1_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L437 | neighbors=[FormularioD1.tsx]
-- "denuncias_formulariod1_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L20 | neighbors=[FormularioD1.tsx]
-- "denuncias_formulariod1_subpanelstyle": "subPanelStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L438 | neighbors=[FormularioD1.tsx]
-- "denuncias_formulariod1_subtitlestyle": "subTitleStyle" | kind=code-symbol | source=components/denuncias/FormularioD1.tsx:L448 | neighbors=[FormularioD1.tsx]
-- "denuncias_stored1_ahora": "ahora" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L3 | neighbors=[storeD1.ts]
-- "denuncias_stored1_center": "center" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L40 | neighbors=[storeD1.ts]
-- "denuncias_stored1_coord": "Coord" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L7 | neighbors=[storeD1.ts]
-- "denuncias_stored1_d1formactions": "D1FormActions" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L27 | neighbors=[storeD1.ts]
-- "denuncias_stored1_d1formstate": "D1FormState" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L17 | neighbors=[storeD1.ts]
-- "denuncias_stored1_d1formstore": "D1FormStore" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L38 | neighbors=[storeD1.ts]
-- "denuncias_stored1_dir": "Dir" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L12 | neighbors=[storeD1.ts]
-- "denuncias_stored1_horaactual": "horaActual" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L5 | neighbors=[storeD1.ts]
-- "denuncias_stored1_initialstate": "initialState" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L42 | neighbors=[storeD1.ts]
-- "despacho_despachoform_btn": "BTN" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L13 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_btn_sm": "BTN_SM" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L14 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_elemento": "Elemento" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L10 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_err": "ERR" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L16 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_i": "I" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L12 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_lbl": "LBL" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L17 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_tag": "TAG" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L15 | neighbors=[DespachoForm.tsx]
-- "despacho_despachoform_unidad": "Unidad" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L9 | neighbors=[DespachoForm.tsx]
-- "despacho_page_despachopage": "DespachoPage()" | kind=code-symbol | source=app/agente_911/despacho/page.tsx:L9 | neighbors=[page.tsx]
-- "despacho_route_get": "GET()" | kind=code-symbol | source=app/api/incidentes/[id]/despacho/route.ts:L7 | neighbors=[route.ts]
-- "despacho_tablondespacho_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L268 | neighbors=[TablonDespacho.tsx]
-- "despacho_tablondespacho_canalbadge": "CanalBadge()" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L252 | neighbors=[TablonDespacho.tsx]
-- "despacho_tablondespacho_incrow": "IncRow" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L15 | neighbors=[TablonDespacho.tsx]
-- "despacho_tablondespacho_labelstyle": "labelStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L269 | neighbors=[TablonDespacho.tsx]
-- "despacho_tablondespacho_labeltopstyle": "labelTopStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L266 | neighbors=[TablonDespacho.tsx]
-- "despacho_tablondespacho_tab": "Tab" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L13 | neighbors=[TablonDespacho.tsx]
-- "despacho_tablondespacho_titlestyle": "titleStyle" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L267 | neighbors=[TablonDespacho.tsx]
-- "despachos_page_misdespachospage": "MisDespachosPage()" | kind=code-symbol | source=app/oficial/despachos/page.tsx:L9 | neighbors=[page.tsx]
-- "detenidos_page_btndetalle": "btnDetalle" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L112 | neighbors=[page.tsx]
-- "detenidos_page_detenidosfiscaliapage": "DetenidosFiscaliaPage()" | kind=code-symbol | source=app/fiscalia/detenidos/page.tsx:L9 | neighbors=[page.tsx]
-- "detenidos_page_detenidosjuzgadopage": "DetenidosJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/detenidos/page.tsx:L10 | neighbors=[page.tsx]
-- "detenidos_page_detenidospage": "DetenidosPage()" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L12 | neighbors=[page.tsx]
-- "detenidos_page_fotobadge": "fotoBadge()" | kind=code-symbol | source=app/monitorista/detenidos/page.tsx:L119 | neighbors=[page.tsx]
-- "detenidos_page_pagbtn": "pagBtn" | kind=code-symbol | source=app/fiscalia/detenidos/page.tsx:L165 | neighbors=[page.tsx]
-- "editar_campo_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/[id]/editar-campo/route.ts:L8 | neighbors=[route.ts]
-- "emails_mailer_mailattachment": "MailAttachment" | kind=code-symbol | source=lib/emails/mailer.ts:L13 | neighbors=[mailer.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-063.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-063.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

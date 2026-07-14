@@ -1,4 +1,4 @@
-# Node Description Batch 43 of 87
+# Node Description Batch 43 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "id_page_todate": "toDate()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/[id]/page.tsx:L12 | neighbors=[page.tsx, fmtDT()]
+- "id_page_toiso": "toISO()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/page.tsx:L17 | neighbors=[page.tsx, FichaDetailPage()]
+- "imprimir_page_fmtdt": "fmtDT()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L10 | neighbors=[page.tsx, ImprimirFichaPage()]
+- "imprimir_page_imprimirfichapage": "ImprimirFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L15 | neighbors=[page.tsx, fmtDT()]
+- "incidentes_actions_cerrarpordetencion": "cerrarPorDetencion()" | kind=code-symbol | source=lib/incidentes/actions.ts:L621 | neighbors=[actions.ts, requireOperador()]
+- "incidentes_actions_marcarensitio": "marcarEnSitio()" | kind=code-symbol | source=lib/incidentes/actions.ts:L599 | neighbors=[actions.ts, requireOperador()]
+- "incidentes_camara_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L129 | neighbors=[page.tsx, IncidentesCamaraPage()]
+- "incidentes_camara_page_incidentescamarapage": "IncidentesCamaraPage()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L13 | neighbors=[page.tsx, filtroBtn()]
+- "incidentes_filtrosincidencias_filtrosincidencias": "FiltrosIncidencias()" | kind=code-symbol | source=components/reportes/incidentes/FiltrosIncidencias.tsx:L7 | neighbors=[FiltrosIncidencias.tsx, page.tsx]
+- "incidentes_folio_generarfolioincidente": "generarFolioIncidente()" | kind=code-symbol | source=lib/incidentes/folio.ts:L3 | neighbors=[actions.ts, folio.ts]
+- "incidentes_historialincidente_historialincidente": "HistorialIncidente()" | kind=code-symbol | source=components/incidentes/HistorialIncidente.tsx:L10 | neighbors=[page.tsx, HistorialIncidente.tsx]
+- "incidentes_mapper_rowtoincidentebasico": "rowToIncidenteBasico()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L193 | neighbors=[mapper.ts, repository.ts]
+- "incidentes_permisos_accion": "Accion" | kind=code-symbol | source=lib/incidentes/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
+- "incidentes_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/incidentes/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
+- "incidentes_repository_insertarreportecampo": "insertarReporteCampo()" | kind=code-symbol | source=lib/incidentes/repository.ts:L164 | neighbors=[repository.ts, service.ts]
+- "incidentes_repository_listarincidentesatendidos": "listarIncidentesAtendidos()" | kind=code-symbol | source=lib/incidentes/repository.ts:L30 | neighbors=[route.ts, repository.ts]
+- "incidentes_repository_listarincidentesendespacho": "listarIncidentesEnDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L59 | neighbors=[route.ts, repository.ts]
+- "incidentes_repository_listarincidentespendientesdespacho": "listarIncidentesPendientesDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L82 | neighbors=[repository.ts, route.ts]
+- "incidentes_repository_tostr": "toStr()" | kind=code-symbol | source=lib/incidentes/repository.ts:L5 | neighbors=[repository.ts, obtenerDespachoDeIncidente()]
+- "incidentes_repository_verificarreportecampo": "verificarReporteCampo()" | kind=code-symbol | source=lib/incidentes/repository.ts:L288 | neighbors=[repository.ts, service.ts]
 - "incidentes_service_crearreportecampo": "crearReporteCampo()" | kind=code-symbol | source=lib/incidentes/service.ts:L90 | neighbors=[actions.ts, service.ts]
 - "incidentes_service_listarconfiltros": "listarConFiltros()" | kind=code-symbol | source=lib/incidentes/service.ts:L15 | neighbors=[page.tsx, service.ts]
 - "incidentes_service_obtenerhistorialcompleto": "obtenerHistorialCompleto()" | kind=code-symbol | source=lib/incidentes/service.ts:L19 | neighbors=[page.tsx, service.ts]
@@ -37,31 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "legalidad_actions_obtenerfraccionesaction": "obtenerFraccionesAction()" | kind=code-symbol | source=features/via/legalidad/actions.ts:L10 | neighbors=[actions.ts, SeccionMotivo.tsx]
 - "legalidad_types_articuloley": "ArticuloLey" | kind=code-symbol | source=features/via/legalidad/types.ts:L11 | neighbors=[mapper.ts, types.ts]
 - "lib_auth_session": "Session" | kind=code-symbol | source=lib/auth.ts:L62 | neighbors=[auth.ts, proxy.ts]
-- "manual_migrations_0006_formato_n_formato_n_armas_aseguradas": "formato_n_armas_aseguradas" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L78 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0006_formato_n_formato_n_atencion_victimas": "formato_n_atencion_victimas" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L68 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0006_formato_n_formato_n_eventos": "formato_n_eventos" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L12 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0006_formato_n_formato_n_fge": "formato_n_fge" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L23 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0006_formato_n_formato_n_fgr": "formato_n_fgr" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L37 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0006_formato_n_formato_n_medios_alternativos": "formato_n_medios_alternativos" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L60 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0006_formato_n_formato_n_rnd": "formato_n_rnd" | kind=code-symbol | source=lib/db/manual-migrations/0006_formato_n.sql:L51 | neighbors=[0006_formato_n.sql, public.formato_n_reportes]
-- "manual_migrations_0008_monitorista_permisos_monitorista_permisos": "monitorista_permisos" | kind=code-symbol | source=lib/db/manual-migrations/0008_monitorista_permisos.sql:L1 | neighbors=[0008_monitorista_permisos.sql, users]
-- "manual_migrations_0008_monitorista_permisos_users": "users" | kind=code-symbol | source=lib/db/manual-migrations/0008_monitorista_permisos.sql:L3 | neighbors=[0008_monitorista_permisos.sql, monitorista_permisos]
-- "manual_migrations_0011_permisos_plantillas_permisos_plantillas": "permisos_plantillas" | kind=code-symbol | source=lib/db/manual-migrations/0011_permisos_plantillas.sql:L4 | neighbors=[0011_permisos_plantillas.sql, roles]
-- "manual_migrations_0011_permisos_plantillas_roles": "roles" | kind=code-symbol | source=lib/db/manual-migrations/0011_permisos_plantillas.sql:L6 | neighbors=[0011_permisos_plantillas.sql, permisos_plantillas]
-- "modulo_incidentes_reportestabs_reportestabs": "ReportesTabs()" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportesTabs.tsx:L10 | neighbors=[page.tsx, ReportesTabs.tsx]
-- "modulo_incidentes_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportFilters.tsx:L7 | neighbors=[page.tsx, ReportFilters.tsx]
-- "modulo_incidentes_reporttables_operationaltable": "OperationalTable()" | kind=code-symbol | source=components/reportes/modulo_incidentes/ReportTables.tsx:L12 | neighbors=[ReportesTabs.tsx, ReportTables.tsx]
-- "monitorista_actions_cancelarsolicitud": "cancelarSolicitud()" | kind=code-symbol | source=lib/monitorista/actions.ts:L77 | neighbors=[actions.ts, requireMonitorista()]
-- "monitorista_actions_completarsolicitud": "completarSolicitud()" | kind=code-symbol | source=lib/monitorista/actions.ts:L64 | neighbors=[actions.ts, requireMonitorista()]
-- "monitorista_actions_subirevidencia": "subirEvidencia()" | kind=code-symbol | source=lib/monitorista/actions.ts:L35 | neighbors=[actions.ts, requireMonitorista()]
-- "monitorista_bandejasolicitudes_tabstyle": "tabStyle()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L130 | neighbors=[BandejaSolicitudes.tsx, BandejaSolicitudes()]
-- "monitorista_batchenviofotos_batchenviofotos": "BatchEnvioFotos()" | kind=code-symbol | source=components/monitorista/BatchEnvioFotos.tsx:L9 | neighbors=[page.tsx, BatchEnvioFotos.tsx]
-- "monitorista_botongenerarppt_botongenerarppt": "BotonGenerarPpt()" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L7 | neighbors=[page.tsx, BotonGenerarPpt.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-042.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-042.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

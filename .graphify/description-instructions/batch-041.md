@@ -1,4 +1,4 @@
-# Node Description Batch 42 of 87
+# Node Description Batch 42 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_types_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=lib/fiscalia/types.ts:L352 | neighbors=[FiscaliaDashboard.tsx, types.ts]
+- "fiscalia_types_rolrow": "RolRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L7 | neighbors=[repository.ts, types.ts]
+- "fiscalia_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/fiscalia/types.ts:L1 | neighbors=[actions.ts, types.ts]
+- "fiscalia_usetoaststore_usetoaststore": "useToastStore" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L21 | neighbors=[CargarOficioSection.tsx, useToastStore.ts]
+- "flota_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/flota/mapper.ts:L8 | neighbors=[mapper.ts, rowToPatrulla()]
+- "flota_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/flota/mapper.ts:L3 | neighbors=[mapper.ts, rowToPatrulla()]
+- "flota_repository_estastale": "estaStale()" | kind=code-symbol | source=lib/flota/repository.ts:L5 | neighbors=[repository.ts, service.ts]
+- "flota_repository_listaractivas": "listarActivas()" | kind=code-symbol | source=lib/flota/repository.ts:L41 | neighbors=[repository.ts, service.ts]
+- "flota_repository_obtenerporid": "obtenerPorId()" | kind=code-symbol | source=lib/flota/repository.ts:L51 | neighbors=[repository.ts, service.ts]
+- "flota_repository_upsertpatrullas": "upsertPatrullas()" | kind=code-symbol | source=lib/flota/repository.ts:L16 | neighbors=[repository.ts, service.ts]
+- "flota_service_extraervehiculos": "extraerVehiculos()" | kind=code-symbol | source=lib/flota/service.ts:L15 | neighbors=[service.ts, obtenerFlota()]
+- "flota_service_obtenerpatrullaporid": "obtenerPatrullaPorId()" | kind=code-symbol | source=lib/flota/service.ts:L111 | neighbors=[page.tsx, service.ts]
+- "formato_n_atencion_victimas_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L102 | neighbors=[page.tsx, FormatoNAtencionVictimasPage()]
+- "formato_n_atencion_victimas_page_formatonatencionvictimaspage": "FormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "formato_n_fge_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L112 | neighbors=[page.tsx, FormatoNFgePage()]
+- "formato_n_fge_page_formatonfgepage": "FormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "formato_n_fgr_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L112 | neighbors=[page.tsx, FormatoNFgrPage()]
+- "formato_n_fgr_page_formatonfgrpage": "FormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
+- "formato_n_medios_alternativos_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L100 | neighbors=[page.tsx, FormatoNMediosAlternativosPage()]
+- "formato_n_medios_alternativos_page_formatonmediosalternativospage": "FormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/page.tsx:L12 | neighbors=[page.tsx, filtroBtn()]
 - "guardar_docs_route_subirarchivo": "subirArchivo()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L7 | neighbors=[route.ts, POST()]
 - "guardar_docs_route_validararchivo": "validarArchivo()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L39 | neighbors=[route.ts, POST()]
 - "health_repository_ping": "ping()" | kind=code-symbol | source=lib/health/repository.ts:L3 | neighbors=[repository.ts, route.ts]
@@ -37,31 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "id_page_sanitize": "sanitize()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L53 | neighbors=[page.tsx, InfraccionCiudadanoPage()]
 - "id_page_solicituddetailpage": "SolicitudDetailPage()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/[id]/page.tsx:L21 | neighbors=[page.tsx, fmtDT()]
 - "id_page_statusbadge": "statusBadge()" | kind=code-symbol | source=app/monitorista/denuncias/[id]/page.tsx:L235 | neighbors=[page.tsx, DetalleDenunciaPage()]
-- "id_page_todate": "toDate()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/[id]/page.tsx:L12 | neighbors=[page.tsx, fmtDT()]
-- "id_page_toiso": "toISO()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/page.tsx:L17 | neighbors=[page.tsx, FichaDetailPage()]
-- "imprimir_page_fmtdt": "fmtDT()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L10 | neighbors=[page.tsx, ImprimirFichaPage()]
-- "imprimir_page_imprimirfichapage": "ImprimirFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/[id]/imprimir/page.tsx:L15 | neighbors=[page.tsx, fmtDT()]
-- "incidentes_actions_cerrarpordetencion": "cerrarPorDetencion()" | kind=code-symbol | source=lib/incidentes/actions.ts:L523 | neighbors=[actions.ts, requireOperador()]
-- "incidentes_actions_marcarensitio": "marcarEnSitio()" | kind=code-symbol | source=lib/incidentes/actions.ts:L501 | neighbors=[actions.ts, requireOperador()]
-- "incidentes_camara_page_filtrobtn": "filtroBtn()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L129 | neighbors=[page.tsx, IncidentesCamaraPage()]
-- "incidentes_camara_page_incidentescamarapage": "IncidentesCamaraPage()" | kind=code-symbol | source=app/monitorista/incidentes-camara/page.tsx:L13 | neighbors=[page.tsx, filtroBtn()]
-- "incidentes_filtrosincidencias_filtrosincidencias": "FiltrosIncidencias()" | kind=code-symbol | source=components/reportes/incidentes/FiltrosIncidencias.tsx:L7 | neighbors=[FiltrosIncidencias.tsx, page.tsx]
-- "incidentes_folio_generarfolioincidente": "generarFolioIncidente()" | kind=code-symbol | source=lib/incidentes/folio.ts:L3 | neighbors=[actions.ts, folio.ts]
-- "incidentes_historialincidente_historialincidente": "HistorialIncidente()" | kind=code-symbol | source=components/incidentes/HistorialIncidente.tsx:L10 | neighbors=[page.tsx, HistorialIncidente.tsx]
-- "incidentes_mapper_rowtoincidentebasico": "rowToIncidenteBasico()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L193 | neighbors=[mapper.ts, repository.ts]
-- "incidentes_permisos_accion": "Accion" | kind=code-symbol | source=lib/incidentes/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
-- "incidentes_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/incidentes/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
-- "incidentes_repository_insertarreportecampo": "insertarReporteCampo()" | kind=code-symbol | source=lib/incidentes/repository.ts:L164 | neighbors=[repository.ts, service.ts]
-- "incidentes_repository_listarincidentesatendidos": "listarIncidentesAtendidos()" | kind=code-symbol | source=lib/incidentes/repository.ts:L30 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_listarincidentesendespacho": "listarIncidentesEnDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L59 | neighbors=[route.ts, repository.ts]
-- "incidentes_repository_listarincidentespendientesdespacho": "listarIncidentesPendientesDespacho()" | kind=code-symbol | source=lib/incidentes/repository.ts:L82 | neighbors=[repository.ts, route.ts]
-- "incidentes_repository_tostr": "toStr()" | kind=code-symbol | source=lib/incidentes/repository.ts:L5 | neighbors=[repository.ts, obtenerDespachoDeIncidente()]
-- "incidentes_repository_verificarreportecampo": "verificarReporteCampo()" | kind=code-symbol | source=lib/incidentes/repository.ts:L288 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-041.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-041.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

@@ -18,8 +18,8 @@ interface IncRow {
   descripcion: string | null; tipoIncidente: string | null
   prioridad: string | null; capturadoPor: string | null
   despachoId: string | null; fechaHoraDespacho: string | null
-  unidades: { placa: string | null }[]
-  elementos: { nombre: string | null; nomina: string | null }[]
+  unidades: { placa: string | null; esRefuerzo?: boolean }[]
+  elementos: { nombre: string | null; nomina: string | null; esPrioritario?: boolean; esRefuerzo?: boolean }[]
   accionesRealizadas?: string | null
   hayDetencion?: boolean | null
   ofiAutoridadRecibe?: string | null
@@ -161,8 +161,8 @@ export function TablonDespacho() {
                         <label style={labelStyle}>UNIDADES ASIGNADAS</label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                           {inc.unidades.map((u, i) => (
-                            <span key={i} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: '#eff6ff', border: '1px solid #bfdbfe', color: '#1d4ed8', borderRadius: 2 }}>
-                              {u.placa || '—'}
+                            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff6ff', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#bfdbfe'}`, color: u.esRefuerzo ? '#c2410c' : '#1d4ed8', borderRadius: 2 }}>
+                              {u.placa || '—'}{u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
                             </span>
                           ))}
                         </div>
@@ -171,8 +171,10 @@ export function TablonDespacho() {
                         <label style={labelStyle}>ELEMENTOS ASIGNADOS</label>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                           {inc.elementos.map((e, i) => (
-                            <div key={i} style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>
-                              {e.nombre || '—'} <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b' }}>({e.nomina})</span>
+                            <div key={i} style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <span>{e.nombre || '—'} <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b' }}>({e.nomina || 's/n'})</span></span>
+                              {e.esPrioritario && <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>PRIORITARIO</span>}
+                              {e.esRefuerzo && <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#fff7ed', color: '#c2410c', border: '1px solid #fed7aa', borderRadius: 2 }}>REFUERZO</span>}
                             </div>
                           ))}
                         </div>
@@ -237,6 +239,14 @@ export function TablonDespacho() {
                     <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 16 }}>
                       <label style={{ ...labelStyle, marginBottom: 12 }}>ASIGNAR UNIDADES Y ELEMENTOS</label>
                       <DespachoForm incidenteId={inc.id} onDespachado={cargarPendientes} />
+                    </div>
+                  )}
+
+                  {/* Refuerzos: agregar elementos/unidades a un folio ya activo */}
+                  {tab === 'en_despacho' && (
+                    <div style={{ borderTop: '1px solid #fed7aa', paddingTop: 16 }}>
+                      <label style={{ ...labelStyle, marginBottom: 12, color: '#c2410c' }}>ENVIAR REFUERZOS</label>
+                      <DespachoForm incidenteId={inc.id} modo="refuerzo" onDespachado={() => cargarTab('en_despacho')} />
                     </div>
                   )}
                 </div>

@@ -1,4 +1,4 @@
-# Node Description Batch 33 of 87
+# Node Description Batch 33 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_formato_n_consolidado_service_obtenerformatonconsolidadorango": "obtenerFormatoNConsolidadoRango()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L57 | neighbors=[route.ts, formato-n-consolidado-service.ts, enumerarFechas()]
+- "reportes_formato_n_eventos_service_listareventos": "listarEventos()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L37 | neighbors=[page.tsx, route.ts, formato-n-eventos-service.ts]
+- "reportes_formato_n_eventos_service_obtenerevento": "obtenerEvento()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L42 | neighbors=[route.ts, formato-n-eventos-service.ts, rowTo()]
+- "reportes_formato_n_eventos_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L22 | neighbors=[formato-n-eventos-service.ts, obtenerEvento(), formatFecha()]
+- "reportes_formato_n_fge_service_listarfge": "listarFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L55 | neighbors=[page.tsx, route.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_obtenerfge": "obtenerFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L67 | neighbors=[route.ts, formato-n-fge-service.ts, rowTo()]
+- "reportes_formato_n_fge_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L5 | neighbors=[page.tsx, route.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_periodos": "PERIODOS" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L4 | neighbors=[page.tsx, formato-n-consolidado-service.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fgr_service_listarfgr": "listarFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L54 | neighbors=[page.tsx, route.ts, formato-n-fgr-service.ts]
+- "reportes_formato_n_fgr_service_obtenerfgr": "obtenerFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L66 | neighbors=[route.ts, formato-n-fgr-service.ts, rowTo()]
+- "reportes_formato_n_fgr_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-fgr-service.ts]
+- "reportes_formato_n_medios_alternativos_service_listarmediosalternativos": "listarMediosAlternativos()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L42 | neighbors=[page.tsx, route.ts, formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_medios_alternativos_service_obtenermediosalternativos": "obtenerMediosAlternativos()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L54 | neighbors=[route.ts, formato-n-medios-alternativos-service.ts, rowTo()]
+- "reportes_formato_n_medios_alternativos_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_rnd_service_listarrnd": "listarRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L33 | neighbors=[page.tsx, route.ts, formato-n-rnd-service.ts]
+- "reportes_formato_n_rnd_service_obtenerrnd": "obtenerRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L38 | neighbors=[route.ts, formato-n-rnd-service.ts, rowTo()]
+- "reportes_formato_n_rnd_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L20 | neighbors=[formato-n-rnd-service.ts, obtenerRnd(), formatFecha()]
+- "reportes_incidentes_mapper_rowtoreportediario": "rowToReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L11 | neighbors=[mapper.ts, toNum(), repository.ts]
+- "reportes_incidentes_mapper_rowtoreportesemanal": "rowToReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L20 | neighbors=[mapper.ts, toNum(), repository.ts]
 - "reportes_incidentes_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteDiario(), rowToReporteSemanal()]
 - "reportes_incidentes_types_reportediariorow": "ReporteDiarioRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "reportes_incidentes_types_reportesemanalrow": "ReporteSemanalRow" | kind=code-symbol | source=lib/reportes-incidentes/types.ts:L8 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -38,30 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_operativos_service_obtenerdatosoperativos": "obtenerDatosOperativos()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L24 | neighbors=[page.tsx, service.ts, obtenerDatosExcel()]
 - "reportes_operativos_service_obtenerdatostelefonicos": "obtenerDatosTelefonicos()" | kind=code-symbol | source=lib/reportes-operativos/service.ts:L280 | neighbors=[page.tsx, route.ts, service.ts]
 - "reportes_operativos_types_detencionincrow": "DetencionIncRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L24 | neighbors=[mapper.ts, service.ts, types.ts]
-- "reportes_operativos_types_detencionofirow": "DetencionOfiRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L16 | neighbors=[mapper.ts, service.ts, types.ts]
-- "reportes_sin_d1_mapper_rowtosind1": "rowToSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/mapper.ts:L11 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_sin_d1_service_listarsind1": "listarSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/service.ts:L6 | neighbors=[page.tsx, route.ts, service.ts]
-- "reportes_sin_novedad_mapper_rowtosinnovedad": "rowToSinNovedad()" | kind=code-symbol | source=lib/reportes-sin-novedad/mapper.ts:L11 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "reportes_sin_novedad_service_listarreportessinnovedad": "listarReportesSinNovedad()" | kind=code-symbol | source=lib/reportes-sin-novedad/service.ts:L6 | neighbors=[route.ts, service.ts, page.tsx]
-- "reportes_types": "types.ts" | kind=code-symbol | source=lib/reportes/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, repository.ts, FormatoNStats]
-- "reportes_welcomebanner_sentinelhero": "SentinelHero()" | kind=code-symbol | source=components/reportes/welcomeBanner.tsx:L1 | neighbors=[page.tsx, page.tsx, welcomeBanner.tsx]
-- "rol_servicios_catalogos_actions_createbodycam": "createBodyCam()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L63 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_catalogos_actions_createconcepto": "createConcepto()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L76 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_catalogos_actions_createmediocanalizacion": "createMedioCanalizacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L115 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_catalogos_actions_createradio": "createRadio()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L50 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_catalogos_actions_createsector": "createSector()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L37 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_catalogos_actions_createtipoemergencia": "createTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L102 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_catalogos_actions_createtipoobservacion": "createTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L89 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
-- "rol_servicios_mapper_rowtobodycam": "rowToBodyCam()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L114 | neighbors=[mapper.ts, toBool(), repository.ts]
-- "rol_servicios_mapper_rowtomediocanalizacion": "rowToMedioCanalizacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L152 | neighbors=[mapper.ts, toBool(), repository.ts]
-- "rol_servicios_mapper_rowtorolobservacion": "rowToRolObservacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L86 | neighbors=[mapper.ts, toStr(), repository.ts]
-- "rol_servicios_mapper_rowtosector": "rowToSector()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L95 | neighbors=[mapper.ts, toBool(), repository.ts]
-- "rol_servicios_mapper_rowtotipoemergencia": "rowToTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L143 | neighbors=[mapper.ts, toBool(), repository.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-032.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-032.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

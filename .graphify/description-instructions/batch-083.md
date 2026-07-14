@@ -1,4 +1,4 @@
-# Node Description Batch 84 of 87
+# Node Description Batch 84 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "shared_detalleinfraccionview_timelinenode": "TimelineNode()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L731 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_direcciongooglemaps_props": "Props" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L13 | neighbors=[DireccionGoogleMaps.tsx]
-- "shared_infracciones_bool": "bool()" | kind=code-symbol | source=lib/shared/infracciones.ts:L48 | neighbors=[infracciones.ts]
-- "shared_infracciones_num": "num()" | kind=code-symbol | source=lib/shared/infracciones.ts:L55 | neighbors=[infracciones.ts]
-- "shared_infracciones_str": "str()" | kind=code-symbol | source=lib/shared/infracciones.ts:L43 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfracciongarantia": "ViaInfraccionGarantia" | kind=code-symbol | source=lib/shared/infracciones.ts:L114 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfraccionheader": "ViaInfraccionHeader" | kind=code-symbol | source=lib/shared/infracciones.ts:L63 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfraccioninfractor": "ViaInfraccionInfractor" | kind=code-symbol | source=lib/shared/infracciones.ts:L90 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfraccionlegal": "ViaInfraccionLegal" | kind=code-symbol | source=lib/shared/infracciones.ts:L80 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfraccionoficial": "ViaInfraccionOficial" | kind=code-symbol | source=lib/shared/infracciones.ts:L98 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfraccionubicacion": "ViaInfraccionUbicacion" | kind=code-symbol | source=lib/shared/infracciones.ts:L118 | neighbors=[infracciones.ts]
-- "shared_infracciones_viainfraccionvehiculo": "ViaInfraccionVehiculo" | kind=code-symbol | source=lib/shared/infracciones.ts:L105 | neighbors=[infracciones.ts]
-- "shared_pedirevidenciasmodal_evidenciaitem": "EvidenciaItem" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L18 | neighbors=[PedirEvidenciasModal.tsx]
-- "shared_pedirevidenciasmodal_existingevidencia": "ExistingEvidencia" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L7 | neighbors=[PedirEvidenciasModal.tsx]
-- "shared_pedirevidenciasmodal_inputsx": "inputSx" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L30 | neighbors=[PedirEvidenciasModal.tsx]
-- "shared_pedirevidenciasmodal_readonlysx": "readOnlySx" | kind=code-symbol | source=components/shared/PedirEvidenciasModal.tsx:L41 | neighbors=[PedirEvidenciasModal.tsx]
-- "sin_robos_page_reporteslimpiospage": "ReportesLimpiosPage()" | kind=code-symbol | source=app/sin_robos/page.tsx:L13 | neighbors=[page.tsx]
-- "sin_robos_paginacionsinrobos_paginationbuttonstyle": "paginationButtonStyle" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L89 | neighbors=[PaginacionSinRobos.tsx]
-- "sin_robos_paginacionsinrobos_paginationprops": "PaginationProps" | kind=code-symbol | source=components/reportes/sin_robos/PaginacionSinRobos.tsx:L5 | neighbors=[PaginacionSinRobos.tsx]
-- "solicitudes_page_solicitudespage": "SolicitudesPage()" | kind=code-symbol | source=app/monitorista/solicitudes/page.tsx:L13 | neighbors=[page.tsx]
-- "solicitudes_page_statcard": "StatCard()" | kind=code-symbol | source=app/monitorista/solicitudes/page.tsx:L86 | neighbors=[page.tsx]
-- "solicitudes_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L8 | neighbors=[route.ts]
-- "solicitudes_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/solicitudes/route.ts:L22 | neighbors=[route.ts]
-- "solicitudes_solicitudes_client_estatusbg": "estatusBg()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L344 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_estatuscolor": "estatusColor()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L351 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_estatuslabels": "estatusLabels" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L8 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_formatdate": "formatDate()" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L18 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_tdstyle": "tdStyle" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L369 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_solicitudes_client_thstyle": "thStyle" | kind=code-symbol | source=app/corralon/solicitudes/solicitudes-client.tsx:L358 | neighbors=[solicitudes-client.tsx]
-- "solicitudes_subir_oficio_modal_props": "Props" | kind=code-symbol | source=app/corralon/solicitudes/subir-oficio-modal.tsx:L6 | neighbors=[subir-oficio-modal.tsx]
-- "solicitudes_ver_documento_modal_props": "Props" | kind=code-symbol | source=app/corralon/solicitudes/ver-documento-modal.tsx:L5 | neighbors=[ver-documento-modal.tsx]
-- "solicitudid_page_aseguradosfiscaliapage": "AseguradosFiscaliaPage()" | kind=code-symbol | source=app/fiscalia/solicitudes/[solicitudId]/page.tsx:L11 | neighbors=[page.tsx]
-- "solicitudid_page_aseguradospage": "AseguradosPage()" | kind=code-symbol | source=app/agente_juzgado/solicitudes/[solicitudId]/page.tsx:L11 | neighbors=[page.tsx]
-- "steps_pasociudadano_pasociudadano": "PasoCiudadano()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadano.tsx:L16 | neighbors=[PasoCiudadano.tsx]
-- "steps_pasociudadano_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadano.tsx:L11 | neighbors=[PasoCiudadano.tsx]
-- "steps_pasociudadanoconductor_pasociudadanoconductor": "PasoCiudadanoConductor()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadanoConductor.tsx:L14 | neighbors=[PasoCiudadanoConductor.tsx]
-- "steps_pasociudadanoconductor_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoCiudadanoConductor.tsx:L6 | neighbors=[PasoCiudadanoConductor.tsx]
-- "steps_pasoconductor_pasoconductor": "PasoConductor()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConductor.tsx:L21 | neighbors=[PasoConductor.tsx]
-- "steps_pasoconductor_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConductor.tsx:L13 | neighbors=[PasoConductor.tsx]
-- "steps_pasoconfirmacion_pasoconfirmacion": "PasoConfirmacion()" | kind=code-symbol | source=features/via/infracciones/components/steps/PasoConfirmacion.tsx:L27 | neighbors=[PasoConfirmacion.tsx]
+- "scripts_benchmark_countprojectfiles": "countProjectFiles()" | kind=code-symbol | source=scripts/benchmark.mjs:L31 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_dirname": "__dirname" | kind=code-symbol | source=scripts/benchmark.mjs:L13 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_discoverycost": "discoveryCost" | kind=code-symbol | source=scripts/benchmark.mjs:L180 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_docs_chars_bovedachars": "{ docs, chars: bovedaChars }" | kind=code-symbol | source=scripts/benchmark.mjs:L176 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_estimatediscoverycost": "estimateDiscoveryCost()" | kind=code-symbol | source=scripts/benchmark.mjs:L124 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_estimatesavings": "estimateSavings()" | kind=code-symbol | source=scripts/benchmark.mjs:L162 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_estimatesavingspercent": "estimateSavingsPercent()" | kind=code-symbol | source=scripts/benchmark.mjs:L166 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_files_lines": "{ files, lines }" | kind=code-symbol | source=scripts/benchmark.mjs:L175 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_formatnumber": "formatNumber()" | kind=code-symbol | source=scripts/benchmark.mjs:L107 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_getagentssize": "getAgentsSize()" | kind=code-symbol | source=scripts/benchmark.mjs:L89 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_getgraphifystats": "getGraphifyStats()" | kind=code-symbol | source=scripts/benchmark.mjs:L78 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_getprojectname": "getProjectName()" | kind=code-symbol | source=scripts/benchmark.mjs:L99 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_getyoumindagversion": "getYoumindagVersion()" | kind=code-symbol | source=scripts/benchmark.mjs:L94 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_graph_path": "GRAPH_PATH" | kind=code-symbol | source=scripts/benchmark.mjs:L15 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_nodes_edges": "{ nodes, edges }" | kind=code-symbol | source=scripts/benchmark.mjs:L177 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_payback": "payback" | kind=code-symbol | source=scripts/benchmark.mjs:L285 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_projectname": "projectName" | kind=code-symbol | source=scripts/benchmark.mjs:L173 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_root": "ROOT" | kind=code-symbol | source=scripts/benchmark.mjs:L14 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_savings": "savings" | kind=code-symbol | source=scripts/benchmark.mjs:L182 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_savingspercent": "savingsPercent" | kind=code-symbol | source=scripts/benchmark.mjs:L183 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_showjson": "showJson" | kind=code-symbol | source=scripts/benchmark.mjs:L27 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_version": "version" | kind=code-symbol | source=scripts/benchmark.mjs:L174 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_ym_json": "YM_JSON" | kind=code-symbol | source=scripts/benchmark.mjs:L18 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_youmindagcost": "youmindagCost" | kind=code-symbol | source=scripts/benchmark.mjs:L181 | neighbors=[benchmark.mjs]
+- "scripts_export_schema_dirname": "__dirname" | kind=code-symbol | source=scripts/export-schema.mjs:L8 | neighbors=[export-schema.mjs]
+- "scripts_export_schema_root": "ROOT" | kind=code-symbol | source=scripts/export-schema.mjs:L9 | neighbors=[export-schema.mjs]
+- "scripts_export_schema_typetoreadable": "typeToReadable()" | kind=code-symbol | source=scripts/export-schema.mjs:L69 | neighbors=[export-schema.mjs]
+- "scripts_exportar_schema_columninfo": "ColumnInfo" | kind=code-symbol | source=scripts/exportar-schema.ts:L6 | neighbors=[exportar-schema.ts]
+- "scripts_exportar_schema_schemas": "SCHEMAS" | kind=code-symbol | source=scripts/exportar-schema.ts:L4 | neighbors=[exportar-schema.ts]
+- "scripts_exportar_schema_typetoreadable": "typeToReadable()" | kind=code-symbol | source=scripts/exportar-schema.ts:L53 | neighbors=[exportar-schema.ts]
+- "scripts_extract_domain_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/extract-domain.mjs:L10 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_dirname": "__dirname" | kind=code-symbol | source=scripts/extract-domain.mjs:L8 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/extract-domain.mjs:L10 | neighbors=[extract-domain.mjs]
+- "scripts_extract_domain_root": "ROOT" | kind=code-symbol | source=scripts/extract-domain.mjs:L9 | neighbors=[extract-domain.mjs]
+- "scripts_load_context_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/load-context.mjs:L11 | neighbors=[load-context.mjs]
+- "scripts_load_context_dirname": "__dirname" | kind=code-symbol | source=scripts/load-context.mjs:L9 | neighbors=[load-context.mjs]
+- "scripts_load_context_graph_json": "GRAPH_JSON" | kind=code-symbol | source=scripts/load-context.mjs:L12 | neighbors=[load-context.mjs]
+- "scripts_load_context_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/load-context.mjs:L14 | neighbors=[load-context.mjs]
+- "scripts_load_context_root": "ROOT" | kind=code-symbol | source=scripts/load-context.mjs:L10 | neighbors=[load-context.mjs]
+- "scripts_populate_vault_cwd": "CWD" | kind=code-symbol | source=scripts/populate-vault.mjs:L12 | neighbors=[populate-vault.mjs]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-083.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-083.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

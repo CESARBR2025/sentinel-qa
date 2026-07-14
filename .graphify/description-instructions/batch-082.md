@@ -1,4 +1,4 @@
-# Node Description Batch 83 of 87
+# Node Description Batch 83 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "scripts_session_checkpoint_decisions_file": "DECISIONS_FILE" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L19 | neighbors=[session-checkpoint.mjs]
-- "scripts_session_checkpoint_dirname": "__dirname" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L15 | neighbors=[session-checkpoint.mjs]
-- "scripts_session_checkpoint_root": "ROOT" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L16 | neighbors=[session-checkpoint.mjs]
-- "scripts_session_checkpoint_session_dir": "SESSION_DIR" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L17 | neighbors=[session-checkpoint.mjs]
-- "scripts_session_checkpoint_session_file": "SESSION_FILE" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L18 | neighbors=[session-checkpoint.mjs]
-- "scripts_trace_components_components": "components" | kind=code-symbol | source=scripts/trace-components.mjs:L129 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_dirname": "__dirname" | kind=code-symbol | source=scripts/trace-components.mjs:L14 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_dirty": "dirty" | kind=code-symbol | source=scripts/trace-components.mjs:L151 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_extensions": "EXTENSIONS" | kind=code-symbol | source=scripts/trace-components.mjs:L19 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_filemap": "fileMap" | kind=code-symbol | source=scripts/trace-components.mjs:L140 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_filestomodify": "filesToModify" | kind=code-symbol | source=scripts/trace-components.mjs:L150 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_forceflag": "forceFlag" | kind=code-symbol | source=scripts/trace-components.mjs:L130 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_injecttrace": "injectTrace()" | kind=code-symbol | source=scripts/trace-components.mjs:L21 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_root": "ROOT" | kind=code-symbol | source=scripts/trace-components.mjs:L15 | neighbors=[trace-components.mjs]
-- "scripts_trace_components_search_dirs": "SEARCH_DIRS" | kind=code-symbol | source=scripts/trace-components.mjs:L18 | neighbors=[trace-components.mjs]
-- "scripts_trace_server_dirname": "__dirname" | kind=code-symbol | source=scripts/trace-server.mjs:L17 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_dirty": "dirty" | kind=code-symbol | source=scripts/trace-server.mjs:L238 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_extensions": "EXTENSIONS" | kind=code-symbol | source=scripts/trace-server.mjs:L22 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_filemap": "fileMap" | kind=code-symbol | source=scripts/trace-server.mjs:L227 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_filestomodify": "filesToModify" | kind=code-symbol | source=scripts/trace-server.mjs:L237 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_fnnames": "fnNames" | kind=code-symbol | source=scripts/trace-server.mjs:L216 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_forceflag": "forceFlag" | kind=code-symbol | source=scripts/trace-server.mjs:L217 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_root": "ROOT" | kind=code-symbol | source=scripts/trace-server.mjs:L18 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_search_dirs": "SEARCH_DIRS" | kind=code-symbol | source=scripts/trace-server.mjs:L21 | neighbors=[trace-server.mjs]
-- "seguimientos_route_post": "POST()" | kind=code-symbol | source=app/api/prevencion/busquedas/[id]/seguimientos/route.ts:L7 | neighbors=[route.ts]
-- "setup_2fa_page_setup2fapage": "Setup2FAPage()" | kind=code-symbol | source=app/(auth)/login/setup-2fa/page.tsx:L7 | neighbors=[page.tsx]
-- "shared_detalleinfraccionview_fieldwithicon": "FieldWithIcon()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L464 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_getstatusstyle": "getStatusStyle()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L96 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infracciondetalle": "InfraccionDetalle" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L77 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infracciongarantia": "InfraccionGarantia" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L63 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infraccionheader": "InfraccionHeader" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L15 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infraccioninfractor": "InfraccionInfractor" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L41 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infraccionlegal": "InfraccionLegal" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L31 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infraccionoficial": "InfraccionOficial" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L47 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infraccionubicacion": "InfraccionUbicacion" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L67 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_infraccionvehiculo": "InfraccionVehiculo" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L54 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_props": "Props" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L142 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_section": "Section()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L440 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_status_styles": "STATUS_STYLES" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L89 | neighbors=[DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_streetviewmap": "StreetViewMap()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L400 | neighbors=[DetalleInfraccionView.tsx]
+- "roles_formulariorol_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L201 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L193 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L218 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L9 | neighbors=[FormularioRol.tsx]
+- "roles_page_rolespage": "RolesPage()" | kind=code-symbol | source=app/admin/roles/page.tsx:L6 | neighbors=[page.tsx]
+- "roles_route_post": "POST()" | kind=code-symbol | source=app/api/admin/roles/route.ts:L7 | neighbors=[route.ts]
+- "rondin_page_reporterecorridopage": "ReporteRecorridoPage()" | kind=code-symbol | source=app/agente_911/rondin/page.tsx:L9 | neighbors=[page.tsx]
+- "rondin_page_rondinoficialpage": "RondinOficialPage()" | kind=code-symbol | source=app/oficial/rondin/page.tsx:L7 | neighbors=[page.tsx]
+- "sasiete_mapper_ordenpagorow": "OrdenPagoRow" | kind=code-symbol | source=features/via/saSiete/mapper.ts:L3 | neighbors=[mapper.ts]
+- "sasiete_repository_sa7repository_actualizarordenpago": ".actualizarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L65 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_buscarordenporinfraccionid": ".buscarOrdenPorInfraccionId()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L57 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_insertarordenpago": ".insertarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L14 | neighbors=[SA7Repository]
+- "sasiete_repository_sa7repository_obtenerconceptoidporclasificacion": ".obtenerConceptoIdPorClasificacion()" | kind=code-symbol | source=features/via/saSiete/repository.ts:L6 | neighbors=[SA7Repository]
+- "sasiete_service_sa7service_buscarordenporinfraccion": ".buscarOrdenPorInfraccion()" | kind=code-symbol | source=features/via/saSiete/service.ts:L87 | neighbors=[SA7Service]
+- "sasiete_service_sa7service_generarordenpago": ".generarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/service.ts:L13 | neighbors=[SA7Service]
+- "sasiete_service_sa7service_obtenerconceptoid": ".obtenerConceptoId()" | kind=code-symbol | source=features/via/saSiete/service.ts:L9 | neighbors=[SA7Service]
+- "sasiete_types_catalogoconceptosa7": "CatalogoConceptoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L1 | neighbors=[types.ts]
+- "scripts_ab_test_a": "a" | kind=code-symbol | source=scripts/ab-test.mjs:L220 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_agents_path": "AGENTS_PATH" | kind=code-symbol | source=scripts/ab-test.mjs:L15 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_agentssize": "agentsSize" | kind=code-symbol | source=scripts/ab-test.mjs:L218 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_b": "b" | kind=code-symbol | source=scripts/ab-test.mjs:L221 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_boveda_dir": "BOVEDA_DIR" | kind=code-symbol | source=scripts/ab-test.mjs:L14 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_bovedadocs": "bovedaDocs" | kind=code-symbol | source=scripts/ab-test.mjs:L216 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_collectbovedadocs": "collectBovedaDocs()" | kind=code-symbol | source=scripts/ab-test.mjs:L56 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_collectsourcefiles": "collectSourceFiles()" | kind=code-symbol | source=scripts/ab-test.mjs:L30 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_dirname": "__dirname" | kind=code-symbol | source=scripts/ab-test.mjs:L11 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_files": "files" | kind=code-symbol | source=scripts/ab-test.mjs:L215 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_formatnumber": "formatNumber()" | kind=code-symbol | source=scripts/ab-test.mjs:L25 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_getagentssize": "getAgentsSize()" | kind=code-symbol | source=scripts/ab-test.mjs:L82 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_getgraphstats": "getGraphStats()" | kind=code-symbol | source=scripts/ab-test.mjs:L74 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_graph_path": "GRAPH_PATH" | kind=code-symbol | source=scripts/ab-test.mjs:L13 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_graphstats": "graphStats" | kind=code-symbol | source=scripts/ab-test.mjs:L217 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_root": "ROOT" | kind=code-symbol | source=scripts/ab-test.mjs:L12 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_savingspct": "savingsPct" | kind=code-symbol | source=scripts/ab-test.mjs:L224 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_showdetail": "showDetail" | kind=code-symbol | source=scripts/ab-test.mjs:L272 | neighbors=[ab-test.mjs]
+- "scripts_ab_test_youmindaginstalled": "youmindagInstalled" | kind=code-symbol | source=scripts/ab-test.mjs:L226 | neighbors=[ab-test.mjs]
+- "scripts_benchmark_agents_path": "AGENTS_PATH" | kind=code-symbol | source=scripts/benchmark.mjs:L17 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_agentschars": "agentsChars" | kind=code-symbol | source=scripts/benchmark.mjs:L178 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_boveda_dir": "BOVEDA_DIR" | kind=code-symbol | source=scripts/benchmark.mjs:L16 | neighbors=[benchmark.mjs]
+- "scripts_benchmark_countbovedadocs": "countBovedaDocs()" | kind=code-symbol | source=scripts/benchmark.mjs:L59 | neighbors=[benchmark.mjs]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-082.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-082.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

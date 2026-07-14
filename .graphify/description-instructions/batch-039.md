@@ -1,4 +1,4 @@
-# Node Description Batch 40 of 87
+# Node Description Batch 40 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "d1_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/d1/mapper.ts:L3 | neighbors=[mapper.ts, rowToReporteD1()]
+- "d1_noiniciada_descargafilters_descargafilters": "DescargaFilters()" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaFilters.tsx:L7 | neighbors=[DescargaFilters.tsx, page.tsx]
+- "d1_noiniciada_descargapagination_descargapagination": "DescargaPagination()" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaPagination.tsx:L13 | neighbors=[DescargaPagination.tsx, DescargaTable.tsx]
+- "d1_noiniciada_descargatable_descargatable": "DescargaTable()" | kind=code-symbol | source=components/reportes/d1_noiniciada/DescargaTable.tsx:L7 | neighbors=[DescargaTable.tsx, page.tsx]
+- "d1_repository_insertarreportedenuncia": "insertarReporteDenuncia()" | kind=code-symbol | source=lib/d1/repository.ts:L13 | neighbors=[repository.ts, route.ts]
+- "d1_repository_obtenerreportesd1": "obtenerReportesD1()" | kind=code-symbol | source=lib/d1/repository.ts:L93 | neighbors=[repository.ts, service.ts]
+- "d1_repository_verificarfoliodenunciaunico": "verificarFolioDenunciaUnico()" | kind=code-symbol | source=lib/d1/repository.ts:L5 | neighbors=[repository.ts, route.ts]
+- "dashboard_enable_2fa_enable2fa": "Enable2FA()" | kind=code-symbol | source=app/dashboard/enable-2fa.tsx:L7 | neighbors=[enable-2fa.tsx, page.tsx]
+- "dashboard_module_cards_modulecards": "ModuleCards()" | kind=code-symbol | source=app/dashboard/module-cards.tsx:L260 | neighbors=[module-cards.tsx, page.tsx]
+- "db_index_db": "db" | kind=code-symbol | source=lib/db/index.ts:L5 | neighbors=[index.ts, auth.ts]
+- "denuncias_stored1_used1formstore": "useD1FormStore" | kind=code-symbol | source=lib/denuncias/storeD1.ts:L52 | neighbors=[FormularioD1.tsx, storeD1.ts]
+- "despacho_despachoform_despachoform": "DespachoForm()" | kind=code-symbol | source=components/911/despacho/DespachoForm.tsx:L19 | neighbors=[DespachoForm.tsx, TablonDespacho.tsx]
+- "despacho_tablondespacho_tablondespacho": "TablonDespacho()" | kind=code-symbol | source=components/911/despacho/TablonDespacho.tsx:L29 | neighbors=[page.tsx, TablonDespacho.tsx]
+- "deteccion_camara_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/deteccion_camara/ReportFilters.tsx:L7 | neighbors=[ReportFilters.tsx, page.tsx]
+- "deteccion_camara_reporttables_reporttable": "ReportTable()" | kind=code-symbol | source=components/reportes/deteccion_camara/ReportTables.tsx:L4 | neighbors=[ReportTables.tsx, page.tsx]
+- "emails_mailer_sendmail": "sendMail()" | kind=code-symbol | source=lib/emails/mailer.ts:L28 | neighbors=[mailer.ts, server.ts]
+- "emails_server_enviarcorreoasignacionfiscalia": "enviarCorreoAsignacionFiscalia()" | kind=code-symbol | source=lib/emails/server.ts:L12 | neighbors=[server.ts, actions.ts]
+- "emails_server_enviarcorreoordenliberacion": "enviarCorreoOrdenLiberacion()" | kind=code-symbol | source=lib/emails/server.ts:L39 | neighbors=[server.ts, route.ts]
+- "eslint_config": "eslint.config.mjs" | kind=code-symbol | source=eslint.config.mjs:L1 | neighbors=[90da1ca Initial commit from Create Next…, eslintConfig]
+- "estadisticos_phonereportstable_phonereportstable": "PhoneReportsTable()" | kind=code-symbol | source=components/reportes/estadisticos/PhoneReportsTable.tsx:L13 | neighbors=[page.tsx, PhoneReportsTable.tsx]
 - "estadisticos_phonestatscards_phonestatscards": "PhoneStatsCards()" | kind=code-symbol | source=components/reportes/estadisticos/PhoneStatsCards.tsx:L5 | neighbors=[page.tsx, PhoneStatsCards.tsx]
 - "estadisticos_reportfilters_reportfilters": "ReportFilters()" | kind=code-symbol | source=components/reportes/estadisticos/ReportFilters.tsx:L7 | neighbors=[page.tsx, ReportFilters.tsx]
 - "expediente_client_limpiarcachetoken": "limpiarCacheToken()" | kind=code-symbol | source=lib/expediente/client.ts:L62 | neighbors=[client.ts, expediente.ts]
@@ -37,31 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_detallesaseguradoview_detallesaseguradoview": "DetallesAseguradoView()" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L40 | neighbors=[DetallesAseguradoView.tsx, page.tsx]
 - "fiscalia_expediente_obtenertokenfiscalia": "obtenerTokenFiscalia()" | kind=code-symbol | source=lib/fiscalia/expediente.ts:L10 | neighbors=[expediente.ts, subirArchivoFiscalia()]
 - "fiscalia_formularioasegurado_displayval": "displayVal()" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L59 | neighbors=[FormularioAsegurado.tsx, FormularioAsegurado()]
-- "fiscalia_formulariopuestadisposicion_formulariopuestadisposicion": "FormularioPuestaDisposicion()" | kind=code-symbol | source=components/fiscalia/FormularioPuestaDisposicion.tsx:L45 | neighbors=[FormularioPuestaDisposicion.tsx, page.tsx]
-- "fiscalia_mapper_num": "num()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L15 | neighbors=[mapper.ts, rowToSolicitud()]
-- "fiscalia_mapper_rowtodetalledetenidoguardado": "rowToDetalleDetenidoGuardado()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L186 | neighbors=[mapper.ts, repository.ts]
-- "fiscalia_mapper_rowtopuestadisposicion": "rowToPuestaDisposicion()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L201 | neighbors=[mapper.ts, repository.ts]
-- "fiscalia_repository_actualizardetallesasegurado": "actualizarDetallesAsegurado()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L214 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_actualizarestadosolicitud": "actualizarEstadoSolicitud()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L109 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_actualizarsolicitudconevidencias": "actualizarSolicitudConEvidencias()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L271 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_guardardetenidosdirecciones": "guardarDetenidosDirecciones()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L435 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_guardarpuestadisposicion": "guardarPuestaDisposicion()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L582 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_listarasegurados": "listarAsegurados()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L361 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_listaraseguradoscondisposicion": "listarAseguradosConDisposicion()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L544 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_listarliberaciones": "listarLiberaciones()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L505 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenerdetalleasegurado": "obtenerDetalleAsegurado()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L122 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenerdetalleaseguradocompleto": "obtenerDetalleAseguradoCompleto()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L390 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenerdetalleinfraccionvia": "obtenerDetalleInfraccionVia()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L286 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenerdetenidosguardados": "obtenerDetenidosGuardados()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L424 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenerevidenciasmonitorista": "obtenerEvidenciasMonitorista()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L254 | neighbors=[repository.ts, page.tsx]
-- "fiscalia_repository_obtenerpuestadisposicionporreporte": "obtenerPuestaDisposicionPorReporte()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L574 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L13 | neighbors=[repository.ts, service.ts]
-- "fiscalia_repository_obtenersolicitudescompletadas": "obtenerSolicitudesCompletadas()" | kind=code-symbol | source=lib/fiscalia/repository.ts:L96 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-039.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-039.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

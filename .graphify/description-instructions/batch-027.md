@@ -1,4 +1,4 @@
-# Node Description Batch 28 of 87
+# Node Description Batch 28 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -24,6 +24,24 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "admin_types_usuariolista": "UsuarioLista" | kind=code-symbol | source=lib/admin/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "agente_infracciones_actions_obtenerdetalleinfraccioninfracciones": "obtenerDetalleInfraccionInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L37 | neighbors=[actions.ts, ModalEntregarGarantia.tsx, page.tsx]
+- "agente_infracciones_mapper_inputtodbparams": "inputToDbParams()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L28 | neighbors=[mapper.ts, nvl(), repository.ts]
+- "agente_infracciones_types_capturainfractorresult": "CapturaInfractorResult" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L48 | neighbors=[actions.ts, service.ts, types.ts]
+- "agente_infracciones_types_liberacionrow": "LiberacionRow" | kind=code-symbol | source=lib/agente_infracciones/types.ts:L11 | neighbors=[mapper.ts, service.ts, types.ts]
+- "agente_juzgado_actions_obtenerdetalleinfraccionviaactionjuzgado": "obtenerDetalleInfraccionViaActionJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L269 | neighbors=[actions.ts, JuzgadoDashboard.tsx, page.tsx]
+- "agente_juzgado_capturardetallesform_capturardetallesform": "CapturarDetallesForm()" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L62 | neighbors=[CapturarDetallesForm.tsx, emptyItem(), page.tsx]
+- "agente_juzgado_formularioaseguradojuzgado_formularioaseguradojuzgado": "FormularioAseguradoJuzgado()" | kind=code-symbol | source=components/agente_juzgado/FormularioAseguradoJuzgado.tsx:L59 | neighbors=[FormularioAseguradoJuzgado.tsx, concatNombre(), displayVal()]
+- "agente_juzgado_mapper_rowtosolicitud": "rowToSolicitud()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L21 | neighbors=[mapper.ts, num(), service.ts]
+- "agente_juzgado_service_finalizarprocesojuzgadosvc": "finalizarProcesoJuzgadoSvc()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L88 | neighbors=[actions.ts, service.ts, route.ts]
+- "agente_juzgado_service_iniciarprocesojuzgadosvc": "iniciarProcesoJuzgadoSvc()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L84 | neighbors=[actions.ts, service.ts, route.ts]
+- "agente_juzgado_service_obtenerdatosasegurado": "obtenerDatosAsegurado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L64 | neighbors=[actions.ts, service.ts, page.tsx]
+- "agente_juzgado_service_verificarroljuzgado": "verificarRolJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L22 | neighbors=[actions.ts, service.ts, page.tsx]
+- "agente_juzgado_types_evidenciamonitorista": "EvidenciaMonitorista" | kind=code-symbol | source=lib/agente_juzgado/types.ts:L1 | neighbors=[DetallesAseguradoView.tsx, repository.ts, types.ts]
+- "agente_liberaciones_actions_generarordenpagoaction": "generarOrdenPagoAction()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L362 | neighbors=[actions.ts, CapturarInfractorSection.tsx, RevisionDocumentosSection.tsx]
+- "agente_liberaciones_actions_obtenerdashboardliberaciones": "obtenerDashboardLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L11 | neighbors=[actions.ts, page.tsx, page.tsx]
+- "agente_liberaciones_actions_obtenerliberaciones": "obtenerLiberaciones()" | kind=code-symbol | source=lib/agente_liberaciones/actions.ts:L27 | neighbors=[actions.ts, page.tsx, page.tsx]
+- "agente_liberaciones_profiledropdown_profiledropdown": "ProfileDropdown()" | kind=code-symbol | source=components/agente_liberaciones/ProfileDropdown.tsx:L14 | neighbors=[page.tsx, ProfileDropdown.tsx, page.tsx]
 - "agente_liberaciones_types_liberacionrow": "LiberacionRow" | kind=code-symbol | source=lib/agente_liberaciones/types.ts:L11 | neighbors=[mapper.ts, service.ts, types.ts]
 - "app_page": "page.tsx" | kind=code-symbol | source=app/page.tsx:L1 | neighbors=[RootPage(), 6a042cd feat: sistema de autenticación,…, 90da1ca Initial commit from Create Next…]
 - "auxiliar_actions_upsertchecklistaction": "upsertChecklistAction()" | kind=code-symbol | source=lib/auxiliar/actions.ts:L20 | neighbors=[actions.ts, requireAuxiliar(), page.tsx]
@@ -38,7 +56,7 @@ one-sentence description — no prose, no markdown fences.
 - "camara_mapper_rowtototalescamara": "rowToTotalesCamara()" | kind=code-symbol | source=lib/camara/mapper.ts:L42 | neighbors=[mapper.ts, toNumNullable(), repository.ts]
 - "camara_repository_obtenertotalescamara": "obtenerTotalesCamara()" | kind=code-symbol | source=lib/camara/repository.ts:L34 | neighbors=[repository.ts, service.ts, route.ts]
 - "camara_types_totalescamara": "TotalesCamara" | kind=code-symbol | source=lib/camara/types.ts:L20 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "commit:repo:github.com/presidenciaSJR/seguridad_publica@6c646afab60d76cab6a76094a1892433957f5f20": "6c646af fix loader bug en login" | kind=Commit | source=git | neighbors=[11ee4f2 mejorando flujo de 911, conexion, page.tsx]
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@de6da3e68d15f705aa9ce7a50a1ab081a74acccd": "de6da3e mejorando despacho" | kind=Commit | source=git | neighbors=[6c646af fix loader bug en login, feature/testing, 3c12c41 cambios en flujo de 911-despacho]
 - "components_buttonverdetalles_botonverdetalle": "BotonVerDetalle()" | kind=code-symbol | source=features/compartido/components/ButtonVerDetalles.tsx:L11 | neighbors=[InfraccionesDashboard.tsx, LiberacionesDashboard.tsx, ButtonVerDetalles.tsx]
 - "components_mapadireccionregistro_cleancolonianame": "cleanColoniaName()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L37 | neighbors=[MapaDireccionRegistro.tsx, normalizeUpper(), extractNeighborhoodFromComponents()]
 - "components_mapadireccionregistro_extractneighborhoodfromcomponents": "extractNeighborhoodFromComponents()" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L60 | neighbors=[MapaDireccionRegistro.tsx, extractAddress(), cleanColoniaName()]
@@ -46,29 +64,11 @@ one-sentence description — no prose, no markdown fences.
 - "corralon_actions_obtenerdashboardcorralon": "obtenerDashboardCorralon()" | kind=code-symbol | source=lib/corralon/actions.ts:L10 | neighbors=[actions.ts, page.tsx, page.tsx]
 - "corralon_actions_obtenersolicitudes": "obtenerSolicitudes()" | kind=code-symbol | source=lib/corralon/actions.ts:L31 | neighbors=[actions.ts, page.tsx, page.tsx]
 - "corralon_mapper_rowtosolicitud": "rowToSolicitud()" | kind=code-symbol | source=lib/corralon/mapper.ts:L8 | neighbors=[mapper.ts, toStr(), service.ts]
-- "corralon_module_card": "module-card.tsx" | kind=code-symbol | source=app/corralon/module-card.tsx:L1 | neighbors=[5a1b5d5 empezando corralon, ModuleCard(), page.tsx]
-- "corralon_profile_dropdown_profiledropdown": "ProfileDropdown()" | kind=code-symbol | source=app/corralon/profile-dropdown.tsx:L14 | neighbors=[page.tsx, profile-dropdown.tsx, page.tsx]
-- "d1_service_listarreportesd1": "listarReportesD1()" | kind=code-symbol | source=lib/d1/service.ts:L5 | neighbors=[page.tsx, service.ts, route.ts]
-- "d1_types_reported1": "ReporteD1" | kind=code-symbol | source=lib/d1/types.ts:L1 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "dashboard_sign_out_button_signoutbutton": "SignOutButton()" | kind=code-symbol | source=app/dashboard/sign-out-button.tsx:L6 | neighbors=[page.tsx, sign-out-button.tsx, SubHeader.tsx]
-- "exportar_route_get": "GET()" | kind=code-symbol | source=app/api/reportes-telefonicos/exportar/route.ts:L60 | neighbors=[route.ts, crearHoja(), getRango()]
-- "fiscalia_actions_accionpedirevidencias": "accionPedirEvidencias()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L78 | neighbors=[actions.ts, PedirEvidenciasModal.tsx, PedirEvidenciasModal.tsx]
-- "fiscalia_actions_obtenerdetalleinfraccionviaaction": "obtenerDetalleInfraccionViaAction()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L285 | neighbors=[actions.ts, FiscaliaDashboard.tsx, page.tsx]
-- "fiscalia_capturardetallesform_capturardetallesform": "CapturarDetallesForm()" | kind=code-symbol | source=components/fiscalia/CapturarDetallesForm.tsx:L62 | neighbors=[CapturarDetallesForm.tsx, emptyItem(), page.tsx]
-- "fiscalia_expediente_subirarchivofiscalia": "subirArchivoFiscalia()" | kind=code-symbol | source=lib/fiscalia/expediente.ts:L42 | neighbors=[actions.ts, expediente.ts, obtenerTokenFiscalia()]
-- "fiscalia_formularioasegurado_formularioasegurado": "FormularioAsegurado()" | kind=code-symbol | source=components/fiscalia/FormularioAsegurado.tsx:L63 | neighbors=[FormularioAsegurado.tsx, displayVal(), page.tsx]
-- "fiscalia_mapper_rowtoasegurado": "rowToAsegurado()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L165 | neighbors=[repository.ts, mapper.ts, repository.ts]
-- "fiscalia_mapper_rowtosolicitud": "rowToSolicitud()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L21 | neighbors=[mapper.ts, num(), service.ts]
-- "fiscalia_service_guardardetallesaseguradosservice": "guardarDetallesAseguradosService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L134 | neighbors=[actions.ts, actions.ts, service.ts]
-- "fiscalia_service_guardarpuestadisposicionservice": "guardarPuestaDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L159 | neighbors=[actions.ts, actions.ts, service.ts]
-- "fiscalia_service_listaraseguradoscondisposicionservice": "listarAseguradosConDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L151 | neighbors=[actions.ts, actions.ts, service.ts]
-- "fiscalia_service_obtenerdatosasegurado": "obtenerDatosAsegurado()" | kind=code-symbol | source=lib/fiscalia/service.ts:L63 | neighbors=[actions.ts, service.ts, page.tsx]
-- "fiscalia_service_obtenerpuestadisposicionservice": "obtenerPuestaDisposicionService()" | kind=code-symbol | source=lib/fiscalia/service.ts:L155 | neighbors=[actions.ts, actions.ts, service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-027.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-027.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

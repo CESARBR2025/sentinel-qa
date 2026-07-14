@@ -1,4 +1,4 @@
-# Node Description Batch 76 of 87
+# Node Description Batch 76 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "monitorista_bandejasolicitudes_btnsuccess": "btnSuccess" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L148 | neighbors=[BandejaSolicitudes.tsx]
+- "monitorista_bandejasolicitudes_origenbadge": "origenBadge" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L160 | neighbors=[BandejaSolicitudes.tsx]
+- "monitorista_bandejasolicitudes_solicitudrow": "SolicitudRow" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L11 | neighbors=[BandejaSolicitudes.tsx]
+- "monitorista_bandejasolicitudes_statusbadge": "statusBadge()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L166 | neighbors=[BandejaSolicitudes.tsx]
+- "monitorista_botongenerarppt_inputstyle": "inputStyle" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L135 | neighbors=[BotonGenerarPpt.tsx]
+- "monitorista_botongenerarppt_label": "Label()" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L131 | neighbors=[BotonGenerarPpt.tsx]
+- "monitorista_buscadorevento_opciones": "OPCIONES" | kind=code-symbol | source=components/monitorista/BuscadorEvento.tsx:L6 | neighbors=[BuscadorEvento.tsx]
+- "monitorista_cardenviofoto_etiquetas": "ETIQUETAS" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L10 | neighbors=[CardEnvioFoto.tsx]
+- "monitorista_filaincidentecamara_td": "Td()" | kind=code-symbol | source=components/monitorista/FilaIncidenteCamara.tsx:L61 | neighbors=[FilaIncidenteCamara.tsx]
+- "monitorista_galeriaevidencias_cardstyle": "cardStyle" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L98 | neighbors=[GaleriaEvidencias.tsx]
+- "monitorista_galeriaevidencias_evidenciarow": "EvidenciaRow" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L6 | neighbors=[GaleriaEvidencias.tsx]
+- "monitorista_galeriaevidencias_itemstyle": "itemStyle" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L107 | neighbors=[GaleriaEvidencias.tsx]
+- "monitorista_galeriaevidencias_sectiontitle": "sectionTitle" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L102 | neighbors=[GaleriaEvidencias.tsx]
+- "monitorista_layout_monitoristalayout": "MonitoristaLayout()" | kind=code-symbol | source=app/monitorista/layout.tsx:L6 | neighbors=[layout.tsx]
+- "monitorista_mapper_bool": "bool()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L19 | neighbors=[mapper.ts]
+- "monitorista_mapper_str": "str()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L8 | neighbors=[mapper.ts]
+- "monitorista_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L110 | neighbors=[page.tsx]
+- "monitorista_page_monitoristahubpage": "MonitoristaHubPage()" | kind=code-symbol | source=app/monitorista/page.tsx:L12 | neighbors=[page.tsx]
+- "monitorista_page_onlinestyle": "onlineStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L111 | neighbors=[page.tsx]
+- "monitorista_permisos_accion": "Accion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L5 | neighbors=[permisos.ts]
+- "monitorista_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L17 | neighbors=[permisos.ts]
+- "monitorista_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L27 | neighbors=[permisos.ts]
+- "monitorista_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L21 | neighbors=[permisos.ts]
+- "monitorista_permisos_permisorow": "PermisoRow" | kind=code-symbol | source=lib/monitorista/permisos.ts:L7 | neighbors=[permisos.ts]
+- "monitorista_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L6 | neighbors=[permisos.ts]
+- "monitorista_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L4 | neighbors=[permisos.ts]
+- "monitorista_ppt_service_descargarfoto": "descargarFoto()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L22 | neighbors=[ppt-service.ts]
+- "monitorista_ppt_service_normalizarurl": "normalizarUrl()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L16 | neighbors=[ppt-service.ts]
+- "monitorista_repository_rechazarfoto": "rechazarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L609 | neighbors=[repository.ts]
+- "monitorista_subirevidenciamodal_btncancel": "btnCancel" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L252 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L8 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_limites": "LIMITES" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L45 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_modal": "modal" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L247 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirevidenciamodal_overlay": "overlay" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L242 | neighbors=[SubirEvidenciaModal.tsx]
+- "monitorista_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L8 | neighbors=[SubirFotoDetenido.tsx]
+- "monitorista_tabladetenidos_btndetalle": "btnDetalle" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L104 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_detenidorow": "DetenidoRow" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L14 | neighbors=[TablaDetenidos.tsx]
+- "monitorista_tabladetenidos_fotobadge": "fotoBadge()" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L111 | neighbors=[TablaDetenidos.tsx]
 - "monitorista_tabladetenidos_fotoinfo": "FotoInfo" | kind=code-symbol | source=components/monitorista/TablaDetenidos.tsx:L8 | neighbors=[TablaDetenidos.tsx]
 - "monitorista_types_fichainteligenciadata": "FichaInteligenciaData" | kind=code-symbol | source=lib/monitorista/types.ts:L172 | neighbors=[types.ts]
-- "monitorista_types_monitoristastats": "MonitoristaStats" | kind=code-symbol | source=lib/monitorista/types.ts:L1 | neighbors=[types.ts]
-- "next_config_nextconfig": "nextConfig" | kind=code-symbol | source=next.config.ts:L3 | neighbors=[next.config.ts]
-- "notificaciones_campanillanotificaciones_alerttoast": "AlertToast()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L101 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_bellicon": "BellIcon()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L20 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_injectkeyframes": "injectKeyframes()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L92 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_notificacion": "Notificacion" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L7 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_playalertsound": "playAlertSound()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L41 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_props": "Props" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L187 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_timeago": "timeAgo()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L31 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_toastprops": "ToastProps" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L73 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_checker_hitos_alertar": "HITOS_ALERTAR" | kind=code-symbol | source=lib/notificaciones/checker.ts:L4 | neighbors=[checker.ts]
-- "notificaciones_route_get": "GET()" | kind=code-symbol | source=app/api/notificaciones/route.ts:L7 | neighbors=[route.ts]
-- "nueva_page_autoridades": "AUTORIDADES" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L8 | neighbors=[page.tsx]
-- "nueva_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L94 | neighbors=[page.tsx]
-- "nueva_page_field": "Field()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L132 | neighbors=[page.tsx]
-- "nueva_page_nuevafichapage": "NuevaFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L14 | neighbors=[page.tsx]
-- "nueva_page_nuevamedidapage": "NuevaMedidaPage()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L15 | neighbors=[page.tsx]
-- "nueva_page_nuevasolicitudpage": "NuevaSolicitudPage()" | kind=code-symbol | source=app/prevencion/juridico/solicitudes/nueva/page.tsx:L15 | neighbors=[page.tsx]
-- "nueva_page_row": "Row()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L124 | neighbors=[page.tsx]
-- "nueva_page_section": "Section()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L111 | neighbors=[page.tsx]
-- "nueva_page_selectfield": "SelectField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L148 | neighbors=[page.tsx]
-- "nueva_page_textareafield": "TextareaField()" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L166 | neighbors=[page.tsx]
-- "nueva_page_tipos": "TIPOS" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L8 | neighbors=[page.tsx]
-- "nuevo_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L150 | neighbors=[page.tsx]
-- "nuevo_page_campos": "CAMPOS" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L16 | neighbors=[page.tsx]
-- "nuevo_page_campos_calculables": "CAMPOS_CALCULABLES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_campos_manuales": "CAMPOS_MANUALES" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L26 | neighbors=[page.tsx]
-- "nuevo_page_fuentedetencion": "FuenteDetencion" | kind=code-symbol | source=app/formato-n-rnd/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_fuenteincidente": "FuenteIncidente" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_inputstyle": "inputStyle" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L149 | neighbors=[page.tsx]
-- "nuevo_page_label": "Label()" | kind=code-symbol | source=app/monitorista/incidentes-camara/nuevo/page.tsx:L145 | neighbors=[page.tsx]
-- "nuevo_page_nuevadenunciad1page": "NuevaDenunciaD1Page()" | kind=code-symbol | source=app/denuncia/nuevo/page.tsx:L12 | neighbors=[page.tsx]
-- "nuevo_page_nuevaformatonarmaaseguradapage": "NuevaFormatoNArmaAseguradaPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/nuevo/page.tsx:L11 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonatencionvictimaspage": "NuevoFormatoNAtencionVictimasPage()" | kind=code-symbol | source=app/formato-n-atencion-victimas/nuevo/page.tsx:L17 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatoneventopage": "NuevoFormatoNEventoPage()" | kind=code-symbol | source=app/formato-n-eventos/nuevo/page.tsx:L20 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonfgepage": "NuevoFormatoNFgePage()" | kind=code-symbol | source=app/formato-n-fge/nuevo/page.tsx:L32 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonfgrpage": "NuevoFormatoNFgrPage()" | kind=code-symbol | source=app/formato-n-fgr/nuevo/page.tsx:L29 | neighbors=[page.tsx]
-- "nuevo_page_nuevoformatonmediosalternativospage": "NuevoFormatoNMediosAlternativosPage()" | kind=code-symbol | source=app/formato-n-medios-alternativos/nuevo/page.tsx:L17 | neighbors=[page.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-075.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-075.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

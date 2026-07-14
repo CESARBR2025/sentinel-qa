@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useFlota }    from '@/hooks/useFlota'
 import { useEmpleado } from '@/hooks/useEmpleado'
-import { createDespacho } from '@/lib/incidentes/actions'
+import { createDespacho, enviarRefuerzos } from '@/lib/incidentes/actions'
 import { Plus, X, Search, Loader2, CheckCircle } from 'lucide-react'
 
 interface Unidad   { extId: string; placa: string; label: string }
@@ -16,7 +16,8 @@ const TAG: React.CSSProperties    = { display: 'inline-flex', alignItems: 'cente
 const ERR: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#dc2626', marginTop: 4 }
 const LBL: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }
 
-export function DespachoForm({ incidenteId, onDespachado }: { incidenteId: string; onDespachado?: () => void }) {
+export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho' }: { incidenteId: string; onDespachado?: () => void; modo?: 'despacho' | 'refuerzo' }) {
+  const esRefuerzo = modo === 'refuerzo'
   const flota = useFlota()
   const emp   = useEmpleado()
 
@@ -51,8 +52,12 @@ export function DespachoForm({ incidenteId, onDespachado }: { incidenteId: strin
   }
 
   const handleSubmit = () => {
-    if (unidades.length  === 0) { setErrorForm('Agrega al menos una unidad');   return }
-    if (elementos.length === 0) { setErrorForm('Agrega al menos un elemento'); return }
+    if (esRefuerzo) {
+      if (unidades.length === 0 && elementos.length === 0) { setErrorForm('Agrega al menos una unidad o un elemento de refuerzo'); return }
+    } else {
+      if (unidades.length  === 0) { setErrorForm('Agrega al menos una unidad');   return }
+      if (elementos.length === 0) { setErrorForm('Agrega al menos un elemento'); return }
+    }
     setErrorForm(null)
     startTransition(async () => {
       try {
@@ -60,11 +65,12 @@ export function DespachoForm({ incidenteId, onDespachado }: { incidenteId: strin
         fd.set('incidenteId', incidenteId)
         fd.set('unidades',  JSON.stringify(unidades.map(u =>  ({ extId: u.extId,  placa: u.placa }))))
         fd.set('elementos', JSON.stringify(elementos.map(e => ({ extId: e.extId, nomina: e.nomina, nombre: e.nombre }))))
-        await createDespacho(fd)
+        if (esRefuerzo) await enviarRefuerzos(fd)
+        else            await createDespacho(fd)
         setExito(true)
         onDespachado?.()
       } catch (e) {
-        setErrorForm(e instanceof Error ? e.message : 'Error al despachar')
+        setErrorForm(e instanceof Error ? e.message : (esRefuerzo ? 'Error al enviar refuerzos' : 'Error al despachar'))
       }
     })
   }
@@ -74,7 +80,7 @@ export function DespachoForm({ incidenteId, onDespachado }: { incidenteId: strin
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 2 }}>
         <CheckCircle size={16} color="#16a34a" />
         <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#15803d', fontWeight: 700 }}>
-          DESPACHADO — Actualizando tablón...
+          {esRefuerzo ? 'REFUERZOS ENVIADOS — Actualizando tablón...' : 'DESPACHADO — Actualizando tablón...'}
         </span>
       </div>
     )
@@ -170,8 +176,10 @@ export function DespachoForm({ incidenteId, onDespachado }: { incidenteId: strin
       {errorForm && <div style={{ ...ERR, fontSize: 12 }}>{errorForm}</div>}
 
       <div>
-        <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1 }}>
-          {isPending ? <><Loader2 size={13} /> DESPACHANDO...</> : 'DESPACHAR INCIDENTE'}
+        <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1, background: esRefuerzo ? '#c2410c' : '#2563eb' }}>
+          {isPending
+            ? <><Loader2 size={13} /> {esRefuerzo ? 'ENVIANDO...' : 'DESPACHANDO...'}</>
+            : (esRefuerzo ? 'ENVIAR REFUERZOS' : 'DESPACHAR INCIDENTE')}
         </button>
       </div>
     </div>

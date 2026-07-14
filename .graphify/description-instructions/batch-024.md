@@ -1,4 +1,4 @@
-# Node Description Batch 25 of 87
+# Node Description Batch 25 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,18 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_mapper_rowtopersonaafectada": "rowToPersonaAfectada()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L94 | neighbors=[mapper.ts, toNum(), toStr(), repository.ts]
+- "incidentes_repository_obtenerdespachodeincidente": "obtenerDespachoDeIncidente()" | kind=code-symbol | source=lib/incidentes/repository.ts:L124 | neighbors=[route.ts, repository.ts, toStr(), service.ts]
+- "incidentes_repository_obtenerincidentebasico": "obtenerIncidenteBasico()" | kind=code-symbol | source=lib/incidentes/repository.ts:L116 | neighbors=[route.ts, page.tsx, repository.ts, route.ts]
+- "incidentes_toastonload": "ToastOnLoad.tsx" | kind=code-symbol | source=app/agente_911/ciudadano/incidentes/ToastOnLoad.tsx:L1 | neighbors=[22bf125 Merge pull request #20 from pre…, eacfdaf mostrando toast de guardado, page.tsx, ToastOnLoad()]
+- "incidentes_types_incidentelistitem": "IncidenteListItem" | kind=code-symbol | source=lib/incidentes/types.ts:L11 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "legalidad_repository_articulosrepository": "ArticulosRepository" | kind=code-symbol | source=features/via/legalidad/repository.ts:L3 | neighbors=[repository.ts, .obtenerArticulos(), .obtenerFraccionesPorArticulo(), service.ts]
+- "manual_migrations_0009_rename_permisos": "0009_rename_permisos.sql" | kind=code-symbol | source=lib/db/manual-migrations/0009_rename_permisos.sql:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, f2c66e6 Extender roles y permisos finos…]
+- "manual_migrations_0010_permisos_seccion_libre": "0010_permisos_seccion_libre.sql" | kind=code-symbol | source=lib/db/manual-migrations/0010_permisos_seccion_libre.sql:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, f2c66e6 Extender roles y permisos finos…]
+- "manual_migrations_0012_permisos_eliminar": "0012_permisos_eliminar.sql" | kind=code-symbol | source=lib/db/manual-migrations/0012_permisos_eliminar.sql:L1 | neighbors=[27dcb21 Merge branch 'feature/testing' …, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' …, f2c66e6 Extender roles y permisos finos…]
+- "monitorista_actions_requiremonitorista": "requireMonitorista()" | kind=code-symbol | source=lib/monitorista/actions.ts:L11 | neighbors=[actions.ts, cancelarSolicitud(), completarSolicitud(), subirEvidencia()]
+- "monitorista_mapper_parsesolicitudesjson": "parseSolicitudesJson()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L31 | neighbors=[mapper.ts, rowToDenunciaDetalle(), repository.ts, service.ts]
+- "monitorista_ppt_service_generarppt": "generarPpt()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L75 | neighbors=[route.ts, ppt-service.ts, getAspectRatio(), parseDetenidos()]
 - "monitorista_service_getdestinos": "getDestinos()" | kind=code-symbol | source=lib/monitorista/service.ts:L85 | neighbors=[route.ts, page.tsx, detenido-service.ts, service.ts]
 - "monitorista_types_denunciadetalle": "DenunciaDetalle" | kind=code-symbol | source=lib/monitorista/types.ts:L55 | neighbors=[denuncia-service.ts, mapper.ts, service.ts, types.ts]
 - "monitorista_types_dependencia": "Dependencia" | kind=code-symbol | source=lib/monitorista/types.ts:L80 | neighbors=[detenido-service.ts, mapper.ts, service.ts, types.ts]
@@ -41,27 +53,15 @@ one-sentence description — no prose, no markdown fences.
 - "permisos_core_guardarplantillaseccionesaction": "guardarPlantillaSeccionesAction()" | kind=code-symbol | source=lib/permisos/core.ts:L184 | neighbors=[core.ts, guardarPlantillaSeccion(), requireAdmin(), page.tsx]
 - "permisos_core_obtenerpermisosusuario": "obtenerPermisosUsuario()" | kind=code-symbol | source=lib/permisos/core.ts:L32 | neighbors=[page.tsx, core.ts, mapaDefault(), tienePermiso()]
 - "permisos_registro_modulos_por_rol": "MODULOS_POR_ROL" | kind=code-symbol | source=lib/permisos/registro.ts:L18 | neighbors=[page.tsx, registro.ts, page.tsx, page.tsx]
-- "prevencion_mapper_rowtomedidadetalle": "rowToMedidaDetalle()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L56 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
-- "prevencion_mapper_rowtovisita": "rowToVisita()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L141 | neighbors=[mapper.ts, toBool(), toStr(), repository.ts]
-- "prevencion_prorrogaviewermodal": "ProrrogaViewerModal.tsx" | kind=code-symbol | source=components/prevencion/ProrrogaViewerModal.tsx:L1 | neighbors=[0e33bf6 feat: módulo Admin, Prórroga, F…, page.tsx, ProrrogaViewerModal(), ProrrogaViewerModalProps]
-- "reportes_formato_n_atencion_victimas_service_obteneratencionvictimasporfechaperiodo": "obtenerAtencionVictimasPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L64 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts, rowTo(), formato-n-consolidado-service.ts]
-- "reportes_formato_n_fge_service_obtenerfgeporfechaperiodo": "obtenerFgePorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L73 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-fge-service.ts, rowTo()]
-- "reportes_formato_n_fgr_service_obtenerfgrporfechaperiodo": "obtenerFgrPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L72 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-fgr-service.ts, rowTo()]
-- "reportes_formato_n_medios_alternativos_service_obtenermediosalternativosporfechaperiodo": "obtenerMediosAlternativosPorFechaPeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L60 | neighbors=[route.ts, formato-n-consolidado-service.ts, formato-n-medios-alternativos-service.ts, rowTo()]
-- "reportes_incidentes_service_listarreportediario": "listarReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L40 | neighbors=[route.ts, page.tsx, service.ts, combinar()]
-- "reportes_incidentes_service_listarreportesemanal": "listarReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L47 | neighbors=[route.ts, page.tsx, service.ts, combinar()]
-- "reportes_mapper": "mapper.ts" | kind=code-symbol | source=lib/reportes/mapper.ts:L1 | neighbors=[ad3ec5f mejorando esto, toBool(), toNum(), toStr()]
-- "reportes_operativos_types_armarow": "ArmaRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L51 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "reportes_operativos_types_cateorow": "CateoRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L8 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "reportes_operativos_types_drogarow": "DrogaRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L58 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "reportes_operativos_types_extorsionrow": "ExtorsionRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L65 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "reportes_operativos_types_hidrocarburorow": "HidrocarburoRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L44 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
-- "reportes_operativos_types_ordenaprehensionrow": "OrdenAprehensionRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L37 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts]
+- "plugins_context_loader_cacheget": "cacheGet()" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L79 | neighbors=[context-loader.js, cacheKey(), graphifyQuery(), graphifySummary()]
+- "plugins_context_loader_cacheset": "cacheSet()" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L90 | neighbors=[context-loader.js, cacheKey(), graphifyQuery(), graphifySummary()]
+- "plugins_context_loader_graphifyquery": "graphifyQuery()" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L179 | neighbors=[context-loader.js, cacheGet(), cacheSet(), isGraphifyAvailable()]
+- "plugins_context_loader_graphifysummary": "graphifySummary()" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L202 | neighbors=[context-loader.js, cacheGet(), cacheSet(), isGraphifyAvailable()]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-024.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-024.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

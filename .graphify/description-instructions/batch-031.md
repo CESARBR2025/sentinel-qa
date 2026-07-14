@@ -1,4 +1,4 @@
-# Node Description Batch 32 of 87
+# Node Description Batch 32 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,12 +17,31 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "prevencion_actions_createvisita": "createVisita()" | kind=code-symbol | source=lib/prevencion/actions.ts:L53 | neighbors=[actions.ts, requireAcceso(), VisitaModal.tsx]
+- "prevencion_mapper_rowtoautoridadadicional": "rowToAutoridadAdicional()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L154 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "prevencion_mapper_rowtocontestacion": "rowToContestacion()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L127 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "prevencion_mapper_rowtofichabusquedadetalle": "rowToFichaBusquedaDetalle()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L84 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "prevencion_mapper_rowtoseguimiento": "rowToSeguimiento()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L104 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "prevencion_mapper_rowtosolicitud": "rowToSolicitud()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L40 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "prevencion_mapper_rowtosolicitudc4": "rowToSolicitudC4()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L116 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "prevencion_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L9 | neighbors=[mapper.ts, rowToMedidaDetalle(), rowToVisita()]
+- "prevencion_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/prevencion/permisos.ts:L5 | neighbors=[registro.ts, actions.ts, permisos.ts]
+- "prevencion_printbutton": "PrintButton.tsx" | kind=code-symbol | source=components/prevencion/PrintButton.tsx:L1 | neighbors=[5558751 feat: módulo Prevención del Del…, page.tsx, PrintButton()]
+- "prevencion_repository_obtenerfichabusqueda": "obtenerFichaBusqueda()" | kind=code-symbol | source=lib/prevencion/repository.ts:L101 | neighbors=[page.tsx, page.tsx, repository.ts]
+- "prevencion_semaforo_calcularsemaforovigencia": "calcularSemaforoVigencia()" | kind=code-symbol | source=lib/prevencion/semaforo.ts:L5 | neighbors=[page.tsx, page.tsx, semaforo.ts]
+- "prevencion_semaforovigencia_semaforovigencia": "SemaforoVigencia()" | kind=code-symbol | source=components/prevencion/SemaforoVigencia.tsx:L10 | neighbors=[page.tsx, page.tsx, SemaforoVigencia.tsx]
+- "prevencion_timeline_calcularfechaesperada": "calcularFechaEsperada()" | kind=code-symbol | source=lib/prevencion/timeline.ts:L18 | neighbors=[checker.ts, SeguimientoTimeline.tsx, timeline.ts]
+- "prevencion_timeline_getlabelseguimiento": "getLabelSeguimiento()" | kind=code-symbol | source=lib/prevencion/timeline.ts:L10 | neighbors=[checker.ts, SeguimientoTimeline.tsx, timeline.ts]
+- "prevencion_types_autoridadadicional": "AutoridadAdicional" | kind=code-symbol | source=lib/prevencion/types.ts:L122 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "prevencion_types_contestacion": "Contestacion" | kind=code-symbol | source=lib/prevencion/types.ts:L99 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "prevencion_types_fichabusquedadetalle": "FichaBusquedaDetalle" | kind=code-symbol | source=lib/prevencion/types.ts:L62 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "prevencion_types_medidadetalle": "MedidaDetalle" | kind=code-symbol | source=lib/prevencion/types.ts:L36 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_seguimientobusqueda": "SeguimientoBusqueda" | kind=code-symbol | source=lib/prevencion/types.ts:L80 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_solicitudc4": "SolicitudC4" | kind=code-symbol | source=lib/prevencion/types.ts:L90 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_solicitudinformacion": "SolicitudInformacion" | kind=code-symbol | source=lib/prevencion/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "prevencion_types_visitadomiciliaria": "VisitaDomiciliaria" | kind=code-symbol | source=lib/prevencion/types.ts:L111 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "radio_formrondinescalado_formrondinescalado": "FormRondinEscalado()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L27 | neighbors=[FormRondinEscalado.tsx, ahoraLocal(), page.tsx]
-- "radio_input": "Input.tsx" | kind=code-symbol | source=components/911/radio/Input.tsx:L1 | neighbors=[InputProps, SentinelInput(), 4d4a9b7 formulario de notificaciones po…]
+- "radio_input": "Input.tsx" | kind=code-symbol | source=components/911/radio/Input.tsx:L1 | neighbors=[4d4a9b7 formulario de notificaciones po…, InputProps, SentinelInput()]
 - "reportes_d1_route_generarfoliodenunciaunico": "generarFolioDenunciaUnico()" | kind=code-symbol | source=app/api/reportes-d1/route.ts:L23 | neighbors=[route.ts, generarFolioDenuncia(), POST()]
 - "reportes_form_styles_btnprimario": "btnPrimario()" | kind=code-symbol | source=components/reportes/form-styles.ts:L7 | neighbors=[page.tsx, page.tsx, form-styles.ts]
 - "reportes_form_styles_btnsecundario": "btnSecundario" | kind=code-symbol | source=components/reportes/form-styles.ts:L5 | neighbors=[page.tsx, page.tsx, form-styles.ts]
@@ -38,30 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_formato_n_atencion_victimas_service_listaratencionvictimas": "listarAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L46 | neighbors=[page.tsx, route.ts, formato-n-atencion-victimas-service.ts]
 - "reportes_formato_n_atencion_victimas_service_obteneratencionvictimas": "obtenerAtencionVictimas()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L58 | neighbors=[route.ts, formato-n-atencion-victimas-service.ts, rowTo()]
 - "reportes_formato_n_atencion_victimas_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-atencion-victimas-service.ts]
-- "reportes_formato_n_consolidado_service_obtenerformatonconsolidadorango": "obtenerFormatoNConsolidadoRango()" | kind=code-symbol | source=lib/reportes/formato-n-consolidado-service.ts:L57 | neighbors=[route.ts, formato-n-consolidado-service.ts, enumerarFechas()]
-- "reportes_formato_n_eventos_service_listareventos": "listarEventos()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L37 | neighbors=[page.tsx, route.ts, formato-n-eventos-service.ts]
-- "reportes_formato_n_eventos_service_obtenerevento": "obtenerEvento()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L42 | neighbors=[route.ts, formato-n-eventos-service.ts, rowTo()]
-- "reportes_formato_n_eventos_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L22 | neighbors=[formato-n-eventos-service.ts, obtenerEvento(), formatFecha()]
-- "reportes_formato_n_fge_service_listarfge": "listarFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L55 | neighbors=[page.tsx, route.ts, formato-n-fge-service.ts]
-- "reportes_formato_n_fge_service_obtenerfge": "obtenerFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L67 | neighbors=[route.ts, formato-n-fge-service.ts, rowTo()]
-- "reportes_formato_n_fge_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L5 | neighbors=[page.tsx, route.ts, formato-n-fge-service.ts]
-- "reportes_formato_n_fge_service_periodos": "PERIODOS" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L4 | neighbors=[page.tsx, formato-n-consolidado-service.ts, formato-n-fge-service.ts]
-- "reportes_formato_n_fgr_service_listarfgr": "listarFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L54 | neighbors=[page.tsx, route.ts, formato-n-fgr-service.ts]
-- "reportes_formato_n_fgr_service_obtenerfgr": "obtenerFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L66 | neighbors=[route.ts, formato-n-fgr-service.ts, rowTo()]
-- "reportes_formato_n_fgr_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-fgr-service.ts]
-- "reportes_formato_n_medios_alternativos_service_listarmediosalternativos": "listarMediosAlternativos()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L42 | neighbors=[page.tsx, route.ts, formato-n-medios-alternativos-service.ts]
-- "reportes_formato_n_medios_alternativos_service_obtenermediosalternativos": "obtenerMediosAlternativos()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L54 | neighbors=[route.ts, formato-n-medios-alternativos-service.ts, rowTo()]
-- "reportes_formato_n_medios_alternativos_service_periodo": "Periodo" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L4 | neighbors=[page.tsx, route.ts, formato-n-medios-alternativos-service.ts]
-- "reportes_formato_n_rnd_service_listarrnd": "listarRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L33 | neighbors=[page.tsx, route.ts, formato-n-rnd-service.ts]
-- "reportes_formato_n_rnd_service_obtenerrnd": "obtenerRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L38 | neighbors=[route.ts, formato-n-rnd-service.ts, rowTo()]
-- "reportes_formato_n_rnd_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L20 | neighbors=[formato-n-rnd-service.ts, obtenerRnd(), formatFecha()]
-- "reportes_incidentes_mapper_rowtoreportediario": "rowToReporteDiario()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L11 | neighbors=[mapper.ts, toNum(), repository.ts]
-- "reportes_incidentes_mapper_rowtoreportesemanal": "rowToReporteSemanal()" | kind=code-symbol | source=lib/reportes-incidentes/mapper.ts:L20 | neighbors=[mapper.ts, toNum(), repository.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-031.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-031.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

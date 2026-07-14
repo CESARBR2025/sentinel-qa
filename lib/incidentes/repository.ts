@@ -68,14 +68,14 @@ export async function listarIncidentesEnDespacho(): Promise<IncidenteConDespacho
   }))
 }
 
-async function obtenerUnidadesElementos(despachoId: string): Promise<[{ placa: string }[], { nombre: string; nomina: string }[]]> {
+async function obtenerUnidadesElementos(despachoId: string): Promise<[{ placa: string; esRefuerzo: boolean }[], { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]]> {
   const [unidadesResult, elementosResult] = await Promise.all([
-    query<Record<string, unknown>>(`SELECT unidad_placa FROM incidente_despacho_unidades WHERE despacho_id = $1`, [despachoId]),
-    query<Record<string, unknown>>(`SELECT elemento_nombre, elemento_nomina FROM incidente_despacho_elementos WHERE despacho_id = $1`, [despachoId]),
+    query<Record<string, unknown>>(`SELECT unidad_placa, es_refuerzo FROM incidente_despacho_unidades WHERE despacho_id = $1 ORDER BY es_refuerzo, creado_en`, [despachoId]),
+    query<Record<string, unknown>>(`SELECT elemento_nombre, elemento_nomina, es_prioritario, es_refuerzo FROM incidente_despacho_elementos WHERE despacho_id = $1 ORDER BY es_prioritario DESC, es_refuerzo, creado_en`, [despachoId]),
   ])
   return [
-    unidadesResult.rows.map(r => ({ placa: toStr(r.unidad_placa) ?? '' })),
-    elementosResult.rows.map(r => ({ nombre: toStr(r.elemento_nombre) ?? '', nomina: toStr(r.elemento_nomina) ?? '' })),
+    unidadesResult.rows.map(r => ({ placa: toStr(r.unidad_placa) ?? '', esRefuerzo: Boolean(r.es_refuerzo) })),
+    elementosResult.rows.map(r => ({ nombre: toStr(r.elemento_nombre) ?? '', nomina: toStr(r.elemento_nomina) ?? '', esPrioritario: Boolean(r.es_prioritario), esRefuerzo: Boolean(r.es_refuerzo) })),
   ]
 }
 

@@ -1,4 +1,4 @@
-# Node Description Batch 34 of 87
+# Node Description Batch 34 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,25 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_operativos_types_detencionofirow": "DetencionOfiRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L16 | neighbors=[mapper.ts, service.ts, types.ts]
+- "reportes_sin_d1_mapper_rowtosind1": "rowToSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/mapper.ts:L11 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "reportes_sin_d1_service_listarsind1": "listarSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/service.ts:L6 | neighbors=[page.tsx, route.ts, service.ts]
+- "reportes_sin_novedad_mapper_rowtosinnovedad": "rowToSinNovedad()" | kind=code-symbol | source=lib/reportes-sin-novedad/mapper.ts:L11 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "reportes_sin_novedad_service_listarreportessinnovedad": "listarReportesSinNovedad()" | kind=code-symbol | source=lib/reportes-sin-novedad/service.ts:L6 | neighbors=[route.ts, service.ts, page.tsx]
+- "reportes_types": "types.ts" | kind=code-symbol | source=lib/reportes/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, repository.ts, FormatoNStats]
+- "reportes_welcomebanner_sentinelhero": "SentinelHero()" | kind=code-symbol | source=components/reportes/welcomeBanner.tsx:L1 | neighbors=[page.tsx, page.tsx, welcomeBanner.tsx]
+- "rol_servicios_catalogos_actions_createbodycam": "createBodyCam()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L63 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_catalogos_actions_createconcepto": "createConcepto()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L76 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_catalogos_actions_createmediocanalizacion": "createMedioCanalizacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L115 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_catalogos_actions_createradio": "createRadio()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L50 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_catalogos_actions_createsector": "createSector()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L37 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_catalogos_actions_createtipoemergencia": "createTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L102 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_catalogos_actions_createtipoobservacion": "createTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L89 | neighbors=[catalogos-actions.ts, req(), requireAdmin()]
+- "rol_servicios_mapper_rowtobodycam": "rowToBodyCam()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L114 | neighbors=[mapper.ts, toBool(), repository.ts]
+- "rol_servicios_mapper_rowtomediocanalizacion": "rowToMedioCanalizacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L152 | neighbors=[mapper.ts, toBool(), repository.ts]
+- "rol_servicios_mapper_rowtorolobservacion": "rowToRolObservacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L86 | neighbors=[mapper.ts, toStr(), repository.ts]
+- "rol_servicios_mapper_rowtosector": "rowToSector()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L95 | neighbors=[mapper.ts, toBool(), repository.ts]
+- "rol_servicios_mapper_rowtotipoemergencia": "rowToTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L143 | neighbors=[mapper.ts, toBool(), repository.ts]
 - "rol_servicios_mapper_rowtotipoobservacion": "rowToTipoObservacion()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L134 | neighbors=[mapper.ts, toBool(), repository.ts]
 - "rol_servicios_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L12 | neighbors=[mapper.ts, rowToRolAsignacion(), rowToRolServicio()]
 - "rol_servicios_repository_getrolbyid": "getRolById()" | kind=code-symbol | source=lib/rol-servicios/repository.ts:L13 | neighbors=[actions.ts, repository.ts, service.ts]
@@ -24,6 +43,7 @@ one-sentence description — no prose, no markdown fences.
 - "rol_servicios_rolinputs_rolfield": "RolField()" | kind=code-symbol | source=components/rol_servicios/RolInputs.tsx:L9 | neighbors=[page.tsx, RolInputs.tsx, RegistroIncidenteForm.tsx]
 - "sasiete_mapper_maprowtoordenpago": "mapRowToOrdenPago()" | kind=code-symbol | source=features/via/saSiete/mapper.ts:L23 | neighbors=[mapper.ts, repository.ts, service.ts]
 - "sasiete_types_ordenpagosa7": "OrdenPagoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L9 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "scripts_ab_test_charstotokens": "charsToTokens()" | kind=code-symbol | source=scripts/ab-test.mjs:L26 | neighbors=[ab-test.mjs, simulateWithoutYoumindag(), simulateWithYoumindag()]
 - "scripts_load_context_buildinstructions": "buildInstructions()" | kind=code-symbol | source=scripts/load-context.mjs:L79 | neighbors=[load-context.mjs, resolvePath(), main()]
 - "scripts_session_checkpoint_adddecision": "addDecision()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L188 | neighbors=[session-checkpoint.mjs, ensureDir(), getSessionId()]
 - "scripts_session_checkpoint_budgetreport": "budgetReport()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L160 | neighbors=[session-checkpoint.mjs, budget(), formatNum()]
@@ -31,37 +51,17 @@ one-sentence description — no prose, no markdown fences.
 - "scripts_session_checkpoint_last": "last()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L56 | neighbors=[session-checkpoint.mjs, formatEvent(), parseEvent()]
 - "scripts_session_checkpoint_parseevent": "parseEvent()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L31 | neighbors=[session-checkpoint.mjs, getSessionId(), last()]
 - "scripts_session_checkpoint_pendingdecisions": "pendingDecisions()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L209 | neighbors=[session-checkpoint.mjs, formatEvent(), getSessionId()]
+- "scripts_trace_client_findreactimportwithts": "findReactImportWithTS()" | kind=code-symbol | source=scripts/trace-client.mjs:L142 | neighbors=[trace-client.mjs, require, injectClientTrace()]
+- "scripts_trace_client_injectclienttrace": "injectClientTrace()" | kind=code-symbol | source=scripts/trace-client.mjs:L66 | neighbors=[trace-client.mjs, buildHelperCode(), findReactImportWithTS()]
 - "scripts_trace_server_findmatchingbrace": "findMatchingBrace()" | kind=code-symbol | source=scripts/trace-server.mjs:L147 | neighbors=[trace-server.mjs, findFunctionBodyFallback(), isInsideLiteral()]
-- "scripts_trace_utils_checkdirtyfiles": "checkDirtyFiles()" | kind=code-symbol | source=scripts/trace-utils.mjs:L43 | neighbors=[trace-components.mjs, trace-server.mjs, trace-utils.mjs]
-- "scripts_trace_utils_restorebackups": "restoreBackups()" | kind=code-symbol | source=scripts/trace-utils.mjs:L69 | neighbors=[trace-components.mjs, trace-server.mjs, trace-utils.mjs]
 - "services_analistaservice_analistaservice": "analistaService" | kind=code-symbol | source=services/analistaService.ts:L2 | neighbors=[formAnalisis.tsx, BitacoraIPH.tsx, analistaService.ts]
 - "shared_detalleinfraccionview_timeago": "timeAgo()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L126 | neighbors=[DetalleInfraccionView.tsx, SummaryBar(), formatDate()]
 - "shared_direcciongooglemaps_direccion": "Direccion" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L6 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm.tsx, DireccionGoogleMaps.tsx]
-- "shared_direcciongooglemaps_direcciongooglemaps": "DireccionGoogleMaps()" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L18 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm.tsx, DireccionGoogleMaps.tsx]
-- "shared_infracciones_obtenertokenguest": "obtenerTokenGuest()" | kind=code-symbol | source=lib/shared/infracciones.ts:L5 | neighbors=[service.ts, actions.ts, infracciones.ts]
-- "shared_infracciones_viainfracciondetalle": "ViaInfraccionDetalle" | kind=code-symbol | source=lib/shared/infracciones.ts:L128 | neighbors=[types.ts, types.ts, infracciones.ts]
-- "steps_procesomodal_procesomodal": "ProcesoModal()" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L85 | neighbors=[FormularioInfraccion.tsx, ProcesoModal.tsx, getStepIndex()]
-- "templates_layout_emaillayout": "emailLayout()" | kind=code-symbol | source=lib/emails/templates/layout.ts:L56 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
-- "templates_layout_emailstyles": "emailStyles" | kind=code-symbol | source=lib/emails/templates/layout.ts:L1 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
-- "templates_layout_inlinestyles": "inlineStyles()" | kind=code-symbol | source=lib/emails/templates/layout.ts:L50 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
-- "types_detalleinfraccion_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L61 | neighbors=[CapturarDatosTitularSection.tsx, ModalEntregarGarantia.tsx, detalleInfraccion.ts]
-- "via_sa7_consultarestatussa7": "consultarEstatusSA7()" | kind=code-symbol | source=lib/via/sa7.ts:L3 | neighbors=[route.ts, pagos.ts, sa7.ts]
-- "whatsapp_formsection": "FormSection.tsx" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L1 | neighbors=[FormSection(), SectionProps, 519716a Formulario para registro de wha…]
-- "wireframes_wf_c": "wf-c.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-c.jsx:L1 | neighbors=[5558751 feat: módulo Prevención del Del…, 6a042cd feat: sistema de autenticación,…, WireframeC()]
-- "911_filtrosincidentes_filtrosincidentes": "FiltrosIncidentes()" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L29 | neighbors=[FiltrosIncidentes.tsx, page.tsx]
-- "911_mapper_rowtocatalogo": "rowToCatalogo()" | kind=code-symbol | source=lib/911/mapper.ts:L73 | neighbors=[mapper.ts, repository.ts]
-- "911_mapper_rowtoincidenteresumen": "rowToIncidenteResumen()" | kind=code-symbol | source=lib/911/mapper.ts:L15 | neighbors=[mapper.ts, toStr()]
-- "911_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/911/mapper.ts:L9 | neighbors=[mapper.ts, rowToIncidenteDetalle()]
-- "911_pagination_pagination": "Pagination()" | kind=code-symbol | source=components/911/Pagination.tsx:L13 | neighbors=[Pagination.tsx, page.tsx]
-- "911_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/911/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
-- "911_permisos_tieneaccesohub": "tieneAccesoHub()" | kind=code-symbol | source=lib/911/permisos.ts:L46 | neighbors=[permisos.ts, obtenerRolNombre()]
-- "911_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/911/permisos.ts:L9 | neighbors=[permisos.ts, tieneAccesoSeccion()]
-- "911_repository_contarporestatus": "contarPorEstatus()" | kind=code-symbol | source=lib/911/repository.ts:L144 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-033.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-033.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

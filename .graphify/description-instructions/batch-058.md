@@ -1,4 +1,4 @@
-# Node Description Batch 59 of 87
+# Node Description Batch 59 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,51 +17,51 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_liberaciones_page_liberacionesdashboardpage": "LiberacionesDashboardPage()" | kind=code-symbol | source=app/agente_liberaciones/page.tsx:L5 | neighbors=[page.tsx]
+- "agente_liberaciones_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L5 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L12 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L20 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L16 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L6 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L4 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L3 | neighbors=[permisos.ts]
+- "agente_liberaciones_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L8 | neighbors=[permisos.ts]
+- "agente_liberaciones_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_liberaciones/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
+- "agente_liberaciones_repository_actualizarinfraccionestatus": "actualizarInfraccionEstatus()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L155 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_actualizarinfractor": "actualizarInfractor()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L39 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_actualizarrevisiondocumento": "actualizarRevisionDocumento()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L105 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_actualizarsolicitudestatus": "actualizarSolicitudEstatus()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L166 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_insertarordenpago": "insertarOrdenPago()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L175 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_obtenerconceptoporfraccion": "obtenerConceptoPorFraccion()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L68 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_obtenerdocumentosporsolicitud": "obtenerDocumentosPorSolicitud()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L91 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_obtenerestatusdocumentosporsolicitud": "obtenerEstatusDocumentosPorSolicitud()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L132 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_obtenerinfracciondetalleporid": "obtenerInfraccionDetallePorId()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L143 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_obtenersolicitudidporinfraccion": "obtenerSolicitudIdPorInfraccion()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L122 | neighbors=[repository.ts]
+- "agente_liberaciones_repository_obtenersolicitudporinfraccion": "obtenerSolicitudPorInfraccion()" | kind=code-symbol | source=lib/agente_liberaciones/repository.ts:L81 | neighbors=[repository.ts]
+- "agregar_page_agregarrolpage": "AgregarRolPage()" | kind=code-symbol | source=app/admin/roles/agregar/page.tsx:L9 | neighbors=[page.tsx]
+- "alertas_route_get": "GET()" | kind=code-symbol | source=app/api/prevencion/busquedas/alertas/route.ts:L8 | neighbors=[route.ts]
+- "all_route_get_post": "{ GET, POST }" | kind=code-symbol | source=app/api/auth/[...all]/route.ts:L4 | neighbors=[route.ts]
+- "analisis_formanalisis_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L804 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_btnfinishstyle": "btnFinishStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L814 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_btngeostyle": "btnGeoStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L809 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_btnnextstyle": "btnNextStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L799 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_cardstyle": "cardStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L794 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_footeractions": "footerActions" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L820 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_forceleveltoggle": "ForceLevelToggle()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L44 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_grid3": "grid3" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L821 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_labelstyle": "labelStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L796 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_linestyle": "lineStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L797 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_registrodetenidostepper": "RegistroDetenidoStepper()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L83 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L15 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_stepindicator": "StepIndicator()" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L779 | neighbors=[formAnalisis.tsx]
+- "analisis_formanalisis_subcard": "subCard" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L827 | neighbors=[formAnalisis.tsx]
 - "analisis_formanalisis_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/formAnalisis.tsx:L795 | neighbors=[formAnalisis.tsx]
 - "analisis_generarpresentacion_btnbackstyle": "btnBackStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L306 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_btnfinishstyle": "btnFinishStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L311 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_btnnextstyle": "btnNextStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L300 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_cardstyle": "cardStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L296 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_labelstyle": "labelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L298 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_mapboxstyle": "mapBoxStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L305 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_registrodetenidoform": "RegistroDetenidoForm()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L13 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L250 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_sentinelfilefield": "SentinelFileField()" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L271 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_sublabelstyle": "subLabelStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L299 | neighbors=[generarPresentacion.tsx]
-- "analisis_generarpresentacion_titlestyle": "titleStyle" | kind=code-symbol | source=components/analisis/generarPresentacion.tsx:L297 | neighbors=[generarPresentacion.tsx]
-- "analisis_page_actiontextstyle": "actionTextStyle" | kind=code-symbol | source=app/analisis/page.tsx:L161 | neighbors=[page.tsx]
-- "analisis_page_cardcontentstyle": "cardContentStyle" | kind=code-symbol | source=app/analisis/page.tsx:L144 | neighbors=[page.tsx]
-- "analisis_page_carddescstyle": "cardDescStyle" | kind=code-symbol | source=app/analisis/page.tsx:L159 | neighbors=[page.tsx]
-- "analisis_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/analisis/page.tsx:L135 | neighbors=[page.tsx]
-- "analisis_page_cardtitlestyle": "cardTitleStyle" | kind=code-symbol | source=app/analisis/page.tsx:L158 | neighbors=[page.tsx]
-- "analisis_page_decoratorline": "decoratorLine" | kind=code-symbol | source=app/analisis/page.tsx:L172 | neighbors=[page.tsx]
-- "analisis_page_iconboxstyle": "iconBoxStyle" | kind=code-symbol | source=app/analisis/page.tsx:L146 | neighbors=[page.tsx]
-- "analisis_page_menuanalisispage": "MenuAnalisisPage()" | kind=code-symbol | source=app/analisis/page.tsx:L9 | neighbors=[page.tsx]
-- "analisis_page_systemstatusstyle": "systemStatusStyle" | kind=code-symbol | source=app/analisis/page.tsx:L174 | neighbors=[page.tsx]
-- "analisis_page_titlestyle": "titleStyle" | kind=code-symbol | source=app/analisis/page.tsx:L133 | neighbors=[page.tsx]
-- "analisis_page_toplabelstyle": "topLabelStyle" | kind=code-symbol | source=app/analisis/page.tsx:L132 | neighbors=[page.tsx]
-- "analisis_permisos_accion": "Accion" | kind=code-symbol | source=lib/analisis/permisos.ts:L6 | neighbors=[permisos.ts]
-- "analisis_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/analisis/permisos.ts:L13 | neighbors=[permisos.ts]
-- "analisis_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/analisis/permisos.ts:L21 | neighbors=[permisos.ts]
-- "analisis_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/analisis/permisos.ts:L17 | neighbors=[permisos.ts]
-- "analisis_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/analisis/permisos.ts:L7 | neighbors=[permisos.ts]
-- "analisis_permisos_roles_permitidos": "ROLES_PERMITIDOS" | kind=code-symbol | source=lib/analisis/permisos.ts:L26 | neighbors=[permisos.ts]
-- "analisis_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/analisis/permisos.ts:L5 | neighbors=[permisos.ts]
-- "analisis_tablonanalisis_btnstyle": "btnStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L159 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_containerstyle": "containerStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L153 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_headerrowstyle": "headerRowStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L154 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_loadingstyle": "loadingStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L158 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_pagebuttonstyle": "pageButtonStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L168 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_paginationcontainerstyle": "paginationContainerStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L161 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_resultbadge": "ResultBadge()" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L140 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_tablonanalisis": "TablonAnalisis()" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L8 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_tdstyle": "tdStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L156 | neighbors=[TablonAnalisis.tsx]
-- "analisis_tablonanalisis_thstyle": "thStyle" | kind=code-symbol | source=components/analisis/TablonAnalisis.tsx:L155 | neighbors=[TablonAnalisis.tsx]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-058.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-058.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

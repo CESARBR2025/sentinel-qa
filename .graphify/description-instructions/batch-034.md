@@ -1,4 +1,4 @@
-# Node Description Batch 35 of 87
+# Node Description Batch 35 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,26 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "shared_direcciongooglemaps_direcciongooglemaps": "DireccionGoogleMaps()" | kind=code-symbol | source=components/shared/DireccionGoogleMaps.tsx:L18 | neighbors=[CapturarDetallesForm.tsx, CapturarDetallesForm.tsx, DireccionGoogleMaps.tsx]
+- "shared_infracciones_obtenertokenguest": "obtenerTokenGuest()" | kind=code-symbol | source=lib/shared/infracciones.ts:L5 | neighbors=[service.ts, actions.ts, infracciones.ts]
+- "shared_infracciones_viainfracciondetalle": "ViaInfraccionDetalle" | kind=code-symbol | source=lib/shared/infracciones.ts:L128 | neighbors=[types.ts, types.ts, infracciones.ts]
+- "steps_procesomodal_procesomodal": "ProcesoModal()" | kind=code-symbol | source=features/via/infracciones/components/steps/ProcesoModal.tsx:L85 | neighbors=[FormularioInfraccion.tsx, ProcesoModal.tsx, getStepIndex()]
+- "templates_layout_emaillayout": "emailLayout()" | kind=code-symbol | source=lib/emails/templates/layout.ts:L56 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
+- "templates_layout_emailstyles": "emailStyles" | kind=code-symbol | source=lib/emails/templates/layout.ts:L1 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
+- "templates_layout_inlinestyles": "inlineStyles()" | kind=code-symbol | source=lib/emails/templates/layout.ts:L50 | neighbors=[asignacion-fiscalia.ts, layout.ts, orden-liberacion.ts]
+- "types_detalleinfraccion_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=features/via/compartido/types/detalleInfraccion.ts:L61 | neighbors=[CapturarDatosTitularSection.tsx, ModalEntregarGarantia.tsx, detalleInfraccion.ts]
+- "via_sa7_consultarestatussa7": "consultarEstatusSA7()" | kind=code-symbol | source=lib/via/sa7.ts:L3 | neighbors=[route.ts, pagos.ts, sa7.ts]
+- "whatsapp_formsection": "FormSection.tsx" | kind=code-symbol | source=components/911/whatsapp/FormSection.tsx:L1 | neighbors=[519716a Formulario para registro de wha…, FormSection(), SectionProps]
+- "wireframes_wf_c": "wf-c.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-c.jsx:L1 | neighbors=[5558751 feat: módulo Prevención del Del…, 6a042cd feat: sistema de autenticación,…, WireframeC()]
+- "911_filtrosincidentes_filtrosincidentes": "FiltrosIncidentes()" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L29 | neighbors=[FiltrosIncidentes.tsx, page.tsx]
+- "911_mapper_rowtocatalogo": "rowToCatalogo()" | kind=code-symbol | source=lib/911/mapper.ts:L73 | neighbors=[mapper.ts, repository.ts]
+- "911_mapper_rowtoincidenteresumen": "rowToIncidenteResumen()" | kind=code-symbol | source=lib/911/mapper.ts:L15 | neighbors=[mapper.ts, toStr()]
+- "911_mapper_tonum": "toNum()" | kind=code-symbol | source=lib/911/mapper.ts:L9 | neighbors=[mapper.ts, rowToIncidenteDetalle()]
+- "911_pagination_pagination": "Pagination()" | kind=code-symbol | source=components/911/Pagination.tsx:L13 | neighbors=[Pagination.tsx, page.tsx]
+- "911_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/911/permisos.ts:L4 | neighbors=[permisos.ts, registro.ts]
+- "911_permisos_tieneaccesohub": "tieneAccesoHub()" | kind=code-symbol | source=lib/911/permisos.ts:L46 | neighbors=[permisos.ts, obtenerRolNombre()]
+- "911_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/911/permisos.ts:L9 | neighbors=[permisos.ts, tieneAccesoSeccion()]
+- "911_repository_contarporestatus": "contarPorEstatus()" | kind=code-symbol | source=lib/911/repository.ts:L144 | neighbors=[repository.ts, service.ts]
 - "911_repository_listarincidentes": "listarIncidentes()" | kind=code-symbol | source=lib/911/repository.ts:L42 | neighbors=[repository.ts, service.ts]
 - "911_repository_listarincidentesrecientes": "listarIncidentesRecientes()" | kind=code-symbol | source=lib/911/repository.ts:L122 | neighbors=[repository.ts, page.tsx]
 - "911_repository_obtenercatalogos": "obtenerCatalogos()" | kind=code-symbol | source=lib/911/repository.ts:L5 | neighbors=[repository.ts, service.ts]
@@ -37,31 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "admin_repository_existerolpornombre": "existeRolPorNombre()" | kind=code-symbol | source=lib/admin/repository.ts:L52 | neighbors=[repository.ts, route.ts]
 - "admin_repository_listarroles": "listarRoles()" | kind=code-symbol | source=lib/admin/repository.ts:L37 | neighbors=[repository.ts, page.tsx]
 - "admin_repository_listarusuarios": "listarUsuarios()" | kind=code-symbol | source=lib/admin/repository.ts:L5 | neighbors=[repository.ts, page.tsx]
-- "admin_repository_obtenerrol": "obtenerRol()" | kind=code-symbol | source=lib/admin/repository.ts:L44 | neighbors=[repository.ts, page.tsx]
-- "admin_repository_obtenerrolusuario": "obtenerRolUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L70 | neighbors=[actions.ts, repository.ts]
-- "admin_repository_obtenerusuario": "obtenerUsuario()" | kind=code-symbol | source=lib/admin/repository.ts:L16 | neighbors=[repository.ts, page.tsx]
-- "admin_transito_actions_buscarusuariosreincorporar": "buscarUsuariosReincorporar()" | kind=code-symbol | source=lib/admin-transito/actions.ts:L295 | neighbors=[actions.ts, requireAdminTransito()]
-- "admin_transito_repository_obteneroficialexistente": "obtenerOficialExistente()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L36 | neighbors=[repository.ts, upsertOficial()]
-- "admin_transito_repository_upsertoficial": "upsertOficial()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L44 | neighbors=[repository.ts, obtenerOficialExistente()]
-- "admin_transito_types_userwithrole": "UserWithRole" | kind=code-symbol | source=lib/admin-transito/types.ts:L1 | neighbors=[mapper.ts, types.ts]
-- "agente_911_service_verificarrolagente911": "verificarRolAgente911()" | kind=code-symbol | source=lib/agente_911/service.ts:L3 | neighbors=[page.tsx, service.ts]
-- "agente_bitacorista_service_verificarrolagentebitacorista": "verificarRolAgenteBitacorista()" | kind=code-symbol | source=lib/agente_bitacorista/service.ts:L3 | neighbors=[page.tsx, service.ts]
-- "agente_despacho_service_verificarrolagentedespacho": "verificarRolAgenteDespacho()" | kind=code-symbol | source=lib/agente_despacho/service.ts:L3 | neighbors=[page.tsx, service.ts]
-- "agente_infracciones_actions_capturarinfractorinfraccionesaction": "capturarInfractorInfraccionesAction()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L61 | neighbors=[actions.ts, CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_actions_liberargarantiainfraccionesaction": "liberarGarantiaInfraccionesAction()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L79 | neighbors=[actions.ts, ModalEntregarGarantia.tsx]
-- "agente_infracciones_actions_obtenerdashboardinfracciones": "obtenerDashboardInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L10 | neighbors=[actions.ts, page.tsx]
-- "agente_infracciones_actions_obtenerinfracciones": "obtenerInfracciones()" | kind=code-symbol | source=lib/agente_infracciones/actions.ts:L26 | neighbors=[actions.ts, page.tsx]
-- "agente_infracciones_mapper_nvl": "nvl()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L23 | neighbors=[mapper.ts, inputToDbParams()]
-- "agente_infracciones_mapper_rowtoliberacion": "rowToLiberacion()" | kind=code-symbol | source=lib/agente_infracciones/mapper.ts:L8 | neighbors=[mapper.ts, service.ts]
-- "agente_infracciones_modalentregargarantia_getgarantiainfo": "getGarantiaInfo()" | kind=code-symbol | source=components/agente_infracciones/ModalEntregarGarantia.tsx:L17 | neighbors=[ModalEntregarGarantia.tsx, ModalEntregarGarantia()]
-- "agente_infracciones_modalentregargarantia_modalentregargarantia": "ModalEntregarGarantia()" | kind=code-symbol | source=components/agente_infracciones/ModalEntregarGarantia.tsx:L25 | neighbors=[ModalEntregarGarantia.tsx, getGarantiaInfo()]
-- "agente_infracciones_profiledropdown_profiledropdown": "ProfileDropdown()" | kind=code-symbol | source=components/agente_infracciones/ProfileDropdown.tsx:L14 | neighbors=[page.tsx, ProfileDropdown.tsx]
-- "agente_infracciones_repository_actualizardatosinfractor": "actualizarDatosInfractor()" | kind=code-symbol | source=lib/agente_infracciones/repository.ts:L46 | neighbors=[repository.ts, service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-034.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-034.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

@@ -1,4 +1,4 @@
-# Node Description Batch 50 of 87
+# Node Description Batch 50 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,28 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "reportes_formato_n_eventos_service_obtenereventosporfecha": "obtenerEventosPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-eventos-service.ts:L48 | neighbors=[formato-n-consolidado-service.ts, formato-n-eventos-service.ts]
+- "reportes_formato_n_fge_service_actualizarfge": "actualizarFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L141 | neighbors=[route.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_calcularconteosporfecha": "calcularConteosPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L94 | neighbors=[route.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_crearfge": "crearFge()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L127 | neighbors=[route.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L30 | neighbors=[formato-n-fge-service.ts, rowTo()]
+- "reportes_formato_n_fge_service_formatonfge": "FormatoNFge" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L8 | neighbors=[formato-n-consolidado-service.ts, formato-n-fge-service.ts]
+- "reportes_formato_n_fge_service_parseperiodo": "parsePeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L25 | neighbors=[formato-n-fge-service.ts, rowTo()]
+- "reportes_formato_n_fgr_service_actualizarfgr": "actualizarFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L110 | neighbors=[route.ts, formato-n-fgr-service.ts]
+- "reportes_formato_n_fgr_service_crearfgr": "crearFgr()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L96 | neighbors=[route.ts, formato-n-fgr-service.ts]
+- "reportes_formato_n_fgr_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L29 | neighbors=[formato-n-fgr-service.ts, rowTo()]
+- "reportes_formato_n_fgr_service_formatonfgr": "FormatoNFgr" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L7 | neighbors=[formato-n-consolidado-service.ts, formato-n-fgr-service.ts]
+- "reportes_formato_n_fgr_service_parseperiodo": "parsePeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L24 | neighbors=[formato-n-fgr-service.ts, rowTo()]
+- "reportes_formato_n_fgr_service_periodos": "PERIODOS" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L3 | neighbors=[page.tsx, formato-n-fgr-service.ts]
+- "reportes_formato_n_medios_alternativos_service_actualizarmediosalternativos": "actualizarMediosAlternativos()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L87 | neighbors=[route.ts, formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_medios_alternativos_service_crearmediosalternativos": "crearMediosAlternativos()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L78 | neighbors=[route.ts, formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_medios_alternativos_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L23 | neighbors=[formato-n-medios-alternativos-service.ts, rowTo()]
+- "reportes_formato_n_medios_alternativos_service_formatonmediosalternativos": "FormatoNMediosAlternativos" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L7 | neighbors=[formato-n-consolidado-service.ts, formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_medios_alternativos_service_parseperiodo": "parsePeriodo()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L18 | neighbors=[formato-n-medios-alternativos-service.ts, rowTo()]
+- "reportes_formato_n_medios_alternativos_service_periodos": "PERIODOS" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L3 | neighbors=[page.tsx, formato-n-medios-alternativos-service.ts]
+- "reportes_formato_n_rnd_service_actualizarrnd": "actualizarRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L98 | neighbors=[route.ts, formato-n-rnd-service.ts]
+- "reportes_formato_n_rnd_service_buscardetencionesporrango": "buscarDetencionesPorRango()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L76 | neighbors=[route.ts, formato-n-rnd-service.ts]
+- "reportes_formato_n_rnd_service_crearrnd": "crearRnd()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L58 | neighbors=[route.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_formatfecha": "formatFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L14 | neighbors=[formato-n-rnd-service.ts, rowTo()]
 - "reportes_formato_n_rnd_service_formatonrnd": "FormatoNRnd" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L3 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
 - "reportes_formato_n_rnd_service_obtenerrndporfecha": "obtenerRndPorFecha()" | kind=code-symbol | source=lib/reportes/formato-n-rnd-service.ts:L44 | neighbors=[formato-n-consolidado-service.ts, formato-n-rnd-service.ts]
@@ -35,33 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "reportes_operativos_types_reportecampogeneralrow": "ReporteCampoGeneralRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L72 | neighbors=[mapper.ts, types.ts]
 - "reportes_operativos_types_reportecampoincidentegeneralrow": "ReporteCampoIncidenteGeneralRow" | kind=code-symbol | source=lib/reportes-operativos/types.ts:L95 | neighbors=[mapper.ts, types.ts]
 - "reportes_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/reportes/permisos.ts:L4 | neighbors=[registro.ts, permisos.ts]
-- "reportes_repository_getenvioformatoscount": "getEnvioFormatosCount()" | kind=code-symbol | source=lib/reportes/repository.ts:L30 | neighbors=[page.tsx, repository.ts]
-- "reportes_repository_getformatonstats": "getFormatoNStats()" | kind=code-symbol | source=lib/reportes/repository.ts:L4 | neighbors=[page.tsx, repository.ts]
-- "reportes_repository_getincidentescount": "getIncidentesCount()" | kind=code-symbol | source=lib/reportes/repository.ts:L25 | neighbors=[page.tsx, repository.ts]
-- "reportes_sin_d1_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-sin-d1/mapper.ts:L3 | neighbors=[mapper.ts, rowToSinD1()]
-- "reportes_sin_d1_repository_obtenersind1": "obtenerSinD1()" | kind=code-symbol | source=lib/reportes-sin-d1/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "reportes_sin_novedad_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/reportes-sin-novedad/mapper.ts:L3 | neighbors=[mapper.ts, rowToSinNovedad()]
-- "reportes_sin_novedad_repository_obtenerreportessinnovedad": "obtenerReportesSinNovedad()" | kind=code-symbol | source=lib/reportes-sin-novedad/repository.ts:L5 | neighbors=[repository.ts, service.ts]
-- "reportes_types_formatonstats": "FormatoNStats" | kind=code-symbol | source=lib/reportes/types.ts:L1 | neighbors=[repository.ts, types.ts]
-- "rol_servicios_actions_createasignacion": "createAsignacion()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L89 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_createobservacion": "createObservacion()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L155 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_createrol": "createRol()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L33 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_deleteasignacion": "deleteAsignacion()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L121 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_deleteobservacion": "deleteObservacion()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L175 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_guardarfirmas": "guardarFirmas()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L188 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_updateencabezadorol": "updateEncabezadoRol()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L61 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_actions_upsertestadofuerza": "upsertEstadoFuerza()" | kind=code-symbol | source=lib/rol-servicios/actions.ts:L134 | neighbors=[actions.ts, requireSession()]
-- "rol_servicios_catalogos_actions_togglebodycam": "toggleBodyCam()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L72 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_catalogos_actions_toggleconcepto": "toggleConcepto()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L85 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_catalogos_actions_togglemediocanalizacion": "toggleMedioCanalizacion()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L124 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_catalogos_actions_toggleradio": "toggleRadio()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L59 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_catalogos_actions_togglesector": "toggleSector()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L46 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
-- "rol_servicios_catalogos_actions_toggletipoemergencia": "toggleTipoEmergencia()" | kind=code-symbol | source=lib/rol-servicios/catalogos-actions.ts:L111 | neighbors=[catalogos-actions.ts, toggleCatalogo()]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-049.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-049.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is

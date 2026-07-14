@@ -39,8 +39,8 @@ export interface IncidenteConDespacho {
   hayDetencion: boolean | null
   ofiAutoridadRecibe: string | null
   d1Pendiente: boolean
-  unidades: { placa: string }[]
-  elementos: { nombre: string; nomina: string }[]
+  unidades: { placa: string; esRefuerzo: boolean }[]
+  elementos: { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]
 }
 
 export interface IncidentePendiente {

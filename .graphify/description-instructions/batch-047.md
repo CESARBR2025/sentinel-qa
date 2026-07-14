@@ -1,4 +1,4 @@
-# Node Description Batch 48 of 87
+# Node Description Batch 48 of 89
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -17,6 +17,28 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "permisos_core_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/permisos/core.ts:L9 | neighbors=[core.ts, PermisoRow]
+- "plugins_context_loader_contextloaderplugin": "ContextLoaderPlugin()" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L344 | neighbors=[context-loader.js, loadPluginState()]
+- "plugins_context_loader_loadpluginstate": "loadPluginState()" | kind=code-symbol | source=.opencode/plugins/context-loader.js:L106 | neighbors=[context-loader.js, ContextLoaderPlugin()]
+- "postcss_config": "postcss.config.mjs" | kind=code-symbol | source=postcss.config.mjs:L1 | neighbors=[90da1ca Initial commit from Create Next…, config]
+- "prevencion_actions_cancelarfichaapi": "cancelarFichaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L375 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_createcontestacionapi": "createContestacionApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L435 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_createfichaapi": "createFichaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L339 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_createmedidaapi": "createMedidaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L285 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_createseguimientoapi": "createSeguimientoApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L384 | neighbors=[actions.ts, route.ts]
+- "prevencion_actions_createsolicitudapi": "createSolicitudApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L392 | neighbors=[actions.ts, route.ts]
+- "prevencion_actions_createsolicitudc4api": "createSolicitudC4Api()" | kind=code-symbol | source=lib/prevencion/actions.ts:L426 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_createvisitaapi": "createVisitaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L331 | neighbors=[actions.ts, route.ts]
+- "prevencion_actions_updatefichaapi": "updateFichaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L348 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_updatemedidaapi": "updateMedidaApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L293 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_updatemedidastatusapi": "updateMedidaStatusApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L322 | neighbors=[route.ts, actions.ts]
+- "prevencion_actions_updatesolicitudapi": "updateSolicitudApi()" | kind=code-symbol | source=lib/prevencion/actions.ts:L401 | neighbors=[route.ts, actions.ts]
+- "prevencion_agregarautoridadform_agregarautoridadform": "AgregarAutoridadForm()" | kind=code-symbol | source=components/prevencion/AgregarAutoridadForm.tsx:L26 | neighbors=[page.tsx, AgregarAutoridadForm.tsx]
+- "prevencion_cancelacionmodal_cancelacionmodal": "CancelacionModal()" | kind=code-symbol | source=components/prevencion/CancelacionModal.tsx:L6 | neighbors=[page.tsx, CancelacionModal.tsx]
+- "prevencion_contestacionform_contestacionform": "ContestacionForm()" | kind=code-symbol | source=components/prevencion/ContestacionForm.tsx:L6 | neighbors=[page.tsx, ContestacionForm.tsx]
+- "prevencion_mapper_rowtobusqueda": "rowToBusqueda()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L28 | neighbors=[mapper.ts, toStr()]
+- "prevencion_mapper_rowtomedida": "rowToMedida()" | kind=code-symbol | source=lib/prevencion/mapper.ts:L15 | neighbors=[mapper.ts, toStr()]
+- "prevencion_medidasfiltros_medidasfiltros": "MedidasFiltros()" | kind=code-symbol | source=components/prevencion/MedidasFiltros.tsx:L22 | neighbors=[page.tsx, MedidasFiltros.tsx]
 - "prevencion_permisos_accion": "Accion" | kind=code-symbol | source=lib/prevencion/permisos.ts:L6 | neighbors=[actions.ts, permisos.ts]
 - "prevencion_permisos_obtenerrolnombre": "obtenerRolNombre()" | kind=code-symbol | source=lib/prevencion/permisos.ts:L38 | neighbors=[permisos.ts, tieneAccesoSeccion()]
 - "prevencion_printbutton_printbutton": "PrintButton()" | kind=code-symbol | source=components/prevencion/PrintButton.tsx:L3 | neighbors=[page.tsx, PrintButton.tsx]
@@ -35,33 +57,11 @@ one-sentence description — no prose, no markdown fences.
 - "prevencion_repository_listarsolicitudesc4": "listarSolicitudesC4()" | kind=code-symbol | source=lib/prevencion/repository.ts:L61 | neighbors=[page.tsx, repository.ts]
 - "prevencion_repository_listarsolicitudesfiltradas": "listarSolicitudesFiltradas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L207 | neighbors=[repository.ts, route.ts]
 - "prevencion_repository_listarsolicitudesjuridico": "listarSolicitudesJuridico()" | kind=code-symbol | source=lib/prevencion/repository.ts:L45 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarvisitas": "listarVisitas()" | kind=code-symbol | source=lib/prevencion/repository.ts:L85 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_listarvisitasconalias": "listarVisitasConAlias()" | kind=code-symbol | source=lib/prevencion/repository.ts:L154 | neighbors=[repository.ts, route.ts]
-- "prevencion_repository_obtenercontestacion": "obtenerContestacion()" | kind=code-symbol | source=lib/prevencion/repository.ts:L69 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_obtenerfichadetalle": "obtenerFichaDetalle()" | kind=code-symbol | source=lib/prevencion/repository.ts:L193 | neighbors=[route.ts, repository.ts]
-- "prevencion_repository_obtenermedidadetalle": "obtenerMedidaDetalle()" | kind=code-symbol | source=lib/prevencion/repository.ts:L77 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_obtenermedidadetallecompleto": "obtenerMedidaDetalleCompleto()" | kind=code-symbol | source=lib/prevencion/repository.ts:L140 | neighbors=[route.ts, repository.ts]
-- "prevencion_repository_obtenersolicitud": "obtenerSolicitud()" | kind=code-symbol | source=lib/prevencion/repository.ts:L53 | neighbors=[page.tsx, repository.ts]
-- "prevencion_repository_obtenersolicituddetalle": "obtenerSolicitudDetalle()" | kind=code-symbol | source=lib/prevencion/repository.ts:L223 | neighbors=[route.ts, repository.ts]
-- "prevencion_seguimientotimeline_seguimientotimeline": "SeguimientoTimeline()" | kind=code-symbol | source=components/prevencion/SeguimientoTimeline.tsx:L15 | neighbors=[page.tsx, SeguimientoTimeline.tsx]
-- "prevencion_semaforo_semaforocolor": "SemaforoColor" | kind=code-symbol | source=lib/prevencion/semaforo.ts:L3 | neighbors=[semaforo.ts, SemaforoVigencia.tsx]
-- "prevencion_solicitudc4form_solicitudc4form": "SolicitudC4Form()" | kind=code-symbol | source=components/prevencion/SolicitudC4Form.tsx:L6 | neighbors=[page.tsx, SolicitudC4Form.tsx]
-- "prevencion_timeline_tipos_seguimiento": "TIPOS_SEGUIMIENTO" | kind=code-symbol | source=lib/prevencion/timeline.ts:L3 | neighbors=[SeguimientoTimeline.tsx, timeline.ts]
-- "prevencion_types_busquedaitem": "BusquedaItem" | kind=code-symbol | source=lib/prevencion/types.ts:L12 | neighbors=[mapper.ts, types.ts]
-- "prevencion_types_medidaitem": "MedidaItem" | kind=code-symbol | source=lib/prevencion/types.ts:L1 | neighbors=[mapper.ts, types.ts]
-- "prevencion_visitamodal_visitamodal": "VisitaModal()" | kind=code-symbol | source=components/prevencion/VisitaModal.tsx:L6 | neighbors=[page.tsx, VisitaModal.tsx]
-- "proxy_ispublic": "isPublic()" | kind=code-symbol | source=proxy.ts:L8 | neighbors=[proxy.ts, proxy()]
-- "proxy_proxy": "proxy()" | kind=code-symbol | source=proxy.ts:L12 | neighbors=[proxy.ts, isPublic()]
-- "radio_formrondinescalado_ahoralocal": "ahoraLocal()" | kind=code-symbol | source=components/911/radio/FormRondinEscalado.tsx:L21 | neighbors=[FormRondinEscalado.tsx, FormRondinEscalado()]
-- "reportes_d1_route_generarfoliodenuncia": "generarFolioDenuncia()" | kind=code-symbol | source=app/api/reportes-d1/route.ts:L9 | neighbors=[route.ts, generarFolioDenunciaUnico()]
-- "reportes_d1_route_post": "POST()" | kind=code-symbol | source=app/api/reportes-d1/route.ts:L32 | neighbors=[route.ts, generarFolioDenunciaUnico()]
-- "reportes_form_styles_btntiny": "btnTiny" | kind=code-symbol | source=components/reportes/form-styles.ts:L9 | neighbors=[page.tsx, form-styles.ts]
-- "reportes_formato_n_armas_aseguradas_service_actualizararmaasegurada": "actualizarArmaAsegurada()" | kind=code-symbol | source=lib/reportes/formato-n-armas-aseguradas-service.ts:L104 | neighbors=[route.ts, formato-n-armas-aseguradas-service.ts]
 
 ## Instructions
 
 Write a single JSON object mapping each node id to a one-sentence description
-to: /Users/cesarbr/Documents/dev/sjr/seguridad_publica/.graphify/description-instructions/batch-047.json
+to: /Users/ugomez/Documents/GitHub/seguridad_publica/.graphify/description-instructions/batch-047.json
 
 Keep each description factual and concise (one sentence). No markdown, no prose
 outside the JSON object. It is acceptable to omit a node if context is
