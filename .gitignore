@@ -60,7 +60,14 @@ graphify-visual/
 
 # Alexandria — vault y config MCP personal (rutas locales, no del repo)
 KnowledgeVault/
+Alexandria/
+
+# YouMindAG — archivos de sesión locales, no del repo
+/.youmindag/
+.youmindag/
 .vault.json
 .mcp.json
 /opencode.json
 .vscode/mcp.json
+/.youmindag
+.youmindag/plugin-state.json
