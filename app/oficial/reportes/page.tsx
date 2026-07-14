@@ -3,9 +3,10 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verificarRolOficial, listarReportesOficial } from '@/lib/oficial/service'
 import { AlertTriangle, ArrowLeft, CheckCircle2, FileText } from 'lucide-react'
+import { ToastExito } from '@/components/oficial/ToastExito'
 import Link from 'next/link'
 
-export default async function MisReportesPage() {
+export default async function MisReportesPage({ searchParams }: { searchParams: Promise<{ exito?: string; folio?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
@@ -13,9 +14,11 @@ export default async function MisReportesPage() {
   if (!esOficial) redirect('/dashboard')
 
   const reportes = await listarReportesOficial(session.user.id)
+  const params = await searchParams
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+      <ToastExito show={params.exito === '1'} folio={params.folio} />
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px' }}>

@@ -7,7 +7,7 @@ import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { verificarRolOficial, contarDenunciasPendientesOficial, contarDespachosAsignadosOficial } from '@/lib/oficial/service'
 
-export default async function OficialDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
+export default async function OficialDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string; folio?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
@@ -25,7 +25,7 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-      <ToastExito show={params.exito === '1'} />
+      <ToastExito show={params.exito === '1'} folio={params.folio} />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         .card-o {

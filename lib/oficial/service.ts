@@ -13,6 +13,7 @@ import {
   obtenerReporteDetalle,
   obtenerDespachosAsignados,
   contarDespachosAsignados,
+  obtenerRondinesOficial,
 } from './repository'
 import { query } from '@/lib/db'
 import type {
@@ -23,6 +24,7 @@ import type {
   OfiReporteDetalle,
   CatalogoItem,
   DespachoAsignado,
+  RondinOficialResumen,
 } from './types'
 
 function str(fd: FormData, key: string): string | null {
@@ -209,6 +211,10 @@ export async function listarReportesOficial(userId: string): Promise<OfiReporteR
 
 export async function listarDespachosAsignados(userId: string): Promise<DespachoAsignado[]> {
   return obtenerDespachosAsignados(userId)
+}
+
+export async function listarRondinesOficial(userId: string): Promise<RondinOficialResumen[]> {
+  return obtenerRondinesOficial(userId)
 }
 
 export async function contarDespachosAsignadosOficial(userId: string): Promise<number> {

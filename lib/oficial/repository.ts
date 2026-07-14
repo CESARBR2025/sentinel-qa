@@ -5,6 +5,7 @@ import {
   rowToReporteResumen,
   rowToReporteDetalle,
   rowToDespachoAsignado,
+  rowToRondinOficialResumen,
 } from "./mapper";
 import type {
   OfiOficial,
@@ -13,6 +14,7 @@ import type {
   OfiReporteDetalle,
   CatalogoItem,
   DespachoAsignado,
+  RondinOficialResumen,
 } from "./types";
 
 export async function obtenerOficialPorUserId(
@@ -476,6 +478,27 @@ export async function insertarDetallesAsegurados(
       [reporteCampoId, d.nombre, d.apellidoPaterno, d.apellidoMaterno],
     )
   }
+}
+
+export async function obtenerRondinesOficial(userId: string): Promise<RondinOficialResumen[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       i.id, i.folio, i.fecha_hora_inicio, i.calle, i.colonia, i.estatus,
+       cti.nombre AS tipo_incidente_nombre,
+       desp.fecha_hora_despacho,
+       CONCAT(u.name, ' ', COALESCE(u.apellido, '')) AS capturado_por_nombre
+     FROM incidentes i
+     JOIN incidente_despacho desp ON desp.incidente_id = i.id
+     JOIN incidente_despacho_elementos de ON de.despacho_id = desp.id
+     LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+     LEFT JOIN users u ON u.id = i.capturado_por
+      WHERE i.origen_rondin = true
+        AND de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+      ORDER BY i.fecha_hora_inicio DESC
+      LIMIT 50`,
+    [userId],
+  );
+  return result.rows.map(rowToRondinOficialResumen);
 }
 
 export async function actualizarPatrullaOficial(

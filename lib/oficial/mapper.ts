@@ -1,4 +1,4 @@
-import type { OfiReporteCampo, OfiOficial, OfiDetenido, OfiVehiculo, OfiCateo, OfiReporteResumen, OfiD1Vinculada, OfiReporteDetalle, DespachoAsignado } from './types'
+import type { OfiReporteCampo, OfiOficial, OfiDetenido, OfiVehiculo, OfiCateo, OfiReporteResumen, OfiD1Vinculada, OfiReporteDetalle, DespachoAsignado, RondinOficialResumen } from './types'
 
 function parseJsonField<T>(val: unknown): T {
   if (!val) return (typeof val === 'string' ? JSON.parse(val) : val) ?? ([] as unknown as T)
@@ -131,6 +131,20 @@ export function rowToD1(row: Record<string, unknown>): OfiD1Vinculada {
     observaciones: (row.d1_observaciones as string) ?? null,
     ofendidoHombre: Number(row.d1_ofendido_hombre ?? 0),
     ofendidoMujer: Number(row.d1_ofendido_mujer ?? 0),
+  }
+}
+
+export function rowToRondinOficialResumen(row: Record<string, unknown>): RondinOficialResumen {
+  return {
+    id: String(row.id ?? ''),
+    folio: String(row.folio ?? ''),
+    fechaHoraInicio: toStr(row.fecha_hora_inicio) ?? '',
+    tipoIncidente: (row.tipo_incidente_nombre as string) ?? null,
+    calle: (row.calle as string) ?? null,
+    colonia: (row.colonia as string) ?? null,
+    estatus: String(row.estatus ?? ''),
+    fechaHoraDespacho: toStr(row.fecha_hora_despacho),
+    capturadoPor: (row.capturado_por_nombre as string) ?? null,
   }
 }
 

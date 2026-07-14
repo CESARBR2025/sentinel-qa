@@ -16,7 +16,7 @@ const TAG: React.CSSProperties    = { display: 'inline-flex', alignItems: 'cente
 const ERR: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#dc2626', marginTop: 4 }
 const LBL: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }
 
-export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho' }: { incidenteId: string; onDespachado?: () => void; modo?: 'despacho' | 'refuerzo' }) {
+export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho', prioritario }: { incidenteId: string; onDespachado?: () => void; modo?: 'despacho' | 'refuerzo'; prioritario?: { nombre: string; nomina: string } | null }) {
   const esRefuerzo = modo === 'refuerzo'
   const flota = useFlota()
   const emp   = useEmpleado()
@@ -51,12 +51,15 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho' }: {
     emp.limpiar()
   }
 
+  const tienePrioritario = !!(prioritario?.nombre || prioritario?.nomina)
+  const elementosValidos = tienePrioritario ? elementos : null // prioritario cuenta como elemento
+
   const handleSubmit = () => {
     if (esRefuerzo) {
       if (unidades.length === 0 && elementos.length === 0) { setErrorForm('Agrega al menos una unidad o un elemento de refuerzo'); return }
     } else {
       if (unidades.length  === 0) { setErrorForm('Agrega al menos una unidad');   return }
-      if (elementos.length === 0) { setErrorForm('Agrega al menos un elemento'); return }
+      if (elementos.length === 0 && !tienePrioritario) { setErrorForm('Agrega al menos un elemento'); return }
     }
     setErrorForm(null)
     startTransition(async () => {
@@ -80,7 +83,7 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho' }: {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 2 }}>
         <CheckCircle size={16} color="#16a34a" />
         <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#15803d', fontWeight: 700 }}>
-          {esRefuerzo ? 'REFUERZOS ENVIADOS — Actualizando tablón...' : 'DESPACHADO — Actualizando tablón...'}
+          {esRefuerzo ? 'REFUERZOS ENVIADOS — Actualizando tablón...' : tienePrioritario ? 'DESPACHADO CON PRIORITARIO — Actualizando tablón...' : 'DESPACHADO — Actualizando tablón...'}
         </span>
       </div>
     )
@@ -131,7 +134,20 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho' }: {
 
         {/* BUSCADOR ELEMENTOS */}
         <div>
-          <label style={LBL}>Elementos (oficiales)</label>
+          <label style={LBL}>{tienePrioritario ? 'Elementos (adicionales)' : 'Elementos (oficiales)'}</label>
+          {tienePrioritario && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, padding: '6px 10px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+              <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#15803d', fontWeight: 600 }}>
+                {prioritario!.nombre}
+              </span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#16a34a' }}>
+                ({prioritario!.nomina})
+              </span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2, marginLeft: 'auto' }}>
+                PRIORITARIO
+              </span>
+            </div>
+          )}
           <div style={{ display: 'flex', gap: 6 }}>
             <input
               value={nominaInput}
@@ -176,10 +192,10 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho' }: {
       {errorForm && <div style={{ ...ERR, fontSize: 12 }}>{errorForm}</div>}
 
       <div>
-        <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1, background: esRefuerzo ? '#c2410c' : '#2563eb' }}>
+        <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1, background: esRefuerzo ? '#c2410c' : (tienePrioritario ? '#16a34a' : '#2563eb') }}>
           {isPending
             ? <><Loader2 size={13} /> {esRefuerzo ? 'ENVIANDO...' : 'DESPACHANDO...'}</>
-            : (esRefuerzo ? 'ENVIAR REFUERZOS' : 'DESPACHAR INCIDENTE')}
+            : (esRefuerzo ? 'ENVIAR REFUERZOS' : tienePrioritario ? 'DESPACHAR Y ASIGNAR' : 'DESPACHAR INCIDENTE')}
         </button>
       </div>
     </div>

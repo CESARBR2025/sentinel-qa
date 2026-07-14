@@ -24,6 +24,9 @@ interface IncRow {
   hayDetencion?: boolean | null
   ofiAutoridadRecibe?: string | null
   d1Pendiente?: boolean
+  origenRondin?: boolean
+  prioritarioNombre?: string | null
+  prioritarioNomina?: string | null
 }
 
 export function TablonDespacho() {
@@ -123,6 +126,11 @@ export function TablonDespacho() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                   <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{inc.folio}</span>
                   <CanalBadge canal={inc.canal} />
+                  {inc.origenRondin && (
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+                      RONDÍN
+                    </span>
+                  )}
                   {inc.prioridad && (
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
                       {inc.prioridad.toUpperCase()}
@@ -150,6 +158,26 @@ export function TablonDespacho() {
                       <label style={labelStyle}>DESCRIPCIÓN</label>
                       <div style={{ fontFamily: 'Inter', fontSize: 13, color: '#334155', lineHeight: 1.6, padding: '10px 14px', background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 2 }}>
                         {inc.descripcion}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Oficial prioritario (rondín) */}
+                  {inc.origenRondin && (inc.prioritarioNombre || (inc.elementos?.find(e => e.esPrioritario)?.nombre)) && (
+                    <div>
+                      <label style={labelStyle}>OFICIAL PRIORITARIO (RONDÍN)</label>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+                        <span style={{ fontFamily: 'Inter', fontSize: 13, color: '#15803d', fontWeight: 600 }}>
+                          {inc.prioritarioNombre || inc.elementos?.find(e => e.esPrioritario)?.nombre}
+                        </span>
+                        {(inc.prioritarioNomina || inc.elementos?.find(e => e.esPrioritario)?.nomina) && (
+                          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#16a34a' }}>
+                            ({inc.prioritarioNomina || inc.elementos?.find(e => e.esPrioritario)?.nomina})
+                          </span>
+                        )}
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>
+                          PRIORITARIO
+                        </span>
                       </div>
                     </div>
                   )}
@@ -237,8 +265,17 @@ export function TablonDespacho() {
                   {/* Formulario de despacho solo en pestaña pendientes */}
                   {tab === 'pendientes' && (
                     <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 16 }}>
-                      <label style={{ ...labelStyle, marginBottom: 12 }}>ASIGNAR UNIDADES Y ELEMENTOS</label>
-                      <DespachoForm incidenteId={inc.id} onDespachado={cargarPendientes} />
+                      <label style={{ ...labelStyle, marginBottom: 12 }}>
+                        {inc.origenRondin ? 'ASIGNAR UNIDADES Y REFUERZOS' : 'ASIGNAR UNIDADES Y ELEMENTOS'}
+                      </label>
+                      <DespachoForm
+                        incidenteId={inc.id}
+                        onDespachado={cargarPendientes}
+                        prioritario={inc.origenRondin ? {
+                          nombre: inc.prioritarioNombre || inc.elementos?.find(e => e.esPrioritario)?.nombre || '',
+                          nomina: inc.prioritarioNomina || inc.elementos?.find(e => e.esPrioritario)?.nomina || '',
+                        } : undefined}
+                      />
                     </div>
                   )}
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle, X } from 'lucide-react'
 
-export function ToastExito({ show: initialShow }: { show: boolean }) {
+export function ToastExito({ show: initialShow, folio }: { show: boolean; folio?: string }) {
   const [visible, setVisible] = useState(initialShow)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function ToastExito({ show: initialShow }: { show: boolean }) {
       animation: 'slideIn 0.3s ease',
     }}>
       <CheckCircle size={20} color="#22c55e" />
-      <span>Reporte registrado exitosamente</span>
+      <span>{folio ? `Reporte registrado: ${folio}` : 'Reporte registrado exitosamente'}</span>
       <button onClick={() => setVisible(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', marginLeft: 8 }}>
         <X size={16} />
       </button>
