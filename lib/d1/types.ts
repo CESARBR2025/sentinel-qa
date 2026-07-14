@@ -1,3 +1,10 @@
+export interface GrupoAdscripcion {
+  id: number
+  clave: string
+  nombre: string
+  autoridad: string
+}
+
 export interface ReporteD1 {
   id: string
   folioDenuncia: string | null

@@ -1,5 +1,5 @@
 import { query } from '@/lib/db'
-import type { ReporteD1 } from './types'
+import type { ReporteD1, GrupoAdscripcion } from './types'
 import { rowToReporteD1 } from './mapper'
 
 export async function verificarFolioDenunciaUnico(folio: string): Promise<boolean> {
@@ -8,6 +8,20 @@ export async function verificarFolioDenunciaUnico(folio: string): Promise<boolea
     [folio],
   )
   return Number(result.rows[0]?.count ?? 1) === 0
+}
+
+export async function obtenerGruposAdscripcion(autoridad?: string): Promise<GrupoAdscripcion[]> {
+  if (autoridad) {
+    const result = await query<GrupoAdscripcion>(
+      `SELECT id, clave, nombre, autoridad FROM cat_grupos_adscripcion WHERE activo = true AND autoridad = $1 ORDER BY orden`,
+      [autoridad],
+    )
+    return result.rows
+  }
+  const result = await query<GrupoAdscripcion>(
+    `SELECT id, clave, nombre, autoridad FROM cat_grupos_adscripcion WHERE activo = true ORDER BY autoridad, orden`,
+  )
+  return result.rows
 }
 
 export async function insertarReporteDenuncia(params: Record<string, unknown>): Promise<string> {

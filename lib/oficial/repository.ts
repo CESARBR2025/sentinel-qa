@@ -6,6 +6,7 @@ import {
   rowToReporteDetalle,
   rowToDespachoAsignado,
   rowToRondinOficialResumen,
+  rowToReporteCampoParaD1,
 } from "./mapper";
 import type {
   OfiOficial,
@@ -15,6 +16,7 @@ import type {
   CatalogoItem,
   DespachoAsignado,
   RondinOficialResumen,
+  ReporteCampoParaD1,
 } from "./types";
 
 export async function obtenerOficialPorUserId(
@@ -478,6 +480,47 @@ export async function insertarDetallesAsegurados(
       [reporteCampoId, d.nombre, d.apellidoPaterno, d.apellidoMaterno],
     )
   }
+}
+
+export async function obtenerReporteCampoParaD1(reporteCampoId: string): Promise<ReporteCampoParaD1 | null> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       rc.id,
+       rc.folio_reporte_campo,
+       rc.ofi_tipo_incidente,
+       rc.ofi_descripcion,
+       rc.ofi_calle,
+       rc.ofi_colonia,
+       rc.ofi_latitud AS latitud,
+       rc.ofi_longitud AS longitud,
+       rc.ofi_autoridad_recibe,
+       rc.created_at,
+       CONCAT(u.name, ' ', COALESCE(u.apellido, '')) AS oficial_nombre,
+       o.no_nomina AS oficial_nomina,
+       i.fecha_hora_inicio AS incidente_fecha_hora_inicio,
+       desp.fecha_hora_despacho AS despacho_fecha_hora_despacho
+     FROM ofi_reportes_campo rc
+     LEFT JOIN ofi_oficiales o ON o.id = rc.ofi_oficial_id
+     LEFT JOIN users u ON u.id = o.user_id
+     LEFT JOIN incidentes i ON i.id = rc.incidente_id
+     LEFT JOIN incidente_despacho desp ON desp.incidente_id = rc.incidente_id
+     WHERE rc.id = $1
+     LIMIT 1`,
+    [reporteCampoId],
+  )
+  return result.rows.length ? rowToReporteCampoParaD1(result.rows[0]) : null
+}
+
+export async function obtenerSectorOficial(oficialId: string): Promise<string | null> {
+  const result = await query<{ sector: string | null }>(
+    `SELECT d.nombre AS sector
+     FROM ofi_oficiales o
+     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
+     WHERE o.id = $1
+     LIMIT 1`,
+    [oficialId],
+  )
+  return result.rows[0]?.sector ?? null
 }
 
 export async function obtenerRondinesOficial(userId: string): Promise<RondinOficialResumen[]> {
