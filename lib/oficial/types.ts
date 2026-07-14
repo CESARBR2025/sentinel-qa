@@ -190,6 +190,23 @@ export interface OfiReporteDetalle extends OfiReporteCampo {
   d1: OfiD1Vinculada | null;
 }
 
+export interface ReporteCampoParaD1 {
+  id: string
+  folioReporteCampo: string | null
+  tipoIncidente: string | null
+  descripcion: string | null
+  calle: string | null
+  colonia: string | null
+  latitud: number | null
+  longitud: number | null
+  autoridadRecibe: string | null
+  oficialNombre: string | null
+  oficialNomina: string | null
+  fechaHoraInicioIncidente: string | null
+  fechaHoraDespacho: string | null
+  created_at: string | null
+}
+
 export interface RondinOficialResumen {
   id: string
   folio: string

@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { accionTomarCaso } from '@/lib/fiscalia/actions'
 
 export function TomarCasoBoton({ solicitudId }: { solicitudId: string }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -24,6 +26,7 @@ export function TomarCasoBoton({ solicitudId }: { solicitudId: string }) {
     }
 
     setOpen(false)
+    router.push(`/fiscalia/solicitudes/${solicitudId}`)
   }
 
   return (

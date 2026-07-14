@@ -8,7 +8,7 @@ import pool from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
-import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesEnProceso, listarSolicitudesConMonitorista, listarSolicitudesCompletadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, listarAseguradosCompletados, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
+import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesSinEvidencias, listarSolicitudesConEvidencias, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, listarAseguradosCompletados, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import type { ViaInfraccionDetalle } from './types'
 import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow } from './types'
@@ -31,9 +31,9 @@ export async function obtenerDashboardFiscalia(): Promise<UserInfo> {
 
 export interface SolicitudesData {
   pendientes: SolicitudEvidencia[]
-  enProceso: SolicitudEvidencia[]
-  conMonitorista: SolicitudEvidencia[]
-  completadas: SolicitudEvidencia[]
+  sinEvidencias: SolicitudEvidencia[]
+  conEvidencias: SolicitudEvidencia[]
+  finalizadas: SolicitudEvidencia[]
 }
 
 export async function obtenerSolicitudes(): Promise<SolicitudesData> {
@@ -43,14 +43,14 @@ export async function obtenerSolicitudes(): Promise<SolicitudesData> {
   const esValido = await verificarRolFiscalia(session.user.id)
   if (!esValido) redirect('/dashboard')
 
-  const [pendientes, enProceso, conMonitorista, completadas] = await Promise.all([
+  const [pendientes, sinEvidencias, conEvidencias, finalizadas] = await Promise.all([
     listarSolicitudesPendientes(),
-    listarSolicitudesEnProceso(),
-    listarSolicitudesConMonitorista(),
-    listarSolicitudesCompletadas(),
+    listarSolicitudesSinEvidencias(),
+    listarSolicitudesConEvidencias(),
+    listarSolicitudesFinalizadas(),
   ])
 
-  return { pendientes, enProceso, conMonitorista, completadas }
+  return { pendientes, sinEvidencias, conEvidencias, finalizadas }
 }
 
 export async function accionTomarCaso(formData: FormData): Promise<{ success: boolean; error?: string }> {
@@ -120,7 +120,6 @@ export async function obtenerDatosAseguradoAction(solicitudId: string): Promise<
 export async function guardarDetallesAseguradoAction(
   solicitudId: string,
   datos: DatosAseguradoInput,
-  evidencias?: { colonia: string; calle: string; numero: string; horaInicio: string; horaFin: string }[],
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const session = await auth.api.getSession({ headers: await headers() })
@@ -129,26 +128,7 @@ export async function guardarDetallesAseguradoAction(
     const esValido = await verificarRolFiscalia(session.user.id)
     if (!esValido) return { success: false, error: 'Acceso no autorizado' }
 
-    let evidenciasJson: string | null = null
-    if (evidencias && evidencias.length > 0) {
-      const validos = evidencias.filter(it => it.colonia.trim() && it.calle.trim() && it.numero.trim() && it.horaInicio.trim() && it.horaFin.trim())
-      if (validos.length > 0) {
-        const ahora = new Date().toISOString()
-        const nuevas = validos.map((it, idx) => ({
-          solicitud_id: idx + 1,
-          fecha_peticion: ahora,
-          colonia: it.colonia.trim(),
-          calle: it.calle.trim(),
-          numero: it.numero.trim(),
-          hora_inicio: it.horaInicio.trim(),
-          hora_fin: it.horaFin.trim(),
-          atendida: false,
-        }))
-        evidenciasJson = JSON.stringify(nuevas)
-      }
-    }
-
-    await guardarDetallesAsegurado(solicitudId, datos, evidenciasJson)
+    await guardarDetallesAsegurado(solicitudId, datos)
 
     revalidatePath('/fiscalia/solicitudes')
     return { success: true }
@@ -513,3 +493,5 @@ export async function guardarPuestaDisposicionJuzgadoAction(
     return { success: false, error: msg }
   }
 }
+
+

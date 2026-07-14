@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User, Shield, BadgeCheck, UserCheck, ScrollText, Gavel, MapPin, Map, Image, File } from 'lucide-react'
+import { Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User, Shield, BadgeCheck, UserCheck, ScrollText, Gavel, MapPin, Map, Image, File, Camera } from 'lucide-react'
 import { abrirDocumento } from '@/lib/shared/abrirDocumento'
+import { PedirEvidenciasBoton } from '@/components/fiscalia/PedirEvidenciasModal'
 import type { DetalleAsegurado, EvidenciaMonitorista } from '@/lib/fiscalia/types'
 
 const labelSx: React.CSSProperties = {
@@ -205,6 +206,16 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
         </div>
       </div>
 
+      {/* Botón para pedir evidencias si está en SIN_EVIDENCIA_REQUERIDA */}
+      {data.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+          <PedirEvidenciasBoton
+            solicitudId={solicitudId}
+            existingEvidencias={[]}
+          />
+        </div>
+      )}
+
       {evidencias && evidencias.length > 0 && (
         <div style={{
           padding: '16px 20px',
@@ -265,7 +276,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
       )}
 
       <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-        <Link href="/agente_juzgado/solicitudes" style={{
+        <Link href="/fiscalia/solicitudes" style={{
           fontFamily: 'Inter,sans-serif',
           fontSize: 12,
           padding: '8px 20px',

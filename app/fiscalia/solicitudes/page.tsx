@@ -4,7 +4,7 @@ import { obtenerDashboardFiscalia, obtenerSolicitudes } from '@/lib/fiscalia/act
 
 export default async function SolicitudesPage() {
   const user = await obtenerDashboardFiscalia()
-  const { pendientes, enProceso, conMonitorista, completadas } = await obtenerSolicitudes()
+  const { pendientes, sinEvidencias, conEvidencias, finalizadas } = await obtenerSolicitudes()
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
@@ -44,7 +44,7 @@ export default async function SolicitudesPage() {
         </div>
 
         {/* Tabs + Tables */}
-        <TabSolicitudes pendientes={pendientes} enProceso={enProceso} conMonitorista={conMonitorista} completadas={completadas} />
+        <TabSolicitudes pendientes={pendientes} sinEvidencias={sinEvidencias} conEvidencias={conEvidencias} finalizadas={finalizadas} />
 
         {/* Footer */}
         <div style={{
