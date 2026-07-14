@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
 
 interface Props {
   lat:   number
@@ -17,26 +18,29 @@ const PIN_ICONS: Record<string, string> = {
 
 export function MapaPinFijo({ lat, lng, label, color }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const [loaded, setLoaded] = useState(() => !!window?.google?.maps)
+  const [status, setStatus] = useState<'loading' | 'ready' | 'unavailable'>(
+    () => (typeof window !== 'undefined' && window?.google?.maps ? 'ready' : 'loading'),
+  )
 
   useEffect(() => {
-    if (loaded) return
-
-    const existing = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')
-    if (existing) {
-      existing.addEventListener('load', () => setLoaded(true))
-      return
+    if (status !== 'loading') return
+    let cancelled = false
+    loadGoogleMaps()
+      .then((g) => {
+        if (cancelled) return
+        if (g?.maps) setStatus('ready')
+        else setStatus('unavailable')
+      })
+      .catch(() => {
+        if (!cancelled) setStatus('unavailable')
+      })
+    return () => {
+      cancelled = true
     }
-
-    const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`
-    script.async = true
-    script.onload = () => setLoaded(true)
-    document.head.appendChild(script)
-  }, [loaded])
+  }, [status])
 
   useEffect(() => {
-    if (!loaded || !mapRef.current) return
+    if (status !== 'ready' || !mapRef.current) return
 
     const map = new google.maps.Map(mapRef.current, {
       center: { lat, lng },
@@ -59,9 +63,17 @@ export function MapaPinFijo({ lat, lng, label, color }: Props) {
       icon: PIN_ICONS[color],
       animation: google.maps.Animation.DROP,
     })
-  }, [loaded, lat, lng, label, color])
+  }, [status, lat, lng, label, color])
 
-  if (!loaded) {
+  if (status === 'unavailable') {
+    return (
+      <div style={{ height: 280, background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#94a3b8' }}>
+        Mapa no disponible
+      </div>
+    )
+  }
+
+  if (status === 'loading') {
     return (
       <div style={{ height: 280, background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#94a3b8' }}>
         Cargando mapa...

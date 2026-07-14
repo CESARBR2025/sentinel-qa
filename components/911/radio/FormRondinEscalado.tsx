@@ -7,6 +7,7 @@ import { ArrowLeft, MapPin, Radio, Crosshair, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { useRondinFormStore } from '@/stores/useRondinFormStore'
+import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
 
 interface CatalogoItem { id: number; nombre: string }
 
@@ -42,15 +43,18 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
   const coloniaRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.google?.maps?.Geocoder) {
-      setMapsReady(true)
-      return
+    let cancelled = false
+    loadGoogleMaps()
+      .then((g) => {
+        if (!cancelled && g?.maps?.Geocoder) setMapsReady(true)
+        else if (!cancelled) setMapsReady(false)
+      })
+      .catch(() => {
+        if (!cancelled) setMapsReady(false)
+      })
+    return () => {
+      cancelled = true
     }
-    const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-    script.async = true
-    script.onload = () => setMapsReady(true)
-    document.head.appendChild(script)
   }, [setMapsReady])
 
   const obtenerUbicacion = () => {
