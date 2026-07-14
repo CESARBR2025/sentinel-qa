@@ -325,7 +325,7 @@ export async function createRondinEscalado(formData: FormData) {
   const anonimo = bool(formData, 'anonimo')
   const nombreOficial = str(formData, 'nombreOficial')
 
-  const incidenteId = await tryActionRaw(async () => {
+  const { incidenteId, esOficial } = await tryActionRaw(async () => {
     const cliente = await pool.connect()
     try {
       await cliente.query('BEGIN')
@@ -378,7 +378,7 @@ export async function createRondinEscalado(formData: FormData) {
       )
 
       await cliente.query('COMMIT')
-      return incId
+      return { incidenteId: incId, esOficial: oficialId !== null }
     } catch (err) {
       await cliente.query('ROLLBACK')
       throw err
@@ -390,8 +390,12 @@ export async function createRondinEscalado(formData: FormData) {
   await registrarAudit({ userId: session.user.id, accion: 'CREATE', entidad: 'incidentes', entidadId: incidenteId, payload: { origen: 'rondin_escalado', prioritario: nombreOficial } })
 
   revalidatePath('/agente_911/rondin')
+  revalidatePath('/oficial/despachos')
   revalidatePath('/incidentes')
 
+  // El oficial reportante aterriza en SU vista del despacho (puede ver/atender);
+  // un operador 911 va a la ficha del rondín en su módulo.
+  if (esOficial) redirect(`/oficial/despachos/${incidenteId}`)
   redirect(`/agente_911/rondin/incidentes/${incidenteId}`)
 }
 
