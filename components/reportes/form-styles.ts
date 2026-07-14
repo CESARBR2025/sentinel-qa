@@ -6,7 +6,7 @@ export const btnSecundario: React.CSSProperties = { fontFamily: 'JetBrains Mono'
 
 export const btnPrimario = (disabled: boolean): React.CSSProperties => ({ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '10px 24px', background: disabled ? '#94a3b8' : '#0f172a', color: '#ffffff', border: 'none', borderRadius: 2, cursor: disabled ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 8 })
 
-export const btnTiny: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '6px 12px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', borderRadius: 2, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }
+export const btnTiny: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '6px 12px', background: '#eff1f3', color: '#1f355a', border: '1px solid #c3c8d2', borderRadius: 2, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }
 
 export const btnTinyDanger: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '6px 10px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 2, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }
 

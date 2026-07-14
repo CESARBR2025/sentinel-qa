@@ -60,7 +60,7 @@ export function FiltrosIncidencias() {
           <label style={styles.label}>Fecha Final</label>
           <input type="date" style={{ ...styles.input, color: '#0F172A' }} value={to} onChange={e => setTo(e.target.value)} />
         </div>
-        <button style={{ ...styles.primaryButton, background: '#2563EB' }} onClick={handleGenerar}>
+        <button style={{ ...styles.primaryButton, background: '#1f355a' }} onClick={handleGenerar}>
           <Search size={18} /> GENERAR
         </button>
         <button style={{ ...styles.primaryButton, background: '#ffffff', color: '#64748b', border: '1px solid #e2e8f0' }} onClick={handleLimpiar}>

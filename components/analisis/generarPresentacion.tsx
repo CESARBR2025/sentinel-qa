@@ -94,7 +94,7 @@ export default function RegistroDetenidoForm() {
             {step === 1 && (
                 <div style={cardStyle}>
                     <div style={{ marginBottom: '32px', borderBottom: '1px solid #f1f5f9', paddingBottom: '20px' }}>
-                        <h2 style={titleStyle}>01. FICHA DE <span style={{ color: '#3b82f6' }}>IDENTIFICACIÓN</span></h2>
+                        <h2 style={titleStyle}>01. FICHA DE <span style={{ color: '#3e5171' }}>IDENTIFICACIÓN</span></h2>
                         <p style={subLabelStyle}>Registro de datos generales y evidencia fotográfica del detenido.</p>
                     </div>
 
@@ -176,10 +176,10 @@ export default function RegistroDetenidoForm() {
                 <div style={cardStyle} className="animate-tactical">
                     <div style={{ marginBottom: '32px', borderBottom: '1px solid #f1f5f9', paddingBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
-                            <h2 style={titleStyle}>02. DATOS <span style={{ color: '#3b82f6' }}>OPERATIVOS Y LEGALES</span></h2>
+                            <h2 style={titleStyle}>02. DATOS <span style={{ color: '#3e5171' }}>OPERATIVOS Y LEGALES</span></h2>
                             <p style={subLabelStyle}>Vinculación de folios, geolocalización e inteligencia criminal.</p>
                         </div>
-                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: '12px', color: '#3b82f6', fontWeight: 700 }}>PASO 2 DE 2</div>
+                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: '12px', color: '#3e5171', fontWeight: 700 }}>PASO 2 DE 2</div>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
@@ -258,7 +258,7 @@ const SentinelField = ({ label, icon: Icon, name, value, onChange, as = 'input',
                     name={name} value={value} onChange={onChange} {...props}
                     style={{
                         width: '100%', padding: `10px 12px 10px ${Icon ? '38px' : '12px'}`,
-                        border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: '2px',
+                        border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: '2px',
                         fontFamily: 'Inter, sans-serif', fontSize: '13px', outline: 'none',
                         minHeight: as === 'textarea' ? '100px' : 'auto', ...props.style
                     }}

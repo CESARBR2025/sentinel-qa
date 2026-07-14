@@ -80,15 +80,15 @@ export default function LoadingProvider({ children }: { children: React.ReactNod
         pointerEvents: 'none',
       }}>
         <img
-          src="/logo_sentinel.png"
+          src="/chaleco.png"
           alt="SENTINEL"
-          style={{ height: 100, objectFit: 'contain', filter: 'drop-shadow(0 4px 16px rgba(212,164,58,0.4))' }}
+          style={{ height: 100, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
         />
         <div style={{ width: 120, marginBottom: 12 }}>
           <div style={{ height: 3, background: '#1b2742', borderRadius: 2 }}>
             <div style={{
               height: '100%', width: `${progress}%`,
-              background: progress > 90 ? '#4a9e6a' : '#2563eb',
+              background: progress > 90 ? '#4a9e6a' : '#1f355a',
               transition: 'width 0.25s ease-out',
             }}/>
           </div>

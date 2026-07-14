@@ -6,7 +6,7 @@ export function ReportTable({ data }: { data: any[] }) {
     <div style={styles.tableContainer}>
       <div style={styles.tableHeader}>
         <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '20px', fontWeight: 700 }}>
-          <span style={{ color: '#2563EB', marginRight: '8px' }}>|</span> REGISTROS POR TURNO
+          <span style={{ color: '#1f355a', marginRight: '8px' }}>|</span> REGISTROS POR TURNO
         </h3>
       </div>
       <div style={{ overflowX: 'auto' }}>
@@ -34,8 +34,8 @@ export function ReportTable({ data }: { data: any[] }) {
                 <td style={styles.td}><b>{r.fecha}</b></td>
                 <td style={styles.td}>
                   <span style={styles.badge(
-                    r.turno === 'MATUTINO' ? '#DBEAFE' : r.turno === 'VESPERTINO' ? '#FEF3C7' : '#F3E8FF',
-                    r.turno === 'MATUTINO' ? '#1E40AF' : r.turno === 'VESPERTINO' ? '#B45309' : '#6B21A8'
+                    r.turno === 'MATUTINO' ? '#dbdfe5' : r.turno === 'VESPERTINO' ? '#FEF3C7' : '#F3E8FF',
+                    r.turno === 'MATUTINO' ? '#172844' : r.turno === 'VESPERTINO' ? '#B45309' : '#6B21A8'
                   )}>{r.turno}</span>
                 </td>
                 <td style={styles.td}>{r.persSinNovedad}</td>
@@ -49,7 +49,7 @@ export function ReportTable({ data }: { data: any[] }) {
                 <td style={styles.td}>{r.persecuciones}</td>
                 <td style={styles.td}>
                   {r.asegurados > 0
-                    ? <span style={styles.badge('#DBEAFE', '#1E40AF')}>{r.asegurados}</span>
+                    ? <span style={styles.badge('#dbdfe5', '#172844')}>{r.asegurados}</span>
                     : 0}
                 </td>
                 <td style={styles.td}>{r.recuperados}</td>

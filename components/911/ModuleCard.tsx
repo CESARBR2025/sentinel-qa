@@ -18,7 +18,7 @@ interface ModuleCardProps {
 
 export const ModuleCard = ({ label, sub, icon, href, stats }: ModuleCardProps) => {
   const [hover, setHover] = useState(false)
-  const blueAccent = '#2563eb'
+  const blueAccent = '#1f355a'
 
   return (
     <Link
@@ -36,7 +36,7 @@ export const ModuleCard = ({ label, sub, icon, href, stats }: ModuleCardProps) =
         flexDirection: 'column',
         minHeight: '280px',
         borderRadius: '2px',
-        boxShadow: hover ? '0 20px 40px -12px rgba(37, 99, 235, 0.15)' : '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+        boxShadow: hover ? '0 20px 40px -12px rgba(31, 53, 90, 0.15)' : '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
         transform: hover ? 'translateY(-5px)' : 'translateY(0)',
         overflow: 'hidden'
       }}

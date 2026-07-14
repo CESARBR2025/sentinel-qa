@@ -63,7 +63,7 @@ export function HistorialIncidente({ historial }: { historial: Historial }) {
           {cierre.acciones && <Dato label="Acciones" valor={cierre.acciones} />}
           <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
             {cierre.hayDetencion && <Badge texto="CON DETENCIÓN" color="#dc2626" bg="#fef2f2" border="#fecaca" />}
-            {cierre.autoridadRecibe && <Badge texto={cierre.autoridadRecibe.toUpperCase()} color="#1d4ed8" bg="#eff6ff" border="#bfdbfe" />}
+            {cierre.autoridadRecibe && <Badge texto={cierre.autoridadRecibe.toUpperCase()} color="#1c3051" bg="#eff1f3" border="#c3c8d2" />}
             {cierre.legacy && <Badge texto="REGISTRO LEGACY" color="#64748b" bg="#f8fafc" border="#e2e8f0" />}
           </div>
         </>
@@ -89,7 +89,7 @@ export function HistorialIncidente({ historial }: { historial: Historial }) {
 
   return (
     <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '20px 24px' }}>
-      <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+      <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
         HISTORIAL DEL INCIDENTE
       </span>
       <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column' }}>
@@ -99,14 +99,14 @@ export function HistorialIncidente({ historial }: { historial: Historial }) {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{
                 width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: paso.activo ? '#eff6ff' : '#f8fafc',
-                border: `1px solid ${paso.activo ? '#bfdbfe' : '#e2e8f0'}`,
-                color: paso.activo ? '#2563eb' : '#94a3b8', flexShrink: 0,
+                background: paso.activo ? '#eff1f3' : '#f8fafc',
+                border: `1px solid ${paso.activo ? '#c3c8d2' : '#e2e8f0'}`,
+                color: paso.activo ? '#1f355a' : '#94a3b8', flexShrink: 0,
               }}>
                 {paso.icono}
               </div>
               {i < pasos.length - 1 && (
-                <div style={{ width: 2, flex: 1, minHeight: 16, background: paso.activo ? '#bfdbfe' : '#e2e8f0' }} />
+                <div style={{ width: 2, flex: 1, minHeight: 16, background: paso.activo ? '#c3c8d2' : '#e2e8f0' }} />
               )}
             </div>
             {/* Contenido */}

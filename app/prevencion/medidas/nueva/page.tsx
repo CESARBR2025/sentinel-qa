@@ -23,7 +23,7 @@ export default async function NuevaMedidaPage() {
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
         <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 6px' }}>
-          Nueva <span style={{ color: '#2563eb' }}>Medida de Protección</span>
+          Nueva <span style={{ color: '#1f355a' }}>Medida de Protección</span>
         </h2>
         <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
           Captura los datos del oficio y la víctima
@@ -96,7 +96,7 @@ export default async function NuevaMedidaPage() {
           </Link>
           <button
             type="submit"
-            style={{ flex: 1, padding: '12px 24px', background: '#2563eb', color: '#fff', border: '1px solid #2563eb', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '2px' }}
+            style={{ flex: 1, padding: '12px 24px', background: '#1f355a', color: '#fff', border: '1px solid #1f355a', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '2px' }}
           >
             Guardar Medida →
           </button>
@@ -111,7 +111,7 @@ export default async function NuevaMedidaPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 12 }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 12 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '20px', background: '#ffffff', border: '1px solid #e2e8f0' }}>

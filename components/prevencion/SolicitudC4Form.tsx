@@ -42,7 +42,7 @@ export function SolicitudC4Form({ solicitudId }: { solicitudId: string }) {
           disabled={pending}
           style={{
             padding: '9px 20px',
-            background: pending ? '#f1f5f9' : '#2563eb',
+            background: pending ? '#f1f5f9' : '#1f355a',
             color: pending ? '#94a3b8' : '#ffffff',
             border: 'none',
             fontFamily: 'Barlow Condensed,sans-serif',

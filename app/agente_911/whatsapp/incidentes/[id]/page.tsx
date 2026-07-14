@@ -146,7 +146,7 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
 // --- ESTILOS ---
 const cardStyle = { background: 'white', border: '1px solid #e2e8f0', padding: '32px', borderRadius: '4px' };
 const sectionTitleStyle: React.CSSProperties = { fontFamily: 'Barlow Condensed', fontSize: '18px', fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' };
-const decoratorStyle = { width: '4px', height: '18px', background: '#3b82f6' };
+const decoratorStyle = { width: '4px', height: '18px', background: '#3e5171' };
 const labelStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', fontWeight: 600 };
 const valueStyle = { fontFamily: 'Inter', fontSize: '15px', fontWeight: 500, color: '#1e293b' };
 const itemGroupStyle = { display: 'flex', flexDirection: 'column' as const };
@@ -163,7 +163,7 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     const base: React.CSSProperties = { padding: '8px 16px', borderRadius: '2px', fontSize: '12px', fontWeight: 700, fontFamily: 'JetBrains Mono', border: '1px solid' };
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
-        case 'en_despacho':   return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }; 
+        case 'en_despacho':   return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' }; 
         case 'en_sitio':      return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' }; 
         case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
         case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' }; 

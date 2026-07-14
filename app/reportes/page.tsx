@@ -42,7 +42,7 @@ export default async function GestionPage() {
     {
       titulo: 'Módulo de resumen de incidentes',
       subtitulo: 'Clasificación y seguimiento detallado: Motos, Vehículos, Cateos, Hidrocarburos y más.',
-      icono: <ShieldAlert size={28} style={{ color: '#2563EB' }} />, // Icono destacado
+      icono: <ShieldAlert size={28} style={{ color: '#1f355a' }} />, // Icono destacado
       enlace: '/modulo_incidentes', // Aquí es donde hicimos las pestañas
       estadisticas: [{ label: 'Categorías', value: '9' }, { label: 'Estatus', value: 'Seguimiento' }]
     },

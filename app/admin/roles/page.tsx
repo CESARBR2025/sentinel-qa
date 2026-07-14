@@ -11,10 +11,10 @@ export default async function RolesPage() {
       <div style={{ marginBottom: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 4px' }}>
-            Roles del <span style={{ color: '#2563eb' }}>Sistema</span>
+            Roles del <span style={{ color: '#1f355a' }}>Sistema</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
-            <span style={{ color: '#2563eb' }}>›</span> {lista.length} configuraciones de acceso detectadas
+            <span style={{ color: '#1f355a' }}>›</span> {lista.length} configuraciones de acceso detectadas
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export default async function RolesPage() {
                   {r.nombre === 'Monitorista' && (
                     <Link
                       href={`/admin/roles/${r.id}/plantilla-permisos`}
-                      style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
+                      style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
                     >
                       Plantilla →
                     </Link>

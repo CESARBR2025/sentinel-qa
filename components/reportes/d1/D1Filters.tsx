@@ -38,7 +38,7 @@ export function D1Filters() {
                 <input type="text" placeholder="Buscar..." style={styles.input} value={folio} onChange={e => setFolio(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') handleFiltrar() }} />
             </div>
-            <button style={{ ...styles.primaryButton, height: '38px', justifyContent: 'center', background: '#2563EB' }} onClick={handleFiltrar}>
+            <button style={{ ...styles.primaryButton, height: '38px', justifyContent: 'center', background: '#1f355a' }} onClick={handleFiltrar}>
                 <Search size={16} /> FILTRAR
             </button>
             <button style={{ ...styles.primaryButton, height: '38px', justifyContent: 'center', background: '#64748B' }} onClick={handleLimpiar}>

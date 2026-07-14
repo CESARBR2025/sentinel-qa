@@ -120,7 +120,7 @@ export function SubirFotoDetenido({
       </div>
 
       {urlArchivo && (
-        <div style={{ marginBottom: 8, fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#2563eb' }}>
+        <div style={{ marginBottom: 8, fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#1f355a' }}>
           <a href={`/api/expediente/proxy?url=${encodeURIComponent(urlArchivo)}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
             Ver foto actual
           </a>

@@ -20,7 +20,7 @@ export const styles = {
     main: { maxWidth: '1600px', margin: '0 auto', padding: '40px 48px' },
     headerContainer: {
         display: 'flex', justifyContent: 'space-between' as const, alignItems: 'flex-end' as const,
-        marginBottom: '40px', borderLeft: '4px solid #2563EB', paddingLeft: '20px'
+        marginBottom: '40px', borderLeft: '4px solid #1f355a', paddingLeft: '20px'
     },
     title: {
         fontFamily: 'Barlow Condensed', fontSize: '56px', fontWeight: 800,
@@ -61,8 +61,8 @@ export const styles = {
     tabButton: (isActive: boolean) => ({
         padding: '12px 20px', cursor: 'pointer', border: 'none', background: 'none',
         fontFamily: 'Barlow Condensed', fontSize: '18px', fontWeight: 700,
-        color: isActive ? '#2563EB' : '#64748B',
-        borderBottom: isActive ? '4px solid #2563EB' : '4px solid transparent',
+        color: isActive ? '#1f355a' : '#64748B',
+        borderBottom: isActive ? '4px solid #1f355a' : '4px solid transparent',
         display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s'
     }),
     searchInput: {

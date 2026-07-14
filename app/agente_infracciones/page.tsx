@@ -25,14 +25,14 @@ export default async function InfraccionesDashboardPage() {
           <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#0891b2' }}></div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <img src="/logo_sentinel.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
+            <img src="/chaleco.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
             <div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#0891b2', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 8, height: 8, background: '#0891b2', display: 'inline-block' }}></span>
                 Agente Infracciones
               </div>
               <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                SENTINEL · INFRACCIONES
+                CENTINELA · INFRACCIONES
               </h1>
             </div>
           </div>
@@ -55,7 +55,7 @@ export default async function InfraccionesDashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · INFRACCIONES</span>
+            <span>CENTINELA v0.1 · INFRACCIONES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }}></span>
           </div>
         </div>

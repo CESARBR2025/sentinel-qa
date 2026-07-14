@@ -36,14 +36,14 @@ export default async function IncidentesCamaraPage({
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
       <ToastAuto show={exito === 'creado'} mensaje="Registro creado exitosamente" />
       <ToastAuto show={exito === 'actualizado'} mensaje="Registro actualizado exitosamente" />
-      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Incidentes por" accent="Cámara" accentColor="#2563eb" user={user} />
+      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Incidentes por" accent="Cámara" accentColor="#1f355a" user={user} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 }}>
           <div>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Cámaras de Vigilancia</span>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Cámaras de Vigilancia</span>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Incidentes por Cámara</h1>
-            <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
+            <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
           </div>
           <Link href="/monitorista/incidentes-camara/nuevo" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em', background: '#0f172a', color: '#ffffff', padding: '12px 24px', textDecoration: 'none', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
             <Plus size={14} /> NUEVO REGISTRO
@@ -53,7 +53,7 @@ export default async function IncidentesCamaraPage({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 40 }}>
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <BarChart3 size={20} color="#2563eb" />
+              <BarChart3 size={20} color="#1f355a" />
               <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total Registros</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{registros.length}</div></div>
             </div>
           </div>

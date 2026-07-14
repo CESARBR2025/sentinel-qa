@@ -292,12 +292,12 @@ function LoginContent() {
           --text:     #0f172a;
           --text-dim: #64748b;
           --text-mute:#4a5878;
-          --navy:     #14224a;
-          --red:      #2563eb;
+          --navy:     #1f355a;
+          --red:      #1f355a;
           --red-hi:   #447df9;
-          --gold:     #2563eb;
+          --gold:     #1f355a;
           --gold-hi:  #f0be4c;
-          --ok:       #2563eb;
+          --ok:       #1f355a;
         }
         *{box-sizing:border-box;}
         html,body{margin:0;padding:0;background:var(--ink);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;overflow:hidden;}
@@ -339,11 +339,14 @@ function LoginContent() {
           .mobile-logo{display:flex!important;}
         }
         .otp-input-field { font-size: 26px; }
+        @media(max-height:640px){
+          .estado-enlace{display:none!important;}
+        }
       `}</style>
 
       <div className="stage" style={{ position:'fixed',inset:0,display:'grid',gridTemplateColumns:'1.05fr 1fr',background:`var(--ink)` }}>
         {/* Grid blueprint */}
-        <div style={{ position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(37,99,235,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.06) 1px,transparent 1px)'}}/>
+        <div style={{ position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(31, 53, 90,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(31, 53, 90,.06) 1px,transparent 1px)'}}/>
 
         {/* Corners dorados */}
         {[{top:18,left:18,borderTop:'1px solid',borderLeft:'1px solid'},{top:18,right:18,borderTop:'1px solid',borderRight:'1px solid'},{bottom:18,left:18,borderBottom:'1px solid',borderLeft:'1px solid'},{bottom:18,right:18,borderBottom:'1px solid',borderRight:'1px solid'}].map((s,i) => (
@@ -351,40 +354,41 @@ function LoginContent() {
         ))}
 
         {/* ── PANEL IZQUIERDO ── */}
-        <aside className="left-panel" style={{ position:'relative',padding:'52px 60px 44px',borderRight:'1px solid var(--line)',background: '#ffffff',display:'flex',flexDirection:'column',overflow:'hidden' }}>
+        <aside className="left-panel" style={{ position:'relative',padding:'clamp(20px,4vh,52px) 60px',borderRight:'1px solid var(--line)',background: '#ffffff',display:'flex',flexDirection:'column',justifyContent:'center',gap:'clamp(14px,2.6vh,26px)',overflow:'hidden' }}>
 
           {/* Brand */}
-          <div className="hide-mobile" style={{ display:'flex',alignItems:'center',gap:18,paddingBottom:26,borderBottom:'1px solid var(--line)' }}>
-            <div style={{ position:'relative',width:96,height:96,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+          <div className="hide-mobile" style={{ display:'flex',alignItems:'center',gap:16,paddingBottom:'clamp(10px,2vh,20px)',borderBottom:'1px solid var(--line)',flexShrink:0 }}>
+            <div style={{ position:'relative',width:'clamp(64px,11vh,96px)',height:'clamp(64px,11vh,96px)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
               <div style={{ position:'absolute',inset:-6,borderRadius:'50%',background:'radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0%,rgba(212,164,58,.10) 35%,rgba(212,164,58,0) 72%)',filter:'blur(6px)' }}/>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-shield.png" alt="Escudo SSPM" width={84} height={84} style={{ position:'relative',zIndex:1,objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
+              <img src="/logo-shield.png" alt="Escudo SSPM" width={84} height={84} style={{ position:'relative',zIndex:1,width:'clamp(56px,9.6vh,84px)',height:'clamp(56px,9.6vh,84px)',objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
             </div>
             <div style={{ width:1,background:'linear-gradient(180deg,transparent,var(--gold),transparent)',alignSelf:'stretch',opacity:.55 }}/>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-text-dark.png" alt="SSPM" style={{ height:56,maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
+            <img src="/logo-text-dark.png" alt="SSPM" style={{ height:'clamp(40px,7vh,56px)',maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
           </div>
 
           {/* Headline */}
-          <div style={{ marginTop:30 }}>
-            <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--red)',letterSpacing:'0.3em',textTransform:'uppercase',marginBottom:20,display:'flex',alignItems:'center',gap:10 }}>
+          <div style={{ flexShrink:0 }}>
+            <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--red)',letterSpacing:'0.3em',textTransform:'uppercase',marginBottom:'clamp(10px,1.8vh,20px)',display:'flex',alignItems:'center',gap:10 }}>
               <span style={{ width:26,height:1,background:'var(--red)',display:'inline-block' }}/>
               Acceso oficial · uso restringido
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 16 }}>
-              <img src="/logo_sentinel.png" alt="SENTINEL" style={{ height: 180, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(136, 129, 228, 0.5))' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 'clamp(6px,1.4vh,16px)' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/chaleco.png" alt="CENTINELA" style={{ height: 'clamp(64px,13vh,150px)', objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }} />
             </div>
-            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:104,lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(37, 99, 235, 0.1)',textAlign:'center' }}>
+            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:'clamp(42px,9.5vh,104px)',lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(31, 53, 90, 0.1)',textAlign:'center' }}>
               <span style={{ color:'var(--gold)' }}>CENTINELA</span>
             </h1>
-            <div className="hide-mobile" style={{ display:'flex',gap:10,alignItems:'center',marginTop:16,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
+            <div className="hide-mobile" style={{ display:'flex',gap:10,alignItems:'center',marginTop:'clamp(8px,1.6vh,16px)',fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
               <span>S.S.P.M.</span><span style={{ color:'var(--gold)' }}>·</span>
               <span>SAN JUAN DEL RÍO</span><span style={{ color:'var(--gold)' }}>·</span>
               <span>QRO</span>
             </div>
           </div>
 
-          {/* Sentinel mark 
+          {/* Sentinel mark
           <div className="hide-mobile" style={{ marginTop:34,display:'flex',alignItems:'center',gap:14 }}>
             <div style={{ flexShrink:0,width:28,height:1,background:'var(--gold)' }}/>
             <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.12em',color:'var(--text-dim)',textTransform:'lowercase',lineHeight:1.5 }}>
@@ -401,13 +405,13 @@ function LoginContent() {
           </div>*/}
 
           {/* Protocolo */}
-          <div className="hide-mobile" style={{ marginTop:30,border:'1px solid var(--line)',background:'#ffffff',padding:'18px 20px',position:'relative' }}>
+          <div className="hide-mobile" style={{ flexShrink:0,border:'1px solid var(--line)',background:'#ffffff',padding:'clamp(12px,2vh,18px) 20px',position:'relative' }}>
             <div style={{ position:'absolute',top:-1,left:0,width:40,height:2,background:'var(--gold)' }}/>
-            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.22em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:14 }}>
+            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.22em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:'clamp(8px,1.4vh,14px)' }}>
               <span>› Protocolo de acceso</span>
               <span style={{ color:'var(--gold)' }}>Nivel 3</span>
             </div>
-            <div style={{ display:'grid',gap:10,fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--text)',letterSpacing:'0.08em' }}>
+            <div style={{ display:'grid',gap:'clamp(6px,1.2vh,10px)',fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--text)',letterSpacing:'0.08em' }}>
               {[
                 ['Canal cifrado extremo a extremo','Activo'],
                 ['Verificación de identidad en dos pasos','Requerido'],
@@ -420,7 +424,7 @@ function LoginContent() {
                 </div>
               ))}
             </div>
-            <div style={{ marginTop:16,paddingTop:12,borderTop:'1px dashed var(--line-2)',display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:9,letterSpacing:'0.22em',color:'var(--text-mute)',textTransform:'uppercase' }}>
+            <div style={{ marginTop:'clamp(8px,1.4vh,16px)',paddingTop:12,borderTop:'1px dashed var(--line-2)',display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:9,letterSpacing:'0.22em',color:'var(--text-mute)',textTransform:'uppercase' }}>
               <span>SESIÓN · {dateStr}</span>
               <span style={{ color:'var(--gold)' }}>SIGN: 0x4F··A1C2</span>
             </div>
@@ -437,9 +441,9 @@ function LoginContent() {
             background:'#ffffff',
           }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo_sentinel.png" alt="S" style={{ height:36, objectFit:'contain', filter:'drop-shadow(0 0 8px rgba(212,164,58,0.5))' }} />
+            <img src="/chaleco.png" alt="CENTINELA" style={{ height:36, objectFit:'contain', filter: 'drop-shadow(0 0 8px rgba(31, 53, 90, 0.5))' }} />
             <span style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:800, fontSize:30, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--gold)', lineHeight:1 }}>
-              ENTINEL
+              ENTINELA
             </span>
           </div>
 
@@ -461,7 +465,7 @@ function LoginContent() {
 
             {/* Solo mostrar formulario si NO es success */}
             {phase !== 'success' && (
-            <>
+            <div style={{ display:'flex', flexDirection:'column', flex:1, minHeight:0 }}>
             {/* Encabezado del form */}
             <div style={{ marginBottom:28 }}>
               <span style={{ display:'inline-flex',alignItems:'center',gap:8,fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.24em',color:'var(--gold)',textTransform:'uppercase',border:'1px solid var(--gold)',padding:'4px 10px',marginBottom:14 }}>
@@ -582,7 +586,32 @@ function LoginContent() {
               </div>
             )}
 
-            </>
+            {/* Espacio sobrante — estado del enlace, centrado */}
+            <div className="hide-mobile estado-enlace" style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', minHeight:24, overflow:'hidden' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:10, margin:'28px 0 18px', opacity:.7 }}>
+                <div style={{ flex:1, height:1, background:'var(--line-2)' }}/>
+                <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.3em', color:'var(--text-mute)', textTransform:'uppercase' }}>Estado del enlace</span>
+                <div style={{ flex:1, height:1, background:'var(--line-2)' }}/>
+              </div>
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
+                {[
+                  ['Cifrado','TLS 1.3','var(--ok)'],
+                  ['Sesión','#'+sessionId,'var(--gold)'],
+                  ['Núcleo C4','En línea','var(--ok)'],
+                ].map(([lbl,val,color]) => (
+                  <div key={lbl} style={{ border:'1px solid var(--line)', padding:'14px 12px', position:'relative' }}>
+                    <div style={{ position:'absolute', top:-1, left:0, width:20, height:2, background:color }}/>
+                    <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.2em', color:'var(--text-mute)', textTransform:'uppercase', marginBottom:6 }}>{lbl}</div>
+                    <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, letterSpacing:'0.04em', color:'var(--text)', fontWeight:600 }}>{val}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop:20, textAlign:'center', fontFamily:'JetBrains Mono,monospace', fontSize:9.5, letterSpacing:'0.24em', color:'var(--text-mute)', textTransform:'uppercase' }}>
+                Plataforma verificada · Secretaría de Seguridad Pública Municipal
+              </div>
+            </div>
+
+            </div>
             )}
           </div>
 
@@ -595,7 +624,7 @@ function LoginContent() {
               <div style={{ position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(74,158,106,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(74,158,106,0.08) 1px,transparent 1px)',backgroundSize:'40px 40px',pointerEvents:'none' }}/>
               
               {/* Línea horizontal central */}
-              <div style={{ position:'absolute',top:'50%',left:0,right:0,height:1,background:'rgba(37,99,235,0.4)', boxShadow:'0 0 15px rgba(37,99,235,0.6)' }}/>
+              <div style={{ position:'absolute',top:'50%',left:0,right:0,height:1,background:'rgba(31, 53, 90,0.4)', boxShadow:'0 0 15px rgba(31, 53, 90,0.6)' }}/>
 
               <div className="cyber-success-icon" style={{ width:120,height:120,background:'var(--ink)',borderRadius:4,border:'1px solid var(--ok)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 40px rgba(74,158,106,.35), inset 0 0 20px rgba(74,158,106,.2)',marginBottom:36,position:'relative',zIndex:2 }}>
                  {/* Decorative brackets */}
@@ -606,7 +635,7 @@ function LoginContent() {
               
               <div className="cyber-success-text" style={{ textAlign:'center',position:'relative',zIndex:2 }}>
                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:12,color:'var(--ok)',letterSpacing:'0.4em',textTransform:'uppercase',marginBottom:12 }}>[ STATUS: AUTHENTICATED ]</div>
-                 <h3 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:46,letterSpacing:'0.08em',textTransform:'uppercase',margin:'0 0 8px',color:'var(--text)', textShadow:'0 0 20px rgba(37, 99, 235, 0.2)' }}>Acceso concedido</h3>
+                 <h3 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:46,letterSpacing:'0.08em',textTransform:'uppercase',margin:'0 0 8px',color:'var(--text)', textShadow:'0 0 20px rgba(31, 53, 90, 0.2)' }}>Acceso concedido</h3>
                  <p style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.18em',color:'var(--gold)',textTransform:'uppercase',margin:0 }}>Iniciando enlace seguro con el núcleo C4...</p>
               </div>
             </div>

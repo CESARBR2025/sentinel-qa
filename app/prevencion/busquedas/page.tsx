@@ -8,7 +8,7 @@ import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',     color: '#991b1b' },
-  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#2563eb' },
+  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#1f355a' },
 }
 
 export default async function BusquedasPage() {
@@ -28,7 +28,7 @@ export default async function BusquedasPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 6px' }}>
-            Búsquedas / <span style={{ color: '#2563eb' }}>Protocolo Alba</span>
+            Búsquedas / <span style={{ color: '#1f355a' }}>Protocolo Alba</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             {fichas.length} ficha{fichas.length !== 1 ? 's' : ''} registrada{fichas.length !== 1 ? 's' : ''}
@@ -36,7 +36,7 @@ export default async function BusquedasPage() {
         </div>
         <Link
           href="/prevencion/busquedas/nueva"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', background: '#2563eb', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', background: '#1f355a', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
         >
           + Activar protocolo
         </Link>
@@ -101,7 +101,7 @@ export default async function BusquedasPage() {
                       </span>
                     </td>
                     <td style={{ padding: '10px 12px' }}>
-                      <Link href={`/prevencion/busquedas/${f.id}`} style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, letterSpacing: '0.12em', textDecoration: 'none', textTransform: 'uppercase' }}>
+                      <Link href={`/prevencion/busquedas/${f.id}`} style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 600, letterSpacing: '0.12em', textDecoration: 'none', textTransform: 'uppercase' }}>
                         Ver →
                       </Link>
                     </td>

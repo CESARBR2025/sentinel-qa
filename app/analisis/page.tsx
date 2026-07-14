@@ -28,17 +28,17 @@ export default async function MenuAnalisisPage() {
         .menu-card:hover {
           transform: translateY(-5px);
           box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          border-color: #2563eb !important;
+          border-color: #1f355a !important;
         }
 
         .menu-card:hover .icon-container {
-          background: #2563eb !important;
+          background: #1f355a !important;
           color: white !important;
         }
 
         .menu-card:hover .arrow-icon {
           transform: translateX(5px);
-          color: #2563eb;
+          color: #1f355a;
         }
 
         @keyframes slideIn {
@@ -58,7 +58,7 @@ export default async function MenuAnalisisPage() {
         {/* ENCABEZADO TÁCTICO */}
         <div style={{ marginBottom: '48px' }} className="animate-in">
           <span style={topLabelStyle}>ÁREA DE INTELIGENCIA OPERATIVA</span>
-          <h1 style={titleStyle}>CENTRO DE <span style={{ color: '#2563eb' }}>ANÁLISIS Y REGISTRO</span></h1>
+          <h1 style={titleStyle}>CENTRO DE <span style={{ color: '#1f355a' }}>ANÁLISIS Y REGISTRO</span></h1>
           <p style={{ margin: '12px 0 0 0', fontFamily: 'Inter', color: '#64748b', fontSize: '16px', maxWidth: '600px' }}>
             Seleccione el módulo de trabajo para la gestión de reportes de campo o la generación de informes policiales homologados.
           </p>
@@ -83,7 +83,7 @@ export default async function MenuAnalisisPage() {
                 </div>
               </div>
             </div>
-            <div style={{ ...decoratorLine, background: '#2563eb' }} />
+            <div style={{ ...decoratorLine, background: '#1f355a' }} />
           </Link>
 
           {/* OPCIÓN 2: GENERAR REPORTE IPH */}
@@ -114,7 +114,7 @@ export default async function MenuAnalisisPage() {
                 <span>NÚCLEO DE DATOS CONECTADO</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShieldCheck size={14} color="#2563eb" />
+                <ShieldCheck size={14} color="#1f355a" />
                 <span>SESIÓN CIFRADA: {user.email}</span>
             </div>
         </div>
@@ -129,7 +129,7 @@ export default async function MenuAnalisisPage() {
 
 // --- ESTILOS TÁCTICOS ---
 
-const topLabelStyle = { fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2563eb', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase' as const };
+const topLabelStyle = { fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1f355a', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase' as const };
 const titleStyle = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '48px', margin: 0, color: '#0f172a', textTransform: 'uppercase' as const, lineHeight: 1 };
 
 const cardStyle: React.CSSProperties = {
@@ -151,7 +151,7 @@ const iconBoxStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: '#2563eb',
+  color: '#1f355a',
   transition: 'all 0.3s'
 };
 
@@ -162,7 +162,7 @@ const actionTextStyle: React.CSSProperties = {
   fontFamily: 'JetBrains Mono',
   fontSize: '11px',
   fontWeight: 700,
-  color: '#2563eb',
+  color: '#1f355a',
   display: 'flex',
   alignItems: 'center',
   gap: '8px',

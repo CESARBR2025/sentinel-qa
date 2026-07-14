@@ -60,7 +60,7 @@ export function BandejaSolicitudes({
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
                   {s.origen === 'denuncia' && <span style={origenBadge}>D1</span>}
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 700, color: '#1e40af' }}>
+                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 700, color: '#172844' }}>
                     {s.folio || s.entidadId.substring(0, 12)}
                   </span>
                   <span style={statusBadge(s.status)}>{s.status.toUpperCase()}</span>
@@ -133,7 +133,7 @@ const tabStyle = (active: boolean): React.CSSProperties => ({
   background: active ? '#ffffff' : '#f8fafc',
   color: active ? '#0f172a' : '#64748b',
   border: active ? '1px solid #e2e8f0' : '1px solid transparent',
-  borderBottom: active ? '2px solid #3b82f6' : '2px solid transparent',
+  borderBottom: active ? '2px solid #3e5171' : '2px solid transparent',
   marginBottom: -2,
   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
   borderRadius: '4px 4px 0 0',

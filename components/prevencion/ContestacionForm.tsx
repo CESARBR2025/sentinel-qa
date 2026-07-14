@@ -33,7 +33,7 @@ export function ContestacionForm({ solicitudId }: { solicitudId: string }) {
         </FormField>
       </div>
 
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginTop: 4 }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginTop: 4 }}>
         › Acuse de Entrega
       </div>
 
@@ -60,7 +60,7 @@ export function ContestacionForm({ solicitudId }: { solicitudId: string }) {
           disabled={pending}
           style={{
             padding: '10px 24px',
-            background: pending ? '#f1f5f9' : '#2563eb',
+            background: pending ? '#f1f5f9' : '#1f355a',
             color: pending ? '#94a3b8' : '#ffffff',
             border: 'none',
             fontFamily: 'Barlow Condensed,sans-serif',

@@ -40,7 +40,7 @@ export const ReportFilters = () => {
           <label style={styles.label}><Calendar size={10} style={{ marginRight: '4px' }} /> Fecha Fin</label>
           <input type="date" style={styles.input} value={to} onChange={e => setTo(e.target.value)} />
         </div>
-        <button style={{ ...styles.primaryButton, background: '#2563EB', height: '42px' }} onClick={handleFiltrar}>
+        <button style={{ ...styles.primaryButton, background: '#1f355a', height: '42px' }} onClick={handleFiltrar}>
           <Filter size={14} /> FILTRAR
         </button>
         <button style={{ ...styles.primaryButton, background: '#64748B', height: '42px' }} onClick={handleLimpiar}>

@@ -111,7 +111,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                 {pendientes.map((row) => (
                   <tr key={row.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={tdStyle}>
-                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2563eb', fontWeight: 600 }}>
+                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#1f355a', fontWeight: 600 }}>
                         {row.folio}
                       </span>
                     </td>
@@ -180,20 +180,20 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                             rel="noopener noreferrer"
                             style={{
                               padding: '6px 14px',
-                              border: '1px solid #2563eb',
-                              background: '#eff6ff',
+                              border: '1px solid #1f355a',
+                              background: '#eff1f3',
                               cursor: 'pointer',
                               fontFamily: 'JetBrains Mono,monospace',
                               fontSize: 10,
                               fontWeight: 600,
-                              color: '#2563eb',
+                              color: '#1f355a',
                               letterSpacing: '0.05em',
                               transition: 'all 0.15s ease',
                               whiteSpace: 'nowrap',
                               textDecoration: 'none',
                             }}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.color = '#ffffff' }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.color = '#2563eb' }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#1f355a'; e.currentTarget.style.color = '#ffffff' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#eff1f3'; e.currentTarget.style.color = '#1f355a' }}
                           >
                             Ver Orden
                           </a>
@@ -236,7 +236,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                 {finalizadas.map((row) => (
                   <tr key={row.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={tdStyle}>
-                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2563eb', fontWeight: 600 }}>
+                      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#1f355a', fontWeight: 600 }}>
                         {row.folio}
                       </span>
                     </td>
@@ -285,20 +285,20 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                             rel="noopener noreferrer"
                             style={{
                               padding: '6px 14px',
-                              border: '1px solid #2563eb',
-                              background: '#eff6ff',
+                              border: '1px solid #1f355a',
+                              background: '#eff1f3',
                               cursor: 'pointer',
                               fontFamily: 'JetBrains Mono,monospace',
                               fontSize: 10,
                               fontWeight: 600,
-                              color: '#2563eb',
+                              color: '#1f355a',
                               letterSpacing: '0.05em',
                               transition: 'all 0.15s ease',
                               whiteSpace: 'nowrap',
                               textDecoration: 'none',
                             }}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#2563eb'; e.currentTarget.style.color = '#ffffff' }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.color = '#2563eb' }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#1f355a'; e.currentTarget.style.color = '#ffffff' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#eff1f3'; e.currentTarget.style.color = '#1f355a' }}
                           >
                             Ver Orden
                           </a>

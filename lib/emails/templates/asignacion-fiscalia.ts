@@ -65,7 +65,7 @@ export function templateAsignacionFiscalia(
     </p>
 
     <div style="background: #f5f5f5; padding: 12px; border-radius: 4px; word-break: break-all; font-size: 11px; border: 1px solid #d0d0d0; text-align:center;">
-      <a href="${urlVistaCiudadano}" style="color: #2563eb; text-decoration:none;">
+      <a href="${urlVistaCiudadano}" style="color: #1f355a; text-decoration:none;">
         ${urlVistaCiudadano}
       </a>
     </div>

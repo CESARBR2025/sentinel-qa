@@ -103,7 +103,7 @@ export function ModalSeleccionarUnidad({
               color: "#0f172a",
             }}
           >
-            <Car size={20} color="#2563eb" />
+            <Car size={20} color="#1f355a" />
             Seleccionar Unidad
           </div>
           <button
@@ -192,9 +192,9 @@ export function ModalSeleccionarUnidad({
                     padding: "14px 16px",
                     border:
                       esSeleccionada
-                        ? "1px solid #2563eb"
+                        ? "1px solid #1f355a"
                         : "1px solid transparent",
-                    background: esSeleccionada ? "#eff6ff" : "transparent",
+                    background: esSeleccionada ? "#eff1f3" : "transparent",
                     cursor: "pointer",
                     textAlign: "left",
                     borderRadius: 4,
@@ -216,7 +216,7 @@ export function ModalSeleccionarUnidad({
                       height: 18,
                       borderRadius: "50%",
                       border: esSeleccionada
-                        ? "5px solid #2563eb"
+                        ? "5px solid #1f355a"
                         : "2px solid #cbd5e1",
                       display: "flex",
                       alignItems: "center",
@@ -257,7 +257,7 @@ export function ModalSeleccionarUnidad({
                       style={{
                         fontFamily: "JetBrains Mono,monospace",
                         fontSize: 8,
-                        color: "#2563eb",
+                        color: "#1f355a",
                         letterSpacing: "0.1em",
                         fontWeight: 600,
                       }}
@@ -302,7 +302,7 @@ export function ModalSeleccionarUnidad({
               padding: "10px 24px",
               border: "none",
               background:
-                !seleccionada || enviando ? "#94a3b8" : "#2563eb",
+                !seleccionada || enviando ? "#94a3b8" : "#1f355a",
               color: "#fff",
               cursor:
                 !seleccionada || enviando ? "not-allowed" : "pointer",

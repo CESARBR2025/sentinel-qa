@@ -3,7 +3,7 @@ export const styles = {
     main: { maxWidth: '1600px', margin: '0 auto', padding: '40px 48px' },
     headerContainer: {
         display: 'flex', justifyContent: 'space-between' as const, alignItems: 'flex-end' as const,
-        marginBottom: '40px', borderLeft: '4px solid #2563EB', paddingLeft: '20px'
+        marginBottom: '40px', borderLeft: '4px solid #1f355a', paddingLeft: '20px'
     },
     title: { 
         fontFamily: 'Barlow Condensed', fontSize: '56px', fontWeight: 800, 
@@ -36,7 +36,7 @@ export const styles = {
         padding: '14px 16px', fontSize: '13px', color: '#334155', borderBottom: '1px solid #F1F5F9' 
     },
     totalTh: { padding: '12px 16px', fontFamily: 'JetBrains Mono', fontSize: '10px', textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9', background: '#F1F5F9', color: '#0F172A', fontWeight: 800 },
-    totalTd: { padding: '14px 16px', fontSize: '13px', borderBottom: '1px solid #F1F5F9', background: '#F8FAFC', fontWeight: 700, color: '#2563EB' },
+    totalTd: { padding: '14px 16px', fontSize: '13px', borderBottom: '1px solid #F1F5F9', background: '#F8FAFC', fontWeight: 700, color: '#1f355a' },
     label: { fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' as const, marginBottom: '8px', display: 'block' },
     input: { width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #E2E8F0', fontFamily: 'Inter' },
     primaryButton: {

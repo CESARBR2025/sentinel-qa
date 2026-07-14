@@ -41,7 +41,7 @@ export default async function NuevoOficialPage({
           }}
         >
           Nuevo{' '}
-          <span style={{ color: '#2563eb' }}>Oficial</span>
+          <span style={{ color: '#1f355a' }}>Oficial</span>
         </h2>
         <Link
           href="/admin-transito/oficiales"

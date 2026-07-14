@@ -26,7 +26,7 @@ export default async function LiberacionesPage() {
           <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#7c3aed' }}></div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <img src="/logo_sentinel.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
+            <img src="/chaleco.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
             <div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#7c3aed', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 8, height: 8, background: '#7c3aed', display: 'inline-block' }}></span>

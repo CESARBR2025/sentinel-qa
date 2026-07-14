@@ -45,12 +45,12 @@ export default async function ConfiguracionPerfilPage() {
 
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: 24, borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#2563eb' }} />
+          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#1f355a' }} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <img src="/logo_sentinel.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
+            <img src="/chaleco.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
             <div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }} />
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
                 Configuración
               </div>
               <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 42, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
@@ -64,7 +64,7 @@ export default async function ConfiguracionPerfilPage() {
         {error ? (
           <div style={{ textAlign: 'center', padding: 64, background: '#fff', border: '1px solid #e2e8f0' }}>
             <p style={{ color: '#dc2626', fontFamily: 'Inter,sans-serif', fontSize: 14 }}>{error}</p>
-            <Link href="/oficial" style={{ color: '#2563eb', fontSize: 13 }}>Volver al dashboard</Link>
+            <Link href="/oficial" style={{ color: '#1f355a', fontSize: 13 }}>Volver al dashboard</Link>
           </div>
         ) : perfil ? (
           <>
@@ -78,7 +78,7 @@ export default async function ConfiguracionPerfilPage() {
             <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
               <div style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e2e8f0', padding: 32, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
-                  <User size={18} color="#2563eb" />
+                  <User size={18} color="#1f355a" />
                   <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, textTransform: 'uppercase', margin: 0, color: '#0f172a', letterSpacing: '0.04em' }}>
                     Datos Generales
                   </h2>
@@ -157,7 +157,7 @@ export default async function ConfiguracionPerfilPage() {
         ) : (
           <div style={{ textAlign: 'center', padding: 64, background: '#fff', border: '1px solid #e2e8f0' }}>
             <p style={{ color: '#64748b', fontFamily: 'Inter,sans-serif', fontSize: 14 }}>No se encontró información del perfil</p>
-            <Link href="/oficial" style={{ color: '#2563eb', fontSize: 13 }}>Volver al dashboard</Link>
+            <Link href="/oficial" style={{ color: '#1f355a', fontSize: 13 }}>Volver al dashboard</Link>
           </div>
         )}
 
@@ -166,7 +166,7 @@ export default async function ConfiguracionPerfilPage() {
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span>SENTINEL v0.1 · OFICIAL</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#2563eb' }} />
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
           </div>
         </div>
 

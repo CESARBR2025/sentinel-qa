@@ -11,7 +11,7 @@ import type { DetalleCompleto, ViaInfraccionDetalle } from '@/lib/fiscalia/types
 import { obtenerDetalleInfraccionViaAction } from '@/lib/fiscalia/actions'
 
 const AVATAR_COLORS = [
-    { bg: '#EFF6FF', text: '#2563EB' },
+    { bg: '#eff1f3', text: '#1f355a' },
     { bg: '#FEF3C7', text: '#D97706' },
     { bg: '#DCFCE7', text: '#16A34A' },
     { bg: '#FEE2E2', text: '#DC2626' },
@@ -53,9 +53,9 @@ const STATUS_BADGE: Record<string, { bg: string; text: string; dot: string; labe
     PENDIENTE: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Pendiente' },
     RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Pendiente' },
     RETENIDO_POR_DELITO_PENDIENTE_OFICIO: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Pendiente' },
-    EN_PROCESO_FISCALIA: { bg: '#DBEAFE', text: '#1E40AF', dot: '#3B82F6', label: 'En Proceso' },
+    EN_PROCESO_FISCALIA: { bg: '#dbdfe5', text: '#172844', dot: '#3e5171', label: 'En Proceso' },
     LIBERADO_POR_FISCALIA: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
-    LIBERADO_POR_LIBERACIONES: { bg: '#DBEAFE', text: '#1E40AF', dot: '#3B82F6', label: 'Por revisar' },
+    LIBERADO_POR_LIBERACIONES: { bg: '#dbdfe5', text: '#172844', dot: '#3e5171', label: 'Por revisar' },
     EN_REVISION_MW: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'En revisión' },
     CERRADA: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Cerrada' },
     MESA_DE_CONTROL_PENDIENTE_DOCS: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },

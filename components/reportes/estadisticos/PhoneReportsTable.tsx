@@ -36,7 +36,7 @@ export function PhoneReportsTable({ data }: { data: PhoneReport[] }) {
                 {/* ENCABEZADO */}
                 <div style={styles.tableHeader}>
                     <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '22px', fontWeight: 700 }}>
-                        <span style={{ color: '#2563EB', marginRight: '8px' }}>|</span> REGISTRO DE NÚMEROS IDENTIFICADOS
+                        <span style={{ color: '#1f355a', marginRight: '8px' }}>|</span> REGISTRO DE NÚMEROS IDENTIFICADOS
                     </h3>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ position: 'relative' }}>
@@ -65,7 +65,7 @@ export function PhoneReportsTable({ data }: { data: PhoneReport[] }) {
                                 paginatedData.map((row, i) => (
                                     <tr key={i} style={{ background: i % 2 === 0 ? 'white' : '#F8FAFC' }}>
                                         <td style={{...styles.td, fontFamily: 'JetBrains Mono', fontWeight: 600, color: '#64748B'}}>{row.folio}</td>
-                                        <td style={{...styles.td, fontWeight: 700, color: '#2563EB', fontSize: '15px'}}>{row.telefono}</td>
+                                        <td style={{...styles.td, fontWeight: 700, color: '#1f355a', fontSize: '15px'}}>{row.telefono}</td>
                                         <td style={styles.td}>{row.fecha}</td>
                                         <td style={{...styles.td, fontWeight: 600, textTransform: 'uppercase'}}>{row.incidencia}</td>
                                     </tr>

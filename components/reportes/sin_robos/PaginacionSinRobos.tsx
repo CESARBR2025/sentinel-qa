@@ -56,7 +56,7 @@ export function PaginacionSinRobos({ currentPage, totalPages, totalResults, onPa
                     alignItems: 'center',
                     margin: '0 4px'
                 }}>
-                    <span style={{ color: '#2563EB', background: '#EFF6FF', padding: '4px 10px', borderRadius: '4px' }}>
+                    <span style={{ color: '#1f355a', background: '#eff1f3', padding: '4px 10px', borderRadius: '4px' }}>
                         {currentPage}
                     </span>
                     <span style={{ padding: '4px 2px', color: '#64748B' }}>/</span>

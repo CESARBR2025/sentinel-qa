@@ -30,7 +30,7 @@ export default async function RegistroInteligenciaPage() {
                 INTELIGENCIA E INVESTIGACIÓN
             </span>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: '42px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-                FICHA DE REGISTRO <span style={{ color: '#3b82f6' }}>TÁCTICO</span>
+                FICHA DE REGISTRO <span style={{ color: '#3e5171' }}>TÁCTICO</span>
             </h1>
             <div style={{ width: '40px', height: '4px', background: '#0f172a' }}></div>
         </div>

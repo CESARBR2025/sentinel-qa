@@ -10,9 +10,9 @@ interface Unidad   { extId: string; placa: string; label: string }
 interface Elemento { extId: string; nomina: string; nombre: string; puesto: string }
 
 const I: React.CSSProperties      = { width: '100%', padding: '8px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', color: '#1e293b', fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none', boxSizing: 'border-box', borderRadius: 2 }
-const BTN: React.CSSProperties    = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#2563eb', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', borderRadius: 2 }
+const BTN: React.CSSProperties    = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: '#1f355a', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', borderRadius: 2 }
 const BTN_SM: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 4, padding: '5px 10px', background: 'transparent', border: '1px solid #e2e8f0', color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, cursor: 'pointer', borderRadius: 2 }
-const TAG: React.CSSProperties    = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#1d4ed8' }
+const TAG: React.CSSProperties    = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', background: '#eff1f3', border: '1px solid #c3c8d2', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#1c3051' }
 const ERR: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#dc2626', marginTop: 4 }
 const LBL: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }
 
@@ -123,7 +123,7 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho', pri
                 <span key={u.extId} style={TAG}>
                   {u.placa}
                   <button onClick={() => setUnidades(prev => prev.filter(x => x.extId !== u.extId))}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3b82f6', display: 'flex' }}>
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3e5171', display: 'flex' }}>
                     <X size={10} />
                   </button>
                 </span>
@@ -143,7 +143,7 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho', pri
               <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#16a34a' }}>
                 ({prioritario!.nomina})
               </span>
-              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2, marginLeft: 'auto' }}>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2, marginLeft: 'auto' }}>
                 PRIORITARIO
               </span>
             </div>
@@ -179,7 +179,7 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho', pri
                 <span key={e.extId} style={{ ...TAG, justifyContent: 'space-between' }}>
                   <span>{e.nombre}</span>
                   <button onClick={() => setElementos(prev => prev.filter(x => x.extId !== e.extId))}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3b82f6', display: 'flex' }}>
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#3e5171', display: 'flex' }}>
                     <X size={10} />
                   </button>
                 </span>
@@ -192,7 +192,7 @@ export function DespachoForm({ incidenteId, onDespachado, modo = 'despacho', pri
       {errorForm && <div style={{ ...ERR, fontSize: 12 }}>{errorForm}</div>}
 
       <div>
-        <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1, background: esRefuerzo ? '#c2410c' : (tienePrioritario ? '#16a34a' : '#2563eb') }}>
+        <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1, background: esRefuerzo ? '#c2410c' : (tienePrioritario ? '#16a34a' : '#1f355a') }}>
           {isPending
             ? <><Loader2 size={13} /> {esRefuerzo ? 'ENVIANDO...' : 'DESPACHANDO...'}</>
             : (esRefuerzo ? 'ENVIAR REFUERZOS' : tienePrioritario ? 'DESPACHAR Y ASIGNAR' : 'DESPACHAR INCIDENTE')}

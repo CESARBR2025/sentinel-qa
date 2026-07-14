@@ -33,7 +33,7 @@ export function ReportFilters() {
           <label style={styles.label}>Fecha Final</label>
           <input type="date" style={styles.input} value={to} onChange={e => setTo(e.target.value)} />
         </div>
-        <button style={{ ...styles.primaryButton, background: '#2563EB', padding: '12px 24px' }} onClick={handleGenerar}>
+        <button style={{ ...styles.primaryButton, background: '#1f355a', padding: '12px 24px' }} onClick={handleGenerar}>
           <Search size={18} /> GENERAR
         </button>
         <button style={{ ...styles.primaryButton, background: '#ffffff', color: '#64748b', border: '1px solid #e2e8f0', padding: '12px 24px' }} onClick={handleLimpiar}>

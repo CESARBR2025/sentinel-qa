@@ -39,7 +39,7 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
     <div>
       {/* Breadcrumb */}
       <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/juridico" style={{ color: '#2563eb', textDecoration: 'none' }}>Área Jurídica</Link>
+        <Link href="/prevencion/juridico" style={{ color: '#1f355a', textDecoration: 'none' }}>Área Jurídica</Link>
         <span>›</span>
         <span style={{ color: '#0f172a', fontWeight: 600 }}>{solicitud.oficio}</span>
       </div>
@@ -49,7 +49,7 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 6 }}>
             <AutoridadBadge autoridad={solicitud.autoridad} />
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: completado ? '#166534' : '#2563eb', fontWeight: 600 }}>
+            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: completado ? '#166534' : '#1f355a', fontWeight: 600 }}>
               {completado ? '✓ Completado' : '● En Jurídico'}
             </span>
           </div>
@@ -82,7 +82,7 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
       {/* Solicitudes a C4 */}
       <div style={{ marginBottom: 40 }}>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
           › Solicitudes a C4 ({solicitudesC4.length} registrada{solicitudesC4.length !== 1 ? 's' : ''})
         </div>
 
@@ -112,7 +112,7 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 
       {/* Contestación */}
       <div>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
           › Contestación y Acuse de Entrega
         </div>
 
@@ -144,7 +144,7 @@ export default async function SolicitudDetailPage({ params }: { params: Promise<
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

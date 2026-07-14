@@ -40,15 +40,15 @@ export function ProfileDropdownAuxiliar({ name, apellido, email }: Props) {
         onClick={() => setOpen(!open)}
         style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
-          border: `1px solid ${open ? '#2563eb' : '#e2e8f0'}`,
-          background: open ? '#eff6ff' : '#ffffff',
+          border: `1px solid ${open ? '#1f355a' : '#e2e8f0'}`,
+          background: open ? '#eff1f3' : '#ffffff',
           cursor: 'pointer', transition: 'all 0.15s ease', fontFamily: 'Inter,sans-serif',
         }}
-        onMouseEnter={e => { if (!open) { e.currentTarget.style.borderColor = '#93c5fd'; e.currentTarget.style.background = '#f8fafc'; }}}
+        onMouseEnter={e => { if (!open) { e.currentTarget.style.borderColor = '#98a2b3'; e.currentTarget.style.background = '#f8fafc'; }}}
         onMouseLeave={e => { if (!open) { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#ffffff'; }}}
       >
         <div style={{
-          width: 30, height: 30, background: '#2563eb', color: '#fff',
+          width: 30, height: 30, background: '#1f355a', color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontFamily: 'Barlow Condensed,sans-serif', fontSize: 14, fontWeight: 700,
           borderRadius: '50%', flexShrink: 0,

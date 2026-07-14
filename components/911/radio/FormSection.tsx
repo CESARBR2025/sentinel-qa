@@ -30,7 +30,7 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
             padding: `12px 12px 12px ${Icon ? '40px' : '12px'}`,
             background: props.disabled ? '#f8fafc' : '#ffffff',
             border: '1px solid #e2e8f0',
-            borderLeft: '4px solid #3b82f6',
+            borderLeft: '4px solid #3e5171',
             borderRadius: '2px',
             fontFamily: 'Inter, sans-serif',
             fontSize: '14px',
@@ -241,7 +241,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
 
           {/* ENCABEZADO */}
           <div style={{ marginBottom: '40px' }}>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
               Plataforma de Prevención
             </span>
             <h1 style={{
@@ -249,7 +249,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
               fontWeight: 800, fontSize: 32, letterSpacing: '0.02em',
               textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a'
             }}>
-              REPORTES DENTRO DE <span style={{ color: '#3b82f6' }}>RECORRIDOS</span>
+              REPORTES DENTRO DE <span style={{ color: '#3e5171' }}>RECORRIDOS</span>
             </h1>
           </div>
 
@@ -282,7 +282,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                           padding: '12px 12px 12px 40px',
                           background: '#ffffff',
                           border: '1px solid #e2e8f0',
-                          borderLeft: '4px solid #3b82f6',
+                          borderLeft: '4px solid #3e5171',
                           borderRadius: '2px',
                           fontFamily: 'Inter, sans-serif',
                           fontSize: '14px',
@@ -401,7 +401,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       <input
                         type="text"
                         placeholder="Buscar dirección en el mapa..."
-                        style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', marginBottom: '12px' }}
+                        style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderLeft: '4px solid #3e5171', marginBottom: '12px' }}
                       />
                     </Autocomplete>
                     <GoogleMap
@@ -504,7 +504,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                         </div>
                       ))}
 
-                      <button type="button" onClick={agregarDetenido} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', padding: '8px 16px', borderRadius: '2px', cursor: 'pointer', fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600 }}>
+                      <button type="button" onClick={agregarDetenido} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', background: '#eff1f3', color: '#1f355a', border: '1px solid #c3c8d2', padding: '8px 16px', borderRadius: '2px', cursor: 'pointer', fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600 }}>
                         <Plus size={14} /> AÑADIR OTRO
                       </button>
 
@@ -585,7 +585,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                           setNumVehiculos(n)
                           setVehiculos(Array.from({ length: n }, (_, i) => vehiculos[i] ?? { tipo: '', placas: '', serie: '', color: '', destino: '' }))
                         }}
-                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
+                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
                       >
                         <option value={0}>0</option>
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
@@ -594,7 +594,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
 
                     {vehiculos.map((v, i) => (
                       <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 12, border: '1px solid #e2e8f0', borderRadius: 2 }}>
-                        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
+                        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3e5171', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
                         <select value={v.tipo} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], tipo: e.target.value }; setVehiculos(next) }}
                           style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
                           <option value="">Tipo</option>
@@ -642,7 +642,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                             <input
                               type="text"
                               placeholder="Buscar domicilio cateado..."
-                              style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', marginBottom: 12, fontFamily: 'Inter,sans-serif', fontSize: 14, outline: 'none' }}
+                              style={{ width: '100%', padding: '12px', border: '1px solid #e2e8f0', borderLeft: '4px solid #3e5171', marginBottom: 12, fontFamily: 'Inter,sans-serif', fontSize: 14, outline: 'none' }}
                             />
                           </Autocomplete>
                           <GoogleMap
@@ -683,7 +683,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                         onChange={(e) => setNominaMando(e.target.value)}
                         onBlur={buscarMando}
                         onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); buscarMando() } }}
-                        style={{ width: '100%', padding: '12px 12px 12px 40px', background: '#ffffff', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', borderRadius: '2px', fontFamily: 'Inter,sans-serif', fontSize: '14px', outline: 'none' }} />
+                        style={{ width: '100%', padding: '12px 12px 12px 40px', background: '#ffffff', border: '1px solid #e2e8f0', borderLeft: '4px solid #3e5171', borderRadius: '2px', fontFamily: 'Inter,sans-serif', fontSize: '14px', outline: 'none' }} />
                     </div>
                     <button type="button" onClick={buscarMando} style={{ padding: '0 12px', background: '#f1f5f9', border: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '2px' }}>
                       {empMando.cargando ? <Loader2 size={16} /> : <Search size={16} />}
@@ -717,15 +717,15 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       ¿Órdenes de Aprehensión?
                     </span>
                     <button type="button" onClick={() => setHayOrdenAprehension(!hayOrdenAprehension)} className="sentinel-btn-toggle"
-                      style={{ background: hayOrdenAprehension ? '#3b82f6' : '#ffffff', color: hayOrdenAprehension ? '#ffffff' : '#64748b', borderColor: hayOrdenAprehension ? '#3b82f6' : '#e2e8f0' }}>
+                      style={{ background: hayOrdenAprehension ? '#3e5171' : '#ffffff', color: hayOrdenAprehension ? '#ffffff' : '#64748b', borderColor: hayOrdenAprehension ? '#3e5171' : '#e2e8f0' }}>
                       {hayOrdenAprehension ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {hayOrdenAprehension && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {ordenesAprehension.map((o, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3e5171', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'nombrePersona', 'estatus', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -766,15 +766,15 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       ¿Detención Delito Hidrocarburo?
                     </span>
                     <button type="button" onClick={() => setHayHidrocarburo(!hayHidrocarburo)} className="sentinel-btn-toggle"
-                      style={{ background: hayHidrocarburo ? '#3b82f6' : '#ffffff', color: hayHidrocarburo ? '#ffffff' : '#64748b', borderColor: hayHidrocarburo ? '#3b82f6' : '#e2e8f0' }}>
+                      style={{ background: hayHidrocarburo ? '#3e5171' : '#ffffff', color: hayHidrocarburo ? '#ffffff' : '#64748b', borderColor: hayHidrocarburo ? '#3e5171' : '#e2e8f0' }}>
                       {hayHidrocarburo ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {hayHidrocarburo && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {hidrocarburos.map((h, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3e5171', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'nombrePersona', 'datosVehiculo', 'litrosExtraccion', 'nombreToma', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -815,15 +815,15 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       ¿Armas de Fuego?
                     </span>
                     <button type="button" onClick={() => setHayArmaFuego(!hayArmaFuego)} className="sentinel-btn-toggle"
-                      style={{ background: hayArmaFuego ? '#3b82f6' : '#ffffff', color: hayArmaFuego ? '#ffffff' : '#64748b', borderColor: hayArmaFuego ? '#3b82f6' : '#e2e8f0' }}>
+                      style={{ background: hayArmaFuego ? '#3e5171' : '#ffffff', color: hayArmaFuego ? '#ffffff' : '#64748b', borderColor: hayArmaFuego ? '#3e5171' : '#e2e8f0' }}>
                       {hayArmaFuego ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {hayArmaFuego && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {armasFuego.map((a, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3e5171', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'datos', 'cartuchos', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -864,15 +864,15 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       ¿Dosis de Droga?
                     </span>
                     <button type="button" onClick={() => setHayDroga(!hayDroga)} className="sentinel-btn-toggle"
-                      style={{ background: hayDroga ? '#3b82f6' : '#ffffff', color: hayDroga ? '#ffffff' : '#64748b', borderColor: hayDroga ? '#3b82f6' : '#e2e8f0' }}>
+                      style={{ background: hayDroga ? '#3e5171' : '#ffffff', color: hayDroga ? '#ffffff' : '#64748b', borderColor: hayDroga ? '#3e5171' : '#e2e8f0' }}>
                       {hayDroga ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {hayDroga && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {drogas.map((d, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3b82f6', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3b82f6', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#3e5171', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'cantidad', 'nombre', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -920,7 +920,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                       <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 2 }}>
                         <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#1e293b' }}>{label}</span>
                         <button type="button" onClick={() => set(!val)}
-                          style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: val ? '#3b82f6' : '#ffffff', color: val ? '#ffffff' : '#64748b', borderColor: val ? '#3b82f6' : '#e2e8f0' }}>
+                          style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: val ? '#3e5171' : '#ffffff', color: val ? '#ffffff' : '#64748b', borderColor: val ? '#3e5171' : '#e2e8f0' }}>
                           {val ? 'SÍ' : 'NO'}
                         </button>
                       </div>
@@ -940,7 +940,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
               borderRadius: '2px', display: 'flex', alignItems: 'center', gap: '12px',
               border: 'none', cursor: 'pointer'
             }}>
-              <Send size={16} color="#3b82f6" />
+              <Send size={16} color="#3e5171" />
               <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
                 Registrar Reporte de Recorrido
               </span>
@@ -974,7 +974,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                 .sentinel-section-title::before {
                     content: '';
                     width: 4px; height: 18px;
-                    background: #3b82f6;
+                    background: #3e5171;
                     display: inline-block;
                 }
                 .sentinel-btn-toggle {
@@ -985,10 +985,10 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
                     font-size: 9px; font-weight: 600; cursor: pointer;
                     transition: all 0.2s;
                 }
-                .sentinel-btn-toggle:hover { background: #f8fafc; border-color: #3b82f6; }
+                .sentinel-btn-toggle:hover { background: #f8fafc; border-color: #3e5171; }
                 input:focus, textarea:focus, select:focus {
-                    border-color: #3b82f6 !important;
-                    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+                    border-color: #3e5171 !important;
+                    box-shadow: 0 0 0 1px rgba(62, 81, 113, 0.1);
                 }
             `}</style>
       </div>

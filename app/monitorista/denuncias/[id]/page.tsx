@@ -38,7 +38,7 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
           <div>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8, fontWeight: 600 }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8, fontWeight: 600 }}>
               Denuncia D1 — Solicitud de Evidencias
             </div>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: 0 }}>
@@ -129,11 +129,11 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                             {(evidenciasPorSolicitud.get(sol.solicitudId) ?? []).map((ev) => (
                               <a key={ev.id} href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
-fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb',
+fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a',
                       textDecoration: 'none', padding: '6px 12px',
-                      border: '1px solid #bfdbfe', borderRadius: 2,
+                      border: '1px solid #c3c8d2', borderRadius: 2,
                       display: 'flex', alignItems: 'center', gap: 4,
-                      background: '#eff6ff',
+                      background: '#eff1f3',
                               }}>
                                 <ExternalLink size={10} /> {ev.nombreArchivo || `Evidencia #${ev.id}`}
                               </a>
@@ -156,13 +156,13 @@ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb',
                     if (evs.length === 0) return null
                     return (
                       <div key={sol.solicitudId}>
-                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2563eb', marginBottom: 8, letterSpacing: '0.05em' }}>
+                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1f355a', marginBottom: 8, letterSpacing: '0.05em' }}>
                           Solicitud #{sol.solicitudId} — {evs.length} archivo{evs.length > 1 ? 's' : ''}
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                           {evs.map((ev) => (
                             <a key={ev.id} href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
-                              fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb',
+                              fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a',
                               textDecoration: 'none', padding: '6px 12px',
                               border: '1px solid rgba(212,164,58,0.3)', borderRadius: 2,
                               display: 'flex', alignItems: 'center', gap: 4,
@@ -235,7 +235,7 @@ const sectionTitle: React.CSSProperties = {
 function statusBadge(estado: string): React.CSSProperties {
   const base: React.CSSProperties = { padding: '6px 14px', borderRadius: 2, fontSize: 11, fontWeight: 700, fontFamily: 'JetBrains Mono', textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid' }
   if (estado.includes('PENDIENTE')) return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }
-  if (estado.includes('ENVIADA')) return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }
+  if (estado.includes('ENVIADA')) return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' }
   if (estado === 'FINALIZADO') return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }
   return { ...base }
 }
@@ -243,7 +243,7 @@ function statusBadge(estado: string): React.CSSProperties {
 function estadoBadge(valor: string): React.CSSProperties {
   const base: React.CSSProperties = { padding: '4px 10px', borderRadius: 2, fontSize: 10, fontWeight: 700, fontFamily: 'JetBrains Mono', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'inline-block' }
   if (valor === 'RECIBIDA') return { ...base, background: '#fffbeb', color: '#b45309' }
-  if (valor === 'EN_ANALISIS') return { ...base, background: '#eff6ff', color: '#1d4ed8' }
+  if (valor === 'EN_ANALISIS') return { ...base, background: '#eff1f3', color: '#1c3051' }
   if (valor === 'CERRADA') return { ...base, background: '#f0fdf4', color: '#15803d' }
   return { ...base }
 }

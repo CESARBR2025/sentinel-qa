@@ -79,9 +79,9 @@ export default function NuevoIncidenteCamaraPage() {
 
       <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Captura de Datos</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Captura de Datos</span>
           <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Incidentes por Cámara</h1>
-          <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
+          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -96,7 +96,7 @@ export default function NuevoIncidenteCamaraPage() {
               <div style={{ margin: '16px 24px 0', padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'Inter', fontSize: 12, color: '#dc2626', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <div>⚠ {error.msg}</div>
                 {error.existenteId && (
-                  <Link href={`/monitorista/incidentes-camara/${error.existenteId}`} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2563eb', textDecoration: 'underline' }}>
+                  <Link href={`/monitorista/incidentes-camara/${error.existenteId}`} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1f355a', textDecoration: 'underline' }}>
                     → Ir a editar el registro existente
                   </Link>
                 )}

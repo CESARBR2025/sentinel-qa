@@ -8,7 +8,7 @@ import CapturarInfractorSection from '@/features/liberaciones/components/Captura
 import RevisionDocumentosSection from '@/features/liberaciones/components/RevisionDocumentosSection'
 
 const AVATAR_COLORS = [
-    { bg: '#EFF6FF', text: '#2563EB' },
+    { bg: '#eff1f3', text: '#1f355a' },
     { bg: '#FEF3C7', text: '#D97706' },
     { bg: '#DCFCE7', text: '#16A34A' },
     { bg: '#FEE2E2', text: '#DC2626' },
@@ -47,7 +47,7 @@ type EstatusLiberaciones =
 const STATUS_TABS: { key: EstatusLiberaciones; label: string; icon: typeof Clock; color: string }[] = [
     { key: 'VEHICULO_EN_CORRALON', label: 'Captura de datos', icon: Clock, color: '#F59E0B' },
     { key: 'MESA_DE_CONTROL_PENDIENTE_DOCS', label: 'En espera de documentos', icon: Clock, color: '#8B5CF6' },
-    { key: 'MESA_DE_CONTROL_REVISION', label: 'Revisión documentos', icon: RefreshCw, color: '#2563EB' },
+    { key: 'MESA_DE_CONTROL_REVISION', label: 'Revisión documentos', icon: RefreshCw, color: '#1f355a' },
     { key: 'PENDIENTE_PAGO', label: 'Pendiente pago', icon: Clock, color: '#F97316' },
     { key: 'LIBERADA_POR_INFRACCION', label: 'Liberadas', icon: CheckCircle2, color: '#22C55E' },
 ]
@@ -55,7 +55,7 @@ const STATUS_TABS: { key: EstatusLiberaciones; label: string; icon: typeof Clock
 const STATUS_BADGE: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     VEHICULO_EN_CORRALON: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Sin datos' },
     MESA_DE_CONTROL_PENDIENTE_DOCS: { bg: '#F3E8FF', text: '#6B21A8', dot: '#8B5CF6', label: 'Espera docs' },
-    MESA_DE_CONTROL_REVISION: { bg: '#DBEAFE', text: '#1E40AF', dot: '#3B82F6', label: 'En revisión' },
+    MESA_DE_CONTROL_REVISION: { bg: '#dbdfe5', text: '#172844', dot: '#3e5171', label: 'En revisión' },
     PENDIENTE_PAGO_LIBERACION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
     LIBERADA_POR_INFRACCION: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_DELITO: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },

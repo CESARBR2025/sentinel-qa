@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { Clock, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X, Shield } from 'lucide-react'
 
 const AVATAR_COLORS = [
-    { bg: '#EFF6FF', text: '#2563EB' },
+    { bg: '#eff1f3', text: '#1f355a' },
     { bg: '#FEF3C7', text: '#D97706' },
     { bg: '#DCFCE7', text: '#16A34A' },
     { bg: '#FEE2E2', text: '#DC2626' },

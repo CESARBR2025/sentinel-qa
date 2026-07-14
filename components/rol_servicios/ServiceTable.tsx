@@ -30,7 +30,7 @@ export const ServiceTable = ({ title, data, setData }: Props) => {
         paddingBottom: '8px'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexGrow: 1 }}>
-          <div style={{ width: '4px', height: '24px', background: '#2563eb' }} />
+          <div style={{ width: '4px', height: '24px', background: '#1f355a' }} />
           <h3 style={{ 
             fontFamily: 'Barlow Condensed, sans-serif', 
             fontSize: '20px', 
@@ -45,11 +45,11 @@ export const ServiceTable = ({ title, data, setData }: Props) => {
           <span style={{ 
             fontFamily: 'JetBrains Mono, monospace', 
             fontSize: '10px', 
-            background: '#eff6ff', 
-            color: '#2563eb', 
+            background: '#eff1f3', 
+            color: '#1f355a', 
             padding: '2px 8px', 
             borderRadius: '2px',
-            border: '1px solid #dbeafe'
+            border: '1px solid #dbdfe5'
           }}>
             {data.length} REGISTROS
           </span>
@@ -223,7 +223,7 @@ const selectStyle: React.CSSProperties = {
   fontFamily: 'JetBrains Mono, monospace',
   fontSize: '9px',
   fontWeight: 600,
-  color: '#2563eb',
+  color: '#1f355a',
   outline: 'none',
   cursor: 'pointer',
   textTransform: 'uppercase'

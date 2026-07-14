@@ -47,7 +47,7 @@ export default async function OficialesPage({
             }}
           >
             Gestión de{' '}
-            <span style={{ color: '#2563eb' }}>Oficiales</span>
+            <span style={{ color: '#1f355a' }}>Oficiales</span>
           </h2>
           <p
             style={{

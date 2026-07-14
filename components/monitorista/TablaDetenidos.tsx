@@ -61,7 +61,7 @@ export function TablaDetenidos({
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
                     <User size={16} color="#64748b" />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 700, color: '#1e40af' }}>{s.nombre_detenido}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 700, color: '#172844' }}>{s.nombre_detenido}</span>
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b' }}>Folio: {s.folio}</span>
                   </div>
 
@@ -111,7 +111,7 @@ const btnDetalle: React.CSSProperties = {
 function fotoBadge(estado: string): React.CSSProperties {
   const base: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 8, fontWeight: 600, padding: '3px 8px', borderRadius: 2, display: 'inline-flex', alignItems: 'center', gap: 2 }
   if (estado === 'pendiente') return { ...base, background: '#fffbeb', color: '#b45309', border: '1px solid #fef3c7' }
-  if (estado === 'enviado') return { ...base, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #dbeafe' }
+  if (estado === 'enviado') return { ...base, background: '#eff1f3', color: '#1c3051', border: '1px solid #dbdfe5' }
   if (estado === 'rechazado') return { ...base, background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca' }
   if (estado === 'completado') return { ...base, background: '#f0fdf4', color: '#15803d', border: '1px solid #dcfce7' }
   return { ...base }

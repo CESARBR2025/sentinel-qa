@@ -82,7 +82,7 @@ export function SubirFotoDetenido({
         style={{
           fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 600,
           textTransform: 'uppercase', letterSpacing: '0.1em',
-          padding: '6px 12px', background: uploading ? '#94a3b8' : '#2563eb',
+          padding: '6px 12px', background: uploading ? '#94a3b8' : '#1f355a',
           color: '#ffffff', border: 'none', borderRadius: 2,
           cursor: uploading ? 'not-allowed' : 'pointer',
           display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',

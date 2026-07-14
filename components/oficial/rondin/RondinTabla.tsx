@@ -5,7 +5,7 @@ import type { RondinOficialResumen } from '@/lib/oficial/types'
 
 const ESTATUS_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
   sin_despachar: { label: 'SIN DESPACHAR', color: '#b45309', bg: '#fef3c7', border: '#fde68a' },
-  en_despacho:   { label: 'EN DESPACHO',   color: '#1d4ed8', bg: '#eff6ff', border: '#bfdbfe' },
+  en_despacho:   { label: 'EN DESPACHO',   color: '#1c3051', bg: '#eff1f3', border: '#c3c8d2' },
   en_sitio:      { label: 'EN SITIO',      color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
   atendido:      { label: 'ATENDIDO',      color: '#475569', bg: '#f1f5f9', border: '#e2e8f0' },
   cerrado_detencion: { label: 'C/DETENCIÓN', color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },

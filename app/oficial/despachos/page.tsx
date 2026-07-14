@@ -25,11 +25,11 @@ export default async function MisDespachosPage() {
           <Link href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
             <ArrowLeft size={14} /> Volver al panel
           </Link>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600, display: 'block' }}>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600, display: 'block' }}>
             Oficial en Campo
           </span>
           <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 32, textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a' }}>
-            MIS <span style={{ color: '#2563eb' }}>DESPACHOS</span>
+            MIS <span style={{ color: '#1f355a' }}>DESPACHOS</span>
           </h1>
           <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#64748b', margin: '8px 0 0 0' }}>
             Solicitudes de despacho asignadas a ti. Al capturar el reporte de campo, la solicitud se cierra automáticamente.
@@ -63,7 +63,7 @@ export default async function MisDespachosPage() {
                   )}
                   <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b' }}>{d.tipoIncidente || 'Sin clasificar'}</span>
                   {d.canal === 'radio' && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
                       RONDÍN
                     </span>
                   )}
@@ -83,7 +83,7 @@ export default async function MisDespachosPage() {
                   {d.unidades.length > 0 && <span>UNIDADES: {d.unidades.join(' · ')}</span>}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, color: '#2563eb', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, color: '#1f355a', flexShrink: 0 }}>
                 ATENDER <ChevronRight size={14} />
               </div>
             </Link>

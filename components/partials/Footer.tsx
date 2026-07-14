@@ -5,7 +5,7 @@ export function DashboardFooter() {
       style={{
         marginTop: 'auto',
         paddingTop: 24,
-        borderTop: '1px solid rgba(59,130,246,0.2)',
+        borderTop: '1px solid rgba(62, 81, 113,0.2)',
         fontFamily: 'JetBrains Mono,monospace',
         fontSize: 10,
         color: '#94a3b8',
@@ -32,7 +32,7 @@ export function DashboardFooter() {
             width: 4,
             height: 4,
             borderRadius: '50%',
-            background: '#3b82f6',
+            background: '#3e5171',
           }}
         />
       </div>

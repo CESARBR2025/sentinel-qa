@@ -92,9 +92,9 @@ export default function EditarIncidenteCamaraPage() {
 
       <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Modificar Datos</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Modificar Datos</span>
           <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Incidentes por Cámara</h1>
-          <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
+          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
         </div>
 
         <form onSubmit={handleSubmit}>

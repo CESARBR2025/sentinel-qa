@@ -21,7 +21,7 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                         <CheckCircle size={16} color="#10B981" />
                         <span style={styles.tag}>REGISTROS SIN NOVEDAD CONFIRMADA</span>
                     </div>
-                    <span style={styles.badge('#DBEAFE', '#2563EB')}>SENTINEL VERIFIED</span>
+                    <span style={styles.badge('#dbdfe5', '#1f355a')}>SENTINEL VERIFIED</span>
                 </div>
 
                 <table style={styles.table}>
@@ -49,7 +49,7 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                                 </td>
                                 <td style={styles.td}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <Smartphone size={14} color="#2563EB" />
+                                        <Smartphone size={14} color="#1f355a" />
                                         <span style={styles.monoDataBlue}>{item.telefonoReportante}</span>
                                     </div>
                                 </td>

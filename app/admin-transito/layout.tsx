@@ -64,12 +64,12 @@ export default async function AdminTransitoLayout({
               left: 0,
               width: 64,
               height: 3,
-              background: '#2563eb',
+              background: '#1f355a',
             }}
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
             <img
-              src="/logo_sentinel.png"
+              src="/chaleco.png"
               alt="S"
               style={{ height: 56, objectFit: 'contain' }}
             />
@@ -79,7 +79,7 @@ export default async function AdminTransitoLayout({
                   fontFamily: 'JetBrains Mono,monospace',
                   fontSize: 10,
                   letterSpacing: '0.3em',
-                  color: '#2563eb',
+                  color: '#1f355a',
                   textTransform: 'uppercase',
                   marginBottom: 4,
                   display: 'flex',
@@ -91,7 +91,7 @@ export default async function AdminTransitoLayout({
                   style={{
                     width: 8,
                     height: 8,
-                    background: '#2563eb',
+                    background: '#1f355a',
                     display: 'inline-block',
                   }}
                 />
@@ -109,7 +109,7 @@ export default async function AdminTransitoLayout({
                   lineHeight: 1,
                 }}
               >
-                SENTINEL · ADMIN TRÁNSITO
+                CENTINELA · ADMIN TRÁNSITO
               </h1>
             </div>
           </div>
@@ -142,13 +142,13 @@ export default async function AdminTransitoLayout({
         >
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · ADMIN TRÁNSITO</span>
+            <span>CENTINELA v1.0 · ADMIN TRÁNSITO</span>
             <span
               style={{
                 width: 4,
                 height: 4,
                 borderRadius: '50%',
-                background: '#2563eb',
+                background: '#1f355a',
               }}
             />
           </div>

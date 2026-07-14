@@ -21,7 +21,7 @@ export default async function NuevaFichaPage() {
     <div style={{ maxWidth: 760 }}>
       <div style={{ marginBottom: 32 }}>
         <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 6px' }}>
-          Activar <span style={{ color: '#2563eb' }}>Protocolo / Búsqueda</span>
+          Activar <span style={{ color: '#1f355a' }}>Protocolo / Búsqueda</span>
         </h2>
         <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
           Registra los datos de activación — se generará la ficha de difusión automáticamente
@@ -67,7 +67,7 @@ export default async function NuevaFichaPage() {
           </Link>
           <button
             type="submit"
-            style={{ flex: 1, padding: '12px 24px', background: '#2563eb', color: '#ffffff', border: '1px solid #2563eb', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '2px' }}
+            style={{ flex: 1, padding: '12px 24px', background: '#1f355a', color: '#ffffff', border: '1px solid #1f355a', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '2px' }}
           >
             Activar Protocolo →
           </button>

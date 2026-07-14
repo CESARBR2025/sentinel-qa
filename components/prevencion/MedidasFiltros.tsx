@@ -51,8 +51,8 @@ export function MedidasFiltros() {
               onClick={() => set('estado', e.key)}
               style={{
                 padding: '5px 14px',
-                background: active ? '#2563eb' : '#ffffff',
-                border: `1px solid ${active ? '#2563eb' : '#e2e8f0'}`,
+                background: active ? '#1f355a' : '#ffffff',
+                border: `1px solid ${active ? '#1f355a' : '#e2e8f0'}`,
                 color: active ? '#ffffff' : '#64748b',
                 fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
                 letterSpacing: '0.14em', textTransform: 'uppercase',

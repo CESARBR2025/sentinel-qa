@@ -36,7 +36,7 @@ export default async function ReportesDeteccionCamaraPage({
         <div style={styles.headerContainer}>
           <div>
             <span style={styles.tag}>SSPM · DETECCIÓN POR CÁMARA</span>
-            <h1 style={styles.title}>REGISTROS <span style={{ color: '#2563EB' }}>POR TURNO</span></h1>
+            <h1 style={styles.title}>REGISTROS <span style={{ color: '#1f355a' }}>POR TURNO</span></h1>
           </div>
           <a href={`/api/camara/exportar?${excelParams}`}
             style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>

@@ -24,9 +24,9 @@ export function VisitaModal({ medidaId }: { medidaId: string }) {
         onClick={() => setOpen(true)}
         style={{
           padding: '9px 18px',
-          background: '#2563eb',
+          background: '#1f355a',
           color: '#ffffff',
-          border: '1px solid #2563eb',
+          border: '1px solid #1f355a',
           borderRadius: '2px',
           fontFamily: 'Barlow Condensed,sans-serif',
           fontWeight: 700,
@@ -45,10 +45,10 @@ export function VisitaModal({ medidaId }: { medidaId: string }) {
           onClick={e => { if (e.target === e.currentTarget) setOpen(false) }}
         >
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px', width: '100%', maxWidth: 480, position: 'relative', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
-            <div style={{ position: 'absolute', top: -1, left: 0, width: 48, height: 2, background: '#2563eb' }} />
+            <div style={{ position: 'absolute', top: -1, left: 0, width: 48, height: 2, background: '#1f355a' }} />
 
             <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', marginBottom: 24 }}>
-              Registrar <span style={{ color: '#2563eb' }}>Visita Domiciliaria</span>
+              Registrar <span style={{ color: '#1f355a' }}>Visita Domiciliaria</span>
             </div>
 
             <form ref={formRef} onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -70,7 +70,7 @@ export function VisitaModal({ medidaId }: { medidaId: string }) {
                 <button
                   type="submit"
                   disabled={isPending}
-                  style={{ flex: 1, padding: '10px 16px', background: isPending ? '#94a3b8' : '#2563eb', color: '#ffffff', border: 'none', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: isPending ? 'wait' : 'pointer', borderRadius: '2px' }}
+                  style={{ flex: 1, padding: '10px 16px', background: isPending ? '#94a3b8' : '#1f355a', color: '#ffffff', border: 'none', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: isPending ? 'wait' : 'pointer', borderRadius: '2px' }}
                 >
                   {isPending ? 'Guardando…' : 'Guardar Visita'}
                 </button>

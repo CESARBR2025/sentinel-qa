@@ -54,7 +54,7 @@ export default async function NuevaDenunciaD1Page({
 
         {/* Banner si viene de un reporte de recorrido */}
         {prefill.reporteCampoId && (
-          <div style={{ padding: '12px 20px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1d4ed8', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ padding: '12px 20px', background: '#eff1f3', border: '1px solid #c3c8d2', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1c3051', display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontWeight: 700 }}>REPORTE DE RECORRIDO VINCULADO</span>
             <span style={{ color: '#64748b' }}>— Los datos de ubicación y oficial han sido pre-llenados automáticamente.</span>
           </div>
@@ -68,7 +68,7 @@ export default async function NuevaDenunciaD1Page({
               Módulo de Auditoría y Control Legal
             </div>
             <h1 style={{ margin: '12px 0', fontFamily: 'Barlow Condensed', fontSize: '48px', fontWeight: 800, color: '#0f172a', textTransform: 'uppercase', lineHeight: 1 }}>
-              Registro de <span style={{ color: '#2563eb' }}>Reporte D1</span>
+              Registro de <span style={{ color: '#1f355a' }}>Reporte D1</span>
             </h1>
             <p style={{ margin: '16px 0 0 0', fontFamily: 'Inter', color: '#64748b', fontSize: '15px', maxWidth: '600px', lineHeight: '1.6' }}>
               Capture la cronometría exacta del evento, folios de denuncia y datos de victimología para el seguimiento del IPH y CU.

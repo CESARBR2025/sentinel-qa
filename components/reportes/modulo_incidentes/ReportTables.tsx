@@ -37,7 +37,7 @@ export function OperationalTable({ title, columns, data }: OperationalTableProps
                 {/* ENCABEZADO */}
                 <div style={styles.tableHeader}>
                     <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '22px', fontWeight: 700 }}>
-                        <span style={{ color: '#2563EB', marginRight: '8px' }}>|</span> {title}
+                        <span style={{ color: '#1f355a', marginRight: '8px' }}>|</span> {title}
                     </h3>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ position: 'relative' }}>

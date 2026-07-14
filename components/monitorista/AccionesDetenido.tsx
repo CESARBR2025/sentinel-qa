@@ -77,7 +77,7 @@ export function AccionesDetenido({ id, estado, enviadoA, destinos }: { id: strin
       )}
 
       {!puedeEnviar && estado === 'enviado' && (
-        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2563eb', padding: '10px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1f355a', padding: '10px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
           <Send size={14} /> Solicitud enviada a <strong>{destinos.find(d => d.clave === enviadoA)?.nombre || enviadoA}</strong> — esperando fotos
         </div>
       )}

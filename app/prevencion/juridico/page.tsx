@@ -21,7 +21,7 @@ export default async function JuridicoPage() {
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 4px' }}>
-            Bandeja <span style={{ color: '#2563eb' }}>Jurídica</span>
+            Bandeja <span style={{ color: '#1f355a' }}>Jurídica</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             {solicitudes.length} solicitud{solicitudes.length !== 1 ? 'es' : ''} activa{solicitudes.length !== 1 ? 's' : ''}
@@ -29,7 +29,7 @@ export default async function JuridicoPage() {
         </div>
         <Link
           href="/prevencion/juridico/solicitudes/nueva"
-          style={{ padding: '10px 20px', background: '#2563eb', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
+          style={{ padding: '10px 20px', background: '#1f355a', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
         >
           + Nueva Solicitud
         </Link>
@@ -69,7 +69,7 @@ export default async function JuridicoPage() {
                     <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                       <Link
                         href={`/prevencion/juridico/solicitudes/${s.id}`}
-                        style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
+                        style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 600, letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
                       >
                         Ver →
                       </Link>

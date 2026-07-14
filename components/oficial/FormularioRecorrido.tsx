@@ -38,7 +38,7 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
             padding: `12px 12px 12px ${Icon ? '40px' : '12px'}`,
             background: props.disabled ? '#f8fafc' : '#ffffff',
             border: '1px solid #e2e8f0',
-            borderLeft: '4px solid #2563eb',
+            borderLeft: '4px solid #1f355a',
             borderRadius: '2px',
             fontFamily: 'Inter, sans-serif',
             fontSize: '14px',
@@ -237,7 +237,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
             <a href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
               <ArrowLeft size={14} /> Volver al panel
             </a>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
               Oficial en Campo
             </span>
             <h1 style={{
@@ -245,7 +245,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
               fontWeight: 800, fontSize: 32, letterSpacing: '0.02em',
               textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a'
             }}>
-              Reporte de <span style={{ color: '#2563eb' }}>Recorrido</span>
+              Reporte de <span style={{ color: '#1f355a' }}>Recorrido</span>
             </h1>
           </div>
         )}
@@ -261,7 +261,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 <span style={{
                   width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
-                  background: i === step ? '#2563eb' : i < step ? '#2563eb' : '#e2e8f0',
+                  background: i === step ? '#1f355a' : i < step ? '#1f355a' : '#e2e8f0',
                   color: i <= step ? '#ffffff' : '#94a3b8',
                   transition: 'all 0.2s',
                 }}>
@@ -269,7 +269,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 </span>
                 <span style={{
                   fontFamily: 'JetBrains Mono,monospace', fontSize: 9, fontWeight: 600,
-                  color: i === step ? '#2563eb' : i < step ? '#2563eb' : '#94a3b8',
+                  color: i === step ? '#1f355a' : i < step ? '#1f355a' : '#94a3b8',
                   textTransform: 'uppercase', letterSpacing: '0.1em',
                 }}>
                   {label}
@@ -278,7 +278,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
               {i < STEPS.length - 1 && (
                 <div style={{
                   flex: 1, height: 1,
-                  background: i < step ? '#2563eb' : '#e2e8f0',
+                  background: i < step ? '#1f355a' : '#e2e8f0',
                   margin: '0 12px',
                 }} />
               )}
@@ -397,7 +397,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               placeholder="Nombre(s)"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
-                                border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
+                                border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
                                 borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
                                 outline: 'none',
                               }}
@@ -412,7 +412,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               placeholder="Ap. Paterno"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
-                                border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
+                                border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
                                 borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
                                 outline: 'none',
                               }}
@@ -427,7 +427,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               placeholder="Ap. Materno"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
-                                border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
+                                border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
                                 borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
                                 outline: 'none',
                               }}
@@ -501,7 +501,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                           store.setNumVehiculos(n)
                           store.setVehiculos(Array.from({ length: n }, (_, i) => vehiculos[i] ?? { placas: '', serie: '', color: '', tipo: '', destino: '' }))
                         }}
-                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
+                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
                       >
                         <option value={0}>0</option>
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
@@ -511,7 +511,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                         {vehiculos.map((v, i) => (
                           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 12, border: '1px solid #e2e8f0', borderRadius: 2 }}>
-                            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
+                            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
                             <select value={v.tipo} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], tipo: e.target.value }; store.setVehiculos(next) }}
                               style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
                               <option value="">Tipo</option>
@@ -581,15 +581,15 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       ¿Órdenes de Aprehensión?
                     </span>
                     <button type="button" onClick={() => $('hayOrdenAprehension', !store.hayOrdenAprehension)} className="of-btn-toggle"
-                      style={{ background: store.hayOrdenAprehension ? '#2563eb' : '#ffffff', color: store.hayOrdenAprehension ? '#ffffff' : '#64748b', borderColor: store.hayOrdenAprehension ? '#2563eb' : '#e2e8f0' }}>
+                      style={{ background: store.hayOrdenAprehension ? '#1f355a' : '#ffffff', color: store.hayOrdenAprehension ? '#ffffff' : '#64748b', borderColor: store.hayOrdenAprehension ? '#1f355a' : '#e2e8f0' }}>
                       {store.hayOrdenAprehension ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {store.hayOrdenAprehension && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.ordenesAprehension.map((o, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'nombrePersona', 'estatus', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -630,15 +630,15 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       ¿Detención Delito Hidrocarburo?
                     </span>
                     <button type="button" onClick={() => $('hayHidrocarburo', !store.hayHidrocarburo)} className="of-btn-toggle"
-                      style={{ background: store.hayHidrocarburo ? '#2563eb' : '#ffffff', color: store.hayHidrocarburo ? '#ffffff' : '#64748b', borderColor: store.hayHidrocarburo ? '#2563eb' : '#e2e8f0' }}>
+                      style={{ background: store.hayHidrocarburo ? '#1f355a' : '#ffffff', color: store.hayHidrocarburo ? '#ffffff' : '#64748b', borderColor: store.hayHidrocarburo ? '#1f355a' : '#e2e8f0' }}>
                       {store.hayHidrocarburo ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {store.hayHidrocarburo && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.hidrocarburos.map((h, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'nombrePersona', 'datosVehiculo', 'litrosExtraccion', 'nombreToma', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -679,15 +679,15 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       ¿Armas de Fuego?
                     </span>
                     <button type="button" onClick={() => $('hayArmaFuego', !store.hayArmaFuego)} className="of-btn-toggle"
-                      style={{ background: store.hayArmaFuego ? '#2563eb' : '#ffffff', color: store.hayArmaFuego ? '#ffffff' : '#64748b', borderColor: store.hayArmaFuego ? '#2563eb' : '#e2e8f0' }}>
+                      style={{ background: store.hayArmaFuego ? '#1f355a' : '#ffffff', color: store.hayArmaFuego ? '#ffffff' : '#64748b', borderColor: store.hayArmaFuego ? '#1f355a' : '#e2e8f0' }}>
                       {store.hayArmaFuego ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {store.hayArmaFuego && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.armasFuego.map((a, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'datos', 'cartuchos', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -728,15 +728,15 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       ¿Dosis de Droga?
                     </span>
                     <button type="button" onClick={() => $('hayDroga', !store.hayDroga)} className="of-btn-toggle"
-                      style={{ background: store.hayDroga ? '#2563eb' : '#ffffff', color: store.hayDroga ? '#ffffff' : '#64748b', borderColor: store.hayDroga ? '#2563eb' : '#e2e8f0' }}>
+                      style={{ background: store.hayDroga ? '#1f355a' : '#ffffff', color: store.hayDroga ? '#ffffff' : '#64748b', borderColor: store.hayDroga ? '#1f355a' : '#e2e8f0' }}>
                       {store.hayDroga ? '[ SÍ ]' : '[ NO ]'}
                     </button>
                   </div>
                   {store.hayDroga && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.drogas.map((d, i) => (
-                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
+                        <div key={i} style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: 'span 3' }}>#{i + 1}</span>
                           {(['fecha', 'cantidad', 'nombre', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
                               <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
@@ -787,7 +787,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#1e293b' }}>{label}</span>
                       <button type="button"
                         onClick={() => $(key, !store[key])}
-                        style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: store[key] ? '#2563eb' : '#ffffff', color: store[key] ? '#ffffff' : '#64748b', borderColor: store[key] ? '#2563eb' : '#e2e8f0' }}>
+                        style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: store[key] ? '#1f355a' : '#ffffff', color: store[key] ? '#ffffff' : '#64748b', borderColor: store[key] ? '#1f355a' : '#e2e8f0' }}>
                         {store[key] ? 'SÍ' : 'NO'}
                       </button>
                     </div>
@@ -851,14 +851,14 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 value={store.observaciones}
                 onChange={(e: any) => $('observaciones', e.target.value)}
                 placeholder="Observaciones finales..." />
-              <div style={{ marginTop: 24, padding: '20px 24px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 2 }}>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#1d4ed8', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <div style={{ marginTop: 24, padding: '20px 24px', background: '#eff1f3', border: '1px solid #c3c8d2', borderRadius: 2 }}>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#1c3051', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   ¿La víctima desea hacer la denuncia?
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button type="button"
                     onClick={() => $('quiereDenuncia', true)}
-                    style={{ padding: '10px 28px', background: store.quiereDenuncia ? '#2563eb' : '#ffffff', color: store.quiereDenuncia ? '#ffffff' : '#2563eb', border: '1px solid #2563eb', borderRadius: 2, fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
+                    style={{ padding: '10px 28px', background: store.quiereDenuncia ? '#1f355a' : '#ffffff', color: store.quiereDenuncia ? '#ffffff' : '#1f355a', border: '1px solid #1f355a', borderRadius: 2, fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
                     SÍ, DESEA DENUNCIAR
                   </button>
                   <button type="button"
@@ -903,7 +903,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
             </button>
           ) : (
             <button type="button" onClick={handleSubmit} style={{
-              padding: '12px 48px', background: '#2563eb',
+              padding: '12px 48px', background: '#1f355a',
               color: '#ffffff', border: 'none', borderRadius: 2, cursor: 'pointer',
               fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 600,
               textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 10,
@@ -940,7 +940,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
         .of-section-title::before {
           content: '';
           width: 4px; height: 18px;
-          background: #2563eb;
+          background: #1f355a;
           display: inline-block;
         }
         .of-btn-toggle {
@@ -951,18 +951,18 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
           font-size: 9px; font-weight: 600; cursor: pointer;
           transition: all 0.2s;
         }
-        .of-btn-toggle:hover { background: #f8fafc; border-color: #2563eb; }
+        .of-btn-toggle:hover { background: #f8fafc; border-color: #1f355a; }
         input:focus, textarea:focus, select:focus {
-          border-color: #2563eb !important;
-          box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1);
+          border-color: #1f355a !important;
+          box-shadow: 0 0 0 1px rgba(31, 53, 90, 0.1);
         }
         .of-resumen-block {
           padding: 16px;
           border: 1px solid #e2e8f0;
-          border-left: 3px solid #2563eb;
+          border-left: 3px solid #1f355a;
         }
         .of-resumen-label {
-          font-size: 9px; font-weight: 600; color: #2563eb;
+          font-size: 9px; font-weight: 600; color: #1f355a;
           text-transform: uppercase; letter-spacing: 0.15em;
           display: block; margin-bottom: 12px;
         }

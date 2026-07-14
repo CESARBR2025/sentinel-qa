@@ -497,7 +497,7 @@ export default function SeccionLiberacion({
                                                 value={titularNombre}
                                                 onChange={e => setTitularNombre(e.target.value)}
                                                 placeholder="Nombre(s)"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -509,7 +509,7 @@ export default function SeccionLiberacion({
                                                 value={titularAppaterno}
                                                 onChange={e => setTitularAppaterno(e.target.value)}
                                                 placeholder="Apellido paterno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -521,7 +521,7 @@ export default function SeccionLiberacion({
                                                 value={titularApmaterno}
                                                 onChange={e => setTitularApmaterno(e.target.value)}
                                                 placeholder="Apellido materno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                     </div>
@@ -535,7 +535,7 @@ export default function SeccionLiberacion({
                                             onChange={e => setTitularCurp(e.target.value)}
                                             placeholder="CURP del titular"
                                             maxLength={18}
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                     <div className="mt-4">
@@ -547,7 +547,7 @@ export default function SeccionLiberacion({
                                             value={titularCorreo}
                                             onChange={e => setTitularCorreo(e.target.value)}
                                             placeholder="correo@ejemplo.com"
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                 </div>
@@ -567,7 +567,7 @@ export default function SeccionLiberacion({
                                             value={nombreEmpresa}
                                             onChange={e => setNombreEmpresa(e.target.value)}
                                             placeholder="Razón social"
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                     <div>
@@ -579,7 +579,7 @@ export default function SeccionLiberacion({
                                             value={rfcEmpresa}
                                             onChange={e => setRfcEmpresa(e.target.value)}
                                             placeholder="RFC de la empresa"
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                 </div>
@@ -598,7 +598,7 @@ export default function SeccionLiberacion({
                                                 value={nombreRespFiscal}
                                                 onChange={e => setNombreRespFiscal(e.target.value)}
                                                 placeholder="Nombre(s)"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -610,7 +610,7 @@ export default function SeccionLiberacion({
                                                 value={apPaternoRespFiscal}
                                                 onChange={e => setApPaternoRespFiscal(e.target.value)}
                                                 placeholder="Apellido paterno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -622,7 +622,7 @@ export default function SeccionLiberacion({
                                                 value={apMaternoRespFiscal}
                                                 onChange={e => setApMaternoRespFiscal(e.target.value)}
                                                 placeholder="Apellido materno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                     </div>

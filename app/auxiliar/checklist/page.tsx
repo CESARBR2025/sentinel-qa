@@ -26,9 +26,9 @@ export default async function ChecklistPage() {
 
         <div style={{ marginBottom:32, borderBottom:'1px solid #e2e8f0', paddingBottom:20, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
           <div>
-            <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#2563eb', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>AUXILIAR DE NOVEDADES</span>
+            <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1f355a', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>AUXILIAR DE NOVEDADES</span>
             <h1 style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:800, fontSize:36, margin:'4px 0 0', color:'#0f172a', textTransform:'uppercase' }}>
-              Checklist de <span style={{ color:'#2563eb' }}>Novedades</span>
+              Checklist de <span style={{ color:'#1f355a' }}>Novedades</span>
             </h1>
           </div>
           <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#94a3b8' }}>
@@ -47,11 +47,11 @@ export default async function ChecklistPage() {
               return (
                 <Link key={`${p.reporteCampoId}-${p.reporteD1Id}`}
                   href={`/auxiliar/checklist/${p.reporteCampoId}?d1=${p.reporteD1Id}`}
-                  style={{ background:'#ffffff', border:`1px solid ${hecho ? '#bbf7d0' : '#e2e8f0'}`, borderLeft:`4px solid ${hecho ? '#16a34a' : '#2563eb'}`, borderRadius:2, padding:'16px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', textDecoration:'none', color:'inherit' }}>
+                  style={{ background:'#ffffff', border:`1px solid ${hecho ? '#bbf7d0' : '#e2e8f0'}`, borderLeft:`4px solid ${hecho ? '#16a34a' : '#1f355a'}`, borderRadius:2, padding:'16px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', textDecoration:'none', color:'inherit' }}>
                   <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                       <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:12, fontWeight:700, color:'#0f172a' }}>{p.folioCad || 'S/C'}</span>
-                      <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#2563eb' }}>D1: {p.folioDenuncia}</span>
+                      <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#1f355a' }}>D1: {p.folioDenuncia}</span>
                       <span style={{ fontFamily:'Inter,sans-serif', fontSize:12, color:'#64748b' }}>{p.tipoIncidente || '—'}</span>
                       <span style={{ fontFamily:'Inter,sans-serif', fontSize:12, color:'#94a3b8' }}>{p.oficialNombre || '—'}</span>
                     </div>
@@ -65,7 +65,7 @@ export default async function ChecklistPage() {
                         <CheckCircle2 size={11} /> COMPLETADO
                       </span>
                     ) : (
-                      <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontFamily:'JetBrains Mono,monospace', fontSize:10, padding:'3px 10px', background:'#eff6ff', color:'#2563eb', border:'1px solid #bfdbfe', borderRadius:2 }}>
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontFamily:'JetBrains Mono,monospace', fontSize:10, padding:'3px 10px', background:'#eff1f3', color:'#1f355a', border:'1px solid #c3c8d2', borderRadius:2 }}>
                         <Circle size={11} /> PENDIENTE
                       </span>
                     )}

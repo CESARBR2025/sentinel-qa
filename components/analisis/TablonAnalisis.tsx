@@ -54,13 +54,13 @@ export default function TablonAnalisis() {
                                 <td style={tdStyle}>
                                     <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', fontSize: '14px', color: '#0f172a' }}>{r.folio}</div>
                                     <div style={{ fontSize: 10, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-                                        <Shield size={12} color="#2563eb" />
+                                        <Shield size={12} color="#1f355a" />
                                         <span style={{ letterSpacing: '0.05em' }}>{r.oficial || 'OFICIAL NO REGISTRADO'}</span>
                                     </div>
                                 </td>
 
                                 <td style={tdStyle}>
-                                    <div style={{ fontWeight: 700, fontSize: 13, color: '#2563eb', fontFamily: 'JetBrains Mono' }}>
+                                    <div style={{ fontWeight: 700, fontSize: 13, color: '#1f355a', fontFamily: 'JetBrains Mono' }}>
                                         {r.folio_denuncia || 'SIN FOLIO D1'}
                                     </div>
                                     <div style={{ fontSize: 10, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
@@ -74,7 +74,7 @@ export default function TablonAnalisis() {
 
                                 <td style={tdStyle}>
                                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                                        <MapPin size={14} color="#3b82f6" style={{ marginTop: 2 }} />
+                                        <MapPin size={14} color="#3e5171" style={{ marginTop: 2 }} />
                                         <div style={{ fontSize: '12px', lineHeight: '1.4', color: '#475569', maxWidth: '250px' }}>
                                             {formatUbicacion(r)}
                                             {r.entre_calles && <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: 2 }}>E/C: {r.entre_calles}</div>}

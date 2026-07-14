@@ -40,7 +40,7 @@ export default async function ReportesOperativosPage({
         <div style={styles.headerContainer}>
           <div>
             <span style={styles.tag}>SSPM · INTELIGENCIA OPERATIVA</span>
-            <h1 style={styles.title}>REPORTES <span style={{ color: '#2563EB' }}>OPERATIVOS</span></h1>
+            <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>OPERATIVOS</span></h1>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button style={{ ...styles.primaryButton, background: 'white', color: '#0F172A', border: '1px solid #CBD5E1' }}>

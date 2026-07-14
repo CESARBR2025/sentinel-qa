@@ -59,7 +59,7 @@ export function AgregarAutoridadForm({ medidaId, autoridadPrincipal, yaAgregadas
             padding: '6px 14px',
             background: '#ffffff',
             border: '1px solid #e2e8f0',
-            color: '#2563eb',
+            color: '#1f355a',
             fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
             letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer',
           }}
@@ -99,7 +99,7 @@ export function AgregarAutoridadForm({ medidaId, autoridadPrincipal, yaAgregadas
               disabled={pending}
               style={{
                 padding: '7px 18px',
-                background: pending ? '#f1f5f9' : '#2563eb',
+                background: pending ? '#f1f5f9' : '#1f355a',
                 color: pending ? '#94a3b8' : '#ffffff',
                 fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700,
                 fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase',

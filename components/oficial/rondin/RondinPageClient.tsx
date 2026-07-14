@@ -44,7 +44,7 @@ export function RondinPageClient({
           <div style={{ marginBottom: 32, borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
             <span style={{
               fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
-              color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em',
+              color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em',
               textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
             }}>
               <Radio size={14} /> NUEVO REPORTE
@@ -54,7 +54,7 @@ export function RondinPageClient({
               fontSize: 36, margin: '4px 0 0', color: '#0f172a',
               textTransform: 'uppercase',
             }}>
-              Reporte de <span style={{ color: '#2563eb' }}>Rondín</span>
+              Reporte de <span style={{ color: '#1f355a' }}>Rondín</span>
             </h1>
           </div>
 
@@ -88,7 +88,7 @@ export function RondinPageClient({
         <div style={{ marginBottom: 32, borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
           <span style={{
             fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
-            color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em',
+            color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em',
             textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
           }}>
             <Radio size={14} /> RONDÍN
@@ -98,7 +98,7 @@ export function RondinPageClient({
             fontSize: 36, margin: '4px 0 0', color: '#0f172a',
             textTransform: 'uppercase',
           }}>
-            Reportes de <span style={{ color: '#2563eb' }}>Rondín</span>
+            Reportes de <span style={{ color: '#1f355a' }}>Rondín</span>
           </h1>
         </div>
 
@@ -133,16 +133,16 @@ export function RondinPageClient({
             onClick={() => setView('form')}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
-              background: '#2563eb', color: '#ffffff', border: 'none',
+              background: '#1f355a', color: '#ffffff', border: 'none',
               padding: '10px 22px',
               fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
               letterSpacing: '0.08em', textTransform: 'uppercase',
               cursor: 'pointer', borderRadius: 2,
               transition: 'background 0.2s',
-              boxShadow: '0 2px 8px rgba(37,99,235,0.2)',
+              boxShadow: '0 2px 8px rgba(31, 53, 90,0.2)',
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#1d4ed8' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '#2563eb' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#1c3051' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '#1f355a' }}
           >
             <Plus size={15} />
             Nuevo Reporte

@@ -8,7 +8,7 @@ export const styles = {
     main: { maxWidth: '1600px', margin: '0 auto', padding: '40px 48px' },
     headerContainer: {
         display: 'flex', justifyContent: 'space-between' as const, alignItems: 'flex-end' as const,
-        marginBottom: '40px', borderLeft: '4px solid #2563EB', paddingLeft: '20px'
+        marginBottom: '40px', borderLeft: '4px solid #1f355a', paddingLeft: '20px'
     },
     title: { 
         fontFamily: "'Barlow Condensed', sans-serif", fontSize: '56px', fontWeight: 800, 
@@ -40,7 +40,7 @@ export const styles = {
     },
     td: { padding: '14px 16px', fontSize: '13px', color: '#334155', borderBottom: '1px solid #F1F5F9' },
     monoDataBlue: {
-        fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: '12px', color: '#2563EB'
+        fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: '12px', color: '#1f355a'
     },
     primaryButton: {
         background: '#0F172A', color: 'white', padding: '10px 16px', border: 'none',
@@ -48,7 +48,7 @@ export const styles = {
         display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'
     },
     secondaryButtonBlue: {
-        background: '#EFF6FF', color: '#2563EB', padding: '6px 12px', border: '1px solid #DBEAFE',
+        background: '#eff1f3', color: '#1f355a', padding: '6px 12px', border: '1px solid #dbdfe5',
         borderRadius: '4px', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 700,
         display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer'
     },
@@ -79,9 +79,9 @@ export const styles = {
         color: '#64748B'
     },
     paginationActive: {
-        background: '#2563EB',
+        background: '#1f355a',
         color: 'white',
-        borderColor: '#2563EB'
+        borderColor: '#1f355a'
     },
     paginationText: {
         fontSize: '11px',

@@ -83,11 +83,11 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
                 <div style={{ marginBottom: '40px' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
                         Módulo de Operaciones
                     </span>
                     <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.02em', textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a' }}>
-                        REGISTRO DE <span style={{ color: '#3b82f6' }}>INCIDENTES 911</span>
+                        REGISTRO DE <span style={{ color: '#3e5171' }}>INCIDENTES 911</span>
                     </h1>
                 </div>
 
@@ -121,7 +121,7 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
                             </RolField>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                 <label>Descripción de los Hechos</label>
-                                <textarea name="descripcion" placeholder="Describa la situación reportada..." style={{ width: '100%', height: '120px', padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6', borderRadius: '2px', fontFamily: 'Inter, sans-serif', fontSize: '14px', outline: 'none', resize: 'none' }} />
+                                <textarea name="descripcion" placeholder="Describa la situación reportada..." style={{ width: '100%', height: '120px', padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0', borderLeft: '4px solid #3e5171', borderRadius: '2px', fontFamily: 'Inter, sans-serif', fontSize: '14px', outline: 'none', resize: 'none' }} />
                             </div>
                         </div>
                     </section>
@@ -143,7 +143,7 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
                                         <input
                                             type="text"
                                             placeholder="Escribe una dirección para centrar el mapa..."
-                                            style={{ width: '100%', padding: '12px', marginBottom: '12px', borderLeft: '4px solid #3b82f6', border: '1px solid #e2e8f0', borderRadius: '2px' }}
+                                            style={{ width: '100%', padding: '12px', marginBottom: '12px', borderLeft: '4px solid #3e5171', border: '1px solid #e2e8f0', borderRadius: '2px' }}
                                         />
                                     </Autocomplete>
 
@@ -246,7 +246,7 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
 
                 <div style={{ marginTop: '64px', paddingTop: '32px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'center' }}>
                     <button type="submit" style={{ background: '#0f172a', color: '#ffffff', padding: '16px 48px', borderRadius: '2px', display: 'flex', alignItems: 'center', gap: '12px', border: 'none', cursor: 'pointer' }}>
-                        <Send size={16} color="#3b82f6" />
+                        <Send size={16} color="#3e5171" />
                         <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em' }}>Registrar Incidente</span>
                     </button>
                 </div>
@@ -260,7 +260,7 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
                         <div style={{ marginBottom: '16px' }}>
                             <label style={{ display: 'block', marginBottom: '8px' }}>Buscador de Direcciones</label>
                             <Autocomplete onLoad={(ref) => (autocompleteRef.current = ref)} onPlaceChanged={onPlaceChanged}>
-                                <input type="text" placeholder="Buscar dirección..." style={{ width: '100%', padding: '10px', borderLeft: '4px solid #3b82f6', border: '1px solid #e2e8f0' }} />
+                                <input type="text" placeholder="Buscar dirección..." style={{ width: '100%', padding: '10px', borderLeft: '4px solid #3e5171', border: '1px solid #e2e8f0' }} />
                             </Autocomplete>
                         </div>
                         <GoogleMap mapContainerStyle={{ width: '100%', height: '400px' }} center={{ lat: latitud || 20.3889, lng: longitud || -99.9961 }} zoom={15} onLoad={(m) => setMap(m)} onClick={(e) => { if (e.latLng) { setLatitud(e.latLng.lat()); setLongitud(e.latLng.lng()); } }}>
@@ -277,7 +277,7 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
             <style jsx global>{`
                 .sentinel-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 32px; border-radius: 4px; }
                 .sentinel-section-title { font-family: 'Barlow Condensed', sans-serif !important; font-size: 18px !important; font-weight: 700 !important; text-transform: uppercase !important; color: #1e293b !important; margin-bottom: 24px !important; display: flex; align-items: center; gap: 12px; }
-                .sentinel-section-title::before { content: ''; width: 4px; height: 18px; background: #3b82f6; display: inline-block; }
+                .sentinel-section-title::before { content: ''; width: 4px; height: 18px; background: #3e5171; display: inline-block; }
                 label { font-family: 'JetBrains Mono', monospace !important; font-size: 10px !important; font-weight: 600 !important; color: #64748b !important; letter-spacing: 0.1em !important; }
             `}</style>
         </form>

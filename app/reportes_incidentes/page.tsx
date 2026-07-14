@@ -42,7 +42,7 @@ export default async function ReportesIncidentesPage({
           <div>
             <span style={styles.tag}>SSPM · REPORTES DE INCIDENTES</span>
             <h1 style={styles.title}>
-              REPORTE <span style={{ color: '#2563EB' }}>{tipo.toUpperCase()}</span>
+              REPORTE <span style={{ color: '#1f355a' }}>{tipo.toUpperCase()}</span>
             </h1>
           </div>
           <a

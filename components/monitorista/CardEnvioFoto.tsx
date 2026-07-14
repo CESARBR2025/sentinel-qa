@@ -62,7 +62,7 @@ export function CardEnvioFoto({
       <Toast show={toast} mensaje={`Solicitud de ${label} enviada`} onClose={() => setToast(false)} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 600, color: '#1e40af', textTransform: 'uppercase' }}>{label}</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 13, fontWeight: 600, color: '#172844', textTransform: 'uppercase' }}>{label}</span>
           <span style={estadoBadge(estado)}>{estado.toUpperCase()}</span>
         </div>
         {foto?.enviadoA && estado !== 'completado' && (
@@ -109,7 +109,7 @@ export function CardEnvioFoto({
       )}
 
       {estado === 'enviado' && (
-        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', display: 'flex', alignItems: 'center', gap: 6 }}>
           <Send size={12} /> Esperando fotos
         </div>
       )}
@@ -124,7 +124,7 @@ export function CardEnvioFoto({
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
           {evidencias.map((ev) => (
             <a key={ev.id} href={`/api/expediente/proxy?url=${encodeURIComponent(ev.url)}`} target="_blank" rel="noreferrer"
-              style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#2563eb', textDecoration: 'none', padding: '4px 10px', border: '1px solid #bfdbfe', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 4, background: '#eff6ff' }}>
+              style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#1f355a', textDecoration: 'none', padding: '4px 10px', border: '1px solid #c3c8d2', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 4, background: '#eff1f3' }}>
               <ExternalLink size={10} /> {ev.nombre || `Foto ${ev.id.substring(0, 8)}`}
             </a>
           ))}
@@ -137,7 +137,7 @@ export function CardEnvioFoto({
 function estadoBadge(estado: string): React.CSSProperties {
   const base: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 8, fontWeight: 700, textTransform: 'uppercase', padding: '2px 6px', borderRadius: 2, letterSpacing: '0.08em' }
   if (estado === 'pendiente') return { ...base, background: '#fffbeb', color: '#b45309', border: '1px solid #fef3c7' }
-  if (estado === 'enviado') return { ...base, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #dbeafe' }
+  if (estado === 'enviado') return { ...base, background: '#eff1f3', color: '#1c3051', border: '1px solid #dbdfe5' }
   if (estado === 'rechazado') return { ...base, background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca' }
   if (estado === 'completado') return { ...base, background: '#f0fdf4', color: '#15803d', border: '1px solid #dcfce7' }
   return { ...base }

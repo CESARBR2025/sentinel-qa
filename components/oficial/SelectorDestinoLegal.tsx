@@ -13,9 +13,9 @@ const DESTINOS = [
     label: 'Fiscalía General del Estado (FGE)',
     description: 'Delitos del fuero común: robo, lesiones, violencia de género, allanamiento, etc.',
     icon: Gavel,
-    color: '#1d4ed8',
-    bg: '#eff6ff',
-    border: '#bfdbfe',
+    color: '#1c3051',
+    bg: '#eff1f3',
+    border: '#c3c8d2',
   },
   {
     value: 'FGR',

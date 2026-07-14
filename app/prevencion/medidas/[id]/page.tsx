@@ -33,7 +33,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
     <div>
       {/* Breadcrumb */}
       <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#334155', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/medidas" style={{ color: '#2563eb', textDecoration: 'none' }}>Medidas</Link>
+        <Link href="/prevencion/medidas" style={{ color: '#1f355a', textDecoration: 'none' }}>Medidas</Link>
         <span>›</span>
         <span style={{ color: '#0f172a', fontWeight: 600 }}>{medida.expediente}</span>
       </div>
@@ -64,7 +64,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
           {semaforo === 'rojo' && <ProrrogaModal medidaId={id} />}
           <Link
             href="/prevencion/medidas"
-            style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
+            style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
           >
             ← Regresar
           </Link>
@@ -111,7 +111,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
       <div style={{ marginBottom: 32 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 2 }}>
+            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 2 }}>
               › Autoridades Adicionales
             </div>
             <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#334155', letterSpacing: '0.1em' }}>
@@ -151,7 +151,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
 
       {medida.observaciones && (
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '16px 20px', marginBottom: 32 }}>
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 8 }}>
+          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 8 }}>
             › Observaciones
           </div>
           <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#334155', margin: 0, lineHeight: 1.6 }}>
@@ -164,7 +164,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4 }}>
+            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4 }}>
               › Visitas Domiciliarias
             </div>
             <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#334155', letterSpacing: '0.1em' }}>
@@ -182,7 +182,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {visitas.map(v => (
               <div key={v.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '14px 18px', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2563eb', whiteSpace: 'nowrap' }}>
+                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#1f355a', whiteSpace: 'nowrap' }}>
                   {v.fecha_visita} · {v.hora_visita}
                 </span>
                 {v.apercibimiento_aplicado && (
@@ -209,7 +209,7 @@ export default async function MedidaDetailPage({ params }: { params: Promise<{ i
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

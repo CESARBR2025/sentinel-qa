@@ -63,7 +63,7 @@ export function Pagination({
                 ><ChevronLeft size={16} /></button>
 
                 <span style={{ fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 700, margin: '0 12px' }}>
-                    PÁGINA <span style={{ color: '#2563EB' }}>{currentPage}</span> DE {totalPages || 1}
+                    PÁGINA <span style={{ color: '#1f355a' }}>{currentPage}</span> DE {totalPages || 1}
                 </span>
 
                 <button 

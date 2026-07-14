@@ -177,7 +177,7 @@ export default function OficialesTable({ oficiales, deptos, patrullas }: Props) 
                     gap: 4,
                     fontFamily: 'JetBrains Mono,monospace',
                     fontSize: 10,
-                    color: '#2563eb',
+                    color: '#1f355a',
                     letterSpacing: '0.14em',
                     textDecoration: 'none',
                     textTransform: 'uppercase',

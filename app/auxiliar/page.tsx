@@ -23,10 +23,10 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         .card-a { background:#ffffff; border:1px solid #e2e8f0; padding:32px; text-decoration:none; transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1); display:flex; flex-direction:column; min-height:280px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05); cursor:pointer; position:relative; overflow:hidden; width:100%; max-width:520px; }
-        .card-a:hover { border-color:#2563eb; transform:translateY(-5px); box-shadow:0 20px 40px -12px rgba(37,99,235,0.15); }
+        .card-a:hover { border-color:#1f355a; transform:translateY(-5px); box-shadow:0 20px 40px -12px rgba(31, 53, 90,0.15); }
         .card-a:hover .ca-top  { width:100%; }
         .card-a:hover .ca-left { height:100%; }
-        .card-a:hover .ca-icon { color:#2563eb; transform:scale(1.1); }
+        .card-a:hover .ca-icon { color:#1f355a; transform:scale(1.1); }
       `}</style>
 
       <DashboardHeader user={user} />
@@ -35,9 +35,9 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
 
         {/* Title block */}
         <div style={{ position: 'relative', paddingBottom: 24, borderBottom: '1px solid #e2e8f0' }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#2563eb' }} />
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }} />
+          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#1f355a' }} />
+          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
             Auxiliar de Novedades
           </div>
           <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 42, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
@@ -49,12 +49,12 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
         <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 40 }}>
 
           <Link href="/auxiliar/cuestionario-robo" className="card-a">
-            <div className="ca-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#2563eb', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="ca-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#2563eb', transition: 'height 0.4s ease', height: 32 }} />
+            <div className="ca-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="ca-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
               <div className="ca-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}><ClipboardList size={32} /></div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563eb' }} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
                 CONSULTA Y EXPORTAR
               </div>
             </div>
@@ -69,12 +69,12 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
           </Link>
 
           <Link href="/auxiliar/checklist" className="card-a">
-            <div className="ca-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#2563eb', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="ca-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#2563eb', transition: 'height 0.4s ease', height: 32 }} />
+            <div className="ca-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="ca-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
               <div className="ca-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}><CheckSquare size={32} /></div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563eb' }} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
                 REGISTRO POR REPORTE
               </div>
             </div>
@@ -95,7 +95,7 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span>SENTINEL v0.1 · AUXILIAR</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#2563eb' }} />
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
           </div>
         </div>
       </div>

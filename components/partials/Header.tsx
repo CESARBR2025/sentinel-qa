@@ -40,7 +40,7 @@ export function DashboardHeader({
           left: 48,
           width: 64,
           height: 2,
-          background: '#2563eb', // Azul Royal
+          background: '#1f355a', // Azul Royal
         }}
       />
 
@@ -69,7 +69,7 @@ export function DashboardHeader({
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <img
-            src="/logo_sentinel.png"
+            src="/chaleco.png"
             alt="S"
             style={{
               height: 54,
@@ -83,7 +83,7 @@ export function DashboardHeader({
                 fontFamily: 'JetBrains Mono,monospace',
                 fontSize: 10,
                 letterSpacing: '0.3em',
-                color: '#2563eb', // Azul para el label técnico
+                color: '#1f355a', // Azul para el label técnico
                 textTransform: 'uppercase',
                 marginBottom: 4,
                 display: 'flex',
@@ -91,7 +91,7 @@ export function DashboardHeader({
                 gap: 8,
               }}
             >
-              <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }} />
+              <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
               SISTEMA TÁCTICO
             </div>
 
@@ -144,7 +144,7 @@ export function DashboardHeader({
             style={{
               fontFamily: 'JetBrains Mono,monospace',
               fontSize: 10,
-              color: '#3b82f6', // Email en azul técnico
+              color: '#3e5171', // Email en azul técnico
             }}
           >
             {user.email.toLowerCase()}
@@ -154,7 +154,7 @@ export function DashboardHeader({
         <div style={{ width: 1, height: 48, background: '#e2e8f0' }} />
 
         {/* Badge de seguridad opcional al final */}
-        <div style={{ color: '#2563eb', opacity: 0.8 }}>
+        <div style={{ color: '#1f355a', opacity: 0.8 }}>
           <ShieldCheck size={28} strokeWidth={1.5} />
         </div>
 

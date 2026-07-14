@@ -193,7 +193,7 @@ export default async function InfraccionCiudadanoPage({
                         </div>
                     </Card>
                 ) : mostrarPago ? (
-                    <Card className="overflow-hidden p-0 shadow-[0_4px_12px_rgba(29,78,216,0.2)]">
+                    <Card className="overflow-hidden p-0 shadow-[0_4px_12px_rgba(28, 48, 81,0.2)]">
                         <div className="bg-gradient-to-br from-blue-700 to-blue-900 px-6 pt-6 pb-5 relative overflow-hidden">
                             <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-white/5" />
                             <div className="absolute top-12 -right-3 w-16 h-16 rounded-full bg-white/5" />

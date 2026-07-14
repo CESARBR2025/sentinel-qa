@@ -33,7 +33,7 @@ export default async function ReportesTelefonicosPage({
         <div style={styles.headerContainer}>
           <div>
             <span style={styles.tag}>SSPM · INTELIGENCIA DE COMUNICACIONES</span>
-            <h1 style={styles.title}>REPORTES <span style={{ color: '#2563EB' }}>TELEFÓNICOS</span></h1>
+            <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>TELEFÓNICOS</span></h1>
           </div>
         </div>
         <ReportFilters />

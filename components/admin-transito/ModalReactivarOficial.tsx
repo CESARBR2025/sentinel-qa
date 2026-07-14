@@ -91,9 +91,9 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
           justifyContent: 'space-between',
           width: '100%',
           padding: '10px 14px',
-          background: tempId ? '#eff6ff' : '#ffffff',
-          border: tempId ? '1px solid #bfdbfe' : '1px solid #e2e8f0',
-          color: tempId ? '#1e40af' : '#94a3b8',
+          background: tempId ? '#eff1f3' : '#ffffff',
+          border: tempId ? '1px solid #c3c8d2' : '1px solid #e2e8f0',
+          color: tempId ? '#172844' : '#94a3b8',
           fontFamily: 'Inter,sans-serif',
           fontSize: 13,
           cursor: 'pointer',
@@ -104,7 +104,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
         }}
       >
         <span>{selected ? `${selected.numeroUnidad} — ${selected.descripcion}` : '— Sin asignar —'}</span>
-        <Car size={14} color={tempId ? '#2563eb' : '#94a3b8'} />
+        <Car size={14} color={tempId ? '#1f355a' : '#94a3b8'} />
       </button>
 
       {modalOpen && (
@@ -155,7 +155,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
                   color: '#0f172a',
                 }}
               >
-                <Car size={20} color="#2563eb" />
+                <Car size={20} color="#1f355a" />
                 Seleccionar Unidad
               </div>
               <button
@@ -220,8 +220,8 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
                         gap: 14,
                         width: '100%',
                         padding: '14px 16px',
-                        border: esSeleccionada ? '1px solid #2563eb' : '1px solid transparent',
-                        background: esSeleccionada ? '#eff6ff' : 'transparent',
+                        border: esSeleccionada ? '1px solid #1f355a' : '1px solid transparent',
+                        background: esSeleccionada ? '#eff1f3' : 'transparent',
                         cursor: 'pointer',
                         textAlign: 'left',
                         borderRadius: 4,
@@ -234,7 +234,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
                           width: 18,
                           height: 18,
                           borderRadius: '50%',
-                          border: esSeleccionada ? '5px solid #2563eb' : '2px solid #cbd5e1',
+                          border: esSeleccionada ? '5px solid #1f355a' : '2px solid #cbd5e1',
                           flexShrink: 0,
                           transition: 'all 0.15s ease',
                         }}

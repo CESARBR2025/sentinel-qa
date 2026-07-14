@@ -15,7 +15,7 @@ export default async function NuevoUsuarioPage({
     <div style={{ maxWidth: 600 }}>
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: 0 }}>
-          Nuevo <span style={{ color: '#2563eb' }}>Usuario</span>
+          Nuevo <span style={{ color: '#1f355a' }}>Usuario</span>
         </h2>
         <Link href="/admin/usuarios" style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}>
           ← Volver

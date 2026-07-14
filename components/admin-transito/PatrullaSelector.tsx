@@ -72,9 +72,9 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
           justifyContent: 'space-between',
           width: '100%',
           padding: '10px 14px',
-          background: selectedLabel ? '#eff6ff' : '#ffffff',
-          border: selectedLabel ? '1px solid #bfdbfe' : '1px solid #e2e8f0',
-          color: selectedLabel ? '#1e40af' : '#94a3b8',
+          background: selectedLabel ? '#eff1f3' : '#ffffff',
+          border: selectedLabel ? '1px solid #c3c8d2' : '1px solid #e2e8f0',
+          color: selectedLabel ? '#172844' : '#94a3b8',
           fontFamily: 'Inter,sans-serif',
           fontSize: 13,
           cursor: 'pointer',
@@ -84,14 +84,14 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
           transition: 'all 0.15s ease',
         }}
         onMouseEnter={(e) => {
-          if (!selectedLabel) e.currentTarget.style.borderColor = '#2563eb'
+          if (!selectedLabel) e.currentTarget.style.borderColor = '#1f355a'
         }}
         onMouseLeave={(e) => {
           if (!selectedLabel) e.currentTarget.style.borderColor = '#e2e8f0'
         }}
       >
         <span>{selectedLabel || '— Sin asignar —'}</span>
-        <Car size={14} color={selectedLabel ? '#2563eb' : '#94a3b8'} />
+        <Car size={14} color={selectedLabel ? '#1f355a' : '#94a3b8'} />
       </button>
 
       {modalOpen && (
@@ -143,7 +143,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                   color: '#0f172a',
                 }}
               >
-                <Car size={20} color="#2563eb" />
+                <Car size={20} color="#1f355a" />
                 Seleccionar Unidad
               </div>
               <button
@@ -232,9 +232,9 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                         width: '100%',
                         padding: '14px 16px',
                         border: esSeleccionada
-                          ? '1px solid #2563eb'
+                          ? '1px solid #1f355a'
                           : '1px solid transparent',
-                        background: esSeleccionada ? '#eff6ff' : 'transparent',
+                        background: esSeleccionada ? '#eff1f3' : 'transparent',
                         cursor: 'pointer',
                         textAlign: 'left',
                         borderRadius: 4,
@@ -256,7 +256,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                           height: 18,
                           borderRadius: '50%',
                           border: esSeleccionada
-                            ? '5px solid #2563eb'
+                            ? '5px solid #1f355a'
                             : '2px solid #cbd5e1',
                           display: 'flex',
                           alignItems: 'center',
@@ -297,7 +297,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                           style={{
                             fontFamily: 'JetBrains Mono,monospace',
                             fontSize: 8,
-                            color: '#2563eb',
+                            color: '#1f355a',
                             letterSpacing: '0.1em',
                             fontWeight: 600,
                           }}
@@ -343,7 +343,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                 style={{
                   padding: '10px 24px',
                   border: 'none',
-                  background: !tempId ? '#94a3b8' : '#2563eb',
+                  background: !tempId ? '#94a3b8' : '#1f355a',
                   color: '#fff',
                   cursor: !tempId ? 'not-allowed' : 'pointer',
                   fontFamily: 'Inter,sans-serif',

@@ -6,9 +6,9 @@ export default async function AdminTransitoDashboardPage() {
     <div>
       <style>{`
         .at-card:hover {
-          border-color: #2563eb !important;
+          border-color: #1f355a !important;
           transform: translateY(-2px) !important;
-          box-shadow: 0 8px 24px rgba(37,99,235,0.1) !important;
+          box-shadow: 0 8px 24px rgba(31, 53, 90,0.1) !important;
         }
       `}</style>
 
@@ -21,7 +21,7 @@ export default async function AdminTransitoDashboardPage() {
           style={{
             fontFamily: 'JetBrains Mono,monospace',
             fontSize: 10,
-            color: '#2563eb',
+            color: '#1f355a',
             letterSpacing: '0.3em',
             textTransform: 'uppercase',
             marginBottom: 8,
@@ -34,7 +34,7 @@ export default async function AdminTransitoDashboardPage() {
             style={{
               width: 8,
               height: 8,
-              background: '#2563eb',
+              background: '#1f355a',
               display: 'inline-block',
             }}
           />
@@ -52,7 +52,7 @@ export default async function AdminTransitoDashboardPage() {
           }}
         >
           Módulos{' '}
-          <span style={{ color: '#2563eb' }}>Administrativos</span>
+          <span style={{ color: '#1f355a' }}>Administrativos</span>
         </h2>
         <p
           style={{
@@ -89,14 +89,14 @@ export default async function AdminTransitoDashboardPage() {
             width: 56,
             height: 56,
             borderRadius: '50%',
-            background: '#eff6ff',
+            background: '#eff1f3',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
           }}
         >
-          <Users size={28} color="#2563eb" strokeWidth={1.5} />
+          <Users size={28} color="#1f355a" strokeWidth={1.5} />
         </div>
         <div style={{ flex: 1 }}>
           <div

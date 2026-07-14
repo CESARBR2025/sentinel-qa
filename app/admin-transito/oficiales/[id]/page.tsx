@@ -100,7 +100,7 @@ export default async function EditarOficialPage({
           }}
         >
           Editar{' '}
-          <span style={{ color: '#2563eb' }}>Oficial</span>
+          <span style={{ color: '#1f355a' }}>Oficial</span>
         </h2>
           <Link
             href="/admin-transito/oficiales"

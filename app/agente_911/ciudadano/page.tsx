@@ -69,7 +69,7 @@ export default async function Ciudadano911Page() {
                 padding: '24px 48px', borderBottom: '1px solid #e2e8f0', position: 'relative',
                 background: '#ffffff',
             }}>
-                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#2563eb' }} />
+                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#1f355a' }} />
 
                 <div>
                     <Link href="/agente_911/ciudadano/incidentes" style={{
@@ -81,14 +81,14 @@ export default async function Ciudadano911Page() {
                     </Link>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                        <img src="/logo_sentinel.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
+                        <img src="/chaleco.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
                         <div>
-                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }} />
+                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
                                 Sistema de Atención de Emergencias
                             </div>
                             <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                                Reporte de Llamada <span style={{ color: '#2563eb' }}>al 911</span>
+                                Reporte de Llamada <span style={{ color: '#1f355a' }}>al 911</span>
                             </h1>
                         </div>
                     </div>
@@ -121,7 +121,7 @@ export default async function Ciudadano911Page() {
         >
           {/* ENCABEZADO */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 32 }}>
-                <div style={{ width: '4px', height: '16px', background: '#2563eb' }} />
+                <div style={{ width: '4px', height: '16px', background: '#1f355a' }} />
                 <p style={{
                     margin: 0, fontFamily: "'Inter', sans-serif",
                     color: "#64748b", fontSize: "14px", fontWeight: 500

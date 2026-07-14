@@ -78,14 +78,14 @@ export default function PrevencionNav() {
               fontSize: 11,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              color: isActive ? '#2563eb' : '#64748b',
+              color: isActive ? '#1f355a' : '#64748b',
               textDecoration: 'none',
-              borderBottom: isActive ? '2px solid #2563eb' : '2px solid transparent',
+              borderBottom: isActive ? '2px solid #1f355a' : '2px solid transparent',
               transition: 'color 0.15s, border-color 0.15s',
               position: 'relative',
             }}
           >
-            <span style={{ fontSize: 14, color: isActive ? '#2563eb' : '#94a3b8' }}>
+            <span style={{ fontSize: 14, color: isActive ? '#1f355a' : '#94a3b8' }}>
               {ICONS[i]}
             </span>
             {label}

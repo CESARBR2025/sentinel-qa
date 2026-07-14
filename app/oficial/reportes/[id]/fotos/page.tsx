@@ -41,9 +41,9 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
           paddingBottom: 20, borderBottom: '1px solid #e2e8f0', position: 'relative'
         }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#2563eb' }}></div>
+          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#1f355a' }}></div>
           <div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, fontWeight: 600 }}>
+            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, fontWeight: 600 }}>
               Oficial de Campo
             </div>
             <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>

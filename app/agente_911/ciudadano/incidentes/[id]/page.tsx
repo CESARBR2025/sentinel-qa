@@ -99,7 +99,7 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                        <section style={{...cardStyle, borderLeft: '4px solid #3b82f6'}}>
+                        <section style={{...cardStyle, borderLeft: '4px solid #3e5171'}}>
                             <h2 style={sectionTitleStyle}><MapPin size={18}/> UBICACIÓN</h2>
                             <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                                 <div><label style={labelStyle}>DOMICILIO</label><span style={valueStyle}>{inc.calle}, {inc.colonia}</span></div>
@@ -121,10 +121,10 @@ const valueStyle = { fontFamily: 'Inter', fontSize: '14px', fontWeight: 500, col
 const itemGroupStyle = { display: 'flex', flexDirection: 'column' as const };
 const infoGridStyle = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' };
 const narrativaBoxStyle: React.CSSProperties = { fontFamily: 'Inter', fontSize: '14px', lineHeight: '1.7', color: '#334155', padding: '20px', background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: '2px', whiteSpace: 'pre-wrap' };
-const refBoxStyle = { marginTop: '8px', padding: '16px', background: '#eff6ff', borderRadius: '2px' };
+const refBoxStyle = { marginTop: '8px', padding: '16px', background: '#eff1f3', borderRadius: '2px' };
 const btnBackStyle: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#64748b', fontFamily: 'JetBrains Mono', fontSize: '11px', textDecoration: 'none', marginBottom: '24px' };
 const headerStyle = { marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #e2e8f0', paddingBottom: '24px' };
-const labelTopStyle = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em' };
+const labelTopStyle = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em' };
 const titleStyle = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 42, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' as const };
 const footerCardStyle: React.CSSProperties = { padding: '20px', background: '#0f172a', color: '#94a3b8', fontSize: '9px', textTransform: 'uppercase' };
 
@@ -132,7 +132,7 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     const base: React.CSSProperties = { padding: '8px 16px', borderRadius: '2px', fontSize: '12px', fontWeight: 700, fontFamily: 'JetBrains Mono', border: '1px solid' };
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
-        case 'en_despacho':   return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }; 
+        case 'en_despacho':   return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' }; 
         case 'en_sitio':      return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' }; 
         case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
         case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' }; 

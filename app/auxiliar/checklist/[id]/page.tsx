@@ -9,9 +9,9 @@ import Link from 'next/link'
 import { tienePermiso } from '@/lib/auxiliar/permisos'
 
 const LBL: React.CSSProperties = { fontFamily:'JetBrains Mono,monospace', fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.1em', display:'block', marginBottom:6 }
-const SEL: React.CSSProperties = { padding:'10px 12px', border:'1px solid #e2e8f0', borderLeft:'3px solid #2563eb', borderRadius:2, fontFamily:'Inter,sans-serif', fontSize:13, outline:'none', background:'#ffffff', width:'100%' }
+const SEL: React.CSSProperties = { padding:'10px 12px', border:'1px solid #e2e8f0', borderLeft:'3px solid #1f355a', borderRadius:2, fontFamily:'Inter,sans-serif', fontSize:13, outline:'none', background:'#ffffff', width:'100%' }
 const INP: React.CSSProperties = { ...SEL }
-const BTN: React.CSSProperties = { padding:'12px 32px', background:'#2563eb', color:'#ffffff', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:14, letterSpacing:'0.1em', textTransform:'uppercase', border:'none', cursor:'pointer', borderRadius:2 }
+const BTN: React.CSSProperties = { padding:'12px 32px', background:'#1f355a', color:'#ffffff', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:14, letterSpacing:'0.1em', textTransform:'uppercase', border:'none', cursor:'pointer', borderRadius:2 }
 
 function CheckRow({ label, name, defaultValue }: { label: string; name: string; defaultValue: boolean }) {
   return (
@@ -66,7 +66,7 @@ export default async function ChecklistFormPage({
         </Link>
 
         <div style={{ marginBottom:32, borderBottom:'1px solid #e2e8f0', paddingBottom:20 }}>
-          <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#2563eb', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>CHECKLIST DE NOVEDADES</span>
+          <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1f355a', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>CHECKLIST DE NOVEDADES</span>
           <h1 style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:800, fontSize:32, margin:'4px 0 0', color:'#0f172a', textTransform:'uppercase' }}>
             {par.folioCad || 'S/C'} · D1: {par.folioDenuncia}
           </h1>
@@ -85,7 +85,7 @@ export default async function ChecklistFormPage({
               Denuncia CU-D1
             </div>
             {tieneDenuncia && !cl && (
-              <div style={{ marginBottom:12, padding:'8px 12px', background:'#eff6ff', border:'1px solid #bfdbfe', borderRadius:2, fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1d4ed8' }}>
+              <div style={{ marginBottom:12, padding:'8px 12px', background:'#eff1f3', border:'1px solid #c3c8d2', borderRadius:2, fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1c3051' }}>
                 PRE-LLENADO — Este reporte tiene D1 vinculado
               </div>
             )}
@@ -110,7 +110,7 @@ export default async function ChecklistFormPage({
               Detenidos y Acciones
             </div>
             {hayDetencion && !cl && (
-              <div style={{ marginBottom:12, padding:'8px 12px', background:'#eff6ff', border:'1px solid #bfdbfe', borderRadius:2, fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1d4ed8' }}>
+              <div style={{ marginBottom:12, padding:'8px 12px', background:'#eff1f3', border:'1px solid #c3c8d2', borderRadius:2, fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1c3051' }}>
                 PRE-LLENADO — Autoridad: {autoridadRecibe || '—'}
               </div>
             )}

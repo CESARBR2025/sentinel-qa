@@ -21,7 +21,7 @@ export function SubHeader({
   moduleLabel = 'Seguridad Pública Municipal',
   title,
   accent,
-  accentColor = '#2563eb',
+  accentColor = '#1f355a',
   user,
 }: SubHeaderProps) {
   const { data: session } = authClient.useSession()
@@ -36,7 +36,7 @@ export function SubHeader({
       <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
 
       <div style={{ flexGrow: 1 }}>
-        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
           {moduleLabel}
         </span>
         <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 22, letterSpacing: '0.05em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>
@@ -49,7 +49,7 @@ export function SubHeader({
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
             <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span>
-            <span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#1e40af' }}>{operador.name}</span>
+            <span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#172844' }}>{operador.name}</span>
           </div>
           <SignOutButton />
         </div>

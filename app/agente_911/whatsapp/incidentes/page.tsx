@@ -42,7 +42,7 @@ export default async function ListadoWhatsAppPage({
                 {/* HEADER DE SECCIÓN */}
                 <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                     <div>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
                             Centro de Monitoreo Táctico
                         </span>
                         <h1 style={{
@@ -54,12 +54,12 @@ export default async function ListadoWhatsAppPage({
                             margin: '4px 0 0 0',
                             color: '#0f172a'
                         }}>
-                            BITÁCORA <span style={{ color: '#3b82f6' }}>WHATSAPP</span>
+                            BITÁCORA <span style={{ color: '#3e5171' }}>WHATSAPP</span>
                         </h1>
                     </div>
 
                     <Link href="/agente_911/whatsapp" style={btnNuevoStyle}>
-                        <Plus size={14} color="#3b82f6" />
+                        <Plus size={14} color="#3e5171" />
                         <span>NUEVO REGISTRO</span>
                     </Link>
                 </div>
@@ -151,7 +151,7 @@ const sectionTitleStyle: React.CSSProperties = {
     display: 'flex', alignItems: 'center', gap: '12px'
 };
 
-const decoratorStyle = { width: '4px', height: '18px', background: '#3b82f6' };
+const decoratorStyle = { width: '4px', height: '18px', background: '#3e5171' };
 
 const thStyle: React.CSSProperties = {
     padding: '16px 12px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: '10px',
@@ -172,7 +172,7 @@ const btnNuevoStyle: React.CSSProperties = {
 };
 
 const btnViewStyle: React.CSSProperties = {
-    display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#2563eb',
+    display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#1f355a',
     fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 600,
     textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.05em'
 };
@@ -192,7 +192,7 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
 
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' };
-        case 'en_despacho': return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' };
+        case 'en_despacho': return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' };
         case 'en_sitio': return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' };
         case 'atendido': return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' };
         case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' };

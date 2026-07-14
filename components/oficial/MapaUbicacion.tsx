@@ -163,7 +163,7 @@ export function MapaUbicacion({
           fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#475569',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-            <MapPin size={14} color="#2563eb" />
+            <MapPin size={14} color="#1f355a" />
             <span style={{ fontWeight: 600 }}>UBICACIÓN SELECCIONADA</span>
           </div>
           <div>{currentLoc.referenciaUbicacion}</div>
@@ -182,11 +182,11 @@ export function MapaUbicacion({
         .of-map-btn {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 10px 16px; background: #ffffff; color: #1e293b;
-          border: 1px solid #e2e8f0; border-left: 3px solid #2563eb;
+          border: 1px solid #e2e8f0; border-left: 3px solid #1f355a;
           font-family: JetBrains Mono,monospace; font-size: 10px;
           font-weight: 600; cursor: pointer; transition: all 0.2s;
         }
-        .of-map-btn:hover { background: #f1f5f9; border-color: #2563eb; }
+        .of-map-btn:hover { background: #f1f5f9; border-color: #1f355a; }
       `}</style>
     </div>
   )

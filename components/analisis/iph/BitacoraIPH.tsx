@@ -42,7 +42,7 @@ console.log(registros);
             
             <tr key={r.id} style={trStyle}>
               <td style={tdStyle}>
-                <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', color: '#2563eb' }}>{r.folioIPH}</div>
+                <div style={{ fontWeight: 800, fontFamily: 'JetBrains Mono', color: '#1f355a' }}>{r.folioIPH}</div>
               </td>
               <td style={tdStyle}>
                 <div style={{ fontWeight: 600 }}>{r.alias || 'SIN ALIAS'}</div>

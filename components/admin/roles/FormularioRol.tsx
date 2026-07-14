@@ -173,13 +173,13 @@ export default function FormularioRol({ user }: { user: any }) {
         .sentinel-panel {
           background: #ffffff;
           border: 1px solid #e2e8f0;
-          border-left: 4px solid #2563eb;
+          border-left: 4px solid #1f355a;
           padding: 32px;
           border-radius: 4px;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
         }
         input:focus, select:focus, textarea:focus {
-          border-color: #2563eb !important;
+          border-color: #1f355a !important;
           outline: none;
         }
       `}</style>

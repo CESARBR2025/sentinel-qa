@@ -54,7 +54,7 @@ export function DespachoContent({ historial, estatusInicial, incidenteId, asigna
           fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
           padding: '4px 12px', borderRadius: 2,
           ...(estatusInicial === 'en_despacho'
-            ? { background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }
+            ? { background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2' }
             : { background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }),
         }}>
           {estatusInicial === 'en_despacho' ? 'UNIDADES ASIGNADAS' : estatusInicial.toUpperCase()}

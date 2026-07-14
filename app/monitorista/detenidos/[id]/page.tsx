@@ -50,7 +50,7 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
           <div>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 8 }}>Reporte de Detenido</div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 8 }}>Reporte de Detenido</div>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: 0 }}>{reporte.nombreDetenido}</h1>
           </div>
         </div>

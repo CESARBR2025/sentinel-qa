@@ -29,9 +29,9 @@ export default async function CuestionarioRoboPage() {
 
         <div style={{ marginBottom:32, borderBottom:'1px solid #e2e8f0', paddingBottom:20, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
           <div>
-            <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#2563eb', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>AUXILIAR DE NOVEDADES</span>
+            <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#1f355a', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>AUXILIAR DE NOVEDADES</span>
             <h1 style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:800, fontSize:36, margin:'4px 0 0', color:'#0f172a', textTransform:'uppercase' }}>
-              Cuestionario Único de <span style={{ color:'#2563eb' }}>Robo</span>
+              Cuestionario Único de <span style={{ color:'#1f355a' }}>Robo</span>
             </h1>
           </div>
           <div style={{ display:'flex', gap:8 }}>
@@ -71,7 +71,7 @@ export default async function CuestionarioRoboPage() {
               <tbody>
                 {datos.map((r, i) => (
                   <tr key={`${r.reporteCampoId}-${i}`} style={{ background: i % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
-                    <td style={{ ...TD, fontFamily:'JetBrains Mono,monospace', fontSize:11, fontWeight:700, color:'#2563eb' }}>{r.folioIncidente.slice(0,8)}...</td>
+                    <td style={{ ...TD, fontFamily:'JetBrains Mono,monospace', fontSize:11, fontWeight:700, color:'#1f355a' }}>{r.folioIncidente.slice(0,8)}...</td>
                     <td style={{ ...TD, fontFamily:'JetBrains Mono,monospace', fontSize:11 }}>{r.folioReporte || '—'}</td>
                     <td style={{ ...TD, fontFamily:'JetBrains Mono,monospace', fontSize:11 }}>{r.fecha}</td>
                     <td style={{ ...TD, fontFamily:'JetBrains Mono,monospace', fontSize:11 }}>{r.hora}</td>

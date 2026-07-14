@@ -26,13 +26,13 @@ export default async function IPHPage() {
       
       <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em' }}>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em' }}>
                 REGISTRO NACIONAL DE DETENCIONES
             </span>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 42, fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-                BITÁCORA <span style={{ color: '#3b82f6' }}>IPH</span>
+                BITÁCORA <span style={{ color: '#3e5171' }}>IPH</span>
             </h1>
-            <div style={{ width: 40, height: 4, background: '#3b82f6' }}></div>
+            <div style={{ width: 40, height: 4, background: '#3e5171' }}></div>
         </div>
 
         <BitacoraIPH />

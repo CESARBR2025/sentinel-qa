@@ -13,7 +13,7 @@ export const emailStyles = {
   },
   folioBox: {
     background: '#f0f9ff',
-    borderLeft: '4px solid #2563eb',
+    borderLeft: '4px solid #1f355a',
     padding: '16px 20px',
     margin: '20px 0',
     fontSize: '14px',
@@ -38,7 +38,7 @@ export const emailStyles = {
   primaryButton: {
     display: 'inline-block',
     padding: '12px 32px',
-    background: '#2563eb',
+    background: '#1f355a',
     color: '#ffffff',
     textDecoration: 'none',
     borderRadius: '6px',

@@ -21,13 +21,13 @@ export default async function NuevaSolicitudPage() {
   return (
     <div>
       <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/juridico" style={{ color: '#2563eb', textDecoration: 'none' }}>Área Jurídica</Link>
+        <Link href="/prevencion/juridico" style={{ color: '#1f355a', textDecoration: 'none' }}>Área Jurídica</Link>
         <span>›</span>
         <span>Nueva Solicitud</span>
       </div>
 
       <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 32px' }}>
-        Nueva <span style={{ color: '#2563eb' }}>Solicitud de Información</span>
+        Nueva <span style={{ color: '#1f355a' }}>Solicitud de Información</span>
       </h2>
 
       <form action={createSolicitud} style={{ maxWidth: 800, display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -60,7 +60,7 @@ export default async function NuevaSolicitudPage() {
         <div style={{ padding: '24px 0 0', display: 'flex', gap: 20, alignItems: 'center' }}>
           <button
             type="submit"
-            style={{ padding: '12px 28px', background: '#2563eb', color: '#ffffff', border: 'none', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '2px' }}
+            style={{ padding: '12px 28px', background: '#1f355a', color: '#ffffff', border: 'none', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: '2px' }}
           >
             Turnar a Jurídico
           </button>
@@ -81,7 +81,7 @@ export default async function NuevaSolicitudPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ border: '1px solid #e2e8f0', marginBottom: 0, borderBottom: 'none' }}>
-      <div style={{  background: '#f1f5f9', borderBottom: '1px solid #e2e8f0', color: '#2563eb', padding: '10px 20px',  fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase' }}>
+      <div style={{  background: '#f1f5f9', borderBottom: '1px solid #e2e8f0', color: '#1f355a', padding: '10px 20px',  fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase' }}>
         › {title}
       </div>
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 16, background: '#ffffff' }}>

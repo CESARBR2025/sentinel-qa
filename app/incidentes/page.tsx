@@ -61,7 +61,7 @@ export default async function BitacoraIncidentesPage({
                 <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <span style={topLabelStyle}>CENTRO DE MANDO Y COMUNICACIONES</span>
-                        <h1 style={titleStyle}>BITÁCORA GENERAL DE <span style={{ color: '#3b82f6' }}>INCIDENTES</span></h1>
+                        <h1 style={titleStyle}>BITÁCORA GENERAL DE <span style={{ color: '#3e5171' }}>INCIDENTES</span></h1>
                     </div>
                 </div>
 
@@ -102,7 +102,7 @@ export default async function BitacoraIncidentesPage({
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {item.canal === 'radio' && <Radio size={14} color="#2563eb" />}
+                                                {item.canal === 'radio' && <Radio size={14} color="#1f355a" />}
                                                 {item.canal === 'whatsapp' && <MessageSquare size={14} color="#059669" />}
                                                 {item.canal === '911' && <Phone size={14} color="#dc2626" />}
 
@@ -157,7 +157,7 @@ export default async function BitacoraIncidentesPage({
 }
 
 // --- ESTILOS (Iguales a los anteriores) ---
-const topLabelStyle = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em' };
+const topLabelStyle = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em' };
 const titleStyle = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 36, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' as const };
 const tableWrapperStyle = { background: 'white', border: '1px solid #e2e8f0', borderRadius: '4px', overflow: 'hidden' };
 const thStyle: React.CSSProperties = { padding: '16px 24px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' };
@@ -168,7 +168,7 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     const base: React.CSSProperties = { display: 'inline-block', padding: '4px 10px', borderRadius: '2px', fontSize: '10px', fontWeight: 700, fontFamily: 'JetBrains Mono', border: '1px solid' };
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' };
-        case 'en_despacho': return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' };
+        case 'en_despacho': return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' };
         case 'en_sitio': return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' };
         case 'atendido': return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' };
         case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' };

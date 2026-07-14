@@ -26,12 +26,12 @@ export default async function CapturaPage() {
 
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingBottom: 20, borderBottom: "1px solid #e2e8f0", position: "relative", marginBottom: 32 }}>
-          <div style={{ position: "absolute", bottom: -1, left: 0, width: 64, height: 3, background: "#2563eb" }} />
+          <div style={{ position: "absolute", bottom: -1, left: 0, width: 64, height: 3, background: "#1f355a" }} />
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <img src="/logo_sentinel.png" alt="S" style={{ height: 48, objectFit: "contain" }} />
+            <img src="/chaleco.png" alt="S" style={{ height: 48, objectFit: "contain" }} />
             <div>
-              <div style={{ fontFamily: "JetBrains Mono,monospace", fontSize: 10, letterSpacing: "0.3em", color: "#2563eb", textTransform: "uppercase", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: "#2563eb", display: "inline-block" }} />
+              <div style={{ fontFamily: "JetBrains Mono,monospace", fontSize: 10, letterSpacing: "0.3em", color: "#1f355a", textTransform: "uppercase", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 8, height: 8, background: "#1f355a", display: "inline-block" }} />
                 VÍA · CAPTURA DE INFRACCIONES
               </div>
               <h1 style={{ fontFamily: "Barlow Condensed,sans-serif", fontWeight: 800, fontSize: 36, letterSpacing: "0.06em", textTransform: "uppercase", margin: 0, color: "#0f172a", lineHeight: 1 }}>
@@ -67,7 +67,7 @@ export default async function CapturaPage() {
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span>SENTINEL v0.1 · VÍA</span>
-            <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#2563eb" }} />
+            <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#1f355a" }} />
           </div>
         </div>
 

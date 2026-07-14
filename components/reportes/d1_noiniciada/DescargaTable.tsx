@@ -30,7 +30,7 @@ export const DescargaTable = ({ data }: { data: any[] }) => {
                         {paginatedData.map((item, i) => (
                             <tr key={i}>
                                 <td style={styles.td}>
-                                    <span style={{ ...styles.monoData, color: '#2563EB' }}>{item.folio}</span>
+                                    <span style={{ ...styles.monoData, color: '#1f355a' }}>{item.folio}</span>
                                 </td>
                                 <td style={styles.td}>{item.fecha}</td>
                                 <td style={styles.td}>

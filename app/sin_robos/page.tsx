@@ -32,7 +32,7 @@ export default async function ReportesLimpiosPage({
         <div style={styles.headerContainer}>
           <div>
             <span style={styles.tag}>SSPM · SISTEMA SENTINEL</span>
-            <h1 style={styles.title}>REPORTES <span style={{ color: '#2563EB' }}>SIN NOVEDAD</span></h1>
+            <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>SIN NOVEDAD</span></h1>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <a href={`/api/reportes-sin-novedad/exportar?from=${sp.from ?? ''}&to=${sp.to ?? ''}&q=${sp.q ?? ''}`}

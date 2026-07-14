@@ -68,7 +68,7 @@ export default async function MedidasPage({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 6px' }}>
-            Libro Digital — <span style={{ color: '#2563eb' }}>Medidas de Protección</span>
+            Libro Digital — <span style={{ color: '#1f355a' }}>Medidas de Protección</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             {hayFiltro ? (
@@ -80,7 +80,7 @@ export default async function MedidasPage({
         </div>
         <Link
           href="/prevencion/medidas/nueva"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', background: '#2563eb', color: '#ffffff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', background: '#1f355a', color: '#ffffff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '2px' }}
         >
           + Nueva medida
         </Link>
@@ -149,7 +149,7 @@ export default async function MedidasPage({
                   <td style={{ padding: '10px 12px' }}>
                     <Link
                       href={`/prevencion/medidas/${r.id}`}
-                      style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 600, letterSpacing: '0.12em', textDecoration: 'none', textTransform: 'uppercase' }}
+                      style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 600, letterSpacing: '0.12em', textDecoration: 'none', textTransform: 'uppercase' }}
                     >
                       Ver →
                     </Link>

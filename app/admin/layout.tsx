@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </Link>
         <div style={{ width: 1, height: 16, background: '#e2e8f0' }} />
         <div>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600 }}>
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
             Sistema
           </span>
           <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>
@@ -54,7 +54,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </main>
 
       <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
+        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v0.1
       </footer>
     </div>
   )

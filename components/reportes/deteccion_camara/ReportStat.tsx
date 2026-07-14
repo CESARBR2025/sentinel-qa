@@ -8,7 +8,7 @@ export function ReportStat({ label, value, icon }: { label: string, value: strin
       display: 'flex', 
       flexDirection: 'column',
       gap: '8px',
-      borderLeft: '4px solid #2563eb'
+      borderLeft: '4px solid #1f355a'
     }}>
       <div style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '8px' }}>
         {icon}

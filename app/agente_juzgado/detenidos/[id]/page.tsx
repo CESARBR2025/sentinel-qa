@@ -34,7 +34,7 @@ export default async function DetenidoJuzgadoDetailPage({ params }: { params: Pr
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: 20, borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
           <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#059669' }} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <img src="/logo_sentinel.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
+            <img src="/chaleco.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
             <div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#059669', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 8, height: 8, background: '#059669', display: 'inline-block' }} />

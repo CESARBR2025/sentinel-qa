@@ -47,8 +47,8 @@ export const SentinelInput = ({ label, isTextArea, options, ...props }: InputPro
       )}
       <style jsx>{`
         input:focus, textarea:focus, select:focus {
-          border-color: #2563eb !important;
-          box-shadow: 0 0 0 1px #2563eb;
+          border-color: #1f355a !important;
+          box-shadow: 0 0 0 1px #1f355a;
         }
       `}</style>
     </div>

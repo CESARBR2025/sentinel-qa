@@ -85,8 +85,8 @@ export function BuscadorEvento({ value, onChange }: { value: string; onChange: (
                 setSelected(true)
                 setOpen(false)
               }}
-              style={{ padding: '10px 12px', fontFamily: 'Inter', fontSize: 13, color: '#2563eb', cursor: 'pointer', fontStyle: 'italic', borderTop: '1px solid #e2e8f0' }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#eff6ff')}
+              style={{ padding: '10px 12px', fontFamily: 'Inter', fontSize: 13, color: '#1f355a', cursor: 'pointer', fontStyle: 'italic', borderTop: '1px solid #e2e8f0' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#eff1f3')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
               + Otros: &quot;{input}&quot;

@@ -33,7 +33,7 @@ export default async function DescargasPage({
         <div style={styles.headerContainer}>
           <div>
             <span style={styles.tag}>SSPM · MÓDULO DE TRÁMITE INICIAL</span>
-            <h1 style={styles.title}>REPORTES <span style={{ color: '#2563EB' }}>SIN D1 INICIADA</span></h1>
+            <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>SIN D1 INICIADA</span></h1>
           </div>
         </div>
         <DescargaFilters />

@@ -32,7 +32,7 @@ export const ServiceFooter = () => {
       {/* SECCIÓN DE OBSERVACIONES */}
       <section>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-          <div style={{ width: '4px', height: '16px', background: '#3b82f6' }} />
+          <div style={{ width: '4px', height: '16px', background: '#3e5171' }} />
           <span style={{ 
             fontFamily: 'Barlow Condensed, sans-serif', 
             fontSize: '16px', 
@@ -61,7 +61,7 @@ export const ServiceFooter = () => {
             resize: 'none',
             transition: 'border-color 0.2s'
           }}
-          onFocus={(e) => e.currentTarget.style.borderLeftColor = '#2563eb'}
+          onFocus={(e) => e.currentTarget.style.borderLeftColor = '#1f355a'}
           onBlur={(e) => e.currentTarget.style.borderLeftColor = '#cbd5e1'}
         />
       </section>
@@ -109,7 +109,7 @@ export const ServiceFooter = () => {
                 overflow: 'hidden'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#3b82f6';
+                e.currentTarget.style.borderColor = '#3e5171';
                 e.currentTarget.style.background = '#ffffff';
               }}
               onMouseLeave={(e) => {

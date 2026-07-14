@@ -18,7 +18,7 @@ export const styles = {
         justifyContent: 'space-between' as const, 
         alignItems: 'flex-end' as const,
         marginBottom: '40px', 
-        borderLeft: '4px solid #2563EB', 
+        borderLeft: '4px solid #1f355a', 
         paddingLeft: '20px'
     },
     title: {
@@ -190,7 +190,7 @@ export const styles = {
             success: { bg: '#DCFCE7', text: '#166534' },
             warning: { bg: '#FEF9C3', text: '#854d0e' },
             danger: { bg: '#FEE2E2', text: '#991B1B' },
-            primary: { bg: '#DBEAFE', text: '#1E40AF' },
+            primary: { bg: '#dbdfe5', text: '#172844' },
             neutral: { bg: '#F1F5F9', text: '#475569' }
         };
         return {

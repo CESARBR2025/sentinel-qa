@@ -19,7 +19,7 @@ export default async function UsuariosPage({
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 4px' }}>
-            Gestión de <span style={{ color: '#2563eb' }}>Usuarios</span>
+            Gestión de <span style={{ color: '#1f355a' }}>Usuarios</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             {lista.length} usuario{lista.length !== 1 ? 's' : ''} registrado{lista.length !== 1 ? 's' : ''}
@@ -55,7 +55,7 @@ export default async function UsuariosPage({
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   {u.rolNombre ? (
-                    <span style={{ padding: '3px 10px', background: '#eff6ff', color: '#2563eb', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                    <span style={{ padding: '3px 10px', background: '#eff1f3', color: '#1f355a', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                       {u.rolNombre}
                     </span>
                   ) : (
@@ -86,7 +86,7 @@ export default async function UsuariosPage({
                   )}
                   <Link
                     href={`/admin/usuarios/${u.id}`}
-                    style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
+                    style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', letterSpacing: '0.14em', textDecoration: 'none', textTransform: 'uppercase' }}
                   >
                     Editar →
                   </Link>

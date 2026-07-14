@@ -31,11 +31,11 @@ export default async function PrevencionLayout({ children }: { children: React.R
         </Link>
         <div style={{ width: 1, height: 16, background: '#e2e8f0' }} />
         <div>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase' }}>
             Prevención del Delito
           </span>
           <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>
-            ATENCIÓN A <span style={{ color: '#2563eb' }}>VÍCTIMAS</span>
+            ATENCIÓN A <span style={{ color: '#1f355a' }}>VÍCTIMAS</span>
           </span>
         </div>
 

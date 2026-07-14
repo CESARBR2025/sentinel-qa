@@ -28,9 +28,9 @@ export default async function DetenidosPage() {
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 }}>
           <div>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Reportes de Campo con Detenidos</span>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Reportes de Campo con Detenidos</span>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Detenidos</h1>
-            <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
+            <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
           </div>
           <BotonGenerarPpt pendientes={pendientes.length} completados={completadas.length} />
         </div>
@@ -67,7 +67,7 @@ export default async function DetenidosPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 20 }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 15, fontWeight: 700, color: '#1e40af' }}>{r.nombreDetenido}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 15, fontWeight: 700, color: '#172844' }}>{r.nombreDetenido}</span>
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', padding: '2px 8px', background: '#f1f5f9', borderRadius: 2 }}>
                       Folio: {r.folioDetenido || r.id.substring(0, 12)}
                     </span>
@@ -119,7 +119,7 @@ const btnDetalle: React.CSSProperties = {
 function fotoBadge(estado: string): React.CSSProperties {
   const base: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 8, fontWeight: 600, padding: '3px 8px', borderRadius: 2, display: 'inline-flex', alignItems: 'center', gap: 2 }
   if (estado === 'pendiente') return { ...base, background: '#fffbeb', color: '#b45309', border: '1px solid #fef3c7' }
-  if (estado === 'enviado') return { ...base, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #dbeafe' }
+  if (estado === 'enviado') return { ...base, background: '#eff1f3', color: '#1c3051', border: '1px solid #dbdfe5' }
   if (estado === 'rechazado') return { ...base, background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca' }
   if (estado === 'completado') return { ...base, background: '#f0fdf4', color: '#15803d', border: '1px solid #dcfce7' }
   return { ...base }

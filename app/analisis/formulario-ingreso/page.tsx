@@ -33,13 +33,13 @@ export default async function DespachoPage({
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: '32px' }}>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em' }}>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em' }}>
                 MÓDULO DE INTELIGENCIA Y ANÁLISIS
             </span>
             <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: '42px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-                REGISTRO NACIONAL DE <span style={{ color: '#3b82f6' }}>DETENIDOS (IPH)</span>
+                REGISTRO NACIONAL DE <span style={{ color: '#3e5171' }}>DETENIDOS (IPH)</span>
             </h1>
-            <div style={{ width: '40px', height: '4px', background: '#3b82f6' }}></div>
+            <div style={{ width: '40px', height: '4px', background: '#3e5171' }}></div>
         </div>
 
         <div className="animate-tactical">

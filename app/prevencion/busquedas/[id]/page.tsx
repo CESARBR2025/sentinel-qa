@@ -11,7 +11,7 @@ import { listarSeguimientos, obtenerFichaBusqueda } from '@/lib/prevencion/repos
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#991b1b' },
   PROTOCOLO_AMBAR:  { label: 'Protocolo Ambar',     color: '#854d0e' },
-  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#2563eb' },
+  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#1f355a' },
 }
 
 function toISO(v: Date | string): string {
@@ -43,7 +43,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
     <div>
       {/* Breadcrumb */}
       <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/busquedas" style={{ color: '#2563eb', textDecoration: 'none' }}>Búsquedas</Link>
+        <Link href="/prevencion/busquedas" style={{ color: '#1f355a', textDecoration: 'none' }}>Búsquedas</Link>
         <span>›</span>
         <span style={{ color: '#0f172a', fontWeight: 600 }}>{ficha.folio ?? ficha.id.slice(0, 8)}</span>
       </div>
@@ -71,7 +71,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link
             href={`/prevencion/busquedas/${id}/imprimir`}
-            style={{ padding: '9px 16px', background: '#ffffff', color: '#2563eb', border: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none', fontWeight: 600 }}
+            style={{ padding: '9px 16px', background: '#ffffff', color: '#1f355a', border: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none', fontWeight: 600 }}
           >
             Imprimir ficha →
           </Link>
@@ -105,7 +105,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
       {/* Timeline de seguimientos */}
       <div>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
           › Seguimientos de Tiempo ({seguimientos.length}/{24} registrados)
         </div>
 
@@ -130,7 +130,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 16 }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

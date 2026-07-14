@@ -1,4 +1,4 @@
-# Sentinel SSPM
+# Centinela SSPM
 
 Sistema de gestión de seguridad pública para la Secretaría de Seguridad Pública Municipal de San Juan del Río, Querétaro.
 

@@ -361,7 +361,7 @@ export default function Formulario911({ user, catalogos }: {
                             <input
                                 type="text"
                                 placeholder="Escribe una dirección para centrar el mapa..."
-                                style={{ marginBottom: '10px', borderLeft: '3px solid #3b82f6' }}
+                                style={{ marginBottom: '10px', borderLeft: '3px solid #3e5171' }}
                             />
                         </Autocomplete>
 
@@ -659,7 +659,7 @@ export default function Formulario911({ user, catalogos }: {
                     content: '';
                     width: 4px;
                     height: 18px;
-                    background: #3b82f6;
+                    background: #3e5171;
                     display: block;
                 }
 
@@ -696,7 +696,7 @@ export default function Formulario911({ user, catalogos }: {
                 }
                 input:focus, select:focus, textarea:focus {
                     outline: none;
-                    border-color: #3b82f6;
+                    border-color: #3e5171;
                     background: #fcfcfc;
                 }
 
@@ -729,8 +729,8 @@ export default function Formulario911({ user, catalogos }: {
 
                 .btn-secundario {
                     background: transparent;
-                    color: #3b82f6;
-                    border: 1px solid #3b82f6;
+                    color: #3e5171;
+                    border: 1px solid #3e5171;
                     padding: 6px 14px;
                     border-radius: 2px;
                     font-family: 'JetBrains Mono', monospace;
@@ -751,7 +751,7 @@ export default function Formulario911({ user, catalogos }: {
                     padding: 20px;
                     background: #f8fafc;
                     border: 1px solid #e2e8f0;
-                    border-left: 3px solid #3b82f6;
+                    border-left: 3px solid #3e5171;
                     border-radius: 2px;
                     margin-bottom: 12px;
                 }

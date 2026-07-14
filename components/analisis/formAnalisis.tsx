@@ -28,7 +28,7 @@ const SentinelField = ({ label, icon: Icon, name, value, onChange, as = 'input',
                         width: '100%',
                         padding: `12px 12px 12px ${Icon ? '40px' : '12px'}`,
                         border: '1px solid #e2e8f0',
-                        borderLeft: '4px solid #3b82f6',
+                        borderLeft: '4px solid #3e5171',
                         borderRadius: '2px',
                         fontFamily: 'Inter, sans-serif',
                         fontSize: '14px',
@@ -47,9 +47,9 @@ const ForceLevelToggle = ({ label, icon: Icon, name, checked, onChange, danger =
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '20px 24px',
-        background: checked ? (danger ? '#fef2f2' : '#eff6ff') : '#ffffff',
-        border: `1px solid ${checked ? (danger ? '#ef4444' : '#3b82f6') : '#e2e8f0'}`,
-        borderLeft: `6px solid ${checked ? (danger ? '#dc2626' : '#2563eb') : '#94a3b8'}`,
+        background: checked ? (danger ? '#fef2f2' : '#eff1f3') : '#ffffff',
+        border: `1px solid ${checked ? (danger ? '#ef4444' : '#3e5171') : '#e2e8f0'}`,
+        borderLeft: `6px solid ${checked ? (danger ? '#dc2626' : '#1f355a') : '#94a3b8'}`,
         borderRadius: '4px',
         cursor: 'pointer',
         transition: 'all 0.2s'
@@ -58,8 +58,8 @@ const ForceLevelToggle = ({ label, icon: Icon, name, checked, onChange, danger =
             <div style={{
                 width: '40px', height: '40px', borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: checked ? (danger ? '#fee2e2' : '#dbeafe') : '#f1f5f9',
-                color: checked ? (danger ? '#dc2626' : '#2563eb') : '#64748b'
+                background: checked ? (danger ? '#fee2e2' : '#dbdfe5') : '#f1f5f9',
+                color: checked ? (danger ? '#dc2626' : '#1f355a') : '#64748b'
             }}>
                 <Icon size={20} />
             </div>
@@ -239,7 +239,7 @@ console.log("RESPUESTA API:", d);
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap');
         .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; transition: all 0.3s; }
-        .step-dot.active { background: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .step-dot.active { background: #3e5171; box-shadow: 0 0 10px rgba(62, 81, 113, 0.5); }
       `}</style>
 
             {/* INDICADOR DE PASOS TÁCTICO */}
@@ -279,7 +279,7 @@ console.log("RESPUESTA API:", d);
             {step === 1 && (
                 <section className="sentinel-card" style={cardStyle}>
                     <div style={{ marginBottom: '32px' }}>
-                        <h2 style={titleStyle}>IDENTIFICACIÓN DEL <span style={{ color: '#3b82f6' }}>DETENIDO</span></h2>
+                        <h2 style={titleStyle}>IDENTIFICACIÓN DEL <span style={{ color: '#3e5171' }}>DETENIDO</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>Paso 1: Información básica y domicilio de origen.</p>
                     </div>
 
@@ -332,7 +332,7 @@ console.log("RESPUESTA API:", d);
             {step === 2 && (
                 <section className="sentinel-card" style={cardStyle}>
                     <div style={{ marginBottom: '32px' }}>
-                        <h2 style={titleStyle}>DATOS JURÍDICOS Y <span style={{ color: '#3b82f6' }}>LUGAR DE ARRESTO</span></h2>
+                        <h2 style={titleStyle}>DATOS JURÍDICOS Y <span style={{ color: '#3e5171' }}>LUGAR DE ARRESTO</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>Paso 2: Clasificación de la falta y geolocalización.</p>
                     </div>
 
@@ -375,7 +375,7 @@ console.log("RESPUESTA API:", d);
                         {/* SECCIÓN UBICACIÓN DEL ARRESTO */}
                         <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-                                <MapPin size={16} color="#3b82f6" />
+                                <MapPin size={16} color="#3e5171" />
                                 <h3 style={{ ...labelStyle, color: '#0f172a', margin: 0 }}>Ubicación del Arresto (Mapa Táctico)</h3>
                             </div>
 
@@ -470,7 +470,7 @@ console.log("RESPUESTA API:", d);
             {step === 3 && (
                 <section className="sentinel-card" style={cardStyle}>
                     <div style={{ marginBottom: '32px' }}>
-                        <h2 style={titleStyle}>NIVELES DEL <span style={{ color: '#3b82f6' }}>USO DE LA FUERZA</span></h2>
+                        <h2 style={titleStyle}>NIVELES DEL <span style={{ color: '#3e5171' }}>USO DE LA FUERZA</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>
                             Paso 3: Indique los niveles de control aplicados según la resistencia del ciudadano.
                         </p>
@@ -546,7 +546,7 @@ console.log("RESPUESTA API:", d);
             {step === 4 && (
                 <section className="sentinel-card" style={cardStyle}>
                     <div style={{ marginBottom: '32px' }}>
-                        <h2 style={titleStyle}>TIEMPOS Y <span style={{ color: '#3b82f6' }}>FOLIOS OFICIALES</span></h2>
+                        <h2 style={titleStyle}>TIEMPOS Y <span style={{ color: '#3e5171' }}>FOLIOS OFICIALES</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>
                             Paso 4: Registro de folios de control y cronología exacta del evento.
                         </p>
@@ -632,7 +632,7 @@ console.log("RESPUESTA API:", d);
             {step === 5 && (
                 <section className="sentinel-card" style={cardStyle}>
                     <div style={{ marginBottom: '32px' }}>
-                        <h2 style={titleStyle}>DETALLES DE LA <span style={{ color: '#3b82f6' }}>INTERVENCIÓN</span></h2>
+                        <h2 style={titleStyle}>DETALLES DE LA <span style={{ color: '#3e5171' }}>INTERVENCIÓN</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>
                             Paso 5: Clasificación del delito, ubicación del hecho y datos de la unidad responsable.
                         </p>
@@ -655,7 +655,7 @@ console.log("RESPUESTA API:", d);
                         <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <MapPin size={16} color="#3b82f6" />
+                                    <MapPin size={16} color="#3e5171" />
                                     <h3 style={{ ...labelStyle, color: '#0f172a', margin: 0 }}>Ubicación del Hecho (Mapa Táctico)</h3>
                                 </div>
 
@@ -739,7 +739,7 @@ console.log("RESPUESTA API:", d);
 
             {step === 6 && (
                 <section style={cardStyle}>
-                    <h2 style={titleStyle}>06. AFECTADOS Y CIERRE <span style={{ color: '#3b82f6' }}>JUDICIAL</span></h2>
+                    <h2 style={titleStyle}>06. AFECTADOS Y CIERRE <span style={{ color: '#3e5171' }}>JUDICIAL</span></h2>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px', padding: '15px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
                             <SentinelField label="Nombre del Afectado" name="nombreAfectado" icon={User} value={formData.nombreAfectado} onChange={handleChange} />
@@ -780,8 +780,8 @@ const StepIndicator = ({ label, active }: any) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <div style={{
             width: '8px', height: '8px', borderRadius: '50%',
-            background: active ? '#3b82f6' : '#e2e8f0',
-            boxShadow: active ? '0 0 10px rgba(59, 130, 246, 0.5)' : 'none'
+            background: active ? '#3e5171' : '#e2e8f0',
+            boxShadow: active ? '0 0 10px rgba(62, 81, 113, 0.5)' : 'none'
         }} />
         <span style={{
             fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700,
@@ -807,7 +807,7 @@ const btnBackStyle = {
     display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer'
 };
 const btnGeoStyle = {
-    background: '#eff6ff', color: '#2563eb', border: '1px solid #dbeafe', padding: '12px 20px',
+    background: '#eff1f3', color: '#1f355a', border: '1px solid #dbdfe5', padding: '12px 20px',
     fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, borderRadius: '2px',
     display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', width: '100%', height: '46px'
 };

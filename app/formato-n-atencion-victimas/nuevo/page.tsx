@@ -66,7 +66,7 @@ export default function NuevoFormatoNAtencionVictimasPage() {
           <div style={{ marginBottom: 24, padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'Inter', fontSize: 12, color: '#dc2626', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div>⚠ {error.msg}</div>
             {error.existenteId && (
-              <Link href={`/formato-n-atencion-victimas/${error.existenteId}`} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2563eb', textDecoration: 'underline' }}>
+              <Link href={`/formato-n-atencion-victimas/${error.existenteId}`} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1f355a', textDecoration: 'underline' }}>
                 → Ir a editar el reporte existente
               </Link>
             )}

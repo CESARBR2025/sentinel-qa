@@ -38,9 +38,9 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
 
         {/* Encabezado */}
         <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>REPORTE DE CAMPO</span>
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>REPORTE DE CAMPO</span>
           <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, margin: '4px 0 0', color: '#0f172a', textTransform: 'uppercase' }}>
-            <span style={{ color: '#2563eb' }}>{r.folioReporteCampo || r.ofiFolioCad || 'S/C'}</span>
+            <span style={{ color: '#1f355a' }}>{r.folioReporteCampo || r.ofiFolioCad || 'S/C'}</span>
           </h1>
           <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', marginTop: 4 }}>
             Folio CAD: {r.ofiFolioCad || 'S/C'}

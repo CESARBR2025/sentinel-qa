@@ -112,11 +112,11 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
         </Link>
 
         <div style={{ marginBottom: 28 }}>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
             <Radio size={12} /> Rondín · Escala a Despacho
           </span>
           <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 30, textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a' }}>
-            REPORTE DE <span style={{ color: '#2563eb' }}>RONDÍN</span>
+            REPORTE DE <span style={{ color: '#1f355a' }}>RONDÍN</span>
           </h1>
           <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#64748b', margin: '8px 0 0 0', lineHeight: 1.5 }}>
             Este reporte genera una <strong>solicitud de despacho</strong>. Despacho asignará unidades y el oficial en sitio capturará el resultado al cerrar.
@@ -133,7 +133,7 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
           {/* Origen */}
           <Seccion titulo="Origen">
             <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 12, marginBottom: 8 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, padding: '6px 14px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 2, color: '#1d4ed8' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, padding: '6px 14px', background: '#eff1f3', border: '1px solid #c3c8d2', borderRadius: 2, color: '#1c3051' }}>
                 <span style={{ fontWeight: 600, letterSpacing: '0.05em' }}>FOLIO</span>
                 <span style={{ fontWeight: 700 }}>{folio}</span>
               </div>
@@ -215,7 +215,7 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
             </Campo>
             <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 6 }}>
               <button type="button" onClick={obtenerUbicacion} disabled={obteniendoUbicacion}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 18px', background: obteniendoUbicacion ? '#e2e8f0' : '#f8fafc', color: obteniendoUbicacion ? '#94a3b8' : '#2563eb', border: `1px solid ${obteniendoUbicacion ? '#e2e8f0' : '#2563eb'}`, borderRadius: 2, cursor: obteniendoUbicacion ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'all .15s' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 18px', background: obteniendoUbicacion ? '#e2e8f0' : '#f8fafc', color: obteniendoUbicacion ? '#94a3b8' : '#1f355a', border: `1px solid ${obteniendoUbicacion ? '#e2e8f0' : '#1f355a'}`, borderRadius: 2, cursor: obteniendoUbicacion ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'all .15s' }}>
                 {obteniendoUbicacion ? <Loader2 size={14} /> : <Crosshair size={14} />}
                 {obteniendoUbicacion ? 'OBTENIENDO UBICACIÓN…' : 'OBTENER UBICACIÓN ACTUAL'}
               </button>
@@ -236,7 +236,7 @@ function SubmitButton() {
   const { pending } = useFormStatus()
   return (
     <button type="submit" disabled={pending}
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', background: pending ? '#93c5fd' : '#2563eb', color: '#ffffff', border: 'none', borderRadius: 2, cursor: pending ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 16, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', background: pending ? '#98a2b3' : '#1f355a', color: '#ffffff', border: 'none', borderRadius: 2, cursor: pending ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 16, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
       {pending ? <><Loader2 size={15} /> ESCALANDO…</> : <><MapPin size={15} /> ESCALAR A DESPACHO</>}
     </button>
   )
@@ -246,7 +246,7 @@ function Seccion({ titulo, children }: { titulo: string; children: React.ReactNo
   return (
     <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '20px 24px' }}>
       <h2 style={{ fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 17, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#0f172a', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <MapPin size={14} color="#2563eb" /> {titulo}
+        <MapPin size={14} color="#1f355a" /> {titulo}
       </h2>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         {children}
@@ -268,6 +268,6 @@ function Campo({ label, requerido, ancho, children }: { label: string; requerido
 
 const inputStyle: React.CSSProperties = {
   fontFamily: 'Inter', fontSize: 13, padding: '9px 12px',
-  border: '1px solid #e2e8f0', borderLeft: '3px solid #2563eb',
+  border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
   borderRadius: 2, background: '#ffffff', color: '#1e293b', outline: 'none', width: '100%',
 }

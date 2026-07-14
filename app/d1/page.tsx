@@ -32,7 +32,7 @@ export default async function ReportesD1Page({
                 <div style={styles.headerContainer}>
                     <div>
                         <span style={styles.tag}>SSPM · SISTEMA DE DENUNCIA D1</span>
-                        <h1 style={styles.title}>REGISTRO DE <span style={{ color: '#2563EB' }}>REPORTES D1</span></h1>
+                        <h1 style={styles.title}>REGISTRO DE <span style={{ color: '#1f355a' }}>REPORTES D1</span></h1>
                     </div>
                 </div>
                 <D1Filters />

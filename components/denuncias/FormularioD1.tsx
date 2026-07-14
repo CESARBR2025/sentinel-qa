@@ -255,7 +255,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
           {/* MAPA 2: LUGAR DE SOLICITUD DE APOYO */}
           <div style={subPanelStyle}>
-            <h3 style={subTitleStyle}><Shield size={14} color="#2563eb" /> 2. LUGAR DE SOLICITUD DE APOYO</h3>
+            <h3 style={subTitleStyle}><Shield size={14} color="#1f355a" /> 2. LUGAR DE SOLICITUD DE APOYO</h3>
             <div style={mapWrapperStyle}>
               {isLoaded ? (
                 <GoogleMap mapContainerStyle={mapContainerStyle} center={coordsApoyo} zoom={15}
@@ -418,7 +418,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
       <style jsx>{`
         .sentinel-panel {
-          background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb;
+          background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #1f355a;
           padding: 32px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
       `}</style>
@@ -474,7 +474,7 @@ const loaderStyle = {
   color: '#64748b'
 };
 
-const btnNextStyle = { background: '#2563eb', color: '#ffffff', padding: '16px 32px', border: 'none', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };
+const btnNextStyle = { background: '#1f355a', color: '#ffffff', padding: '16px 32px', border: 'none', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };
 const btnBackStyle = { background: '#ffffff', color: '#64748b', padding: '16px 32px', border: '1px solid #e2e8f0', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };
 // Modifica tu btnSubmitStyle actual para que sea verde (opcional):
 const btnSubmitStyle = { background: '#059669', color: '#ffffff', padding: '16px 40px', border: 'none', borderRadius: '4px', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' };

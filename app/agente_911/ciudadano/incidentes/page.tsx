@@ -44,7 +44,7 @@ export default async function Listado911Page({
     const TABS: { key: string; label: string; color: string; count: number }[] = [
         { key: '', label: 'TODOS', color: '#64748b', count: totalGeneral },
         { key: 'sin_despachar', label: 'SIN DESPACHAR', color: '#b45309', count: mapaConteos.sin_despachar || 0 },
-        { key: 'en_despacho', label: 'EN DESPACHO', color: '#1d4ed8', count: mapaConteos.en_despacho || 0 },
+        { key: 'en_despacho', label: 'EN DESPACHO', color: '#1c3051', count: mapaConteos.en_despacho || 0 },
         { key: 'en_sitio', label: 'EN SITIO', color: '#0f766e', count: mapaConteos.en_sitio || 0 },
         { key: 'atendido', label: 'ATENDIDO', color: '#15803d', count: mapaConteos.atendido || 0 },
         { key: 'cerrado_detencion', label: 'CERRADO DET', color: '#7c3aed', count: mapaConteos.cerrado_detencion || 0 },
@@ -58,7 +58,7 @@ export default async function Listado911Page({
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
                 .fila-incidente { transition: background 0.15s ease; }
                 .fila-incidente:hover { background: #f8fafc; }
-                .fila-incidente:hover .btn-ver-ficha { color: #1d4ed8; }
+                .fila-incidente:hover .btn-ver-ficha { color: #1c3051; }
             `}</style>
 
             {/* Header */}
@@ -67,7 +67,7 @@ export default async function Listado911Page({
                 padding: '24px 48px', borderBottom: '1px solid #e2e8f0', position: 'relative',
                 background: '#ffffff',
             }}>
-                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#2563eb' }} />
+                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#1f355a' }} />
 
                 <div>
                     <Link href="/agente_911" style={{
@@ -79,14 +79,14 @@ export default async function Listado911Page({
                     </Link>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                        <img src="/logo_sentinel.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
+                        <img src="/chaleco.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
                         <div>
-                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <span style={{ width: 8, height: 8, background: '#2563eb', display: 'inline-block' }} />
+                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
                                 Atención 911
                             </div>
                             <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                                BITÁCORA <span style={{ color: '#2563eb' }}>CENTRAL 911</span>
+                                BITÁCORA <span style={{ color: '#1f355a' }}>CENTRAL 911</span>
                             </h1>
                         </div>
                     </div>
@@ -249,7 +249,7 @@ export default async function Listado911Page({
             </main>
 
             <footer style={footerStyle}>
-                SISTEMA SENTINEL · ATENCIÓN CIUDADANA 911 · {new Date().getFullYear()}
+                SISTEMA CENTINELA · ATENCIÓN CIUDADANA 911 · {new Date().getFullYear()}
             </footer>
         </div>
     );
@@ -267,7 +267,7 @@ const sectionTitleStyle: React.CSSProperties = {
     display: 'flex', alignItems: 'center', gap: '12px'
 };
 
-const decoratorStyle = { width: '4px', height: '18px', background: '#3b82f6' };
+const decoratorStyle = { width: '4px', height: '18px', background: '#3e5171' };
 
 const thStyle: React.CSSProperties = {
     padding: '16px 12px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: '10px',
@@ -281,7 +281,7 @@ const tdStyle: React.CSSProperties = {
 };
 
 const btnViewStyle: React.CSSProperties = {
-    display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#2563eb',
+    display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#1f355a',
     fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 600, 
     textDecoration: 'none', textTransform: 'uppercase'
 };
@@ -299,7 +299,7 @@ function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     };
     switch (estatus) {
         case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
-        case 'en_despacho':   return { ...base, background: '#eff6ff', color: '#1d4ed8', borderColor: '#dbeafe' }; 
+        case 'en_despacho':   return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' }; 
         case 'en_sitio':      return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' }; 
         case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
         case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' }; 

@@ -97,7 +97,7 @@ export default async function AgregarRolPage() {
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div
               style={{
-                color: "#2563eb",
+                color: "#1f355a",
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "11px",
                 fontWeight: 700,
@@ -108,7 +108,7 @@ export default async function AgregarRolPage() {
                 gap: '8px'
               }}
             >
-              <span style={{ width: '12px', height: '2px', background: '#2563eb' }}></span>
+              <span style={{ width: '12px', height: '2px', background: '#1f355a' }}></span>
               Administración del Sistema y Seguridad
             </div>
 
@@ -124,7 +124,7 @@ export default async function AgregarRolPage() {
                 lineHeight: 1
               }}
             >
-              Crear Nuevo <span style={{ color: "#2563eb" }}>Rol Operativo</span>
+              Crear Nuevo <span style={{ color: "#1f355a" }}>Rol Operativo</span>
             </h1>
 
             <p

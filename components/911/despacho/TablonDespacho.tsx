@@ -64,7 +64,7 @@ export function TablonDespacho() {
       <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #e2e8f0', paddingBottom: 24 }}>
         <div>
           <span style={labelTopStyle}>CENTRO DE MANDO Y COMUNICACIONES</span>
-          <h1 style={titleStyle}>MÓDULO DE <span style={{ color: '#2563eb' }}>DESPACHO</span></h1>
+          <h1 style={titleStyle}>MÓDULO DE <span style={{ color: '#1f355a' }}>DESPACHO</span></h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {tab === 'pendientes' && (
@@ -89,7 +89,7 @@ export function TablonDespacho() {
       <div style={{ display: 'flex', gap: 4, marginBottom: 24 }}>
         {([
           { key: 'pendientes',  label: 'Pendientes',   icon: <AlertTriangle size={13} />, color: '#b45309', bg: '#fef3c7', border: '#fde68a' },
-          { key: 'en_despacho', label: 'En despacho',  icon: <Shield size={13} />,        color: '#1d4ed8', bg: '#eff6ff', border: '#bfdbfe' },
+          { key: 'en_despacho', label: 'En despacho',  icon: <Shield size={13} />,        color: '#1c3051', bg: '#eff1f3', border: '#c3c8d2' },
           { key: 'atendidos',   label: 'Atendidos',    icon: <CheckCircle2 size={13} />,  color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
         ] as const).map(t => (
           <button key={t.key} onClick={() => cambiarTab(t.key as Tab)}
@@ -175,7 +175,7 @@ export function TablonDespacho() {
                             ({inc.prioritarioNomina || inc.elementos?.find(e => e.esPrioritario)?.nomina})
                           </span>
                         )}
-                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
                           PRIORITARIO
                         </span>
                       </div>
@@ -189,7 +189,7 @@ export function TablonDespacho() {
                         <label style={labelStyle}>UNIDADES ASIGNADAS</label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                           {inc.unidades.map((u, i) => (
-                            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff6ff', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#bfdbfe'}`, color: u.esRefuerzo ? '#c2410c' : '#1d4ed8', borderRadius: 2 }}>
+                            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff1f3', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#c3c8d2'}`, color: u.esRefuerzo ? '#c2410c' : '#1c3051', borderRadius: 2 }}>
                               {u.placa || '—'}{u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
                             </span>
                           ))}
@@ -201,7 +201,7 @@ export function TablonDespacho() {
                           {inc.elementos.map((e, i) => (
                             <div key={i} style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b', display: 'flex', alignItems: 'center', gap: 6 }}>
                               <span>{e.nombre || '—'} <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b' }}>({e.nomina || 's/n'})</span></span>
-                              {e.esPrioritario && <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>PRIORITARIO</span>}
+                              {e.esPrioritario && <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>PRIORITARIO</span>}
                               {e.esRefuerzo && <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#fff7ed', color: '#c2410c', border: '1px solid #fed7aa', borderRadius: 2 }}>REFUERZO</span>}
                             </div>
                           ))}
@@ -226,7 +226,7 @@ export function TablonDespacho() {
                         </span>
                       )}
                       {inc.ofiAutoridadRecibe === 'FISCALIA' && (
-                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 2 }}>
+                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
                           DERIVADO A FGE
                         </span>
                       )}
@@ -257,7 +257,7 @@ export function TablonDespacho() {
                   {/* Link a ficha completa */}
                   <div>
                     <Link href={inc.canal === 'whatsapp' ? `/agente_911/whatsapp/incidentes/${inc.id}` : inc.canal === 'radio' ? `/agente_911/rondin/incidentes/${inc.id}` : `/agente_911/ciudadano/incidentes/${inc.id}`}
-                      style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.1em' }}>
+                      style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.1em' }}>
                       VER FICHA COMPLETA →
                     </Link>
                   </div>
@@ -300,7 +300,7 @@ function CanalBadge({ canal }: { canal: string }) {
   const config: Record<string, { icon: React.ReactNode; color: string; bg: string; border: string }> = {
     '911':      { icon: <Phone size={11} />,         color: '#dc2626', bg: '#fef2f2', border: '#fecaca' },
     'whatsapp': { icon: <MessageSquare size={11} />, color: '#059669', bg: '#f0fdf4', border: '#bbf7d0' },
-    'radio':    { icon: <Radio size={11} />,         color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
+    'radio':    { icon: <Radio size={11} />,         color: '#1f355a', bg: '#eff1f3', border: '#c3c8d2' },
   }
   const c = config[canal] ?? { icon: null, color: '#64748b', bg: '#f8fafc', border: '#e2e8f0' }
   return (
@@ -310,7 +310,7 @@ function CanalBadge({ canal }: { canal: string }) {
   )
 }
 
-const labelTopStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2563eb', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }
+const labelTopStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }
 const titleStyle: React.CSSProperties    = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 36, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' }
 const btnBackStyle: React.CSSProperties  = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textDecoration: 'none', letterSpacing: '0.1em' }
 const labelStyle: React.CSSProperties   = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }

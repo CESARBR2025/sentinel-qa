@@ -43,9 +43,9 @@ export const RolField = ({ label, icon: Icon, as = 'input', children, ...props }
           }}
           // Efecto de foco vía CSS inline o Tailwind
           onFocus={(e: any) => {
-            e.target.style.borderColor = '#3b82f6';
-            e.target.style.borderLeftColor = '#2563eb';
-            e.target.style.boxShadow = '0 0 0 1px rgba(59, 130, 246, 0.1)';
+            e.target.style.borderColor = '#3e5171';
+            e.target.style.borderLeftColor = '#1f355a';
+            e.target.style.boxShadow = '0 0 0 1px rgba(62, 81, 113, 0.1)';
           }}
           onBlur={(e: any) => {
             e.target.style.borderColor = '#e2e8f0';

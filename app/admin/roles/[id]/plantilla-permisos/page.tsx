@@ -29,7 +29,7 @@ export default async function PlantillaPermisosRolPage({
       <div style={{ marginBottom: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: '0 0 4px' }}>
-            Plantilla de <span style={{ color: '#2563eb' }}>{rol.nombre}</span>
+            Plantilla de <span style={{ color: '#1f355a' }}>{rol.nombre}</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             Se aplica automáticamente al asignar este rol a un usuario

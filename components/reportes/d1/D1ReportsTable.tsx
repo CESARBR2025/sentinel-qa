@@ -30,7 +30,7 @@ export function D1ReportsTable({ data }: { data: any[] }) {
                 {/* ENCABEZADO DE TABLA (Igual a tu ejemplo de teléfonos) */}
                 <div style={styles.tableHeader}>
                     <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '22px', fontWeight: 700 }}>
-                        <span style={{ color: '#2563EB', marginRight: '8px' }}>|</span> REGISTRO OPERATIVO D1
+                        <span style={{ color: '#1f355a', marginRight: '8px' }}>|</span> REGISTRO OPERATIVO D1
                     </h3>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ position: 'relative' }}>
@@ -88,7 +88,7 @@ export function D1ReportsTable({ data }: { data: any[] }) {
                                         {item.oficialNombre !== '—' && <div style={{ fontSize: 10, color: '#94A3B8' }}>{item.oficialNombre}</div>}
                                     </td>
                                     <td style={styles.td}>
-                                        <span style={{ background: item.estadoTramite === 'RECIBIDA' ? '#DBEAFE' : item.estadoTramite === 'EN_PROCESO' ? '#FEF3C7' : '#DCFCE7', color: item.estadoTramite === 'RECIBIDA' ? '#1D4ED8' : item.estadoTramite === 'EN_PROCESO' ? '#B45309' : '#15803D', padding: '3px 8px', borderRadius: 2, fontSize: 9, fontFamily: 'JetBrains Mono', fontWeight: 700, display: 'inline-block', marginBottom: 4 }}>
+                                        <span style={{ background: item.estadoTramite === 'RECIBIDA' ? '#dbdfe5' : item.estadoTramite === 'EN_PROCESO' ? '#FEF3C7' : '#DCFCE7', color: item.estadoTramite === 'RECIBIDA' ? '#1c3051' : item.estadoTramite === 'EN_PROCESO' ? '#B45309' : '#15803D', padding: '3px 8px', borderRadius: 2, fontSize: 9, fontFamily: 'JetBrains Mono', fontWeight: 700, display: 'inline-block', marginBottom: 4 }}>
                                             {item.estadoTramite}
                                         </span>
                                         {item.seGeneroD1 && (

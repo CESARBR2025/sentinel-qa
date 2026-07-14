@@ -46,9 +46,9 @@ export default function NuevaDetenidoPage() {
 
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Captura de Datos</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Captura de Datos</span>
           <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Nuevo Reporte de Detenido</h1>
-          <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
+          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
         </div>
 
         <form onSubmit={handleSubmit} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}>

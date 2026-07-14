@@ -18,10 +18,10 @@ export default async function HistorialPage() {
   const user = session.user as { name: string; apellido?: string }
 
   const accionLabel: Record<string, { label: string; icon: React.ReactNode }> = {
-    evidencia_subida: { label: 'Evidencia subida', icon: <Camera size={14} color="#2563eb" /> },
+    evidencia_subida: { label: 'Evidencia subida', icon: <Camera size={14} color="#1f355a" /> },
     solicitud_completada: { label: 'Solicitud completada', icon: <CheckCircle2 size={14} color="#059669" /> },
     solicitud_cancelada: { label: 'Solicitud cancelada', icon: <XCircle size={14} color="#dc2626" /> },
-    incidente_creado: { label: 'Incidente por cámara creado', icon: <Plus size={14} color="#2563eb" /> },
+    incidente_creado: { label: 'Incidente por cámara creado', icon: <Plus size={14} color="#1f355a" /> },
     incidente_editado: { label: 'Incidente por cámara editado', icon: <Edit size={14} color="#b45309" /> },
     campo_editado: { label: 'Campo de detenido editado', icon: <PenBox size={14} color="#7c3aed" /> },
     ppt_generado: { label: 'PPT de detenidos generado', icon: <FileText size={14} color="#059669" /> },
@@ -42,9 +42,9 @@ export default async function HistorialPage() {
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#2563eb', textTransform: 'uppercase', fontWeight: 700 }}>Registro de Actividad</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Registro de Actividad</span>
           <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Historial</h1>
-          <div style={{ width: 64, height: 3, background: '#2563eb', marginTop: 12 }} />
+          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
         </div>
 
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>

@@ -35,7 +35,7 @@ export function UnidadAsignadaSection({
           marginBottom: 24,
         }}
       >
-        <Car size={18} color="#2563eb" />
+        <Car size={18} color="#1f355a" />
         <h2
           style={{
             fontFamily: "Barlow Condensed,sans-serif",
@@ -161,8 +161,8 @@ export function UnidadAsignadaSection({
                 transition: "all 0.15s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#2563eb";
-                e.currentTarget.style.color = "#2563eb";
+                e.currentTarget.style.borderColor = "#1f355a";
+                e.currentTarget.style.color = "#1f355a";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = "#e2e8f0";
@@ -221,8 +221,8 @@ export function UnidadAsignadaSection({
                 alignItems: "center",
                 gap: 8,
                 padding: "10px 20px",
-                border: "1px solid #2563eb",
-                background: "#2563eb",
+                border: "1px solid #1f355a",
+                background: "#1f355a",
                 cursor: "pointer",
                 fontFamily: "Inter,sans-serif",
                 fontSize: 12,
@@ -231,10 +231,10 @@ export function UnidadAsignadaSection({
                 transition: "all 0.15s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#1d4ed8";
+                e.currentTarget.style.background = "#1c3051";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#2563eb";
+                e.currentTarget.style.background = "#1f355a";
               }}
             >
               Asignar Unidad

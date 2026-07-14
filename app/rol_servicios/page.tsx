@@ -17,7 +17,7 @@ export default function ModuloRolZen() {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       {/* BARRA SUPERIOR (ESTILO SENTINEL - LIGHT VERSION) */}
-      <SubHeader backHref="/dashboard" backLabel="Dashboard" title="Rol de" accent="Servicios" accentColor="#3b82f6" />
+      <SubHeader backHref="/dashboard" backLabel="Dashboard" title="Rol de" accent="Servicios" accentColor="#3e5171" />
 
       {/* CONTENIDO PRINCIPAL */}
       <main style={{ padding: '40px 48px' }}>
@@ -141,7 +141,7 @@ export default function ModuloRolZen() {
           content: '';
           width: 4px;
           height: 18px;
-          background: #3b82f6;
+          background: #3e5171;
           display: inline-block;
         }
       `}</style>
