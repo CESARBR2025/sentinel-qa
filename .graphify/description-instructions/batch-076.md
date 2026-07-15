@@ -17,6 +17,15 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "infracciones_types_articulosinterfaceprops": "ArticulosInterfaceProps" | kind=code-symbol | source=features/via/infracciones/types.ts:L192 | neighbors=[types.ts]
+- "infracciones_types_viewbuscaridarticulo": "ViewBuscarIDArticulo" | kind=code-symbol | source=features/via/infracciones/types.ts:L187 | neighbors=[types.ts]
+- "infracciones_types_viewfraccionlista": "ViewFraccionLista" | kind=code-symbol | source=features/via/infracciones/types.ts:L169 | neighbors=[types.ts]
+- "infraccionid_route_get": "GET()" | kind=code-symbol | source=app/api/via/pagos/finalizar-instante/[ordenPagoId]/[infraccionId]/route.ts:L5 | neighbors=[route.ts]
+- "iniciar_proceso_route_patch": "PATCH()" | kind=code-symbol | source=app/api/via/infracciones/iniciar-proceso/route.ts:L16 | neighbors=[route.ts]
+- "iniciar_solicitud_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/iniciar-solicitud/route.ts:L5 | neighbors=[route.ts]
+- "iniciarproceso_route_patch": "PATCH()" | kind=code-symbol | source=app/api/agente_juzgado/iniciarProceso/route.ts:L7 | neighbors=[route.ts]
+- "iph_bitacoraiph_bitacoraiph": "BitacoraIPH()" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L8 | neighbors=[BitacoraIPH.tsx]
+- "iph_bitacoraiph_btnpptstyle": "btnPPTStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L99 | neighbors=[BitacoraIPH.tsx]
 - "iph_bitacoraiph_btnstyle": "btnStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L92 | neighbors=[BitacoraIPH.tsx]
 - "iph_bitacoraiph_containerstyle": "containerStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L85 | neighbors=[BitacoraIPH.tsx]
 - "iph_bitacoraiph_headerrowstyle": "headerRowStyle" | kind=code-symbol | source=components/analisis/iph/BitacoraIPH.tsx:L86 | neighbors=[BitacoraIPH.tsx]
@@ -45,18 +54,9 @@ one-sentence description — no prose, no markdown fences.
 - "lib_error_handler_notfounderror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L13 | neighbors=[NotFoundError]
 - "lib_error_handler_unauthorizederror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L25 | neighbors=[UnauthorizedError]
 - "lib_error_handler_validationerror_constructor": ".constructor()" | kind=code-symbol | source=lib/error-handler.ts:L19 | neighbors=[ValidationError]
-- "liberaciones_page_liberacionesjuzgadopage": "LiberacionesJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/liberaciones/page.tsx:L5 | neighbors=[page.tsx]
-- "liberaciones_page_liberacionespage": "LiberacionesPage()" | kind=code-symbol | source=app/fiscalia/liberaciones/page.tsx:L5 | neighbors=[page.tsx]
+- "liberaciones_page_liberacionesjuzgadopage": "LiberacionesJuzgadoPage()" | kind=code-symbol | source=app/agente_juzgado/liberaciones/page.tsx:L6 | neighbors=[page.tsx]
+- "liberaciones_page_liberacionespage": "LiberacionesPage()" | kind=code-symbol | source=app/fiscalia/liberaciones/page.tsx:L6 | neighbors=[page.tsx]
 - "liberar_garantia_route_patch": "PATCH()" | kind=code-symbol | source=app/api/via/infracciones/liberar-garantia/route.ts:L7 | neighbors=[route.ts]
-- "listar_route_get": "GET()" | kind=code-symbol | source=app/api/detenidos/listar/route.ts:L6 | neighbors=[route.ts]
-- "login_desing_app_app": "App()" | kind=code-symbol | source=login-desing/app.jsx:L9 | neighbors=[app.jsx]
-- "login_desing_app_applyglobaltweaks": "applyGlobalTweaks()" | kind=code-symbol | source=login-desing/app.jsx:L211 | neighbors=[app.jsx]
-- "login_desing_app_appwitheffects": "AppWithEffects()" | kind=code-symbol | source=login-desing/app.jsx:L223 | neighbors=[app.jsx]
-- "login_desing_app_nextstepscard": "NextStepsCard()" | kind=code-symbol | source=login-desing/app.jsx:L139 | neighbors=[app.jsx]
-- "login_desing_app_palettecard": "PaletteCard()" | kind=code-symbol | source=login-desing/app.jsx:L87 | neighbors=[app.jsx]
-- "login_desing_app_tweaks": "TWEAKS" | kind=code-symbol | source=login-desing/app.jsx:L3 | neighbors=[app.jsx]
-- "login_desing_app_tweakspanel": "TweaksPanel()" | kind=code-symbol | source=login-desing/app.jsx:L167 | neighbors=[app.jsx]
-- "login_desing_app_typecard": "TypeCard()" | kind=code-symbol | source=login-desing/app.jsx:L115 | neighbors=[app.jsx]
 
 ## Instructions
 

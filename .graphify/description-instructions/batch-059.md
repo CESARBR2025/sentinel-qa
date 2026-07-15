@@ -17,6 +17,15 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_infracciones_storecapturainfractor_initialstate": "initialState" | kind=code-symbol | source=lib/agente_infracciones/storeCapturaInfractor.ts:L38 | neighbors=[storeCapturaInfractor.ts]
+- "agente_juzgado_actions_aseguradosjuzgadodata": "AseguradosJuzgadoData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L365 | neighbors=[actions.ts]
+- "agente_juzgado_actions_liberacionesdata": "LiberacionesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L249 | neighbors=[actions.ts]
+- "agente_juzgado_actions_obtenerdatosaseguradoaction": "obtenerDatosAseguradoAction()" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L165 | neighbors=[actions.ts]
+- "agente_juzgado_actions_solicitudesdata": "SolicitudesData" | kind=code-symbol | source=lib/agente_juzgado/actions.ts:L56 | neighbors=[actions.ts]
+- "agente_juzgado_botonverdetalle_botonverdetalleprops": "BotonVerDetalleProps" | kind=code-symbol | source=components/agente_juzgado/BotonVerDetalle.tsx:L6 | neighbors=[BotonVerDetalle.tsx]
+- "agente_juzgado_capturardetallesform_disabledsx": "disabledSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L33 | neighbors=[CapturarDetallesForm.tsx]
+- "agente_juzgado_capturardetallesform_evidenciaitem": "EvidenciaItem" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L45 | neighbors=[CapturarDetallesForm.tsx]
+- "agente_juzgado_capturardetallesform_inputsx": "inputSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L21 | neighbors=[CapturarDetallesForm.tsx]
 - "agente_juzgado_capturardetallesform_labelsx": "labelSx" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L11 | neighbors=[CapturarDetallesForm.tsx]
 - "agente_juzgado_capturardetallesform_props": "Props" | kind=code-symbol | source=components/agente_juzgado/CapturarDetallesForm.tsx:L57 | neighbors=[CapturarDetallesForm.tsx]
 - "agente_juzgado_cargaroficiosection_campo": "Campo()" | kind=code-symbol | source=components/agente_juzgado/CargarOficioSection.tsx:L455 | neighbors=[CargarOficioSection.tsx]
@@ -48,15 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_juzgado_juzgadotable_datarow": "DataRow" | kind=code-symbol | source=components/agente_juzgado/JuzgadoTable.tsx:L5 | neighbors=[JuzgadoTable.tsx]
 - "agente_juzgado_juzgadotable_juzgadotableprops": "JuzgadoTableProps" | kind=code-symbol | source=components/agente_juzgado/JuzgadoTable.tsx:L16 | neighbors=[JuzgadoTable.tsx]
 - "agente_juzgado_mapper_bool": "bool()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L8 | neighbors=[mapper.ts]
-- "agente_juzgado_mapper_str": "str()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L3 | neighbors=[mapper.ts]
-- "agente_juzgado_page_juzgadodashboardpage": "JuzgadoDashboardPage()" | kind=code-symbol | source=app/agente_juzgado/page.tsx:L8 | neighbors=[page.tsx]
-- "agente_juzgado_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L5 | neighbors=[permisos.ts]
-- "agente_juzgado_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L12 | neighbors=[permisos.ts]
-- "agente_juzgado_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L20 | neighbors=[permisos.ts]
-- "agente_juzgado_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L16 | neighbors=[permisos.ts]
-- "agente_juzgado_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L6 | neighbors=[permisos.ts]
-- "agente_juzgado_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L4 | neighbors=[permisos.ts]
-- "agente_juzgado_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L3 | neighbors=[permisos.ts]
 
 ## Instructions
 

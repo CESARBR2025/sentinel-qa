@@ -31,7 +31,7 @@ export default async function MonitoristaHubPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <DashboardHeader user={user as { name: string; apellido?: string; email: string }} backHref={backHref} />
+      <DashboardHeader user={user as { name: string; apellido?: string; email: string }} roleLabel="Monitorista" backHref={backHref} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 40 }}>

@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "scripts_extract_domain_root": "ROOT" | kind=code-symbol | source=scripts/extract-domain.mjs:L9 | neighbors=[extract-domain.mjs]
+- "scripts_load_context_context_map": "CONTEXT_MAP" | kind=code-symbol | source=scripts/load-context.mjs:L11 | neighbors=[load-context.mjs]
+- "scripts_load_context_dirname": "__dirname" | kind=code-symbol | source=scripts/load-context.mjs:L9 | neighbors=[load-context.mjs]
+- "scripts_load_context_graph_json": "GRAPH_JSON" | kind=code-symbol | source=scripts/load-context.mjs:L12 | neighbors=[load-context.mjs]
+- "scripts_load_context_keywords": "KEYWORDS" | kind=code-symbol | source=scripts/load-context.mjs:L14 | neighbors=[load-context.mjs]
+- "scripts_load_context_root": "ROOT" | kind=code-symbol | source=scripts/load-context.mjs:L10 | neighbors=[load-context.mjs]
+- "scripts_populate_vault_cwd": "CWD" | kind=code-symbol | source=scripts/populate-vault.mjs:L12 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_dirname": "__dirname" | kind=code-symbol | source=scripts/populate-vault.mjs:L11 | neighbors=[populate-vault.mjs]
+- "scripts_populate_vault_main": "main()" | kind=code-symbol | source=scripts/populate-vault.mjs:L338 | neighbors=[populate-vault.mjs]
+- "scripts_session_checkpoint_args": "args" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L244 | neighbors=[session-checkpoint.mjs]
 - "scripts_session_checkpoint_clear": "clear()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L126 | neighbors=[session-checkpoint.mjs]
 - "scripts_session_checkpoint_cleardecisions": "clearDecisions()" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L238 | neighbors=[session-checkpoint.mjs]
 - "scripts_session_checkpoint_decisions_file": "DECISIONS_FILE" | kind=code-symbol | source=scripts/session-checkpoint.mjs:L19 | neighbors=[session-checkpoint.mjs]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "scripts_trace_server_dirty": "dirty" | kind=code-symbol | source=scripts/trace-server.mjs:L241 | neighbors=[trace-server.mjs]
 - "scripts_trace_server_extensions": "EXTENSIONS" | kind=code-symbol | source=scripts/trace-server.mjs:L22 | neighbors=[trace-server.mjs]
 - "scripts_trace_server_filemap": "fileMap" | kind=code-symbol | source=scripts/trace-server.mjs:L227 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_filestomodify": "filesToModify" | kind=code-symbol | source=scripts/trace-server.mjs:L240 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_fnnames": "fnNames" | kind=code-symbol | source=scripts/trace-server.mjs:L216 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_forceflag": "forceFlag" | kind=code-symbol | source=scripts/trace-server.mjs:L217 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_root": "ROOT" | kind=code-symbol | source=scripts/trace-server.mjs:L18 | neighbors=[trace-server.mjs]
-- "scripts_trace_server_search_dirs": "SEARCH_DIRS" | kind=code-symbol | source=scripts/trace-server.mjs:L21 | neighbors=[trace-server.mjs]
-- "scripts_ym_dev_child": "child" | kind=code-symbol | source=scripts/ym-dev.mjs:L47 | neighbors=[ym-dev.mjs]
-- "scripts_ym_dev_log": "LOG" | kind=code-symbol | source=scripts/ym-dev.mjs:L11 | neighbors=[ym-dev.mjs]
-- "scripts_ym_dev_needsshell": "needsShell" | kind=code-symbol | source=scripts/ym-dev.mjs:L29 | neighbors=[ym-dev.mjs]
-- "scripts_ym_dev_opts": "opts" | kind=code-symbol | source=scripts/ym-dev.mjs:L31 | neighbors=[ym-dev.mjs]
-- "scripts_ym_dev_orig": "ORIG" | kind=code-symbol | source=scripts/ym-dev.mjs:L12 | neighbors=[ym-dev.mjs]
 
 ## Instructions
 

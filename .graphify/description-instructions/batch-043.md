@@ -17,10 +17,20 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_service_listarsolicitudessinevidencias": "listarSolicitudesSinEvidencias()" | kind=code-symbol | source=lib/fiscalia/service.ts:L39 | neighbors=[actions.ts, service.ts]
+- "fiscalia_service_obtenerliberaciones": "obtenerLiberaciones()" | kind=code-symbol | source=lib/fiscalia/service.ts:L142 | neighbors=[actions.ts, service.ts]
+- "fiscalia_service_parsedetenidos": "parseDetenidos()" | kind=code-symbol | source=lib/fiscalia/service.ts:L70 | neighbors=[service.ts, obtenerDetalleAseguradoCompletoService()]
+- "fiscalia_service_pedirevidencias": "pedirEvidencias()" | kind=code-symbol | source=lib/fiscalia/service.ts:L58 | neighbors=[actions.ts, service.ts]
+- "fiscalia_service_tomarcaso": "tomarCaso()" | kind=code-symbol | source=lib/fiscalia/service.ts:L54 | neighbors=[actions.ts, service.ts]
+- "fiscalia_service_verificarroljuzgado": "verificarRolJuzgado()" | kind=code-symbol | source=lib/fiscalia/service.ts:L30 | neighbors=[actions.ts, service.ts]
+- "fiscalia_subirfotodetenido_subirfotodetenido": "SubirFotoDetenido()" | kind=code-symbol | source=components/fiscalia/SubirFotoDetenido.tsx:L33 | neighbors=[SubirFotoDetenido.tsx, page.tsx]
+- "fiscalia_tabasegurados_tabasegurados": "TabAsegurados()" | kind=code-symbol | source=components/fiscalia/TabAsegurados.tsx:L45 | neighbors=[page.tsx, TabAsegurados.tsx]
+- "fiscalia_tabsolicitudes_tabsolicitudes": "TabSolicitudes()" | kind=code-symbol | source=components/fiscalia/TabSolicitudes.tsx:L26 | neighbors=[TabSolicitudes.tsx, page.tsx]
+- "fiscalia_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/fiscalia/ToastExito.tsx:L6 | neighbors=[page.tsx, ToastExito.tsx]
 - "fiscalia_tomarcasomodal_tomarcasoboton": "TomarCasoBoton()" | kind=code-symbol | source=components/fiscalia/TomarCasoModal.tsx:L7 | neighbors=[TabSolicitudes.tsx, TomarCasoModal.tsx]
 - "fiscalia_types_detallecompleto": "DetalleCompleto" | kind=code-symbol | source=lib/fiscalia/types.ts:L439 | neighbors=[FiscaliaDashboard.tsx, types.ts]
 - "fiscalia_types_expedienteexp": "ExpedienteExp" | kind=code-symbol | source=lib/fiscalia/types.ts:L175 | neighbors=[ExpedienteView.tsx, types.ts]
-- "fiscalia_types_rolrow": "RolRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L7 | neighbors=[repository.ts, types.ts]
+- "fiscalia_types_rolrow": "RolRow" | kind=code-symbol | source=lib/fiscalia/types.ts:L7 | neighbors=[types.ts, repository.ts]
 - "fiscalia_types_userinfo": "UserInfo" | kind=code-symbol | source=lib/fiscalia/types.ts:L1 | neighbors=[actions.ts, types.ts]
 - "fiscalia_usetoaststore_usetoaststore": "useToastStore" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L21 | neighbors=[CargarOficioSection.tsx, useToastStore.ts]
 - "flota_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/flota/mapper.ts:L8 | neighbors=[mapper.ts, rowToPatrulla()]
@@ -45,18 +55,8 @@ one-sentence description — no prose, no markdown fences.
 - "forms_formkit_section": "Section()" | kind=code-symbol | source=components/forms/FormKit.tsx:L25 | neighbors=[FormKit.tsx, page.tsx]
 - "forms_formkit_select": "Select()" | kind=code-symbol | source=components/forms/FormKit.tsx:L57 | neighbors=[FormKit.tsx, page.tsx]
 - "forms_formkit_textarea": "Textarea()" | kind=code-symbol | source=components/forms/FormKit.tsx:L71 | neighbors=[FormKit.tsx, page.tsx]
-- "generar_route_p": "p()" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L27 | neighbors=[route.ts, GET()]
-- "generar_route_r": "r()" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L21 | neighbors=[route.ts, GET()]
-- "generar_route_tc": "tc()" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L35 | neighbors=[route.ts, GET()]
-- "generar_route_ton": "toN()" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L58 | neighbors=[route.ts, tablaFiscalia()]
-- "guardar_docs_route_subirarchivo": "subirArchivo()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L7 | neighbors=[route.ts, POST()]
-- "guardar_docs_route_validararchivo": "validarArchivo()" | kind=code-symbol | source=app/api/via/exp-digital/guardar-docs/route.ts:L39 | neighbors=[route.ts, POST()]
-- "health_repository_ping": "ping()" | kind=code-symbol | source=lib/health/repository.ts:L3 | neighbors=[repository.ts, route.ts]
-- "hooks_useanalistaform_usedetenidoform": "useDetenidoForm()" | kind=code-symbol | source=hooks/useAnalistaForm.ts:L4 | neighbors=[formAnalisis.tsx, useAnalistaForm.ts]
-- "hooks_usedespacho_usedespacho": "useDespacho()" | kind=code-symbol | source=hooks/useDespacho.ts:L36 | neighbors=[TablonDespacho.tsx, useDespacho.ts]
-- "hooks_useflota_useflota": "useFlota()" | kind=code-symbol | source=hooks/useFlota.ts:L13 | neighbors=[DespachoForm.tsx, useFlota.ts]
-- "hooks_usepolling_usepolling": "usePolling()" | kind=code-symbol | source=hooks/usePolling.ts:L4 | neighbors=[TablonDespacho.tsx, usePolling.ts]
-- "hooks_useregistrodetenido_useregistrodetenido": "useRegistroDetenido()" | kind=code-symbol | source=hooks/useRegistroDetenido.ts:L4 | neighbors=[generarPresentacion.tsx, useRegistroDetenido.ts]
+- "generar_route_p": "p()" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L28 | neighbors=[route.ts, GET()]
+- "generar_route_r": "r()" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L22 | neighbors=[route.ts, GET()]
 
 ## Instructions
 

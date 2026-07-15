@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "monitorista_repository_listarsolicitudesevidencia": "listarSolicitudesEvidencia()" | kind=code-symbol | source=lib/monitorista/repository.ts:L31 | neighbors=[repository.ts, page.tsx]
+- "monitorista_repository_marcarsolicitudatendida": "marcarSolicitudAtendida()" | kind=code-symbol | source=lib/monitorista/repository.ts:L608 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerdenunciaporidraw": "obtenerDenunciaPorIdRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L328 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerdenunciasatendidasraw": "obtenerDenunciasAtendidasRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L316 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerdenunciaspendientesraw": "obtenerDenunciasPendientesRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L305 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerevidenciasdenunciaraw": "obtenerEvidenciasDenunciaRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L340 | neighbors=[repository.ts, service.ts]
+- "monitorista_repository_obtenerfolioreportecampo": "obtenerFolioReporteCampo()" | kind=code-symbol | source=lib/monitorista/repository.ts:L170 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_obteneriphdetenido": "obtenerIphDetenido()" | kind=code-symbol | source=lib/monitorista/repository.ts:L238 | neighbors=[route.ts, repository.ts]
+- "monitorista_repository_obtenerobtenersolicitudfoto": "obtenerObtenerSolicitudFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L499 | neighbors=[repository.ts, route.ts]
+- "monitorista_repository_obtenerprellenadocompleto": "obtenerPrellenadoCompleto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L253 | neighbors=[route.ts, repository.ts]
 - "monitorista_repository_obtenerregistroporfechaturnoraw": "obtenerRegistroPorFechaTurnoRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L425 | neighbors=[repository.ts, service.ts]
 - "monitorista_repository_obtenerregistroraw": "obtenerRegistroRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L417 | neighbors=[repository.ts, service.ts]
 - "monitorista_repository_obtenerreporteporidraw": "obtenerReportePorIdRaw()" | kind=code-symbol | source=lib/monitorista/repository.ts:L378 | neighbors=[repository.ts, service.ts]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "n_coordinacion_actions_num": "num()" | kind=code-symbol | source=lib/n-coordinacion/actions.ts:L7 | neighbors=[actions.ts, guardarDatosCoordinacion()]
 - "n_coordinacion_repository_obtenerarmasdia": "obtenerArmasDia()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L73 | neighbors=[route.ts, repository.ts]
 - "n_coordinacion_repository_obtenereventosdia": "obtenerEventosDia()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L3 | neighbors=[route.ts, repository.ts]
-- "n_coordinacion_repository_obtenerrnd": "obtenerRND()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L58 | neighbors=[route.ts, repository.ts]
-- "n_coordinacion_repository_upsertfge": "upsertFge()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L111 | neighbors=[actions.ts, repository.ts]
-- "n_coordinacion_repository_upsertfgr": "upsertFgr()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L131 | neighbors=[actions.ts, repository.ts]
-- "n_coordinacion_repository_upsertmasc": "upsertMasc()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L151 | neighbors=[actions.ts, repository.ts]
-- "n_coordinacion_repository_upsertobservaciones": "upsertObservaciones()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L176 | neighbors=[actions.ts, repository.ts]
-- "n_coordinacion_repository_upsertvictimas": "upsertVictimas()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L163 | neighbors=[actions.ts, repository.ts]
-- "ncoordinacion_profiledropdowncoordinacion_profiledropdowncoordinacion": "ProfileDropdownCoordinacion()" | kind=code-symbol | source=components/nCoordinacion/ProfileDropdownCoordinacion.tsx:L14 | neighbors=[page.tsx, ProfileDropdownCoordinacion.tsx]
-- "notificaciones_actions_generaralertasdebug": "generarAlertasDebug()" | kind=code-symbol | source=lib/notificaciones/actions.ts:L32 | neighbors=[actions.ts, CampanillaNotificaciones.tsx]
-- "notificaciones_actions_marcarleida": "marcarLeida()" | kind=code-symbol | source=lib/notificaciones/actions.ts:L10 | neighbors=[actions.ts, CampanillaNotificaciones.tsx]
-- "notificaciones_actions_marcartodasleidas": "marcarTodasLeidas()" | kind=code-symbol | source=lib/notificaciones/actions.ts:L21 | neighbors=[actions.ts, CampanillaNotificaciones.tsx]
 
 ## Instructions
 

@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_cargaroficiosection_cargaroficiosectionprops": "CargarOficioSectionProps" | kind=code-symbol | source=components/fiscalia/CargarOficioSection.tsx:L10 | neighbors=[CargarOficioSection.tsx]
+- "fiscalia_cargaroficiosection_fileupload": "FileUpload()" | kind=code-symbol | source=components/fiscalia/CargarOficioSection.tsx:L475 | neighbors=[CargarOficioSection.tsx]
+- "fiscalia_confirmacionmodal_confirmacionmodal": "ConfirmacionModal()" | kind=code-symbol | source=components/fiscalia/ConfirmacionModal.tsx:L38 | neighbors=[ConfirmacionModal.tsx]
+- "fiscalia_confirmacionmodal_confirmacionmodalprops": "ConfirmacionModalProps" | kind=code-symbol | source=components/fiscalia/ConfirmacionModal.tsx:L5 | neighbors=[ConfirmacionModal.tsx]
+- "fiscalia_confirmacionmodal_variantes": "VARIANTES" | kind=code-symbol | source=components/fiscalia/ConfirmacionModal.tsx:L17 | neighbors=[ConfirmacionModal.tsx]
+- "fiscalia_detallesaseguradoview_disabledsx": "disabledSx" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L19 | neighbors=[DetallesAseguradoView.tsx]
+- "fiscalia_detallesaseguradoview_esimagen": "esImagen()" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L37 | neighbors=[DetallesAseguradoView.tsx]
+- "fiscalia_detallesaseguradoview_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L9 | neighbors=[DetallesAseguradoView.tsx]
+- "fiscalia_detallesaseguradoview_props": "Props" | kind=code-symbol | source=components/fiscalia/DetallesAseguradoView.tsx:L31 | neighbors=[DetallesAseguradoView.tsx]
+- "fiscalia_expedienteview_labelsx": "labelSx" | kind=code-symbol | source=components/fiscalia/ExpedienteView.tsx:L12 | neighbors=[ExpedienteView.tsx]
 - "fiscalia_expedienteview_sectionsx": "sectionSx" | kind=code-symbol | source=components/fiscalia/ExpedienteView.tsx:L21 | neighbors=[ExpedienteView.tsx]
 - "fiscalia_expedienteview_sectiontitlesx": "sectionTitleSx" | kind=code-symbol | source=components/fiscalia/ExpedienteView.tsx:L26 | neighbors=[ExpedienteView.tsx]
 - "fiscalia_expedienteview_valuesx": "valueSx" | kind=code-symbol | source=components/fiscalia/ExpedienteView.tsx:L17 | neighbors=[ExpedienteView.tsx]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "fiscalia_fotosexpedientesection_props": "Props" | kind=code-symbol | source=components/fiscalia/FotosExpedienteSection.tsx:L15 | neighbors=[FotosExpedienteSection.tsx]
 - "fiscalia_mapper_bool": "bool()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L8 | neighbors=[mapper.ts]
 - "fiscalia_mapper_rowtoinfracciondetalle": "rowToInfraccionDetalle()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L87 | neighbors=[mapper.ts]
-- "fiscalia_mapper_str": "str()" | kind=code-symbol | source=lib/fiscalia/mapper.ts:L3 | neighbors=[mapper.ts]
-- "fiscalia_page_fiscaliadashboardpage": "FiscaliaDashboardPage()" | kind=code-symbol | source=app/fiscalia/page.tsx:L7 | neighbors=[page.tsx]
-- "fiscalia_permisos_accion": "Accion" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L5 | neighbors=[permisos.ts]
-- "fiscalia_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L12 | neighbors=[permisos.ts]
-- "fiscalia_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L20 | neighbors=[permisos.ts]
-- "fiscalia_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L16 | neighbors=[permisos.ts]
-- "fiscalia_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L6 | neighbors=[permisos.ts]
-- "fiscalia_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L4 | neighbors=[permisos.ts]
-- "fiscalia_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L3 | neighbors=[permisos.ts]
-- "fiscalia_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/fiscalia/permisos.ts:L8 | neighbors=[permisos.ts]
 
 ## Instructions
 

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { tienePermiso } from '@/lib/auxiliar/permisos'
 import { ClipboardList, CheckSquare } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
-import { ProfileDropdownAuxiliar } from '@/components/auxiliar/ProfileDropdownAuxiliar'
 import { DashboardHeader } from '@/components/partials/Header'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
@@ -35,7 +34,7 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
         .card-a:hover .ca-icon { color:#1f355a; transform:scale(1.1); }
       `}</style>
 
-      <DashboardHeader user={user} backHref={backHref} />
+      <DashboardHeader user={user} roleLabel="Auxiliar de Novedades" backHref={backHref} />
 
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
 

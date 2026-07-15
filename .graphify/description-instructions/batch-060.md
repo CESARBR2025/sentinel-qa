@@ -17,8 +17,17 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "agente_juzgado_mapper_str": "str()" | kind=code-symbol | source=lib/agente_juzgado/mapper.ts:L3 | neighbors=[mapper.ts]
+- "agente_juzgado_page_juzgadodashboardpage": "JuzgadoDashboardPage()" | kind=code-symbol | source=app/agente_juzgado/page.tsx:L12 | neighbors=[page.tsx]
+- "agente_juzgado_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L5 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L12 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L20 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L16 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L6 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L4 | neighbors=[permisos.ts]
+- "agente_juzgado_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_juzgado/permisos.ts:L3 | neighbors=[permisos.ts]
 - "agente_juzgado_profiledropdown_props": "Props" | kind=code-symbol | source=components/agente_juzgado/ProfileDropdown.tsx:L8 | neighbors=[ProfileDropdown.tsx]
-- "agente_juzgado_repository_actualizaroficiojuzgado": "actualizarOficioJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L408 | neighbors=[repository.ts]
+- "agente_juzgado_repository_actualizaroficiojuzgado": "actualizarOficioJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/repository.ts:L395 | neighbors=[repository.ts]
 - "agente_juzgado_service_listarsolicitudescerradas": "listarSolicitudesCerradas()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L46 | neighbors=[service.ts]
 - "agente_juzgado_service_obtenerdetalleinfraccionviaservicejuzgado": "obtenerDetalleInfraccionViaServiceJuzgado()" | kind=code-symbol | source=lib/agente_juzgado/service.ts:L79 | neighbors=[service.ts]
 - "agente_juzgado_subirfotodetenido_compressimage": "compressImage()" | kind=code-symbol | source=components/agente_juzgado/SubirFotoDetenido.tsx:L6 | neighbors=[SubirFotoDetenido.tsx]
@@ -48,15 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "agente_liberaciones_liberacionestable_datarow": "DataRow" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L5 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_liberacionestable_liberacionestable": "LiberacionesTable()" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L31 | neighbors=[LiberacionesTable.tsx]
 - "agente_liberaciones_liberacionestable_liberacionestableprops": "LiberacionesTableProps" | kind=code-symbol | source=components/agente_liberaciones/LiberacionesTable.tsx:L16 | neighbors=[LiberacionesTable.tsx]
-- "agente_liberaciones_mapper_str": "str()" | kind=code-symbol | source=lib/agente_liberaciones/mapper.ts:L3 | neighbors=[mapper.ts]
-- "agente_liberaciones_page_liberacionesdashboardpage": "LiberacionesDashboardPage()" | kind=code-symbol | source=app/agente_liberaciones/page.tsx:L5 | neighbors=[page.tsx]
-- "agente_liberaciones_permisos_accion": "Accion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L5 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L12 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L20 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L16 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L6 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L4 | neighbors=[permisos.ts]
-- "agente_liberaciones_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/agente_liberaciones/permisos.ts:L3 | neighbors=[permisos.ts]
 
 ## Instructions
 

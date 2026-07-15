@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "admin_transito_modaldestituiroficial_props": "Props" | kind=code-symbol | source=components/admin-transito/ModalDestituirOficial.tsx:L7 | neighbors=[ModalDestituirOficial.tsx]
+- "admin_transito_modalreactivaroficial_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L9 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_modalreactivaroficial_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L38 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_modalreactivaroficial_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L28 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_modalreactivaroficial_modalreactivaroficial": "ModalReactivarOficial()" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L262 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_modalreactivaroficial_patrullaselect": "PatrullaSelect()" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L55 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_modalreactivaroficial_props": "Props" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L15 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_modalreactivaroficial_selectstyle": "selectStyle" | kind=code-symbol | source=components/admin-transito/ModalReactivarOficial.tsx:L50 | neighbors=[ModalReactivarOficial.tsx]
+- "admin_transito_nuevooficialform_departamento": "Departamento" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L8 | neighbors=[NuevoOficialForm.tsx]
+- "admin_transito_nuevooficialform_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L29 | neighbors=[NuevoOficialForm.tsx]
 - "admin_transito_nuevooficialform_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L19 | neighbors=[NuevoOficialForm.tsx]
 - "admin_transito_nuevooficialform_nuevooficialform": "NuevoOficialForm()" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L46 | neighbors=[NuevoOficialForm.tsx]
 - "admin_transito_nuevooficialform_props": "Props" | kind=code-symbol | source=components/admin-transito/NuevoOficialForm.tsx:L14 | neighbors=[NuevoOficialForm.tsx]
@@ -36,7 +46,6 @@ one-sentence description — no prose, no markdown fences.
 - "admin_transito_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/admin-transito/permisos.ts:L6 | neighbors=[permisos.ts]
 - "admin_transito_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/admin-transito/permisos.ts:L4 | neighbors=[permisos.ts]
 - "admin_transito_permisos_secciones": "SECCIONES" | kind=code-symbol | source=lib/admin-transito/permisos.ts:L3 | neighbors=[permisos.ts]
-- "admin_transito_permisos_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/admin-transito/permisos.ts:L8 | neighbors=[permisos.ts]
 - "admin_transito_repository_actualizaroficialrecord": "actualizarOficialRecord()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L153 | neighbors=[repository.ts]
 - "admin_transito_repository_actualizaruserinfo": "actualizarUserInfo()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L139 | neighbors=[repository.ts]
 - "admin_transito_repository_asignarrolusuario": "asignarRolUsuario()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L32 | neighbors=[repository.ts]
@@ -48,15 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "admin_transito_repository_obteneroficialporid": "obtenerOficialPorId()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L119 | neighbors=[repository.ts]
 - "admin_transito_repository_obtenerroloficialcampo": "obtenerRolOficialCampo()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L24 | neighbors=[repository.ts]
 - "admin_transito_repository_reactivaroficial": "reactivarOficial()" | kind=code-symbol | source=lib/admin-transito/repository.ts:L103 | neighbors=[repository.ts]
-- "agente_911_page_agente911dashboardpage": "Agente911DashboardPage()" | kind=code-symbol | source=app/agente_911/page.tsx:L10 | neighbors=[page.tsx]
-- "agente_bitacorista_page_agentebitacoristadashboardpage": "AgenteBitacoristaDashboardPage()" | kind=code-symbol | source=app/agente_bitacorista/page.tsx:L10 | neighbors=[page.tsx]
-- "agente_despacho_page_agentedespachodashboardpage": "AgenteDespachoDashboardPage()" | kind=code-symbol | source=app/agente_despacho/page.tsx:L10 | neighbors=[page.tsx]
-- "agente_infracciones_capturardatosinfractormodal_capturardatosinfractormodal": "CapturarDatosInfractorModal()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L36 | neighbors=[CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_capturardatosinfractormodal_datosform": "DatosForm()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L80 | neighbors=[CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_capturardatosinfractormodal_field": "Field()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L538 | neighbors=[CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_capturardatosinfractormodal_fieldname": "FieldName" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L18 | neighbors=[CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_capturardatosinfractormodal_isnodata": "isNoData()" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L20 | neighbors=[CapturarDatosInfractorModal.tsx]
-- "agente_infracciones_capturardatosinfractormodal_props": "Props" | kind=code-symbol | source=components/agente_infracciones/CapturarDatosInfractorModal.tsx:L12 | neighbors=[CapturarDatosInfractorModal.tsx]
 
 ## Instructions
 

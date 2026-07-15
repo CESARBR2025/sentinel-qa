@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { obtenerGuestToken } from '@/lib/expediente/client'
 
 const EXP_HOST = process.env.EXPEDIENTE_DIGITAL_URL ?? 'https://sanjuandelrio.sytes.net:3044'
 
 export async function GET(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
   let urlParam = req.nextUrl.searchParams.get('url')
   if (!urlParam) return NextResponse.json({ error: 'URL requerida' }, { status: 400 })
 

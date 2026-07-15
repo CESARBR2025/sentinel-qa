@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "components_capturardatostitularsection_field": "Field()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L671 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_fieldname": "FieldName" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L33 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_props": "Props" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L9 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturardatostitularsection_validatefield": "validateField()" | kind=code-symbol | source=features/via/infracciones/components/CapturarDatosTitularSection.tsx:L35 | neighbors=[CapturarDatosTitularSection.tsx]
+- "components_capturarinfractorsection_capturarinfractorsection": "CapturarInfractorSection()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L42 | neighbors=[CapturarInfractorSection.tsx]
+- "components_capturarinfractorsection_field": "Field()" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L15 | neighbors=[CapturarInfractorSection.tsx]
+- "components_capturarinfractorsection_props": "Props" | kind=code-symbol | source=features/liberaciones/components/CapturarInfractorSection.tsx:L8 | neighbors=[CapturarInfractorSection.tsx]
+- "components_formularioinfraccion_addressdata": "AddressData" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L9 | neighbors=[FormularioInfraccion.tsx]
+- "components_formularioinfraccion_formularioinfraccion": "FormularioInfraccion()" | kind=code-symbol | source=features/via/oficiales/components/FormularioInfraccion.tsx:L71 | neighbors=[FormularioInfraccion.tsx]
+- "components_loadingprovider_getbasepath": "getBasePath()" | kind=code-symbol | source=components/LoadingProvider.tsx:L8 | neighbors=[LoadingProvider.tsx]
 - "components_loadingprovider_loadingprovider": "LoadingProvider()" | kind=code-symbol | source=components/LoadingProvider.tsx:L16 | neighbors=[LoadingProvider.tsx]
 - "components_loadingprovider_main_routes": "MAIN_ROUTES" | kind=code-symbol | source=components/LoadingProvider.tsx:L6 | neighbors=[LoadingProvider.tsx]
 - "components_mapadireccionregistro_containerstyle": "containerStyle" | kind=code-symbol | source=features/via/oficiales/components/MapaDireccionRegistro.tsx:L11 | neighbors=[MapaDireccionRegistro.tsx]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "components_seccionliberacion_subtipos_titular": "SUBTIPOS_TITULAR" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L57 | neighbors=[SeccionLiberacion.tsx]
 - "components_seccionliberacion_subtipotitular": "SubtipoTitular" | kind=code-symbol | source=features/via/infracciones/components/SeccionLiberacion.tsx:L31 | neighbors=[SeccionLiberacion.tsx]
 - "components_smoothscroll_smoothscroll": "SmoothScroll()" | kind=code-symbol | source=components/SmoothScroll.tsx:L5 | neighbors=[SmoothScroll.tsx]
-- "configuracion_page_configuracionperfilpage": "ConfiguracionPerfilPage()" | kind=code-symbol | source=app/oficial/configuracion/page.tsx:L11 | neighbors=[page.tsx]
-- "consolidar_page_arma": "Arma" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L64 | neighbors=[page.tsx]
-- "consolidar_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L84 | neighbors=[page.tsx]
-- "consolidar_page_consolidado": "Consolidado" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L73 | neighbors=[page.tsx]
-- "consolidar_page_consolidarformatonpage": "ConsolidarFormatoNPage()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L98 | neighbors=[page.tsx]
-- "consolidar_page_diaconsolidado": "DiaConsolidado()" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L178 | neighbors=[page.tsx]
-- "consolidar_page_evento": "Evento" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L11 | neighbors=[page.tsx]
-- "consolidar_page_fge": "Fge" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L35 | neighbors=[page.tsx]
-- "consolidar_page_fgr": "Fgr" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L36 | neighbors=[page.tsx]
-- "consolidar_page_linkbtn": "linkBtn" | kind=code-symbol | source=app/envio-de-formatos/consolidar/page.tsx:L403 | neighbors=[page.tsx]
 
 ## Instructions
 

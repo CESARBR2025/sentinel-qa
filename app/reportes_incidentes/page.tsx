@@ -7,6 +7,7 @@ import { IncidenteStat } from '@/components/reportes/incidentes/StatIncidencia'
 import { TablaIncidentes } from '@/components/reportes/incidentes/TablaIncidentes'
 import { styles } from '@/components/reportes/incidentes/styles'
 import { listarReporteDiario, listarReporteSemanal } from '@/lib/reportes-incidentes/service'
+import { tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function ReportesIncidentesPage({
   searchParams,
@@ -15,6 +16,8 @@ export default async function ReportesIncidentesPage({
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; email: string; image?: string }
   const sp   = await searchParams
@@ -36,7 +39,7 @@ export default async function ReportesIncidentesPage({
   return (
     <div style={styles.container}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} roleLabel="Reporte de Incidentes" backHref="/reportes" backLabel="Reportes" />
       <main style={styles.main}>
         <div style={styles.headerContainer}>
           <div>

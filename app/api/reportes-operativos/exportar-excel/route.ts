@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerDatosExcel } from '@/lib/reportes-operativos/service'
+import { tienePermiso } from '@/lib/incidentes/permisos'
 import ExcelJS from 'exceljs'
 
 export async function GET(req: NextRequest) {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    if (!(await tienePermiso(session.user.id, 'modulo_incidentes', 'ver'))) {
+        return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
     const p = req.nextUrl.searchParams
     const desde = p.get('from') ?? '2000-01-01'

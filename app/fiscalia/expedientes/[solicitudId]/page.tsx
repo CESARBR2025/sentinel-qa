@@ -1,13 +1,11 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
-import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import { verificarRolFiscalia } from '@/lib/fiscalia/service'
 import { obtenerExpedienteCompleto, obtenerDetenidosGuardados, obtenerFotosDetenidos, obtenerEvidenciasMonitorista } from '@/lib/fiscalia/repository'
 import { ExpedienteView } from '@/components/fiscalia/ExpedienteView'
 import { PrintButton } from '@/components/fiscalia/PrintButton'
+import { DashboardHeader } from '@/components/partials/Header'
 import { APP_VERSION } from "@/lib/constants"
 
 export default async function ExpedientePage({ params }: { params: Promise<{ solicitudId: string }> }) {
@@ -48,40 +46,25 @@ export default async function ExpedientePage({ params }: { params: Promise<{ sol
   const data = { raw, detenidosDirecciones, fotos, evidencias }
 
   const folioDenuncia = String(raw.d1_folio_denuncia ?? '')
+  const user = session.user as { name: string; apellido?: string; email?: string }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '100vh' }}>
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-          paddingBottom: 20, borderBottom: '1px solid #e2e8f0', position: 'relative',
-        }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#7c3aed' }} />
-          <div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#7c3aed', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ width: 8, height: 8, background: '#7c3aed', display: 'inline-block' }} />
-              Expediente Digital
-            </div>
-            <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '4px 0 0', color: '#0f172a', lineHeight: 1 }}>
-              {folioDenuncia || 'Expediente'}
-            </h1>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <PrintButton />
-          </div>
-        </div>
+      <DashboardHeader
+        user={{ name: user.name, apellido: user.apellido, email: user.email || '' }}
+        roleLabel="Expediente Digital"
+        backHref="/fiscalia/solicitudes"
+        backLabel="Solicitudes"
+      />
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link href="/fiscalia/solicitudes" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b',
-            fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textDecoration: 'none',
-            textTransform: 'uppercase', letterSpacing: '0.08em', width: 'fit-content',
-          }}>
-            <ArrowLeft size={14} /> Regresar a solicitudes
-          </Link>
-          <SignOutButton />
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
+            {folioDenuncia || 'Expediente'}
+          </h1>
+          <PrintButton />
         </div>
 
         <ExpedienteView data={data} />

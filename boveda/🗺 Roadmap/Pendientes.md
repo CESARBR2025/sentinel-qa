@@ -26,19 +26,34 @@ para admin) y se migraron los 6 módulos de rol exacto (agente_911, agente_bitac
 agente_despacho, agente_infracciones, agente_juzgado, agente_liberaciones) al sistema de
 permisos granular. Ver `boveda/🏗 Arquitectura/Decisiones.md`. Queda pendiente:
 
-- [ ] **83 rutas de `app/api` sin ningún chequeo de rol/permiso** (solo exigen sesión vía
-  `proxy.ts`, o ni eso). Se arreglaron ya las 3 más críticas (`via/infracciones/liberar-garantia`,
-  `via/infracciones/registradas/[id]`, `via/liberaciones/documentos/[infraccionId]`). Prioridad
-  sugerida para el resto, por sensibilidad de datos: `app/api/detenidos/*`, `app/api/incidentes/*`,
-  `app/api/monitorista/*`, `app/api/prevencion/*`, `app/api/reportes*`, `app/api/via/infracciones/*`
-  y `app/api/via/sa7/*` (mueven dinero). Usar el patrón de `verificarRolXXX`/`tienePermiso` ya
-  existente en cada módulo — no reinventar.
-- [ ] Revisar `app/api/complementos/gruas/route.ts` y `app/api/expediente/proxy/route.ts` — no
-  validan sesión y no son parte del flujo público de ciudadano (a diferencia de `via/ciudadano/*`,
-  `via/pagos/confirmar-*` y `via/curp`, que sí son intencionalmente públicos).
-- [ ] `app/admin-transito/layout.tsx` sigue comparando `rolNombre !== 'admin_transito'` — no se
-  tocó en esta pasada por ser un rol de módulo (no el bypass de super-admin), pero debería
-  migrarse al mismo patrón de permisos granulares.
+- [x] **Rutas de `app/api` sin chequeo de rol/permiso — corregido (2026-07-15, segunda pasada)**.
+  Se auditaron las 104 rutas de `app/api`; ~20 tenían solo sesión (o ni eso) sin ningún chequeo de
+  rol/permiso. Corregidas todas las sensibles, reutilizando siempre el helper ya existente del
+  módulo (`tienePermiso`/`verificarRolXXX`/`verificarAccesoXXXApi`) — nunca comparación de string
+  de rol: `detenidos/{listar,registrar,detalle/[id]}`, `monitorista/{expediente-proxy,evidencias/
+  subir,denuncias/subir,denuncias/[id]/completar-solicitud}`, `registro-detenidos/registrar`,
+  `analisis/reportes-campo`, `nCoordinacion/generar`, `agente_juzgado/{iniciarProceso,
+  finalizarProceso}`, `camara/exportar`, `reportes-operativos/exportar-excel`, `reportes-
+  telefonicos/exportar`, `reportes-incidentes/exportar`, `reportes-sin-d1/exportar`, `reportes-
+  sin-novedad/exportar`, `d1/exportar`, `via/infracciones/{retencion-placa,registrar,iniciar-
+  proceso}` (las 3 restantes; las otras 3 críticas ya se habían corregido antes), `via/sa7/
+  {generar-orden-pago,buscar-orden}` (dinero — gate combinado Oficial ∨ Infracciones ∨
+  Liberaciones, ya que `FormularioInfraccion`/`CapturarInfractorSection` los llaman desde varios
+  roles), `via/exp-digital/{guardar-evidencias,guardar-docs}`, `rol-servicios/externos/{rh,flota}`
+  (gate `esAdmin`, igual que su layout). También se agregó el mismo `tienePermiso('reportes_
+  ciudadano','ver')` a `app/reportes_incidentes/page.tsx`, que tenía el mismo hueco a nivel de
+  página (solo sesión, sin permiso) — no detectado en el barrido de páginas anterior.
+  Verificado: build limpio, admin real (200 en todas), sin sesión (307 vía `proxy.ts`, igual que
+  antes).
+- [ ] `app/api/complementos/gruas/route.ts` y `app/api/expediente/proxy/route.ts` no validaban
+  sesión — corregido, ahora exigen sesión (sin gate de rol específico: son compartidas entre
+  varios módulos — `expediente/proxy` lo usan corralón, fiscalía, juzgado y monitorista por igual).
+- [ ] `app/api/uploads/[...path]/route.ts` sigue solo con chequeo de sesión (sin rol/permiso) —
+  sirve archivos subidos de múltiples módulos por ruta de archivo; un gate por módulo requeriría
+  namespacing de carpetas por sección, fuera de alcance de esta pasada.
+- [x] `app/admin-transito/layout.tsx` — ya migrado a `tienePermiso(userId, 'admin_transito',
+  'ver')` en la pasada de verificación en vivo del 2026-07-15 (ver sección de abajo). La nota
+  anterior de "pendiente" en este archivo estaba desactualizada.
 - [ ] Roles duplicados en BD: `Auxiliar` (id 32) y `Auxiliar de Novedades` (id 24) mapean al mismo
   módulo en `lib/permisos/registro.ts:73-88` — normalizar en BD requiere decisión de negocio
   (cuál es el nombre correcto) antes de eliminar el duplicado del código.
@@ -140,17 +155,59 @@ tuvo que tocar 65 archivos solo para subir el número).
 - `lib/constants.ts` nuevo (`APP_VERSION`) — los 65 archivos con "CENTINELA v1.2" hardcodeado
   ahora interpolan `{APP_VERSION}`; el próximo cambio de versión toca un solo archivo.
 
-**Pendiente, no corregido en esta pasada (alcance acotado a pedido del usuario):**
-- [ ] ~16 páginas que no son hub-raíz ni tienen backHref dinámico (`d1`, `d1_noiniciada`,
-  `modulo_incidentes`, `reportes_incidentes`, `incidentes_camaras`, `denuncia/nuevo`,
-  `estadisticos`, `sin_robos`, `incidentes`, `envio-de-formatos`, `oficial/despachos/[id]` ya
-  tenía backHref correcto) ahora simplemente no muestran botón "volver" (antes apuntaban a
-  `/dashboard`, incorrecto para varios roles). Si se quiere el botón de vuelta, hay que decidir
-  cuál es el destino lógico de cada una caso por caso.
-- [ ] 8 componentes `ProfileDropdown` casi idénticos (uno por módulo: oficial, fiscalía, juzgado,
-  liberaciones, infracciones, auxiliar, nCoordinación, corralón) — navbar/dropdown duplicado 8
-  veces. No se fusionaron en esta pasada (decisión del usuario: solo el footer). Cada uno ya
-  incluye su propio logout funcional, así que no es un bug — es deuda de mantenimiento.
+### 4º estilo de header encontrado y corregido (2026-07-15, tercera pasada)
+El usuario señaló que `/prevencion/medidas` seguía con header distinto — ninguno de los greps
+anteriores (`ProfileDropdown`, `chaleco.png`, `SubHeader`) lo detectaba porque **el header vivía
+en el `layout.tsx` del módulo, no en cada `page.tsx`**, y no usaba ninguno de los 3 componentes
+conocidos — era un `<header>` inline hecho a mano, sin logo ni `<SignOutButton />`. Esto reveló un
+bug real, no solo de estilo: **`prevencion/*` (10 páginas) y `admin/*` (2 páginas) no tenían
+NINGÚN botón de logout** — mismo bug original de "no hay botón para cerrar sesión" con el que
+empezó toda esta auditoría, escondido porque el grep de sesiones anteriores solo miraba
+`page.tsx`, nunca `layout.tsx`.
+- [x] `app/prevencion/layout.tsx` — migrado a `DashboardHeader` (roleLabel "Prevención del
+  Delito", backHref `/dashboard`, `CampanillaNotificaciones` movida a `children`). Las 10 páginas
+  del módulo heredan el fix automáticamente.
+- [x] `app/admin/layout.tsx` — migrado a `DashboardHeader` (roleLabel "Administración", backHref
+  `/dashboard`, nav Usuarios/Roles movido a `children`).
+- Verificado: `app/rol_servicios/page.tsx` SÍ tiene `SubHeader` (con logout) — no es un caso nuevo,
+  ya estaba en la lista de módulos con `SubHeader` diferida por decisión del usuario.
+- Verificado con grep exhaustivo sobre TODOS los `layout.tsx` del proyecto (no solo `page.tsx`):
+  no quedan más layouts sin header conocido salvo los de solo-auth-gate sin UI propia (`monitorista`,
+  `corralon`, `rol_servicios` — sus páginas individuales ya tienen su propio header).
+- Build + tsc limpios, probado con login real de admin: `/prevencion/{medidas,busquedas,juridico}`
+  y `/admin/{usuarios,roles}` responden 200.
+
+**Botones de volver — corregido (2026-07-15, segunda pasada):**
+Se decidió el destino lógico de cada una de las páginas sin backHref, investigando quién las
+enlaza (no asumido, verificado con grep de callers reales):
+- `d1`, `d1_noiniciada`, `modulo_incidentes`, `reportes_incidentes`, `estadisticos`, `sin_robos`,
+  `incidentes_camaras`, `envio-de-formatos` → todas son sub-módulos de `/reportes` (confirmado en
+  `app/reportes/page.tsx`, cada una tiene su tarjeta `OptionSquare` ahí) → `backHref="/reportes"`.
+- `incidentes` (bitácora) → sub-módulo de `/agente_bitacorista` (único caller real, confirmado por
+  grep) → `backHref="/agente_bitacorista"`.
+- `analisis` → hub propio sin módulo padre (menú con tarjetas internas) → `backHref="/dashboard"`.
+- `denuncia/nuevo` → ya tenía su propio link de vuelta dinámico en el body (`/oficial` o
+  `/dashboard` según si viene de un reporte de recorrido) — no se tocó, no necesitaba `backHref`
+  del header.
+- 7 páginas adicionales encontradas fuera de la lista original (no usaban `DashboardHeader` ni
+  `ProfileDropdown`, sino un header propio con `SignOutButton` suelto, por eso no aparecieron en
+  ningún barrido anterior): `agente_juzgado/{liberaciones/[id],solicitudes/[solicitudId]}`,
+  `fiscalia/{liberaciones/[id],solicitudes/[solicitudId],expedientes/[solicitudId]}`,
+  `agente_liberaciones/revision-documental/[id]`, `agente_infracciones/revision-documental/[id]`
+  — migradas a `DashboardHeader` con su backHref correspondiente al hub del módulo.
+- 3 páginas más encontradas con `ProfileDropdown` fuera del inventario original:
+  `agente_911/ciudadano/{page,incidentes/page}` e `infracciones/captura` — migradas también.
+
+**8 componentes `ProfileDropdown` casi idénticos** (oficial, fiscalía, juzgado, liberaciones,
+infracciones, auxiliar, nCoordinación, corralón) — ya no se usan en ninguna `page.tsx` (todas
+migradas a `DashboardHeader`); los componentes en sí quedaron sin callers en ese nivel pero no se
+borraron en esta pasada (limpieza de código muerto, no bug). **Excepción encontrada tarde**:
+`app/admin-transito/layout.tsx` sigue renderizando `ProfileDropdown` (de `components/oficial/`)
+inline en su propio header custom — no apareció en el barrido porque es un `layout.tsx`, no un
+`page.tsx` (el grep de esta sesión solo cubrió `page.tsx`). Afecta a las 4 páginas del módulo
+admin-transito. Mismo caso que el punto de abajo (`SubHeader` restante): encontrado pero fuera del
+alcance decidido por el usuario para esta pasada — pendiente de migrar a `DashboardHeader` en la
+próxima.
 
 ## Migración a header único (`DashboardHeader`, look de `/dashboard`) — plan por módulo (ver ADR-009)
 
@@ -160,34 +217,25 @@ en `globals.css`). **No** `SubHeader` — ese fue un primer intento, revertido p
 Migración deliberadamente gradual (no todo de un jalón) para poder revisar cada módulo en el
 navegador antes de dar por bueno el cambio visual.
 
-**Ya en `DashboardHeader` (2026-07-15):**
-- `app/dashboard` (ahora consume el componente en vez de duplicar el header inline)
-- `monitorista/detenidos/[id]`, `monitorista/denuncias/[id]`
-- `auxiliar/cuestionario-robo`, `auxiliar/checklist`, `auxiliar/checklist/[id]`
-- `oficial/despachos`, `oficial/reportes`, `oficial/reportes/[id]`, `oficial/reportes/[id]/fotos`
+**Migración a `DashboardHeader` completa para todo lo que usaba `ProfileDropdown` o header custom
+con `SignOutButton` suelto en un `page.tsx` (2026-07-15, segunda pasada).** Verificado con
+`grep -rl "ProfileDropdown" app --include="page.tsx"` y `grep -rl "chaleco.png" app --include=
+"page.tsx" | xargs grep -L "DashboardHeader"` → cero resultados salvo `(auth)/login` (correcto,
+no debe llevar header — usuario aún no autenticado). Incluye, además de los módulos ya migrados
+antes de esta pasada (dashboard, monitorista/detenidos/denuncias, auxiliar, oficial/despachos-
+reportes): fiscalía completo (7 archivos), agente_juzgado completo (8 archivos), agente_911,
+agente_despacho, agente_bitacorista, corralón, nCoordinación, y los 10 archivos "encontrados
+tarde" documentados arriba (7 con header propio + `SignOutButton`, 3 con `ProfileDropdown` fuera
+del inventario original).
 
-**Con logout agregado pero con su header propio sin migrar** (decisión explícita del usuario de
-no arriesgar el look en esta pasada):
-- `agente_infracciones/revision-documental/[id]`, `agente_liberaciones/revision-documental/[id]`
-- `agente_juzgado/solicitudes/[solicitudId]`, `agente_juzgado/liberaciones/[id]`
-- `fiscalia/solicitudes/[solicitudId]`, `fiscalia/expedientes/[solicitudId]`,
-  `fiscalia/liberaciones/[id]`
-
-**Siguen en `SubHeader` (no revertidas, pendiente decidir si migrar a `DashboardHeader`):**
+**Siguen en `SubHeader`, fuera de alcance por decisión del usuario (2026-07-15, confirmado de
+nuevo al preguntarle explícitamente si ampliar el scope):**
 - [ ] `formato-n-*` (~15 archivos), `monitorista/historial`, `monitorista/detenidos` (raíz),
-  `monitorista/incidentes-camara*`, `monitorista/solicitudes` (raíz), `rol_servicios` — todas
-  usaban `SubHeader` desde antes de esta sesión o se dejaron así; no se tocaron en la reversión
-  porque el pedido explícito fue sobre las 9 recién migradas. Decidir si también pasan a
-  `DashboardHeader` para tener un solo estilo de verdad en todo el sistema.
+  `monitorista/incidentes-camara*`, `monitorista/solicitudes` (raíz), `rol_servicios`.
+- [ ] `app/admin-transito/layout.tsx` — header propio con `ProfileDropdown` (de
+  `components/oficial/`) para sus 4 páginas; encontrado al final de esta pasada (no apareció en el
+  grep porque está en un `layout.tsx`, no un `page.tsx`) — mismo trato: documentado, no migrado.
 
 **Sin tocar — pendiente de decidir en próxima sesión:**
 - [ ] `monitorista/solicitudes/[id]` — tema oscuro (`#050810`); `DashboardHeader` es claro,
   necesita variante oscura o quedarse con su header propio a propósito.
-- [ ] Resto de páginas "detalle" de `agente_juzgado`/`fiscalia` con el template logo+color
-  (`detenidos/[id]`, `asegurados/[id]`, `asegurados/puesta-disposicion/[id]`, etc.) — no
-  auditadas aún, probablemente mismo patrón que las 7 ya resueltas.
-- [ ] Los 8 `ProfileDropdown` de páginas hub (oficial, fiscalía, juzgado, liberaciones,
-  infracciones, auxiliar, nCoordinación, corralón) — candidatos a reemplazar por `DashboardHeader`
-  sin `backHref` (páginas hub no necesitan volver).
-- [ ] Las ~16 páginas sin back button documentadas arriba (`d1`, `incidentes`, etc.) — decidir
-  destino lógico de cada una antes de agregarles `DashboardHeader`.

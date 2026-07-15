@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_service_crearreportecampo": "crearReporteCampo()" | kind=code-symbol | source=lib/incidentes/service.ts:L90 | neighbors=[actions.ts, service.ts]
+- "incidentes_service_listarconfiltros": "listarConFiltros()" | kind=code-symbol | source=lib/incidentes/service.ts:L15 | neighbors=[page.tsx, service.ts]
+- "incidentes_service_obtenerhistorialcompleto": "obtenerHistorialCompleto()" | kind=code-symbol | source=lib/incidentes/service.ts:L19 | neighbors=[page.tsx, service.ts]
+- "incidentes_statincidencia_incidentestat": "IncidenteStat()" | kind=code-symbol | source=components/reportes/incidentes/StatIncidencia.tsx:L3 | neighbors=[StatIncidencia.tsx, page.tsx]
+- "incidentes_tablaincidentes_tablaincidentes": "TablaIncidentes()" | kind=code-symbol | source=components/reportes/incidentes/TablaIncidentes.tsx:L23 | neighbors=[TablaIncidentes.tsx, page.tsx]
+- "incidentes_types_despachodetalleresponse": "DespachoDetalleResponse" | kind=code-symbol | source=lib/incidentes/types.ts:L206 | neighbors=[mapper.ts, types.ts]
+- "incidentes_types_reportedetalleresponse": "ReporteDetalleResponse" | kind=code-symbol | source=lib/incidentes/types.ts:L240 | neighbors=[mapper.ts, types.ts]
+- "infracciones_actions_eliminarinfraccionaction": "eliminarInfraccionAction()" | kind=code-symbol | source=features/via/infracciones/actions.ts:L5 | neighbors=[FormularioInfraccion.tsx, actions.ts]
+- "infracciones_mapper_mapcrearinfracciontodb": "mapCrearInfraccionToDB()" | kind=code-symbol | source=features/via/infracciones/mapper.ts:L3 | neighbors=[mapper.ts, service.ts]
+- "infracciones_mapper_mapinfracciondetalle": "mapInfraccionDetalle()" | kind=code-symbol | source=features/via/infracciones/mapper.ts:L54 | neighbors=[mapper.ts, service.ts]
 - "infracciones_service_infraccionesservice_registrarnuevainfraccionsv": ".registrarNuevaInfraccionSV()" | kind=code-symbol | source=features/via/infracciones/service.ts:L33 | neighbors=[InfraccionesService, generarFolioInfraccion()]
 - "infracciones_service_randombase36char": "randomBase36Char()" | kind=code-symbol | source=features/via/infracciones/service.ts:L7 | neighbors=[service.ts, rellenarBase36()]
 - "infracciones_service_sanitizecrearinfraccionpayload": "sanitizeCrearInfraccionPayload()" | kind=code-symbol | source=features/via/infracciones/service.ts:L69 | neighbors=[service.ts, route.ts]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_actions_cancelarsolicitud": "cancelarSolicitud()" | kind=code-symbol | source=lib/monitorista/actions.ts:L77 | neighbors=[actions.ts, requireMonitorista()]
 - "monitorista_actions_completarsolicitud": "completarSolicitud()" | kind=code-symbol | source=lib/monitorista/actions.ts:L64 | neighbors=[actions.ts, requireMonitorista()]
 - "monitorista_actions_subirevidencia": "subirEvidencia()" | kind=code-symbol | source=lib/monitorista/actions.ts:L35 | neighbors=[actions.ts, requireMonitorista()]
-- "monitorista_bandejasolicitudes_tabstyle": "tabStyle()" | kind=code-symbol | source=components/monitorista/BandejaSolicitudes.tsx:L130 | neighbors=[BandejaSolicitudes.tsx, BandejaSolicitudes()]
-- "monitorista_batchenviofotos_batchenviofotos": "BatchEnvioFotos()" | kind=code-symbol | source=components/monitorista/BatchEnvioFotos.tsx:L9 | neighbors=[page.tsx, BatchEnvioFotos.tsx]
-- "monitorista_botongenerarppt_botongenerarppt": "BotonGenerarPpt()" | kind=code-symbol | source=components/monitorista/BotonGenerarPpt.tsx:L7 | neighbors=[page.tsx, BotonGenerarPpt.tsx]
-- "monitorista_botonsubirdenuncia_botonsubirdenuncia": "BotonSubirDenuncia()" | kind=code-symbol | source=components/monitorista/BotonSubirDenuncia.tsx:L10 | neighbors=[page.tsx, BotonSubirDenuncia.tsx]
-- "monitorista_buscadorevento_buscadorevento": "BuscadorEvento()" | kind=code-symbol | source=components/monitorista/BuscadorEvento.tsx:L24 | neighbors=[BuscadorEvento.tsx, page.tsx]
-- "monitorista_cardenviofoto_estadobadge": "estadoBadge()" | kind=code-symbol | source=components/monitorista/CardEnvioFoto.tsx:L137 | neighbors=[CardEnvioFoto.tsx, CardEnvioFoto()]
-- "monitorista_editarcampodetenido_editarcampodetenido": "EditarCampoDetenido()" | kind=code-symbol | source=components/monitorista/EditarCampoDetenido.tsx:L9 | neighbors=[page.tsx, EditarCampoDetenido.tsx]
-- "monitorista_filaincidentecamara_filaincidentecamara": "FilaIncidenteCamara()" | kind=code-symbol | source=components/monitorista/FilaIncidenteCamara.tsx:L5 | neighbors=[page.tsx, FilaIncidenteCamara.tsx]
-- "monitorista_galeriaevidencias_galeriaevidencias": "GaleriaEvidencias()" | kind=code-symbol | source=components/monitorista/GaleriaEvidencias.tsx:L15 | neighbors=[page.tsx, GaleriaEvidencias.tsx]
-- "monitorista_mapper_parsedetenidos": "parseDetenidos()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L139 | neighbors=[mapper.ts, rowToReporteDetenido()]
 
 ## Instructions
 

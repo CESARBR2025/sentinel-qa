@@ -17,6 +17,15 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "fiscalia_usetoaststore_toasttype": "ToastType" | kind=code-symbol | source=lib/fiscalia/useToastStore.ts:L5 | neighbors=[useToastStore.ts]
+- "flota_mapper_rowtopatrullaasignacion": "rowToPatrullaAsignacion()" | kind=code-symbol | source=lib/flota/mapper.ts:L25 | neighbors=[mapper.ts]
+- "flota_route_get": "GET()" | kind=code-symbol | source=app/api/rol-servicios/externos/flota/route.ts:L9 | neighbors=[route.ts]
+- "flota_service_apirowtoflotavehiculo": "apiRowToFlotaVehiculo()" | kind=code-symbol | source=lib/flota/service.ts:L26 | neighbors=[service.ts]
+- "flota_service_flotaapiresponse": "FlotaApiResponse" | kind=code-symbol | source=lib/flota/service.ts:L8 | neighbors=[service.ts]
+- "flota_service_invalidarcache": "invalidarCache()" | kind=code-symbol | source=lib/flota/service.ts:L86 | neighbors=[service.ts]
+- "formato_n_armas_aseguradas_page_formatonarmasaseguradaspage": "FormatoNArmasAseguradasPage()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L12 | neighbors=[page.tsx]
+- "formato_n_armas_aseguradas_page_td": "Td()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L76 | neighbors=[page.tsx]
+- "formato_n_armas_aseguradas_page_th": "Th()" | kind=code-symbol | source=app/formato-n-armas-aseguradas/page.tsx:L72 | neighbors=[page.tsx]
 - "formato_n_armas_aseguradas_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-armas-aseguradas/route.ts:L7 | neighbors=[route.ts]
 - "formato_n_armas_aseguradas_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-armas-aseguradas/route.ts:L17 | neighbors=[route.ts]
 - "formato_n_atencion_victimas_page_td": "Td()" | kind=code-symbol | source=app/formato-n-atencion-victimas/page.tsx:L98 | neighbors=[page.tsx]
@@ -48,15 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "formato_n_rnd_route_post": "POST()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/route.ts:L17 | neighbors=[route.ts]
 - "forms_formkit_label": "Label()" | kind=code-symbol | source=components/forms/FormKit.tsx:L38 | neighbors=[FormKit.tsx]
 - "formulario_ingreso_page_despachopage": "DespachoPage()" | kind=code-symbol | source=app/analisis/formulario-ingreso/page.tsx:L9 | neighbors=[page.tsx]
-- "fotos_page_fotosdetenidopage": "FotosDetenidoPage()" | kind=code-symbol | source=app/oficial/reportes/[id]/fotos/page.tsx:L10 | neighbors=[page.tsx]
-- "fuente_route_get": "GET()" | kind=code-symbol | source=app/api/reportes/formato-n-rnd/fuente/route.ts:L7 | neighbors=[route.ts]
-- "generar_orden_pago_route_post": "POST()" | kind=code-symbol | source=app/api/via/sa7/generar-orden-pago/route.ts:L9 | neighbors=[route.ts]
-- "generar_ppt_page_registrointeligenciapage": "RegistroInteligenciaPage()" | kind=code-symbol | source=app/analisis/generar-ppt/page.tsx:L9 | neighbors=[page.tsx]
-- "generar_ppt_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/detenidos/generar-ppt/route.ts:L8 | neighbors=[route.ts]
-- "generar_route_alignment": "Alignment" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L25 | neighbors=[route.ts]
-- "generar_route_allborders": "allBorders" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L18 | neighbors=[route.ts]
-- "generar_route_no_border": "NO_BORDER" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L16 | neighbors=[route.ts]
-- "generar_route_noborders": "noBorders" | kind=code-symbol | source=app/api/nCoordinacion/generar/route.ts:L19 | neighbors=[route.ts]
 
 ## Instructions
 

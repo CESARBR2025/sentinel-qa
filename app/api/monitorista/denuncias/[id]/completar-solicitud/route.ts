@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { marcarSolicitudAtendida } from '@/lib/monitorista/denuncia-service'
 import { insertHistorial } from '@/lib/monitorista/repository'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 export async function POST(
   req: NextRequest,
@@ -10,6 +11,9 @@ export async function POST(
 ) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'editar'))) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+  }
 
   const { id: denunciaId } = await params
   const body = await req.json()

@@ -2,12 +2,16 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { marcarPlacaRetenidaEnTransito } from "@/lib/agente_infracciones/repository";
+import { verificarRolOficial } from "@/lib/oficial/service";
 
 export async function PATCH(request: Request) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+    if (!(await verificarRolOficial(session.user.id))) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
     const body = await request.json();

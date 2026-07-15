@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerGuestToken } from '@/lib/monitorista/expediente'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 const EXP_HOST = process.env.EXPEDIENTE_DIGITAL_URL ?? 'https://sanjuandelrio.sytes.net:3044'
 
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+  }
 
   let urlParam = req.nextUrl.searchParams.get('url')
   if (!urlParam) return NextResponse.json({ error: 'URL requerida' }, { status: 400 })

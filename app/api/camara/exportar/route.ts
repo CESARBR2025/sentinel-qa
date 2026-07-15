@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerPorTurno, obtenerConcentradoDiario, obtenerTotalesCamara } from '@/lib/camara/repository'
 import type { IncidenteCamara } from '@/lib/camara/types'
+import { tienePermiso } from '@/lib/incidentes/permisos'
 import ExcelJS from 'exceljs'
 
 const COLS = [
@@ -138,6 +139,9 @@ function crearHoja(
 export async function GET(req: NextRequest) {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    if (!(await tienePermiso(session.user.id, 'incidentes_camaras', 'ver'))) {
+        return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
     const p = req.nextUrl.searchParams
     const desde = p.get('from') || '2000-01-01'

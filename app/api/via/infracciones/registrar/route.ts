@@ -4,12 +4,16 @@ import { headers } from "next/headers";
 import { OficialesViaService } from "@/features/via/oficiales/service";
 import { InfraccionesService } from "@/features/via/infracciones/service";
 import { sanitizeCrearInfraccionPayload } from "@/features/via/infracciones/service";
+import { verificarRolOficial } from "@/lib/oficial/service";
 
 export async function POST(request: Request) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+    if (!(await verificarRolOficial(session.user.id))) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
     const oficialId = await OficialesViaService.obtenerOficialId(

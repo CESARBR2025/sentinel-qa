@@ -34,7 +34,7 @@ export default async function ReportesOperativosPage({
     <div style={styles.container}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} roleLabel="Resumen de Incidentes" backHref="/reportes" backLabel="Reportes" />
 
       <main style={styles.main}>
         <div style={styles.headerContainer}>

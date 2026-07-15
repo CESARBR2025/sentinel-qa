@@ -16,6 +16,9 @@ interface DashboardHeaderProps {
   // mayoría de los roles ese redirect solo rebota de vuelta a su propio hub).
   backHref?: string;
   backLabel?: string;
+  // Texto sobre el nombre del operador (ej. "Agente Fiscalía", "Juez Cívico") —
+  // reemplaza el genérico "Operador Identificado" cuando la página lo necesita.
+  roleLabel?: string;
 }
 
 // Header único de referencia — mismo diseño exacto que app/dashboard/page.tsx
@@ -26,6 +29,7 @@ export function DashboardHeader({
   children,
   backHref,
   backLabel = 'Dashboard',
+  roleLabel = 'Operador Identificado',
 }: DashboardHeaderProps) {
   return (
     <div
@@ -123,7 +127,7 @@ export function DashboardHeader({
               textTransform: 'uppercase',
             }}
           >
-            Operador Identificado
+            {roleLabel}
           </div>
 
           <div

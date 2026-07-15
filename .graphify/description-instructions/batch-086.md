@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "roles_formulariorol_formulariorol": "FormularioRol()" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L27 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_grid2style": "grid2Style" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L191 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_iconstyle": "iconStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L210 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_inputstyle": "inputStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L201 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_labelstyle": "labelStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L193 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_sectiontitlestyle": "sectionTitleStyle" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L218 | neighbors=[FormularioRol.tsx]
+- "roles_formulariorol_sentinelfield": "SentinelField()" | kind=code-symbol | source=components/admin/roles/FormularioRol.tsx:L9 | neighbors=[FormularioRol.tsx]
+- "roles_page_rolespage": "RolesPage()" | kind=code-symbol | source=app/admin/roles/page.tsx:L6 | neighbors=[page.tsx]
+- "roles_route_post": "POST()" | kind=code-symbol | source=app/api/admin/roles/route.ts:L7 | neighbors=[route.ts]
+- "rondin_page_reporterecorridopage": "ReporteRecorridoPage()" | kind=code-symbol | source=app/agente_911/rondin/page.tsx:L9 | neighbors=[page.tsx]
 - "rondin_page_rondinoficialpage": "RondinOficialPage()" | kind=code-symbol | source=app/oficial/rondin/page.tsx:L9 | neighbors=[page.tsx]
 - "rondin_rondinpageclient_view": "View" | kind=code-symbol | source=components/oficial/rondin/RondinPageClient.tsx:L9 | neighbors=[RondinPageClient.tsx]
 - "rondin_rondintabla_estatus_config": "ESTATUS_CONFIG" | kind=code-symbol | source=components/oficial/rondin/RondinTabla.tsx:L6 | neighbors=[RondinTabla.tsx]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "scripts_ab_test_graph_path": "GRAPH_PATH" | kind=code-symbol | source=scripts/ab-test.mjs:L13 | neighbors=[ab-test.mjs]
 - "scripts_ab_test_graphstats": "graphStats" | kind=code-symbol | source=scripts/ab-test.mjs:L217 | neighbors=[ab-test.mjs]
 - "scripts_ab_test_root": "ROOT" | kind=code-symbol | source=scripts/ab-test.mjs:L12 | neighbors=[ab-test.mjs]
-- "scripts_ab_test_savingspct": "savingsPct" | kind=code-symbol | source=scripts/ab-test.mjs:L224 | neighbors=[ab-test.mjs]
-- "scripts_ab_test_showdetail": "showDetail" | kind=code-symbol | source=scripts/ab-test.mjs:L272 | neighbors=[ab-test.mjs]
-- "scripts_ab_test_youmindaginstalled": "youmindagInstalled" | kind=code-symbol | source=scripts/ab-test.mjs:L226 | neighbors=[ab-test.mjs]
-- "scripts_benchmark_agents_path": "AGENTS_PATH" | kind=code-symbol | source=scripts/benchmark.mjs:L17 | neighbors=[benchmark.mjs]
-- "scripts_benchmark_agentschars": "agentsChars" | kind=code-symbol | source=scripts/benchmark.mjs:L178 | neighbors=[benchmark.mjs]
-- "scripts_benchmark_boveda_dir": "BOVEDA_DIR" | kind=code-symbol | source=scripts/benchmark.mjs:L16 | neighbors=[benchmark.mjs]
-- "scripts_benchmark_countbovedadocs": "countBovedaDocs()" | kind=code-symbol | source=scripts/benchmark.mjs:L59 | neighbors=[benchmark.mjs]
-- "scripts_benchmark_countprojectfiles": "countProjectFiles()" | kind=code-symbol | source=scripts/benchmark.mjs:L31 | neighbors=[benchmark.mjs]
-- "scripts_benchmark_dirname": "__dirname" | kind=code-symbol | source=scripts/benchmark.mjs:L13 | neighbors=[benchmark.mjs]
-- "scripts_benchmark_discoverycost": "discoveryCost" | kind=code-symbol | source=scripts/benchmark.mjs:L180 | neighbors=[benchmark.mjs]
 
 ## Instructions
 

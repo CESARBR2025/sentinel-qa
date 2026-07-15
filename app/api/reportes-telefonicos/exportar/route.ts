@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerDatosTelefonicos } from '@/lib/reportes-operativos/service'
+import { tienePermiso } from '@/lib/reportes/permisos'
 import ExcelJS from 'exceljs'
 
 function getRango(req: NextRequest) {
@@ -60,6 +61,9 @@ function getRango(req: NextRequest) {
 export async function GET(req: NextRequest) {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) {
+        return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
     const tipo = req.nextUrl.searchParams.get('tipo') ?? 'diario'
     const { desde, hasta, tipo: tipoLabel } = getRango(req)

@@ -17,6 +17,15 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "incidentes_types_despachocompleto": "DespachoCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L196 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachoelementorow": "DespachoElementoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L182 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachorow": "DespachoRow" | kind=code-symbol | source=lib/incidentes/types.ts:L75 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_despachounidadrow": "DespachoUnidadRow" | kind=code-symbol | source=lib/incidentes/types.ts:L176 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_extorsionrow": "ExtorsionRow" | kind=code-symbol | source=lib/incidentes/types.ts:L108 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_historialincidente": "HistorialIncidente" | kind=code-symbol | source=lib/incidentes/types.ts:L285 | neighbors=[HistorialIncidente.tsx, service.ts, types.ts]
+- "incidentes_types_incidentebasico": "IncidenteBasico" | kind=code-symbol | source=lib/incidentes/types.ts:L190 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentecondespacho": "IncidenteConDespacho" | kind=code-symbol | source=lib/incidentes/types.ts:L24 | neighbors=[mapper.ts, repository.ts, types.ts]
+- "incidentes_types_incidentedetallecompleto": "IncidenteDetalleCompleto" | kind=code-symbol | source=lib/incidentes/types.ts:L137 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_incidentefiltros": "IncidenteFiltros" | kind=code-symbol | source=lib/incidentes/types.ts:L1 | neighbors=[repository.ts, service.ts, types.ts]
 - "incidentes_types_incidentependiente": "IncidentePendiente" | kind=code-symbol | source=lib/incidentes/types.ts:L47 | neighbors=[mapper.ts, repository.ts, types.ts]
 - "incidentes_types_personaafectadarow": "PersonaAfectadaRow" | kind=code-symbol | source=lib/incidentes/types.ts:L66 | neighbors=[mapper.ts, repository.ts, types.ts]
@@ -48,15 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_service_listarreportescondetenidos": "listarReportesConDetenidos()" | kind=code-symbol | source=lib/monitorista/service.ts:L90 | neighbors=[detenido-service.ts, service.ts, parseDetenidos()]
 - "monitorista_service_obtenerreporteporid": "obtenerReportePorId()" | kind=code-symbol | source=lib/monitorista/service.ts:L117 | neighbors=[page.tsx, detenido-service.ts, service.ts]
 - "monitorista_service_subirevidenciadenuncia": "subirEvidenciaDenuncia()" | kind=code-symbol | source=lib/monitorista/service.ts:L51 | neighbors=[denuncia-service.ts, service.ts, solicitudIdToUuid()]
-- "monitorista_subirfotodetenido_subirfotodetenido": "SubirFotoDetenido()" | kind=code-symbol | source=components/monitorista/SubirFotoDetenido.tsx:L31 | neighbors=[page.tsx, CardEnvioFoto.tsx, SubirFotoDetenido.tsx]
-- "monitorista_types_evidencia": "Evidencia" | kind=code-symbol | source=lib/monitorista/types.ts:L22 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_evidenciadetenido": "EvidenciaDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L140 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_iphdetenido": "IphDetenido" | kind=code-symbol | source=lib/monitorista/types.ts:L131 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "monitorista_types_prellenadocompleto": "PrellenadoCompleto" | kind=code-symbol | source=lib/monitorista/types.ts:L149 | neighbors=[mapper.ts, repository.ts, types.ts]
-- "n_coordinacion_actions_guardardatoscoordinacion": "guardarDatosCoordinacion()" | kind=code-symbol | source=lib/n-coordinacion/actions.ts:L10 | neighbors=[actions.ts, num(), page.tsx]
-- "n_coordinacion_repository_obtenerconteosdetenidos": "obtenerConteosDetenidos()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L19 | neighbors=[route.ts, repository.ts, page.tsx]
-- "n_coordinacion_repository_obtenerdatoscapturados": "obtenerDatosCapturados()" | kind=code-symbol | source=lib/n-coordinacion/repository.ts:L94 | neighbors=[route.ts, repository.ts, page.tsx]
-- "notificaciones_repository_listarnotificacionesnoleidas": "listarNotificacionesNoLeidas()" | kind=code-symbol | source=lib/notificaciones/repository.ts:L5 | neighbors=[repository.ts, route.ts, layout.tsx]
 
 ## Instructions
 

@@ -50,7 +50,7 @@ export default async function FiscaliaDashboardPage({ searchParams }: { searchPa
         .card-f:hover .cf-arrow { transform: translateX(5px); }
       `}</style>
 
-      <DashboardHeader user={user} backHref={backHref} />
+      <DashboardHeader user={user} roleLabel="Agente Fiscalía" backHref={backHref} />
 
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
 

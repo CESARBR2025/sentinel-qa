@@ -17,9 +17,19 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "monitorista_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L111 | neighbors=[page.tsx]
+- "monitorista_page_monitoristahubpage": "MonitoristaHubPage()" | kind=code-symbol | source=app/monitorista/page.tsx:L13 | neighbors=[page.tsx]
+- "monitorista_page_onlinestyle": "onlineStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L112 | neighbors=[page.tsx]
+- "monitorista_permisos_accion": "Accion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L5 | neighbors=[permisos.ts]
+- "monitorista_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L17 | neighbors=[permisos.ts]
+- "monitorista_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L27 | neighbors=[permisos.ts]
+- "monitorista_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L21 | neighbors=[permisos.ts]
+- "monitorista_permisos_permisorow": "PermisoRow" | kind=code-symbol | source=lib/monitorista/permisos.ts:L7 | neighbors=[permisos.ts]
+- "monitorista_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L6 | neighbors=[permisos.ts]
+- "monitorista_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L4 | neighbors=[permisos.ts]
 - "monitorista_ppt_service_descargarfoto": "descargarFoto()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L22 | neighbors=[ppt-service.ts]
 - "monitorista_ppt_service_normalizarurl": "normalizarUrl()" | kind=code-symbol | source=lib/monitorista/ppt-service.ts:L16 | neighbors=[ppt-service.ts]
-- "monitorista_repository_rechazarfoto": "rechazarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L609 | neighbors=[repository.ts]
+- "monitorista_repository_rechazarfoto": "rechazarFoto()" | kind=code-symbol | source=lib/monitorista/repository.ts:L601 | neighbors=[repository.ts]
 - "monitorista_subirevidenciamodal_btncancel": "btnCancel" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L252 | neighbors=[SubirEvidenciaModal.tsx]
 - "monitorista_subirevidenciamodal_compressimage": "compressImage()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L8 | neighbors=[SubirEvidenciaModal.tsx]
 - "monitorista_subirevidenciamodal_limites": "LIMITES" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L45 | neighbors=[SubirEvidenciaModal.tsx]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "notificaciones_campanillanotificaciones_bellicon": "BellIcon()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L20 | neighbors=[CampanillaNotificaciones.tsx]
 - "notificaciones_campanillanotificaciones_injectkeyframes": "injectKeyframes()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L92 | neighbors=[CampanillaNotificaciones.tsx]
 - "notificaciones_campanillanotificaciones_notificacion": "Notificacion" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L7 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_playalertsound": "playAlertSound()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L41 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_props": "Props" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L187 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_timeago": "timeAgo()" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L31 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_campanillanotificaciones_toastprops": "ToastProps" | kind=code-symbol | source=components/notificaciones/CampanillaNotificaciones.tsx:L73 | neighbors=[CampanillaNotificaciones.tsx]
-- "notificaciones_checker_hitos_alertar": "HITOS_ALERTAR" | kind=code-symbol | source=lib/notificaciones/checker.ts:L4 | neighbors=[checker.ts]
-- "notificaciones_route_get": "GET()" | kind=code-symbol | source=app/api/notificaciones/route.ts:L7 | neighbors=[route.ts]
-- "nueva_page_autoridades": "AUTORIDADES" | kind=code-symbol | source=app/prevencion/medidas/nueva/page.tsx:L8 | neighbors=[page.tsx]
-- "nueva_page_btnsecundario": "btnSecundario" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L94 | neighbors=[page.tsx]
-- "nueva_page_field": "Field()" | kind=code-symbol | source=app/monitorista/detenidos/nueva/page.tsx:L80 | neighbors=[page.tsx]
-- "nueva_page_nuevafichapage": "NuevaFichaPage()" | kind=code-symbol | source=app/prevencion/busquedas/nueva/page.tsx:L14 | neighbors=[page.tsx]
 
 ## Instructions
 

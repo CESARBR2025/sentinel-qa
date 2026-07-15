@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "scripts_trace_utils_searchrecursive": "searchRecursive()" | kind=code-symbol | source=scripts/trace-utils.mjs:L14 | neighbors=[trace-utils.mjs, findSourceFile()]
+- "scripts_trace_utils_walkrecursive": "walkRecursive()" | kind=code-symbol | source=scripts/trace-utils.mjs:L101 | neighbors=[trace-utils.mjs, findFunctionInContent()]
+- "services_registrodetenidoservice_registrodetenidoservice": "registroDetenidoService" | kind=code-symbol | source=services/registroDetenidoService.ts:L4 | neighbors=[generarPresentacion.tsx, registroDetenidoService.ts]
+- "shared_detalleinfraccionview_detalleinfraccionview": "DetalleInfraccionView()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L147 | neighbors=[page.tsx, DetalleInfraccionView.tsx]
+- "shared_detalleinfraccionview_documentacionsection": "DocumentacionSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L661 | neighbors=[DetalleInfraccionView.tsx, formatDate()]
+- "shared_detalleinfraccionview_formatcurrency": "formatCurrency()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L110 | neighbors=[DetalleInfraccionView.tsx, SummaryBar()]
+- "shared_detalleinfraccionview_fundamentolegalsection": "FundamentoLegalSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L580 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_infractorvehiculosection": "InfractorVehiculoSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L521 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_mapgarantia": "mapGarantia()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L121 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
+- "shared_detalleinfraccionview_mapsection": "MapSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L207 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
 - "shared_detalleinfraccionview_oficialsection": "OficialSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L617 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
 - "shared_infracciones_concatname": "concatName()" | kind=code-symbol | source=lib/shared/infracciones.ts:L152 | neighbors=[infracciones.ts, rowToInfraccionDetalle()]
 - "shared_infracciones_parseevidencias": "parseEvidencias()" | kind=code-symbol | source=lib/shared/infracciones.ts:L138 | neighbors=[infracciones.ts, rowToInfraccionDetalle()]
@@ -36,8 +46,8 @@ one-sentence description — no prose, no markdown fences.
 - "stores_userondinformstore_userondinformstore": "useRondinFormStore" | kind=code-symbol | source=stores/useRondinFormStore.ts:L17 | neighbors=[FormRondinEscalado.tsx, useRondinFormStore.ts]
 - "subir_archivo_route_mapearestatusfinal": "mapearEstatusFinal()" | kind=code-symbol | source=app/api/corralon/subir-archivo/route.ts:L8 | neighbors=[route.ts, POST()]
 - "subir_archivo_route_post": "POST()" | kind=code-symbol | source=app/api/via/ciudadano/subir-archivo/route.ts:L6 | neighbors=[route.ts, mapearEstatusFinal()]
-- "subir_route_detectarmime": "detectarMime()" | kind=code-symbol | source=app/api/monitorista/denuncias/subir/route.ts:L6 | neighbors=[route.ts, POST()]
-- "subir_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/evidencias/subir/route.ts:L7 | neighbors=[route.ts, detectarMime()]
+- "subir_route_detectarmime": "detectarMime()" | kind=code-symbol | source=app/api/monitorista/denuncias/subir/route.ts:L7 | neighbors=[route.ts, POST()]
+- "subir_route_post": "POST()" | kind=code-symbol | source=app/api/monitorista/evidencias/subir/route.ts:L8 | neighbors=[route.ts, detectarMime()]
 - "templates_asignacion_fiscalia_enviarcorreoasignacionfiscaliaparams": "EnviarCorreoAsignacionFiscaliaParams" | kind=code-symbol | source=lib/emails/templates/asignacion-fiscalia.ts:L3 | neighbors=[server.ts, asignacion-fiscalia.ts]
 - "templates_asignacion_fiscalia_templateasignacionfiscalia": "templateAsignacionFiscalia()" | kind=code-symbol | source=lib/emails/templates/asignacion-fiscalia.ts:L11 | neighbors=[server.ts, asignacion-fiscalia.ts]
 - "templates_orden_liberacion_enviarcorreoordenliberacionparams": "EnviarCorreoOrdenLiberacionParams" | kind=code-symbol | source=lib/emails/templates/orden-liberacion.ts:L3 | neighbors=[server.ts, orden-liberacion.ts]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "ui_toast_toasttipo": "ToastTipo" | kind=code-symbol | source=components/ui/Toast.tsx:L6 | neighbors=[Toast.tsx, ToastAuto.tsx]
 - "utils_generateppt_generatedetenidoppt": "generateDetenidoPPT()" | kind=code-symbol | source=lib/utils/generatePPT.ts:L4 | neighbors=[generarPresentacion.tsx, generatePPT.ts]
 - "via_online_useonlinestatus": "useOnlineStatus()" | kind=code-symbol | source=lib/via/online.ts:L16 | neighbors=[FormularioInfraccion.tsx, online.ts]
-- "via_pagos_confirmarpago": "confirmarPago()" | kind=code-symbol | source=lib/via/pagos.ts:L6 | neighbors=[route.ts, pagos.ts]
-- "wireframes_wf_a": "wf-a.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-a.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeA()]
-- "wireframes_wf_b": "wf-b.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-b.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeB()]
-- "wireframes_wf_d": "wf-d.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-d.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeD()]
-- "wireframes_wf_e": "wf-e.jsx" | kind=code-symbol | source=login-desing/wireframes/wf-e.jsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, WireframeE()]
-- "2fa_page_twofactorpage": "TwoFactorPage()" | kind=code-symbol | source=app/(auth)/login/2fa/page.tsx:L6 | neighbors=[page.tsx]
-- "911_filtrosincidentes_btnbuscarstyle": "btnBuscarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L128 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_btnlimpiarstyle": "btnLimpiarStyle" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L129 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_canales": "CANALES" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L15 | neighbors=[FiltrosIncidentes.tsx]
-- "911_filtrosincidentes_catalogoitem": "CatalogoItem" | kind=code-symbol | source=components/911/FiltrosIncidentes.tsx:L8 | neighbors=[FiltrosIncidentes.tsx]
 
 ## Instructions
 

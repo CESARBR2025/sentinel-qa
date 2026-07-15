@@ -2,11 +2,11 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, User, BadgeCheck, Building2, Phone, Calendar, Shield, Fingerprint } from 'lucide-react'
-import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
+import { User, BadgeCheck, Building2, Phone, Calendar, Shield, Fingerprint } from 'lucide-react'
 import { verificarRolOficial, obtenerMiPerfil } from '@/lib/oficial/service'
 import { UnidadAsignadaSection } from '@/components/oficial/UnidadAsignadaSection'
 import { listarPatrullasParaAsignacion, obtenerPatrullaPorId } from '@/lib/flota/service'
+import { DashboardHeader } from '@/components/partials/Header'
 import { APP_VERSION } from "@/lib/constants"
 
 export default async function ConfiguracionPerfilPage() {
@@ -42,25 +42,9 @@ export default async function ConfiguracionPerfilPage() {
         .profile-field:last-child { border-bottom: none; }
       `}</style>
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
+      <DashboardHeader user={user} roleLabel="Configuración" backHref="/oficial" />
 
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: 24, borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#1f355a' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <img src="/chaleco.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
-            <div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
-                Configuración
-              </div>
-              <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 42, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                MI PERFIL
-              </h1>
-            </div>
-          </div>
-          <ProfileDropdown name={user.name} apellido={user.apellido} email={user.email} />
-        </div>
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48 }}>
 
         {error ? (
           <div style={{ textAlign: 'center', padding: 64, background: '#fff', border: '1px solid #e2e8f0' }}>
@@ -69,12 +53,6 @@ export default async function ConfiguracionPerfilPage() {
           </div>
         ) : perfil ? (
           <>
-            {/* Back link */}
-            <Link href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', textDecoration: 'none', letterSpacing: '0.05em', marginBottom: -24 }}>
-              <ArrowLeft size={14} />
-              VOLVER AL DASHBOARD
-            </Link>
-
             {/* Profile card */}
             <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
               <div style={{ flex: '1 1 500px', background: '#fff', border: '1px solid #e2e8f0', padding: 32, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>

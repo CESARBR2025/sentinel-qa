@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "rondin_rondintabla_rondintabla": "RondinTabla()" | kind=code-symbol | source=components/oficial/rondin/RondinTabla.tsx:L40 | neighbors=[RondinPageClient.tsx, RondinTabla.tsx]
+- "sasiete_client_generarordenpago": "generarOrdenPago()" | kind=code-symbol | source=features/via/saSiete/client.ts:L1 | neighbors=[FormularioInfraccion.tsx, client.ts]
+- "sasiete_types_generarordenpagodto": "GenerarOrdenPagoDTO" | kind=code-symbol | source=features/via/saSiete/types.ts:L29 | neighbors=[service.ts, types.ts]
+- "sasiete_types_resultadosa7": "ResultadoSA7" | kind=code-symbol | source=features/via/saSiete/types.ts:L40 | neighbors=[service.ts, types.ts]
+- "scripts_ab_test_simulatewithoutyoumindag": "simulateWithoutYoumindag()" | kind=code-symbol | source=scripts/ab-test.mjs:L89 | neighbors=[ab-test.mjs, charsToTokens()]
+- "scripts_ab_test_simulatewithyoumindag": "simulateWithYoumindag()" | kind=code-symbol | source=scripts/ab-test.mjs:L157 | neighbors=[ab-test.mjs, charsToTokens()]
+- "scripts_benchmark_charstotokens": "charsToTokens()" | kind=code-symbol | source=scripts/benchmark.mjs:L114 | neighbors=[benchmark.mjs, estimateYoumindagContext()]
+- "scripts_benchmark_estimateyoumindagcontext": "estimateYoumindagContext()" | kind=code-symbol | source=scripts/benchmark.mjs:L147 | neighbors=[benchmark.mjs, charsToTokens()]
+- "scripts_export_schema_getcolumns": "getColumns()" | kind=code-symbol | source=scripts/export-schema.mjs:L39 | neighbors=[export-schema.mjs, main()]
+- "scripts_export_schema_getenums": "getEnums()" | kind=code-symbol | source=scripts/export-schema.mjs:L51 | neighbors=[export-schema.mjs, main()]
 - "scripts_export_schema_getschemas": "getSchemas()" | kind=code-symbol | source=scripts/export-schema.mjs:L20 | neighbors=[export-schema.mjs, main()]
 - "scripts_export_schema_gettables": "getTables()" | kind=code-symbol | source=scripts/export-schema.mjs:L29 | neighbors=[export-schema.mjs, main()]
 - "scripts_exportar_schema_getcolumns": "getColumns()" | kind=code-symbol | source=scripts/exportar-schema.ts:L23 | neighbors=[exportar-schema.ts, main()]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "scripts_trace_server_isinsideliteral": "isInsideLiteral()" | kind=code-symbol | source=scripts/trace-server.mjs:L160 | neighbors=[trace-server.mjs, findMatchingBrace()]
 - "scripts_trace_server_require": "require" | kind=code-symbol | source=scripts/trace-server.mjs:L15 | neighbors=[trace-server.mjs, findFunctionBody()]
 - "scripts_trace_utils_escaperegex": "escapeRegex()" | kind=code-symbol | source=scripts/trace-utils.mjs:L97 | neighbors=[trace-utils.mjs, findFunctionInContent()]
-- "scripts_trace_utils_searchrecursive": "searchRecursive()" | kind=code-symbol | source=scripts/trace-utils.mjs:L14 | neighbors=[trace-utils.mjs, findSourceFile()]
-- "scripts_trace_utils_walkrecursive": "walkRecursive()" | kind=code-symbol | source=scripts/trace-utils.mjs:L101 | neighbors=[trace-utils.mjs, findFunctionInContent()]
-- "services_registrodetenidoservice_registrodetenidoservice": "registroDetenidoService" | kind=code-symbol | source=services/registroDetenidoService.ts:L4 | neighbors=[generarPresentacion.tsx, registroDetenidoService.ts]
-- "shared_detalleinfraccionview_detalleinfraccionview": "DetalleInfraccionView()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L147 | neighbors=[page.tsx, DetalleInfraccionView.tsx]
-- "shared_detalleinfraccionview_documentacionsection": "DocumentacionSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L661 | neighbors=[DetalleInfraccionView.tsx, formatDate()]
-- "shared_detalleinfraccionview_formatcurrency": "formatCurrency()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L110 | neighbors=[DetalleInfraccionView.tsx, SummaryBar()]
-- "shared_detalleinfraccionview_fundamentolegalsection": "FundamentoLegalSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L580 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
-- "shared_detalleinfraccionview_infractorvehiculosection": "InfractorVehiculoSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L521 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
-- "shared_detalleinfraccionview_mapgarantia": "mapGarantia()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L121 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
-- "shared_detalleinfraccionview_mapsection": "MapSection()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L207 | neighbors=[DetalleInfraccionView.tsx, sanitize()]
 
 ## Instructions
 

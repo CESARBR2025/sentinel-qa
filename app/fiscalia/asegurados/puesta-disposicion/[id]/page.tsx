@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
-import { ProfileDropdown } from '@/components/fiscalia/ProfileDropdown'
 import { FormularioPuestaDisposicion } from '@/components/fiscalia/FormularioPuestaDisposicion'
 import { obtenerDashboardFiscalia, obtenerDetalleAseguradoCompletoAction, obtenerPuestaDisposicionAction } from '@/lib/fiscalia/actions'
+import { DashboardHeader } from '@/components/partials/Header'
 import { APP_VERSION } from "@/lib/constants"
 
 interface Props {
@@ -23,30 +23,9 @@ export default async function PuestaDisposicionPage({ params }: Props) {
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
       `}</style>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '100vh' }}>
+      <DashboardHeader user={user} roleLabel="Puesta a Disposición" backHref="/fiscalia/asegurados" backLabel="Asegurados" />
 
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-          paddingBottom: 20, borderBottom: '1px solid #e2e8f0',
-          position: 'relative',
-        }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#7c3aed' }}></div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <img src="/chaleco.png" alt="S" style={{ height: 48, objectFit: 'contain' }} />
-            <div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#7c3aed', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: '#7c3aed', display: 'inline-block' }}></span>
-                Puesta a Disposición
-              </div>
-              <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                FISCALÍA · PUESTA A DISPOSICIÓN
-              </h1>
-            </div>
-          </div>
-
-          <ProfileDropdown name={user.name} apellido={user.apellido} email={user.email} />
-        </div>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
         <FormularioPuestaDisposicion reporteCampoId={reporteCampoId} data={data} puestaDisposicion={pad} />
 

@@ -17,6 +17,16 @@ No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
+- "manual_migrations_0007_formato_n_split_formato_n_armas_aseguradas": "formato_n_armas_aseguradas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L113 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_atencion_victimas": "formato_n_atencion_victimas" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L98 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_eventos": "formato_n_eventos" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L23 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_fge": "formato_n_fge" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L36 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_fgr": "formato_n_fgr" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L55 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_medios_alternativos": "formato_n_medios_alternativos" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L85 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0007_formato_n_split_formato_n_rnd": "formato_n_rnd" | kind=code-symbol | source=lib/db/manual-migrations/0007_formato_n_split.sql:L74 | neighbors=[0007_formato_n_split.sql]
+- "manual_migrations_0013_roles_es_admin": "0013_roles_es_admin.sql" | kind=code-symbol | source=lib/db/manual-migrations/0013_roles_es_admin.sql:L1 | neighbors=[3ec7484 Header y Footer Fix]
+- "maps_googlemappicker_center": "center" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L8 | neighbors=[GoogleMapPicker.tsx]
+- "maps_googlemappicker_containerstyle": "containerStyle" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L7 | neighbors=[GoogleMapPicker.tsx]
 - "maps_googlemappicker_googlemappicker": "GoogleMapPicker()" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L18 | neighbors=[GoogleMapPicker.tsx]
 - "maps_googlemappicker_props": "Props" | kind=code-symbol | source=components/maps/GoogleMapPicker.tsx:L10 | neighbors=[GoogleMapPicker.tsx]
 - "maps_loadgooglemaps_googlemapsnamespace": "GoogleMapsNamespace" | kind=code-symbol | source=lib/maps/loadGoogleMaps.ts:L3 | neighbors=[loadGoogleMaps.ts]
@@ -47,16 +57,6 @@ one-sentence description — no prose, no markdown fences.
 - "monitorista_layout_monitoristalayout": "MonitoristaLayout()" | kind=code-symbol | source=app/monitorista/layout.tsx:L6 | neighbors=[layout.tsx]
 - "monitorista_mapper_bool": "bool()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L19 | neighbors=[mapper.ts]
 - "monitorista_mapper_str": "str()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L8 | neighbors=[mapper.ts]
-- "monitorista_page_cardstyle": "cardStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L107 | neighbors=[page.tsx]
-- "monitorista_page_monitoristahubpage": "MonitoristaHubPage()" | kind=code-symbol | source=app/monitorista/page.tsx:L11 | neighbors=[page.tsx]
-- "monitorista_page_onlinestyle": "onlineStyle" | kind=code-symbol | source=app/monitorista/page.tsx:L108 | neighbors=[page.tsx]
-- "monitorista_permisos_accion": "Accion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L5 | neighbors=[permisos.ts]
-- "monitorista_permisos_guardarpermiso": "guardarPermiso()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L17 | neighbors=[permisos.ts]
-- "monitorista_permisos_guardarplantillaseccion": "guardarPlantillaSeccion()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L27 | neighbors=[permisos.ts]
-- "monitorista_permisos_obtenerplantillarol": "obtenerPlantillaRol()" | kind=code-symbol | source=lib/monitorista/permisos.ts:L21 | neighbors=[permisos.ts]
-- "monitorista_permisos_permisorow": "PermisoRow" | kind=code-symbol | source=lib/monitorista/permisos.ts:L7 | neighbors=[permisos.ts]
-- "monitorista_permisos_permisoseccion": "PermisoSeccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L6 | neighbors=[permisos.ts]
-- "monitorista_permisos_seccion": "Seccion" | kind=code-symbol | source=lib/monitorista/permisos.ts:L4 | neighbors=[permisos.ts]
 
 ## Instructions
 

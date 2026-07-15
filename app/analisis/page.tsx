@@ -54,7 +54,7 @@ export default async function MenuAnalisisPage() {
         }
       `}} />
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} roleLabel="Análisis" backHref="/dashboard" />
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '60px 40px' }}>
         

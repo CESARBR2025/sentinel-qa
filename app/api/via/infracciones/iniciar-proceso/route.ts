@@ -6,6 +6,9 @@ import {
   actualizarDatosInfractorIniciarProceso,
   actualizarEstatusPendientePagoInfraccion,
 } from "@/lib/agente_infracciones/repository";
+import { verificarRolOficial } from "@/lib/oficial/service";
+import { verificarRolInfracciones } from "@/lib/agente_infracciones/service";
+import { verificarRolLiberaciones } from "@/lib/agente_liberaciones/service";
 
 const SA7_URL = "https://sanjuandelrio.sytes.net:3044/api/sasiete/qas/generar-orden-completa";
 const CONCEPTO_PRUEBA = "31378";
@@ -15,6 +18,13 @@ export async function PATCH(request: Request) {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+    const autorizado =
+      (await verificarRolOficial(session.user.id)) ||
+      (await verificarRolInfracciones(session.user.id)) ||
+      (await verificarRolLiberaciones(session.user.id));
+    if (!autorizado) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
     const body = await request.json();

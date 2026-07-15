@@ -4,12 +4,16 @@ import { headers } from 'next/headers';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { registrarFichaInteligencia } from '@/lib/monitorista/repository';
+import { tienePermiso } from '@/lib/monitorista/permisos';
 
 export async function POST(req: Request) {
   try {
     // 1. Validar Sesión
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) return NextResponse.json({ message: "No autorizado" }, { status: 401 });
+    if (!(await tienePermiso(session.user.id, 'detenidos', 'crear'))) {
+      return NextResponse.json({ message: "No autorizado" }, { status: 403 });
+    }
 
     // 2. Parsear FormData (Archivos + Texto)
     const formData = await req.formData();

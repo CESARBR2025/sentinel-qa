@@ -3,10 +3,8 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { getCatalogos } from "@/lib/911/service";
-import { ProfileDropdown } from "@/components/oficial/ProfileDropdown"
+import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
 import Formulario911 from "./Formulario911";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
@@ -63,42 +61,13 @@ export default async function Ciudadano911Page() {
         }
       `}} />
 
-      {/* Header */}
-            <div style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-                padding: '24px 48px', borderBottom: '1px solid #e2e8f0', position: 'relative',
-                background: '#ffffff',
-            }}>
-                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#1f355a' }} />
+      <DashboardHeader
+        user={user}
+        roleLabel="Reporte de Llamada al 911"
+        backHref="/agente_911/ciudadano/incidentes"
+        backLabel="Bitácora"
+      />
 
-                <div>
-                    <Link href="/agente_911/ciudadano/incidentes" style={{
-                        fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em',
-                        color: '#94a3b8', textTransform: 'uppercase', textDecoration: 'none',
-                        display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
-                    }}>
-                        <ArrowLeft size={14} /> Bitácora
-                    </Link>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                        <img src="/chaleco.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
-                        <div>
-                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
-                                Sistema de Atención de Emergencias
-                            </div>
-                            <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                                Reporte de Llamada <span style={{ color: '#1f355a' }}>al 911</span>
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <ProfileDropdown name={user.name} apellido={user.apellido} email={user.email} rolLabel="Agente 911" mostrarPerfil={false} />
-                </div>
-            </div>
-      
       <div
         className="sentinel-label-fix"
         style={{
