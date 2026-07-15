@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
+import { SearchBox } from './SearchBox'
 
 const ESTADOS = [
   { key: '', label: 'Todas' },
@@ -27,11 +28,13 @@ export function MedidasFiltros() {
   const autoridad = searchParams.get('autoridad') ?? ''
   const sinVisita = searchParams.get('sinVisita') === '1'
   const prorrogadas = searchParams.get('prorrogadas') === '1'
+  const q = searchParams.get('q') ?? ''
 
   const set = useCallback((key: string, value: string) => {
     const p = new URLSearchParams(searchParams.toString())
     if (value) p.set(key, value)
     else p.delete(key)
+    p.delete('page')
     router.push(`/prevencion/medidas?${p.toString()}`)
   }, [router, searchParams])
 
@@ -41,6 +44,9 @@ export function MedidasFiltros() {
 
   return (
     <div style={{ marginBottom: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {/* Buscador */}
+      <SearchBox placeholder="Buscar por expediente, víctima, demandado, autoridad..." />
+
       {/* Fila 1: estado semáforo */}
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {ESTADOS.map(e => {
@@ -113,7 +119,7 @@ export function MedidasFiltros() {
           Prorrogadas
         </button>
 
-        {(estado || autoridad || sinVisita || prorrogadas) && (
+        {(estado || autoridad || sinVisita || prorrogadas || q) && (
           <button
             onClick={() => router.push('/prevencion/medidas')}
             style={{

@@ -3,17 +3,39 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link          from 'next/link'
 import { format }    from 'date-fns'
+import { Suspense }  from 'react'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
 import { tienePermiso } from '@/lib/prevencion/permisos'
 import { listarSolicitudesJuridico } from '@/lib/prevencion/repository'
+import { JuridicoFiltros } from '@/components/prevencion/JuridicoFiltros'
+import { Pagination } from '@/components/prevencion/Pagination'
+import { paginate } from '@/lib/prevencion/paginate'
 
-export default async function JuridicoPage() {
+export default async function JuridicoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ autoridad?: string; q?: string; page?: string }>
+}) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
   if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/prevencion/medidas')
 
-  const solicitudes = await listarSolicitudesJuridico()
+  const { autoridad, q, page } = await searchParams
+
+  let solicitudes = await listarSolicitudesJuridico()
+  const totalSinFiltro = solicitudes.length
+
+  if (autoridad) solicitudes = solicitudes.filter(s => s.autoridad === autoridad)
+  if (q) {
+    const needle = q.trim().toLowerCase()
+    solicitudes = solicitudes.filter(s => [s.oficio, s.delito, s.carpeta_investigacion, s.fiscal_solicita]
+      .some(v => typeof v === 'string' && v.toLowerCase().includes(needle)))
+  }
+
+  const hayFiltro = !!(autoridad || q)
+  const totalFiltrado = solicitudes.length
+  const pageRows = paginate(solicitudes, page)
 
   return (
     <div>
@@ -24,7 +46,11 @@ export default async function JuridicoPage() {
             Bandeja <span style={{ color: '#1f355a' }}>Jurídica</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
-            {solicitudes.length} solicitud{solicitudes.length !== 1 ? 'es' : ''} activa{solicitudes.length !== 1 ? 's' : ''}
+            {hayFiltro ? (
+              <>{totalFiltrado} resultado{totalFiltrado !== 1 ? 's' : ''} · <span style={{ color: '#d4a43a' }}>filtros activos</span></>
+            ) : (
+              <>{totalSinFiltro} solicitud{totalSinFiltro !== 1 ? 'es' : ''} activa{totalSinFiltro !== 1 ? 's' : ''}</>
+            )}
           </p>
         </div>
         <Link
@@ -35,10 +61,15 @@ export default async function JuridicoPage() {
         </Link>
       </div>
 
+      {/* Filtros */}
+      <Suspense>
+        <JuridicoFiltros />
+      </Suspense>
+
       {/* Table */}
-      {solicitudes.length === 0 ? (
+      {totalFiltrado === 0 ? (
         <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-          › No hay solicitudes activas en la bandeja
+          {hayFiltro ? '› Sin resultados para los filtros seleccionados.' : '› No hay solicitudes activas en la bandeja'}
         </div>
       ) : (
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
@@ -53,7 +84,7 @@ export default async function JuridicoPage() {
               </tr>
             </thead>
             <tbody>
-              {solicitudes.map(s => {
+              {pageRows.map(s => {
                 const fechaAct = new Date(String(s.fecha_activacion))
                 return (
                   <tr key={s.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
@@ -81,6 +112,10 @@ export default async function JuridicoPage() {
           </table>
         </div>
       )}
+
+      <Suspense>
+        <Pagination total={totalFiltrado} />
+      </Suspense>
     </div>
   )
 }

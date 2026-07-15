@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 /**
@@ -25,10 +25,51 @@ export default function PageTransition() {
   const [pct, setPct]     = useState(0)
   const prevPath  = useRef(pathname)
   const isInitial = useRef(true)
+  const running   = useRef(false)
   const timers    = useRef<ReturnType<typeof setTimeout>[]>([])
   const rafs      = useRef<number[]>([])
 
-  // ── Disparo en cambio de ruta ────────────────────────────────────────────────
+  // ── Secuencia de la compuerta ────────────────────────────────────────────────
+  const startTransition = useCallback(() => {
+    if (running.current) return
+    running.current = true
+
+    timers.current.forEach(clearTimeout); timers.current = []
+    rafs.current.forEach(cancelAnimationFrame); rafs.current = []
+
+    setStage(1) // monta con hojas abiertas (fuera de pantalla) + blur inmediato
+    // Doble rAF: paint del estado abierto antes de cerrar → dispara la transición IN
+    const r1 = requestAnimationFrame(() => {
+      const r2 = requestAnimationFrame(() => setStage(2))
+      rafs.current.push(r2)
+    })
+    rafs.current.push(r1)
+
+    timers.current.push(setTimeout(() => setStage(3), T_CLOSE + T_HOLD))
+    timers.current.push(setTimeout(() => { setStage(0); running.current = false }, T_CLOSE + T_HOLD + T_OPEN))
+  }, [])
+
+  // ── Disparo TEMPRANO al hacer clic en un enlace interno (antes de navegar) ────
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const a = (e.target as HTMLElement)?.closest?.('a')
+      if (!a) return
+      const target = a.getAttribute('target')
+      if ((target && target !== '_self') || a.hasAttribute('download')) return
+      const raw = a.getAttribute('href')
+      if (!raw || raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('tel:')) return
+      let url: URL
+      try { url = new URL(a.href, location.href) } catch { return }
+      if (url.origin !== location.origin) return
+      if (url.pathname === location.pathname) return // misma página (hash/query) → sin transición
+      startTransition()
+    }
+    document.addEventListener('click', onClick, true) // fase de captura → antes que Next
+    return () => document.removeEventListener('click', onClick, true)
+  }, [startTransition])
+
+  // ── Fallback: navegaciones no originadas por clic (router.push, back/forward) ─
   useEffect(() => {
     if (isInitial.current) {
       isInitial.current = false
@@ -37,21 +78,9 @@ export default function PageTransition() {
     }
     if (prevPath.current === pathname) return
     prevPath.current = pathname
-
-    timers.current.forEach(clearTimeout); timers.current = []
-    rafs.current.forEach(cancelAnimationFrame); rafs.current = []
-
-    setStage(1) // monta con hojas abiertas (fuera de pantalla)
-    // Doble rAF: garantiza un paint del estado abierto antes de cerrar → dispara la transición IN
-    const r1 = requestAnimationFrame(() => {
-      const r2 = requestAnimationFrame(() => setStage(2))
-      rafs.current.push(r2)
-    })
-    rafs.current.push(r1)
-
-    timers.current.push(setTimeout(() => setStage(3), T_CLOSE + T_HOLD))
-    timers.current.push(setTimeout(() => setStage(0), T_CLOSE + T_HOLD + T_OPEN))
-  }, [pathname])
+    if (running.current) return // ya iniciada por el clic
+    startTransition()
+  }, [pathname, startTransition])
 
   // ── Contador de carga durante el hold ────────────────────────────────────────
   useEffect(() => {
@@ -113,6 +142,13 @@ export default function PageTransition() {
         .pt-hz { position: absolute; left: 0; right: 0; height: 14px; pointer-events: none;
           background: repeating-linear-gradient(-45deg, rgba(77,146,240,0.16) 0 10px, transparent 10px 20px); }
       `}</style>
+
+      {/* ── Capa de bloqueo: difumina y desactiva toda la app durante la transición ── */}
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 0,
+        background: 'rgba(5, 8, 16, 0.4)',
+        backdropFilter: 'blur(9px)', WebkitBackdropFilter: 'blur(9px)',
+      }} />
 
       {/* ── Hoja superior ── */}
       <div style={{ ...panelBase, top: 0, transform: closed ? 'translateY(0)' : 'translateY(-100.5%)' }}>

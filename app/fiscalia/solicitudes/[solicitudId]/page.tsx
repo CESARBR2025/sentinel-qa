@@ -7,6 +7,7 @@ import { verificarRolFiscalia, obtenerDatosAsegurado } from '@/lib/fiscalia/serv
 import { obtenerEvidenciasMonitorista } from '@/lib/fiscalia/repository'
 import { CapturarDetallesForm } from '@/components/fiscalia/CapturarDetallesForm'
 import { DetallesAseguradoView } from '@/components/fiscalia/DetallesAseguradoView'
+import { FotosExpedienteSection } from '@/components/fiscalia/FotosExpedienteSection'
 
 export default async function AseguradosFiscaliaPage({ params }: { params: Promise<{ solicitudId: string }> }) {
   const { solicitudId } = await params
@@ -62,9 +63,21 @@ export default async function AseguradosFiscaliaPage({ params }: { params: Promi
 
         {datosCapturados ? (
           <DetallesAseguradoView solicitudId={solicitudId} data={data} evidencias={evidencias} />
-        ) : (
+        ) : <>
           <CapturarDetallesForm solicitudId={solicitudId} data={data} />
-        )}
+          {data.reporteCampoId && (
+            <FotosExpedienteSection
+              detenidos={data.detenidosLista || []}
+              reporteCampoId={data.reporteCampoId}
+              hayArmaFuego={!!data.hayArmaFuego}
+              hayArmaBlanca={!!data.hayArmaBlanca}
+              hayDroga={!!data.hayDroga}
+              hayVehiculo={!!data.hayVehiculo}
+              hayHidrocarburo={!!data.hayHidrocarburo}
+              objetosRecuperados={data.objetosRecuperados || undefined}
+            />
+          )}
+        </>}
 
         <div style={{
           marginTop: 'auto', paddingTop: 20,

@@ -4,23 +4,45 @@ import { redirect } from 'next/navigation'
 import { getFichasBusqueda } from '@/lib/prevencion/repository'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { Suspense } from 'react'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { BusquedasFiltros } from '@/components/prevencion/BusquedasFiltros'
+import { Pagination } from '@/components/prevencion/Pagination'
+import { paginate } from '@/lib/prevencion/paginate'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
   PROTOCOLO_ALBA:   { label: 'Protocolo Alba',     color: '#991b1b' },
   BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#1f355a' },
 }
 
-export default async function BusquedasPage() {
+export default async function BusquedasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string; status?: string; q?: string; page?: string }>
+}) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
   if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
 
-  const fichas = await getFichasBusqueda()
+  const { tipo, status, q, page } = await searchParams
+
+  let fichas = await getFichasBusqueda()
 
   const activas    = fichas.filter(f => f.status === 'activa').length
   const canceladas = fichas.filter(f => f.status === 'cancelada').length
+
+  if (tipo) fichas = fichas.filter(f => f.tipo === tipo)
+  if (status) fichas = fichas.filter(f => f.status === status)
+  if (q) {
+    const needle = q.trim().toLowerCase()
+    fichas = fichas.filter(f => [f.nombre_desaparecida, f.folio, f.carpeta_investigacion, f.rt_atiende, f.enlace]
+      .some(v => typeof v === 'string' && v.toLowerCase().includes(needle)))
+  }
+
+  const hayFiltro = !!(tipo || status || q)
+  const totalFiltrado = fichas.length
+  const pageRows = paginate(fichas, page)
 
   return (
     <div>
@@ -31,7 +53,11 @@ export default async function BusquedasPage() {
             Búsquedas / <span style={{ color: '#1f355a' }}>Protocolo Alba</span>
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
-            {fichas.length} ficha{fichas.length !== 1 ? 's' : ''} registrada{fichas.length !== 1 ? 's' : ''}
+            {hayFiltro ? (
+              <>{totalFiltrado} resultado{totalFiltrado !== 1 ? 's' : ''} · <span style={{ color: '#d4a43a' }}>filtros activos</span></>
+            ) : (
+              <>{fichas.length} ficha{fichas.length !== 1 ? 's' : ''} registrada{fichas.length !== 1 ? 's' : ''}</>
+            )}
           </p>
         </div>
         <Link
@@ -45,7 +71,7 @@ export default async function BusquedasPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginBottom: 32, maxWidth: 600 }}>
         {[
-          { label: 'Total',     value: fichas.length, color: '#1e293b' },
+          { label: 'Total',     value: activas + canceladas, color: '#1e293b' },
           { label: 'Activas',   value: activas,       color: '#991b1b' },
           { label: 'Cerradas',  value: canceladas,    color: '#166534' },
         ].map(s => (
@@ -56,10 +82,15 @@ export default async function BusquedasPage() {
         ))}
       </div>
 
+      {/* Filtros */}
+      <Suspense>
+        <BusquedasFiltros />
+      </Suspense>
+
       {/* Tabla */}
-      {fichas.length === 0 ? (
+      {totalFiltrado === 0 ? (
         <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2a3a5e', letterSpacing: '0.15em' }}>
-          › No hay fichas registradas — activa el primer protocolo.
+          {hayFiltro ? '› Sin resultados para los filtros seleccionados.' : '› No hay fichas registradas — activa el primer protocolo.'}
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
@@ -72,7 +103,7 @@ export default async function BusquedasPage() {
               </tr>
             </thead>
             <tbody>
-              {fichas.map((f, i) => {
+              {pageRows.map((f, i) => {
                 const cfg = TIPO_CFG[f.tipo] ?? { label: f.tipo, color: '#4a5878' }
                 const fechaStr = format(new Date(String(f.fecha_activacion)), 'dd/MM/yy HH:mm')
 
@@ -112,6 +143,10 @@ export default async function BusquedasPage() {
           </table>
         </div>
       )}
+
+      <Suspense>
+        <Pagination total={totalFiltrado} />
+      </Suspense>
     </div>
   )
 }

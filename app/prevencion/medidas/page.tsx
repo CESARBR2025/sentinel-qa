@@ -7,6 +7,8 @@ import { calcularSemaforoVigencia } from '@/lib/prevencion/semaforo'
 import { SemaforoVigencia } from '@/components/prevencion/SemaforoVigencia'
 import { AutoridadBadge } from '@/components/prevencion/AutoridadBadge'
 import { MedidasFiltros } from '@/components/prevencion/MedidasFiltros'
+import { Pagination } from '@/components/prevencion/Pagination'
+import { paginate } from '@/lib/prevencion/paginate'
 import { Suspense } from 'react'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 
@@ -25,6 +27,8 @@ export default async function MedidasPage({
     autoridad?: string
     sinVisita?: string
     prorrogadas?: string
+    q?: string
+    page?: string
   }>
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -32,7 +36,7 @@ export default async function MedidasPage({
   if (!(await tieneAccesoSeccion(session.user.id, 'medidas'))) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'medidas', 'ver'))) redirect('/dashboard')
 
-  const { estado, autoridad, sinVisita, prorrogadas } = await searchParams
+  const { estado, autoridad, sinVisita, prorrogadas, q, page } = await searchParams
 
   let rows = await getMedidas({ autoridad, prorrogadas })
 
@@ -48,7 +52,16 @@ export default async function MedidasPage({
     rows = rows.filter(r => !idsConVisita.has(r.id))
   }
 
-  const semaforos = rows.map(r => calcularSemaforoVigencia(r.fecha_vencimiento))
+  // Búsqueda de texto libre
+  if (q) {
+    const needle = q.trim().toLowerCase()
+    rows = rows.filter(r => [r.expediente, r.n_oficio, r.victima, r.demandado, r.tipo_medida, r.nombre_autoridad, r.colonia, r.enlace]
+      .some(v => typeof v === 'string' && v.toLowerCase().includes(needle)))
+  }
+
+  const totalFiltrado = rows.length
+  const pageRows = paginate(rows, page)
+  const semaforos = pageRows.map(r => calcularSemaforoVigencia(r.fecha_vencimiento))
 
   // Stats siempre del total sin filtros (para contexto)
   const allRows = await getMedidasStats()
@@ -60,7 +73,7 @@ export default async function MedidasPage({
     { label: 'Vencidas', value: allSem.filter(s => s === 'rojo').length, color: '#991b1b' },
   ]
 
-  const hayFiltro = !!(estado || autoridad || sinVisita || prorrogadas)
+  const hayFiltro = !!(estado || autoridad || sinVisita || prorrogadas || q)
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', padding: '40px' }}>
@@ -72,7 +85,7 @@ export default async function MedidasPage({
           </h2>
           <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
             {hayFiltro ? (
-              <>{rows.length} resultado{rows.length !== 1 ? 's' : ''} · <span style={{ color: '#d4a43a' }}>filtros activos</span></>
+              <>{totalFiltrado} resultado{totalFiltrado !== 1 ? 's' : ''} · <span style={{ color: '#d4a43a' }}>filtros activos</span></>
             ) : (
               <>{allRows.length} expediente{allRows.length !== 1 ? 's' : ''} registrado{allRows.length !== 1 ? 's' : ''}</>
             )}
@@ -102,7 +115,7 @@ export default async function MedidasPage({
       </Suspense>
 
       {/* Table */}
-      {rows.length === 0 ? (
+      {totalFiltrado === 0 ? (
         <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#2a3a5e', letterSpacing: '0.15em' }}>
           {hayFiltro ? '› Sin resultados para los filtros seleccionados.' : '› No hay expedientes registrados — crea el primero.'}
         </div>
@@ -119,7 +132,7 @@ export default async function MedidasPage({
               </tr>
             </thead>
             <tbody>
-              {rows.map((r, i) => (
+              {pageRows.map((r, i) => (
                 <tr key={r.id} style={{ borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                   <td style={{ padding: '10px 12px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -160,6 +173,10 @@ export default async function MedidasPage({
           </table>
         </div>
       )}
+
+      <Suspense>
+        <Pagination total={totalFiltrado} />
+      </Suspense>
     </div>
   )
 }

@@ -60,60 +60,67 @@ export default function PrevencionNav() {
   const totalAlertas = alertas.pendientes24h + alertas.vencidos
 
   return (
-    <nav style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '0 48px', display: 'flex', gap: 0 }}>
-      {NAV.map(({ href, label }, i) => {
-        const isActive = pathname.startsWith(href)
-        const showBadge = href === '/prevencion/busquedas' && totalAlertas > 0
+    <nav style={{
+      background: 'linear-gradient(180deg, #eef2f7 0%, #e8edf3 100%)',
+      borderBottom: '1px solid #d5dde7',
+      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
+      padding: '12px 48px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 20,
+    }}>
+      <style>{`
+        .pvnav-chip { position: relative; display: inline-flex; align-items: center; gap: 9px;
+          padding: 9px 18px; border-radius: 7px; text-decoration: none;
+          font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+          text-transform: uppercase; color: #5b6b82; white-space: nowrap;
+          transition: color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease; }
+        .pvnav-chip:not(.is-active):hover { color: #1f355a; background: rgba(31,53,90,0.06); }
+        .pvnav-chip.is-active { color: #ffffff; background: linear-gradient(180deg, #274268 0%, #1f355a 100%);
+          box-shadow: 0 3px 10px rgba(31,53,90,0.32), inset 0 1px 0 rgba(255,255,255,0.18); }
+        .pvnav-chip .pvnav-ico { display: inline-flex; opacity: 0.9; }
+      `}</style>
 
-        return (
-          <Link
-            key={href}
-            href={href}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '14px 24px',
-              fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 11,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: isActive ? '#1f355a' : '#64748b',
-              textDecoration: 'none',
-              borderBottom: isActive ? '2px solid #1f355a' : '2px solid transparent',
-              transition: 'color 0.15s, border-color 0.15s',
-              position: 'relative',
-            }}
-          >
-            <span style={{ fontSize: 14, color: isActive ? '#1f355a' : '#94a3b8' }}>
-              {ICONS[i]}
-            </span>
-            {label}
-            {showBadge && (
-              <span style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                minWidth: 18,
-                height: 18,
-                borderRadius: 9,
-                background: alertas.vencidos > 0 ? '#991b1b' : '#854d0e',
-                color: '#fff',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                fontFamily: 'JetBrains Mono,monospace',
-                fontSize: 9,
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '0 4px',
-              }}>
-                {totalAlertas}
+      {/* Etiqueta identificadora del sub-menú */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+        <span style={{ width: 3, height: 22, background: '#1f355a', borderRadius: 2 }} />
+        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9.5, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#8393a8', lineHeight: 1.2 }}>
+          Secciones
+        </span>
+      </div>
+
+      {/* Control segmentado */}
+      <div style={{
+        display: 'inline-flex', gap: 4, padding: 5,
+        background: '#ffffff', border: '1px solid #dbe3ec', borderRadius: 11,
+        boxShadow: '0 1px 2px rgba(15,23,42,0.05)',
+      }}>
+        {NAV.map(({ href, label }, i) => {
+          const isActive = pathname.startsWith(href)
+          const showBadge = href === '/prevencion/busquedas' && totalAlertas > 0
+
+          return (
+            <Link key={href} href={href} className={`pvnav-chip${isActive ? ' is-active' : ''}`}>
+              <span className="pvnav-ico" style={{ color: isActive ? '#9ec3ff' : '#94a3b8' }}>
+                {ICONS[i]}
               </span>
-            )}
-          </Link>
-        )
-      })}
+              {label}
+              {showBadge && (
+                <span style={{
+                  minWidth: 18, height: 18, borderRadius: 9,
+                  background: alertas.vencidos > 0 ? '#991b1b' : '#854d0e',
+                  color: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                  fontFamily: 'JetBrains Mono,monospace', fontSize: 9, fontWeight: 600,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 5px',
+                  marginLeft: 2,
+                }}>
+                  {totalAlertas}
+                </span>
+              )}
+            </Link>
+          )
+        })}
+      </div>
     </nav>
   )
 }

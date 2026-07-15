@@ -5,27 +5,28 @@ import Link from 'next/link'
 import { TomarCasoBoton } from './TomarCasoModal'
 import { PedirEvidenciasBoton } from './PedirEvidenciasModal'
 import type { SolicitudEvidencia } from '@/lib/fiscalia/types'
+import { Eye } from 'lucide-react'
 
 interface Props {
   pendientes: SolicitudEvidencia[]
-  enProceso: SolicitudEvidencia[]
-  conMonitorista: SolicitudEvidencia[]
-  completadas: SolicitudEvidencia[]
+  sinEvidencias: SolicitudEvidencia[]
+  conEvidencias: SolicitudEvidencia[]
+  finalizadas: SolicitudEvidencia[]
 }
 
-type Tab = 'pendientes' | 'en_proceso' | 'con_monitorista' | 'completadas'
+type Tab = 'pendientes' | 'sin_evidencias' | 'con_evidencias' | 'finalizadas'
 
 const tabs: { key: Tab; label: string; color: string }[] = [
-  { key: 'pendientes',       label: 'Pendientes',         color: '#d97706' },
-  { key: 'en_proceso',       label: 'En Proceso',         color: '#7c3aed' },
-  { key: 'con_monitorista',  label: 'Con Monitorista',    color: '#0891b2' },
-  { key: 'completadas',      label: 'Completadas',        color: '#16a34a' },
+  { key: 'pendientes',     label: 'Pendientes',      color: '#d97706' },
+  { key: 'sin_evidencias', label: 'Sin Evidencias',  color: '#16a34a' },
+  { key: 'con_evidencias', label: 'Con Evidencias',  color: '#0891b2' },
+  { key: 'finalizadas',    label: 'Finalizadas',     color: '#475569' },
 ]
 
-export function TabSolicitudes({ pendientes, enProceso, conMonitorista, completadas }: Props) {
+export function TabSolicitudes({ pendientes, sinEvidencias, conEvidencias, finalizadas }: Props) {
   const [tab, setTab] = useState<Tab>('pendientes')
 
-  const map: Record<Tab, SolicitudEvidencia[]> = { pendientes, en_proceso: enProceso, con_monitorista: conMonitorista, completadas }
+  const map: Record<Tab, SolicitudEvidencia[]> = { pendientes, sin_evidencias: sinEvidencias, con_evidencias: conEvidencias, finalizadas }
   const data = map[tab]
 
   return (
@@ -85,7 +86,7 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista, completa
             <line x1="12" y1="18" x2="12" y2="12" />
             <line x1="9" y1="15" x2="15" y2="15" />
           </svg>
-          <span>No hay solicitudes {tab === 'pendientes' ? 'pendientes' : tab === 'en_proceso' ? 'en proceso' : tab === 'con_monitorista' ? 'con monitorista' : 'completadas'}</span>
+          <span>No hay solicitudes {tab === 'pendientes' ? 'pendientes' : tab === 'sin_evidencias' ? 'sin evidencias' : tab === 'con_evidencias' ? 'con evidencias' : 'finalizadas'}</span>
         </div>
       ) : (
         <div style={{ overflowX: 'auto', background: '#ffffff', border: '1px solid #e2e8f0' }}>
@@ -104,91 +105,93 @@ export function TabSolicitudes({ pendientes, enProceso, conMonitorista, completa
               </tr>
             </thead>
             <tbody>
-              {data.map(s => (
-                <tr key={s.id} className="st-r">
-                  <td style={{ fontFamily: 'JetBrains Mono,monospace', fontWeight: 600, color: '#0f172a' }}>{s.folioDenuncia ?? '—'}</td>
-                  <td>{s.iph ?? '—'}</td>
-                  <td>{s.folioCu ?? '—'}</td>
-                  <td>{s.corporacion ?? '—'}</td>
-                  <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.delito ?? '—'}</td>
-                  <td style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>{s.fechaReporte ?? '—'}</td>
-                  <td>
-                    <span className="badge-estado" style={{
-                      background: s.estadoTramite === 'RECIBIDA' ? '#fef3c7' : '#e0e7ff',
-                      color: s.estadoTramite === 'RECIBIDA' ? '#92400e' : '#3730a3',
-                    }}>{s.estadoTramite ?? '—'}</span>
-                  </td>
-                  <td>
-                    <span className="badge-estado" style={{
-                      background: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#cffafe' :
-                                   s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
-                                   s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#d1fae5' :
-                                   '#f1f5f9',
-                      color: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#155e75' :
-                             s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
-                             s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#065f46' :
-                             '#475569',
-                    }}>{s.estadoEvidencia ?? '—'}</span>
-                  </td>
-                  <td style={{ textAlign: 'center' }}>
-                    {tab === 'pendientes' ? (
-                      <TomarCasoBoton solicitudId={s.id} />
-                    ) : tab === 'en_proceso' ? (
-                      <Link href={`/fiscalia/solicitudes/${s.id}`} style={{
-                        fontFamily: 'JetBrains Mono,monospace',
-                        fontSize: 9,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        padding: '5px 14px',
-                        border: `1px solid ${s.folioSija ? '#059669' : '#7c3aed'}`,
-                        background: '#ffffff',
-                        color: s.folioSija ? '#059669' : '#7c3aed',
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        transition: 'all 0.15s ease',
-                      }}
-                        onMouseEnter={e => { e.currentTarget.style.background = s.folioSija ? '#059669' : '#7c3aed'; e.currentTarget.style.color = '#ffffff'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = s.folioSija ? '#059669' : '#7c3aed'; }}
-                      >
-                        {s.folioSija ? 'Detalles' : 'Capturar'}
-                      </Link>
-                    ) : tab === 'con_monitorista' ? (
-                      <PedirEvidenciasBoton
-                        solicitudId={s.id}
-                        existingEvidencias={(() => {
-                          try {
-                            const raw = s.monitoristaFechasRequeridas
-                            if (!raw) return []
-                            const parsed = JSON.parse(raw)
-                            return Array.isArray(parsed) ? parsed : []
-                          } catch {
-                            return []
-                          }
-                        })()}
-                      />
-                    ) : (
-                      <Link href={`/fiscalia/solicitudes/${s.id}`} style={{
-                        fontFamily: 'JetBrains Mono,monospace',
-                        fontSize: 9,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        padding: '5px 14px',
-                        border: '1px solid #16a34a',
-                        background: '#ffffff',
-                        color: '#16a34a',
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        transition: 'all 0.15s ease',
-                      }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#16a34a'; e.currentTarget.style.color = '#ffffff'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#16a34a'; }}
-                      >
-                        Detalles
-                      </Link>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {data.map(s => {
+                const puedePedirEvidencias = tab === 'sin_evidencias'
+                return (
+                  <tr key={s.id} className="st-r">
+                    <td style={{ fontFamily: 'JetBrains Mono,monospace', fontWeight: 600, color: '#0f172a' }}>{s.folioDenuncia ?? '—'}</td>
+                    <td>{s.iph ?? '—'}</td>
+                    <td>{s.folioCu ?? '—'}</td>
+                    <td>{s.corporacion ?? '—'}</td>
+                    <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.delito ?? '—'}</td>
+                    <td style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>{s.fechaReporte ?? '—'}</td>
+                    <td>
+                      <span className="badge-estado" style={{
+                        background: s.estadoTramite === 'RECIBIDA' ? '#fef3c7' : '#e0e7ff',
+                        color: s.estadoTramite === 'RECIBIDA' ? '#92400e' : '#3730a3',
+                      }}>{s.estadoTramite ?? '—'}</span>
+                    </td>
+                    <td>
+                      <span className="badge-estado" style={{
+                        background: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#cffafe' :
+                                     s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
+                                     s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#d1fae5' :
+                                     '#f1f5f9',
+                        color: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#155e75' :
+                               s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
+                               s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#065f46' :
+                               '#475569',
+                      }}>{s.estadoEvidencia ?? '—'}</span>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {tab === 'pendientes' ? (
+                        <TomarCasoBoton solicitudId={s.id} />
+                      ) : tab === 'finalizadas' ? (
+                        <Link href={`/fiscalia/expedientes/${s.id}`} style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
+                          fontFamily: 'JetBrains Mono,monospace', fontSize: 9,
+                          letterSpacing: '0.08em', textTransform: 'uppercase',
+                          padding: '5px 14px', border: '1px solid #475569',
+                          background: '#ffffff', color: '#475569',
+                          cursor: 'pointer', textDecoration: 'none',
+                          transition: 'all 0.15s ease',
+                        }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#475569'; e.currentTarget.style.color = '#ffffff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#475569'; }}
+                        >
+                          <Eye size={12} /> Ver Expediente
+                        </Link>
+                      ) : (
+                        <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+                          <Link href={`/fiscalia/solicitudes/${s.id}`} style={{
+                            fontFamily: 'JetBrains Mono,monospace',
+                            fontSize: 9,
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            padding: '5px 14px',
+                            border: '1px solid #7c3aed',
+                            background: '#ffffff',
+                            color: '#7c3aed',
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            transition: 'all 0.15s ease',
+                          }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#7c3aed'; e.currentTarget.style.color = '#ffffff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#7c3aed'; }}
+                          >
+                            Detalles
+                          </Link>
+                          {puedePedirEvidencias && (
+                            <PedirEvidenciasBoton
+                              solicitudId={s.id}
+                              existingEvidencias={(() => {
+                                try {
+                                  const raw = s.monitoristaFechasRequeridas
+                                  if (!raw) return []
+                                  const parsed = JSON.parse(raw)
+                                  return Array.isArray(parsed) ? parsed : []
+                                } catch {
+                                  return []
+                                }
+                              })()}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

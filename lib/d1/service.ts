@@ -1,6 +1,11 @@
-import { obtenerReportesD1 } from './repository'
+import { obtenerReportesD1, obtenerGruposAdscripcion } from './repository'
+import type { GrupoAdscripcion } from './types'
 
 function toStr(val: unknown) { return String(val ?? '—') }
+
+export async function listarGruposAdscripcion(autoridad?: string): Promise<GrupoAdscripcion[]> {
+  return obtenerGruposAdscripcion(autoridad)
+}
 
 export async function listarReportesD1(desde?: string, hasta?: string, folio?: string) {
     const rows = await obtenerReportesD1(desde, hasta, folio)

@@ -43,7 +43,17 @@ interface Prefill {
   lat: number | null
   lng: number | null
   oficialId: string | null
+  destino: string | null
   crp: string
+  tipoIncidente: string | null
+  descripcion: string | null
+  folioReporteCampo: string | null
+  sector: string | null
+  nombreOficial: string | null
+  nominaOficial: string | null
+  fechaHoraInicioIncidente: string | null
+  fechaHoraDespacho: string | null
+  fechaReporteCampo: string | null
 }
 
 function generarFolioDenuncia(): string {
@@ -60,12 +70,65 @@ function generarFolioDenuncia(): string {
   return `SSPM/${fecha}/${codigo}`
 }
 
-export default function FormularioD1({ user, prefill }: { user: any; prefill?: Prefill }) {
+interface GrupoAdscripcionOption {
+  id: number
+  clave: string
+  nombre: string
+  autoridad: string
+}
+
+export default function FormularioD1({ user, prefill, gruposAdscripcion }: { user: any; prefill?: Prefill; gruposAdscripcion?: GrupoAdscripcionOption[] }) {
   const folioDenunciaAuto = useMemo(() => generarFolioDenuncia(), [])
+
+  const consecutivoAnio = useMemo(() => {
+    const y = new Date().getFullYear()
+    const rand = String(Math.floor(Math.random() * 90000) + 10000)
+    return { y, rand }
+  }, [])
+
+  const iphDefault = `IPH-${consecutivoAnio.y}-${consecutivoAnio.rand}`
+  const cuDefault = `CU-${consecutivoAnio.y}-${consecutivoAnio.rand}`
+
   const oficialId = prefill?.oficialId ?? ''
   const incidenteId = prefill?.incidenteId ?? ''
 
   const store = useD1FormStore()
+
+  // Pre-fill avistamiento con misma fecha/hora de reporte
+  const fechaAvistamientoDefault = prefill?.fechaReporteCampo
+    ? new Date(prefill.fechaReporteCampo).toISOString().split('T')[0]
+    : store.fechaReporte
+
+  const horaAvistamientoDefault = prefill?.fechaReporteCampo
+    ? new Date(prefill.fechaReporteCampo).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+    : store.horaReporte
+
+  // Pre-fill fecha/hora despacho desde incidente
+  const fechaDespachoDefault = prefill?.fechaHoraDespacho
+    ? new Date(prefill.fechaHoraDespacho).toISOString().split('T')[0]
+    : ''
+
+  const horaDespachoDefault = prefill?.fechaHoraDespacho
+    ? new Date(prefill.fechaHoraDespacho).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+    : ''
+
+  // Cronometría: defaults progresivos desde fecha/hora reporte
+  const fechaConfirmacionDefault = fechaDespachoDefault || store.fechaReporte
+  const horaConfirmacionDefault = horaDespachoDefault || store.horaReporte
+  const fechaLlegadaDefault = fechaDespachoDefault || store.fechaReporte
+  const horaLlegadaDefault = horaDespachoDefault || store.horaReporte
+
+  // Default grupo de adscripción: el primero del catálogo filtrado por destino, o el primero general
+  const grupoAdscripcionDefault = useMemo(() => {
+    if (!gruposAdscripcion || gruposAdscripcion.length === 0) return ''
+    return gruposAdscripcion[0].clave
+  }, [gruposAdscripcion])
+
+  // Las horas del proceso de denuncia por defecto son las del reporte
+  const horaInicioDenunciaDefault = store.horaReporte
+  const horaFinDenunciaDefault = store.horaReporte
+  const horaTerminoAtencionDefault = store.horaReporte
+  const horaCuestionarioDefault = store.horaReporte
   const step = store.step
   const coordsHecho = store.coordsHecho
   const dirHecho = store.dirHecho
@@ -150,7 +213,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   // Limpiar store y redirigir
   resetStore();
-  router.push('/oficial?exito=1');
+  const folioEnc = encodeURIComponent(result.folioDenuncia || folioDenunciaAuto)
+  router.push(`/oficial/reportes?exito=1&folio=${folioEnc}`);
 };
 
 
@@ -171,11 +235,19 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <h2 style={sectionTitleStyle}><FileText size={18} /> IDENTIFICACIÓN LEGAL</h2>
         <div style={grid3Style}>
           <SentinelField label="Folio de Denuncia" name="folioDenuncia" required value={folioDenunciaAuto} readOnly />
-          <SentinelField label="IPH" name="iph" placeholder="IPH-2026-..." />
-          <SentinelField label="Folio de CU" name="folioCu" placeholder="CU-..." />
+          <SentinelField label="IPH" name="iph" defaultValue={iphDefault} />
+          <SentinelField label="Folio de CU" name="folioCu" defaultValue={cuDefault} />
           <SentinelField label="Corporación" name="corporacion" defaultValue="SSPM" />
-          <SentinelField label="Sector" name="sector" />
-          <SentinelField label="Grupo de Adscripción" name="grupoAdscripcion" />
+          <SentinelField label="Sector" name="sector" defaultValue={prefill?.sector ?? ''} />
+          <div style={fieldContainerStyle}>
+            <label style={labelStyle}>Grupo de Adscripción</label>
+            <select name="grupoAdscripcion" style={inputStyle} defaultValue={grupoAdscripcionDefault}>
+              <option value="">Seleccione un grupo...</option>
+              {gruposAdscripcion?.map(g => (
+                <option key={g.id} value={g.clave}>{g.nombre}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </section>
       
@@ -188,30 +260,30 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           <div style={grid4Style}>
             <SentinelField readOnly label="Fecha Reporte" name="fechaReporte" type="date" required value={fReporte} onChange={(e: any) => store.setFechaReporte(e.target.value)} />
             <SentinelField readOnly label="Hora Reporte" name="horaReporte" type="time" required value={hReporte} onChange={(e: any) => store.setHoraReporte(e.target.value)} />
-            <SentinelField label="Fecha Avistamiento Ciudadano" name="fechaAvistamiento" type="date" />
-            <SentinelField label="Hora Avistamiento Ciudadano" name="horaAvistamiento" type="time" />
+            <SentinelField label="Fecha Avistamiento Ciudadano" name="fechaAvistamiento" type="date" defaultValue={fechaAvistamientoDefault} />
+            <SentinelField label="Hora Avistamiento Ciudadano" name="horaAvistamiento" type="time" defaultValue={horaAvistamientoDefault} />
           </div>
 
           {/* Fila: Despacho y Confirmación */}
           <div style={grid4Style}>
-            <SentinelField label="Fecha Despacho" name="fechaDespacho" type="date" />
-            <SentinelField label="Hora Despacho" name="horaDespacho" type="time" />
-            <SentinelField label="Fecha Confirmación" name="fechaConfirmacion" type="date" />
-            <SentinelField label="Hora Confirmación" name="horaConfirmacion" type="time" />
+            <SentinelField label="Fecha Despacho" name="fechaDespacho" type="date" defaultValue={fechaDespachoDefault} />
+            <SentinelField label="Hora Despacho" name="horaDespacho" type="time" defaultValue={horaDespachoDefault} />
+            <SentinelField label="Fecha Confirmación" name="fechaConfirmacion" type="date" defaultValue={fechaConfirmacionDefault} />
+            <SentinelField label="Hora Confirmación" name="horaConfirmacion" type="time" defaultValue={horaConfirmacionDefault} />
           </div>
 
           {/* Fila: Llegada y Toma de Denuncia */}
           <div style={grid4Style}>
-            <SentinelField label="Día de Llegada" name="fechaLlegada" type="date" />
-            <SentinelField label="Hora de Llegada" name="horaLlegada" type="time" />
-            <SentinelField label="Hora Inicio Denuncia" name="horaInicioDenuncia" type="time" />
-            <SentinelField label="Hora Término Denuncia" name="horaFinDenuncia" type="time" />
+            <SentinelField label="Día de Llegada" name="fechaLlegada" type="date" defaultValue={fechaLlegadaDefault} />
+            <SentinelField label="Hora de Llegada" name="horaLlegada" type="time" defaultValue={horaLlegadaDefault} />
+            <SentinelField label="Hora Inicio Denuncia" name="horaInicioDenuncia" type="time" defaultValue={horaInicioDenunciaDefault} />
+            <SentinelField label="Hora Término Denuncia" name="horaFinDenuncia" type="time" defaultValue={horaFinDenunciaDefault} />
           </div>
 
           {/* Fila: Cierre de Atención */}
           <div style={grid3Style}>
-            <SentinelField label="Hora Término Atención" name="horaTerminoAtencion" type="time" />
-            <SentinelField label="Hora Recaba Cuestionario" name="horaCuestionario" type="time" />
+            <SentinelField label="Hora Término Atención" name="horaTerminoAtencion" type="time" defaultValue={horaTerminoAtencionDefault} />
+            <SentinelField label="Hora Recaba Cuestionario" name="horaCuestionario" type="time" defaultValue={horaCuestionarioDefault} />
           </div>
         </div>
       </section>
@@ -300,7 +372,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               <option value="3">3.- DETENIDO CON DIVERSOS ELEMENTOS</option>
             </select>
           </div>
-          <SentinelField label="Delito" name="delito" required />
+          <SentinelField label="Delito" name="delito" required defaultValue={prefill?.tipoIncidente ?? ''} />
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Hubo Violencia?</label>
             <select name="violencia" style={inputStyle}>
@@ -380,7 +452,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         </div>
         <div style={{ marginTop: '20px' }}>
           <label style={labelStyle}>Observaciones</label>
-          <textarea name="observaciones" style={{ ...inputStyle, minHeight: '100px', paddingTop: '12px' }} placeholder="Escriba aquí..." />
+          <textarea name="observaciones" style={{ ...inputStyle, minHeight: '100px', paddingTop: '12px' }} placeholder="Escriba aquí..." defaultValue={prefill?.descripcion ?? ''} />
         </div>
       </section>
       </div>

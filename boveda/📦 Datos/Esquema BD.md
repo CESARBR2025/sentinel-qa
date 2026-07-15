@@ -1508,3 +1508,16 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 10 | `nombre_resp_fiscal` | `character varying` | SÍ | — |
 | 11 | `appaterno_resp_fiscal` | `character varying` | SÍ | — |
 | 12 | `apmaterno_resp_fiscal` | `character varying` | SÍ | — |
+
+### \`cat_grupos_adscripcion\`
+
+Catálogo de grupos de adscripción fiscalía/juzgado para el campo \`grupo_adscripcion\` en D1.
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `serial` | NO | — |
+| 2 | `clave` | `varchar` | NO | — |
+| 3 | `nombre` | `varchar` | NO | — |
+| 4 | `autoridad` | `varchar` | NO | — |
+| 5 | `activo` | `boolean` | SÍ | true |
+| 6 | `orden` | `integer` | SÍ | 0 |
