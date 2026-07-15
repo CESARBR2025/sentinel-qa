@@ -2,6 +2,7 @@ import { obtenerDetalleInfraccionInfracciones } from '@/lib/agente_infracciones/
 import { DetalleInfraccionView } from '@/components/shared/DetalleInfraccionView'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DetalleInfraccionPage({
   params,
@@ -72,7 +73,7 @@ export default async function DetalleInfraccionPage({
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · INFRACCIONES · DETALLE</span>
+            <span>CENTINELA {APP_VERSION} · INFRACCIONES · DETALLE</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }} />
           </div>
         </div>

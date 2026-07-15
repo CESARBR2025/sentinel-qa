@@ -5,8 +5,9 @@ import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/mon
 import { Camera, ClipboardList, Clock, History, Shield, User, Video } from 'lucide-react'
 import { obtenerPermisosUsuario } from '@/lib/monitorista/permisos'
 import { getMonitoristaStats } from '@/lib/monitorista/repository'
-import { getUserWithRole } from '@/lib/auth/helpers'
 import { DashboardHeader } from '@/components/partials/Header'
+import { DashboardFooter } from '@/components/partials/Footer'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import Link from 'next/link'
 
 export default async function MonitoristaHubPage() {
@@ -14,7 +15,9 @@ export default async function MonitoristaHubPage() {
   if (!session) redirect('/login')
 
   const userWithRole = await getUserWithRole(session.user.id)
-  const esAdmin = userWithRole?.rolNombre === 'Administrador'
+  const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+  const backHref = hub === '/monitorista' ? undefined : (hub ?? '/dashboard')
+
   const permisos = await obtenerPermisosUsuario(session.user.id)
 
   const stats = await getMonitoristaStats(session.user.id)
@@ -28,7 +31,7 @@ export default async function MonitoristaHubPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <DashboardHeader user={user as { name: string; apellido?: string; email: string }} />
+      <DashboardHeader user={user as { name: string; apellido?: string; email: string }} backHref={backHref} />
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 40 }}>
@@ -100,9 +103,7 @@ export default async function MonitoristaHubPage() {
         </div>
       </main>
 
-      <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v1.2
-      </footer>
+      <div style={{ padding: '0 48px 32px' }}><DashboardFooter /></div>
     </div>
   )
 }

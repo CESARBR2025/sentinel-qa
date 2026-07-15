@@ -6,10 +6,16 @@ import PrevencionNav from './PrevencionNav'
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones'
 import { generarAlertasBusquedas }  from '@/lib/notificaciones/checker'
 import { listarNotificacionesNoLeidas } from '@/lib/notificaciones/repository'
+import { obtenerPermisosUsuario } from '@/lib/prevencion/permisos'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function PrevencionLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  const permisos = await obtenerPermisosUsuario(session.user.id)
+  const tieneAcceso = permisos.busquedas.puede_ver || permisos.medidas.puede_ver || permisos.solicitudes.puede_ver
+  if (!tieneAcceso) redirect('/dashboard')
 
   // Generate alerts for this user (idempotent)
   await generarAlertasBusquedas(session.user.id)
@@ -54,7 +60,7 @@ export default async function PrevencionLayout({ children }: { children: React.R
       </main>
 
       <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v1.2
+        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA {APP_VERSION}
       </footer>
     </div>
   )

@@ -4,6 +4,7 @@ import { Camera, ShieldCheck } from 'lucide-react'
 import { ProfileDropdown } from '@/components/agente_juzgado/ProfileDropdown'
 import { ToastExito } from '@/components/agente_juzgado/ToastExito'
 import { obtenerDashboardJuzgado } from '@/lib/agente_juzgado/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function JuzgadoDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
   const user = await obtenerDashboardJuzgado()
@@ -188,7 +189,7 @@ export default async function JuzgadoDashboardPage({ searchParams }: { searchPar
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

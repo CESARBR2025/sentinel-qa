@@ -4,6 +4,7 @@ import { FormularioAsegurado } from '@/components/fiscalia/FormularioAsegurado'
 import { obtenerDashboardFiscalia, obtenerDetalleAseguradoCompletoAction, obtenerPuestaDisposicionAction } from '@/lib/fiscalia/actions'
 import { ACTAS_CHECKLIST } from '@/lib/fiscalia/types'
 import { Clock, Building2, CheckCircle } from 'lucide-react'
+import { APP_VERSION } from "@/lib/constants"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -172,7 +173,7 @@ export default async function AseguradoDetallePage({ params }: Props) {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · ASEGURADOS</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

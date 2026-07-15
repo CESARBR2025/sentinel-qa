@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { InfraccionesService } from "@/features/via/infracciones/service";
+import { verificarRolInfracciones } from "@/lib/agente_infracciones/service";
 
 export async function GET(
   _req: Request,
   context: { params: Promise<{ id: string }> },
 ) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+  if (!(await verificarRolInfracciones(session.user.id))) {
+    return NextResponse.json({ error: "Sin permiso" }, { status: 403 });
+  }
+
   try {
     const { id } = await context.params;
     const data = await InfraccionesService.obtenerPorId(id);

@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/fiscalia/ProfileDropdown'
 import FiscaliaTable from '@/components/fiscalia/FiscaliaTable'
 import { obtenerDashboardFiscalia, obtenerLiberacionesAction } from '@/lib/fiscalia/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function LiberacionesPage() {
   const [user, liberaciones] = await Promise.all([
@@ -61,7 +62,7 @@ export default async function LiberacionesPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · LIBERACIONES</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · LIBERACIONES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

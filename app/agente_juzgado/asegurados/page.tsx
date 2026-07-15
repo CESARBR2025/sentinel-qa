@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/agente_juzgado/ProfileDropdown'
 import { TabAsegurados } from '@/components/fiscalia/TabAsegurados'
 import { obtenerDashboardJuzgado, obtenerAseguradosJuzgadoAction } from '@/lib/agente_juzgado/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function JuzgadoAseguradosPage() {
   const user = await obtenerDashboardJuzgado()
@@ -48,7 +49,7 @@ export default async function JuzgadoAseguradosPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · ASEGURADOS</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

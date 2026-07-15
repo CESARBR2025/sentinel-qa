@@ -1,5 +1,4 @@
 import {
-  obtenerRolUsuario,
   obtenerSolicitudesPendientes,
   obtenerSolicitudesSinEvidencias,
   obtenerSolicitudesConEvidencias,
@@ -20,16 +19,16 @@ import {
   guardarPuestaDisposicion,
 } from './repository'
 import { rowToSolicitud } from './mapper'
+import { tienePermiso as tienePermisoFiscalia } from './permisos'
+import { tienePermiso as tienePermisoJuzgado } from '@/lib/agente_juzgado/permisos'
 import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow } from './types'
 
 export async function verificarRolFiscalia(userId: string): Promise<boolean> {
-  const rol = await obtenerRolUsuario(userId)
-  return rol === 'agente_fiscalia'
+  return tienePermisoFiscalia(userId, 'fiscalia', 'ver')
 }
 
 export async function verificarRolJuzgado(userId: string): Promise<boolean> {
-  const rol = await obtenerRolUsuario(userId)
-  return rol === 'agente_juzgado'
+  return tienePermisoJuzgado(userId, 'juzgado', 'ver')
 }
 
 export async function listarSolicitudesPendientes(): Promise<SolicitudEvidencia[]> {

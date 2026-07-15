@@ -9,6 +9,7 @@ import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarSolicitudesEvidencia, getHistorialCount } from '@/lib/monitorista/repository'
 import type { SolicitudEvidencia } from '@/lib/monitorista/types'
 import { SubHeader } from '@/components/partials/SubHeader'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function SolicitudesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -77,7 +78,7 @@ export default async function SolicitudesPage() {
       </main>
 
       <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v1.2
+        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA {APP_VERSION}
       </footer>
     </div>
   )

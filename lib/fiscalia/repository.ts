@@ -1,6 +1,5 @@
 import pool, { query } from "@/lib/db";
 import type {
-  RolRow,
   DetalleAsegurado,
   DatosAseguradoInput,
   EvidenciaMonitorista,
@@ -9,18 +8,6 @@ import type {
 } from "./types";
 import { rowToAsegurado, rowToDetalleDetenidoGuardado, rowToPuestaDisposicion } from "./mapper";
 import type { AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, PuestaDisposicionInput } from "./types";
-
-export async function obtenerRolUsuario(userId: string): Promise<string> {
-  const result = await query<RolRow>(
-    `SELECT r.nombre AS rol
-     FROM users u
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE u.id = $1
-     LIMIT 1`,
-    [userId],
-  );
-  return result.rows[0]?.rol ?? "";
-}
 
 export async function obtenerSolicitudesPendientes() {
   const result = await query<Record<string, unknown>>(

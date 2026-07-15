@@ -7,6 +7,7 @@ import { verificarRolFiscalia } from '@/lib/fiscalia/service'
 import { obtenerExpedienteCompleto, obtenerDetenidosGuardados, obtenerFotosDetenidos, obtenerEvidenciasMonitorista } from '@/lib/fiscalia/repository'
 import { ExpedienteView } from '@/components/fiscalia/ExpedienteView'
 import { PrintButton } from '@/components/fiscalia/PrintButton'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function ExpedientePage({ params }: { params: Promise<{ solicitudId: string }> }) {
   const { solicitudId } = await params
@@ -89,7 +90,7 @@ export default async function ExpedientePage({ params }: { params: Promise<{ sol
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · EXPEDIENTE</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · EXPEDIENTE</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }} />
           </div>
         </div>

@@ -6,6 +6,7 @@ import { obtenerHistorialCompleto } from '@/lib/incidentes/service'
 import { obtenerIncidenteBasico } from '@/lib/incidentes/repository'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DespachoContent } from '@/components/oficial/DespachoContent'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AtenderDespachoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -50,7 +51,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
         />
 
         <footer style={{ padding: '24px 0 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', marginTop: 40 }}>
-          SSPM · SAN JUAN DEL RÍO · CENTINELA v1.2 · OFICIAL
+          SSPM · SAN JUAN DEL RÍO · CENTINELA {APP_VERSION} · OFICIAL
         </footer>
       </main>
     </div>

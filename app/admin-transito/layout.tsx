@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getUserWithRole } from '@/lib/auth/helpers'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AdminTransitoLayout({
   children,
@@ -142,7 +143,7 @@ export default async function AdminTransitoLayout({
         >
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · ADMIN TRÁNSITO</span>
+            <span>CENTINELA {APP_VERSION} · ADMIN TRÁNSITO</span>
             <span
               style={{
                 width: 4,

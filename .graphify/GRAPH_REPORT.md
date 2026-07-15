@@ -1,34 +1,34 @@
-# Graph Report - .  (2026-07-14)
+# Graph Report - .  (2026-07-15)
 
 ## Corpus Check
-- Large corpus: 794 files · ~569,804 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
+- Large corpus: 729 files · ~512,910 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder, or use --no-semantic to run AST-only.
 
 ## Summary
-- 3577 nodes · 11695 edges · 130 communities detected
+- 3706 nodes · 13010 edges · 137 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
-- Edge kinds: MODIFIES: 3861 · contains: 2703 · imports: 1851 · imports_from: 1234 · ON_BRANCH: 1227 · calls: 398 · PARENT_OF: 323 · re_exports: 52 · method: 29 · references: 9 · inherits: 8
+- Edge kinds: MODIFIES: 4690 · contains: 2803 · imports: 1939 · ON_BRANCH: 1436 · imports_from: 1292 · calls: 415 · PARENT_OF: 337 · re_exports: 52 · method: 29 · references: 9 · inherits: 8
 
 
 ## Input Scope
 - Requested: auto
 - Resolved: committed (source: default-auto)
-- Included files: 794 · Candidates: 854
-- Excluded: 1 untracked · 72996 ignored · 1 sensitive · 30 missing committed
+- Included files: 729 · Candidates: 880
+- Excluded: 1 untracked · 73341 ignored · 1 sensitive · 30 missing committed
 - Recommendation: Use --scope all or graphify.yaml inputs.corpus for a knowledge-base folder.
 
 ## Graph Freshness
-- Built from Git commit: `54a87f1`
+- Built from Git commit: `7e39526`
 - Compare this hash to `git rev-parse HEAD` before trusting freshness-sensitive graph output.
 ## God Nodes (most connected - your core abstractions)
-1. `auth` - 135 edges
-2. `query()` - 64 edges
-3. `DashboardHeader()` - 25 edges
-4. `getUserWithRole()` - 25 edges
+1. `auth` - 140 edges
+2. `query()` - 65 edges
+3. `getUserWithRole()` - 27 edges
+4. `DashboardHeader()` - 26 edges
 5. `SubHeader()` - 17 edges
 6. `tienePermiso()` - 17 edges
 7. `tienePermiso()` - 16 edges
-8. `authClient` - 14 edges
+8. `authClient` - 15 edges
 9. `AppError` - 14 edges
 10. `requireOperador()` - 14 edges
 
@@ -48,564 +48,610 @@
 
 ### Community 0 - "Community 0"
 Cohesion: 0.03
-Nodes (92): 06c55f5 Merge branch 'feature/testing' into feature/reportes, 41ea169 Merge branch 'testing' into conexion, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia, a2e0623 Consolidado de formatos N y SubHeader, ajustes en servicios de reportes, bb10dcd Formatos V1, c95f412 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, f5fac0b Merge branch 'testing' into conexion, SignOutButton() (+84 more)
+Nodes (72): Accion, obtenerRolNombre(), PermisoSeccion, ROLES_PERMITIDOS, Seccion, SECCIONES, tieneAccesoHub(), tieneAccesoSeccion() (+64 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.04
-Nodes (52): TIPO_CFG, 1e81ec8 Datos se autorellenan de denuncias y seccion de oficial, 5558751 feat: módulo Prevención del Delito completo + fix flujo autenticación 2FA, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, f2c66e6 Extender roles y permisos finos a incidentes, prevención, auxiliar, 911, análisis, denuncia D1 y Formato N, fmtDT(), ImprimirFichaPage() (+44 more)
+Nodes (56): { GET, POST }, TIPO_CFG, 5558751 feat: módulo Prevención del Delito completo + fix flujo autenticación 2FA, 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, f2c66e6 Extender roles y permisos finos a incidentes, prevención, auxiliar, 911, análisis, denuncia D1 y Formato N, ffcea0c fase 1 completada, db (+48 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.05
-Nodes (90): 0c31cc2 Merge branch 'testing' into juzgado, 0d9172a mejorando flujo de 911-despacho, 13f7f39 Reporte-incidentes, 22bf125 Merge pull request #20 from presidenciaSJR/conexion, 290d651 feat(despacho): flujo integral 911 → despacho → oficial → D1 → legal, 458bbfb registro de reporte de campo - oficial, 93dd3ea Merge pull request #1 from presidenciaSJR/juzgado, 9d803f2 fix api maps (+82 more)
+Cohesion: 0.02
+Nodes (66): guardarDetallesAseguradosJuzgadoAction(), guardarPuestaDisposicionJuzgadoAction(), obtenerDetalleAseguradoCompletoJuzgadoAction(), obtenerPuestaDisposicionJuzgadoAction(), obtenerDetalleAseguradoCompletoAction(), obtenerDetalleInfraccionViaAction(), obtenerPuestaDisposicionAction(), FormularioPuestaDisposicion() (+58 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.05
-Nodes (34): getStats(), verificarRolAgente911(), verificarRolAgenteDespacho(), { GET, POST }, getUserWithRole(), rowToUserWithRole(), UserWithRole, requireAuxiliar() (+26 more)
+Cohesion: 0.10
+Nodes (82): feature/monitorista, feature/monitorista-reportes, fix/detenidos, fix/incidentes-camara, fix/subir-fotografias, libraries, 0844e6e Corregido, 0fe445e vista de oficial (+74 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.02
-Nodes (68): guardarDetallesAseguradosJuzgadoAction(), guardarPuestaDisposicionJuzgadoAction(), obtenerDetalleAseguradoCompletoJuzgadoAction(), obtenerPuestaDisposicionJuzgadoAction(), obtenerDetalleInfraccionLiberaciones(), obtenerDetalleAseguradoCompletoAction(), obtenerPuestaDisposicionAction(), FormularioPuestaDisposicion() (+60 more)
+Cohesion: 0.06
+Nodes (48): 23b7312 Merge pull request #16 from presidenciaSJR/conexion, 27dcb21 Merge branch 'feature/testing' into feature/reportes, b5233a8 implementando via como modulo de oficial, f7b1aac Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, datosIniciales, mapRowToOficialViaDTO(), OfiOficialRow, OfiOficialViaDTO (+40 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.04
-Nodes (67): guardarDetallesAseguradoAction(), CapturarDetallesForm(), disabledSx, emptyItem(), EvidenciaItem, inputSx, labelSx, Props (+59 more)
+Nodes (55): 06c55f5 Merge branch 'feature/testing' into feature/reportes, 41ea169 Merge branch 'testing' into conexion, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia, bb10dcd Formatos V1, c95f412 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, filtroBtn(), FormatoNFgePage(), formato_n_armas_aseguradas (+47 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.05
-Nodes (74): num(), parseDetenidos(), parseSolicitudesJson(), parseTurno(), rowToDenunciaDetalle(), rowToDependencia(), rowToEvidencia(), rowToEvidenciaArchivo() (+66 more)
+Nodes (75): num(), parseDetenidos(), parseSolicitudesJson(), parseTurno(), rowToDenunciaDetalle(), rowToDependencia(), rowToEvidencia(), rowToEvidenciaArchivo() (+67 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.05
-Nodes (58): 6109a7a replicando flujo para fiscalia, AseguradosData, LiberacionesData, SolicitudesData, num(), rowToAsegurado(), rowToDetalleDetenidoGuardado(), rowToPuestaDisposicion() (+50 more)
+Cohesion: 0.10
+Nodes (79): conexion, feature/testing, main, testing, 0c8695c Cambios en filtros, 0caf5dd Fixes, 11be750 Fase 1 de correccion - completada - pendiente testing, 11e8817 Merge branch 'testing' into juzgado (+71 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.07
-Nodes (55): HistorialIncidente(), rowToAlarmaEscolar(), rowToDespacho(), rowToDespachoElemento(), rowToDespachoUnidad(), rowToExtorsion(), rowToIncidenteBasico(), rowToIncidenteConDespachoBase() (+47 more)
+Cohesion: 0.06
+Nodes (69): 0d9172a mejorando flujo de 911-despacho, 13f7f39 Reporte-incidentes, 2e958e1 catalogo de grupo de incidencia, 5ef7cf3 Agregar los campos faltantes, ef95840 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, parseJsonField(), rowToD1(), rowToDespachoAsignado() (+61 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.08
-Nodes (57): createBodyCam(), createConcepto(), createMedioCanalizacion(), createRadio(), createSector(), createTipoEmergencia(), createTipoObservacion(), req() (+49 more)
+Cohesion: 0.07
+Nodes (65): createBodyCam(), createConcepto(), createMedioCanalizacion(), createRadio(), createSector(), createTipoEmergencia(), createTipoObservacion(), req() (+57 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.06
-Nodes (50): accionCerrarCaso(), accionTomarCaso(), AseguradosJuzgadoData, LiberacionesData, obtenerSolicitudes(), SolicitudesData, num(), rowToInfraccionDetalle() (+42 more)
+Cohesion: 0.04
+Nodes (49): btnBackStyle, btnFinishStyle, btnGeoStyle, btnNextStyle, cardStyle, footerActions, grid3, labelStyle (+41 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.05
-Nodes (42): 09a02d5 Fix Reporte Rondin, 435348e corrigiendo flujo de rondin, f0089cf Merge pull request #21 from presidenciaSJR/conexion, f4cf76c Actualización Rondin, BTN, BTN_SM, DespachoForm(), Elemento (+34 more)
+Nodes (59): 067c4de arreglando flujo de fiscalia  a schema via, accionTomarCaso(), AseguradosData, guardarDetallesAseguradoAction(), guardarDetallesAseguradosAction(), guardarPuestaDisposicionAction(), LiberacionesData, obtenerSolicitudes() (+51 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.11
-Nodes (56): conexion, feature/testing, testing, 0c8695c Cambios en filtros, 0caf5dd Fixes, 11ee4f2 mejorando flujo de 911, 1265204 paginacion por tablas, 160d1e1 Monitorista V1.1 (+48 more)
+Cohesion: 0.04
+Nodes (51): obtenerAseguradosJuzgadoAction(), concatNombre(), disabledSx, displayVal(), FormularioAseguradoJuzgado(), labelSx, Props, metadata (+43 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.06
-Nodes (36): insertarDocumentoLiberacion(), 16df128 flujo de corralones listo, 5a1b5d5 empezando corralon, obtenerDashboardCorralon(), obtenerSolicitudes(), TabSolicitudes, rowToSolicitud(), toStr() (+28 more)
+Nodes (33): Departamento, inputStyle, labelStyle, Props, selectStyle, 16a63d4 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, 863c575 Merge pull request #24 from presidenciaSJR/feature/testing, 91c36bf validando orden de pago (+25 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.05
-Nodes (47): concatNombre(), disabledSx, displayVal(), FormularioAseguradoJuzgado(), labelSx, Props, metadata, 2db162a flujo de asegurados (+39 more)
+Nodes (46): Accion, registrarAudit(), obtenerIphDetenido(), obtenerPrellenadoCompleto(), obtenerSolicitudConEvidencias(), obtenerPrellenado(), actualizarArmaAsegurada(), ArmaFuente (+38 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.04
-Nodes (30): Accion, PermisoSeccion, Seccion, SECCIONES, Accion, PermisoSeccion, Seccion, SECCIONES (+22 more)
+Cohesion: 0.07
+Nodes (54): rowToAlarmaEscolar(), rowToDespacho(), rowToDespachoElemento(), rowToDespachoUnidad(), rowToExtorsion(), rowToIncidenteBasico(), rowToIncidenteConDespachoBase(), rowToIncidenteDetalleCompletoBase() (+46 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.08
-Nodes (33): 126b4d1 Monitorista V1, 44ebbc4 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into testing, 46b2c89 Merge branch 'testing' into juzgado, 5d179c0 Apartado de reportes, 8e6c8c6 Apartado de reportes, da33516 Merge pull request #3 from presidenciaSJR/feature/monitorista, BandejaSolicitudes(), btnDetalle (+25 more)
+Cohesion: 0.06
+Nodes (41): actualizarOficial(), buscarUsuariosReincorporar(), crearOficial(), destituirOficial(), obtenerOficialesLista(), obtenerOficialPorId(), reactivarOficialConDatos(), requireAdminTransito() (+33 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.07
-Nodes (24): SubirFotoDetenido(), 388b997 Apartados para subir fotografias de los detenidos, 672bab5 libearciones para juzgado, de5682f Merge pull request #10 from presidenciaSJR/fix/subir-fotografias, FilaDetenidoRol(), btnDetalle, pagBtn, SubirFotoDetenido() (+16 more)
+Cohesion: 0.05
+Nodes (47): accionPedirEvidencias(), guardarDetallesAseguradoAction(), CapturarDetallesForm(), disabledSx, emptyItem(), EvidenciaItem, inputSx, labelSx (+39 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.05
-Nodes (29): Accion, obtenerRolNombre(), PermisoSeccion, ROLES_PERMITIDOS, Seccion, SECCIONES, tieneAccesoHub(), tieneAccesoSeccion() (+21 more)
+Cohesion: 0.06
+Nodes (51): accionCerrarCaso(), accionTomarCaso(), AseguradosJuzgadoData, LiberacionesData, obtenerSolicitudes(), SolicitudesData, num(), rowToInfraccionDetalle() (+43 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.07
-Nodes (30): createUser(), requireAdmin(), updateUser(), ActionResult, ApiHandler, ApiResponse, AppError, ConflictError (+22 more)
+Cohesion: 0.05
+Nodes (40): 435348e corrigiendo flujo de rondin, f0089cf Merge pull request #21 from presidenciaSJR/conexion, BTN, BTN_SM, DespachoForm(), Elemento, ERR, I (+32 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.20
-Nodes (48): feature/monitorista-reportes, fix/detenidos, fix/incidentes-camara, fix/subir-fotografias, main, 0e33bf6 feat: módulo Admin, Prórroga, Filtros medidas, Autoridades adicionales y Notificaciones/Alertas, 0fe445e vista de oficial, 11e8817 Merge branch 'testing' into juzgado (+40 more)
+Cohesion: 0.08
+Nodes (32): capturarInfractorAction(), finalizarRevisionAction(), generarOrdenPagoAction(), obtenerDashboardLiberaciones(), obtenerDetalleInfraccionLiberaciones(), obtenerDocumentosLiberacion(), obtenerLiberaciones(), revisarDocumentoAction() (+24 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.08
-Nodes (44): rowToAutoridadAdicional(), rowToBusqueda(), rowToContestacion(), rowToFichaBusquedaDetalle(), rowToMedida(), rowToMedidaDetalle(), rowToSeguimiento(), rowToSolicitud() (+36 more)
+Nodes (25): SubirFotoDetenido(), 388b997 Apartados para subir fotografias de los detenidos, 672bab5 libearciones para juzgado, de5682f Merge pull request #10 from presidenciaSJR/fix/subir-fotografias, FilaDetenidoRol(), btnDetalle, pagBtn, insertarFotoFiscalia() (+17 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.10
-Nodes (24): obtenerAseguradosJuzgadoAction(), obtenerDashboardJuzgado(), obtenerLiberacionesAction(), ProfileDropdown(), Props, ToastExito(), 090c4dd vista de fiscalia, 997ef65 Merge pull request #2 from presidenciaSJR/juzgado (+16 more)
+Cohesion: 0.08
+Nodes (22): a2e0623 Consolidado de formatos N y SubHeader, ajustes en servicios de reportes, f5fac0b Merge branch 'testing' into conexion, SignOutButton(), filtroBtn(), FormatoNAtencionVictimasPage(), filtroBtn(), FormatoNFgrPage(), filtroBtn() (+14 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.05
-Nodes (29): btnPrimario, btnSecundario, inputStyle, labelStyle, pageWrap, selectStyle, btnPrimario(), btnSecundario (+21 more)
+Cohesion: 0.07
+Nodes (30): createUser(), requireAdmin(), updateUser(), ActionResult, ApiHandler, ApiResponse, AppError, ConflictError (+22 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.08
-Nodes (30): capturarInfractorAction(), finalizarRevisionAction(), generarOrdenPagoAction(), obtenerDocumentosLiberacion(), revisarDocumentoAction(), LiberacionesResponse, UserInfo, 0b210fa Merge pull request #12 from presidenciaSJR/conexion (+22 more)
+Cohesion: 0.10
+Nodes (26): obtenerDashboardJuzgado(), ProfileDropdown(), Props, ToastExito(), 090c4dd vista de fiscalia, 44ebbc4 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into testing, 997ef65 Merge pull request #2 from presidenciaSJR/juzgado, a291695 Merge branch 'feature/testing' into feature/denuncias (+18 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.10
-Nodes (29): liberarGarantiaInfraccionesAction(), obtenerDashboardInfracciones(), obtenerDetalleInfraccionInfracciones(), obtenerInfracciones(), columns, DataRow, InfraccionesTableProps, inputToDbParams() (+21 more)
+Cohesion: 0.06
+Nodes (36): obtenerEvidenciasMonitorista(), obtenerDatosAsegurado(), verificarRolJuzgado(), 1f7c0d7 Merge pull request #23 from presidenciaSJR/conexion, 375d265 flujo de fiscalia, 6109a7a replicando flujo para fiscalia, CapturarDetallesForm(), disabledSx (+28 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.12
-Nodes (35): af993fb Fix/Monitorista, rowToArma(), rowToCateo(), rowToDetencionInc(), rowToDetencionOfi(), rowToDroga(), rowToExtorsion(), rowToHidrocarburo() (+27 more)
+Cohesion: 0.08
+Nodes (44): rowToAutoridadAdicional(), rowToBusqueda(), rowToContestacion(), rowToFichaBusquedaDetalle(), rowToMedida(), rowToMedidaDetalle(), rowToSeguimiento(), rowToSolicitud() (+36 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.07
-Nodes (21): guardarOficioJuzgadoAction(), obtenerDetalleInfraccionViaActionJuzgado(), BotonVerDetalle(), BotonVerDetalleProps, CargarOficioSectionProps, ConfirmacionModalProps, VARIANTES, AVATAR_COLORS (+13 more)
+Cohesion: 0.06
+Nodes (29): btnPrimario, btnSecundario, inputStyle, labelStyle, pageWrap, selectStyle, btnPrimario(), btnSecundario (+21 more)
 
 ### Community 28 - "Community 28"
-Cohesion: 0.07
-Nodes (21): cacheGet(), cacheKey(), cacheSet(), CHECKPOINT_SCRIPT, ContextLoaderPlugin(), DECISION_MSG, __dirname, GOLDEN_RULES (+13 more)
+Cohesion: 0.08
+Nodes (23): actionTextStyle, cardContentStyle, cardDescStyle, cardStyle, cardTitleStyle, decoratorLine, iconBoxStyle, systemStatusStyle (+15 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.11
-Nodes (24): Props, c27a9ee fase prefinal, dc063f3 gestion de oficiales correctamente, rowToPatrulla(), toBool(), toStr(), estaStale(), listarActivas() (+16 more)
+Cohesion: 0.06
+Nodes (23): guardarOficioJuzgadoAction(), obtenerDetalleInfraccionViaActionJuzgado(), obtenerLiberacionesAction(), BotonVerDetalle(), BotonVerDetalleProps, CargarOficioSectionProps, ConfirmacionModalProps, VARIANTES (+15 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.08
-Nodes (28): actualizarDatosInfractor(), actualizarDatosInfractorIniciarProceso(), actualizarEstatusDependenciaMesaControl(), actualizarEstatusPendientePagoInfraccion(), actualizarEstatusSolicitudLiberacion(), actualizarEvidenciasInfraccion(), actualizarUrlOrdenSalida(), actualizarUrlsDocumentosInfraccion() (+20 more)
+Cohesion: 0.07
+Nodes (26): insertarDocumentoLiberacion(), obtenerDashboardCorralon(), obtenerSolicitudes(), TabSolicitudes, rowToSolicitud(), toStr(), ModuleCard(), ProfileDropdown() (+18 more)
 
 ### Community 31 - "Community 31"
-Cohesion: 0.10
-Nodes (28): ModuleCardProps, Stat, feature/monitorista, 283f342 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, 2be4ca9 Cambio en header, 3a00521 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, 3b10d72 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, 6488a30 Formulario sin backend de 911 listo (+20 more)
+Cohesion: 0.12
+Nodes (34): rowToArma(), rowToCateo(), rowToDetencionInc(), rowToDetencionOfi(), rowToDroga(), rowToExtorsion(), rowToHidrocarburo(), rowToOrdenAprehension() (+26 more)
 
 ### Community 32 - "Community 32"
-Cohesion: 0.09
-Nodes (18): actionTextStyle, cardContentStyle, cardDescStyle, cardStyle, cardTitleStyle, decoratorLine, iconBoxStyle, systemStatusStyle (+10 more)
+Cohesion: 0.06
+Nodes (23): 3c12c41 cambios en flujo de 911-despacho, 7a1ae94 911-rondin, cacheGet(), cacheKey(), cacheSet(), CHECKPOINT_SCRIPT, ContextLoaderPlugin(), DECISION_MSG (+15 more)
 
 ### Community 33 - "Community 33"
-Cohesion: 0.13
-Nodes (31): 11be750 Fase 1 de correccion - completada - pendiente testing, 5ef7cf3 Agregar los campos faltantes, 712c116 Merge branch 'testing' into conexion, ef95840 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, addPersonaAfectada(), CANALES, cerrarPorDetencion(), createAlarmaEscolar() (+23 more)
+Cohesion: 0.08
+Nodes (23): 126b4d1 Monitorista V1, 46b2c89 Merge branch 'testing' into juzgado, da33516 Merge pull request #3 from presidenciaSJR/feature/monitorista, BandejaSolicitudes(), btnDetalle, btnPrimary, btnSuccess, origenBadge (+15 more)
 
 ### Community 34 - "Community 34"
-Cohesion: 0.10
-Nodes (18): Props, Props, Props, ArchivoField, Props, InfraccionCreada, PasoPagoProps, COLORES (+10 more)
+Cohesion: 0.11
+Nodes (27): liberarGarantiaInfraccionesAction(), obtenerDashboardInfracciones(), obtenerDetalleInfraccionInfracciones(), obtenerInfracciones(), columns, DataRow, InfraccionesTableProps, inputToDbParams() (+19 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.09
-Nodes (20): limpiarCacheToken(), obtenerGuestToken(), subirArchivoExpediente(), cancelarSolicitud(), completarSolicitud(), requireMonitorista(), subirEvidencia(), actualizarEstadoSolicitud() (+12 more)
+Cohesion: 0.10
+Nodes (24): 5d179c0 Apartado de reportes, 8e6c8c6 Apartado de reportes, limpiarCacheToken(), obtenerGuestToken(), subirArchivoExpediente(), cancelarSolicitud(), completarSolicitud(), requireMonitorista() (+16 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.07
-Nodes (20): AGENTS_PATH, agentsChars, BOVEDA_DIR, charsToTokens(), __dirname, discoveryCost, { docs, chars: bovedaChars }, estimateYoumindagContext() (+12 more)
+Nodes (16): rowToLiberacion(), Accion, PermisoSeccion, Seccion, SECCIONES, tienePermiso(), obtenerLiberaciones(), obtenerRolUsuario() (+8 more)
 
 ### Community 37 - "Community 37"
+Cohesion: 0.14
+Nodes (29): 09a02d5 Fix Reporte Rondin, 22bf125 Merge pull request #20 from presidenciaSJR/conexion, f4cf76c Actualización Rondin, addPersonaAfectada(), CANALES, cerrarPorDetencion(), createAlarmaEscolar(), createDespacho() (+21 more)
+
+### Community 38 - "Community 38"
+Cohesion: 0.07
+Nodes (20): AGENTS_PATH, agentsChars, BOVEDA_DIR, charsToTokens(), __dirname, discoveryCost, { docs, chars: bovedaChars }, estimateYoumindagContext() (+12 more)
+
+### Community 39 - "Community 39"
+Cohesion: 0.10
+Nodes (15): mapCrearInfraccionToDB(), mapInfraccionDetalle(), InfraccionesRepository, generarFolioInfraccion(), InfraccionesService, randomBase36Char(), rellenarBase36(), sanitizeCrearInfraccionPayload() (+7 more)
+
+### Community 40 - "Community 40"
 Cohesion: 0.12
 Nodes (20): cardStyle, rowToRol(), rowToUsuarioLista(), toStr(), actualizarUsuario(), asignarRolUsuario(), crearRol(), eliminarSesion() (+12 more)
 
-### Community 38 - "Community 38"
-Cohesion: 0.13
-Nodes (16): obtenerDashboardLiberaciones(), obtenerLiberaciones(), columns, DataRow, LiberacionesTableProps, ProfileDropdown(), Props, 07543de Conexion de reportes con d1 y los diarios, mensuales y semanales (+8 more)
-
-### Community 39 - "Community 39"
-Cohesion: 0.12
-Nodes (16): 067c4de arreglando flujo de fiscalia  a schema via, 1dbd480 flujo de liberaciones completado, mapCrearInfraccionToDB(), mapInfraccionDetalle(), InfraccionesRepository, generarFolioInfraccion(), InfraccionesService, randomBase36Char() (+8 more)
-
-### Community 40 - "Community 40"
-Cohesion: 0.10
-Nodes (22): DetalleInfraccionView(), DocumentacionSection(), formatCurrency(), formatDate(), FundamentoLegalSection(), InfraccionDetalle, InfraccionGarantia, InfraccionHeader (+14 more)
-
 ### Community 41 - "Community 41"
-Cohesion: 0.13
-Nodes (20): rowToIncidenteCamara(), rowToTotalesCamara(), toNum(), toNumNullable(), toStr(), obtenerConcentradoDiario(), obtenerIncidentesCamara(), obtenerPorTurno() (+12 more)
+Cohesion: 0.09
+Nodes (26): actualizarDatosInfractor(), actualizarDatosInfractorIniciarProceso(), actualizarEstatusDependenciaMesaControl(), actualizarEstatusPendientePagoInfraccion(), actualizarEstatusSolicitudLiberacion(), actualizarEvidenciasInfraccion(), actualizarUrlOrdenSalida(), actualizarUrlsDocumentosInfraccion() (+18 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.10
-Nodes (19): cleanColoniaName(), containerStyle, DEFAULT_CENTER, extractAddress(), extractNeighborhoodFromComponents(), getMunicipioEstado(), LIBRARIES, MapaDireccionRegistro() (+11 more)
+Cohesion: 0.12
+Nodes (20): 0c31cc2 Merge branch 'testing' into juzgado, 290d651 feat(despacho): flujo integral 911 → despacho → oficial → D1 → legal, 458bbfb registro de reporte de campo - oficial, 93dd3ea Merge pull request #1 from presidenciaSJR/juzgado, b79a96a Conexión entre ambos modulos, accounts, sessions, twoFactors (+12 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.10
-Nodes (7): ProfileDropdownAuxiliar(), Props, 6a042cd feat: sistema de autenticación, dashboard y esquema de base de datos, Enable2FA(), s, Step, authClient
+Nodes (22): DetalleInfraccionView(), DocumentacionSection(), formatCurrency(), formatDate(), FundamentoLegalSection(), InfraccionDetalle, InfraccionGarantia, InfraccionHeader (+14 more)
 
 ### Community 44 - "Community 44"
-Cohesion: 0.12
-Nodes (11): rowToDepartamento(), rowToOficialLista(), rowToUserBasico(), toStr(), listarDepartamentosActivos(), obtenerOficialExistente(), upsertOficial(), Departamento (+3 more)
+Cohesion: 0.13
+Nodes (20): rowToIncidenteCamara(), rowToTotalesCamara(), toNum(), toNumNullable(), toStr(), obtenerConcentradoDiario(), obtenerIncidentesCamara(), obtenerPorTurno() (+12 more)
 
 ### Community 45 - "Community 45"
-Cohesion: 0.08
-Nodes (15): AVATAR_COLORS, EstatusInfracciones, Props, SORTABLE_KEYS, STATUS_BADGE, STATUS_TABS, AVATAR_COLORS, EstatusLiberaciones (+7 more)
+Cohesion: 0.12
+Nodes (11): rowToDepartamento(), rowToOficialLista(), rowToUserBasico(), toStr(), listarDepartamentosActivos(), obtenerOficialExistente(), upsertOficial(), Departamento (+3 more)
 
 ### Community 46 - "Community 46"
 Cohesion: 0.09
 Nodes (17): ac5d42f cerrando flujo de 911-despacho-, eacfdaf mostrando toast de guardado, btnNuevoStyle, btnViewStyle, cardStyle, decoratorStyle, footerStyle, headerInnerStyle (+9 more)
 
 ### Community 47 - "Community 47"
-Cohesion: 0.14
-Nodes (9): 23b7312 Merge pull request #16 from presidenciaSJR/conexion, mapRowToOrdenPago(), OrdenPagoRow, SA7Repository, SA7Service, CatalogoConceptoSA7, GenerarOrdenPagoDTO, OrdenPagoSA7 (+1 more)
+Cohesion: 0.11
+Nodes (13): Field(), FormActions(), FormHeader(), Section(), Select(), Textarea(), BuscadorEvento(), OPCIONES (+5 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.11
-Nodes (16): 91c36bf validando orden de pago, FieldName, isNoData(), Props, TitularForm(), getGarantiaInfo(), ModalEntregarGarantia(), Props (+8 more)
+Cohesion: 0.12
+Nodes (7): ProfileDropdownAuxiliar(), Props, 6a042cd feat: sistema de autenticación, dashboard y esquema de base de datos, Enable2FA(), s, Step, authClient
 
 ### Community 49 - "Community 49"
-Cohesion: 0.11
-Nodes (8): rowToLiberacion(), obtenerLiberaciones(), obtenerRolUsuario(), listarLiberaciones(), verificarRolLiberaciones(), LiberacionRow, RolRow, 51e682b mejorando flujo de liberaciones
+Cohesion: 0.13
+Nodes (9): ede5a1d eliminado referencias a via_prueba, mapRowToOrdenPago(), OrdenPagoRow, SA7Repository, SA7Service, CatalogoConceptoSA7, GenerarOrdenPagoDTO, OrdenPagoSA7 (+1 more)
 
 ### Community 50 - "Community 50"
+Cohesion: 0.08
+Nodes (20): btnBackStyle, btnNextStyle, btnSubmitStyle, center, fieldContainerStyle, grid2Style, grid3Style, grid4Style (+12 more)
+
+### Community 51 - "Community 51"
+Cohesion: 0.11
+Nodes (13): 5bbdda8 Merge pull request #8 from presidenciaSJR/juzgado, ff6d3c2 juzgado, BotonVerDetalle(), BotonVerDetalleProps, ConfirmacionModalProps, VARIANTES, AVATAR_COLORS, EstatusFiscalia (+5 more)
+
+### Community 52 - "Community 52"
 Cohesion: 0.09
 Nodes (17): a, AGENTS_PATH, agentsSize, b, BOVEDA_DIR, bovedaDocs, charsToTokens(), __dirname (+9 more)
 
-### Community 51 - "Community 51"
+### Community 53 - "Community 53"
 Cohesion: 0.17
 Nodes (16): 75ca4b2 Merge pull request #9 from presidenciaSJR/conexion, 953d38a implementando vista de fiscalia, MailAttachment, MailOptions, sendMail(), transporter, enviarCorreoAsignacionFiscalia(), enviarCorreoOrdenLiberacion() (+8 more)
 
-### Community 52 - "Community 52"
-Cohesion: 0.14
-Nodes (14): generarAlertasBusquedas(), HITOS_ALERTAR, rowToNotificacion(), eliminarAlertasBusqueda(), listarNotificacionesNoLeidas(), marcarNotificacionLeida(), marcarTodasNotificacionesLeidas(), Notificacion (+6 more)
-
-### Community 53 - "Community 53"
-Cohesion: 0.14
-Nodes (14): actualizarOficial(), buscarUsuariosReincorporar(), crearOficial(), destituirOficial(), obtenerOficialesLista(), obtenerOficialPorId(), reactivarOficialConDatos(), requireAdminTransito() (+6 more)
-
 ### Community 54 - "Community 54"
-Cohesion: 0.14
-Nodes (9): 16a63d4 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, ac48eb1 Merge pull request #17 from presidenciaSJR/conexion, GruaRow, listarGruasActivas(), containerStyle, Props, Props, ProfileDropdown() (+1 more)
+Cohesion: 0.12
+Nodes (14): 0e33bf6 feat: módulo Admin, Prórroga, Filtros medidas, Autoridades adicionales y Notificaciones/Alertas, HITOS_ALERTAR, createProrroga(), I, L, ProrrogaModal(), ProrrogaViewerModal(), ProrrogaViewerModalProps (+6 more)
 
 ### Community 55 - "Community 55"
-Cohesion: 0.12
-Nodes (11): AddressData, eliminarInfraccionAction(), ProcesoEstado, ViewArticulosLista, generarOrdenPago(), config, getStepIndex(), ProcesoModal() (+3 more)
-
-### Community 56 - "Community 56"
-Cohesion: 0.10
-Nodes (11): libraries, 0844e6e Corregido, 6feefe2 BackEnd completo para hacer la conección con la BD, 71912a4 Bitacora incluida, 7f3fe1a Formulariop de Rondines listo, falta revisarlo PERO YA ES FUNCIONAL, 82ae6e9 Interfaz de llamada 911 cambios, a58a0f7 Despachos, IncidenteDetalle (+3 more)
-
-### Community 57 - "Community 57"
 Cohesion: 0.10
 Nodes (16): Arma, cardStyle, Consolidado, Evento, Fge, Fgr, linkBtn, Medios (+8 more)
 
-### Community 58 - "Community 58"
+### Community 56 - "Community 56"
 Cohesion: 0.15
 Nodes (18): addDecision(), append(), args, budget(), budgetReport(), DECISIONS_FILE, __dirname, ensureDir() (+10 more)
 
-### Community 59 - "Community 59"
-Cohesion: 0.13
-Nodes (6): b5233a8 implementando via como modulo de oficial, mapRowToOficialViaDTO(), OfiOficialRow, OficialesViaRepository, OficialesViaService, OfiOficialViaDTO
+### Community 57 - "Community 57"
+Cohesion: 0.14
+Nodes (11): AddressData, eliminarInfraccionAction(), ProcesoEstado, ViewArticulosLista, generarOrdenPago(), config, getStepIndex(), ProcesoModal() (+3 more)
 
-### Community 60 - "Community 60"
-Cohesion: 0.13
-Nodes (12): btnBackStyle, btnFinishStyle, btnNextStyle, cardStyle, labelStyle, mapBoxStyle, subLabelStyle, titleStyle (+4 more)
-
-### Community 61 - "Community 61"
-Cohesion: 0.19
-Nodes (8): 2c128e5 test expediente vercel, ede5a1d eliminado referencias a via_prueba, f7b1aac Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, POST(), subirArchivo(), validarArchivo(), getExpedienteHost(), getExpedienteToken()
-
-### Community 62 - "Community 62"
+### Community 58 - "Community 58"
 Cohesion: 0.20
 Nodes (15): rowToReporteDiario(), rowToReporteSemanal(), toNum(), obtenerReporteDiario(), obtenerReporteSemanal(), combinar(), COMBO_KEYS, listarReporteDiario() (+7 more)
 
-### Community 63 - "Community 63"
+### Community 59 - "Community 59"
 Cohesion: 0.14
 Nodes (16): components, __dirname, dirty, EXTENSIONS, fileMap, filesToModify, forceFlag, ROOT (+8 more)
 
-### Community 64 - "Community 64"
+### Community 60 - "Community 60"
 Cohesion: 0.25
 Nodes (10): 2fcba7b vista de reportes de incidentes diarios y semanales, 552d291 Merge branch 'testing' into conexion, 719b5ab cambio para generacion de reportes semanal y diario, FiltrosIncidencias(), PaginationProps, IncidenteStat(), styles, Props (+2 more)
 
-### Community 65 - "Community 65"
+### Community 61 - "Community 61"
+Cohesion: 0.14
+Nodes (14): 5d2b064 fix vercel upload files, da48f68 implementando flujo de aceptacion de documentos, concatName(), obtenerDetalleInfraccionVia(), obtenerTokenGuest(), parseEvidencias(), rowToInfraccionDetalle(), ViaInfraccionGarantia (+6 more)
+
+### Community 62 - "Community 62"
 Cohesion: 0.20
-Nodes (6): ad3ec5f mejorando esto, ping(), rowToSinNovedad(), toStr(), obtenerReportesSinNovedad(), SinNovedadRow
+Nodes (6): ad3ec5f mejorando esto, ping(), rowToSinD1(), toStr(), obtenerSinD1(), SinD1Row
 
-### Community 66 - "Community 66"
-Cohesion: 0.16
-Nodes (10): ReportStat(), paginationButtonStyle, PaginationProps, PhoneReport, PhoneReportsTable(), PhoneStatsCards(), ReportesTabs(), OperationalTable() (+2 more)
-
-### Community 67 - "Community 67"
-Cohesion: 0.13
-Nodes (13): COLOR_MAP, addAutoridadMedida(), AgregarAutoridadForm(), Autoridad, AUTORIDADES, I, L, Props (+5 more)
-
-### Community 68 - "Community 68"
+### Community 63 - "Community 63"
 Cohesion: 0.18
 Nodes (14): contarPorEstatus(), listarIncidentes(), listarIncidentesRecientes(), obtenerCatalogos(), obtenerIncidente(), obtenerIncidenteConExtras(), obtenerStats(), obtenerTiposIncidente() (+6 more)
 
-### Community 69 - "Community 69"
-Cohesion: 0.12
-Nodes (12): btnBackStyle, btnFinishStyle, btnGeoStyle, btnNextStyle, cardStyle, footerActions, grid3, labelStyle (+4 more)
-
-### Community 70 - "Community 70"
+### Community 64 - "Community 64"
 Cohesion: 0.26
 Nodes (13): rowToChecklist(), rowToCuestionarioRobo(), rowToParReporte(), toStr(), obtenerCuestionariosRobo(), obtenerParesReporte(), upsertChecklist(), guardarChecklist() (+5 more)
 
-### Community 71 - "Community 71"
-Cohesion: 0.14
-Nodes (11): 49dca47 cambio, 4d4a9b7 formulario de notificaciones por radio, 519716a Formulario para registro de whatsapp, 72e8913 cambio de diseño, 95b78c1 cambios de incidentes, c694543 cambio dee estatus, ef9e0ea Formulario arreglado, f7573dd Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing (+3 more)
+### Community 65 - "Community 65"
+Cohesion: 0.21
+Nodes (12): rowToReporteD1(), toBool(), toNum(), toStr(), insertarReporteDenuncia(), obtenerGruposAdscripcion(), obtenerReportesD1(), verificarFolioDenunciaUnico() (+4 more)
 
-### Community 72 - "Community 72"
-Cohesion: 0.15
-Nodes (11): 9550203 Cambios en presentacion, se genera, 9d67ddf Cambios de formulario analisis, btnPPTStyle, btnStyle, containerStyle, headerRowStyle, tdStyle, thStyle (+3 more)
+### Community 66 - "Community 66"
+Cohesion: 0.13
+Nodes (9): cardStyle, onlineStyle, Accion, obtenerPermisosUsuario(), PermisoRow, PermisoSeccion, Seccion, enviarFoto() (+1 more)
 
-### Community 73 - "Community 73"
+### Community 67 - "Community 67"
 Cohesion: 0.16
 Nodes (16): __dirname, dirty, escapeRegex(), EXTENSIONS, fileMap, filesToModify, findFunctionBody(), findFunctionBodyFallback() (+8 more)
 
-### Community 74 - "Community 74"
-Cohesion: 0.14
-Nodes (13): accionPedirEvidencias(), Props, Tab, tabs, TabSolicitudes(), TomarCasoBoton(), accionPedirEvidencias(), emptyItem() (+5 more)
+### Community 68 - "Community 68"
+Cohesion: 0.16
+Nodes (10): 67b1cb7 ReporteWord, 7e39526 Mejoras UI/UX, CARD, G3, INP, LBL, NUM, SEC (+2 more)
 
-### Community 75 - "Community 75"
-Cohesion: 0.23
-Nodes (11): b170599 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, b403f89 Vista para reportes de incidentes por camaras y cambio den header, bd1a223 Merge branch 'feature/vistas-reportes' into feature/testing, bf2e7ed Reportes del modulo de incidentes, fa9df15 Reporte de cámaras, ReportFilters(), ReportTable(), styles (+3 more)
+### Community 69 - "Community 69"
+Cohesion: 0.17
+Nodes (8): obtenerArticulosAction(), obtenerFraccionesAction(), ArticulosMapper, QueryRow, ArticulosRepository, ArticulosService, ArticuloLey, FraccionLey
 
-### Community 76 - "Community 76"
-Cohesion: 0.19
-Nodes (12): actualizarAtencionVictimas(), crearAtencionVictimas(), formatFecha(), FormatoNAtencionVictimas, FormatoNAtencionVictimasInput, listarAtencionVictimas(), obtenerAtencionVictimas(), obtenerAtencionVictimasPorFechaPeriodo() (+4 more)
-
-### Community 77 - "Community 77"
-Cohesion: 0.19
-Nodes (12): actualizarFgr(), crearFgr(), formatFecha(), FormatoNFgr, FormatoNFgrInput, listarFgr(), obtenerFgr(), obtenerFgrPorFechaPeriodo() (+4 more)
-
-### Community 78 - "Community 78"
-Cohesion: 0.19
-Nodes (12): actualizarMediosAlternativos(), crearMediosAlternativos(), formatFecha(), FormatoNMediosAlternativos, FormatoNMediosAlternativosInput, listarMediosAlternativos(), obtenerMediosAlternativos(), obtenerMediosAlternativosPorFechaPeriodo() (+4 more)
-
-### Community 79 - "Community 79"
+### Community 70 - "Community 70"
 Cohesion: 0.14
 Nodes (8): capturarInfractorInfraccionesAction(), FieldName, Props, CapturaInfractorActions, CapturaInfractorState, CapturaInfractorStore, initialState, useCapturaInfractorStore
 
-### Community 80 - "Community 80"
-Cohesion: 0.22
-Nodes (6): 27dcb21 Merge branch 'feature/testing' into feature/reportes, ArticulosMapper, QueryRow, ArticulosRepository, ArticuloLey, FraccionLey
+### Community 71 - "Community 71"
+Cohesion: 0.31
+Nodes (9): 156c925 vista de reporte de sin robos, 22b7b54 Merge branch 'feature/reportes' into feature/testing, 97a156c Reportes con D1, sin D1 y sin robo, PaginacionSinRobos(), paginationButtonStyle, PaginationProps, TablaReportesLimpios(), ReportFilters() (+1 more)
 
-### Community 81 - "Community 81"
-Cohesion: 0.17
-Nodes (8): 5bbdda8 Merge pull request #8 from presidenciaSJR/juzgado, ff6d3c2 juzgado, BotonVerDetalleProps, ConfirmacionModalProps, VARIANTES, columns, DataRow, FiscaliaTableProps
+### Community 72 - "Community 72"
+Cohesion: 0.25
+Nodes (14): Alignment, allBorders, dRow(), GET(), hRow(), NO_BORDER, noBorders, p() (+6 more)
 
-### Community 82 - "Community 82"
-Cohesion: 0.14
-Nodes (9): Departamento, inputStyle, labelStyle, Props, selectStyle, AccionModal, Departamento, Oficial (+1 more)
-
-### Community 83 - "Community 83"
-Cohesion: 0.22
-Nodes (10): 14fd73a Update FormSection.tsx, 305b0bd se quitan campos, 5795f74 Búsqueda de nombre de policía por nómina, 81b9829 Cambios para guardado de persinas afectadas, 917002a Guardado de policia a cargo, bf354f1 Nombre completo de quien captura, d5e0e56 Campo para agregar detenidos de forma dinámica y eliminación de campos extras, d665f95 Camo dinamico y cambio a select en datos positivos (+2 more)
-
-### Community 84 - "Community 84"
+### Community 73 - "Community 73"
 Cohesion: 0.19
-Nodes (12): 54a87f1 Fix oficial/despachos, cd92b01 Update .gitignore, dd2f306 Fix Mapa, getMapsWindow(), GoogleMapsNamespace, GoogleMapsWindow, loadGoogleMaps(), waitForGoogle() (+4 more)
+Nodes (12): guardarDatosCoordinacion(), num(), obtenerArmasDia(), obtenerConteosDetenidos(), obtenerDatosCapturados(), obtenerEventosDia(), obtenerRND(), upsertFge() (+4 more)
 
-### Community 85 - "Community 85"
+### Community 74 - "Community 74"
+Cohesion: 0.20
+Nodes (11): cleanColoniaName(), containerStyle, DEFAULT_CENTER, extractAddress(), extractNeighborhoodFromComponents(), getMunicipioEstado(), LIBRARIES, MapaDireccionRegistro() (+3 more)
+
+### Community 75 - "Community 75"
 Cohesion: 0.15
 Nodes (11): DocConfig, DOCS_ACCIDENTE, DOCS_DELITO, DOCS_EMPRESA, DOCS_INFRACCION, getEstatusConfig(), MOTIVO_TO_SUBTIPO, Props (+3 more)
 
-### Community 86 - "Community 86"
+### Community 76 - "Community 76"
+Cohesion: 0.21
+Nodes (8): paginationButtonStyle, PaginationProps, PhoneReport, PhoneReportsTable(), ReportesTabs(), OperationalTable(), OperationalTableProps, styles
+
+### Community 77 - "Community 77"
 Cohesion: 0.23
-Nodes (9): rowToReporteD1(), toBool(), toNum(), toStr(), insertarReporteDenuncia(), obtenerReportesD1(), verificarFolioDenunciaUnico(), listarReportesD1() (+1 more)
+Nodes (10): actualizarFgr(), crearFgr(), formatFecha(), FormatoNFgrInput, listarFgr(), obtenerFgr(), obtenerFgrPorFechaPeriodo(), parsePeriodo() (+2 more)
 
-### Community 87 - "Community 87"
-Cohesion: 0.14
-Nodes (9): obtenerDetalleInfraccionViaAction(), BotonVerDetalle(), AVATAR_COLORS, EstatusFiscalia, Props, SORTABLE_KEYS, STATUS_BADGE, STATUS_TABS (+1 more)
+### Community 78 - "Community 78"
+Cohesion: 0.23
+Nodes (10): actualizarMediosAlternativos(), crearMediosAlternativos(), formatFecha(), FormatoNMediosAlternativosInput, listarMediosAlternativos(), obtenerMediosAlternativos(), obtenerMediosAlternativosPorFechaPeriodo(), parsePeriodo() (+2 more)
 
-### Community 88 - "Community 88"
-Cohesion: 0.14
-Nodes (8): tdStyle, thStyle, Accion, obtenerPermisosUsuario(), PermisoRow, PermisoSeccion, Seccion, listarHistorial()
-
-### Community 89 - "Community 89"
+### Community 79 - "Community 79"
 Cohesion: 0.18
 Nodes (13): buildHelperCode(), components, __dirname, dirty, EXTENSIONS, fileMap, filesToModify, findReactImportWithTS() (+5 more)
 
-### Community 90 - "Community 90"
-Cohesion: 0.33
-Nodes (7): 156c925 vista de reporte de sin robos, PaginacionSinRobos(), paginationButtonStyle, PaginationProps, TablaReportesLimpios(), ReportFilters(), styles
+### Community 80 - "Community 80"
+Cohesion: 0.38
+Nodes (7): 4c9fa8a vista de reporte de d1 no iniciada, 712c116 Merge branch 'testing' into conexion, DescargaFilters(), DescargaPagination(), PaginationProps, DescargaTable(), styles
 
-### Community 91 - "Community 91"
-Cohesion: 0.18
-Nodes (9): obtenerArticulosAction(), obtenerFraccionesAction(), ArticulosService, Articulo, Fraccion, SeccionMotivoProps, CustomSelect(), CustomSelectProps (+1 more)
-
-### Community 92 - "Community 92"
+### Community 81 - "Community 81"
 Cohesion: 0.26
 Nodes (11): CWD, __dirname, populateAPIRoutes(), populateComandos(), populateEnvVars(), populateEstructura(), populateFeatures(), populateLibrerias() (+3 more)
 
-### Community 93 - "Community 93"
+### Community 82 - "Community 82"
 Cohesion: 0.17
 Nodes (11): btnBuscarStyle, btnLimpiarStyle, CANALES, CatalogoItem, ESTATUS, fieldStyle, FiltrosIncidentes(), inputStyle (+3 more)
 
-### Community 94 - "Community 94"
+### Community 83 - "Community 83"
 Cohesion: 0.17
-Nodes (9): btnStyle, containerStyle, headerRowStyle, loadingStyle, pageButtonStyle, paginationContainerStyle, tdStyle, thStyle (+1 more)
+Nodes (7): AVATAR_COLORS, EstatusInfracciones, Props, SORTABLE_KEYS, STATUS_BADGE, STATUS_TABS, BotonVerDetalle()
 
-### Community 95 - "Community 95"
+### Community 84 - "Community 84"
 Cohesion: 0.17
-Nodes (9): 3c12c41 cambios en flujo de 911-despacho, 7a1ae94 911-rondin, child, LOG, needsShell, opts, ORIG, PID_FILE (+1 more)
+Nodes (7): AVATAR_COLORS, EstatusLiberaciones, Props, SORTABLE_KEYS, STATUS_BADGE, STATUS_TABS, TIPO_LIBERACION_OPTS
 
-### Community 96 - "Community 96"
+### Community 85 - "Community 85"
 Cohesion: 0.18
 Nodes (6): guardarOficioAction(), CargarOficioSectionProps, Toast, ToastStore, ToastType, useToastStore
 
-### Community 97 - "Community 97"
+### Community 86 - "Community 86"
+Cohesion: 0.27
+Nodes (5): POST(), subirArchivo(), validarArchivo(), getExpedienteHost(), getExpedienteToken()
+
+### Community 87 - "Community 87"
 Cohesion: 0.17
 Nodes (2): LogLine, LogType
 
-### Community 98 - "Community 98"
+### Community 88 - "Community 88"
+Cohesion: 0.24
+Nodes (7): generarAlertasBusquedas(), rowToNotificacion(), eliminarAlertasBusqueda(), listarNotificacionesNoLeidas(), marcarNotificacionLeida(), marcarTodasNotificacionesLeidas(), Notificacion
+
+### Community 89 - "Community 89"
 Cohesion: 0.24
 Nodes (11): buildInstructions(), buildKeywords(), CONTEXT_MAP, __dirname, extractDomain(), GRAPH_JSON, KEYWORDS, main() (+3 more)
 
-### Community 99 - "Community 99"
-Cohesion: 0.38
-Nodes (6): 22b7b54 Merge branch 'feature/reportes' into feature/testing, 97a156c Reportes con D1, sin D1 y sin robo, rowToSinD1(), toStr(), obtenerSinD1(), SinD1Row
-
-### Community 100 - "Community 100"
+### Community 90 - "Community 90"
 Cohesion: 0.40
 Nodes (7): 98e7e6e vista de reportes de d1, b233bc7 Merge branch 'testing' into conexion, D1Filters(), D1Pagination(), PaginationProps, D1ReportsTable(), styles
 
-### Community 101 - "Community 101"
+### Community 91 - "Community 91"
+Cohesion: 0.18
+Nodes (5): Accion, PermisoRow, PermisoSeccion, Seccion, SECCIONES
+
+### Community 92 - "Community 92"
 Cohesion: 0.18
 Nodes (3): Module, ModuleCards(), MODULES
 
-### Community 102 - "Community 102"
+### Community 93 - "Community 93"
 Cohesion: 0.18
 Nodes (2): DC, DCCtx
 
-### Community 103 - "Community 103"
+### Community 94 - "Community 94"
 Cohesion: 0.18
 Nodes (1): WF
 
-### Community 104 - "Community 104"
+### Community 95 - "Community 95"
 Cohesion: 0.33
 Nodes (8): rowToCatalogo(), rowToIncidenteDetalle(), rowToIncidenteResumen(), toNum(), toStr(), CatalogoItem, IncidenteDetalle, IncidenteResumen
 
-### Community 105 - "Community 105"
-Cohesion: 0.38
-Nodes (6): 4c9fa8a vista de reporte de d1 no iniciada, DescargaFilters(), DescargaPagination(), PaginationProps, DescargaTable(), styles
+### Community 96 - "Community 96"
+Cohesion: 0.22
+Nodes (8): HistorialIncidente(), marcarEnSitioOficial(), Asignacion, DespachoContent(), Props, FormularioRecorrido(), MarcarEnSitioButton(), Props
 
-### Community 106 - "Community 106"
+### Community 97 - "Community 97"
 Cohesion: 0.20
 Nodes (1): TWEAKS
 
-### Community 107 - "Community 107"
+### Community 98 - "Community 98"
 Cohesion: 0.36
 Nodes (9): formato_n_armas_aseguradas, formato_n_atencion_victimas, formato_n_eventos, formato_n_fge, formato_n_fgr, formato_n_medios_alternativos, formato_n_reportes, formato_n_rnd (+1 more)
 
-### Community 108 - "Community 108"
+### Community 99 - "Community 99"
+Cohesion: 0.24
+Nodes (6): BusquedasFiltros(), ESTADOS, TIPOS, AUTORIDADES, JuridicoFiltros(), SearchBox()
+
+### Community 100 - "Community 100"
 Cohesion: 0.20
 Nodes (7): btnSubmitStyle, fieldContainerStyle, grid2Style, iconStyle, inputStyle, labelStyle, sectionTitleStyle
 
-### Community 109 - "Community 109"
-Cohesion: 0.24
-Nodes (6): PasoInfraccionProps, MAPA_GARANTIAS, SeccionGarantia(), SeccionGarantiaProps, SeccionMotivo(), SelectWrapper()
+### Community 101 - "Community 101"
+Cohesion: 0.20
+Nodes (7): child, LOG, needsShell, opts, ORIG, PID_FILE, ROOT
 
-### Community 110 - "Community 110"
+### Community 102 - "Community 102"
 Cohesion: 0.22
 Nodes (8): arrowBtnStyle, containerStyle, infoStyle, labelStyle, pageNumberStyle, Pagination(), PaginationProps, valueStyle
 
-### Community 111 - "Community 111"
-Cohesion: 0.22
-Nodes (1): TWEAKS
-
-### Community 112 - "Community 112"
+### Community 103 - "Community 103"
 Cohesion: 0.22
 Nodes (4): Accion, PermisoSeccion, Seccion, SECCIONES
 
-### Community 113 - "Community 113"
+### Community 104 - "Community 104"
+Cohesion: 0.22
+Nodes (5): Accion, PermisoSeccion, Seccion, SECCIONES, tienePermiso()
+
+### Community 105 - "Community 105"
+Cohesion: 0.22
+Nodes (5): Accion, PermisoSeccion, Seccion, SECCIONES, tienePermiso()
+
+### Community 106 - "Community 106"
+Cohesion: 0.22
+Nodes (1): TWEAKS
+
+### Community 107 - "Community 107"
+Cohesion: 0.22
+Nodes (4): Accion, PermisoSeccion, Seccion, SECCIONES
+
+### Community 108 - "Community 108"
+Cohesion: 0.44
+Nodes (4): rowToSinNovedad(), toStr(), obtenerReportesSinNovedad(), SinNovedadRow
+
+### Community 109 - "Community 109"
 Cohesion: 0.33
 Nodes (7): __dirname, getColumns(), getEnums(), getSchemas(), getTables(), main(), ROOT
 
-### Community 114 - "Community 114"
+### Community 110 - "Community 110"
 Cohesion: 0.25
 Nodes (6): CONTEXT_MAP_PATH, __dirname, GRAPH_JSON, LOADER_SCRIPT, ROOT, SKILL_PATH
 
-### Community 115 - "Community 115"
-Cohesion: 0.25
-Nodes (3): Alertas, ICONS, NAV
-
-### Community 116 - "Community 116"
+### Community 111 - "Community 111"
 Cohesion: 0.36
 Nodes (6): ColumnInfo, getColumns(), getEnums(), getTables(), main(), SCHEMAS
 
-### Community 117 - "Community 117"
+### Community 112 - "Community 112"
+Cohesion: 0.38
+Nodes (6): getMapsWindow(), GoogleMapsNamespace, GoogleMapsWindow, loadGoogleMaps(), waitForGoogle(), Window
+
+### Community 113 - "Community 113"
 Cohesion: 0.33
 Nodes (5): btnDetalle, DetenidoRow, FotoInfo, TablaDetenidos(), tabStyle()
 
-### Community 118 - "Community 118"
+### Community 114 - "Community 114"
 Cohesion: 0.52
 Nodes (6): drawWatermark(), formatearFecha(), formatearOficio(), generarOrdenSalidaVehiculo(), loadImageAsBase64(), parrafoMixtoConWrap()
 
-### Community 119 - "Community 119"
+### Community 115 - "Community 115"
+Cohesion: 0.29
+Nodes (6): AgregarAutoridadForm(), Autoridad, AUTORIDADES, I, L, Props
+
+### Community 116 - "Community 116"
 Cohesion: 0.33
 Nodes (6): CONTEXT_MAP, __dirname, extractDomain(), KEYWORDS, loadKeywords(), ROOT
 
-### Community 120 - "Community 120"
-Cohesion: 0.29
-Nodes (3): PasoConfirmacionProps, SeccionEstructurada, Props
-
-### Community 121 - "Community 121"
+### Community 117 - "Community 117"
 Cohesion: 0.40
 Nodes (5): Session, config, isPublic(), proxy(), PUBLIC_PATHS
 
-### Community 122 - "Community 122"
+### Community 118 - "Community 118"
+Cohesion: 0.33
+Nodes (2): createVisita(), VisitaModal()
+
+### Community 119 - "Community 119"
 Cohesion: 0.40
 Nodes (4): calcularSemaforoVigencia(), SemaforoColor, CFG, SemaforoVigencia()
 
-### Community 123 - "Community 123"
+### Community 120 - "Community 120"
+Cohesion: 0.40
+Nodes (3): columns, DataRow, FiscaliaTableProps
+
+### Community 121 - "Community 121"
 Cohesion: 0.40
 Nodes (2): cancelarFicha(), CancelacionModal()
 
-### Community 124 - "Community 124"
-Cohesion: 0.40
-Nodes (4): createProrroga(), I, L, ProrrogaModal()
+### Community 122 - "Community 122"
+Cohesion: 0.50
+Nodes (2): ModuleCardProps, Stat
 
-### Community 125 - "Community 125"
+### Community 123 - "Community 123"
+Cohesion: 0.50
+Nodes (4): 905531c trabajando en panel de fiscalia, a2145fb Merge branch 'testing' into juzgado, c194e54 envio de solicitud de evidencias completado, c4523ac tabla de fiscalia, evidencias funcional
+
+### Community 124 - "Community 124"
 Cohesion: 0.50
 Nodes (1): MAIN_ROUTES
 
-### Community 126 - "Community 126"
+### Community 125 - "Community 125"
 Cohesion: 0.50
 Nodes (2): ADMIN, pool
 
+### Community 126 - "Community 126"
+Cohesion: 0.50
+Nodes (2): Filtros, IncidenteResumen
+
 ### Community 127 - "Community 127"
+Cohesion: 0.50
+Nodes (1): OficialesViaRepository
+
+### Community 128 - "Community 128"
+Cohesion: 0.67
+Nodes (3): getExtension(), Props, VerDocumentoModal()
+
+### Community 129 - "Community 129"
+Cohesion: 0.67
+Nodes (1): Stage
+
+### Community 130 - "Community 130"
 Cohesion: 1.00
 Nodes (2): obtenerTokenFiscalia(), subirArchivoFiscalia()
 
-### Community 129 - "Community 129"
+### Community 131 - "Community 131"
+Cohesion: 0.67
+Nodes (1): IncidenteDetalle
+
+### Community 132 - "Community 132"
+Cohesion: 0.67
+Nodes (1): ReporteCampoDetalle
+
+### Community 133 - "Community 133"
+Cohesion: 0.67
+Nodes (1): InputProps
+
+### Community 134 - "Community 134"
+Cohesion: 0.67
+Nodes (1): SectionProps
+
+### Community 135 - "Community 135"
 Cohesion: 1.00
 Nodes (1): eslintConfig
 
-### Community 130 - "Community 130"
+### Community 136 - "Community 136"
 Cohesion: 1.00
 Nodes (1): config
 
 ## Knowledge Gaps
-- **798 isolated node(s):** `__dirname`, `ROOT`, `TOKEN_LOG`, `GRAPH_PATH`, `CHECKPOINT_SCRIPT` (+793 more)
+- **828 isolated node(s):** `__dirname`, `ROOT`, `TOKEN_LOG`, `GRAPH_PATH`, `CHECKPOINT_SCRIPT` (+823 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 97`** (2 nodes): `LogLine`, `LogType`
+- **Thin community `Community 87`** (2 nodes): `LogLine`, `LogType`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 102`** (2 nodes): `DC`, `DCCtx`
+- **Thin community `Community 93`** (2 nodes): `DC`, `DCCtx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 103`** (1 nodes): `WF`
+- **Thin community `Community 94`** (1 nodes): `WF`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 97`** (1 nodes): `TWEAKS`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 106`** (1 nodes): `TWEAKS`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 111`** (1 nodes): `TWEAKS`
+- **Thin community `Community 118`** (2 nodes): `createVisita()`, `VisitaModal()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 123`** (2 nodes): `cancelarFicha()`, `CancelacionModal()`
+- **Thin community `Community 121`** (2 nodes): `cancelarFicha()`, `CancelacionModal()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 125`** (1 nodes): `MAIN_ROUTES`
+- **Thin community `Community 122`** (2 nodes): `ModuleCardProps`, `Stat`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 126`** (2 nodes): `ADMIN`, `pool`
+- **Thin community `Community 124`** (1 nodes): `MAIN_ROUTES`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 127`** (2 nodes): `obtenerTokenFiscalia()`, `subirArchivoFiscalia()`
+- **Thin community `Community 125`** (2 nodes): `ADMIN`, `pool`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 129`** (1 nodes): `eslintConfig`
+- **Thin community `Community 126`** (2 nodes): `Filtros`, `IncidenteResumen`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 130`** (1 nodes): `config`
+- **Thin community `Community 127`** (1 nodes): `OficialesViaRepository`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 129`** (1 nodes): `Stage`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 130`** (2 nodes): `obtenerTokenFiscalia()`, `subirArchivoFiscalia()`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 131`** (1 nodes): `IncidenteDetalle`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 132`** (1 nodes): `ReporteCampoDetalle`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 133`** (1 nodes): `InputProps`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 134`** (1 nodes): `SectionProps`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 135`** (1 nodes): `eslintConfig`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 136`** (1 nodes): `config`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `auth` connect `Community 3` to `Community 19`, `Community 53`, `Community 54`, `Community 18`, `Community 25`, `Community 10`, `Community 24`, `Community 32`, `Community 1`, `Community 47`, `Community 0`, `Community 55`, `Community 16`, `Community 29`, `Community 13`, `Community 15`, `Community 2`, `Community 17`, `Community 35`, `Community 38`, `Community 41`, `Community 27`, `Community 7`, `Community 56`, `Community 76`, `Community 77`, `Community 78`, `Community 61`, `Community 88`, `Community 4`, `Community 33`, `Community 46`, `Community 67`, `Community 52`, `Community 23`, `Community 39`, `Community 64`, `Community 9`, `Community 11`, `Community 90`, `Community 22`, `Community 5`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Why does `query()` connect `Community 18` to `Community 68`, `Community 37`, `Community 53`, `Community 44`, `Community 3`, `Community 30`, `Community 10`, `Community 24`, `Community 49`, `Community 70`, `Community 41`, `Community 54`, `Community 13`, `Community 86`, `Community 7`, `Community 29`, `Community 65`, `Community 33`, `Community 11`, `Community 8`, `Community 39`, `Community 80`, `Community 17`, `Community 6`, `Community 52`, `Community 2`, `Community 59`, `Community 15`, `Community 1`, `Community 21`, `Community 0`, `Community 76`, `Community 77`, `Community 78`, `Community 62`, `Community 26`, `Community 99`, `Community 19`, `Community 9`, `Community 47`, `Community 32`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **Why does `SA7Repository` connect `Community 47` to `Community 61`?**
+- **Why does `auth` connect `Community 1` to `Community 23`, `Community 16`, `Community 13`, `Community 0`, `Community 34`, `Community 18`, `Community 20`, `Community 28`, `Community 49`, `Community 5`, `Community 33`, `Community 30`, `Community 80`, `Community 8`, `Community 21`, `Community 66`, `Community 44`, `Community 29`, `Community 11`, `Community 3`, `Community 22`, `Community 14`, `Community 77`, `Community 78`, `Community 72`, `Community 86`, `Community 2`, `Community 37`, `Community 46`, `Community 41`, `Community 35`, `Community 73`, `Community 68`, `Community 88`, `Community 47`, `Community 27`, `Community 42`, `Community 39`, `Community 17`, `Community 60`, `Community 4`, `Community 9`, `Community 19`, `Community 71`, `Community 24`, `Community 25`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `query()` connect `Community 0` to `Community 63`, `Community 40`, `Community 16`, `Community 45`, `Community 41`, `Community 18`, `Community 20`, `Community 36`, `Community 64`, `Community 44`, `Community 13`, `Community 30`, `Community 65`, `Community 11`, `Community 62`, `Community 37`, `Community 14`, `Community 15`, `Community 39`, `Community 4`, `Community 21`, `Community 35`, `Community 6`, `Community 73`, `Community 54`, `Community 88`, `Community 8`, `Community 1`, `Community 26`, `Community 17`, `Community 5`, `Community 77`, `Community 78`, `Community 58`, `Community 31`, `Community 108`, `Community 23`, `Community 9`, `Community 49`, `Community 61`, `Community 28`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `SA7Repository` connect `Community 49` to `Community 13`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **What connects `__dirname`, `ROOT`, `TOKEN_LOG` to the rest of the system?**
-  _798 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _828 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.034051935325820674 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.033232016210739616 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.039880059970014994 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.04002026342451875 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.04737281067556297 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.024054982817869417 - nodes in this community are weakly interconnected._

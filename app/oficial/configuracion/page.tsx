@@ -7,6 +7,7 @@ import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
 import { verificarRolOficial, obtenerMiPerfil } from '@/lib/oficial/service'
 import { UnidadAsignadaSection } from '@/components/oficial/UnidadAsignadaSection'
 import { listarPatrullasParaAsignacion, obtenerPatrullaPorId } from '@/lib/flota/service'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function ConfiguracionPerfilPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -165,7 +166,7 @@ export default async function ConfiguracionPerfilPage() {
         <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · OFICIAL</span>
+            <span>CENTINELA {APP_VERSION} · OFICIAL</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
           </div>
         </div>

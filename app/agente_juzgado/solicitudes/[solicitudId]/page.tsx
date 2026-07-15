@@ -7,6 +7,7 @@ import { verificarRolJuzgado, obtenerDatosAsegurado } from '@/lib/agente_juzgado
 import { obtenerEvidenciasMonitorista } from '@/lib/agente_juzgado/repository'
 import { CapturarDetallesForm } from '@/components/agente_juzgado/CapturarDetallesForm'
 import { DetallesAseguradoView } from '@/components/agente_juzgado/DetallesAseguradoView'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AseguradosPage({ params }: { params: Promise<{ solicitudId: string }> }) {
   const { solicitudId } = await params
@@ -75,7 +76,7 @@ export default async function AseguradosPage({ params }: { params: Promise<{ sol
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · ASEGURADOS</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

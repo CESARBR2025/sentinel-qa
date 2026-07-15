@@ -7,12 +7,18 @@ import { ClipboardList, CheckSquare } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { ProfileDropdownAuxiliar } from '@/components/auxiliar/ProfileDropdownAuxiliar'
 import { DashboardHeader } from '@/components/partials/Header'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AuxiliarPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
   if (!(await tienePermiso(session.user.id, 'auxiliar_checklist', 'ver'))) redirect('/dashboard')
+
+  const userWithRole = await getUserWithRole(session.user.id)
+  const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+  const backHref = hub === '/auxiliar' ? undefined : (hub ?? '/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
   const params = await searchParams
@@ -29,7 +35,7 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
         .card-a:hover .ca-icon { color:#1f355a; transform:scale(1.1); }
       `}</style>
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} backHref={backHref} />
 
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
 
@@ -94,7 +100,7 @@ export default async function AuxiliarPage({ searchParams }: { searchParams: Pro
         <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · AUXILIAR</span>
+            <span>CENTINELA {APP_VERSION} · AUXILIAR</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
           </div>
         </div>

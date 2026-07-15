@@ -6,6 +6,7 @@ import { listarDetenidosParaRol } from '@/lib/detenidos-compartido'
 import Link from 'next/link'
 import { Camera } from 'lucide-react'
 import { FilaDetenidoRol } from '@/components/FilaDetenidoRol'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DetenidosJuzgadoPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -82,7 +83,7 @@ export default async function DetenidosJuzgadoPage() {
         <div style={{ marginTop: 'auto', paddingTop: 20, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · DETENIDOS</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · DETENIDOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }} />
           </div>
         </div>

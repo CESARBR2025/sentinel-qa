@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/agente_liberaciones/ProfileDropdown'
 import LiberacionesTable from "@/components/agente_liberaciones/LiberacionesTable";
 import { obtenerDashboardLiberaciones, obtenerLiberaciones } from "@/lib/agente_liberaciones/actions";
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function RevisionDocumentalPage() {
     const [user, liberaciones] = await Promise.all([
@@ -55,7 +56,7 @@ export default async function RevisionDocumentalPage() {
                 }}>
                     <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span>CENTINELA v1.2 · LIBERACIONES</span>
+                        <span>CENTINELA {APP_VERSION} · LIBERACIONES</span>
                         <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }}></span>
                     </div>
                 </div>

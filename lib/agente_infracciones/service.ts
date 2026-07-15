@@ -1,14 +1,14 @@
-import { obtenerRolUsuario, obtenerLiberaciones, actualizarDatosInfractor, obtenerConceptoId, insertarOrdenPagoSa7, liberarGarantia } from './repository'
+import { obtenerLiberaciones, actualizarDatosInfractor, obtenerConceptoId, insertarOrdenPagoSa7, liberarGarantia } from './repository'
 import { rowToLiberacion } from './mapper'
 import { obtenerTokenGuest } from '@/lib/shared/infracciones'
+import { tienePermiso } from './permisos'
 import type { LiberacionRow, CapturaInfractorInput, CapturaInfractorResult } from './types'
 
 const SA7_URL = 'https://sanjuandelrio.sytes.net:3044/api/sasiete/generar-orden-completa' as const
 const CONCEPTO_PRUEBA = '31378'
 
 export async function verificarRolInfracciones(userId: string): Promise<boolean> {
-  const rol = await obtenerRolUsuario(userId)
-  return rol === 'agente_infracciones'
+  return tienePermiso(userId, 'infracciones', 'ver')
 }
 
 export async function listarLiberaciones(): Promise<LiberacionRow[]> {

@@ -2,6 +2,7 @@ import { obtenerDetalleInfraccionViaActionJuzgado } from '@/lib/agente_juzgado/a
 import { DetalleInfraccionView } from '@/components/shared/DetalleInfraccionView'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DetalleInfraccionJuzgadoPage({
   params,
@@ -72,7 +73,7 @@ export default async function DetalleInfraccionJuzgadoPage({
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · DETALLE</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · DETALLE</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }} />
           </div>
         </div>

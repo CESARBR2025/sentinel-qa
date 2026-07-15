@@ -3,9 +3,18 @@ import { Car, ClipboardList, Camera, Shield } from 'lucide-react'
 import { ToastExito } from '@/components/fiscalia/ToastExito'
 import { obtenerDashboardFiscalia } from '@/lib/fiscalia/actions'
 import { DashboardHeader } from '@/components/partials/Header'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function FiscaliaDashboardPage({ searchParams }: { searchParams: Promise<{ exito?: string }> }) {
   const user = await obtenerDashboardFiscalia()
+
+  const session = await auth.api.getSession({ headers: await headers() })
+  const userWithRole = session ? await getUserWithRole(session.user.id) : null
+  const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+  const backHref = hub === '/fiscalia' ? undefined : (hub ?? '/dashboard')
 
   const params = await searchParams
 
@@ -41,7 +50,7 @@ export default async function FiscaliaDashboardPage({ searchParams }: { searchPa
         .card-f:hover .cf-arrow { transform: translateX(5px); }
       `}</style>
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} backHref={backHref} />
 
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48, minHeight: '100vh' }}>
 
@@ -176,7 +185,7 @@ export default async function FiscaliaDashboardPage({ searchParams }: { searchPa
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

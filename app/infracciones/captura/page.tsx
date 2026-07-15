@@ -6,6 +6,7 @@ import { verificarRolOficial } from "@/lib/oficial/service";
 import { FileBadge2, ArrowLeft } from "lucide-react";
 import { ProfileDropdown } from "@/components/oficial/ProfileDropdown";
 import FormularioInfraccion from "@/features/via/oficiales/components/FormularioInfraccion";
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function CapturaPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -66,7 +67,7 @@ export default async function CapturaPage() {
         <div style={{ marginTop: 32, paddingTop: 20, borderTop: "1px solid #e2e8f0", fontFamily: "JetBrains Mono,monospace", fontSize: 10, color: "#94a3b8", letterSpacing: "0.18em", textTransform: "uppercase", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span>CENTINELA v1.2 · VÍA</span>
+            <span>CENTINELA {APP_VERSION} · VÍA</span>
             <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#1f355a" }} />
           </div>
         </div>

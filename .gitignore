@@ -70,3 +70,8 @@ Alexandria/
 # YouMindAG — generated knowledge graph
 .graphify/
 graphify-visual/
+
+# Alexandria (conocimiento y config personal — no del repo)
+.cursor/mcp.json
+opencode.json
+.gemini/settings.json

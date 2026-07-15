@@ -32,3 +32,10 @@ export async function obtenerRolNombre(usuarioId: string): Promise<string | null
 export async function tieneAccesoSeccion(usuarioId: string, seccion: Seccion): Promise<boolean> {
   return core.tienePermiso(usuarioId, seccion, 'ver')
 }
+
+// Una sola consulta para varias secciones (evita N llamadas a tieneAccesoSeccion,
+// cada una con su propio round-trip a BD, cuando solo hace falta "alguna de estas").
+export async function tieneAlgunAcceso(usuarioId: string, secciones: readonly Seccion[]): Promise<boolean> {
+  const permisos = await core.obtenerPermisosUsuario(usuarioId, secciones)
+  return secciones.some(s => permisos[s].puede_ver)
+}

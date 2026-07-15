@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/agente_infracciones/ProfileDropdown'
 import InfraccionesTable from "@/components/agente_infracciones/InfraccionesTable";
 import { obtenerDashboardInfracciones, obtenerInfracciones } from '@/lib/agente_infracciones/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function InfraccionesDashboardPage() {
   const [user, infracciones] = await Promise.all([
@@ -55,7 +56,7 @@ export default async function InfraccionesDashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · INFRACCIONES</span>
+            <span>CENTINELA {APP_VERSION} · INFRACCIONES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }}></span>
           </div>
         </div>

@@ -8,6 +8,7 @@ import { BotonGenerarPpt } from '@/components/monitorista/BotonGenerarPpt'
 import { Clock, CheckCircle2, Eye, Camera } from 'lucide-react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { SubHeader } from '@/components/partials/SubHeader'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DetenidosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -103,7 +104,7 @@ export default async function DetenidosPage() {
       </main>
 
       <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v1.2
+        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA {APP_VERSION}
       </footer>
     </div>
   )

@@ -5,6 +5,7 @@ import { FormularioAsegurado } from '@/components/fiscalia/FormularioAsegurado'
 import { obtenerDashboardJuzgado, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarDetallesAseguradosJuzgadoAction } from '@/lib/agente_juzgado/actions'
 import { ACTAS_CHECKLIST } from '@/lib/fiscalia/types'
 import { Clock } from 'lucide-react'
+import { APP_VERSION } from "@/lib/constants"
 
 const labelSx: React.CSSProperties = {
   fontFamily: 'JetBrains Mono,monospace',
@@ -171,7 +172,7 @@ export default async function JuzgadoAseguradoDetallePage({ params }: Props) {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · ASEGURADOS</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/agente_juzgado/ProfileDropdown'
 import { TabSolicitudes } from '@/components/agente_juzgado/TabSolicitudes'
 import { obtenerDashboardJuzgado, obtenerSolicitudes } from '@/lib/agente_juzgado/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function SolicitudesPage() {
   const user = await obtenerDashboardJuzgado()
@@ -53,7 +54,7 @@ export default async function SolicitudesPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · SOLICITUDES</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · SOLICITUDES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

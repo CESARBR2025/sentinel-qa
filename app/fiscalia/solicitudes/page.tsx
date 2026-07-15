@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/fiscalia/ProfileDropdown'
 import { TabSolicitudes } from '@/components/fiscalia/TabSolicitudes'
 import { obtenerDashboardFiscalia, obtenerSolicitudes } from '@/lib/fiscalia/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function SolicitudesPage() {
   const user = await obtenerDashboardFiscalia()
@@ -56,7 +57,7 @@ export default async function SolicitudesPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · SOLICITUDES</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · SOLICITUDES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

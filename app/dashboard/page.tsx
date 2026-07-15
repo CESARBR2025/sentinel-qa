@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation'
 import { SignOutButton } from './sign-out-button'
 import { Enable2FA } from './enable-2fa'
 import { ModuleCards } from './module-cards'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -12,20 +13,9 @@ export default async function DashboardPage() {
 
   const userWithRole = await getUserWithRole(session.user.id)
 
-  if (userWithRole?.rolNombre === 'admin_transito') redirect('/admin-transito')
-  if (userWithRole?.rolNombre === 'Oficial de Campo') redirect('/oficial')
-  if (userWithRole?.rolNombre === 'agente_fiscalia') redirect('/fiscalia')
-  if (userWithRole?.rolNombre === 'agente_juzgado') redirect('/agente_juzgado')
-  if (userWithRole?.rolNombre === 'agente_liberaciones') redirect('/agente_liberaciones')
-  if (userWithRole?.rolNombre === 'agente_infracciones') redirect('/agente_infracciones')
-  if (userWithRole?.rolNombre === 'Monitorista') redirect('/monitorista')
-  if (userWithRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
-  if (userWithRole?.rolNombre === 'Reportante') redirect('/reportes')
-  if (userWithRole?.rolNombre === 'agente_911') redirect('/agente_911')
-  if (userWithRole?.rolNombre === 'agente_despacho') redirect('/agente_despacho')
-  if (userWithRole?.rolNombre === 'agente_bitacorista') redirect('/agente_bitacorista')
-  if (userWithRole?.rolNombre === 'corralon_mw' || userWithRole?.rolNombre === 'corralon_mejia') redirect('/corralon')
-  if (userWithRole?.rolNombre === 'agente_reportes') redirect('/nCoordinacion')
+  // Administrador (esAdmin) nunca tiene hub propio — siempre ve el panel general.
+  const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+  if (hub) redirect(hub)
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean
@@ -231,7 +221,7 @@ export default async function DashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2</span>
+            <span>CENTINELA {APP_VERSION}</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#3e5171' }}></span>
           </div>
         </div>

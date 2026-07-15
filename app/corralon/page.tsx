@@ -1,6 +1,7 @@
 import { obtenerDashboardCorralon, obtenerSolicitudes } from '@/lib/corralon/actions'
 import { ProfileDropdown } from './profile-dropdown'
 import { ModuleCard } from './module-card'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function CorralonDashboardPage() {
   const [user, solicitudes] = await Promise.all([
@@ -64,7 +65,7 @@ export default async function CorralonDashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · CORRALÓN</span>
+            <span>CENTINELA {APP_VERSION} · CORRALÓN</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#d97706' }}></span>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { ProfileDropdown } from '@/components/agente_juzgado/ProfileDropdown'
 import { FormularioPuestaDisposicion } from '@/components/fiscalia/FormularioPuestaDisposicion'
 import { obtenerDashboardJuzgado, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarPuestaDisposicionJuzgadoAction } from '@/lib/agente_juzgado/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -63,7 +64,7 @@ export default async function JuzgadoPuestaDisposicionPage({ params }: Props) {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · PUESTA A DISPOSICIÓN</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · PUESTA A DISPOSICIÓN</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

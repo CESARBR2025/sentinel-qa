@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/agente_juzgado/ProfileDropdown'
 import { JuzgadoTable } from '@/components/agente_juzgado/JuzgadoTable'
 import { obtenerDashboardJuzgado, obtenerLiberacionesAction } from '@/lib/agente_juzgado/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function LiberacionesJuzgadoPage() {
   const [user, liberaciones] = await Promise.all([
@@ -61,7 +62,7 @@ export default async function LiberacionesJuzgadoPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · JUZGADO · LIBERACIONES</span>
+            <span>CENTINELA {APP_VERSION} · JUZGADO · LIBERACIONES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

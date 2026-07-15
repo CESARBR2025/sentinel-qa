@@ -1,4 +1,4 @@
-# Node Description Batch 23 of 89
+# Node Description Batch 23 of 93
 
 Graphify is running in assistant/skill mode (no API key). You are the host
 assistant (Claude Code / Codex / Gemini CLI). Read the prompt below and write
@@ -12,51 +12,60 @@ describing what it is or does. Use only the provided context.
 For a code symbol (kind=code-symbol — a function, class, or constant),
 describe what the function/symbol does based on its name, source location
 and neighbors — e.g. "Resolves the configured ontology profile from graphify.yaml.".
-Write every description in English (en). Do not switch languages.
+For an entity node (any other kind — e.g. a person, place, event, object),
+describe what the entity is and its role, grounded in its type, its
+relations (neighbors) and the provided citations/evidence — e.g.
+"Lady Carfax, a wealthy heiress who disappears en route to Lausanne.".
+Ground entity descriptions in the citations/evidence when present; do not
+speculate beyond the context, so a node with no supporting context may be
+left out of the reply.
+LANGUAGE: each entry has a `lang=` marker giving the language of its source.
+Write that entry's description in EXACTLY that language. Do not translate to
+a single common language — match each node's source language individually.
 No marketing language.
 Respond ONLY with a JSON object mapping each node id (as a string) to its
 one-sentence description — no prose, no markdown fences.
 
-- "id_page_infraccionciudadanopage": "InfraccionCiudadanoPage()" | kind=code-symbol | source=app/infracciones/[id]/page.tsx:L64 | neighbors=[page.tsx, formatDate(), getStatusStyle(), sanitize(), timeAgo()]
-- "incidentes_actions_createalarmaescolar": "createAlarmaEscolar()" | kind=code-symbol | source=lib/incidentes/actions.ts:L800 | neighbors=[actions.ts, req(), requireOperador(), createIncidente(), createIncidenteCliente()]
-- "incidentes_actions_createextorsion": "createExtorsion()" | kind=code-symbol | source=lib/incidentes/actions.ts:L768 | neighbors=[actions.ts, req(), requireOperador(), createIncidente(), createIncidenteCliente()]
-- "incidentes_actions_validarenum": "validarEnum()" | kind=code-symbol | source=lib/incidentes/actions.ts:L37 | neighbors=[actions.ts, addPersonaAfectada(), createIncidente(), createIncidenteCliente(), insertarIncidente()]
-- "incidentes_mapper_rowtoincidentedetallecompletobase": "rowToIncidenteDetalleCompletoBase()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L201 | neighbors=[mapper.ts, toBool(), toNum(), toStr(), repository.ts]
-- "incidentes_mapper_rowtoreportecampo": "rowToReporteCampo()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L115 | neighbors=[mapper.ts, toBool(), toNum(), toStr(), repository.ts]
-- "incidentes_mapper_rowtoreportecampodetalle": "rowToReporteCampoDetalle()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L237 | neighbors=[mapper.ts, toBool(), toNum(), toStr(), repository.ts]
-- "incidentes_mapper_tobool": "toBool()" | kind=code-symbol | source=lib/incidentes/mapper.ts:L32 | neighbors=[mapper.ts, rowToIncidenteConDespachoBase(), rowToIncidenteDetalleCompletoBase(), rowToReporteCampo(), rowToReporteCampoDetalle()]
-- "incidentes_statincidencia": "StatIncidencia.tsx" | kind=code-symbol | source=components/reportes/incidentes/StatIncidencia.tsx:L1 | neighbors=[2fcba7b vista de reportes de incidentes…, 552d291 Merge branch 'testing' into con…, e286619 Merge branch 'feature/testing' …, IncidenteStat(), page.tsx]
-- "incidentes_styles_styles": "styles" | kind=code-symbol | source=components/reportes/incidentes/styles.ts:L1 | neighbors=[FiltrosIncidencias.tsx, Paginacion.tsx, styles.ts, TablaIncidentes.tsx, page.tsx]
-- "monitorista_mapper_rowtoincidentecamara": "rowToIncidenteCamara()" | kind=code-symbol | source=lib/monitorista/mapper.ts:L175 | neighbors=[mapper.ts, num(), parseTurno(), repository.ts, service.ts]
-- "monitorista_subirevidenciamodal_subirevidenciamodal": "SubirEvidenciaModal()" | kind=code-symbol | source=components/monitorista/SubirEvidenciaModal.tsx:L50 | neighbors=[BandejaSolicitudes.tsx, BotonSubirDenuncia.tsx, SubirEvidenciaModal.tsx, btnSubmit(), formatSize()]
-- "monitorista_types_incidentecamara": "IncidenteCamara" | kind=code-symbol | source=lib/monitorista/types.ts:L113 | neighbors=[incidentes-camara-service.ts, mapper.ts, repository.ts, service.ts, types.ts]
-- "next_config": "next.config.ts" | kind=code-symbol | source=next.config.ts:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, 75ca4b2 Merge pull request #9 from pres…, 90da1ca Initial commit from Create Next…, 953d38a implementando vista de fiscalia, nextConfig]
-- "notificaciones_mapper": "mapper.ts" | kind=code-symbol | source=lib/notificaciones/mapper.ts:L1 | neighbors=[ad3ec5f mejorando esto, rowToNotificacion(), types.ts, Notificacion, repository.ts]
-- "oficial_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/oficial/mapper.ts:L69 | neighbors=[mapper.ts, rowToD1(), rowToDespachoAsignado(), rowToReporteCampo(), rowToReporteResumen()]
-- "oficial_types_ofireportedetalle": "OfiReporteDetalle" | kind=code-symbol | source=lib/oficial/types.ts:L188 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts, OfiReporteCampo]
-- "oficiales_repository_oficialesviarepository": "OficialesViaRepository" | kind=code-symbol | source=features/via/oficiales/repository.ts:L4 | neighbors=[repository.ts, .obtenerOficialIdPorUserId(), .obtenerOficialPorId(), .obtenerOficialPorUserId(), service.ts]
-- "oficiales_service_oficialesviaservice": "OficialesViaService" | kind=code-symbol | source=features/via/oficiales/service.ts:L3 | neighbors=[service.ts, .obtenerMiPerfil(), .obtenerOficialId(), .obtenerPorId(), route.ts]
-- "path_route": "route.ts" | kind=code-symbol | source=app/api/uploads/[...path]/route.ts:L1 | neighbors=[0e33bf6 feat: módulo Admin, Prórroga, F…, auth.ts, auth, GET(), MIME]
-- "permisos_core_tienepermiso": "tienePermiso()" | kind=code-symbol | source=lib/permisos/core.ts:L52 | neighbors=[actions.ts, layout.tsx, core.ts, obtenerPermisosUsuario(), route.ts]
-- "prevencion_autoridadbadge_autoridadbadge": "AutoridadBadge()" | kind=code-symbol | source=components/prevencion/AutoridadBadge.tsx:L8 | neighbors=[page.tsx, page.tsx, page.tsx, AgregarAutoridadForm.tsx, AutoridadBadge.tsx]
-- "reportes_formato_n_atencion_victimas_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-atencion-victimas-service.ts:L31 | neighbors=[formato-n-atencion-victimas-service.ts, obtenerAtencionVictimas(), obtenerAtencionVictimasPorFechaPeriodo(), formatFecha(), parsePeriodo()]
-- "reportes_formato_n_fge_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-fge-service.ts:L36 | neighbors=[formato-n-fge-service.ts, obtenerFge(), obtenerFgePorFechaPeriodo(), formatFecha(), parsePeriodo()]
-- "reportes_formato_n_fgr_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-fgr-service.ts:L35 | neighbors=[formato-n-fgr-service.ts, obtenerFgr(), obtenerFgrPorFechaPeriodo(), formatFecha(), parsePeriodo()]
-- "reportes_formato_n_medios_alternativos_service_rowto": "rowTo()" | kind=code-symbol | source=lib/reportes/formato-n-medios-alternativos-service.ts:L29 | neighbors=[formato-n-medios-alternativos-service.ts, obtenerMediosAlternativos(), obtenerMediosAlternativosPorFechaPeriod…, formatFecha(), parsePeriodo()]
-- "reportes_incidentes_service_combinar": "combinar()" | kind=code-symbol | source=lib/reportes-incidentes/service.ts:L12 | neighbors=[service.ts, toNum(), toStr(), listarReporteDiario(), listarReporteSemanal()]
-- "reportes_sin_d1_types": "types.ts" | kind=code-symbol | source=lib/reportes-sin-d1/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, mapper.ts, repository.ts, service.ts, SinD1Row]
-- "reportes_sin_novedad_types": "types.ts" | kind=code-symbol | source=lib/reportes-sin-novedad/types.ts:L1 | neighbors=[ad3ec5f mejorando esto, mapper.ts, repository.ts, service.ts, SinNovedadRow]
-- "rh_route": "route.ts" | kind=code-symbol | source=app/api/rol-servicios/externos/rh/route.ts:L1 | neighbors=[6feefe2 BackEnd completo para hacer la …, a58a0f7 Despachos, auth.ts, auth, GET()]
-- "rol_servicios_signaturemodal": "SignatureModal.tsx" | kind=code-symbol | source=components/rol_servicios/SignatureModal.tsx:L1 | neighbors=[b68a2b7 Merge branch 'feature/testing' …, f9243ac Interfaz de formulario de rol d…, ServiceFooter.tsx, Props, SignatureModal()]
-- "rol_servicios_types_servicerow": "ServiceRow" | kind=code-symbol | source=lib/rol-servicios/types.ts:L3 | neighbors=[mapper.ts, page.tsx, service.ts, ServiceTable.tsx, types.ts]
-- "scripts_export_schema_main": "main()" | kind=code-symbol | source=scripts/export-schema.mjs:L76 | neighbors=[export-schema.mjs, getColumns(), getEnums(), getSchemas(), getTables()]
-- "scripts_load_context_main": "main()" | kind=code-symbol | source=scripts/load-context.mjs:L117 | neighbors=[load-context.mjs, buildInstructions(), buildKeywords(), extractDomain(), queryGraph()]
-- "scripts_trace_utils_findsourcefile": "findSourceFile()" | kind=code-symbol | source=scripts/trace-utils.mjs:L33 | neighbors=[trace-client.mjs, trace-components.mjs, trace-server.mjs, trace-utils.mjs, searchRecursive()]
-- "sin_robos_styles_styles": "styles" | kind=code-symbol | source=components/reportes/sin_robos/styles.ts:L1 | neighbors=[page.tsx, PaginacionSinRobos.tsx, ReporteSinRobos.tsx, ReportFilters.tsx, styles.ts]
-- "token_guest_route": "route.ts" | kind=code-symbol | source=app/api/auth/token-guest/route.ts:L1 | neighbors=[23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, b5233a8 implementando via como modulo d…, f7b1aac Merge branch 'feature/testing' …, POST()]
-- "ui_fieldlabel_fieldlabel": "FieldLabel()" | kind=code-symbol | source=features/via/infracciones/components/ui/FieldLabel.tsx:L1 | neighbors=[PasoConductor.tsx, PasoVehiculo.tsx, SeccionGarantia.tsx, SeccionMotivo.tsx, FieldLabel.tsx]
-- "ui_radioinput": "RadioInput.tsx" | kind=code-symbol | source=features/via/infracciones/components/ui/RadioInput.tsx:L1 | neighbors=[23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, b5233a8 implementando via como modulo d…, f7b1aac Merge branch 'feature/testing' …, RadioOption()]
-- "2fa_page": "page.tsx" | kind=code-symbol | source=app/(auth)/login/2fa/page.tsx:L1 | neighbors=[TwoFactorPage(), auth-client.ts, authClient, 6a042cd feat: sistema de autenticación,…]
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@54a87f1d329f459f1b266afb4b406706c78f8e78": "54a87f1 Fix oficial/despachos" | kind=Commit | source=git | neighbors=[feature/testing, main, 2233342 Fix/MarcarEnSitio, page.tsx, FormularioRecorrido.tsx, dd2f306 Fix Mapa] | lang=pt
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@54d7324d5800f2fc2db384689934b3f092a82bb5": "54d7324 chore: dejar de versionar config MCP local de Alexandria" | kind=Commit | source=git | neighbors=[feature/testing, main, 0caf5dd Fixes, fcdb169 chore(graphify): actualiza graf…, conexion, testing] | lang=nl
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@6594f4a7d3f2e0fa3674302b4ae412dfd576f203": "6594f4a Flujos por Rol" | kind=Commit | source=git | neighbors=[feature/testing, main, 290d651 feat(despacho): flujo integral …, ac9ad49 Merge branch 'feature/testing' …, conexion, testing] | lang=pt
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@6c646afab60d76cab6a76094a1892433957f5f20": "6c646af fix loader bug en login" | kind=Commit | source=git | neighbors=[11ee4f2 mejorando flujo de 911, feature/testing, main, de6da3e mejorando despacho, page.tsx, conexion] | lang=en
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@a7a7f2e084cd75996841e4eeb0019d3671cacfde": "a7a7f2e boveda" | kind=Commit | source=git | neighbors=[feature/testing, main, a21f03f fix bugs reporte denuncia, e6bffc9 boveda conectada, conexion, testing] | lang=pt
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@c776b5881c43c8a0acbc67cb9696f9b9a77735b3": "c776b58 Integrar Alexandria (bóveda de conocimiento local vía MCP)" | kind=Commit | source=git | neighbors=[feature/testing, main, 5641e69 Merge branch 'feature/testing' …, ec3acf7 iniciando reset de testing, conexion, testing] | lang=en
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@e211eefd572dbc8a9bedcdde8eb32d55fe19b171": "e211eef upload AGENTS" | kind=Commit | source=git | neighbors=[514a705 refactorizacion sql, feature/testing, main, ad3ec5f mejorando esto, conexion, testing] | lang=en
+- "commit:repo:github.com/presidenciaSJR/seguridad_publica@fcdb169e76940c47bc1f42e7975ee8fc19a49bed": "fcdb169 chore(graphify): actualiza grafo tras flujo integral de despacho" | kind=Commit | source=git | neighbors=[290d651 feat(despacho): flujo integral …, feature/testing, main, 54d7324 chore: dejar de versionar confi…, conexion, testing] | lang=nl
+- "components_filadetenidorol": "FilaDetenidoRol.tsx" | kind=code-symbol | source=components/FilaDetenidoRol.tsx:L1 | neighbors=[388b997 Apartados para subir fotografia…, 672bab5 libearciones para juzgado, 863c575 Merge pull request #24 from pre…, de5682f Merge pull request #10 from pre…, FilaDetenidoRol(), page.tsx] | lang=en
+- "components_pagetransition": "PageTransition.tsx" | kind=code-symbol | source=components/PageTransition.tsx:L1 | neighbors=[layout.tsx, 0068216 Mejora de Dashboard, Login y tr…, 7e39526 Mejoras UI/UX, 863c575 Merge pull request #24 from pre…, PageTransition(), Stage] | lang=en
+- "curp_route": "route.ts" | kind=code-symbol | source=app/api/via/curp/route.ts:L1 | neighbors=[23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, 863c575 Merge pull request #24 from pre…, b5233a8 implementando via como modulo d…, f7b1aac Merge branch 'feature/testing' …, POST()] | lang=en
+- "dashboard_sign_out_button": "sign-out-button.tsx" | kind=code-symbol | source=app/dashboard/sign-out-button.tsx:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, page.tsx, SignOutButton(), auth-client.ts, authClient, SubHeader.tsx] | lang=en
+- "db_create_admin": "create-admin.ts" | kind=code-symbol | source=lib/db/create-admin.ts:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, 863c575 Merge pull request #24 from pre…, ffcea0c fase 1 completada, ADMIN, main(), pool] | lang=en
+- "deteccion_camara_styles_styles": "styles" | kind=code-symbol | source=components/reportes/deteccion_camara/styles.ts:L1 | neighbors=[ReportFilters.tsx, ReportTables.tsx, styles.ts, ReportFilters.tsx, page.tsx, ReportFilters.tsx] | lang=en
+- "expediente_client_subirarchivoexpediente": "subirArchivoExpediente()" | kind=code-symbol | source=lib/expediente/client.ts:L28 | neighbors=[client.ts, actions.ts, expediente.ts, route.ts, route.ts, route.ts] | lang=en
+- "fiscalia_actions_obtenerdashboardfiscalia": "obtenerDashboardFiscalia()" | kind=code-symbol | source=lib/fiscalia/actions.ts:L16 | neighbors=[page.tsx, actions.ts, page.tsx, page.tsx, page.tsx, page.tsx] | lang=en
+- "fiscalia_printbutton": "PrintButton.tsx" | kind=code-symbol | source=components/fiscalia/PrintButton.tsx:L1 | neighbors=[1f7c0d7 Merge pull request #23 from pre…, 375d265 flujo de fiscalia, 7e39526 Mejoras UI/UX, 863c575 Merge pull request #24 from pre…, PrintButton(), page.tsx] | lang=en
+- "fiscalia_profiledropdown_profiledropdown": "ProfileDropdown()" | kind=code-symbol | source=components/fiscalia/ProfileDropdown.tsx:L14 | neighbors=[page.tsx, page.tsx, ProfileDropdown.tsx, page.tsx, page.tsx, page.tsx] | lang=en
+- "fiscalia_types_detalleasegurado": "DetalleAsegurado" | kind=code-symbol | source=lib/fiscalia/types.ts:L131 | neighbors=[actions.ts, CapturarDetallesForm.tsx, DetallesAseguradoView.tsx, repository.ts, service.ts, types.ts] | lang=en
+- "fiscalia_types_detenidodireccioninput": "DetenidoDireccionInput" | kind=code-symbol | source=lib/fiscalia/types.ts:L43 | neighbors=[actions.ts, actions.ts, FormularioAsegurado.tsx, repository.ts, service.ts, types.ts] | lang=en
+- "fiscalia_types_puestadisposicioninput": "PuestaDisposicionInput" | kind=code-symbol | source=lib/fiscalia/types.ts:L110 | neighbors=[actions.ts, actions.ts, FormularioPuestaDisposicion.tsx, repository.ts, service.ts, types.ts] | lang=en
+- "flota_route": "route.ts" | kind=code-symbol | source=app/api/rol-servicios/externos/flota/route.ts:L1 | neighbors=[6feefe2 BackEnd completo para hacer la …, 863c575 Merge pull request #24 from pre…, a58a0f7 Despachos, GET(), auth.ts, auth] | lang=en
+- "flota_service_listarpatrullasparaasignacion": "listarPatrullasParaAsignacion()" | kind=code-symbol | source=lib/flota/service.ts:L90 | neighbors=[page.tsx, service.ts, obtenerFlota(), page.tsx, page.tsx, page.tsx] | lang=en
+- "health_repository": "repository.ts" | kind=code-symbol | source=lib/health/repository.ts:L1 | neighbors=[863c575 Merge pull request #24 from pre…, ad3ec5f mejorando esto, ping(), db.ts, query(), route.ts] | lang=en
+- "health_route": "route.ts" | kind=code-symbol | source=app/api/health/route.ts:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, 863c575 Merge pull request #24 from pre…, ad3ec5f mejorando esto, repository.ts, ping(), GET()] | lang=en
+- "infracciones_service_infraccionesservice": "InfraccionesService" | kind=code-symbol | source=features/via/infracciones/service.ts:L32 | neighbors=[page.tsx, route.ts, service.ts, .obtenerPorId(), .registrarNuevaInfraccionSV(), route.ts] | lang=en
+- "next_config": "next.config.ts" | kind=code-symbol | source=next.config.ts:L1 | neighbors=[6a042cd feat: sistema de autenticación,…, 75ca4b2 Merge pull request #9 from pres…, 863c575 Merge pull request #24 from pre…, 90da1ca Initial commit from Create Next…, 953d38a implementando vista de fiscalia, nextConfig] | lang=en
+- "notificaciones_mapper": "mapper.ts" | kind=code-symbol | source=lib/notificaciones/mapper.ts:L1 | neighbors=[863c575 Merge pull request #24 from pre…, ad3ec5f mejorando esto, rowToNotificacion(), types.ts, Notificacion, repository.ts] | lang=en
+- "oficial_toastexito_toastexito": "ToastExito()" | kind=code-symbol | source=components/oficial/ToastExito.tsx:L6 | neighbors=[page.tsx, page.tsx, page.tsx, ToastExito.tsx, page.tsx, page.tsx] | lang=en
+- "oficial_types_rondinoficialresumen": "RondinOficialResumen" | kind=code-symbol | source=lib/oficial/types.ts:L210 | neighbors=[mapper.ts, repository.ts, service.ts, types.ts, RondinPageClient.tsx, RondinTabla.tsx] | lang=en
+- "reportes_sin_d1_types": "types.ts" | kind=code-symbol | source=lib/reportes-sin-d1/types.ts:L1 | neighbors=[863c575 Merge pull request #24 from pre…, ad3ec5f mejorando esto, mapper.ts, repository.ts, service.ts, SinD1Row] | lang=en
+- "reportes_sin_novedad_types": "types.ts" | kind=code-symbol | source=lib/reportes-sin-novedad/types.ts:L1 | neighbors=[863c575 Merge pull request #24 from pre…, ad3ec5f mejorando esto, mapper.ts, repository.ts, service.ts, SinNovedadRow] | lang=en
+- "rh_route": "route.ts" | kind=code-symbol | source=app/api/rol-servicios/externos/rh/route.ts:L1 | neighbors=[6feefe2 BackEnd completo para hacer la …, 863c575 Merge pull request #24 from pre…, a58a0f7 Despachos, auth.ts, auth, GET()] | lang=en
+- "rol_servicios_mapper_tostr": "toStr()" | kind=code-symbol | source=lib/rol-servicios/mapper.ts:L7 | neighbors=[mapper.ts, rowToEstadoFuerzaConcepto(), rowToRadio(), rowToRolAsignacion(), rowToRolObservacion(), rowToRolServicio()] | lang=en
+- "rol_servicios_signaturemodal": "SignatureModal.tsx" | kind=code-symbol | source=components/rol_servicios/SignatureModal.tsx:L1 | neighbors=[863c575 Merge pull request #24 from pre…, b68a2b7 Merge branch 'feature/testing' …, f9243ac Interfaz de formulario de rol d…, ServiceFooter.tsx, Props, SignatureModal()] | lang=en
+- "shared_abrirdocumento_abrirdocumento": "abrirDocumento()" | kind=code-symbol | source=lib/shared/abrirDocumento.ts:L1 | neighbors=[DetallesAseguradoView.tsx, RevisionDocumentosSection.tsx, SeccionLiberacion.tsx, DetallesAseguradoView.tsx, abrirDocumento.ts, DetalleInfraccionView.tsx] | lang=en
+- "shared_detalleinfraccionview_sanitize": "sanitize()" | kind=code-symbol | source=components/shared/DetalleInfraccionView.tsx:L116 | neighbors=[DetalleInfraccionView.tsx, FundamentoLegalSection(), InfractorVehiculoSection(), mapGarantia(), MapSection(), OficialSection()] | lang=en
+- "shared_infracciones_obtenerdetalleinfraccionvia": "obtenerDetalleInfraccionVia()" | kind=code-symbol | source=lib/shared/infracciones.ts:L237 | neighbors=[actions.ts, actions.ts, actions.ts, actions.ts, infracciones.ts, rowToInfraccionDetalle()] | lang=en
+- "stores_userondinformstore": "useRondinFormStore.ts" | kind=code-symbol | source=stores/useRondinFormStore.ts:L1 | neighbors=[435348e corrigiendo flujo de rondin, 863c575 Merge pull request #24 from pre…, f0089cf Merge pull request #21 from pre…, FormRondinEscalado.tsx, RondinFormState, useRondinFormStore] | lang=en
+- "token_guest_route": "route.ts" | kind=code-symbol | source=app/api/auth/token-guest/route.ts:L1 | neighbors=[23b7312 Merge pull request #16 from pre…, 27dcb21 Merge branch 'feature/testing' …, 863c575 Merge pull request #24 from pre…, b5233a8 implementando via como modulo d…, f7b1aac Merge branch 'feature/testing' …, POST()] | lang=en
 
 ## Instructions
 

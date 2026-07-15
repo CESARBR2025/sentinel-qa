@@ -21,7 +21,7 @@ export default async function AnalisisPage() {
         .analisis-row:hover { background-color: #f1f5f9 !important; }
       `}} />
       
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} backHref="/analisis" backLabel="Análisis" />
       
       <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>

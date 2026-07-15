@@ -5,6 +5,7 @@ import { ProfileDropdown } from '@/components/fiscalia/ProfileDropdown'
 import { listarDetenidosParaRol } from '@/lib/detenidos-compartido'
 import Link from 'next/link'
 import { FilaDetenidoRol } from '@/components/FilaDetenidoRol'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DetenidosFiscaliaPage({
   searchParams,
@@ -152,7 +153,7 @@ export default async function DetenidosFiscaliaPage({
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · DETENIDOS</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · DETENIDOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

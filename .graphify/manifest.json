@@ -8,152 +8,152 @@
     "hash": "cc7694478665b7fcbe341844fda5e403"
   },
   "app/(auth)/login/page.tsx": {
-    "mtime": 1784038442311.5986,
-    "hash": "15345919b1a6c4d0bf6de46e313d26c2"
+    "mtime": 1784125250105.6267,
+    "hash": "98080ed9b9dd512195a26e5f7be84168"
   },
   "app/(auth)/login/setup-2fa/page.tsx": {
     "mtime": 1782833636573.2473,
     "hash": "a2153f9c567a521c21a05243852fadd7"
   },
   "app/admin-transito/layout.tsx": {
-    "mtime": 1783693875225.3801,
-    "hash": "5a99302ccfe6c318d21c87a126190323"
+    "mtime": 1784125250106.012,
+    "hash": "e85f4fabbd1491aaa5c8388533b0536a"
   },
   "app/admin-transito/oficiales/[id]/page.tsx": {
-    "mtime": 1783693875225.5994,
-    "hash": "ffe7488c27c5abb8e043273f434deae1"
+    "mtime": 1784125250106.2192,
+    "hash": "c601894b850f4a14bfa11e98b1221933"
   },
   "app/admin-transito/oficiales/nuevo/page.tsx": {
-    "mtime": 1783693875225.8083,
-    "hash": "78c4f774453f9b9232bf08c2ffa8b8ec"
+    "mtime": 1784125250106.3313,
+    "hash": "8ce53b331e0c8447659d4016e2940f01"
   },
   "app/admin-transito/oficiales/page.tsx": {
-    "mtime": 1783693875225.9539,
-    "hash": "83a396f5e9361a06335e4b142f4b7242"
+    "mtime": 1784125250106.4392,
+    "hash": "6d5ea5cedde510b1a3be272e7635e44e"
   },
   "app/admin-transito/page.tsx": {
-    "mtime": 1783524170065.9702,
-    "hash": "445279adae06e0267314f03e05cc39ad"
+    "mtime": 1784125250106.5437,
+    "hash": "b4e951d298e43aad8a62e00d41a91fea"
   },
   "app/admin/admin-styles.ts": {
     "mtime": 1783116000513.6365,
     "hash": "f13db3a8583f728cce043ac3ad989fde"
   },
   "app/admin/layout.tsx": {
-    "mtime": 1783693875226.104,
-    "hash": "55fa4aaab46ed9c09dd0c562ec3c43c8"
+    "mtime": 1784127935002.462,
+    "hash": "2f150962b4424dff64c7b8f2b04f437d"
   },
   "app/admin/page.tsx": {
     "mtime": 1782833636575.4263,
     "hash": "9a6be8282f19b99fb6e6eb91ab1dac2a"
   },
   "app/admin/roles/[id]/plantilla-permisos/page.tsx": {
-    "mtime": 1783693875227.242,
-    "hash": "d8fbc68cfa4ca0708b2cc9d72f3ab412"
+    "mtime": 1784125250106.755,
+    "hash": "3c26b445ac5008896baaf2b149e6f0b4"
   },
   "app/admin/roles/agregar/page.tsx": {
-    "mtime": 1783118196239.9607,
-    "hash": "c013799c49489a48b1c50887cea7fa1f"
+    "mtime": 1784125250106.9758,
+    "hash": "727c784126507af8de067a5654d9fb6d"
   },
   "app/admin/roles/page.tsx": {
-    "mtime": 1783693875227.5356,
-    "hash": "9af0aa54fb8dd95416a02c014c752be0"
+    "mtime": 1784125250107.191,
+    "hash": "4a35d3b0abc7d40dd7db8fbf0a71e6cd"
   },
   "app/admin/usuarios/[id]/page.tsx": {
-    "mtime": 1783693875227.8843,
-    "hash": "2ea7e0b18412334e601110b70e237b3a"
+    "mtime": 1784125250107.3052,
+    "hash": "50a1df95e0db68fa15ef77cf0b0b5d90"
   },
   "app/admin/usuarios/nuevo/page.tsx": {
-    "mtime": 1783693875228.2158,
-    "hash": "7a2a15da2fbe0374394a0784919ceffa"
+    "mtime": 1784125250107.413,
+    "hash": "e9335129c69c982298dd24244c506eb4"
   },
   "app/admin/usuarios/page.tsx": {
-    "mtime": 1783693875228.6401,
-    "hash": "e5b6f3afeddc0ba727c44f77bc337c82"
+    "mtime": 1784125250107.53,
+    "hash": "c2b83c473904d80f79dddb29d0cb39cd"
   },
   "app/agente_infracciones/page.tsx": {
-    "mtime": 1783029400886.6934,
-    "hash": "f19c684f25718fac595365132ff784ad"
+    "mtime": 1784125250109.9604,
+    "hash": "90f50af0bdf8441332b67528fae8bfc4"
   },
   "app/agente_infracciones/revision-documental/[id]/page.tsx": {
-    "mtime": 1783029400886.8655,
-    "hash": "c90b476b900c3aef5fa74d3df2d413d3"
+    "mtime": 1784125250110.0808,
+    "hash": "be04c3f66c1dc065e8bb22edf20b07ea"
   },
   "app/agente_juzgado/asegurados/[id]/page.tsx": {
-    "mtime": 1783110559098.858,
-    "hash": "020553b53ce04217a5beece2d33c55c0"
+    "mtime": 1784125250110.308,
+    "hash": "f541c31589efa2e303f3b90d2f33bcf5"
   },
   "app/agente_juzgado/asegurados/page.tsx": {
-    "mtime": 1783110559098.9827,
-    "hash": "24b6ebe4deee4254fb91ce9fb44e9a37"
+    "mtime": 1784125250110.6472,
+    "hash": "6b529d670371e007fafaac74e0bfec98"
   },
   "app/agente_juzgado/asegurados/puesta-disposicion/[id]/page.tsx": {
-    "mtime": 1783110559099.1707,
-    "hash": "663c5ec747c7f9b7fdb9d3dd9e3d871e"
+    "mtime": 1784125250110.7695,
+    "hash": "86dead519fb0cc0691a63caa4b01d691"
   },
   "app/agente_juzgado/detenidos/[id]/page.tsx": {
-    "mtime": 1782921376329.716,
-    "hash": "94fbfa96fc37b19e05ff0b61dcf997b5"
+    "mtime": 1784125250111.1506,
+    "hash": "54e6d69fac45bf8a3df0f66c5e7c041d"
   },
   "app/agente_juzgado/detenidos/page.tsx": {
-    "mtime": 1782920976910.7703,
-    "hash": "d97ce6fbcd814ae212bde91c842f5687"
+    "mtime": 1784125250111.3784,
+    "hash": "455ae9c71f791c1d36088fed7e672fd6"
   },
   "app/agente_juzgado/liberaciones/[id]/page.tsx": {
-    "mtime": 1782930364199.9607,
-    "hash": "999d1e570ba73fbd177bb6d060db2c00"
+    "mtime": 1784125250111.6863,
+    "hash": "72b2ffb0cc89fa4794b6b0036dfcb92a"
   },
   "app/agente_juzgado/liberaciones/page.tsx": {
-    "mtime": 1782930364200.0757,
-    "hash": "2a7b7c59eccfa64cc5a1b8c23fbb0ac9"
+    "mtime": 1784125250111.8,
+    "hash": "748d827c8e3f183ef8f8be85912fa891"
   },
   "app/agente_juzgado/page.tsx": {
-    "mtime": 1783110559099.3323,
-    "hash": "8830b5bb109ab4aa72499f45f6ba5de5"
+    "mtime": 1784125250111.9792,
+    "hash": "784a415623421972d0712214051b7b58"
   },
   "app/agente_juzgado/solicitudes/[solicitudId]/page.tsx": {
-    "mtime": 1782833636576.472,
-    "hash": "9f91e9bac89217c4695a288b2e8174b1"
+    "mtime": 1784125250112.2725,
+    "hash": "22a4dcf528aedc06c873e078904c80c4"
   },
   "app/agente_juzgado/solicitudes/page.tsx": {
-    "mtime": 1782833636576.5688,
-    "hash": "173bf0107b22b98cb58a568e2340d9f8"
+    "mtime": 1784125250112.475,
+    "hash": "dc1bb6358401d870a63106e944601be9"
   },
   "app/agente_liberaciones/page.tsx": {
-    "mtime": 1782940679097.5632,
-    "hash": "8b5928a01fe1741753ccdce50bb87694"
+    "mtime": 1784125250112.6853,
+    "hash": "43b564b23caa38572dd080271eb5d723"
   },
   "app/agente_liberaciones/revision-documental/[id]/page.tsx": {
-    "mtime": 1782940679097.8982,
-    "hash": "3d3c804e1bf81ffc421e95ac60b9a9f2"
+    "mtime": 1784125250112.7812,
+    "hash": "43af070815674601d2a357ee6a7d0e96"
   },
   "app/agente_liberaciones/revision-documental/page.tsx": {
-    "mtime": 1782940679098.1804,
-    "hash": "8298f31423fb99d6be27d3b291aef832"
+    "mtime": 1784125250112.9138,
+    "hash": "64a1b23b897d1e871f171db06ffeb16e"
   },
   "app/analisis/formulario-ingreso/page.tsx": {
-    "mtime": 1783434532388.5034,
-    "hash": "6b1c741842b9844ff68e999f4c96297e"
+    "mtime": 1784125250113.2095,
+    "hash": "273a751e063f7ea7d33231dc769a2a5c"
   },
   "app/analisis/generar-ppt/page.tsx": {
-    "mtime": 1783118196240.6492,
-    "hash": "d8d733997aae286a2b0f3fd6dde01069"
+    "mtime": 1784125250113.417,
+    "hash": "03b1cf088d857a43b192d324c12cced4"
   },
   "app/analisis/iph/page.tsx": {
-    "mtime": 1783118196240.7795,
-    "hash": "362c7d685127c2946ccd48ab7c0d82fb"
+    "mtime": 1784125250113.6223,
+    "hash": "249ce784086ea3e96e4db4634ebd51e7"
   },
   "app/analisis/page.tsx": {
-    "mtime": 1783693875229.6807,
-    "hash": "8749b850248ddb4efcf622abefb69234"
+    "mtime": 1784128264193.3513,
+    "hash": "16d8c5441092efc4cbe6cb5d07a4877d"
   },
   "app/analisis/pendiente-analisis/page.tsx": {
-    "mtime": 1783460669821.8606,
-    "hash": "6caaf4a8589ce01063b62ee5457d03ca"
+    "mtime": 1784125250113.9753,
+    "hash": "681a1c7954fb84cd06dda85665bd7622"
   },
   "app/api/admin/roles/route.ts": {
-    "mtime": 1783693875229.821,
-    "hash": "79c9bd9a17177adb92f8aec86eda6612"
+    "mtime": 1784127948808.9536,
+    "hash": "97fc26f867075e6dce3d4999432bbe7b"
   },
   "app/api/agente_juzgado/finalizarProceso/route.ts": {
     "mtime": 1783693875229.9524,
@@ -512,12 +512,12 @@
     "hash": "5084e53630944afb296b5e7782dfcac8"
   },
   "app/api/via/infracciones/liberar-garantia/route.ts": {
-    "mtime": 1783693875235.4006,
-    "hash": "8109658661908909a040adb638aeed31"
+    "mtime": 1784128299617.4531,
+    "hash": "8641c0c4c6ebaa691c2be0c7d315af57"
   },
   "app/api/via/infracciones/registradas/[id]/route.ts": {
-    "mtime": 1783524170068.3132,
-    "hash": "eed1bc40dfc0a4a08888d3c443b80476"
+    "mtime": 1784128306587.6763,
+    "hash": "228c9239d4171f8aaa8024d95c53e405"
   },
   "app/api/via/infracciones/registrar/route.ts": {
     "mtime": 1783524170068.5002,
@@ -528,8 +528,8 @@
     "hash": "b25e017dbaf0c05f1c0e1236f8a3e3ba"
   },
   "app/api/via/liberaciones/documentos/[infraccionId]/route.ts": {
-    "mtime": 1783693875235.6287,
-    "hash": "2459b27be3ea9d10470ea704ce99ce38"
+    "mtime": 1784128314203.0813,
+    "hash": "f75bf4f73fbd9ef1f11479ae6b39e7ca"
   },
   "app/api/via/pagos/confirmar-ausente/[ordenPagoId]/[infraccionId]/route.ts": {
     "mtime": 1783524170068.9412,
@@ -560,20 +560,20 @@
     "hash": "c8f2ffb5a3ac08aaed0bdf58388a9e9c"
   },
   "app/auxiliar/checklist/[id]/page.tsx": {
-    "mtime": 1783699235573.2195,
-    "hash": "dfd55a7be537e4d02aa9b8682893805e"
+    "mtime": 1784125250114.0913,
+    "hash": "9a8b4b2899437d2ba181550a42dd49f8"
   },
   "app/auxiliar/checklist/page.tsx": {
-    "mtime": 1783699235573.3347,
-    "hash": "b87d1d92e2beb227d77104280af93d18"
+    "mtime": 1784125250114.2063,
+    "hash": "5626c6af6f59d17b042ab3d251abf66f"
   },
   "app/auxiliar/cuestionario-robo/page.tsx": {
-    "mtime": 1783699235573.4253,
-    "hash": "66b82b798542aa3003b8e1232c2a2b8b"
+    "mtime": 1784125250114.3054,
+    "hash": "0ea2166c117656805360b5ef26facd13"
   },
   "app/auxiliar/page.tsx": {
-    "mtime": 1783699235573.5037,
-    "hash": "c00d289e1bc29e1eb1a7fb87b0ed2e4c"
+    "mtime": 1784125250114.4983,
+    "hash": "f373a75d1e6dfb49471d8b5c07515b1e"
   },
   "app/corralon/layout.tsx": {
     "mtime": 1783693875236.591,
@@ -584,20 +584,20 @@
     "hash": "1a8cb890ca65472a81126a874b733077"
   },
   "app/corralon/page.tsx": {
-    "mtime": 1783693875236.7026,
-    "hash": "07a4e2b46e16d3761d25564b4c95d168"
+    "mtime": 1784125250114.6123,
+    "hash": "92594c49328f8bf3ab0412d4e461592b"
   },
   "app/corralon/profile-dropdown.tsx": {
     "mtime": 1783693875236.8037,
     "hash": "f312530235b79fdef6f70420259c072f"
   },
   "app/corralon/solicitudes/page.tsx": {
-    "mtime": 1783693875236.8865,
-    "hash": "2e1f4b00a146f354c1048e9e3e3a181e"
+    "mtime": 1784125250114.712,
+    "hash": "1a95a795c8569601f487941da7440bdf"
   },
   "app/corralon/solicitudes/solicitudes-client.tsx": {
-    "mtime": 1783693875236.9707,
-    "hash": "678318e31e40c39d52093936003ba1cb"
+    "mtime": 1784125250114.838,
+    "hash": "eafbfe09d54cad6b26464c3c3afacbe7"
   },
   "app/corralon/solicitudes/subir-oficio-modal.tsx": {
     "mtime": 1783693875237.0923,
@@ -608,84 +608,84 @@
     "hash": "3b1749ccd476528f52f0033a122d9c3f"
   },
   "app/d1/page.tsx": {
-    "mtime": 1783699235573.6023,
-    "hash": "6fef2b3cc223f61e2e1031b5f86575cf"
+    "mtime": 1784125250115.0728,
+    "hash": "2c3375346ec039c6868dda50402d8cf0"
   },
   "app/d1_noiniciada/page.tsx": {
-    "mtime": 1783699235573.7104,
-    "hash": "9cffc748bd02b66b27eab251a544bdc4"
+    "mtime": 1784125250115.2825,
+    "hash": "cbcfa79f5d05aed270a0c9b9a91b9132"
   },
   "app/dashboard/enable-2fa.tsx": {
-    "mtime": 1782833636585.8179,
-    "hash": "25f5c137280de0c3d8556fc5f30c1b98"
+    "mtime": 1784125250115.4954,
+    "hash": "4c03c7ca397bab1de691de0b6b5a7e0e"
   },
   "app/dashboard/module-cards.tsx": {
-    "mtime": 1783699235574.561,
-    "hash": "56c1e54035840d52f404df57c89972a1"
+    "mtime": 1784125250115.6628,
+    "hash": "f66f79d127cf13ac77b56ee4cc295bda"
   },
   "app/dashboard/page.tsx": {
-    "mtime": 1783699235574.6907,
-    "hash": "712a0e275baabba58ff62058be9f1449"
+    "mtime": 1784125250115.8503,
+    "hash": "dd76bba892fc86c8ca3011c526bc0a21"
   },
   "app/dashboard/sign-out-button.tsx": {
     "mtime": 1782833636586.1255,
     "hash": "1c4ae20fa3eca1b9f879ef879a8d79ca"
   },
   "app/denuncia/nuevo/page.tsx": {
-    "mtime": 1784038442315.0913,
-    "hash": "51d2c26f6d20484fb62881353fcc9df2"
+    "mtime": 1784125250116.0593,
+    "hash": "08043e24bf7ed976383799cb95426aaa"
   },
   "app/envio-de-formatos/consolidar/page.tsx": {
-    "mtime": 1783458135159.8728,
-    "hash": "c953e8aed12ce551910649fbba21f637"
+    "mtime": 1784125250116.6313,
+    "hash": "1d096cfe79e405840655bce7547be823"
   },
   "app/envio-de-formatos/page.tsx": {
     "mtime": 1783693875237.7314,
     "hash": "1126e64a049e65437d6b0015acedc983"
   },
   "app/estadisticos/page.tsx": {
-    "mtime": 1783699235574.8008,
-    "hash": "dd2b4649cdf43652d129a9af1d6efb9a"
+    "mtime": 1784125250116.7554,
+    "hash": "e4d16265979660b1502ba398064c4cea"
   },
   "app/fiscalia/asegurados/[id]/page.tsx": {
-    "mtime": 1783110559100.2805,
-    "hash": "b53dfb2fa24d35eedfac20ac007e3745"
+    "mtime": 1784125250116.9463,
+    "hash": "a9e5414b6e89b9e5cfe1332d2ed5c9cc"
   },
   "app/fiscalia/asegurados/page.tsx": {
-    "mtime": 1783110559100.4045,
-    "hash": "01ed7beb8eea2925fbd12454d10a6d26"
+    "mtime": 1784125250117.0347,
+    "hash": "d443aad346d1f20b4a4ac7a5336d5266"
   },
   "app/fiscalia/asegurados/puesta-disposicion/[id]/page.tsx": {
-    "mtime": 1783110559100.5808,
-    "hash": "335fbb8f7da32f18ce5e1c0f53ea4641"
+    "mtime": 1784125250117.138,
+    "hash": "41618faf374c2cb7626c315620a1fa18"
   },
   "app/fiscalia/detenidos/[id]/page.tsx": {
-    "mtime": 1782921370592.981,
-    "hash": "d00c5ec05dc21d0db7bb1dd36eaf3dec"
+    "mtime": 1784125250117.2434,
+    "hash": "e43375f203329c7ee51ef8ecd13c64d5"
   },
   "app/fiscalia/detenidos/page.tsx": {
-    "mtime": 1782921062113.8306,
-    "hash": "e3aab09eb1866444c3f237c6d49efa3a"
+    "mtime": 1784125250117.3513,
+    "hash": "b81d8f4785bdceba45748d8a36091d08"
   },
   "app/fiscalia/liberaciones/[id]/page.tsx": {
-    "mtime": 1782930364201.4785,
-    "hash": "d7ff751e220232ea07557768e6f4d623"
+    "mtime": 1784125250117.4868,
+    "hash": "b98b39a59c4553da8f5d45c63c657e71"
   },
   "app/fiscalia/liberaciones/page.tsx": {
-    "mtime": 1782928778966.4949,
-    "hash": "efcb95a2d6fecf7a06e386c44d03b56e"
+    "mtime": 1784125250117.7297,
+    "hash": "936a2fe4c9919f1d3f5df6704d976532"
   },
   "app/fiscalia/page.tsx": {
     "mtime": 1783451352368.2473,
     "hash": "ed7b473d3672cb55ff7d19bca2418f4a"
   },
   "app/fiscalia/solicitudes/[solicitudId]/page.tsx": {
-    "mtime": 1782833636586.706,
-    "hash": "cd856464096e3c41dac52e538df0acd9"
+    "mtime": 1784125250117.8657,
+    "hash": "3a9ff24c28964bbcfa297283504eea63"
   },
   "app/fiscalia/solicitudes/page.tsx": {
-    "mtime": 1782833636587.0383,
-    "hash": "f6a49b5361c7406f40cff0703099f77f"
+    "mtime": 1784125250118.05,
+    "hash": "9f92f254a6338506086351a9e2f2f018"
   },
   "app/formato-n-armas-aseguradas/[id]/page.tsx": {
     "mtime": 1783454689710.6313,
@@ -696,20 +696,20 @@
     "hash": "211dc60e794bf2febf45be8118b1c907"
   },
   "app/formato-n-armas-aseguradas/page.tsx": {
-    "mtime": 1783455061822.983,
-    "hash": "4ea23788425c6587515f207e6aabe76f"
+    "mtime": 1784125250118.4553,
+    "hash": "345abf94a96391a42efcba2e6f908eff"
   },
   "app/formato-n-atencion-victimas/[id]/page.tsx": {
     "mtime": 1783454689709.1162,
     "hash": "efa6e440158d26f2e93983abab28861c"
   },
   "app/formato-n-atencion-victimas/nuevo/page.tsx": {
-    "mtime": 1783454689709.4167,
-    "hash": "5587aa13a2a41477e68882bb61be5568"
+    "mtime": 1784125250118.8608,
+    "hash": "8c37b2144f89b4b26c94ad5cfa3b8f61"
   },
   "app/formato-n-atencion-victimas/page.tsx": {
-    "mtime": 1783455061822.7705,
-    "hash": "f8cc4319ef84775e085288b424e21677"
+    "mtime": 1784125250118.9663,
+    "hash": "6e396ea4531bf42e69b0de49be1cb8ef"
   },
   "app/formato-n-eventos/[id]/page.tsx": {
     "mtime": 1783454689708.1187,
@@ -720,44 +720,44 @@
     "hash": "8f616235c3a5a06c1d98ff45d47185d6"
   },
   "app/formato-n-eventos/page.tsx": {
-    "mtime": 1783455061822.6365,
-    "hash": "f7c7a88c7668cd91673bfd4f9380d676"
+    "mtime": 1784125250119.071,
+    "hash": "0e56f4a1883289fb1c84c98d177b719b"
   },
   "app/formato-n-fge/[id]/page.tsx": {
     "mtime": 1783454689709.7427,
     "hash": "09ccdaa7edb0a0f2de10080a7cfd6ef8"
   },
   "app/formato-n-fge/nuevo/page.tsx": {
-    "mtime": 1783454689710.1406,
-    "hash": "a4aa55c8226f82db7e396f56c399d4d1"
+    "mtime": 1784125250119.1816,
+    "hash": "6ead0a87de1e30b22a50d6276ac23acb"
   },
   "app/formato-n-fge/page.tsx": {
-    "mtime": 1783455061822.5173,
-    "hash": "842521ad3a90c81ac012b54519027c9f"
+    "mtime": 1784125250119.282,
+    "hash": "264b514199dcb3d392e09bef340114ea"
   },
   "app/formato-n-fgr/[id]/page.tsx": {
     "mtime": 1783454689707.3696,
     "hash": "711badb86adfbf5dc0b9608e438caba5"
   },
   "app/formato-n-fgr/nuevo/page.tsx": {
-    "mtime": 1783454689707.7415,
-    "hash": "e3bbec252d2596ce4405855ecfe6b359"
+    "mtime": 1784125250119.3853,
+    "hash": "353ad00d4b2d5f8ea309779e39e04a9b"
   },
   "app/formato-n-fgr/page.tsx": {
-    "mtime": 1783455061822.3254,
-    "hash": "dddb05ddcb65d1077d7ca5a14ebd98e2"
+    "mtime": 1784125250119.4736,
+    "hash": "78ebb50c482b8872037dee6c5b256f8d"
   },
   "app/formato-n-medios-alternativos/[id]/page.tsx": {
     "mtime": 1783454689706.449,
     "hash": "9b23664992b3f455800b81c5a762c750"
   },
   "app/formato-n-medios-alternativos/nuevo/page.tsx": {
-    "mtime": 1783454689706.938,
-    "hash": "d0e95ff526ec1d534644f3dd310bcbef"
+    "mtime": 1784125250119.5852,
+    "hash": "3c5cb37e1cc3db6fe4eca60cf6f6aa4a"
   },
   "app/formato-n-medios-alternativos/page.tsx": {
-    "mtime": 1783455061823.3542,
-    "hash": "adedd55b0b0e8aefb3ce10f815fb9f70"
+    "mtime": 1784125250119.683,
+    "hash": "444df7b599ecb7981392afed77742656"
   },
   "app/formato-n-rnd/[id]/page.tsx": {
     "mtime": 1783454689705.5088,
@@ -768,248 +768,248 @@
     "hash": "685e27c9f924144178c9f41d51e84c67"
   },
   "app/formato-n-rnd/page.tsx": {
-    "mtime": 1783455061821.9912,
-    "hash": "1c2636e0bbcf5bdb4f43b4e3a34b7dd1"
+    "mtime": 1784125250119.8972,
+    "hash": "1a2c0805fd6434ad781f7ac90fa5d98c"
   },
   "app/incidentes/page.tsx": {
-    "mtime": 1784038442315.4492,
-    "hash": "27b186e12573bb1d8ac6d59bbc3179a8"
+    "mtime": 1784125250120.221,
+    "hash": "bddc943b8e142a2b98e8bc95a8ada488"
   },
   "app/incidentes_camaras/page.tsx": {
-    "mtime": 1783699235575.0684,
-    "hash": "bf46c74421908a0af90695828742e8dd"
+    "mtime": 1784125250120.333,
+    "hash": "880f6c4ca73b209ea6d7ade5c868d68c"
   },
   "app/infracciones/[id]/page.tsx": {
-    "mtime": 1783524170070.6174,
-    "hash": "791edc3dd3f672887397c3ab55d6cd8d"
+    "mtime": 1784125250120.5706,
+    "hash": "c5c6841caac6ba136e98b2f8a57caecf"
   },
   "app/infracciones/captura/page.tsx": {
-    "mtime": 1783693875238.1333,
-    "hash": "a5a7cc3dbb2303daead617d4be0cdb2d"
+    "mtime": 1784125250120.7588,
+    "hash": "aefc60557f8021abce2c4ab87deed78a"
   },
   "app/layout.tsx": {
-    "mtime": 1784038442316.2937,
-    "hash": "e708e7174fb1c43b46170794c7950d96"
+    "mtime": 1784125250120.8794,
+    "hash": "c95c618aadce880d0768a8320b3b31b5"
   },
   "app/modulo_incidentes/page.tsx": {
-    "mtime": 1783699235575.1882,
-    "hash": "a0514866b95a4325a63970050af1914d"
+    "mtime": 1784125250121.0166,
+    "hash": "2218a3039c2c47f94874406f7121aa01"
   },
   "app/monitorista/denuncias/[id]/page.tsx": {
-    "mtime": 1783693875238.3494,
-    "hash": "f12fc69c5be6b61b4c3e17d21f2a52ea"
+    "mtime": 1784125250121.169,
+    "hash": "60d438b9436dd58245d1352212049f23"
   },
   "app/monitorista/detenidos/[id]/page.tsx": {
-    "mtime": 1783693875238.4763,
-    "hash": "96ed6d3237ff82a06ac488e4881a7eac"
+    "mtime": 1784125250121.2935,
+    "hash": "7a5cfd9ccf7a67d7e993865648493a5d"
   },
   "app/monitorista/detenidos/nueva/page.tsx": {
-    "mtime": 1783454811199.6392,
-    "hash": "1a68c9f92b781f99fdf3666790622851"
+    "mtime": 1784125250121.479,
+    "hash": "2134a635a4829c05c69eee337fdbb4d5"
   },
   "app/monitorista/detenidos/page.tsx": {
-    "mtime": 1783693875238.5867,
-    "hash": "ab98d278784a0453aea6f313b9639e9b"
+    "mtime": 1784125250121.676,
+    "hash": "dae61e0ca9693dc5bd8baabb7b5cd5a2"
   },
   "app/monitorista/historial/page.tsx": {
-    "mtime": 1783693875238.717,
-    "hash": "8426c5c7aa81f1b69bda29d367033b1d"
+    "mtime": 1784125250121.775,
+    "hash": "611f20dc285f542836f993bb740d2738"
   },
   "app/monitorista/incidentes-camara/[id]/page.tsx": {
-    "mtime": 1783454800828.4846,
-    "hash": "ca68656146b40d215d523c0750f76f9f"
+    "mtime": 1784125250121.8892,
+    "hash": "02a003c2e45f9eae2f1eb05486f7d62e"
   },
   "app/monitorista/incidentes-camara/nuevo/page.tsx": {
-    "mtime": 1783454790467.2026,
-    "hash": "13e043fc584048f6f801ab42768887ba"
+    "mtime": 1784125250122.0789,
+    "hash": "43954d5e73d1e289a6d9584f610a7b77"
   },
   "app/monitorista/incidentes-camara/page.tsx": {
-    "mtime": 1783693875238.8347,
-    "hash": "2d83f85355520f99084e581310df355b"
+    "mtime": 1784125250122.1982,
+    "hash": "20622aad521c1a5490473bc4d34412a6"
   },
   "app/monitorista/layout.tsx": {
     "mtime": 1783699235575.2878,
     "hash": "b30d4837f6c59c40e3b44d35609e1aaf"
   },
   "app/monitorista/page.tsx": {
-    "mtime": 1783693875239.0374,
-    "hash": "77d10952c105c7df3f615a005799f65e"
+    "mtime": 1784128003271.0344,
+    "hash": "99952b8481c2eec88fcf8a95c9a80580"
   },
   "app/monitorista/solicitudes/[id]/page.tsx": {
     "mtime": 1783693875239.1687,
     "hash": "06bd68b2ce0267e84e08e1cde0e838c4"
   },
   "app/monitorista/solicitudes/page.tsx": {
-    "mtime": 1783693875239.2869,
-    "hash": "429feae1b45cefd71fd59aadec1b7bed"
+    "mtime": 1784125250122.418,
+    "hash": "636df83660b6c3832c9bbf81fe72dd17"
   },
   "app/oficial/configuracion/page.tsx": {
-    "mtime": 1783693875239.4036,
-    "hash": "f5858f7abe85fe4043b837866b4be1dd"
+    "mtime": 1784125250122.5952,
+    "hash": "8f77487243a896c2c5d772ea7456b047"
   },
   "app/oficial/nuevo/page.tsx": {
     "mtime": 1782833636589.3726,
     "hash": "840c607d1f4c1133e9e56a24e97910a8"
   },
   "app/oficial/page.tsx": {
-    "mtime": 1784046286819.34,
-    "hash": "d7736e2ec666bfbc3735528ef5479e58"
+    "mtime": 1784125250122.8423,
+    "hash": "14afff5e68df84a27897661b73694969"
   },
   "app/oficial/reportes/[id]/fotos/page.tsx": {
-    "mtime": 1783693875239.5437,
-    "hash": "01dcf27ab753e9c1868eba84e19d0bda"
+    "mtime": 1784125250122.9587,
+    "hash": "49f138c31b756b537faefceb1c78bb2f"
   },
   "app/oficial/reportes/[id]/page.tsx": {
-    "mtime": 1783693875239.7554,
-    "hash": "ba47c834596dfe43fef81818e2890873"
+    "mtime": 1784125250123.0767,
+    "hash": "e3507052d3044bc2faf39a2d0f92126e"
   },
   "app/oficial/reportes/page.tsx": {
-    "mtime": 1784046286819.5432,
-    "hash": "391fcc3beb02d517d77d6b97aa9b4c2b"
+    "mtime": 1784125250123.2937,
+    "hash": "5e016b60ea69b4b67eb88a86eb9074cf"
   },
   "app/page.tsx": {
     "mtime": 1782833636589.9382,
     "hash": "7fc07483250fc5c773522ea2d4999474"
   },
   "app/prevencion/PrevencionNav.tsx": {
-    "mtime": 1783099413684.0166,
-    "hash": "e81b6468c8870e8c8bb3c406852865c0"
+    "mtime": 1784125250123.4998,
+    "hash": "aba1dee68d1ae542472662e178aee269"
   },
   "app/prevencion/busquedas/[id]/imprimir/page.tsx": {
     "mtime": 1783693875239.8904,
     "hash": "d423d22a810fc0b1a1efc8d4979e20f4"
   },
   "app/prevencion/busquedas/[id]/page.tsx": {
-    "mtime": 1783693875240.0125,
-    "hash": "ce017983f0a7848145a3d539772219d4"
+    "mtime": 1784125250123.6191,
+    "hash": "61bb5c44e0a801e373c589ee88a2cfea"
   },
   "app/prevencion/busquedas/nueva/page.tsx": {
-    "mtime": 1783118196252.1165,
-    "hash": "21a1b96d365b29c52d2f046363d1b855"
+    "mtime": 1784125250123.8223,
+    "hash": "8e910baa758dcc4db93d3c6f6ace72f0"
   },
   "app/prevencion/busquedas/page.tsx": {
-    "mtime": 1783693875240.1255,
-    "hash": "d0f7c1961af114ea80360f0f8e3813d6"
+    "mtime": 1784125250123.951,
+    "hash": "33366eb0e5bc9c5f8f4185bd800e65f5"
   },
   "app/prevencion/juridico/page.tsx": {
-    "mtime": 1783699235575.3975,
-    "hash": "70175eea784ad735b02fb0f7d87dedf4"
+    "mtime": 1784125250124.0676,
+    "hash": "eea22ffd45f10eae3bc7b12e3be714d4"
   },
   "app/prevencion/juridico/solicitudes/[id]/page.tsx": {
-    "mtime": 1783693875240.349,
-    "hash": "8f08563beb2b1ccea2555b9ace2dba4b"
+    "mtime": 1784125250124.1665,
+    "hash": "a3ed8e6dddf1202ceb7f2ca09590c924"
   },
   "app/prevencion/juridico/solicitudes/nueva/page.tsx": {
-    "mtime": 1783118196252.554,
-    "hash": "41ddc41268acfb8a7c7d91dd71f1863d"
+    "mtime": 1784125250124.2964,
+    "hash": "5c52905eb70dd956f000f93dc122b1ec"
   },
   "app/prevencion/layout.tsx": {
-    "mtime": 1783693875240.4333,
-    "hash": "cfde20b34029ba5b5a1d272bc86831f5"
+    "mtime": 1784128273952.637,
+    "hash": "2ccb25d882c88e5aeeadbde6188bfb69"
   },
   "app/prevencion/medidas/[id]/page.tsx": {
-    "mtime": 1783693875240.5562,
-    "hash": "d24a83c4cbf9b8c1e9a6d0c35b6fd232"
+    "mtime": 1784125250124.524,
+    "hash": "158d16ac02b07d2606cf8232251bc509"
   },
   "app/prevencion/medidas/nueva/page.tsx": {
-    "mtime": 1783118196252.7808,
-    "hash": "7a1881f3ca124131d8af12e68cf5ea84"
+    "mtime": 1784125250124.6252,
+    "hash": "542d782633d8a74b92cae9994c719d51"
   },
   "app/prevencion/medidas/page.tsx": {
-    "mtime": 1783693875240.6646,
-    "hash": "3ef36405727d44b5b20a6ce69d2350a0"
+    "mtime": 1784125250124.7378,
+    "hash": "3d1ecb63efc5537daea2f4b5a9997099"
   },
   "app/reportes/page.tsx": {
-    "mtime": 1783699235575.5051,
-    "hash": "2a56df0eb8aa60d3061ca14d61596e40"
+    "mtime": 1784125250124.8555,
+    "hash": "64ccdd7c5b1862f92ecff66cec815fe3"
   },
   "app/reportes_incidentes/page.tsx": {
-    "mtime": 1783440750473.817,
-    "hash": "d92ad3de3b2cf3780bb2c0388da0bc5d"
+    "mtime": 1784125250125.3398,
+    "hash": "22afe888d1ce6081fd964f48957f8914"
   },
   "app/rol_servicios/layout.tsx": {
-    "mtime": 1783693875240.8887,
-    "hash": "68df9ed69524d625e2be11bbade7296a"
+    "mtime": 1784127884926.6555,
+    "hash": "ed2a20eccdb382a40695115f1a833d21"
   },
   "app/rol_servicios/page.tsx": {
-    "mtime": 1783693875241.0156,
-    "hash": "d77c85e29e459bce0cf6d86b6d89d6ec"
+    "mtime": 1784125250125.504,
+    "hash": "096303382b6dacbb545dd976673df11f"
   },
   "app/sin_robos/page.tsx": {
-    "mtime": 1783699235575.754,
-    "hash": "607f862ff9f9b69d83fe88f4a8d21a8c"
+    "mtime": 1784125250125.6384,
+    "hash": "3e8005372f75c5808ce6993e85037200"
   },
   "components/911/ModuleCard.tsx": {
-    "mtime": 1782833636591.5854,
-    "hash": "7c82020912016c120026bc7123ee897a"
+    "mtime": 1784125250125.9343,
+    "hash": "c617e78644ac9a3172eb173c845f7aba"
   },
   "components/911/Pagination.tsx": {
     "mtime": 1784038442318.6387,
     "hash": "ca632d373c573053688971de6e7d4d04"
   },
   "components/911/despacho/DespachoForm.tsx": {
-    "mtime": 1784046286819.773,
-    "hash": "20510ca23068327585e2bdf0939f218a"
+    "mtime": 1784125250126.0532,
+    "hash": "198069c21584216413c41de22984504b"
   },
   "components/911/despacho/TablonDespacho.tsx": {
-    "mtime": 1784046286819.8977,
-    "hash": "af42cdd48178ae64b23541355d13066d"
+    "mtime": 1784125250126.2908,
+    "hash": "c054305f50fdef9981350a84822383df"
   },
   "components/911/radio/FormSection.tsx": {
-    "mtime": 1783440750474.2107,
-    "hash": "6ae0bdbeb2903123c4c32a3118cd531f"
+    "mtime": 1784125250126.696,
+    "hash": "32e6c9542d0b74c4916fd6311737ce3a"
   },
   "components/911/radio/Input.tsx": {
-    "mtime": 1782833636592.2874,
-    "hash": "e59d4ac3aa2a2cfd9036f0f7927f5a41"
+    "mtime": 1784125250126.813,
+    "hash": "b05163af3c83531cc35c49e8addb817b"
   },
   "components/911/whatsapp/FormSection.tsx": {
-    "mtime": 1782833636592.3782,
-    "hash": "71e56b70890a8df387a84350a73e8e94"
+    "mtime": 1784125250127.0142,
+    "hash": "74c59e92811bb4b5e80661be11d02bb7"
   },
   "components/911/whatsapp/RegistroIncidenteForm.tsx": {
-    "mtime": 1782833636592.5027,
-    "hash": "0755ec75d1dc4adf8dbf1751f21870b8"
+    "mtime": 1784125250127.254,
+    "hash": "e68aaaba9ece48fa815de77fedd3a6a1"
   },
   "components/FilaDetenidoRol.tsx": {
     "mtime": 1782920937302.5498,
     "hash": "8fcf39d42e80a1023a5ba933619c8d5c"
   },
   "components/LoadingProvider.tsx": {
-    "mtime": 1782833636592.6082,
-    "hash": "2d3270b7862b1f5f03d2f8d19e7f2a10"
+    "mtime": 1784125250127.3628,
+    "hash": "61d5a3825234e8d94ab3f5f0a615b09a"
   },
   "components/admin-transito/ModalDestituirOficial.tsx": {
     "mtime": 1783524170071.2378,
     "hash": "ba05aa1cc1a5f41a8316a0d2cfd96f22"
   },
   "components/admin-transito/ModalReactivarOficial.tsx": {
-    "mtime": 1783693875245.7283,
-    "hash": "1b71f1690829f4e8f39b58820bdba63b"
+    "mtime": 1784125250127.728,
+    "hash": "e122a3477f420197e9bb258e1ccf9d17"
   },
   "components/admin-transito/NuevoOficialForm.tsx": {
     "mtime": 1783524170071.4592,
     "hash": "3ab3f34f17480f725aadb9fedef7a6a1"
   },
   "components/admin-transito/OficialesTable.tsx": {
-    "mtime": 1783524170071.5583,
-    "hash": "49d87906c839a0847a9ca8127ab2fdb2"
+    "mtime": 1784125250127.9417,
+    "hash": "52c929f8786ed541c65ff3241699f345"
   },
   "components/admin-transito/PatrullaSelector.tsx": {
-    "mtime": 1783693875245.9426,
-    "hash": "7ef679090812a343d0dd9efd93a5ae13"
+    "mtime": 1784125250128.139,
+    "hash": "2e6a4680f5d23256ed27e1e59cedc6d3"
   },
   "components/admin/roles/FormularioRol.tsx": {
-    "mtime": 1783118196253.0256,
-    "hash": "446492f7ca2bceeb63a11e292df34084"
+    "mtime": 1784125250128.2642,
+    "hash": "869d3093ca66767923ba3d0293fac199"
   },
   "components/agente_infracciones/CapturarDatosInfractorModal.tsx": {
     "mtime": 1783029400888.619,
     "hash": "c6ca09203c99f9bf6699a39dfd0dbc21"
   },
   "components/agente_infracciones/InfraccionesDashboard.tsx": {
-    "mtime": 1783029400888.76,
-    "hash": "1761954aeb1fec3bddbca8c8f6b41de0"
+    "mtime": 1784125250128.5151,
+    "hash": "062035356c826184ab9e741144132a16"
   },
   "components/agente_infracciones/InfraccionesTable.tsx": {
     "mtime": 1783029400888.844,
@@ -1052,8 +1052,8 @@
     "hash": "4b8cbb9a0e766f5e1f2b7407e1d34808"
   },
   "components/agente_juzgado/JuzgadoDashboard.tsx": {
-    "mtime": 1782930364202.25,
-    "hash": "6043a7191810ecfc82fba5799446683a"
+    "mtime": 1784125250128.8718,
+    "hash": "b05ce47ce3345a1247fa0cd477b81bdc"
   },
   "components/agente_juzgado/JuzgadoTable.tsx": {
     "mtime": 1782930364202.3691,
@@ -1064,8 +1064,8 @@
     "hash": "19b316bbb484050f671a1c89755058eb"
   },
   "components/agente_juzgado/SubirFotoDetenido.tsx": {
-    "mtime": 1782921195470.7888,
-    "hash": "d1331a6eeecc217fc2de0c103c800389"
+    "mtime": 1784125250129.057,
+    "hash": "dc36c6271ee0b946cb7b3d8e95bd56d4"
   },
   "components/agente_juzgado/TabSolicitudes.tsx": {
     "mtime": 1782833636593.55,
@@ -1080,8 +1080,8 @@
     "hash": "7162e305b6a5ef45ba443dcb6f0a14e1"
   },
   "components/agente_liberaciones/LiberacionesDashboard.tsx": {
-    "mtime": 1783029400889.2568,
-    "hash": "8d981701b77ec55939523035648a61dc"
+    "mtime": 1784125250129.199,
+    "hash": "d0e55b755cc88a7959d00ecae0130afc"
   },
   "components/agente_liberaciones/LiberacionesTable.tsx": {
     "mtime": 1782940679099.5967,
@@ -1092,36 +1092,36 @@
     "hash": "595bb8e1f322b72d5684201f5897e296"
   },
   "components/analisis/TablonAnalisis.tsx": {
-    "mtime": 1783693875246.2693,
-    "hash": "a6e4e0ca558b1e48c97229c63e395d4f"
+    "mtime": 1784125250129.307,
+    "hash": "778e3b9080ee52dc5cfce831e2627ac6"
   },
   "components/analisis/formAnalisis.tsx": {
-    "mtime": 1783693875246.5374,
-    "hash": "3094a3c1c99fdc76bc70a524929f29c1"
+    "mtime": 1784125250129.674,
+    "hash": "d22b9cd4da2a977087c2b41c65cd871c"
   },
   "components/analisis/generarPresentacion.tsx": {
-    "mtime": 1783693875246.803,
-    "hash": "2f657729d6e9d3c2b2e569c0fe8000c6"
+    "mtime": 1784125250129.7922,
+    "hash": "e1db5dba1d03645a1ee6e68b57bb93b7"
   },
   "components/analisis/iph/BitacoraIPH.tsx": {
-    "mtime": 1783693875247.133,
-    "hash": "afd73fd05711cab7a7621b0c26e131d5"
+    "mtime": 1784125250129.9902,
+    "hash": "cc7224ce705c4d971648dff43ce79e94"
   },
   "components/auxiliar/ProfileDropdownAuxiliar.tsx": {
-    "mtime": 1782836789237.108,
-    "hash": "5e5e72622b6afd2e4aac47069ce6fbcc"
+    "mtime": 1784125250130.1729,
+    "hash": "46319582d23739e92c4f347c654b7012"
   },
   "components/denuncias/FormularioD1.tsx": {
-    "mtime": 1783434532392.8022,
-    "hash": "cac48c107b61282d81d8a73083538627"
+    "mtime": 1784125250130.5168,
+    "hash": "4121b79941f4d214e5bdb2fd34a6911a"
   },
   "components/fiscalia/ButtonVerDetalles.tsx": {
     "mtime": 1782928778966.6404,
     "hash": "e7dc7172f54b4f157849943a40c537fd"
   },
   "components/fiscalia/CapturarDetallesForm.tsx": {
-    "mtime": 1782833636594.3408,
-    "hash": "8378bfca4cffe7b600363c9ac1ff4e89"
+    "mtime": 1784059266495.848,
+    "hash": "0e2a5e9e03bbc29a659d3167c5abe588"
   },
   "components/fiscalia/CargarOficioSection.tsx": {
     "mtime": 1783524170072.3264,
@@ -1132,12 +1132,12 @@
     "hash": "9034babede8f9415a3fc4e9fede6becc"
   },
   "components/fiscalia/DetallesAseguradoView.tsx": {
-    "mtime": 1782833636594.4695,
-    "hash": "67dc060d6f6822cce18285bc52334800"
+    "mtime": 1784059266496.4048,
+    "hash": "9a646f0f80a1eb867d67189e0118788e"
   },
   "components/fiscalia/FiscaliaDashboard.tsx": {
-    "mtime": 1783029400889.5154,
-    "hash": "270b08327deb210fc1b15ff17f37a8b8"
+    "mtime": 1784125250130.6548,
+    "hash": "eaf67ef6473ccf0eef385aa7f588977d"
   },
   "components/fiscalia/FiscaliaTable.tsx": {
     "mtime": 1782928778967.4556,
@@ -1160,36 +1160,36 @@
     "hash": "bd28b616734492541861387dcadfeb35"
   },
   "components/fiscalia/SubirFotoDetenido.tsx": {
-    "mtime": 1782921182011.731,
-    "hash": "069444736b743e188896f080f1573df5"
+    "mtime": 1784125250130.9243,
+    "hash": "57142f726d41a3ab0e4bbc0c7cac155d"
   },
   "components/fiscalia/TabAsegurados.tsx": {
     "mtime": 1783110559104.5105,
     "hash": "682141ba3c654b47524d4d4d83f28c75"
   },
   "components/fiscalia/TabSolicitudes.tsx": {
-    "mtime": 1782833636596.2256,
-    "hash": "31f72cf05fd2ebf088b279d271e4fda2"
+    "mtime": 1784059266497.11,
+    "hash": "b1dc3d67a4c471d278220daf710e2158"
   },
   "components/fiscalia/ToastExito.tsx": {
     "mtime": 1782833636596.3337,
     "hash": "964dad533051ba8e6922551345d9894f"
   },
   "components/fiscalia/TomarCasoModal.tsx": {
-    "mtime": 1782833636596.4287,
-    "hash": "8b06678bba72fa36b50120c72e6ba106"
+    "mtime": 1784059266497.2788,
+    "hash": "0e8716aa287c6c9b8878120817f02415"
   },
   "components/maps/GoogleMapPicker.tsx": {
     "mtime": 1783110559105.043,
     "hash": "b88d663123736d1e1054bc8392306902"
   },
   "components/monitorista/AccionesDetenido.tsx": {
-    "mtime": 1783118196253.142,
-    "hash": "52036cad70e12868b3198b63005aeebe"
+    "mtime": 1784125250131.2334,
+    "hash": "ee5ad213b44542fc7b313373cfda075a"
   },
   "components/monitorista/BandejaSolicitudes.tsx": {
-    "mtime": 1783118196253.266,
-    "hash": "54a34b1f5ff98df9b7e2ff28091d2441"
+    "mtime": 1784125250131.4048,
+    "hash": "37b3edcf9a98841fa75a569a8e5aa71b"
   },
   "components/monitorista/BatchEnvioFotos.tsx": {
     "mtime": 1783693875247.243,
@@ -1204,12 +1204,12 @@
     "hash": "86da65bed047bf71313f3bf2831ea002"
   },
   "components/monitorista/BuscadorEvento.tsx": {
-    "mtime": 1782833636597.219,
-    "hash": "ddef070552fb6f83cd33cadfc342abb7"
+    "mtime": 1784125250131.507,
+    "hash": "0ed534e66235373fda5a3204aa6e8c9c"
   },
   "components/monitorista/CardEnvioFoto.tsx": {
-    "mtime": 1783693875247.3733,
-    "hash": "4abcf2f994eae9dec6797fddbac35826"
+    "mtime": 1784125250131.636,
+    "hash": "305827746d053045584b2960a0d03559"
   },
   "components/monitorista/EditarCampoDetenido.tsx": {
     "mtime": 1783118196253.7258,
@@ -1228,60 +1228,60 @@
     "hash": "3834e90fd27dd00ba42940f6240567c5"
   },
   "components/monitorista/SubirFotoDetenido.tsx": {
-    "mtime": 1783118196253.964,
-    "hash": "6f4fe17935aee7aabff6efacc6f7c5ef"
+    "mtime": 1784125250131.7424,
+    "hash": "b439ffdc418743ea76c0664e7db7fdd0"
   },
   "components/monitorista/TablaDetenidos.tsx": {
-    "mtime": 1782833636598.0356,
-    "hash": "f8bd5462da9ad1ca0db851d01a241836"
+    "mtime": 1784125250131.9705,
+    "hash": "010c052147406b1eacb08c640e4dab29"
   },
   "components/notificaciones/CampanillaNotificaciones.tsx": {
     "mtime": 1782833636598.1716,
     "hash": "064b37321411d57569bc73ca3b772f49"
   },
   "components/oficial/FormularioRecorrido.tsx": {
-    "mtime": 1784047657091.275,
-    "hash": "b7aae31a3aee97900584164b00785230"
+    "mtime": 1784125250132.5452,
+    "hash": "2d2b4f628464659c495340a9f6f39784"
   },
   "components/oficial/MapaPinFijo.tsx": {
     "mtime": 1784046974945.102,
     "hash": "bf638a84077a4917f3cde7899fd5c4b8"
   },
   "components/oficial/MapaUbicacion.tsx": {
-    "mtime": 1782833636600.0144,
-    "hash": "21206689a07361fb514d0d41b1887e40"
+    "mtime": 1784125250132.6519,
+    "hash": "47de90974dab9d6d6b53930ceea90ef5"
   },
   "components/oficial/ModalSeleccionarUnidad.tsx": {
-    "mtime": 1783693875247.7615,
-    "hash": "829fdc42404ec2e90634d112cf8475cf"
+    "mtime": 1784125250132.7505,
+    "hash": "a2da4406ed4163dc383e96f007122c2f"
   },
   "components/oficial/ProfileDropdown.tsx": {
-    "mtime": 1783524170073.1028,
-    "hash": "3bc73bbb0c3124927909a92e042c4bb4"
+    "mtime": 1784125250132.8494,
+    "hash": "85853993ff855249794372b3d71b24d4"
   },
   "components/oficial/ToastExito.tsx": {
     "mtime": 1784046286820.369,
     "hash": "18b3e5a4bdd1acaf13bb99ed88e627f2"
   },
   "components/oficial/UnidadAsignadaSection.tsx": {
-    "mtime": 1783693875247.8723,
-    "hash": "14158f326ee6bff80a22cc72f1f32d79"
+    "mtime": 1784125250133.1636,
+    "hash": "5b17ad31d2543395259a2c0aa97636aa"
   },
   "components/partials/Footer.tsx": {
-    "mtime": 1782833636600.4988,
-    "hash": "2fe9af6dd76c92f352c03df1b2cb13ed"
+    "mtime": 1784125250133.5554,
+    "hash": "1fc7ea0aed53a2a74b8fa661bdb6105b"
   },
   "components/partials/Header.tsx": {
-    "mtime": 1783699235575.9993,
-    "hash": "603e51d914af1ba726c45f3ee34f6363"
+    "mtime": 1784125250133.6514,
+    "hash": "a89380fa729c3e6c1bcbbc379c0566ad"
   },
   "components/partials/SubHeader.tsx": {
-    "mtime": 1783454629859.6213,
-    "hash": "4e5e592b4b4fe68e811ad10950a13676"
+    "mtime": 1784125250133.91,
+    "hash": "f4839edbeda650af5d1101233f5c3491"
   },
   "components/prevencion/AgregarAutoridadForm.tsx": {
-    "mtime": 1783110559105.1926,
-    "hash": "f2125e14666eb3c27ce7f264a30781e5"
+    "mtime": 1784125250134.2002,
+    "hash": "4bf84fa7b89a40f8a51b011fe53976d9"
   },
   "components/prevencion/AutoridadBadge.tsx": {
     "mtime": 1782833636600.9314,
@@ -1292,12 +1292,12 @@
     "hash": "3473ab8fe8668ca198058d938175d66c"
   },
   "components/prevencion/ContestacionForm.tsx": {
-    "mtime": 1783110559105.4639,
-    "hash": "93b592aa55446bd0f49a6d6e4dbca87e"
+    "mtime": 1784125250134.3643,
+    "hash": "1e453efb21340b507bbaa423fdae1bc6"
   },
   "components/prevencion/MedidasFiltros.tsx": {
-    "mtime": 1783099413685.6184,
-    "hash": "43fce10b2034bf7f9a3ebed95bc545e3"
+    "mtime": 1784125250134.6267,
+    "hash": "51dc9e052c2e7e90b01698c94b0f4a92"
   },
   "components/prevencion/PrintButton.tsx": {
     "mtime": 1782833636601.5012,
@@ -1320,28 +1320,28 @@
     "hash": "0c150746ce19fba8dd3e317326412181"
   },
   "components/prevencion/SolicitudC4Form.tsx": {
-    "mtime": 1783110559105.71,
-    "hash": "09a4b151d6c20009f7f4786524e39271"
+    "mtime": 1784125250134.8274,
+    "hash": "748187efd3eb30eecbe3e01c7a3be7a0"
   },
   "components/prevencion/VisitaModal.tsx": {
-    "mtime": 1783110559105.85,
-    "hash": "7e6211844f3600d6060ab0e1364cf4fb"
+    "mtime": 1784125250134.916,
+    "hash": "5f166f2467f9e0b99406cb4630a436f4"
   },
   "components/reportes/d1/D1Filters.tsx": {
-    "mtime": 1783015157193.1328,
-    "hash": "209fa97509920b9c593b26509decd0e8"
+    "mtime": 1784125250135.1304,
+    "hash": "1ba3468448737250fbb0e21fd8d5beb9"
   },
   "components/reportes/d1/D1Pagination.tsx": {
     "mtime": 1782928778967.6792,
     "hash": "db7deab4b75a6314cf50aaf18a34b625"
   },
   "components/reportes/d1/D1ReportsTable.tsx": {
-    "mtime": 1783015157193.3186,
-    "hash": "8317f438ab0a1f71ca80fce676c94421"
+    "mtime": 1784125250135.2717,
+    "hash": "cd98ca0b4a60c51326b1a40e03353363"
   },
   "components/reportes/d1/styles.ts": {
-    "mtime": 1782928778967.8955,
-    "hash": "8a9f0c2aa3e2ec8ded3284825c820aee"
+    "mtime": 1784125250135.471,
+    "hash": "3af60747360949047102a4801f745c54"
   },
   "components/reportes/d1_noiniciada/DescargaFilters.tsx": {
     "mtime": 1783029400889.9958,
@@ -1352,60 +1352,60 @@
     "hash": "711a671a539e25c8998fcf73268dfe8a"
   },
   "components/reportes/d1_noiniciada/DescargaTable.tsx": {
-    "mtime": 1783029400890.1062,
-    "hash": "2686bab9a47c54dd5120c8ba1d93e1aa"
+    "mtime": 1784125250135.5571,
+    "hash": "b1f3f27aceb4a9559658bf6767e7bc72"
   },
   "components/reportes/d1_noiniciada/styles.ts": {
-    "mtime": 1782934813805.712,
-    "hash": "ff5d1543eebfabc26e694eb1344224a1"
+    "mtime": 1784125250136.4922,
+    "hash": "ba7730dc84d8d54ab75195f5185f7c8c"
   },
   "components/reportes/deteccion_camara/ReportFilters.tsx": {
-    "mtime": 1783115992700.1694,
-    "hash": "e58e66ca2a45692a0e3b43e71c29bbe6"
+    "mtime": 1784125250136.8853,
+    "hash": "c8db8f35e9da9f89c3227796b870fb8a"
   },
   "components/reportes/deteccion_camara/ReportStat.tsx": {
-    "mtime": 1782842470276.3804,
-    "hash": "6fd36b76109054be9d4a2f7a4dfd4f70"
+    "mtime": 1784125250137.656,
+    "hash": "6aa8626dcfc79ba20928aba52e2f7755"
   },
   "components/reportes/deteccion_camara/ReportTables.tsx": {
-    "mtime": 1783115992700.2744,
-    "hash": "1c401820cc5e1939fc4a950046091791"
+    "mtime": 1784125250137.7761,
+    "hash": "fb3bbcf496afdc2fdc02a216a3709f29"
   },
   "components/reportes/deteccion_camara/styles.ts": {
-    "mtime": 1782842470276.7754,
-    "hash": "1c04bf8e9f7e502c93e816198c58bb75"
+    "mtime": 1784125250137.9897,
+    "hash": "f5bd3c2a13ac2377deed98049e5bc41a"
   },
   "components/reportes/estadisticos/PhonePagination.tsx": {
-    "mtime": 1782917130094.551,
-    "hash": "abc03fbd50b41fabbf794017210a8f08"
+    "mtime": 1784125250138.4797,
+    "hash": "c39b05926364d4189b9cfe1fc19c4391"
   },
   "components/reportes/estadisticos/PhoneReportsTable.tsx": {
-    "mtime": 1783015157193.618,
-    "hash": "1606012d1ca6cefe7eb737079c858660"
+    "mtime": 1784125250138.5696,
+    "hash": "4a426a22b650b8de479f5ba7c7d90c58"
   },
   "components/reportes/estadisticos/PhoneStatsCards.tsx": {
     "mtime": 1783015157193.7974,
     "hash": "9a00d840bb2cce0a52b3a42c7f37359a"
   },
   "components/reportes/estadisticos/ReportFilters.tsx": {
-    "mtime": 1783015157193.8699,
-    "hash": "60bdbaee2bb3c7a4e653de4ce4fb3baa"
+    "mtime": 1784125250138.6592,
+    "hash": "3e23e78287be3a662be234763c917375"
   },
   "components/reportes/form-styles.ts": {
-    "mtime": 1783096452388.4495,
-    "hash": "a74bbbfb52d494cae884a2060c0b936e"
+    "mtime": 1784125250138.9094,
+    "hash": "4937a1896a5760be3ca5d6d3ff6bdab4"
   },
   "components/reportes/incidentes/FiltrosIncidencias.tsx": {
-    "mtime": 1783440750475.108,
-    "hash": "42f81bc8d2c6c22ed03e0f1824fffe99"
+    "mtime": 1784125250138.996,
+    "hash": "ba8e62c275ebc2e87f6d342f2e99493d"
   },
   "components/reportes/incidentes/Paginacion.tsx": {
-    "mtime": 1783029400890.3042,
-    "hash": "6799a23092dedc5687343ec2b61c77fd"
+    "mtime": 1784125250139.0935,
+    "hash": "aa33013a87319bc0c039365e98c9d62d"
   },
   "components/reportes/incidentes/StatIncidencia.tsx": {
-    "mtime": 1783029400890.3728,
-    "hash": "9114ab4f307e37004b5ef8f7af5bf663"
+    "mtime": 1784125250139.1792,
+    "hash": "12d51e2d7fcaa8b4af147bc57f53ea61"
   },
   "components/reportes/incidentes/TablaIncidentes.tsx": {
     "mtime": 1783029400890.4438,
@@ -1416,56 +1416,56 @@
     "hash": "6ffd59347eca2e1431091f8f208d8461"
   },
   "components/reportes/menuOption.tsx": {
-    "mtime": 1782842470277.0808,
-    "hash": "280085f9cec2b6f0e7454708371d279e"
+    "mtime": 1784125250139.2563,
+    "hash": "7b8e3cc5a7c14341f2bad70d6817cb61"
   },
   "components/reportes/modulo_incidentes/ReportFilters.tsx": {
-    "mtime": 1782942581661.695,
-    "hash": "61b5fd48739841c6541dbb7e610b2e5f"
+    "mtime": 1784125250139.4563,
+    "hash": "6a801a67e3a39ea363c5d29234841b3d"
   },
   "components/reportes/modulo_incidentes/ReportTables.tsx": {
-    "mtime": 1782942581662.11,
-    "hash": "ab9f7f1c441c32d716ac944bc36b1ebf"
+    "mtime": 1784125250139.6238,
+    "hash": "bfbfba40f8980cdcc424b0154085b050"
   },
   "components/reportes/modulo_incidentes/ReportesTabs.tsx": {
     "mtime": 1782842470277.862,
     "hash": "9f0f66b471a47a12941322a30ad3f425"
   },
   "components/reportes/modulo_incidentes/styles.ts": {
-    "mtime": 1782842470278.1208,
-    "hash": "7c0c87fa046e9bcf8cac93f474c135a4"
+    "mtime": 1784125250139.7744,
+    "hash": "f8ac4f4948f0d6b956aa1fe1b0db7c45"
   },
   "components/reportes/sin_robos/PaginacionSinRobos.tsx": {
-    "mtime": 1783015157194.0615,
-    "hash": "f323ddfb0f729e14cfbf7162de19cef2"
+    "mtime": 1784125250139.8792,
+    "hash": "7b0693f0551dc030615a09db79fb8e06"
   },
   "components/reportes/sin_robos/ReportFilters.tsx": {
-    "mtime": 1783029400890.6013,
-    "hash": "603ed7789995dd3f8ceb5289401db903"
+    "mtime": 1784125250139.963,
+    "hash": "24812ef6f226dc8deeca96b2d6e8df08"
   },
   "components/reportes/sin_robos/ReporteSinRobos.tsx": {
-    "mtime": 1783029400890.7107,
-    "hash": "d65a5074173a374ea049da27ece955d2"
+    "mtime": 1784125250140.1328,
+    "hash": "acb38bb3864a86582cd8c62befc32f1d"
   },
   "components/reportes/sin_robos/styles.ts": {
-    "mtime": 1783015157194.5134,
-    "hash": "97f5561fc01fc8c78c829b750ba6fb9e"
+    "mtime": 1784125250140.2087,
+    "hash": "91506444953fac4373dc3e5b79dba52b"
   },
   "components/reportes/welcomeBanner.tsx": {
-    "mtime": 1782842470278.2888,
-    "hash": "8c843ff65b07140d85f63c7a407c3b73"
+    "mtime": 1784125250140.2883,
+    "hash": "3b26d5cc5e08684786df55aa9b3e496d"
   },
   "components/rol_servicios/RolInputs.tsx": {
-    "mtime": 1782833636602.6765,
-    "hash": "8f80f6f25b37827af1d9bed49835eab7"
+    "mtime": 1784125250140.6702,
+    "hash": "703289577655c05183a696b473ce3ff0"
   },
   "components/rol_servicios/ServiceFooter.tsx": {
-    "mtime": 1782833636602.8425,
-    "hash": "46e21edba383fcf0cfd1f5201af89306"
+    "mtime": 1784125250140.7756,
+    "hash": "09ac939becbf5c5e98fb7941ae94b517"
   },
   "components/rol_servicios/ServiceTable.tsx": {
-    "mtime": 1783693875247.9954,
-    "hash": "dec965cddb983c20987f02f440fc4ea5"
+    "mtime": 1784125250140.8787,
+    "hash": "630fbca388f72aafdf30de42ae0592e8"
   },
   "components/rol_servicios/SignatureModal.tsx": {
     "mtime": 1782833636603.1333,
@@ -1540,8 +1540,8 @@
     "hash": "7d31e9dc7f5ca9b6e9e0726d50b4c940"
   },
   "features/via/infracciones/components/SeccionLiberacion.tsx": {
-    "mtime": 1783524170074.49,
-    "hash": "8a631cb45d616fbd8c1f69cad3cd8546"
+    "mtime": 1784125250141.1335,
+    "hash": "bf2170ab6f26d2709572b96148af318d"
   },
   "features/via/infracciones/components/steps/PasoCiudadano.tsx": {
     "mtime": 1783434532393.1511,
@@ -1624,8 +1624,8 @@
     "hash": "32c037b85a60a588f244c12e025b2741"
   },
   "features/via/infracciones/components/ui/SegmentedControl.tsx": {
-    "mtime": 1783434532395.1455,
-    "hash": "9cddefd1b521fd808411c8b83811374e"
+    "mtime": 1784125250141.3167,
+    "hash": "4c84ebd47ecc9c55817767737ad595d8"
   },
   "features/via/infracciones/components/ui/SelectWrapper.tsx": {
     "mtime": 1783434532395.1978,
@@ -1788,8 +1788,8 @@
     "hash": "8dc14233d5558fe405072475a4172323"
   },
   "lib/admin/actions.ts": {
-    "mtime": 1783693875250.3384,
-    "hash": "4830c72699188a77b15cb20a8636a0ea"
+    "mtime": 1784127889774.583,
+    "hash": "c5162d457b8dc361c6758523eee4c030"
   },
   "lib/admin/mapper.ts": {
     "mtime": 1783693875250.407,
@@ -1816,8 +1816,8 @@
     "hash": "e1806bebe72ed361695c3c5df9a57e29"
   },
   "lib/agente_infracciones/service.ts": {
-    "mtime": 1783029400891.4282,
-    "hash": "6f1dfeeeeb53cc5ed557697a3f09068f"
+    "mtime": 1784128154297.228,
+    "hash": "30822a19b9a5ed2c6e263e2311f9f020"
   },
   "lib/agente_infracciones/storeCapturaInfractor.ts": {
     "mtime": 1783029400891.4966,
@@ -1840,8 +1840,8 @@
     "hash": "5f933830fb497e097f5a9b642dd88c0b"
   },
   "lib/agente_juzgado/service.ts": {
-    "mtime": 1783110559106.5332,
-    "hash": "a7a379c518bd5e34eae2dcb0edac6752"
+    "mtime": 1784128174790.8938,
+    "hash": "1d3caa9ec26e4754a0ba2949f5811f77"
   },
   "lib/agente_juzgado/types.ts": {
     "mtime": 1783524170077.1904,
@@ -1860,8 +1860,8 @@
     "hash": "639b80f89017c506973aa84a975cd179"
   },
   "lib/agente_liberaciones/service.ts": {
-    "mtime": 1782940679103.1455,
-    "hash": "d6128a8b9705a48e15c782274996f1d0"
+    "mtime": 1784128182890.8738,
+    "hash": "6ba53946971142310820fa98b21737ac"
   },
   "lib/agente_liberaciones/types.ts": {
     "mtime": 1783029400892.6187,
@@ -1880,8 +1880,8 @@
     "hash": "c49b5bca77f74efc4125cbb669af7584"
   },
   "lib/auth/helpers.ts": {
-    "mtime": 1783693875251.0745,
-    "hash": "e870fb37ccfa8d72890bbce647e01f91"
+    "mtime": 1784127812752.2927,
+    "hash": "014afa44dae7bac0b3f284338b7b5ef6"
   },
   "lib/auxiliar/actions.ts": {
     "mtime": 1783699235577.9614,
@@ -1956,16 +1956,16 @@
     "hash": "887ad1504b23ce19893c1bade50888ad"
   },
   "lib/d1/repository.ts": {
-    "mtime": 1783714291933.4575,
-    "hash": "4d7b42069db4058309b0ee6d86b7cd20"
+    "mtime": 1784059266497.8613,
+    "hash": "7de5dbf03c307fc6feda339dc796a7d0"
   },
   "lib/d1/service.ts": {
-    "mtime": 1783693875252.4932,
-    "hash": "0e84971629b0d68bffa52f4268ea6907"
+    "mtime": 1784059266498.3442,
+    "hash": "6c1abe88fa2d053b1261363a41cb0009"
   },
   "lib/d1/types.ts": {
-    "mtime": 1783693875252.5444,
-    "hash": "3f757e6050ea79f0b66d9be055a0060e"
+    "mtime": 1784059266498.5837,
+    "hash": "3a356527274b2387518d0d541b4f3f6f"
   },
   "lib/db.ts": {
     "mtime": 1783693875252.6353,
@@ -2032,16 +2032,16 @@
     "hash": "c0b9139c9cd8386d193b999ddbfbae9f"
   },
   "lib/emails/templates/asignacion-fiscalia.ts": {
-    "mtime": 1782928778968.3762,
-    "hash": "8a0b9545aad8bcb831d00b7c9bd6ddb9"
+    "mtime": 1784125250141.4167,
+    "hash": "5514aaf6eae21bb8aaccb657b66f1818"
   },
   "lib/emails/templates/layout.ts": {
-    "mtime": 1782928778968.472,
-    "hash": "3439af97cba8edb0cb853ac53ef1fb73"
+    "mtime": 1784125250141.686,
+    "hash": "5538e3efe9764305d70a5a1e4b9ad2fc"
   },
   "lib/emails/templates/orden-liberacion.ts": {
-    "mtime": 1783524170078.467,
-    "hash": "df6a16c5fc360aa0acec410df99072ab"
+    "mtime": 1784125250141.7769,
+    "hash": "3547e72bc07b0b976f6f0828528a9e75"
   },
   "lib/error-handler.ts": {
     "mtime": 1783693875252.9875,
@@ -2056,8 +2056,8 @@
     "hash": "bef768175eb7e633da3bcf9cb08c0013"
   },
   "lib/fiscalia/actions.ts": {
-    "mtime": 1783524170078.9404,
-    "hash": "14a20e27c7712b99e12ffd52c3ea81a2"
+    "mtime": 1784059266498.8508,
+    "hash": "3c770d4d38e248822b324f5adb3f1f36"
   },
   "lib/fiscalia/expediente.ts": {
     "mtime": 1782928778968.8662,
@@ -2068,16 +2068,16 @@
     "hash": "4814752b857bd1a1217c4e8ff27c47d1"
   },
   "lib/fiscalia/repository.ts": {
-    "mtime": 1783693875253.1108,
-    "hash": "64b4e6366ee4a7d1bbbf57b56fa3628b"
+    "mtime": 1784059266499.3362,
+    "hash": "b131ed2487afc1631785bba1ce816bf1"
   },
   "lib/fiscalia/service.ts": {
-    "mtime": 1783524170079.5586,
-    "hash": "f8a083752e26d281fabb1b22330d3d2b"
+    "mtime": 1784059266499.6665,
+    "hash": "df76b7314b6dd8eeb75abfc9c880911a"
   },
   "lib/fiscalia/types.ts": {
-    "mtime": 1783524170079.7332,
-    "hash": "40abb06cbdc2e4621087f4adb1294a33"
+    "mtime": 1784059266500.145,
+    "hash": "e7a16aed50d4264096c10ef5a06a676e"
   },
   "lib/fiscalia/useToastStore.ts": {
     "mtime": 1782856737480.2783,
@@ -2204,32 +2204,32 @@
     "hash": "b2dbdb17a7a4c30743c1c65b1b99ad96"
   },
   "lib/oficial/mapper.ts": {
-    "mtime": 1784046286822.0164,
-    "hash": "b19d30e035608c520de5466605396927"
+    "mtime": 1784059266500.6755,
+    "hash": "32a4b3135b617c496565b3bef4a70a2f"
   },
   "lib/oficial/repository.ts": {
-    "mtime": 1784046286822.1265,
-    "hash": "36214c596ae8e890a0463295e2d8b324"
+    "mtime": 1784059266501.0103,
+    "hash": "911d171d07e1f3c941000973ecb4ade1"
   },
   "lib/oficial/service.ts": {
-    "mtime": 1784046286822.239,
-    "hash": "abb87a094b713c4039821fe0cf001fca"
+    "mtime": 1784059266501.3826,
+    "hash": "6f260c2807377791507a3b88b3411a57"
   },
   "lib/oficial/store.ts": {
     "mtime": 1784038442321.3936,
     "hash": "d42825e842874b5c0c625c5788c8079b"
   },
   "lib/oficial/types.ts": {
-    "mtime": 1784046286822.4175,
-    "hash": "05f7f05e6f329ffceb09e6e9ae3002ad"
+    "mtime": 1784059266501.6753,
+    "hash": "046b53134acc75ac6d87cf4544a6622f"
   },
   "lib/ordenSalida/generarOrdenSalida.ts": {
     "mtime": 1783524170081.3245,
     "hash": "17de188a6616ee49dd17a10f5669bf67"
   },
   "lib/permisos/core.ts": {
-    "mtime": 1783699235579.3623,
-    "hash": "b161d6594cb988cf3f7fefc0e036cb3e"
+    "mtime": 1784127865009.1523,
+    "hash": "448faac187e89618f9844bba1ca8e969"
   },
   "lib/permisos/registro.ts": {
     "mtime": 1783699235579.475,
@@ -2380,8 +2380,8 @@
     "hash": "fc99fe0a086637584ddb3e5d3abdce19"
   },
   "lib/rol-servicios/catalogos-actions.ts": {
-    "mtime": 1783693875259.5156,
-    "hash": "8112e8148f06de3a3b4315f6b2557d37"
+    "mtime": 1784127904998.7412,
+    "hash": "6154e0c4230e25b0d4dae31ba8515d92"
   },
   "lib/rol-servicios/mapper.ts": {
     "mtime": 1783693875259.6055,
@@ -2500,8 +2500,8 @@
     "hash": "849114c5d67cb23f90fc800cae1bf645"
   },
   "AGENTS.md": {
-    "mtime": 1784038442311.0781,
-    "hash": "4fe4764b169bef4163ee6d34f53ec0c2"
+    "mtime": 1784050210635.6667,
+    "hash": "d0c757e0c2f20a21036ff301357e3514"
   },
   "CLAUDE.md": {
     "mtime": 1784046286818.6724,
@@ -2512,8 +2512,8 @@
     "hash": "bf8342ea6790191e7428d911e6a70b5e"
   },
   "README.md": {
-    "mtime": 1783693875223.392,
-    "hash": "dc8e37408df73858f3d652be40b3fb7a"
+    "mtime": 1784125250105.1968,
+    "hash": "a2d823299d7b17184f6c51f2265255a0"
   },
   "boveda/Home.md": {
     "mtime": 1783695646504.984,
@@ -3056,76 +3056,76 @@
     "hash": "edd50f0efc642a2d2fb4adf5ad2e831e"
   },
   "app/agente_911/ciudadano/Formulario911.tsx": {
-    "mtime": 1784038442312.254,
-    "hash": "caa50abb7b630fc36d53db975869cb71"
+    "mtime": 1784125250107.8047,
+    "hash": "9a083eeefe3622aacae343deb5a3bb47"
   },
   "app/agente_911/ciudadano/incidentes/[id]/page.tsx": {
-    "mtime": 1784038442313.1116,
-    "hash": "34f045994b0fe2e27c4f624d14057cea"
+    "mtime": 1784125250107.9695,
+    "hash": "85e016688324ebefcbc92c47b618ac12"
   },
   "app/agente_911/ciudadano/incidentes/page.tsx": {
-    "mtime": 1784038442313.2312,
-    "hash": "1a0daf1905a6c96f2e53c9e1ca0ae5ec"
+    "mtime": 1784125250108.0916,
+    "hash": "7a87249c46204914c3b0dbb48f639dc1"
   },
   "app/agente_911/ciudadano/page.tsx": {
-    "mtime": 1784038442313.6611,
-    "hash": "48c7f3a8d798ead1d4bbbaabe7005167"
+    "mtime": 1784125250108.4265,
+    "hash": "fc65e58c62a6ce956aa63c98249a28b4"
   },
   "app/agente_911/despacho/page.tsx": {
     "mtime": 1783699235570.5017,
     "hash": "237a703b210a6929bff14eac9fb62266"
   },
   "app/agente_911/page.tsx": {
-    "mtime": 1783699235570.6462,
-    "hash": "21ecec5ae92ee2bfb152102b2b731c26"
+    "mtime": 1784125250108.7622,
+    "hash": "5c88377294434f620ed3d28b2571fed9"
   },
   "app/agente_911/rondin/incidentes/[id]/page.tsx": {
-    "mtime": 1784038442313.8477,
-    "hash": "4e7ba02a96f8f7eb6fa9cc6fa721a791"
+    "mtime": 1784125250108.8838,
+    "hash": "21c7466e0ad484af5a78f1767368ef4c"
   },
   "app/agente_911/rondin/incidentes/page.tsx": {
-    "mtime": 1784038442314.007,
-    "hash": "f625dcb5a61af4681a9bc69bae9d2f58"
+    "mtime": 1784125250109.0186,
+    "hash": "21b38ec5eec18b8b45bac702958490c2"
   },
   "app/agente_911/rondin/page.tsx": {
     "mtime": 1784046286818.8054,
     "hash": "7dd26ac0380836441376aa2a7d5558bf"
   },
   "app/agente_911/whatsapp/incidentes/[id]/page.tsx": {
-    "mtime": 1784038442314.1912,
-    "hash": "8f7738cef9dd02bb7db54e04252ba386"
+    "mtime": 1784125250109.1775,
+    "hash": "6034603b6e7aa6c3e9071601a7393d3b"
   },
   "app/agente_911/whatsapp/incidentes/page.tsx": {
-    "mtime": 1784038442314.3557,
-    "hash": "3c2c3da6498c70832aec83559a7d9a8c"
+    "mtime": 1784125250109.328,
+    "hash": "1e5969443af1ca8b9787e190056367f1"
   },
   "app/agente_911/whatsapp/page.tsx": {
     "mtime": 1783699235571.9287,
     "hash": "379f5f01013974e05cb74458035a6847"
   },
   "app/agente_bitacorista/page.tsx": {
-    "mtime": 1783699235572.0288,
-    "hash": "58bf3ece2da45a1014d62203e0251594"
+    "mtime": 1784125250109.5276,
+    "hash": "5ebbed6ec63a3bf185cc2a894686c04b"
   },
   "app/agente_despacho/page.tsx": {
-    "mtime": 1784046286818.9934,
-    "hash": "0b70d151d9c72a6e6c96bccb96743a98"
+    "mtime": 1784125250109.7615,
+    "hash": "df85989040c4ae508139f4301f352f46"
   },
   "lib/admin-transito/permisos.ts": {
     "mtime": 1783699235576.5105,
     "hash": "d1acd42f65643c7005fca75ef59d7410"
   },
   "lib/agente_911/service.ts": {
-    "mtime": 1783699235576.6145,
-    "hash": "311f168c79bfc32220b5a86e33cdf17c"
+    "mtime": 1784128134559.786,
+    "hash": "6d9de82dcc10946aa964714d94ce13b9"
   },
   "lib/agente_bitacorista/service.ts": {
-    "mtime": 1783699235576.9653,
-    "hash": "3ac2f99ad84936f479b71b8ee6dff04e"
+    "mtime": 1784128145509.1035,
+    "hash": "147a827d4261987ee58ee9182af5966c"
   },
   "lib/agente_despacho/service.ts": {
-    "mtime": 1783699235577.1833,
-    "hash": "6655a13f6187b82e79559c2c43b73156"
+    "mtime": 1784128140104.021,
+    "hash": "09d8e82826b5ae554b917c27be5896ae"
   },
   "lib/agente_infracciones/permisos.ts": {
     "mtime": 1783699235577.258,
@@ -3164,8 +3164,8 @@
     "hash": "86b403084e0055bdc4cae62c9496ae99"
   },
   "app/oficial/despachos/page.tsx": {
-    "mtime": 1784038442317.4094,
-    "hash": "41c9493cf4a62f26b25697362d8eb3f5"
+    "mtime": 1784125250122.7024,
+    "hash": "97a6bc2a993c8b742c692cc7162767d4"
   },
   "app/oficial/rondin/page.tsx": {
     "mtime": 1784046286819.6384,
@@ -3176,12 +3176,12 @@
     "hash": "86a5047efac465e8ac327c63fafff120"
   },
   "components/911/radio/FormRondinEscalado.tsx": {
-    "mtime": 1784046958682.65,
-    "hash": "733c7cb2b89d778543565d6a7b221a38"
+    "mtime": 1784125250126.4287,
+    "hash": "adc0d197899c78269fa429ad8277f5dd"
   },
   "components/incidentes/HistorialIncidente.tsx": {
-    "mtime": 1783714084614.7039,
-    "hash": "70784c72d1813d5f097b676f39fee168"
+    "mtime": 1784125250131.133,
+    "hash": "b7382fe3d883cfdbac5614c00a314e30"
   },
   ".graphify/description-instructions/batch-082.md": {
     "mtime": 1784043803693.864,
@@ -3200,8 +3200,8 @@
     "hash": "66caf5c3adfaa1cdc8215cc106650bd6"
   },
   "components/oficial/SelectorDestinoLegal.tsx": {
-    "mtime": 1784038442319.165,
-    "hash": "c41181915677c8667615adc66dce84eb"
+    "mtime": 1784125250133.0667,
+    "hash": "15192776cefb2990329120a7fba9f874"
   },
   "scripts/export-schema.mjs": {
     "mtime": 1784038442324.8752,
@@ -3264,12 +3264,12 @@
     "hash": "2d4fa36b17c327d4a7c4b3d44ae99fda"
   },
   "components/oficial/rondin/RondinPageClient.tsx": {
-    "mtime": 1784046286820.5034,
-    "hash": "37ac2708ca4581924c0a9fdaedae9bb0"
+    "mtime": 1784125250133.2546,
+    "hash": "34525ca0d3c97f395d828964640c44a8"
   },
   "components/oficial/rondin/RondinTabla.tsx": {
-    "mtime": 1784046286820.6318,
-    "hash": "2117a63401629334aed1ee4935883581"
+    "mtime": 1784125250133.363,
+    "hash": "d65abadbffa2682e51b3ca69927694b5"
   },
   "stores/useRondinFormStore.ts": {
     "mtime": 1784046286822.4932,
@@ -3286,5 +3286,109 @@
   "lib/maps/loadGoogleMaps.ts": {
     "mtime": 1784046985152.7954,
     "hash": "c6c06deaf460b56af55b285fc75485f2"
+  },
+  "app/(auth)/login/ptpag/page.tsx": {
+    "mtime": 1784125250105.7705,
+    "hash": "7ecacf14dbe905fab07077c537458cfc"
+  },
+  "app/api/fiscalia/expediente/subir-foto/route.ts": {
+    "mtime": 1784059266492.5483,
+    "hash": "c8e3fedbadb0d7d7d85bde5289b53275"
+  },
+  "app/api/nCoordinacion/generar/route.ts": {
+    "mtime": 1784065820975.9429,
+    "hash": "3517d39e19de1dcb592fb1ad93337740"
+  },
+  "app/fiscalia/expedientes/[solicitudId]/page.tsx": {
+    "mtime": 1784059266493.3638,
+    "hash": "de66a40468fcc09932deddbcf49a8e2c"
+  },
+  "app/nCoordinacion/page.tsx": {
+    "mtime": 1784065820976.4158,
+    "hash": "6d51f4ee3bf38c3c17f9f499afa76cd6"
+  },
+  "app/not-found.tsx": {
+    "mtime": 1784125250122.4817,
+    "hash": "248ab48af480d110d41eef569f01e6c1"
+  },
+  "components/PageTransition.tsx": {
+    "mtime": 1784125250127.4448,
+    "hash": "67fa084759a832a45ca4ff479fed04d6"
+  },
+  "components/SmoothScroll.tsx": {
+    "mtime": 1784125250127.5176,
+    "hash": "b7e2fd0e556c1e90f767718617f11783"
+  },
+  "components/fiscalia/ExpedienteView.tsx": {
+    "mtime": 1784059266496.6455,
+    "hash": "fd124042d7fea0a1028538bccaa37399"
+  },
+  "components/fiscalia/FotosExpedienteSection.tsx": {
+    "mtime": 1784059266496.8088,
+    "hash": "73b3699e40b660fdc14fab064056e963"
+  },
+  "components/fiscalia/PrintButton.tsx": {
+    "mtime": 1784059266496.912,
+    "hash": "446741eff04b1a2299d0d0fb1b6248e6"
+  },
+  "components/forms/FormKit.tsx": {
+    "mtime": 1784125250131.0173,
+    "hash": "77564d8c69cd37724783b9e0fa5123b2"
+  },
+  "components/nCoordinacion/ProfileDropdownCoordinacion.tsx": {
+    "mtime": 1784065820976.7747,
+    "hash": "9a324d8d2cf8c99c07ca0e08ebe2ae07"
+  },
+  "components/oficial/DespachoContent.tsx": {
+    "mtime": 1784125250132.2378,
+    "hash": "0a4e91624fcb5650d41f0cc042de43b6"
+  },
+  "components/prevencion/BusquedasFiltros.tsx": {
+    "mtime": 1784125250134.2646,
+    "hash": "73fd508d43fb46e1a5b650d1912d058b"
+  },
+  "components/prevencion/JuridicoFiltros.tsx": {
+    "mtime": 1784125250134.4272,
+    "hash": "8c253c64c4775a07ac1f7c3232c5bb1e"
+  },
+  "components/prevencion/Pagination.tsx": {
+    "mtime": 1784125250134.6885,
+    "hash": "16ea863139b08f847c3bd74c7b5d095b"
+  },
+  "components/prevencion/SearchBox.tsx": {
+    "mtime": 1784125250134.7417,
+    "hash": "3d9e5035b7a33c69d90391419f1d0848"
+  },
+  "lib/n-coordinacion/actions.ts": {
+    "mtime": 1784065820976.9604,
+    "hash": "dbaf99a9adc6b755a79ecd593698c5a8"
+  },
+  "lib/n-coordinacion/repository.ts": {
+    "mtime": 1784065820977.0728,
+    "hash": "2f4e1e67d27d1635b5084aa4e27af2b0"
+  },
+  "lib/prevencion/paginate.ts": {
+    "mtime": 1784125250141.8394,
+    "hash": "464ff43a58d973c577fdeaa1aa24aeb9"
+  },
+  "cesar.md": {
+    "mtime": 1784065820976.598,
+    "hash": "fd319a5249df1c7bca9eeec8eab196e5"
+  },
+  "public/chaleco.png": {
+    "mtime": 1784125250142.8726,
+    "hash": "e8a800cc121ca424662a725954706cf2"
+  },
+  "public/logo_centinel.png": {
+    "mtime": 1784125250143.026,
+    "hash": "e5caebc0830460e15c3b07358322a717"
+  },
+  "public/logo_gobierno_mx.png": {
+    "mtime": 1784065820978.7026,
+    "hash": "3a714fdc4c822d985aef4bcf98792b39"
+  },
+  "public/logo_queretaro.jpeg": {
+    "mtime": 1784065820978.9055,
+    "hash": "2df21289a91c978b86f9d950987a5599"
   }
 }

@@ -8,6 +8,7 @@ import { obtenerEvidenciasMonitorista } from '@/lib/fiscalia/repository'
 import { CapturarDetallesForm } from '@/components/fiscalia/CapturarDetallesForm'
 import { DetallesAseguradoView } from '@/components/fiscalia/DetallesAseguradoView'
 import { FotosExpedienteSection } from '@/components/fiscalia/FotosExpedienteSection'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AseguradosFiscaliaPage({ params }: { params: Promise<{ solicitudId: string }> }) {
   const { solicitudId } = await params
@@ -88,7 +89,7 @@ export default async function AseguradosFiscaliaPage({ params }: { params: Promi
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · ASEGURADOS</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

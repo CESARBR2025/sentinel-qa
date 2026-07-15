@@ -6,6 +6,7 @@ import { es }          from 'date-fns/locale'
 import { PrintButton } from '@/components/prevencion/PrintButton'
 import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
 import { obtenerFichaBusqueda } from '@/lib/prevencion/repository'
+import { APP_VERSION } from "@/lib/constants"
 
 function fmtDT(v: Date | string | null): string {
   if (!v) return '—'
@@ -150,7 +151,7 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
         </div>
 
         <div style={{ marginTop: 32, paddingTop: 12, borderTop: '1px solid #eee', fontFamily: 'monospace', fontSize: 9, color: '#bbb', textAlign: 'center' }}>
-          CENTINELA v1.2 · SSPM San Juan del Río · ID: {id}
+          CENTINELA {APP_VERSION} · SSPM San Juan del Río · ID: {id}
         </div>
       </div>
 

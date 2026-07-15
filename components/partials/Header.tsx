@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
+import { SignOutButton } from '@/app/dashboard/sign-out-button';
 
 interface DashboardHeaderProps {
   user: {
@@ -10,6 +11,9 @@ interface DashboardHeaderProps {
     email: string;
   };
   children?: React.ReactNode;
+  // Sin backHref no se muestra ningún botón de "volver" — cada página decide si
+  // tiene un destino real al que regresar (nunca "/dashboard" a ciegas: para la
+  // mayoría de los roles ese redirect solo rebota de vuelta a su propio hub).
   backHref?: string;
   backLabel?: string;
 }
@@ -17,7 +21,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({
   user,
   children,
-  backHref = '/dashboard',
+  backHref,
   backLabel = 'Dashboard',
 }: DashboardHeaderProps) {
   return (
@@ -45,27 +49,31 @@ export function DashboardHeader({
       />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-        
-        {/* BOTÓN REGRESAR */}
-        <Link
-          href={backHref}
-          style={{ 
-            fontFamily: 'JetBrains Mono,monospace', 
-            fontSize: 10, 
-            letterSpacing: '0.25em', 
-            color: '#94a3b8', 
-            textTransform: 'uppercase', 
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            marginBottom: 8
-          }}
-        >
-          <ArrowLeft size={14} /> {backLabel}
-        </Link>
 
-        <div style={{ width: 1, height: 32, background: '#e2e8f0', marginBottom: 8 }} />
+        {/* BOTÓN REGRESAR — solo si la página pasó un destino real */}
+        {backHref && (
+          <>
+            <Link
+              href={backHref}
+              style={{
+                fontFamily: 'JetBrains Mono,monospace',
+                fontSize: 10,
+                letterSpacing: '0.25em',
+                color: '#94a3b8',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 8
+              }}
+            >
+              <ArrowLeft size={14} /> {backLabel}
+            </Link>
+
+            <div style={{ width: 1, height: 32, background: '#e2e8f0', marginBottom: 8 }} />
+          </>
+        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <img
@@ -159,6 +167,8 @@ export function DashboardHeader({
         </div>
 
         {children}
+
+        <SignOutButton />
       </div>
     </div>
   );

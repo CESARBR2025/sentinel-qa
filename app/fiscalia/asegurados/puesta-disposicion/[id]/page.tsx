@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { ProfileDropdown } from '@/components/fiscalia/ProfileDropdown'
 import { FormularioPuestaDisposicion } from '@/components/fiscalia/FormularioPuestaDisposicion'
 import { obtenerDashboardFiscalia, obtenerDetalleAseguradoCompletoAction, obtenerPuestaDisposicionAction } from '@/lib/fiscalia/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -58,7 +59,7 @@ export default async function PuestaDisposicionPage({ params }: Props) {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · PUESTA A DISPOSICIÓN</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · PUESTA A DISPOSICIÓN</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

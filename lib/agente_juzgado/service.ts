@@ -1,5 +1,4 @@
 import {
-  obtenerRolUsuario,
   obtenerSolicitudesRecepcionadas,
   obtenerSolicitudesEnRevision,
   obtenerSolicitudesConMonitorista,
@@ -16,12 +15,12 @@ import {
   listarAseguradosJuzgado,
 } from './repository'
 import { rowToSolicitud, rowToInfraccionDetalle } from './mapper'
+import { tienePermiso } from './permisos'
 import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, ViaInfraccionDetalle } from './types'
 import type { AseguradoRow } from '@/lib/fiscalia/types'
 
 export async function verificarRolJuzgado(userId: string): Promise<boolean> {
-  const rol = await obtenerRolUsuario(userId)
-  return rol === 'agente_juzgado'
+  return tienePermiso(userId, 'juzgado', 'ver')
 }
 
 export async function listarSolicitudesRecepcionadas(): Promise<SolicitudEvidencia[]> {

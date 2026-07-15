@@ -1,6 +1,7 @@
 import { ProfileDropdown } from '@/components/fiscalia/ProfileDropdown'
 import { TabAsegurados } from '@/components/fiscalia/TabAsegurados'
 import { obtenerDashboardFiscalia, obtenerAseguradosAction } from '@/lib/fiscalia/actions'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AseguradosPage() {
   const user = await obtenerDashboardFiscalia()
@@ -51,7 +52,7 @@ export default async function AseguradosPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.2 · FISCALÍA · ASEGURADOS</span>
+            <span>CENTINELA {APP_VERSION} · FISCALÍA · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>
