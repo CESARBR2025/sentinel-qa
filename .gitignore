@@ -69,6 +69,7 @@ Alexandria/
 
 # YouMindAG — generated knowledge graph
 .graphify/
+/.graphify/
 graphify-visual/
 
 # Alexandria (conocimiento y config personal — no del repo)
