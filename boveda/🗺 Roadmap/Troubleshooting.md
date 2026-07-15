@@ -1,0 +1,291 @@
+# Troubleshooting
+
+**Propósito**: Errores conocidos y sus soluciones.
+
+---
+
+## Error TS2305: Module has no exported member 'X'
+
+**Síntoma**: `Module '"@/lib/monitorista/detenido-service"' has no exported member 'crearSolicitudFotos'`
+
+**Causa raíz**: Una función fue movida de un archivo a otro durante refactorización (ej: de `detenido-service.ts` a `repository.ts` o `service.ts`).
+
+**Fix**:
+1. Encontrar dónde está ahora la función:
+   ```bash
+   grep -rn "export.*function crearSolicitudFotos\|export.*crearSolicitudFotos" lib/
+   ```
+2. Actualizar el import en el caller
+
+---
+
+## Error TS2551: Property 'snake_case' does not exist on type 'CamelCase'
+
+**Síntoma**: `Property 'tipo_foto' does not exist on type 'EvidenciaDetenido'. Did you mean 'tipoFoto'?`
+
+**Causa raíz**: El JSX usa `item.tipo_foto` (snake_case de BD) pero el tipo ahora es `item.tipoFoto` (camelCase de TS) después de agregar mapper.
+
+**Fix**: Reemplazar la referencia en JSX:
+```diff
+- item.tipo_foto
++ item.tipoFoto
+```
+
+---
+
+## Error TS2322: Type 'Record<string, unknown>[]' not assignable to 'SomeType[]'
+
+**Síntoma**: `Type 'Record<string, unknown>[]' is not assignable to type 'IncidenteCamara[]'`
+
+**Causa raíz**: El repository devuelve `result.rows` sin mapper. Necesita pasar por `rowTo*()`.
+
+**Fix** en el repository:
+```diff
+- return result.rows
++ return result.rows.map(rowToIncidenteCamara)
+```
+
+---
+
+## Error de INSERT: "INSERT tiene más columnas de destino que expresiones"
+
+**Síntoma**: PostgreSQL error `INSERT has more target columns than expressions`
+
+**Causa raíz**: La query tiene N columnas listadas pero M placeholders (`$1`...`$M`) donde M < N.
+
+**Ejemplo**:
+```sql
+INSERT INTO tabla (col1, col2, col3) VALUES ($1)  -- 3 columnas, 1 placeholder
+```
+
+**Fix**: Contar columnas vs placeholders. Cada columna necesita su `$N`:
+```sql
+INSERT INTO tabla (col1, col2, col3) VALUES ($1, $2, $3)
+```
+
+---
+
+## Google Maps: `useJsApiLoader` crash en React 19 Strict Mode
+
+**Síntoma**: Error de carga del mapa o "Invalid DOM property" al cargar Google Maps.
+
+**Causa raíz**: `useJsApiLoader` recibe un objeto de config que cambia en cada render en Strict Mode (React 19 renderiza dos veces).
+
+**Fix**: Envolver la config en `useMemo`:
+```tsx
+const config = useMemo(() => ({
+  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? '',
+  libraries: ['places'] as Libraries[],
+}), [])
+const { isLoaded } = useJsApiLoader(config)
+```
+
+---
+
+## Error: Cannot find module '@/lib/db/index' (o confusión db.ts vs db/index.ts)
+
+**Síntoma**: Error de import de módulo.
+
+**Causa raíz**: Existen dos archivos:
+- `lib/db.ts` → exporta `pool` (default) y `query()`
+- `lib/db/index.ts` → exporta instancia de Drizzle para better-auth
+
+**Fix**: 
+- App code → importar de `@/lib/db` (el `db.ts`)
+- Auth → importar de `@/lib/db/index` (solo `lib/auth.ts`)
+
+```diff
+- import { query } from '@/lib/db/index'
++ import { query } from '@/lib/db'
+```
+
+---
+
+## Error: build falla con "Module not found: Can't resolve 'drizzle-orm'"
+
+**Síntoma**: Build error al no encontrar drizzle-orm.
+
+**Causa raíz**: `drizzle-orm` debe estar en dependencies porque `better-auth` lo requiere como adapter. Nunca removerlo de package.json.
+
+**Fix**:
+```bash
+npm install drizzle-orm
+```
+
+---
+
+## Error: redirect() called from server action throws error
+
+**Síntoma**: `Error: NEXT_REDIRECT` atrapado por tryAction/tryActionRaw.
+
+**Causa raíz**: `redirect()` lanza un error especial que Next.js intercepta, pero `tryAction/tryActionRaw` lo captura como error normal.
+
+**Fix**: Usar `tryActionRaw` (que re-lanza) en vez de `tryAction` (que captura) cuando la acción hace redirect:
+```ts
+export async function crearAlgo(formData: FormData) {
+  return tryActionRaw(async () => {
+    await guardar(formData)
+    redirect('/exito')  // ✓ funciona porque tryActionRaw re-lanza NEXT_REDIRECT
+  })
+}
+```
+
+---
+
+## Error: Componente cliente no recibe props correctas de server component
+
+**Síntoma**: Una prop pasada de server component a client component tiene undefined o tipo incorrecto.
+
+**Causa raíz**: El server component usa snake_case en el objeto que pasa, pero el client component espera camelCase.
+
+**Fix**: Verificar que el mapper convierta correctamente. Debug temporal:
+```ts
+console.log('row raw:', row)
+console.log('row mapped:', rowToAlgo(row))
+```
+
+---
+
+## Flota: null `placaVehiculo` viola NOT NULL en `numero_unidad`
+
+**Síntoma**: `el valor nulo en la columna «numero_unidad» de la relación «v2_patrullas» viola la restricción de no nulo`
+
+**Causa raíz**: La API externa de flota devuelve campos en snake_case (`placa_vehiculo`), pero `upsertPatrullas` accede a `v.placaVehiculo` (camelCase) obteniendo `undefined`. Ese `undefined` se pasa como NULL al INSERT, violando `NOT NULL` en `numero_unidad`.
+
+**Fix**:
+1. Agregar mapper `apiRowToFlotaVehiculo` en `lib/flota/service.ts` que convierta snake_case → camelCase y filtre vehículos sin placa
+2. Filtrar vehículos sin `placaVehiculo` en `upsertPatrullas` (`lib/flota/repository.ts`)
+
+```ts
+function apiRowToFlotaVehiculo(raw: Record<string, unknown>): FlotaVehiculoRaw | null {
+  const placaVehiculo = String(raw.placa_vehiculo ?? raw.placaVehiculo ?? '').trim()
+  if (!placaVehiculo) return null
+  return {
+    placaVehiculo,
+    numSerie: String(raw.num_serie ?? raw.numSerie ?? ''),
+    marca: String(raw.marca ?? ''),
+    modelo: String(raw.modelo ?? ''),
+    color: String(raw.color ?? ''),
+    tipoVehiculo: String(raw.tipo_vehiculo ?? raw.tipoVehiculo ?? ''),
+    secretaria: String(raw.secretaria ?? ''),
+    idVehiculo: Number(raw.id_vehiculo ?? raw.idVehiculo ?? 0),
+  }
+}
+```
+
+---
+
+## Google Maps: `useJsApiLoader` con `id` inconsistente entre componentes
+
+**Síntoma**: `Loader must not be called again with different options. {"id":"script-loader",...} !== {"id":"google-map-script",...}`
+
+**Causa raíz**: Algunos componentes usan `id: 'google-map-script'` explícito en `useJsApiLoader`, mientras que otros omiten el `id` y obtienen el default `script-loader`. `@react-google-maps/api` lanza error si el loader se inicializa con opciones diferentes.
+
+**Fix**: Unificar el `id` en todos los llamados a `useJsApiLoader`:
+```tsx
+const { isLoaded } = useJsApiLoader({
+  id: 'google-map-script',
+  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+  libraries: ['places'],
+})
+```
+
+**Archivos afectados** (8 componentes):
+- `features/via/oficiales/components/MapaDireccionRegistro.tsx`
+- `features/via/infracciones/components/MapSectionCiudadano.tsx`
+- `components/shared/DetalleInfraccionView.tsx`
+- `components/denuncias/FormularioD1.tsx`
+- `components/911/radio/FormSection.tsx`
+- `components/maps/GoogleMapPicker.tsx`
+- `components/911/whatsapp/RegistroIncidenteForm.tsx`
+- `app/911/ciudadano/Formulario911.tsx`
+
+---
+
+## TypeError: dateString.split is not a function
+
+**Síntoma**: `TypeError: dateString.split is not a function` en `calcularSemaforoVigencia` al llamar a `parseISO(fechaVencimiento)`.
+
+**Causa raíz**: El valor obtenido de la base de datos (e.g. `fecha_vencimiento`) es devuelto por el driver `pg` como un objeto `Date` de JavaScript. Al no pasar por un mapper (o cuando la función espera una fecha sin procesar), `parseISO` de `date-fns` recibe el objeto `Date` directamente y falla al intentar llamar a `split` (método de string).
+
+**Fix**:
+1. Modificar `calcularSemaforoVigencia` (`lib/prevencion/semaforo.ts`) para aceptar tanto `string` como `Date` (y `null`/`undefined`), y usar `parseISO` solo cuando sea de tipo `string`.
+2. Actualizar la función auxiliar `toStr` en `lib/prevencion/mapper.ts` para que convierta las instancias de `Date` a string usando `val.toISOString()` en lugar del comportamiento por defecto `String(val)`.
+
+---
+
+## Error: Objects are not valid as a React child (found: [object Date])
+
+**Síntoma**: `Error: Objects are not valid as a React child (found: [object Date])` al intentar renderizar `/prevencion/medidas`.
+
+**Causa raíz**: Las funciones `getMedidas` y `getMedidasStats` en `lib/prevencion/repository.ts` devolvían las filas resultantes de la consulta PostgreSQL directamente (`result.rows`) sin mapear. Dado que `node-postgres` devuelve las columnas de tipo `DATE` como objetos `Date` nativos, el motor de React fallaba al intentar renderizar `{r.fecha_vencimiento}` directamente en el JSX de la tabla de la página.
+
+**Fix**:
+1. Actualizar `getMedidas` y `getMedidasStats` en `lib/prevencion/repository.ts` para mapear el campo `fecha_vencimiento` explícitamente a un string ISO (`YYYY-MM-DD`) cuando es una instancia de `Date`, asegurando que no se entreguen objetos `Date` a los componentes de presentación de la página.
+
+---
+
+## Sonner toast desaparece al navegar entre rutas (App Router)
+
+**Síntoma**: `toast.success()` se ejecuta correctamente (console.log confirma), pero el toast no se muestra visualmente después de una navegación con `router.push()`.
+
+**Causa raíz**: El componente `<Toaster />` de sonner se renderiza en el root layout (`app/layout.tsx`). Durante la navegación cliente con `router.push()`, el layout se re-renderiza con nuevos `children`. En ciertas condiciones (especialmente con un `LoadingProvider` que condiciona `{children}`), el `<Toaster />` se remonta y pierde el estado global de sonner, descartando cualquier toast añadido durante la transición.
+
+**Fix**: No usar sonner para notificaciones que deben persistir a través de navegaciones. En su lugar, inyectar un elemento DOM directamente en `<body>`:
+
+```tsx
+const el = document.createElement('div')
+el.textContent = `✓ Reporte generado: ${folio}`
+Object.assign(el.style, {
+  position: 'fixed', top: '20px', right: '20px', zIndex: '2147483647',
+  background: '#16a34a', color: '#fff', padding: '16px 24px',
+  borderRadius: '4px', fontFamily: 'JetBrains Mono, monospace',
+  fontSize: '13px', fontWeight: '600',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+})
+document.body.appendChild(el)
+setTimeout(() => el.remove(), 5000)
+```
+
+**Archivo**: `app/agente_911/ciudadano/incidentes/ToastOnLoad.tsx`
+
+**Alternativas fallidas**: `router.replace` (remonta el componente, pierde `useRef`), `window.history.replaceState` (no remonta pero sonner igual no muestra la toast).
+
+---
+
+## Login se queda cargando eternamente y no redirige al dashboard/rol
+
+**Síntoma**: Al hacer login exitoso (`POST /api/auth/sign-in/email 200`), el navegador se queda congelado mostrando "Cargando tablero..." o el overlay de éxito, y nunca llega a cargar la página de destino. El servidor **nunca recibe** `GET /dashboard`. Afecta a todos los perfiles.
+
+**Causa raíz**: Dos capas independientes que bloquean la navegación post-login:
+
+1. **`app/dashboard/loading.tsx` crea un Suspense boundary** que envuelve `page.tsx`. Cuando el server component ejecuta `redirect('/agente_911')` (u otro rol), el `NEXT_REDIRECT` lanzado dentro del Suspense boundary no se propaga correctamente en algunos escenarios, dejando la página en loading perpetuo.
+
+2. **`window.__showLoader()` desde el login** — el `useEffect` del login llama a `window.__showLoader('Cargando tablero...', 99999)` (definido por `LoadingProvider`). El `setInterval` interno del `LoadingProvider` para animar la barra de progreso causa re-renders del árbol completo, interfiriendo con los `setTimeout` de navegación del login.
+
+**Fix**:
+
+1. Eliminar `app/dashboard/loading.tsx` si existe (no es parte del código base original — nunca fue commiteado).
+
+2. En `app/(auth)/login/page.tsx`, reemplazar el `useEffect` de éxito que usa `__showLoader` por una navegación directa con delay simple:
+
+```tsx
+// Antes (roto):
+useEffect(() => {
+    if (phase !== 'success') return
+    const t1 = setTimeout(() => {
+      window.__showLoader?.('Cargando tablero...', 99999)
+    }, 2800)
+    const t2 = setTimeout(() => { window.location.href = fromPath }, 4000)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+}, [phase, fromPath])
+
+// Después (funciona):
+useEffect(() => {
+    if (phase !== 'success') return
+    const t = setTimeout(() => { window.location.href = fromPath }, 1200)
+    return () => clearTimeout(t)
+}, [phase, fromPath])
+```
+
+El overlay de éxito cyberpunk del propio login ("Acceso concedido") ya da suficiente feedback visual durante el 1.2s de transición. No se necesita un loader externo.

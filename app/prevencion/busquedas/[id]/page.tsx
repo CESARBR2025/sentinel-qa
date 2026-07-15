@@ -1,16 +1,17 @@
-import { db } from '@/lib/db/index'
-import { fichasBusqueda, seguimientosBusqueda, users } from '@/lib/db/schema'
-import { eq, asc } from 'drizzle-orm'
+import { auth }      from '@/lib/auth'
+import { headers }   from 'next/headers'
 import Link         from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { format }   from 'date-fns'
 import { SeguimientoTimeline } from '@/components/prevencion/SeguimientoTimeline'
 import { CancelacionModal }    from '@/components/prevencion/CancelacionModal'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { listarSeguimientos, obtenerFichaBusqueda } from '@/lib/prevencion/repository'
 
 const TIPO_CFG: Record<string, { label: string; color: string }> = {
-  PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#c0223a' },
-  PROTOCOLO_AMBAR:  { label: 'Protocolo Ambar',     color: '#d4a43a' },
-  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#5a8fd4' },
+  PROTOCOLO_ALBA:   { label: 'Protocolo Alba',      color: '#991b1b' },
+  PROTOCOLO_AMBAR:  { label: 'Protocolo Ambar',     color: '#854d0e' },
+  BUSQUEDA_PERSONA: { label: 'Búsqueda de Persona', color: '#1f355a' },
 }
 
 function toISO(v: Date | string): string {
@@ -23,41 +24,28 @@ function fmtDT(v: Date | string | null): string {
 }
 
 export default async function FichaDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
+
   const { id } = await params
 
-  const [ficha] = await db
-    .select()
-    .from(fichasBusqueda)
-    .where(eq(fichasBusqueda.id, id))
-    .limit(1)
-
+  const ficha = await obtenerFichaBusqueda(id)
   if (!ficha) notFound()
 
-  const seguimientos = await db
-    .select({
-      id:              seguimientosBusqueda.id,
-      tipo:            seguimientosBusqueda.tipo,
-      fechaHoraEnvio:  seguimientosBusqueda.fechaHoraEnvio,
-      archivoUrl:      seguimientosBusqueda.archivoUrl,
-      registradoPor:   seguimientosBusqueda.registradoPor,
-      nombreUsuario:   users.name,
-      apellidoUsuario: users.apellido,
-    })
-    .from(seguimientosBusqueda)
-    .leftJoin(users, eq(seguimientosBusqueda.registradoPor, users.id))
-    .where(eq(seguimientosBusqueda.fichaId, id))
-    .orderBy(asc(seguimientosBusqueda.creadoEn))
+  const seguimientos = await listarSeguimientos(id)
 
-  const cfg        = TIPO_CFG[ficha.tipo] ?? { label: ficha.tipo, color: '#4a5878' }
+  const cfg        = TIPO_CFG[ficha.tipo] ?? { label: ficha.tipo, color: '#64748b' }
   const fichaActiva = ficha.status === 'activa'
 
   return (
     <div>
       {/* Breadcrumb */}
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#4a5878', letterSpacing: '0.12em' }}>
-        <Link href="/prevencion/busquedas" style={{ color: '#4a5878', textDecoration: 'none' }}>Búsquedas</Link>
+      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.12em' }}>
+        <Link href="/prevencion/busquedas" style={{ color: '#1f355a', textDecoration: 'none' }}>Búsquedas</Link>
         <span>›</span>
-        <span style={{ color: '#8a9bc0' }}>{ficha.folio ?? ficha.id.slice(0, 8)}</span>
+        <span style={{ color: '#0f172a', fontWeight: 600 }}>{ficha.folio ?? ficha.id.slice(0, 8)}</span>
       </div>
 
       {/* Header */}
@@ -71,8 +59,8 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
               {fichaActiva ? '● Activa' : '✓ Cerrada'}
             </span>
           </div>
-          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#d8e0f0', margin: '0 0 4px' }}>
-            {ficha.nombreDesaparecida}
+          <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#1e293b', margin: '0 0 4px' }}>
+            {ficha.nombre_desaparecida}
           </h2>
           {ficha.edad != null && (
             <p style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#8a9bc0', margin: 0 }}>
@@ -83,7 +71,7 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Link
             href={`/prevencion/busquedas/${id}/imprimir`}
-            style={{ padding: '9px 16px', background: 'transparent', color: '#d4a43a', border: '1px solid #d4a43a50', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}
+            style={{ padding: '9px 16px', background: '#ffffff', color: '#1f355a', border: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none', fontWeight: 600 }}
           >
             Imprimir ficha →
           </Link>
@@ -96,20 +84,20 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
         <Card title="Datos de Activación">
           <Field label="Folio"              value={ficha.folio} />
           <Field label="Tipo"               value={cfg.label} />
-          <Field label="Activación"         value={fmtDT(ficha.fechaActivacion)} />
-          <Field label="Aceptación"         value={fmtDT(ficha.fechaAceptacion)} />
-          <Field label="Carpeta Invest."    value={ficha.carpetaInvestigacion} />
+          <Field label="Activación"         value={fmtDT(ficha.fecha_activacion)} />
+          <Field label="Aceptación"         value={fmtDT(ficha.fecha_aceptacion)} />
+          <Field label="Carpeta Invest."    value={ficha.carpeta_investigacion} />
         </Card>
 
         <Card title="Personal Asignado">
           <Field label="Enlace"             value={ficha.enlace} />
-          <Field label="RT que atiende"     value={ficha.rtAtiende} />
-          <Field label="Elemento Novedades" value={ficha.elementoNovedades} />
+          <Field label="RT que atiende"     value={ficha.rt_atiende} />
+          <Field label="Elemento Novedades" value={ficha.elemento_novedades} />
           {!fichaActiva && (
             <>
-              <Field label="Cancelación"    value={fmtDT(ficha.fechaCancelacion)} />
-              <Field label="Fiscal cancela" value={ficha.fiscalCancela} />
-              <Field label="Motivo"         value={ficha.motivoCancelacion} />
+              <Field label="Cancelación"    value={fmtDT(ficha.fecha_cancelacion)} />
+              <Field label="Fiscal cancela" value={ficha.fiscal_cancela} />
+              <Field label="Motivo"         value={ficha.motivo_cancelacion} />
             </>
           )}
         </Card>
@@ -117,18 +105,18 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
       {/* Timeline de seguimientos */}
       <div>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
           › Seguimientos de Tiempo ({seguimientos.length}/{24} registrados)
         </div>
 
         <SeguimientoTimeline
           fichaId={id}
-          fechaActivacionISO={toISO(ficha.fechaActivacion)}
+          fechaActivacionISO={toISO(ficha.fecha_activacion)}
           seguimientosRegistrados={seguimientos.map(s => ({
             tipo:               s.tipo,
-            fechaHoraEnvioISO: toISO(s.fechaHoraEnvio),
-            archivoUrl:        s.archivoUrl,
-            nombreUsuario:     s.nombreUsuario && s.apellidoUsuario ? `${s.nombreUsuario} ${s.apellidoUsuario}` : s.nombreUsuario,
+            fechaHoraEnvioISO: toISO(s.fecha_hora_envio),
+            archivoUrl:        s.archivo_url,
+            nombreUsuario:     s.nombre_usuario && s.apellido_usuario ? `${s.nombre_usuario} ${s.apellido_usuario}` : s.nombre_usuario,
           }))}
           fichaActiva={fichaActiva}
         />
@@ -141,8 +129,8 @@ export default async function FichaDetailPage({ params }: { params: Promise<{ id
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: '#0b1220', border: '1px solid #1b2742', padding: '20px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#d4a43a', textTransform: 'uppercase', marginBottom: 16 }}>
+    <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '20px' }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.25em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 16 }}>
         › {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -156,10 +144,10 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
   if (!value) return null
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#4a5878', letterSpacing: '0.15em', textTransform: 'uppercase', minWidth: 110, paddingTop: 2, flexShrink: 0 }}>
+      <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', letterSpacing: '0.15em', textTransform: 'uppercase', minWidth: 110, paddingTop: 2, flexShrink: 0 }}>
         {label}
       </span>
-      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#d8e0f0', flex: 1 }}>
+      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#1e293b', flex: 1 }}>
         {value}
       </span>
     </div>

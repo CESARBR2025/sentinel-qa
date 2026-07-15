@@ -1,0 +1,212 @@
+{
+  "main": {
+    "id": "3cf0f704ab9700c3",
+    "type": "split",
+    "children": [
+      {
+        "id": "d999ce45d6d915d5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aa19c212fa3a4d41",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "📦 Datos/Esquema BD.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Esquema BD"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "85064ed6ad60dd21",
+    "type": "split",
+    "children": [
+      {
+        "id": "8e78b5a242495f88",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9cb9ebeeaeb4c97f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "07f092abc4f37817",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "3b01618f4354af2b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "087230bee5dfd40d",
+    "type": "split",
+    "children": [
+      {
+        "id": "7717783b7efb1053",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d5ed9ac7dc2ad5f0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes"
+            }
+          },
+          {
+            "id": "bd9e5917edbba801",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes"
+            }
+          },
+          {
+            "id": "840c57f3cce25c95",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "0f4387737fe18a02",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "4d7635dd78a7e28c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "9cb9ebeeaeb4c97f",
+  "lastOpenFiles": [
+    "🛠 Stack/Alexandria.md",
+    "📡 API/Server Actions.md",
+    "📡 API/API Routes.md",
+    "🗺 Roadmap/Pendientes.md",
+    "🗺 Roadmap/Changelog.md",
+    "🧩 Features/Formato N.md",
+    "🧩 Features/Admin.md",
+    "🧩 Features/911.md",
+    "🛠 Stack/Variables de Entorno.md",
+    "🛠 Stack/Librerias.md",
+    "🛠 Stack/Convenciones.md",
+    "🛠 Stack/Comandos.md",
+    "Home.md",
+    "🏗 Arquitectura/Middleware y Auth.md",
+    "🏗 Arquitectura/Crear Modulo.md",
+    "🏗 Arquitectura/Decisiones.md",
+    "🏗 Arquitectura/Estructura.md",
+    "🗺 Roadmap/Troubleshooting.md",
+    "🧩 Features/Rol Servicios.md",
+    "🧩 Features/Reporte Campo.md",
+    "🧩 Features/Prevencion.md",
+    "🧩 Features/Monitorista.md",
+    "🧩 Features/Liberaciones.md",
+    "🧩 Features/Juzgado.md",
+    "🧩 Features/Flota.md",
+    "🧩 Features/Fiscalia.md"
+  ]
+}

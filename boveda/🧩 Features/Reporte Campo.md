@@ -1,0 +1,74 @@
+# Reporte Campo — Reportes de Oficiales en Campo
+
+**Propósito**: Oficial de campo crea reporte de recorrido, captura incidentes, vincula con D1, sube fotos de detenidos y gestiona el estatus. Desde el flujo de despacho, **también cierra solicitudes de despacho** — es la única tabla de reporte de campo (`incidente_reporte_campo` quedó legacy). Ver [[Plan Flujo Despacho]].
+
+---
+
+## Cierre de solicitud de despacho
+
+Cuando el reporte se crea con `incidente_id` (desde `/oficial/despachos/[id]`), `insertarReporteCampo` valida en transacción que el incidente esté `en_despacho` y que no exista ya un cierre (índice único parcial `uq_ofi_rc_incidente`), inserta el reporte y hace `UPDATE incidentes SET estatus='atendido'`. El incidente aparece entonces en el tab "Atendidos" del despacho. El oficial se resuelve de `ofi_oficiales` por sesión (`user_id`), nunca a mano.
+
+- `obtenerDespachosAsignados(userId)` — asignaciones activas del oficial (JOIN `incidente_despacho_elementos.oficial_id` → `ofi_oficiales.user_id`).
+- Bandera calculada "D1 pendiente": `ofi_hay_detencion = true` sin `ofi_reporte_denuncia` vinculada. Al crear la D1 se hereda `incidente_id` y la bandera se limpia.
+
+---
+
+## Flujo
+
+```mermaid
+flowchart TD
+    A[Oficial inicia sesión] --> B[Formulario stepper de reporte]
+    B --> C[Sección 1: Datos generales y ubicación en mapa]
+    C --> D[Sección 2: Tipo de incidente y emergencia]
+    D --> E[Sección 3: Descripción y acciones realizadas]
+    E --> F[Sección 4: Detenidos, vehículos, cateo]
+    F --> G[Sección 5: Armas, drogas, hidrocarburos]
+    G --> H{¿Requiere denuncia?}
+    H -->|Sí| I[Generar D1 - Folio de denuncia]
+    H -->|No| J[Guardar solo reporte]
+    I --> K[Solicitar fotos de detenidos a monitorista]
+    J --> L[Reporte en estatus registrado]
+    K --> M[Subir fotos frontal/derecho/izquierdo]
+    M --> L
+    L --> N{Estatus sigue}
+    N --> O[registrado → tramite vía estado_tramite: RECIBIDA → EN_ANALISIS → EN_REVISION_JUZGADO → CERRADO]
+```
+
+## Componentes involucrados
+
+| Archivo | Rol |
+|---------|-----|
+| `lib/oficial/types.ts` | Interfaces `OfiReporteCampo`, `CrearReporteCampoInput`, `OfiReporteDetalle`, `OfiD1Vinculada`, `OfiDetenido`, `OfiVehiculo`, `OfiCateo`, `OfiOrdenAprehension`, `OfiHidrocarburo`, `OfiArmaFuego`, `OfiDroga` |
+| `lib/oficial/mapper.ts` | `rowToOficial`, `rowToReporteResumen`, `rowToReporteDetalle` |
+| `lib/oficial/repository.ts` | `obtenerOficialPorUserId`, `insertarReporteCampo` (cierra despacho si trae `incidenteId`), `obtenerReportesOficial`, `obtenerReporteDetalle`, `verificarFolioExiste`, `actualizarPatrullaOficial`, `obtenerPrellenado`, `obtenerDespachosAsignados`, `contarDespachosAsignados`, `obtenerCierrePorIncidente` |
+| `app/oficial/despachos/page.tsx`, `[id]/page.tsx` | Vista "Mis Despachos" — asignaciones activas y cierre con historial |
+| `components/incidentes/HistorialIncidente.tsx` | Timeline generativo 911/rondín → despacho → campo → D1 |
+| `lib/oficial/service.ts` | Orquestación de reportes de campo |
+| `lib/oficial/actions.ts` | Server actions para crear reporte, vincular D1, subir evidencias |
+| `lib/oficial/store.ts` | Store Zustand para formulario stepper |
+
+## BD
+
+| Tabla | Columnas clave | Uso |
+|-------|---------------|-----|
+| `ofi_reportes_campo` | `id`, `incidente_id` (FK cierre despacho), `folio_reporte_campo`, `ofi_folio_cad`, `ofi_tipo_incidente`, `ofi_descripcion`, `ofi_contenido_reporte`, `ofi_calle`, `ofi_colonia`, `ofi_entre_calles`, `ofi_referencia`, `ofi_latitud`, `ofi_longitud`, `ofi_hay_detencion`, `ofi_detenidos` (JSONB), `expediente_ci`, `personal_ingreso_ci`, `ofi_hay_vehiculo`, `ofi_vehiculos` (JSONB), `ofi_hay_cateo`, `ofi_cateo` (JSONB), `ofi_estatus`, `quiere_denuncia` | Reporte principal de campo (también cierra despacho) |
+| `incidente_despacho_elementos` | `id`, `despacho_id`, `elemento_nomina`, `elemento_nombre`, `oficial_id` (FK → `ofi_oficiales`) | Elementos despachados; `oficial_id` liga al oficial con cuenta |
+| `ofi_reporte_denuncia` | `id`, `reporte_campo_id`, `folio_denuncia`, `iph`, `delito`, `fecha_reporte`, `hora_reporte`, `estado_tramite` | Denuncia D1 vinculada |
+| `ofi_oficiales` | `id`, `user_id`, `no_nomina`, `numero_empleado`, `patrulla_id`, `ofi_estatus` | Perfil del oficial |
+| `ofi_detalles_asegurados` | `id`, `reporte_campo_id`, `nombre_detenido`, `ap_paterno_detenido`, `ap_materno_detenido`, `calle`, `colonia`, `latitud`, `longitud` | Detalles de detenidos — se llena automáticamente al crear el reporte |
+| `solicitud_fotos` | `id`, `reporte_campo_id`, `tipo_foto`, `estado`, `enviado_a` | Solicitudes de foto a monitorista |
+| `cat_tipos_incidente` | `id`, `nombre`, `activo` | Catálogo de tipos de incidente |
+| `cat_tipos_emergencia` | `id`, `nombre`, `activo` | Catálogo de tipos de emergencia |
+
+## Reglas de negocio
+
+1. El formulario es un stepper con múltiples secciones manejado por store Zustand
+2. El reporte puede incluir detenidos (JSONB), vehículos (JSONB), cateo (JSONB), armas, drogas, hidrocarburos, órdenes de aprehensión
+3. Si `quiere_denuncia = true`, se genera un D1 vinculado al reporte
+4. Si hay detenidos, se solicita automáticamente foto frontal, derecho e izquierdo
+5. El folio del reporte se verifica para evitar duplicados
+6. Estatus del reporte: `ofi_reportes_campo.ofi_estatus` default `registrado`. Avance real vía `ofi_reporte_denuncia.estado_tramite`: `RECIBIDA` → `EN_ANALISIS` → `EN_REVISION_JUZGADO` → `CERRADO`
+7. La ubicación se captura desde un mapa (latitud/longitud + calle/colonia)
+8. `ofi_detenidos` es un array JSONB con objetos `{ nombre, apellidoPaterno, apellidoMaterno }` (antes solo `{ nombre }`)
+9. Al crear el reporte se insertan automáticamente registros en `ofi_detalles_asegurados` con los nombres completos
+10. `ofi_cateo` es un objeto JSONB con ubicación

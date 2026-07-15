@@ -1,48 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db/index'
-import { fichasBusqueda, seguimientosBusqueda } from '@/lib/db/schema'
-import { eq, isNotNull } from 'drizzle-orm'
-import { addHours } from 'date-fns'
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { addHours } from "date-fns";
+import { verificarAccesoPrevencionApi } from "@/lib/prevencion/permisos";
+import { getFichasActivas, getSeguimientoTipos } from "@/lib/prevencion/repository";
 
 export async function GET() {
-  const busquedas = await db
-    .select()
-    .from(fichasBusqueda)
-    .where(eq(fichasBusqueda.status, 'activa'))
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session)
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const chequeo = await verificarAccesoPrevencionApi(
+    session.user.id,
+    "busquedas",
+    "ver",
+  );
+  if (chequeo) return chequeo;
 
-  const ahora = new Date()
-  const enProximo = addHours(ahora, 24) // próximas en 24h
+  const busquedas = await getFichasActivas();
 
-  let pendientes24h = 0
-  let vencidos = 0
+  const ahora = new Date();
+  const enProximo = addHours(ahora, 24);
+
+  let pendientes24h = 0;
+  let vencidos = 0;
 
   for (const ficha of busquedas) {
-    const seguimientos = await db
-      .select()
-      .from(seguimientosBusqueda)
-      .where(eq(seguimientosBusqueda.fichaId, ficha.id))
+    const seguimientos = await getSeguimientoTipos(ficha.id);
 
-    const regs = new Set(seguimientos.map(s => s.tipo))
+    const regs = new Set(seguimientos.map(s => s.tipo));
 
-    // Hitos que aún no se han registrado
-    const hitosPendientes = ['CONTESTACION_INICIAL', '24H', '48H', '72H']
+    const hitosPendientes = ["CONTESTACION_INICIAL", "24H", "48H", "72H"];
 
     for (const hito of hitosPendientes) {
       if (!regs.has(hito)) {
         const fechaEsperada =
-          hito === '24H' ? addHours(new Date(ficha.fechaActivacion), 24) :
-          hito === '48H' ? addHours(new Date(ficha.fechaActivacion), 48) :
-          hito === '72H' ? addHours(new Date(ficha.fechaActivacion), 72) :
-          new Date(ficha.fechaActivacion)
+          hito === "24H"
+            ? addHours(new Date(ficha.fecha_activacion), 24)
+            : hito === "48H"
+              ? addHours(new Date(ficha.fecha_activacion), 48)
+              : hito === "72H"
+                ? addHours(new Date(ficha.fecha_activacion), 72)
+                : new Date(ficha.fecha_activacion);
 
         if (fechaEsperada < ahora) {
-          vencidos++
+          vencidos++;
         } else if (fechaEsperada < enProximo) {
-          pendientes24h++
+          pendientes24h++;
         }
       }
     }
   }
 
-  return NextResponse.json({ pendientes24h, vencidos })
+  return NextResponse.json({ pendientes24h, vencidos });
 }

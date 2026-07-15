@@ -1,13 +1,11 @@
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { db }       from '@/lib/db/index'
-import { notificaciones } from '@/lib/db/schema'
-import { eq, and, desc } from 'drizzle-orm'
 import Link         from 'next/link'
 import PrevencionNav from './PrevencionNav'
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones'
 import { generarAlertasBusquedas }  from '@/lib/notificaciones/checker'
+import { listarNotificacionesNoLeidas } from '@/lib/notificaciones/repository'
 
 export default async function PrevencionLayout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -17,34 +15,27 @@ export default async function PrevencionLayout({ children }: { children: React.R
   await generarAlertasBusquedas(session.user.id)
 
   // Fetch initial unread notifications to pass as SSR props
-  const initialNotifs = await db
-    .select()
-    .from(notificaciones)
-    .where(and(
-      eq(notificaciones.userId, session.user.id),
-      eq(notificaciones.leida, false),
-    ))
-    .orderBy(desc(notificaciones.creadoEn))
+  const initialNotifs = await listarNotificacionesNoLeidas(session.user.id)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#070b16', color: '#d8e0f0', fontFamily: 'Inter,system-ui,sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       {/* Barra superior */}
-      <header style={{ borderBottom: '1px solid #1b2742', padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', gap: 24 }}>
+      <header style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', gap: 24 }}>
         <Link
           href="/dashboard"
-          style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em', color: '#4a5878', textTransform: 'uppercase', textDecoration: 'none' }}
+          style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none' }}
         >
           ← Dashboard
         </Link>
-        <div style={{ width: 1, height: 16, background: '#1b2742' }} />
+        <div style={{ width: 1, height: 16, background: '#e2e8f0' }} />
         <div>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#c0223a', textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase' }}>
             Prevención del Delito
           </span>
-          <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#d8e0f0' }}>
-            ATENCIÓN A <span style={{ color: '#d4a43a' }}>VÍCTIMAS</span>
+          <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 20, letterSpacing: '0.08em', textTransform: 'uppercase', marginLeft: 12, color: '#0f172a' }}>
+            ATENCIÓN A <span style={{ color: '#1f355a' }}>VÍCTIMAS</span>
           </span>
         </div>
 
@@ -62,7 +53,7 @@ export default async function PrevencionLayout({ children }: { children: React.R
         {children}
       </main>
 
-      <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#2a3a5e', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #1b2742' }}>
+      <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
         SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
       </footer>
     </div>

@@ -1,10 +1,11 @@
-import { db } from '@/lib/db/index'
-import { fichasBusqueda } from '@/lib/db/schema'
-import { eq }          from 'drizzle-orm'
-import { notFound }    from 'next/navigation'
+import { auth }        from '@/lib/auth'
+import { headers }     from 'next/headers'
+import { notFound, redirect } from 'next/navigation'
 import { format }      from 'date-fns'
 import { es }          from 'date-fns/locale'
 import { PrintButton } from '@/components/prevencion/PrintButton'
+import { tieneAccesoSeccion, tienePermiso } from '@/lib/prevencion/permisos'
+import { obtenerFichaBusqueda } from '@/lib/prevencion/repository'
 
 function fmtDT(v: Date | string | null): string {
   if (!v) return '—'
@@ -12,14 +13,14 @@ function fmtDT(v: Date | string | null): string {
 }
 
 export default async function ImprimirFichaPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+  if (!(await tieneAccesoSeccion(session.user.id, 'busquedas'))) redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'busquedas', 'ver'))) redirect('/dashboard')
+
   const { id } = await params
 
-  const [ficha] = await db
-    .select()
-    .from(fichasBusqueda)
-    .where(eq(fichasBusqueda.id, id))
-    .limit(1)
-
+  const ficha = await obtenerFichaBusqueda(id)
   if (!ficha) notFound()
 
   const esDifusion = ficha.tipo === 'PROTOCOLO_ALBA'
@@ -85,9 +86,9 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
         {/* Datos de la persona */}
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 20, fontFamily: 'sans-serif', fontSize: 12 }}>
           <tbody>
-            <PrintRow label="Nombre completo"   value={ficha.nombreDesaparecida} bold />
+            <PrintRow label="Nombre completo"   value={ficha.nombre_desaparecida} bold />
             <PrintRow label="Edad"               value={ficha.edad != null ? `${ficha.edad} años` : '—'} />
-            <PrintRow label="Carpeta de investigación" value={ficha.carpetaInvestigacion} />
+            <PrintRow label="Carpeta de investigación" value={ficha.carpeta_investigacion} />
           </tbody>
         </table>
 
@@ -97,11 +98,11 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 20, fontFamily: 'sans-serif', fontSize: 12 }}>
           <tbody>
-            <PrintRow label="Fecha y hora de activación" value={fmtDT(ficha.fechaActivacion)} bold />
-            <PrintRow label="Fecha y hora de aceptación" value={fmtDT(ficha.fechaAceptacion)} />
+            <PrintRow label="Fecha y hora de activación" value={fmtDT(ficha.fecha_activacion)} bold />
+            <PrintRow label="Fecha y hora de aceptación" value={fmtDT(ficha.fecha_aceptacion)} />
             <PrintRow label="Enlace asignado"            value={ficha.enlace} />
-            <PrintRow label="RT que atiende"             value={ficha.rtAtiende} />
-            <PrintRow label="Elemento de novedades"      value={ficha.elementoNovedades} />
+            <PrintRow label="RT que atiende"             value={ficha.rt_atiende} />
+            <PrintRow label="Elemento de novedades"      value={ficha.elemento_novedades} />
           </tbody>
         </table>
 
