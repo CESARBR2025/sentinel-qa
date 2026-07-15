@@ -159,7 +159,7 @@ export async function obtenerDatosExcel(desde: string, hasta: string) {
 
     const ofiGen = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date          AS fecha,
+      ofi_reportes_campo.created_at::date          AS fecha,
       ofi_folio_cad             AS folio,
       CONCAT(u.name, ' ', u.apellido) AS oficial,
       ofi_hay_cateo             AS hay_cateo,
@@ -182,8 +182,8 @@ export async function obtenerDatosExcel(desde: string, hasta: string) {
     FROM ofi_reportes_campo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
-    WHERE created_at::date BETWEEN $1 AND $2
-    ORDER BY created_at DESC
+    WHERE ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
+    ORDER BY ofi_reportes_campo.created_at DESC
   `, [desde, hasta])
 
     const incGen = await query<Record<string, unknown>>(`

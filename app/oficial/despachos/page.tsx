@@ -2,8 +2,9 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Clock, Shield, ChevronRight } from 'lucide-react'
+import { MapPin, Clock, Shield, ChevronRight } from 'lucide-react'
 import { verificarRolOficial, listarDespachosAsignados } from '@/lib/oficial/service'
+import { DashboardHeader } from '@/components/partials/Header'
 import React from 'react'
 
 export default async function MisDespachosPage() {
@@ -19,12 +20,15 @@ export default async function MisDespachosPage() {
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/oficial"
+        backLabel="Panel"
+      />
+
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 48px' }}>
 
         <div style={{ marginBottom: 32 }}>
-          <Link href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
-            <ArrowLeft size={14} /> Volver al panel
-          </Link>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600, display: 'block' }}>
             Oficial en Campo
           </span>

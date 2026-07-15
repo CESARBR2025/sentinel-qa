@@ -5,14 +5,14 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/expediente/client'
-import { getRolUsuario, obtenerSolicitudFolioIncidente, crearSolicitudEvidencia, insertarEvidencia, actualizarEstadoSolicitud, insertHistorial } from '@/lib/monitorista/repository'
+import { obtenerSolicitudFolioIncidente, crearSolicitudEvidencia, insertarEvidencia, actualizarEstadoSolicitud, insertHistorial } from '@/lib/monitorista/repository'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 async function requireMonitorista() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  const rol = await getRolUsuario(session.user.id)
-  if (rol !== 'Monitorista') redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'ver'))) redirect('/dashboard')
   return session
 }
 

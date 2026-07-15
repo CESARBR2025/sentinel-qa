@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import { verificarRolJuzgado, obtenerDatosAsegurado } from '@/lib/agente_juzgado/service'
 import { obtenerEvidenciasMonitorista } from '@/lib/agente_juzgado/repository'
 import { CapturarDetallesForm } from '@/components/agente_juzgado/CapturarDetallesForm'
@@ -53,13 +54,16 @@ export default async function AseguradosPage({ params }: { params: Promise<{ sol
           </div>
         </div>
 
-        <Link href="/agente_juzgado/solicitudes" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b',
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textDecoration: 'none',
-          textTransform: 'uppercase', letterSpacing: '0.08em', width: 'fit-content',
-        }}>
-          <ArrowLeft size={14} /> Regresar a solicitudes
-        </Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link href="/agente_juzgado/solicitudes" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b',
+            fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textDecoration: 'none',
+            textTransform: 'uppercase', letterSpacing: '0.08em', width: 'fit-content',
+          }}>
+            <ArrowLeft size={14} /> Regresar a solicitudes
+          </Link>
+          <SignOutButton />
+        </div>
 
         {datosCapturados ? (
           <DetallesAseguradoView solicitudId={solicitudId} data={data} evidencias={evidencias} />

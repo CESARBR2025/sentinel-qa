@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerGuestToken, subirArchivoExpediente } from '@/lib/expediente/client'
-import { getRolUsuario, obtenerObtenerSolicitudFoto, insertarEvidenciaDetenido, actualizarSolicitudFotoEstado } from '@/lib/monitorista/repository'
+import { obtenerObtenerSolicitudFoto, insertarEvidenciaDetenido, actualizarSolicitudFotoEstado } from '@/lib/monitorista/repository'
 import { insertHistorial } from '@/lib/monitorista/repository'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 export async function POST(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -24,12 +25,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'tipoFoto inválido' }, { status: 400 })
   }
 
-  const rol = await getRolUsuario(session.user.id)
+  const usuario = await getUserWithRole(session.user.id)
 
   let destinosPermitidos: string[]
-  if (rol === 'agente_fiscalia') {
+  if (usuario?.esAdmin) {
+    destinosPermitidos = ['FISCALIA', 'JUZGADO_CIVICO', 'AMBOS']
+  } else if (usuario?.rolNombre === 'agente_fiscalia') {
     destinosPermitidos = ['FISCALIA', 'AMBOS']
-  } else if (rol === 'agente_juzgado') {
+  } else if (usuario?.rolNombre === 'agente_juzgado') {
     destinosPermitidos = ['JUZGADO_CIVICO', 'AMBOS']
   } else {
     return NextResponse.json({ error: 'Rol sin permisos para subir fotos' }, { status: 403 })

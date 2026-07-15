@@ -2,9 +2,9 @@ import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { listarCuestionariosRobo } from '@/lib/auxiliar/service'
-import { ArrowLeft, Download } from 'lucide-react'
-import Link from 'next/link'
+import { Download } from 'lucide-react'
 import { tienePermiso } from '@/lib/auxiliar/permisos'
+import { DashboardHeader } from '@/components/partials/Header'
 
 const TH: React.CSSProperties = { padding:'10px 14px', textAlign:'left', fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#64748b', letterSpacing:'0.15em', textTransform:'uppercase', fontWeight:600, background:'#f8fafc', borderBottom:'1px solid #e2e8f0', whiteSpace:'nowrap' }
 const TD: React.CSSProperties = { padding:'10px 14px', fontFamily:'Inter,sans-serif', fontSize:12, color:'#1e293b', borderBottom:'1px solid #f1f5f9' }
@@ -21,11 +21,13 @@ export default async function CuestionarioRoboPage() {
     <div style={{ minHeight:'100vh', background:'#f8fafc', color:'#1e293b', fontFamily:'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <div style={{ maxWidth:1400, margin:'0 auto', padding:'40px 48px' }}>
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/auxiliar"
+        backLabel="Panel"
+      />
 
-        <Link href="/auxiliar" style={{ display:'inline-flex', alignItems:'center', gap:6, color:'#64748b', fontFamily:'JetBrains Mono,monospace', fontSize:11, textDecoration:'none', marginBottom:24 }}>
-          <ArrowLeft size={13} /> VOLVER AL PANEL
-        </Link>
+      <div style={{ maxWidth:1400, margin:'0 auto', padding:'40px 48px' }}>
 
         <div style={{ marginBottom:32, borderBottom:'1px solid #e2e8f0', paddingBottom:20, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
           <div>
@@ -34,16 +36,17 @@ export default async function CuestionarioRoboPage() {
               Cuestionario Único de <span style={{ color:'#1f355a' }}>Robo</span>
             </h1>
           </div>
-          <div style={{ display:'flex', gap:8 }}>
-            <a href="/api/auxiliar/exportar-robo?formato=xlsx"
-              style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'#16a34a', color:'#ffffff', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', borderRadius:2 }}>
-              <Download size={14} /> Excel
-            </a>
-            <a href="/api/auxiliar/exportar-robo?formato=pdf"
-              style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'#dc2626', color:'#ffffff', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', borderRadius:2 }}>
-              <Download size={14} /> PDF
-            </a>
-          </div>
+        </div>
+
+        <div style={{ marginBottom:32, display:'flex', justifyContent:'flex-end', gap:8 }}>
+          <a href="/api/auxiliar/exportar-robo?formato=xlsx"
+            style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'#16a34a', color:'#ffffff', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', borderRadius:2 }}>
+            <Download size={14} /> Excel
+          </a>
+          <a href="/api/auxiliar/exportar-robo?formato=pdf"
+            style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'10px 20px', background:'#dc2626', color:'#ffffff', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.08em', textTransform:'uppercase', textDecoration:'none', borderRadius:2 }}>
+            <Download size={14} /> PDF
+          </a>
         </div>
 
         {datos.length === 0 ? (

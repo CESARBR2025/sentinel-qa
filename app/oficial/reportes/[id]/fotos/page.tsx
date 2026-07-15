@@ -5,7 +5,8 @@ import { obtenerReporteCampoSimple } from '@/lib/oficial/repository'
 import { verificarRolOficial } from '@/lib/oficial/service'
 import { SubirFotoDetenido } from '@/components/monitorista/SubirFotoDetenido'
 import Link from 'next/link'
-import { ArrowLeft, Camera } from 'lucide-react'
+import { Camera } from 'lucide-react'
+import { DashboardHeader } from '@/components/partials/Header'
 
 export default async function FotosDetenidoPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -32,10 +33,13 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/oficial"
+        backLabel="Regresar"
+      />
+
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 32, minHeight: '100vh' }}>
-        <Link href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-          <ArrowLeft size={14} /> Regresar
-        </Link>
 
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',

@@ -2,6 +2,7 @@ import { obtenerDetalleInfraccionInfracciones } from '@/lib/agente_infracciones/
 import { DetalleInfraccionView } from '@/components/shared/DetalleInfraccionView'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import { APP_VERSION } from "@/lib/constants"
 
 export default async function DetalleInfraccionPage({
@@ -42,19 +43,22 @@ export default async function DetalleInfraccionPage({
             </div>
           </div>
 
-          <Link
-            href="/agente_infracciones"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '10px 20px', borderRadius: 8,
-              background: '#ffffff', color: '#475569',
-              border: '1px solid #e2e8f0', fontSize: 13, fontWeight: 500,
-              textDecoration: 'none', transition: 'all 0.15s',
-            }}
-          >
-            <ArrowLeft size={16} />
-            Volver a Infracciones
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Link
+              href="/agente_infracciones"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '10px 20px', borderRadius: 8,
+                background: '#ffffff', color: '#475569',
+                border: '1px solid #e2e8f0', fontSize: 13, fontWeight: 500,
+                textDecoration: 'none', transition: 'all 0.15s',
+              }}
+            >
+              <ArrowLeft size={16} />
+              Volver a Infracciones
+            </Link>
+            <SignOutButton />
+          </div>
         </div>
 
         {/* Content */}

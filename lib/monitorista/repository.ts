@@ -598,14 +598,6 @@ export async function registrarFichaInteligencia(data: Record<string, unknown>) 
   )
 }
 
-export async function getRolUsuario(userId: string): Promise<string> {
-  const r = await query<{ rol: string }>(
-    `SELECT r.nombre AS rol FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`,
-    [userId],
-  )
-  return r.rows[0]?.rol ?? ''
-}
-
 export async function rechazarFoto(fotoId: string): Promise<void> {
   await query(
     `UPDATE solicitud_fotos SET estado = 'rechazado' WHERE id = $1 AND estado = 'enviado'`,

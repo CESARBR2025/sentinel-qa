@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import { verificarRolFiscalia } from '@/lib/fiscalia/service'
 import { obtenerExpedienteCompleto, obtenerDetenidosGuardados, obtenerFotosDetenidos, obtenerEvidenciasMonitorista } from '@/lib/fiscalia/repository'
 import { ExpedienteView } from '@/components/fiscalia/ExpedienteView'
@@ -72,13 +73,16 @@ export default async function ExpedientePage({ params }: { params: Promise<{ sol
           </div>
         </div>
 
-        <Link href="/fiscalia/solicitudes" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b',
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textDecoration: 'none',
-          textTransform: 'uppercase', letterSpacing: '0.08em', width: 'fit-content',
-        }}>
-          <ArrowLeft size={14} /> Regresar a solicitudes
-        </Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link href="/fiscalia/solicitudes" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b',
+            fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textDecoration: 'none',
+            textTransform: 'uppercase', letterSpacing: '0.08em', width: 'fit-content',
+          }}>
+            <ArrowLeft size={14} /> Regresar a solicitudes
+          </Link>
+          <SignOutButton />
+        </div>
 
         <ExpedienteView data={data} />
 

@@ -1,11 +1,11 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
-import { Camera, ArrowLeft, MapPin, Clock, User, Shield, FileText, ExternalLink } from 'lucide-react'
-import Link from 'next/link'
+import { Camera, MapPin, Clock, User, Shield, FileText, ExternalLink } from 'lucide-react'
 import React from 'react'
 import { obtenerDenunciaPorId, obtenerEvidenciasDenuncia } from '@/lib/monitorista/denuncia-service'
 import { BotonSubirDenuncia } from '@/components/monitorista/BotonSubirDenuncia'
+import { DashboardHeader } from '@/components/partials/Header'
 
 export default async function DetalleDenunciaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -29,13 +29,12 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/monitorista/solicitudes"
+        backLabel="Bandeja"
+      />
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 64px' }}>
-        <Link href="/monitorista/solicitudes" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b',
-          fontFamily: 'JetBrains Mono', fontSize: 11, textDecoration: 'none',
-          marginBottom: 32, textTransform: 'uppercase', letterSpacing: '0.1em',
-        }}><ArrowLeft size={14} /> Bandeja</Link>
-
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
           <div>
             <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8, fontWeight: 600 }}>

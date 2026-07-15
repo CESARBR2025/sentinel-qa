@@ -2,9 +2,10 @@ import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verificarRolOficial, listarReportesOficial } from '@/lib/oficial/service'
-import { AlertTriangle, ArrowLeft, CheckCircle2, FileText } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, FileText } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import Link from 'next/link'
+import { DashboardHeader } from '@/components/partials/Header'
 
 export default async function MisReportesPage({ searchParams }: { searchParams: Promise<{ exito?: string; folio?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -21,11 +22,13 @@ export default async function MisReportesPage({ searchParams }: { searchParams: 
       <ToastExito show={params.exito === '1'} folio={params.folio} />
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px' }}>
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/oficial"
+        backLabel="Panel"
+      />
 
-        <Link href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 24 }}>
-          <ArrowLeft size={13} /> VOLVER AL PANEL
-        </Link>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px' }}>
 
         <div style={{ marginBottom: 32, borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>HISTORIAL</span>

@@ -13,7 +13,7 @@ import {
 export async function obtenerVehiculos(desde: string, hasta: string): Promise<VehiculoRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date       AS fecha,
+      ofi_reportes_campo.created_at::date       AS fecha,
       ofi_folio_cad          AS folio,
       CONCAT(u.name, ' ', u.apellido) AS seguimiento,
       jsonb_array_elements(ofi_vehiculos) AS vehiculo
@@ -22,7 +22,7 @@ export async function obtenerVehiculos(desde: string, hasta: string): Promise<Ve
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_vehiculo = true
       AND jsonb_array_length(ofi_vehiculos) > 0
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`
@@ -44,7 +44,7 @@ export async function obtenerVehiculos(desde: string, hasta: string): Promise<Ve
 export async function obtenerCateos(desde: string, hasta: string): Promise<CateoRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date                          AS fecha,
+      ofi_reportes_campo.created_at::date                          AS fecha,
       ofi_folio_cad                             AS folio,
       (ofi_cateo->>'calle')                     AS ubicacion,
       'SSPM'                                    AS dependencia,
@@ -53,7 +53,7 @@ export async function obtenerCateos(desde: string, hasta: string): Promise<Cateo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_cateo = true
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`
@@ -75,7 +75,7 @@ export async function obtenerCateos(desde: string, hasta: string): Promise<Cateo
 export async function obtenerDetenidos(desde: string, hasta: string): Promise<DetencionResult> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date      AS fecha,
+      ofi_reportes_campo.created_at::date      AS fecha,
       ofi_folio_cad         AS folio,
       ofi_detenidos         AS detenidos,
       ofi_autoridad_recibe  AS fiscalia,
@@ -84,7 +84,7 @@ export async function obtenerDetenidos(desde: string, hasta: string): Promise<De
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_detencion = true
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`
@@ -109,7 +109,7 @@ export async function obtenerDetenidos(desde: string, hasta: string): Promise<De
 export async function obtenerOrdenesAprehension(desde: string, hasta: string): Promise<OrdenAprehensionRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date         AS fecha,
+      ofi_reportes_campo.created_at::date         AS fecha,
       ofi_folio_cad            AS folio,
       ofi_ordenes_aprehension  AS ordenes,
       CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
@@ -117,7 +117,7 @@ export async function obtenerOrdenesAprehension(desde: string, hasta: string): P
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_orden_aprehension = true
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`
@@ -138,7 +138,7 @@ export async function obtenerOrdenesAprehension(desde: string, hasta: string): P
 export async function obtenerHidrocarburos(desde: string, hasta: string): Promise<HidrocarburoRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date   AS fecha,
+      ofi_reportes_campo.created_at::date   AS fecha,
       ofi_folio_cad      AS folio,
       ofi_hidrocarburos  AS hidrocarburos,
       CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
@@ -146,7 +146,7 @@ export async function obtenerHidrocarburos(desde: string, hasta: string): Promis
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_hidrocarburo = true
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`
@@ -167,7 +167,7 @@ export async function obtenerHidrocarburos(desde: string, hasta: string): Promis
 export async function obtenerArmas(desde: string, hasta: string): Promise<ArmaRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date   AS fecha,
+      ofi_reportes_campo.created_at::date   AS fecha,
       ofi_folio_cad      AS folio,
       ofi_armas_fuego    AS armas,
       CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
@@ -175,7 +175,7 @@ export async function obtenerArmas(desde: string, hasta: string): Promise<ArmaRo
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_arma_fuego = true
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`
@@ -196,7 +196,7 @@ export async function obtenerArmas(desde: string, hasta: string): Promise<ArmaRo
 export async function obtenerDrogas(desde: string, hasta: string): Promise<DrogaRow[]> {
   const ofi = await query<Record<string, unknown>>(`
     SELECT
-      created_at::date   AS fecha,
+      ofi_reportes_campo.created_at::date   AS fecha,
       ofi_folio_cad      AS folio,
       ofi_drogas         AS drogas,
       CONCAT(u.name, ' ', u.apellido) AS seguimiento_reporte
@@ -204,7 +204,7 @@ export async function obtenerDrogas(desde: string, hasta: string): Promise<Droga
     LEFT JOIN ofi_oficiales o ON o.id = ofi_reportes_campo.ofi_oficial_id
     LEFT JOIN users u ON u.id = o.user_id
     WHERE ofi_hay_droga = true
-      AND created_at::date BETWEEN $1 AND $2
+      AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
   const inc = await query<Record<string, unknown>>(`

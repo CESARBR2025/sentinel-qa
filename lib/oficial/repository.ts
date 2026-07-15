@@ -269,19 +269,6 @@ export async function contarDespachosAsignados(userId: string): Promise<number> 
   return parseInt(result.rows[0].count, 10);
 }
 
-export async function obtenerRolUsuario(
-  userId: string,
-): Promise<string | null> {
-  const result = await query<{ nombre: string }>(
-    `SELECT roles.nombre
-     FROM users
-     LEFT JOIN roles ON roles.id = users.rol_id
-     WHERE users.id = $1
-     LIMIT 1`,
-    [userId],
-  );
-  return result.rows.length ? result.rows[0].nombre : null;
-}
 
 export async function obtenerCatalogoIncidentes(): Promise<CatalogoItem[]> {
   const result = await query<CatalogoItem>(

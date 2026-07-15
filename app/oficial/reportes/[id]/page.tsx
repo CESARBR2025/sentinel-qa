@@ -2,9 +2,10 @@ import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import { verificarRolOficial, verReporteDetalle } from '@/lib/oficial/service'
-import { ArrowLeft, AlertTriangle, CheckCircle2, MapPin, Clock, User, Shield, Car, Home } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, MapPin, Clock, User, Shield, Car, Home } from 'lucide-react'
 import Link from 'next/link'
 import { MapaPinFijo } from '@/components/oficial/MapaPinFijo'
+import { DashboardHeader } from '@/components/partials/Header'
 
 const LBL: React.CSSProperties = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }
 const VAL: React.CSSProperties = { fontFamily: 'Inter,sans-serif', fontSize: 14, color: '#1e293b' }
@@ -30,11 +31,13 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/oficial/reportes"
+        backLabel="Mis reportes"
+      />
 
-        <Link href="/oficial/reportes" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none' }}>
-          <ArrowLeft size={13} /> MIS REPORTES
-        </Link>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
         {/* Encabezado */}
         <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
