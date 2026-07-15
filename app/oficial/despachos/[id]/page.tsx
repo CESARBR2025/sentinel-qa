@@ -50,7 +50,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
         />
 
         <footer style={{ padding: '24px 0 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', marginTop: 40 }}>
-          SSPM · SAN JUAN DEL RÍO · SENTINEL v0.1 · OFICIAL
+          SSPM · SAN JUAN DEL RÍO · CENTINELA v1.2 · OFICIAL
         </footer>
       </main>
     </div>

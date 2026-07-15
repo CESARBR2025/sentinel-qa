@@ -949,7 +949,7 @@ export default function ReporteRecorridoZen({ user, catalogos }: { user: any, ca
         </main>
 
         <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff', marginTop: '60px' }}>
-          SSPM · SAN JUAN DEL RÍO · SENTINEL v1.0
+          SSPM · SAN JUAN DEL RÍO · CENTINELA v1.2
         </footer>
 
         <style jsx global>{`

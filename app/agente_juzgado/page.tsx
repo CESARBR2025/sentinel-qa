@@ -60,7 +60,7 @@ export default async function JuzgadoDashboardPage({ searchParams }: { searchPar
                 Agente Juzgado
               </div>
               <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 42, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                SENTINEL · JUZGADO
+                CENTINELA · JUZGADO
               </h1>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default async function JuzgadoDashboardPage({ searchParams }: { searchPar
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · JUZGADO</span>
+            <span>CENTINELA v1.2 · JUZGADO</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#059669' }}></span>
           </div>
         </div>

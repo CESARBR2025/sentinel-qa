@@ -34,7 +34,7 @@ export default async function CorralonDashboardPage() {
                 Corralón
               </div>
               <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                SENTINEL · CORRALÓN
+                CENTINELA · CORRALÓN
               </h1>
             </div>
           </div>
@@ -64,7 +64,7 @@ export default async function CorralonDashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · CORRALÓN</span>
+            <span>CENTINELA v1.2 · CORRALÓN</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#d97706' }}></span>
           </div>
         </div>

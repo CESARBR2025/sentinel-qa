@@ -41,7 +41,7 @@ export const OptionSquare = ({ titulo, subtitulo, icono, enlace, estadisticas }:
         overflow: 'hidden'
       }}
     >
-      {/* ADORNOS SENTINEL */}
+      {/* ADORNOS CENTINELA */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: hover ? '100%' : '24px', height: '2px', background: blueAccent, transition: 'width 0.4s ease' }} />
       <div style={{ position: 'absolute', top: 0, left: 0, width: '2px', height: hover ? '100%' : '24px', background: blueAccent, transition: 'height 0.4s ease' }} />
 

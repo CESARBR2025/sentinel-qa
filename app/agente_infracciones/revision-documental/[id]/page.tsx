@@ -72,7 +72,7 @@ export default async function DetalleInfraccionPage({
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v0.1 · INFRACCIONES · DETALLE</span>
+            <span>CENTINELA v1.2 · INFRACCIONES · DETALLE</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }} />
           </div>
         </div>

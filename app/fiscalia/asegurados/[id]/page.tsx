@@ -172,7 +172,7 @@ export default async function AseguradoDetallePage({ params }: Props) {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · FISCALÍA · ASEGURADOS</span>
+            <span>CENTINELA v1.2 · FISCALÍA · ASEGURADOS</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

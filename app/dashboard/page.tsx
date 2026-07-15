@@ -231,7 +231,7 @@ export default async function DashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1</span>
+            <span>CENTINELA v1.2</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#3e5171' }}></span>
           </div>
         </div>

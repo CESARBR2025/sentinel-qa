@@ -54,7 +54,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </main>
 
       <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v0.1
+        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v1.2
       </footer>
     </div>
   )

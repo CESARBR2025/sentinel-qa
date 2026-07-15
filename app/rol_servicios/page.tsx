@@ -16,7 +16,7 @@ export default function ModuloRolZen() {
       {/* Carga de fuentes idéntica al diseño Sentinel */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      {/* BARRA SUPERIOR (ESTILO SENTINEL - LIGHT VERSION) */}
+      {/* BARRA SUPERIOR (ESTILO CENTINELA - LIGHT VERSION) */}
       <SubHeader backHref="/dashboard" backLabel="Dashboard" title="Rol de" accent="Servicios" accentColor="#3e5171" />
 
       {/* CONTENIDO PRINCIPAL */}
@@ -108,7 +108,7 @@ export default function ModuloRolZen() {
         </div>
       </main>
 
-      {/* FOOTER (IDÉNTICO AL DISEÑO SENTINEL) */}
+      {/* FOOTER (IDÉNTICO AL DISEÑO CENTINELA) */}
       <footer style={{ 
         padding: '32px 48px', 
         fontFamily: 'JetBrains Mono, monospace', 
@@ -120,7 +120,7 @@ export default function ModuloRolZen() {
         borderTop: '1px solid #e2e8f0',
         background: '#ffffff'
       }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · ROL DIGITAL v0.1
+        SSPM · SAN JUAN DEL RÍO · QRO · ROL DIGITAL v1.2
       </footer>
 
       {/* Estilos adicionales para que las tablas encajen en el diseño técnico */}

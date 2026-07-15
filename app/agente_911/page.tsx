@@ -153,7 +153,7 @@ export default async function Agente911DashboardPage() {
         <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · 911</span>
+            <span>CENTINELA v1.2 · 911</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
           </div>
         </div>

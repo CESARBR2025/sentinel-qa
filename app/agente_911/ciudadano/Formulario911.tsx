@@ -632,7 +632,7 @@ export default function Formulario911({ user, catalogos }: {
             </div>
 
             <style jsx>{`
-                /* CONTENEDORES TIPO SENTINEL */
+                /* CONTENEDORES TIPO CENTINELA */
                 .panel {
                     background: #ffffff;
                     border: 1px solid #e2e8f0;

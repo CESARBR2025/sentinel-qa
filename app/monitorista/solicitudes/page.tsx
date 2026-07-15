@@ -77,7 +77,7 @@ export default async function SolicitudesPage() {
       </main>
 
       <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · SENTINEL v0.1
+        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA v1.2
       </footer>
     </div>
   )

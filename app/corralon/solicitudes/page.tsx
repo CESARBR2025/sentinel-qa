@@ -55,7 +55,7 @@ export default async function SolicitudesPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · CORRALÓN</span>
+            <span>CENTINELA v1.2 · CORRALÓN</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#d97706' }}></span>
           </div>
         </div>

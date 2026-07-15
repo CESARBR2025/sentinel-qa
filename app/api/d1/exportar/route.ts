@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const data = await listarReportesD1(desde, hasta, folio)
 
     const wb = new ExcelJS.Workbook()
-    wb.creator = 'SENTINEL · SSPM'
+    wb.creator = 'CENTINELA · SSPM'
     const ws = wb.addWorksheet('Reportes D1', {
         pageSetup: { orientation: 'landscape', fitToPage: true },
     })

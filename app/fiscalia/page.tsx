@@ -53,7 +53,7 @@ export default async function FiscaliaDashboardPage({ searchParams }: { searchPa
             Agente Fiscalía
           </div>
           <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 42, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-            SENTINEL · FISCALÍA
+            CENTINELA · FISCALÍA
           </h1>
         </div>
 
@@ -176,7 +176,7 @@ export default async function FiscaliaDashboardPage({ searchParams }: { searchPa
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · FISCALÍA</span>
+            <span>CENTINELA v1.2 · FISCALÍA</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
           </div>
         </div>

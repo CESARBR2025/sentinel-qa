@@ -106,7 +106,7 @@ export default async function EnvioDeFormatosPage() {
       </main>
 
       <footer style={{ padding: '48px', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#94a3b8', letterSpacing: '0.2em', borderTop: '1px solid #e2e8f0', marginTop: '80px', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · ADMIN CORE v0.1
+        SSPM · SAN JUAN DEL RÍO · ADMIN CORE v1.2
       </footer>
     </div>
   )

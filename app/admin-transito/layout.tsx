@@ -142,7 +142,7 @@ export default async function AdminTransitoLayout({
         >
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.0 · ADMIN TRÁNSITO</span>
+            <span>CENTINELA v1.2 · ADMIN TRÁNSITO</span>
             <span
               style={{
                 width: 4,

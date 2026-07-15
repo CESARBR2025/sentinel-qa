@@ -21,7 +21,7 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                         <CheckCircle size={16} color="#10B981" />
                         <span style={styles.tag}>REGISTROS SIN NOVEDAD CONFIRMADA</span>
                     </div>
-                    <span style={styles.badge('#dbdfe5', '#1f355a')}>SENTINEL VERIFIED</span>
+                    <span style={styles.badge('#dbdfe5', '#1f355a')}>CENTINELA VERIFIED</span>
                 </div>
 
                 <table style={styles.table}>

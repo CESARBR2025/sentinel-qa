@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const data   = await listarSinD1(p.get('from') || undefined, p.get('to') || undefined, p.get('nombre') || undefined)
 
   const wb = new ExcelJS.Workbook()
-  wb.creator = 'SENTINEL · SSPM'
+  wb.creator = 'CENTINELA · SSPM'
   const ws = wb.addWorksheet('Sin D1', { pageSetup: { orientation: 'portrait', fitToPage: true } })
 
   const COLS = [

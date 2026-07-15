@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     : await listarReporteDiario(desde, hasta)
 
   const wb = new ExcelJS.Workbook()
-  wb.creator = 'SENTINEL · SSPM'
+  wb.creator = 'CENTINELA · SSPM'
   const ws = wb.addWorksheet(`Reporte ${tipo}`, { pageSetup: { orientation: 'landscape', fitToPage: true } })
 
   const COLS = tipo === 'semanal'

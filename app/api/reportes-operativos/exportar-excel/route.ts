@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         await obtenerDatosExcel(desde, hasta)
 
     const wb = new ExcelJS.Workbook()
-    wb.creator = 'SENTINEL · SSPM'
+    wb.creator = 'CENTINELA · SSPM'
     wb.created = new Date()
     wb.modified = new Date()
 

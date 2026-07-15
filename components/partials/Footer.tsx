@@ -25,7 +25,7 @@ export function DashboardFooter() {
           gap: 12,
         }}
       >
-        <span>SENTINEL v0.1</span>
+        <span>CENTINELA v1.2</span>
 
         <span
           style={{

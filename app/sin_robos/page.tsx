@@ -31,7 +31,7 @@ export default async function ReportesLimpiosPage({
       <main style={styles.main}>
         <div style={styles.headerContainer}>
           <div>
-            <span style={styles.tag}>SSPM · SISTEMA SENTINEL</span>
+            <span style={styles.tag}>SSPM · SISTEMA CENTINELA</span>
             <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>SIN NOVEDAD</span></h1>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>

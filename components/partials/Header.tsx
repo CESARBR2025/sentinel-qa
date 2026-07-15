@@ -32,7 +32,7 @@ export function DashboardHeader({
         background: '#ffffff', // Fondo claro
       }}
     >
-      {/* LÍNEA DE ACENTO AZUL (ESTILO SENTINEL) */}
+      {/* LÍNEA DE ACENTO AZUL (ESTILO CENTINELA) */}
       <div
         style={{
           position: 'absolute',

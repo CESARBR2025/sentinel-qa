@@ -150,7 +150,7 @@ export default async function ImprimirFichaPage({ params }: { params: Promise<{ 
         </div>
 
         <div style={{ marginTop: 32, paddingTop: 12, borderTop: '1px solid #eee', fontFamily: 'monospace', fontSize: 9, color: '#bbb', textAlign: 'center' }}>
-          SENTINEL v0.1 · SSPM San Juan del Río · ID: {id}
+          CENTINELA v1.2 · SSPM San Juan del Río · ID: {id}
         </div>
       </div>
 

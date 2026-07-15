@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(148, 163, 184);
-    doc.text("San Juan del Río, Querétaro · Sistema SENTINEL", W / 2, 34, {
+    doc.text("San Juan del Río, Querétaro · Sistema CENTINELA", W / 2, 34, {
       align: "center",
     });
 
@@ -174,7 +174,7 @@ export async function GET(req: NextRequest) {
     doc.setTextColor(148, 163, 184);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6.5);
-    doc.text("SSPM · San Juan del Río · SENTINEL v0.1", M, footerY);
+    doc.text("SSPM · San Juan del Río · CENTINELA v1.2", M, footerY);
     doc.text(`${new Date().toLocaleDateString("es-MX")}`, W - M, footerY, {
       align: "right",
     });
@@ -192,7 +192,7 @@ export async function GET(req: NextRequest) {
 
   // ── XLSX ──────────────────────────────────────────────────────────────────
   const wb = new ExcelJS.Workbook();
-  wb.creator = "SENTINEL · SSPM";
+  wb.creator = "CENTINELA · SSPM";
   wb.created = new Date();
   wb.modified = new Date();
 

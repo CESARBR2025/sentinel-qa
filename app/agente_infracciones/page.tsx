@@ -55,7 +55,7 @@ export default async function InfraccionesDashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v0.1 · INFRACCIONES</span>
+            <span>CENTINELA v1.2 · INFRACCIONES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }}></span>
           </div>
         </div>

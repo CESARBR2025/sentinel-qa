@@ -32,7 +32,7 @@ export default async function LiberacionesDashboardPage() {
                 Agente Liberaciones
               </div>
               <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                SENTINEL · LIBERACIONES
+                CENTINELA · LIBERACIONES
               </h1>
             </div>
           </div>
@@ -55,7 +55,7 @@ export default async function LiberacionesDashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1 · LIBERACIONES</span>
+            <span>CENTINELA v1.2 · LIBERACIONES</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#0891b2' }}></span>
           </div>
         </div>

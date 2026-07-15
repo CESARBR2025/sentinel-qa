@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const data = await listarReportesSinNovedad(desde, hasta, q)
 
   const wb = new ExcelJS.Workbook()
-  wb.creator = 'SENTINEL · SSPM'
+  wb.creator = 'CENTINELA · SSPM'
   const ws = wb.addWorksheet('Sin Novedad', {
     pageSetup: { orientation: 'portrait', fitToPage: true },
   })

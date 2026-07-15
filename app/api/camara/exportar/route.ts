@@ -151,7 +151,7 @@ export async function GET(req: NextRequest) {
     ])
 
     const wb = new ExcelJS.Workbook()
-    wb.creator = 'SENTINEL · SSPM'
+    wb.creator = 'CENTINELA · SSPM'
 
     crearHoja(wb, 'TURNO 1 MATUTINO', 'REGISTROS DIARIOS — TURNO 1 MATUTINO', t1)
     crearHoja(wb, 'TURNO 2 VESPERTINO', 'REGISTROS DIARIOS — TURNO 2 VESPERTINO', t2)

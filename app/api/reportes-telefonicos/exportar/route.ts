@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     const data = await obtenerDatosTelefonicos(desde, hasta)
 
     const wb = new ExcelJS.Workbook()
-    wb.creator = 'SENTINEL · SSPM'
+    wb.creator = 'CENTINELA · SSPM'
     const ws = wb.addWorksheet('Reportes Telefónicos', {
         pageSetup: { orientation: 'portrait', fitToPage: true },
     })
