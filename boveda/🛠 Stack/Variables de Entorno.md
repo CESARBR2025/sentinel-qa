@@ -1,78 +1,40 @@
+<!-- AUTO-GENERATED START -->
 # Variables de Entorno
 
-**Propósito**: Variables de entorno requeridas para el funcionamiento del proyecto.
+**Propósito**: Documentación de variables de entorno.
 
 ---
 
-## Base de datos
-
-| Variable | Propósito |
-|----------|-----------|
-| `DATABASE_URL` | Conexión a PostgreSQL |
-| `PGHOST` | Host de la base de datos |
-| `DB_PORT` | Puerto de la base de datos |
-| `PGUSER` | Usuario de base de datos |
-| `PGPASSWORD` | Contraseña de base de datos |
-| `PGDATABASE` | Nombre de la base de datos |
-
-## Autenticación (better-auth)
-
-| Variable | Propósito |
-|----------|-----------|
-| `BETTER_AUTH_SECRET` | Secreto para firma de sesiones JWT |
-| `BETTER_AUTH_URL` | URL base de la aplicación |
-| `NEXT_PUBLIC_APP_URL` | URL pública de la app |
-
-## APIs externas
-
-| Variable | Propósito |
-|----------|-----------|
-| `FLOTA_API_SECRET_KEY` | API key para sincronización de flota |
-| `NOMINA_API_URL` | URL de API de nómina |
-| `SECRET_NOMINA` | Secreto para API de nómina |
-| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | API key de Google Maps |
-
-## Expediente Digital
-
-| Variable | Propósito |
-|----------|-----------|
-| `NEXT_PUBLIC_WS_EXPEDIENTE` | WebService de expediente digital |
-| `NEXT_PUBLIC_GUEST` | URL para guest token de expediente |
-| `EXPEDIENTE_DIGITAL_URL` | URL del sistema de expediente digital |
-| `EXPEDIENTE_SISTEMA` | Identificador del sistema (SSPM) |
-| `EXPEDIENTE_CODIGO_INVITACION` | Código de invitación para expediente |
-
-## SMTP
-
-| Variable | Propósito |
-|----------|-----------|
-| `SMTP_HOST` | Servidor SMTP |
-| `SMTP_PORT` | Puerto SMTP |
-| `SMTP_SECURE` | Usar TLS (true/false) |
-| `SMTP_USER` | Usuario de correo |
-| `SMTP_PASS` | Contraseña de correo |
-
-## CUS
-
-| Variable | Propósito |
-|----------|-----------|
-| `X_API_KEY` | API key para sistema CUS |
-
-## Validación de estado
-
-| Variable | Propósito |
-|----------|-----------|
-| `KEY_USER_VALIDATE_STATUS` | Clave para validación de usuario |
-| `KEY_PD_VALIDATE_STATUS` | Clave para validación predial |
-
-## Flota
-
-| Variable | Propósito |
-|----------|-----------|
-| `NEXT_PUBLIC_FLOTA_API_KEY` | API key pública para flota |
-
-## Entorno
-
-| Variable | Propósito |
-|----------|-----------|
-| `NODE_ENV` | Entorno de ejecución (production/development) |
+| Variable | Requerida | Descripción |
+|----------|-----------|-------------|
+| `DATABASE_URL` | No | Base de datos PostgreSQL |
+| `PGHOST` | No | — |
+| `DB_PORT` | No | — |
+| `PGUSER` | No | — |
+| `PGPASSWORD` | No | — |
+| `PGDATABASE` | No | — |
+| `BETTER_AUTH_SECRET` | No | better-auth — firma de sesiones (obligatorio) |
+| `NEXT_PUBLIC_APP_URL` | No | — |
+| `BETTER_AUTH_URL` | No | — |
+| `FLOTA_API_SECRET_KEY` | No | — |
+| `NOMINA_API_URL` | No | — |
+| `SECRET_NOMINA` | No | — |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | — |
+| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | — |
+| `NEXT_PUBLIC_GUEST` | No | — |
+| `EXPEDIENTE_DIGITAL_URL` | No | — |
+| `DB_NAME_VIA` | No | — |
+| `EXPEDIENTE_SISTEMA` | No | CONTROL DE PDF - VISUALIZACION |
+| `EXPEDIENTE_CODIGO_INVITACION` | No | — |
+| `SMTP_HOST` | No | SMTP Server (Gmail ejemplo) |
+| `SMTP_PORT` | No | — |
+| `SMTP_SECURE` | No | — |
+| `SMTP_USER` | No | Credenciales de Gmail |
+| `SMTP_PASS` | No | — |
+| `X_API_KEY` | No | CUS |
+| `NODE_ENV` | No | — |
+| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | SA7 |
+| `KEY_USER_VALIDATE_STATUS` | No | — |
+| `KEY_PD_VALIDATE_STATUS` | No | — |
+| `NEXT_PUBLIC_FLOTA_API_KEY` | No | FLOTA DE POLICIAS |
+<!-- AUTO-GENERATED END -->
