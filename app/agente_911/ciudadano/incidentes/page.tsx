@@ -3,9 +3,9 @@ import { auth } from "@/lib/auth";
 import { getIncidentesPaginados, getConteoEstatus } from "@/lib/911/service";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Eye, Plus, ArrowLeft, MapPin, Hash, AlertTriangle, Clock } from "lucide-react";
+import { Eye, Plus, MapPin, Hash, AlertTriangle, Clock } from "lucide-react";
 import Link from "next/link";
-import { ProfileDropdown } from "@/components/oficial/ProfileDropdown"
+import { DashboardHeader } from "@/components/partials/Header";
 import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 import ToastOnLoad from "./ToastOnLoad";
@@ -61,51 +61,22 @@ export default async function Listado911Page({
                 .fila-incidente:hover .btn-ver-ficha { color: #1c3051; }
             `}</style>
 
-            {/* Header */}
-            <div style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-                padding: '24px 48px', borderBottom: '1px solid #e2e8f0', position: 'relative',
-                background: '#ffffff',
-            }}>
-                <div style={{ position: 'absolute', bottom: -1, left: 48, width: 64, height: 3, background: '#1f355a' }} />
-
-                <div>
-                    <Link href="/agente_911" style={{
-                        fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.25em',
-                        color: '#94a3b8', textTransform: 'uppercase', textDecoration: 'none',
-                        display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
-                    }}>
-                        <ArrowLeft size={14} /> Panel 911
-                    </Link>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                        <img src="/chaleco.png" alt="S" style={{ height: 56, objectFit: 'contain' }} />
-                        <div>
-                            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <span style={{ width: 8, height: 8, background: '#1f355a', display: 'inline-block' }} />
-                                Atención 911
-                            </div>
-                            <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                                BITÁCORA <span style={{ color: '#1f355a' }}>CENTRAL 911</span>
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <Link href="/agente_911/ciudadano" style={{
-                        background: '#0f172a', color: '#ffffff', padding: '12px 24px', borderRadius: '2px',
-                        fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 600,
-                        display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none',
-                        letterSpacing: '0.1em',
-                    }}>
-                        <Plus size={14} />
-                        <span>NUEVO REGISTRO</span>
-                    </Link>
-                    <div style={{ width: 1, height: 40, background: '#e2e8f0' }} />
-                    <ProfileDropdown name={session.user.name} apellido={(session.user as any).apellido} email={session.user.email} rolLabel="Agente 911" mostrarPerfil={false} />
-                </div>
-            </div>
+            <DashboardHeader
+                user={{ name: session.user.name, apellido: (session.user as any).apellido, email: session.user.email }}
+                roleLabel="Bitácora Central 911"
+                backHref="/agente_911"
+                backLabel="Panel 911"
+            >
+                <Link href="/agente_911/ciudadano" style={{
+                    background: '#0f172a', color: '#ffffff', padding: '12px 24px', borderRadius: '2px',
+                    fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 600,
+                    display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none',
+                    letterSpacing: '0.1em',
+                }}>
+                    <Plus size={14} />
+                    <span>NUEVO REGISTRO</span>
+                </Link>
+            </DashboardHeader>
 
             <main style={{ maxWidth: '1240px', margin: '0 auto', padding: '40px 48px' }}>
 

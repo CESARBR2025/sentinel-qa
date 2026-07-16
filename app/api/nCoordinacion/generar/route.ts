@@ -5,6 +5,7 @@ import {
     obtenerEventosDia, obtenerRND, obtenerArmasDia, obtenerDatosCapturados,
     obtenerConteosDetenidos,
 } from '@/lib/n-coordinacion/repository'
+import { tieneAccesoFormatoN } from '@/lib/reportes/permisos'
 import {
     Document, Packer, Paragraph, Table, TableRow, TableCell, ImageRun,
     TextRun, WidthType, BorderStyle, AlignmentType, ShadingType,
@@ -90,6 +91,9 @@ export async function GET(req: NextRequest) {
     const session = await auth.api.getSession({ headers: await headers() })
     const usuario = session?.user as { name: string; apellido?: string }
     if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    if (!(await tieneAccesoFormatoN(session.user.id))) {
+        return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
     const fecha = req.nextUrl.searchParams.get('fecha') ?? new Date().toISOString().split('T')[0]
     const [y, m, d] = fecha.split('-')

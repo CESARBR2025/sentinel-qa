@@ -7,7 +7,7 @@ import { DashboardHeader } from '@/components/partials/Header'
 import { FileDown } from 'lucide-react'
 import { obtenerConteosDetenidos } from '@/lib/n-coordinacion/repository'
 import { tieneAccesoFormatoN } from '@/lib/reportes/permisos'
-import { ProfileDropdownCoordinacion } from '@/components/nCoordinacion/ProfileDropdownCoordinacion'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 
 const LBL: React.CSSProperties = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }
 const INP: React.CSSProperties = { width: '100%', padding: '8px 12px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none', background: '#ffffff' }
@@ -35,6 +35,10 @@ export default async function NCoordinacionPage({
 
     if (!(await tieneAccesoFormatoN(session.user.id))) redirect('/dashboard')
 
+    const userWithRole = await getUserWithRole(session.user.id)
+    const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+    const backHref = hub === '/nCoordinacion' ? undefined : (hub ?? '/dashboard')
+
     const user = session.user as { name: string; apellido?: string; email: string }
     const sp = await searchParams
     const hoy = new Date().toISOString().split('T')[0]
@@ -49,7 +53,7 @@ export default async function NCoordinacionPage({
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-            <DashboardHeader user={user} />
+            <DashboardHeader user={user} roleLabel="Grupo de Coordinación" backHref={backHref} />
 
             <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px' }}>
 
@@ -67,7 +71,6 @@ export default async function NCoordinacionPage({
                         </h1>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <ProfileDropdownCoordinacion name={user.name} apellido={user.apellido} email={user.email} />
                         <a href={`/api/nCoordinacion/generar?fecha=${fecha}`}
                             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#0f172a', color: '#ffffff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2 }}>
                             <FileDown size={16} /> GENERAR WORD

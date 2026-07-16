@@ -4,8 +4,7 @@ import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
 import { obtenerReportePorId, getDestinos } from '@/lib/monitorista/service'
 import { crearSolicitudFotos } from '@/lib/monitorista/repository'
-import { ArrowLeft, User, Camera, Clock, Shield } from 'lucide-react'
-import Link from 'next/link'
+import { User, Camera, Clock, Shield } from 'lucide-react'
 import React from 'react'
 import { CardEnvioFoto } from '@/components/monitorista/CardEnvioFoto'
 import { BatchEnvioFotos } from '@/components/monitorista/BatchEnvioFotos'
@@ -13,6 +12,7 @@ import { EditarCampoDetenido } from '@/components/monitorista/EditarCampoDetenid
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarEvidenciasDetenido } from '@/lib/monitorista/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
+import { DashboardHeader } from '@/components/partials/Header'
 
 export default async function DetenidoDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ exito?: string }> }) {
   const { id } = await params
@@ -45,9 +45,12 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
       <ToastAuto show={exito === '1'} mensaje="Reporte creado exitosamente" />
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        backHref="/monitorista/detenidos"
+        backLabel="Detenidos"
+      />
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 48px' }}>
-        <Link href="/monitorista/detenidos" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#64748b', fontFamily: 'JetBrains Mono', fontSize: 11, textDecoration: 'none', marginBottom: 24, textTransform: 'uppercase', letterSpacing: '0.1em' }}><ArrowLeft size={14} /> Detenidos</Link>
-
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
           <div>
             <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 8 }}>Reporte de Detenido</div>

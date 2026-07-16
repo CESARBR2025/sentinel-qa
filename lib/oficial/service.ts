@@ -3,7 +3,6 @@ import {
   insertarReporteCampo,
   insertarDetallesAsegurados,
   verificarFolioExiste,
-  obtenerRolUsuario,
   obtenerCatalogoIncidentes,
   obtenerCatalogoEmergencias,
   obtenerCatalogoPrioridades,
@@ -18,6 +17,7 @@ import {
   obtenerSectorOficial,
 } from './repository'
 import { query } from '@/lib/db'
+import { tienePermiso } from '@/lib/incidentes/permisos'
 import type {
   OfiOficial,
   OfiDetenido,
@@ -77,8 +77,7 @@ export async function obtenerPlacaPatrulla(oficialId: string): Promise<string> {
 }
 
 export async function verificarRolOficial(userId: string): Promise<boolean> {
-  const rol = await obtenerRolUsuario(userId)
-  return rol === 'Oficial de Campo'
+  return tienePermiso(userId, 'oficial_campo', 'ver')
 }
 
 export async function obtenerMiPerfil(userId: string): Promise<OfiOficial | null> {

@@ -8,7 +8,7 @@ export default async function RolServiciosLayout({ children }: { children: React
   if (!session) redirect('/login')
 
   const userWithRole = await getUserWithRole(session.user.id)
-  if (userWithRole?.rolNombre !== 'Administrador') redirect('/dashboard')
+  if (!userWithRole?.esAdmin) redirect('/dashboard')
 
   return <>{children}</>
 }

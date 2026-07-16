@@ -81,7 +81,7 @@ export default function LoadingProvider({ children }: { children: React.ReactNod
       }}>
         <img
           src="/chaleco.png"
-          alt="SENTINEL"
+          alt="CENTINELA"
           style={{ height: 100, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
         />
         <div style={{ width: 120, marginBottom: 12 }}>

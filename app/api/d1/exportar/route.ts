@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { listarReportesD1 } from '@/lib/d1/service'
+import { tienePermiso } from '@/lib/reportes/permisos'
 import ExcelJS from 'exceljs'
 
 export async function GET(req: NextRequest) {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) {
+        return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
     const p = req.nextUrl.searchParams
     const desde = p.get('from') || undefined
@@ -16,7 +20,7 @@ export async function GET(req: NextRequest) {
     const data = await listarReportesD1(desde, hasta, folio)
 
     const wb = new ExcelJS.Workbook()
-    wb.creator = 'SENTINEL · SSPM'
+    wb.creator = 'CENTINELA · SSPM'
     const ws = wb.addWorksheet('Reportes D1', {
         pageSetup: { orientation: 'landscape', fitToPage: true },
     })

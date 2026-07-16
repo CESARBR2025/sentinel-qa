@@ -22,7 +22,7 @@ export default async function RegistroInteligenciaPage() {
         .animate-tactical { animation: fadeIn 0.4s ease-out forwards; }
       `}} />
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} backHref="/analisis" backLabel="Análisis" />
 
       <main style={{ maxWidth: '1300px', margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: '32px' }}>

@@ -32,7 +32,7 @@ export default async function ListadoWhatsAppPage({
 
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-            {/* Carga de fuentes Sentinel */}
+            {/* Carga de fuentes CENTINELA */}
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
             <DashboardHeader user={session.user as any} backHref={backHref} backLabel={backLabel} />
@@ -64,7 +64,7 @@ export default async function ListadoWhatsAppPage({
                     </Link>
                 </div>
 
-                {/* CONTENEDOR DE TABLA (SENTINEL CARD) */}
+                {/* CONTENEDOR DE TABLA (CENTINELA CARD) */}
                 <div style={cardStyle}>
                     <div style={sectionTitleStyle}>
                         <div style={decoratorStyle} /> REGISTROS RECIENTES
@@ -139,7 +139,7 @@ export default async function ListadoWhatsAppPage({
     );
 }
 
-// ESTILOS SENTINEL
+// ESTILOS CENTINELA
 const cardStyle = {
     background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px',
     borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)'

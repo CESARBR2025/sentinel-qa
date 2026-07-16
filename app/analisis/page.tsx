@@ -5,10 +5,13 @@ import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
 import { LayoutGrid, FileText, ClipboardList, ChevronRight, ShieldCheck, Activity } from 'lucide-react'
 import Link from 'next/link'
+import { tieneAccesoAnalisis } from '@/lib/analisis/permisos'
 
 export default async function MenuAnalisisPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
+
+  if (!(await tieneAccesoAnalisis(session.user.id))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
@@ -51,7 +54,7 @@ export default async function MenuAnalisisPage() {
         }
       `}} />
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} roleLabel="Análisis" backHref="/dashboard" />
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '60px 40px' }}>
         

@@ -1,3 +1,5 @@
+import { APP_VERSION } from '@/lib/constants'
+
 export function DashboardFooter() {
   return (
     <div
@@ -25,7 +27,7 @@ export function DashboardFooter() {
           gap: 12,
         }}
       >
-        <span>SENTINEL v0.1</span>
+        <span>CENTINELA {APP_VERSION}</span>
 
         <span
           style={{

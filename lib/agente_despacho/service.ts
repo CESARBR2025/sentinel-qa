@@ -1,9 +1,5 @@
-import { query } from '@/lib/db'
+import { tieneAlgunAcceso } from '@/lib/911/permisos'
 
 export async function verificarRolAgenteDespacho(userId: string): Promise<boolean> {
-  const result = await query<{ nombre: string }>(
-    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`,
-    [userId],
-  )
-  return result.rows[0]?.nombre === 'agente_despacho'
+  return tieneAlgunAcceso(userId, ['911_rondin', '911_despacho'])
 }

@@ -22,7 +22,7 @@ export default async function IPHPage() {
         .animate-spin { animation: spin 1s linear infinite; }
       `}} />
       
-      <DashboardHeader user={session.user as any} />
+      <DashboardHeader user={session.user as any} backHref="/analisis" backLabel="Análisis" />
       
       <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
         <div style={{ marginBottom: 32 }}>

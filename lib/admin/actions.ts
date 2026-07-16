@@ -14,7 +14,7 @@ async function requireAdmin() {
   if (!session) redirect('/login')
 
   const user = await getUserWithRole(session.user.id)
-  if (user?.rolNombre !== 'Administrador') redirect('/dashboard')
+  if (!user?.esAdmin) redirect('/dashboard')
   return session
 }
 

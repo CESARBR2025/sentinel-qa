@@ -2,12 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { SA7Repository } from "@/features/via/saSiete/repository";
+import { verificarRolOficial } from "@/lib/oficial/service";
+import { verificarRolInfracciones } from "@/lib/agente_infracciones/service";
+import { verificarRolLiberaciones } from "@/lib/agente_liberaciones/service";
 
 export async function GET(req: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+    const autorizado =
+      (await verificarRolOficial(session.user.id)) ||
+      (await verificarRolInfracciones(session.user.id)) ||
+      (await verificarRolLiberaciones(session.user.id));
+    if (!autorizado) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);

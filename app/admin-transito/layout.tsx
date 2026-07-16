@@ -1,8 +1,9 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { tienePermiso } from '@/lib/admin-transito/permisos'
 import { ProfileDropdown } from '@/components/oficial/ProfileDropdown'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function AdminTransitoLayout({
   children,
@@ -12,9 +13,7 @@ export default async function AdminTransitoLayout({
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const u = await getUserWithRole(session.user.id)
-
-  if (u?.rolNombre !== 'admin_transito') redirect('/dashboard')
+  if (!(await tienePermiso(session.user.id, 'admin_transito', 'ver'))) redirect('/dashboard')
 
   const user = session.user as {
     name: string
@@ -142,7 +141,7 @@ export default async function AdminTransitoLayout({
         >
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA v1.0 · ADMIN TRÁNSITO</span>
+            <span>CENTINELA {APP_VERSION} · ADMIN TRÁNSITO</span>
             <span
               style={{
                 width: 4,

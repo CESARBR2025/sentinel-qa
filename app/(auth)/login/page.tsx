@@ -218,12 +218,6 @@ function LoginContent() {
     if (phase === 'otp' && otp.length === 6) handleOtpSubmit()
   }, [otp]) // eslint-disable-line
 
-  const [dateStr, setDateStr] = useState('----.--.--')
-  useEffect(() => {
-    const d = new Date()
-    setDateStr(`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`)
-  }, [])
-
   // Animación de生成 código 2FA antes de pedirlo
   const [generating2FA, setGenerating2FA] = useState(false)
 
@@ -339,9 +333,6 @@ function LoginContent() {
           .mobile-logo{display:flex!important;}
         }
         .otp-input-field { font-size: 26px; }
-        @media(max-height:640px){
-          .estado-enlace{display:none!important;}
-        }
       `}</style>
 
       <div className="stage" style={{ position:'fixed',inset:0,display:'grid',gridTemplateColumns:'1.05fr 1fr',background:`var(--ink)` }}>
@@ -357,15 +348,21 @@ function LoginContent() {
         <aside className="left-panel" style={{ position:'relative',padding:'clamp(20px,4vh,52px) 60px',borderRight:'1px solid var(--line)',background: '#ffffff',display:'flex',flexDirection:'column',justifyContent:'center',gap:'clamp(14px,2.6vh,26px)',overflow:'hidden' }}>
 
           {/* Brand */}
-          <div className="hide-mobile" style={{ display:'flex',alignItems:'center',gap:16,paddingBottom:'clamp(10px,2vh,20px)',borderBottom:'1px solid var(--line)',flexShrink:0 }}>
-            <div style={{ position:'relative',width:'clamp(64px,11vh,96px)',height:'clamp(64px,11vh,96px)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+          <div className="hide-mobile" style={{ display:'flex',alignItems:'center',gap:20,paddingBottom:'clamp(10px,2vh,20px)',borderBottom:'1px solid var(--line)',flexShrink:0 }}>
+            <div style={{ position:'relative',width:'clamp(76px,13vh,112px)',height:'clamp(76px,13vh,112px)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
               <div style={{ position:'absolute',inset:-6,borderRadius:'50%',background:'radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 0%,rgba(212,164,58,.10) 35%,rgba(212,164,58,0) 72%)',filter:'blur(6px)' }}/>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-shield.png" alt="Escudo SSPM" width={84} height={84} style={{ position:'relative',zIndex:1,width:'clamp(56px,9.6vh,84px)',height:'clamp(56px,9.6vh,84px)',objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
+              <img src="/logo-shield.png" alt="Escudo SSPM" width={96} height={96} style={{ position:'relative',zIndex:1,width:'clamp(68px,11.4vh,96px)',height:'clamp(68px,11.4vh,96px)',objectFit:'contain',filter:'drop-shadow(0 4px 12px rgba(0,0,0,.5))' }} />
             </div>
-            <div style={{ width:1,background:'linear-gradient(180deg,transparent,var(--gold),transparent)',alignSelf:'stretch',opacity:.55 }}/>
+            <div style={{ width:1,height:'clamp(36px,6.4vh,52px)',background:'linear-gradient(180deg,transparent,var(--gold),transparent)',flexShrink:0,opacity:.55 }}/>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-text-dark.png" alt="SSPM" style={{ height:'clamp(40px,7vh,56px)',maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
+            <img src="/logo-text-dark.png" alt="SSPM" style={{ height:'clamp(32px,5.6vh,44px)',maxWidth:'100%',objectFit:'contain',objectPosition:'left center',opacity:.95 }} />
+            <div style={{ width:1,height:'clamp(36px,6.4vh,52px)',background:'var(--line-2)',flexShrink:0 }}/>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/admin.png" alt="San Juan del Río" style={{ height:'clamp(48px,8.4vh,76px)',maxWidth:'32%',objectFit:'contain',objectPosition:'left center' }} />
+            <div style={{ width:1,height:'clamp(36px,6.4vh,52px)',background:'var(--line-2)',flexShrink:0 }}/>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/sjr.png" alt="SJR Legado de Bien Común" style={{ height:'clamp(48px,8.4vh,76px)',maxWidth:'32%',objectFit:'contain',objectPosition:'left center' }} />
           </div>
 
           {/* Headline */}
@@ -374,11 +371,11 @@ function LoginContent() {
               <span style={{ width:26,height:1,background:'var(--red)',display:'inline-block' }}/>
               Acceso oficial · uso restringido
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 'clamp(6px,1.4vh,16px)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 'clamp(10px,2.2vh,24px)' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/chaleco.png" alt="CENTINELA" style={{ height: 'clamp(64px,13vh,150px)', objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }} />
+              <img src="/chaleco.png" alt="CENTINELA" style={{ height: 'clamp(130px,28vh,320px)', objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }} />
             </div>
-            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:'clamp(42px,9.5vh,104px)',lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(31, 53, 90, 0.1)',textAlign:'center' }}>
+            <h1 className="h1-big" style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:'clamp(64px,16vh,176px)',lineHeight:.9,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--text)',margin:0,textShadow:'0 0 40px rgba(31, 53, 90, 0.1)',textAlign:'center' }}>
               <span style={{ color:'var(--gold)' }}>CENTINELA</span>
             </h1>
             <div className="hide-mobile" style={{ display:'flex',gap:10,alignItems:'center',marginTop:'clamp(8px,1.6vh,16px)',fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.32em',color:'var(--text-dim)',textTransform:'uppercase' }}>
@@ -404,31 +401,6 @@ function LoginContent() {
             <div style={{ flex:1,height:1,background:'var(--gold)' }}/>
           </div>*/}
 
-          {/* Protocolo */}
-          <div className="hide-mobile" style={{ flexShrink:0,border:'1px solid var(--line)',background:'#ffffff',padding:'clamp(12px,2vh,18px) 20px',position:'relative' }}>
-            <div style={{ position:'absolute',top:-1,left:0,width:40,height:2,background:'var(--gold)' }}/>
-            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.22em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:'clamp(8px,1.4vh,14px)' }}>
-              <span>› Protocolo de acceso</span>
-              <span style={{ color:'var(--gold)' }}>Nivel 3</span>
-            </div>
-            <div style={{ display:'grid',gap:'clamp(6px,1.2vh,10px)',fontFamily:'JetBrains Mono,monospace',fontSize:11,color:'var(--text)',letterSpacing:'0.08em' }}>
-              {[
-                ['Canal cifrado extremo a extremo','Activo'],
-                ['Verificación de identidad en dos pasos','Requerido'],
-                ['Registro de sesión y trazabilidad','Habilitado'],
-              ].map(([lbl,meta]) => (
-                <div key={lbl} style={{ display:'grid',gridTemplateColumns:'14px 1fr auto',gap:12,alignItems:'center' }}>
-                  <span style={{ color:'var(--ok)',fontSize:14 }}>✓</span>
-                  <span>{lbl}</span>
-                  <span style={{ color:'var(--text-mute)',fontSize:10,letterSpacing:'0.18em',textTransform:'uppercase' }}>{meta}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ marginTop:'clamp(8px,1.4vh,16px)',paddingTop:12,borderTop:'1px dashed var(--line-2)',display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:9,letterSpacing:'0.22em',color:'var(--text-mute)',textTransform:'uppercase' }}>
-              <span>SESIÓN · {dateStr}</span>
-              <span style={{ color:'var(--gold)' }}>SIGN: 0x4F··A1C2</span>
-            </div>
-          </div>
         </aside>
 
         {/* ── PANEL DERECHO ── */}
@@ -461,21 +433,21 @@ function LoginContent() {
           </div>
 
           {/* Formulario */}
-          <div className="main-panel" style={{ flex: 1, padding:'60px 56px 20px',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative' }}>
+          <div className="main-panel" style={{ flex: 1, padding:'40px 56px', display:'flex', flexDirection:'column', justifyContent:'center', overflow:'hidden', position:'relative' }}>
 
             {/* Solo mostrar formulario si NO es success */}
             {phase !== 'success' && (
-            <div style={{ display:'flex', flexDirection:'column', flex:1, minHeight:0 }}>
+            <div style={{ display:'flex', flexDirection:'column', width:'100%', maxWidth:480, margin:'0 auto' }}>
             {/* Encabezado del form */}
-            <div style={{ marginBottom:28 }}>
-              <span style={{ display:'inline-flex',alignItems:'center',gap:8,fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.24em',color:'var(--gold)',textTransform:'uppercase',border:'1px solid var(--gold)',padding:'4px 10px',marginBottom:14 }}>
+            <div style={{ marginBottom:38 }}>
+              <span style={{ display:'inline-flex',alignItems:'center',gap:8,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.24em',color:'var(--gold)',textTransform:'uppercase',border:'1px solid var(--gold)',padding:'6px 12px',marginBottom:18 }}>
                 <IconShield />
                 {phase === 'otp' || phase === 'submitting-2' ? 'ETAPA 2 · VERIFICACIÓN 2FA' : 'ETAPA 1 · CREDENCIALES'}
               </span>
-              <h2 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:34,letterSpacing:'0.02em',textTransform:'uppercase',margin:0,color:'var(--text)' }}>
+              <h2 style={{ fontFamily:'Barlow Condensed,sans-serif',fontWeight:800,fontSize:44,letterSpacing:'0.02em',textTransform:'uppercase',margin:0,color:'var(--text)' }}>
                 {phase === 'otp' || phase === 'submitting-2' ? 'Verificación en dos pasos' : 'Inicio de sesión'}
               </h2>
-              <div style={{ color:'var(--text-dim)',fontSize:13,marginTop:8 }}>
+              <div style={{ color:'var(--text-dim)',fontSize:14.5,marginTop:10 }}>
                 {phase === 'otp' || phase === 'submitting-2'
                   ? 'Ingresa el código de 6 dígitos de tu app autenticadora.'
                   : 'Acceso restringido a personal autorizado de la SSPM.'}
@@ -483,13 +455,13 @@ function LoginContent() {
             </div>
 
             {/* Stepper */}
-            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:26 }}>
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:36 }}>
               {[['01','CREDENCIALES',1],['02','DOBLE FACTOR',2],['03','TABLERO C4',3]].map(([num,label,s]) => {
                 const n = Number(s)
                 const active = step === n
                 const done   = step > n
                 return (
-                  <div key={num} style={{ borderTop:`2px solid ${active?'var(--gold)':done?'var(--ok)':'var(--line-2)'}`,paddingTop:10,fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.18em',color:active?'var(--gold)':done?'var(--ok)':'var(--text-mute)',textTransform:'uppercase' }}>
+                  <div key={num} style={{ borderTop:`3px solid ${active?'var(--gold)':done?'var(--ok)':'var(--line-2)'}`,paddingTop:12,fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.18em',color:active?'var(--gold)':done?'var(--ok)':'var(--text-mute)',textTransform:'uppercase' }}>
                     <span style={{ marginRight:8,color:active?'var(--gold)':done?'var(--ok)':'var(--text-mute)' }}>{num}</span>{label}
                   </div>
                 )
@@ -500,15 +472,15 @@ function LoginContent() {
             {(phase === 'idle' || phase === 'submitting-1') && (
               <form onSubmit={handleLogin}>
                 {/* Email */}
-                <div style={{ marginBottom:16 }}>
-                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:8,display:'flex',justifyContent:'space-between' }}>
+                <div style={{ marginBottom:22 }}>
+                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
                     <span>Correo institucional</span>
                     <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>formato: usuario@gmail.com</span>
                   </div>
-                  <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'12px 14px',boxShadow:failed==='credentials'?'0 0 0 3px rgba(192,34,58,.15)':'none',transition:'border-color .15s,box-shadow .15s' }}>
+                  <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'16px 18px',boxShadow:failed==='credentials'?'0 0 0 3px rgba(192,34,58,.15)':'none',transition:'border-color .15s,box-shadow .15s' }}>
                     <IconUser />
                     <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="usuario@sjr.gob.mx" autoComplete="email" type="email" required disabled={phase==='submitting-1'}
-                      style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:14,letterSpacing:'0.06em' }}
+                      style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:15,letterSpacing:'0.06em' }}
                       onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--gold)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(212,164,58,.12)' }}
                       onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--red)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
                     />
@@ -516,38 +488,38 @@ function LoginContent() {
                 </div>
 
                 {/* Password */}
-                <div style={{ marginBottom:4 }}>
-                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:8,display:'flex',justifyContent:'space-between' }}>
+                <div style={{ marginBottom:6 }}>
+                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
                     <span>Contraseña</span>
                     <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>mín. 8 caracteres</span>
                   </div>
-                  <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'12px 14px',transition:'border-color .15s,box-shadow .15s' }}>
+                  <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'16px 18px',transition:'border-color .15s,box-shadow .15s' }}>
                     <IconLock />
                     <input type={showPwd?'text':'password'} value={pwd} onChange={e=>setPwd(e.target.value)} placeholder="••••••••••••" autoComplete="current-password" required disabled={phase==='submitting-1'}
-                      style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:14,letterSpacing:'0.06em' }}
+                      style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:15,letterSpacing:'0.06em' }}
                       onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--gold)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(212,164,58,.12)' }}
                       onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--red)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
                     />
-                    <button type="button" onClick={()=>setShowPwd(s=>!s)} style={{ background:'none',border:'none',color:'var(--text-dim)',cursor:'pointer',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.15em',padding:'4px 6px' }}>
+                    <button type="button" onClick={()=>setShowPwd(s=>!s)} style={{ background:'none',border:'none',color:'var(--text-dim)',cursor:'pointer',fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.15em',padding:'4px 6px' }}>
                       {showPwd?'OCULTAR':'VER'}
                     </button>
                   </div>
                 </div>
 
                 {failed === 'credentials' && (
-                  <div style={{ marginTop:14,padding:'10px 14px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                  <div style={{ marginTop:16,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
                     <span>⚠</span><span>Credenciales incorrectas · Verifique sus datos de acceso</span>
                   </div>
                 )}
 
 <button type="submit" disabled={phase==='submitting-1'||!email||!pwd}
-                  style={{ marginTop:22,display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%',padding:'14px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:14,letterSpacing:'0.2em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
+                  style={{ marginTop:28,display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%',padding:'18px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15.5,letterSpacing:'0.2em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
                   onMouseEnter={e=>{if(phase!=='submitting-1')e.currentTarget.style.background='var(--red-hi)'}}
                   onMouseLeave={e=>{e.currentTarget.style.background='var(--red)'}}>
                   {phase==='submitting-1'
                     ? generating2FA
-                      ? <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:13 }}><span style={{ width:12,height:12,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Generando código 2FA...</span>
-                      : <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:13 }}><span style={{ width:12,height:12,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Validando…</span>
+                      ? <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:14 }}><span style={{ width:13,height:13,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Generando código 2FA...</span>
+                      : <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:14 }}><span style={{ width:13,height:13,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Validando…</span>
                     : <span>⬢ Acceder al sistema</span>}
                 </button>
               </form>
@@ -556,60 +528,35 @@ function LoginContent() {
             {/* ── FASE 2: TOTP ── */}
             {(phase === 'otp' || phase === 'submitting-2') && (
               <div>
-                <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:8,display:'flex',justifyContent:'space-between' }}>
+                <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
                   <span>Código de verificación · 6 dígitos</span>
                   <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>App autenticadora</span>
                 </div>
                 <OtpInput value={otp} onChange={setOtp} error={failed==='otp'} focusFirst={focusOtpInput} />
-                <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:10,letterSpacing:'0.16em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:20 }}>
+                <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.16em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:28 }}>
                   <span>Código se renueva en <span style={{ color:'var(--gold)' }}>00:{String(otpTime).padStart(2,'0')}</span></span>
                   <span style={{ color:'var(--text-mute)' }}>Google · Authy</span>
                 </div>
 
                 {failed === 'otp' && (
-                  <div style={{ marginBottom:14,padding:'10px 14px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                  <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
                     <span>⚠</span><span>Token incorrecto · Verifica tu app autenticadora e intenta de nuevo</span>
                   </div>
                 )}
 
                 <button onClick={handleOtpSubmit} disabled={phase==='submitting-2'||otp.length!==6}
-                  style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'15px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15,letterSpacing:'0.22em',textTransform:'uppercase',cursor:otp.length!==6||phase==='submitting-2'?'not-allowed':'pointer',opacity:otp.length!==6?0.5:1 }}>
+                  style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'19px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:16,letterSpacing:'0.22em',textTransform:'uppercase',cursor:otp.length!==6||phase==='submitting-2'?'not-allowed':'pointer',opacity:otp.length!==6?0.5:1 }}>
                   {phase==='submitting-2'
                     ? <><span style={{ width:14,height:14,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/> Verificando token…</>
                     : <>Confirmar e ingresar <IconArrow /></>}
                 </button>
 
                 <button onClick={()=>{setPhase('idle');setFailed(null);setOtp('')}}
-                  style={{ marginTop:10,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'15px 18px',background:'transparent',color:'var(--text)',border:'1px solid var(--line-2)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15,letterSpacing:'0.22em',textTransform:'uppercase',cursor:'pointer' }}>
+                  style={{ marginTop:12,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'19px 18px',background:'transparent',color:'var(--text)',border:'1px solid var(--line-2)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:16,letterSpacing:'0.22em',textTransform:'uppercase',cursor:'pointer' }}>
                   ← Volver a credenciales
                 </button>
               </div>
             )}
-
-            {/* Espacio sobrante — estado del enlace, centrado */}
-            <div className="hide-mobile estado-enlace" style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', minHeight:24, overflow:'hidden' }}>
-              <div style={{ display:'flex', alignItems:'center', gap:10, margin:'28px 0 18px', opacity:.7 }}>
-                <div style={{ flex:1, height:1, background:'var(--line-2)' }}/>
-                <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.3em', color:'var(--text-mute)', textTransform:'uppercase' }}>Estado del enlace</span>
-                <div style={{ flex:1, height:1, background:'var(--line-2)' }}/>
-              </div>
-              <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
-                {[
-                  ['Cifrado','TLS 1.3','var(--ok)'],
-                  ['Sesión','#'+sessionId,'var(--gold)'],
-                  ['Núcleo C4','En línea','var(--ok)'],
-                ].map(([lbl,val,color]) => (
-                  <div key={lbl} style={{ border:'1px solid var(--line)', padding:'14px 12px', position:'relative' }}>
-                    <div style={{ position:'absolute', top:-1, left:0, width:20, height:2, background:color }}/>
-                    <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.2em', color:'var(--text-mute)', textTransform:'uppercase', marginBottom:6 }}>{lbl}</div>
-                    <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, letterSpacing:'0.04em', color:'var(--text)', fontWeight:600 }}>{val}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ marginTop:20, textAlign:'center', fontFamily:'JetBrains Mono,monospace', fontSize:9.5, letterSpacing:'0.24em', color:'var(--text-mute)', textTransform:'uppercase' }}>
-                Plataforma verificada · Secretaría de Seguridad Pública Municipal
-              </div>
-            </div>
 
             </div>
             )}

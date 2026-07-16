@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 const RH_URL    = process.env.NOMINA_API_URL ?? ''
 const RH_SECRET = process.env.SECRET_NOMINA  ?? ''
@@ -8,6 +9,8 @@ const RH_SECRET = process.env.SECRET_NOMINA  ?? ''
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  const userWithRole = await getUserWithRole(session.user.id)
+  if (!userWithRole?.esAdmin) return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
 
   const p            = req.nextUrl.searchParams
   const trabajadorId = p.get('trabajadorId')

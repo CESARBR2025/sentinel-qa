@@ -54,7 +54,12 @@ export default async function BitacoraIncidentesPage({
                 .sentinel-table tr:hover { background-color: #f1f5f9 !important; }
             `}} />
 
-            <DashboardHeader user={session.user as { name: string; apellido?: string; email: string }} />
+            <DashboardHeader
+                user={session.user as { name: string; apellido?: string; email: string }}
+                roleLabel="Bitácora de Incidentes"
+                backHref="/agente_bitacorista"
+                backLabel="Bitacorista"
+            />
 
             <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
 

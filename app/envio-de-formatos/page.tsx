@@ -82,7 +82,7 @@ export default async function EnvioDeFormatosPage() {
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} roleLabel="Envío de Formatos" backHref="/reportes" backLabel="Reportes" />
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 48px' }}>
         <SentinelHero
@@ -106,7 +106,7 @@ export default async function EnvioDeFormatosPage() {
       </main>
 
       <footer style={{ padding: '48px', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#94a3b8', letterSpacing: '0.2em', borderTop: '1px solid #e2e8f0', marginTop: '80px', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · ADMIN CORE v0.1
+        SSPM · SAN JUAN DEL RÍO · ADMIN CORE v1.2
       </footer>
     </div>
   )

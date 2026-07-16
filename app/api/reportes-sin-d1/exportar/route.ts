@@ -2,17 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { listarSinD1 } from '@/lib/reportes-sin-d1/service'
+import { tienePermiso } from '@/lib/reportes/permisos'
 import ExcelJS from 'exceljs'
 
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver'))) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+  }
 
   const p      = req.nextUrl.searchParams
   const data   = await listarSinD1(p.get('from') || undefined, p.get('to') || undefined, p.get('nombre') || undefined)
 
   const wb = new ExcelJS.Workbook()
-  wb.creator = 'SENTINEL · SSPM'
+  wb.creator = 'CENTINELA · SSPM'
   const ws = wb.addWorksheet('Sin D1', { pageSetup: { orientation: 'portrait', fitToPage: true } })
 
   const COLS = [

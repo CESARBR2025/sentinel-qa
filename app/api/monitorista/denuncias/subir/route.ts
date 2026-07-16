@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { subirEvidenciaDenuncia } from '@/lib/monitorista/denuncia-service'
+import { tienePermiso } from '@/lib/monitorista/permisos'
 
 function detectarMime(nombre: string, fileType: string): string {
   if (fileType && fileType !== 'application/octet-stream') return fileType
@@ -17,6 +18,9 @@ function detectarMime(nombre: string, fileType: string): string {
 export async function POST(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+  if (!(await tienePermiso(session.user.id, 'solicitudes', 'crear'))) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+  }
 
   const form = await req.formData()
   const file = form.get('file') as File

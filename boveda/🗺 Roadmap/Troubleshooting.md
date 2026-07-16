@@ -247,6 +247,22 @@ document.body.appendChild(el)
 setTimeout(() => el.remove(), 5000)
 ```
 
+---
+
+## `app/reportes_incidentes/page.tsx` solo exigía sesión, sin permiso de sección (2026-07-15)
+
+**Síntoma**: cualquier usuario autenticado (de cualquier rol) podía entrar a `/reportes_incidentes`
+directamente por URL, aunque no tuviera el permiso `reportes_ciudadano` que sí protege a sus
+páginas hermanas (`d1`, `estadisticos`, `sin_robos`, etc., todas hijas de `/reportes`).
+
+**Causa raíz**: la página nunca tuvo el `tienePermiso(...)` que sus hermanas sí tienen — se coló
+al crearla por copiarla de una plantilla incompleta, no una regresión de este refactor.
+
+**Fix**: agregado `if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver')))
+redirect('/dashboard')` en `app/reportes_incidentes/page.tsx`, igual que sus hermanas. Se encontró
+auditando las rutas API sin permiso (`app/api/reportes-incidentes/exportar/route.ts` tenía el
+mismo hueco) — al revisar la página que consume esa API se vio que tampoco estaba protegida.
+
 **Archivo**: `app/agente_911/ciudadano/incidentes/ToastOnLoad.tsx`
 
 **Alternativas fallidas**: `router.replace` (remonta el componente, pierde `useRef`), `window.history.replaceState` (no remonta pero sonner igual no muestra la toast).

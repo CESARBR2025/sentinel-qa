@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   }
 
   const user = await getUserWithRole(session.user.id);
-  if (user?.rolNombre !== "Administrador") {
+  if (!user?.esAdmin) {
     return NextResponse.json({ error: "Sin permiso" }, { status: 403 });
   }
 

@@ -27,11 +27,11 @@ export default async function ReportesLimpiosPage({
   return (
     <div style={styles.container}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} />
+      <DashboardHeader user={user} roleLabel="Sin Robos Confirmados" backHref="/reportes" backLabel="Reportes" />
       <main style={styles.main}>
         <div style={styles.headerContainer}>
           <div>
-            <span style={styles.tag}>SSPM · SISTEMA SENTINEL</span>
+            <span style={styles.tag}>SSPM · SISTEMA CENTINELA</span>
             <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>SIN NOVEDAD</span></h1>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>

@@ -1,10 +1,11 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { SignOutButton } from './sign-out-button'
 import { Enable2FA } from './enable-2fa'
 import { ModuleCards } from './module-cards'
-import { getUserWithRole } from '@/lib/auth/helpers'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
+import { DashboardHeader } from '@/components/partials/Header'
+import { APP_VERSION } from "@/lib/constants"
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -12,20 +13,9 @@ export default async function DashboardPage() {
 
   const userWithRole = await getUserWithRole(session.user.id)
 
-  if (userWithRole?.rolNombre === 'admin_transito') redirect('/admin-transito')
-  if (userWithRole?.rolNombre === 'Oficial de Campo') redirect('/oficial')
-  if (userWithRole?.rolNombre === 'agente_fiscalia') redirect('/fiscalia')
-  if (userWithRole?.rolNombre === 'agente_juzgado') redirect('/agente_juzgado')
-  if (userWithRole?.rolNombre === 'agente_liberaciones') redirect('/agente_liberaciones')
-  if (userWithRole?.rolNombre === 'agente_infracciones') redirect('/agente_infracciones')
-  if (userWithRole?.rolNombre === 'Monitorista') redirect('/monitorista')
-  if (userWithRole?.rolNombre === 'Auxiliar') redirect('/auxiliar')
-  if (userWithRole?.rolNombre === 'Reportante') redirect('/reportes')
-  if (userWithRole?.rolNombre === 'agente_911') redirect('/agente_911')
-  if (userWithRole?.rolNombre === 'agente_despacho') redirect('/agente_despacho')
-  if (userWithRole?.rolNombre === 'agente_bitacorista') redirect('/agente_bitacorista')
-  if (userWithRole?.rolNombre === 'corralon_mw' || userWithRole?.rolNombre === 'corralon_mejia') redirect('/corralon')
-  if (userWithRole?.rolNombre === 'agente_reportes') redirect('/nCoordinacion')
+  // Administrador (esAdmin) nunca tiene hub propio — siempre ve el panel general.
+  const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+  if (hub) redirect(hub)
 
   const user = session.user as {
     name: string; apellido?: string; email: string; twoFactorEnabled?: boolean
@@ -108,47 +98,7 @@ export default async function DashboardPage() {
       <div className="grid-bg"></div>
 
       {/* Header HUD — fijo arriba al hacer scroll */}
-      <div className="cyber-reveal delay-1" style={{
-        position: 'sticky', top: 0, zIndex: 20,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        height: 104, padding: '0 64px',
-        borderBottom: '1px solid #e2e8f0',
-        background: 'rgba(248,250,252,0.85)', backdropFilter: 'blur(10px)',
-      }}>
-          {/* Corner Decorator */}
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#1f355a' }}></div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <img src="/chaleco.png" alt="S" style={{ height: 64, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }} />
-            <div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#3e5171', textTransform: 'uppercase', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, background: '#3e5171', display: 'inline-block' }}></span>
-                Sistema Táctico
-              </div>
-              <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 56, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-                CENTINELA
-              </h1>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Operador Identificado
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 13, color: '#1f355a', letterSpacing: '0.12em', fontWeight: 600 }}>
-                {user.name} {user.apellido ?? ''}
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.08em' }}>
-                {user.email}
-              </div>
-            </div>
-
-            <div style={{ width: 1, height: 48, background: '#e2e8f0' }}></div>
-
-            <SignOutButton />
-          </div>
-      </div>
+      <DashboardHeader user={user} />
 
       {/* Main Content Container */}
       <div style={{ position: 'relative', zIndex: 1, padding: '40px 64px', maxWidth: 1600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
@@ -231,7 +181,7 @@ export default async function DashboardPage() {
         }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>SENTINEL v0.1</span>
+            <span>CENTINELA {APP_VERSION}</span>
             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#3e5171' }}></span>
           </div>
         </div>

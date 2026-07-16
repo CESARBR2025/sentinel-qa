@@ -5,13 +5,13 @@ import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { query }          from '@/lib/db'
-import { getUserRoleName } from './repository'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  const roleName = await getUserRoleName(session.user.id)
-  if (roleName !== 'Administrador') redirect('/dashboard')
+  const usuario = await getUserWithRole(session.user.id)
+  if (!usuario?.esAdmin) redirect('/dashboard')
   return session
 }
 

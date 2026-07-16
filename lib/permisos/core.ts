@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { getUserWithRole } from '@/lib/auth/helpers'
 
 export type Accion = 'ver' | 'crear' | 'editar' | 'eliminar'
 
@@ -19,22 +20,28 @@ export interface PermisoRow extends PermisoSeccion {
   seccion: string
 }
 
-export const PERMISO_TOTAL: PermisoSeccion = { puede_ver: false, puede_crear: false, puede_editar: false, puede_eliminar: false }
+export const PERMISO_COMPLETO: PermisoSeccion = { puede_ver: true, puede_crear: true, puede_editar: true, puede_eliminar: true }
+export const PERMISO_NINGUNO: PermisoSeccion = { puede_ver: false, puede_crear: false, puede_editar: false, puede_eliminar: false }
 
-function mapaDefault<S extends string>(secciones: readonly S[]): Record<S, PermisoSeccion> {
+function mapaBase<S extends string>(secciones: readonly S[], base: PermisoSeccion): Record<S, PermisoSeccion> {
   const mapa = {} as Record<S, PermisoSeccion>
-  for (const s of secciones) mapa[s] = { ...PERMISO_TOTAL }
+  for (const s of secciones) mapa[s] = { ...base }
   return mapa
 }
 
-// Sin fila para un usuario+sección = acceso completo (compatibilidad hacia atrás).
-// Solo restringe cuando un admin explícitamente guardó una fila en "permisos".
+// Sin fila para un usuario+sección = SIN acceso a esa sección. Cada rol solo tiene
+// fila para las secciones de su propio módulo (copiadas de permisos_plantillas al
+// asignar el rol) — deny-by-default es lo que mantiene aislados a los roles entre sí.
+// roles.es_admin es la única excepción: acceso completo sin tocar "permisos".
 export async function obtenerPermisosUsuario<S extends string>(usuarioId: string, secciones: readonly S[]): Promise<Record<S, PermisoSeccion>> {
+  const usuario = await getUserWithRole(usuarioId)
+  if (usuario?.esAdmin) return mapaBase(secciones, PERMISO_COMPLETO)
+
   const r = await query<Record<string, unknown>>(
     `SELECT seccion, puede_ver, puede_crear, puede_editar, puede_eliminar FROM permisos WHERE usuario_id = $1`,
     [usuarioId],
   )
-  const mapa = mapaDefault(secciones)
+  const mapa = mapaBase(secciones, PERMISO_NINGUNO)
   for (const row of r.rows) {
     const seccion = String(row.seccion) as S
     if ((secciones as readonly string[]).includes(seccion)) {
@@ -94,7 +101,7 @@ export async function obtenerPlantillaRol<S extends string>(rolId: number, secci
     `SELECT seccion, puede_ver, puede_crear, puede_editar, puede_eliminar FROM permisos_plantillas WHERE rol_id = $1`,
     [rolId],
   )
-  const mapa = mapaDefault(secciones)
+  const mapa = mapaBase(secciones, PERMISO_NINGUNO)
   for (const row of r.rows) {
     const seccion = String(row.seccion) as S
     if ((secciones as readonly string[]).includes(seccion)) {
@@ -150,10 +157,8 @@ async function requireAdmin(): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const rolCheck = await query<{ nombre: string }>(
-    `SELECT r.nombre FROM users u LEFT JOIN roles r ON u.rol_id = r.id WHERE u.id = $1 LIMIT 1`, [session.user.id],
-  )
-  if (rolCheck.rows[0]?.nombre !== 'Administrador') redirect('/dashboard')
+  const usuario = await getUserWithRole(session.user.id)
+  if (!usuario?.esAdmin) redirect('/dashboard')
 }
 
 // Genérico: guarda permisos de usuario para cualquier módulo, según la lista de secciones
