@@ -11,7 +11,9 @@ import {
   obtenerReportesOficial,
   obtenerReporteDetalle,
   obtenerDespachosAsignados,
+  obtenerDespachosAtendidos,
   contarDespachosAsignados,
+  contarDespachosAtendidos,
   obtenerRondinesOficial,
   obtenerReporteCampoParaD1,
   obtenerSectorOficial,
@@ -26,6 +28,7 @@ import type {
   OfiReporteDetalle,
   CatalogoItem,
   DespachoAsignado,
+  DespachoAtendido,
   RondinOficialResumen,
   ReporteCampoParaD1,
 } from './types'
@@ -229,6 +232,14 @@ export async function listarRondinesOficial(userId: string): Promise<RondinOfici
 
 export async function contarDespachosAsignadosOficial(userId: string): Promise<number> {
   return contarDespachosAsignados(userId)
+}
+
+export async function listarDespachosAtendidos(userId: string): Promise<DespachoAtendido[]> {
+  return obtenerDespachosAtendidos(userId)
+}
+
+export async function contarDespachosAtendidosOficial(userId: string): Promise<number> {
+  return contarDespachosAtendidos(userId)
 }
 
 export async function verReporteDetalle(

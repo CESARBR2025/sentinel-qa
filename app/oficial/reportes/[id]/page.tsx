@@ -33,8 +33,8 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
 
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/oficial/reportes"
-        backLabel="Mis reportes"
+        backHref="/oficial/despachos"
+        backLabel="Mis Despachos"
       />
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 20 }}>
