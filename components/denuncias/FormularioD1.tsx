@@ -214,7 +214,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   // Limpiar store y redirigir
   resetStore();
   const folioEnc = encodeURIComponent(result.folioDenuncia || folioDenunciaAuto)
-  router.push(`/oficial/reportes?exito=1&folio=${folioEnc}`);
+  router.push(`/oficial/despachos?exito=1&folio=${folioEnc}`);
 };
 
 

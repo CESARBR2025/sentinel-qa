@@ -90,7 +90,7 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
                             <button
                                 type="button"
                                 onClick={() => window.location.reload()}
-                                className="w-full h-11 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-medium text-sm rounded-lg shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+                                className="w-full h-11 bg-primary hover:bg-primary-dark active:bg-primary-dark text-white font-medium text-sm rounded-lg shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
                             >
                                 <ArrowLeft size={16} strokeWidth={1.5} />
                                 Nueva infracción
@@ -154,7 +154,7 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
                         <button
                             type="button"
                             onClick={onFinalizarSinPago}
-                            className="w-full h-11 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-medium text-sm rounded-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+                            className="w-full h-11 bg-primary hover:bg-primary-dark active:bg-primary-dark text-white font-medium text-sm rounded-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
                         >
                             <ArrowLeft size={16} strokeWidth={1.5} />
                             Finalizar y Salir
@@ -183,8 +183,8 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
                                     <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-5 space-y-4 border border-slate-200">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-lg bg-blue-700/10 flex items-center justify-center">
-                                                    <Wallet size={16} className="text-blue-700" strokeWidth={1.5} />
+                                                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                                                    <Wallet size={16} className="text-primary" strokeWidth={1.5} />
                                                 </div>
                                                 <div>
                                                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
@@ -232,7 +232,7 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
                                         type="button"
                                         onClick={verificarPago}
                                         disabled={loading}
-                                        className="w-full h-11 rounded-lg bg-blue-700 hover:bg-blue-800 active:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
+                                        className="w-full h-11 rounded-lg bg-primary hover:bg-primary-dark active:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
                                     >
                                         {loading ? (
                                             <>

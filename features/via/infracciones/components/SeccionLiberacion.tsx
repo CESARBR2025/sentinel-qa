@@ -388,8 +388,8 @@ export default function SeccionLiberacion({
     return (
         <section className="bg-white rounded-xl border border-slate-200 shadow-card overflow-hidden">
             <div className="px-6 py-[18px] border-b border-slate-200 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <Scale size={18} className="text-blue-600" strokeWidth={1.5} />
+                <div className="w-10 h-10 rounded-lg bg-primary-muted flex items-center justify-center">
+                    <Scale size={18} className="text-primary" strokeWidth={1.5} />
                 </div>
                 <div>
                     <h3 className="text-[15px] font-medium text-slate-900">
@@ -465,8 +465,8 @@ export default function SeccionLiberacion({
                         {/* TIPO LIBERACIÓN (auto desde DB) */}
                         {selectedType === 'titular' && (
                             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                                    <FileText size={16} className="text-blue-600" strokeWidth={1.5} />
+                                <div className="w-9 h-9 rounded-lg bg-primary-muted flex items-center justify-center shrink-0">
+                                    <FileText size={16} className="text-primary" strokeWidth={1.5} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-slate-500">Tipo de liberación</p>
@@ -497,7 +497,7 @@ export default function SeccionLiberacion({
                                                 value={titularNombre}
                                                 onChange={e => setTitularNombre(e.target.value)}
                                                 placeholder="Nombre(s)"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -509,7 +509,7 @@ export default function SeccionLiberacion({
                                                 value={titularAppaterno}
                                                 onChange={e => setTitularAppaterno(e.target.value)}
                                                 placeholder="Apellido paterno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -521,7 +521,7 @@ export default function SeccionLiberacion({
                                                 value={titularApmaterno}
                                                 onChange={e => setTitularApmaterno(e.target.value)}
                                                 placeholder="Apellido materno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                     </div>
@@ -535,7 +535,7 @@ export default function SeccionLiberacion({
                                             onChange={e => setTitularCurp(e.target.value)}
                                             placeholder="CURP del titular"
                                             maxLength={18}
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                     <div className="mt-4">
@@ -547,7 +547,7 @@ export default function SeccionLiberacion({
                                             value={titularCorreo}
                                             onChange={e => setTitularCorreo(e.target.value)}
                                             placeholder="correo@ejemplo.com"
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                 </div>
@@ -567,7 +567,7 @@ export default function SeccionLiberacion({
                                             value={nombreEmpresa}
                                             onChange={e => setNombreEmpresa(e.target.value)}
                                             placeholder="Razón social"
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                     <div>
@@ -579,7 +579,7 @@ export default function SeccionLiberacion({
                                             value={rfcEmpresa}
                                             onChange={e => setRfcEmpresa(e.target.value)}
                                             placeholder="RFC de la empresa"
-                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                            className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                         />
                                     </div>
                                 </div>
@@ -598,7 +598,7 @@ export default function SeccionLiberacion({
                                                 value={nombreRespFiscal}
                                                 onChange={e => setNombreRespFiscal(e.target.value)}
                                                 placeholder="Nombre(s)"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -610,7 +610,7 @@ export default function SeccionLiberacion({
                                                 value={apPaternoRespFiscal}
                                                 onChange={e => setApPaternoRespFiscal(e.target.value)}
                                                 placeholder="Apellido paterno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                         <div>
@@ -622,7 +622,7 @@ export default function SeccionLiberacion({
                                                 value={apMaternoRespFiscal}
                                                 onChange={e => setApMaternoRespFiscal(e.target.value)}
                                                 placeholder="Apellido materno"
-                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
+                                                className="w-full h-10 px-3.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:shadow-[0_0_0_3px_rgba(31, 53, 90,0.15)] focus:outline-none transition"
                                             />
                                         </div>
                                     </div>
@@ -664,8 +664,8 @@ export default function SeccionLiberacion({
                                 onClick={handleSubmit}
                                 disabled={!allSelected || submitting}
                                 className="
-                                    w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-700
-                                    disabled:bg-blue-300 disabled:opacity-60
+                                    w-full h-12 rounded-lg bg-primary hover:bg-primary-dark
+                                    disabled:bg-primary/40 disabled:opacity-60
                                     text-white text-sm font-medium
                                     flex items-center justify-center gap-2
                                     transition active:scale-[0.99]
@@ -691,9 +691,9 @@ export default function SeccionLiberacion({
                 {!esLiberada && (tieneDocs || submitted || estatusDependencia === 'ESPERA_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
                     <div className="space-y-4">
                         {(tieneDocs && estatusDependencia !== 'ESPERA_REVISION' && estatusDependencia !== 'MESA_DE_CONTROL_RECHAZADA') && (
-                            <div className="rounded-xl border border-blue-500/30 bg-blue-50 p-6 text-center space-y-3">
-                                <div className="w-16 h-16 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto">
-                                    <FileText size={32} className="text-blue-600" strokeWidth={1.5} />
+                            <div className="rounded-xl border border-primary/30 bg-primary-muted p-6 text-center space-y-3">
+                                <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                                    <FileText size={32} className="text-primary" strokeWidth={1.5} />
                                 </div>
                                 <div>
                                     <h4 className="text-lg font-medium text-slate-900">
@@ -745,7 +745,7 @@ export default function SeccionLiberacion({
                         {tieneDocs && (
                             <div className="space-y-3">
                                 <p className="text-sm font-medium text-slate-900 flex items-center gap-2">
-                                    <FileText size={15} className="text-blue-600" strokeWidth={1.5} />
+                                                        <FileText size={15} className="text-primary" strokeWidth={1.5} />
                                     Documentos subidos
                                     {loadingStatus && <Loader2 size={12} className="animate-spin text-slate-400" />}
                                 </p>
@@ -771,8 +771,8 @@ export default function SeccionLiberacion({
                                                     }`}
                                                 >
                                                     <div
-                                                        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                                                            aceptado ? 'bg-green-100' : rechazado ? 'bg-red-100' : 'bg-blue-50'
+                                        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                                                             aceptado ? 'bg-green-100' : rechazado ? 'bg-red-100' : 'bg-primary-muted'
                                                         }`}
                                                     >
                                                         {aceptado ? (
@@ -780,7 +780,7 @@ export default function SeccionLiberacion({
                                                         ) : rechazado ? (
                                                             <XCircle size={15} className="text-red-600" strokeWidth={1.5} />
                                                         ) : (
-                                                            <FileText size={15} className="text-blue-600" strokeWidth={1.5} />
+                                <FileText size={15} className="text-primary" strokeWidth={1.5} />
                                                         )}
                                                     </div>
 
@@ -811,7 +811,7 @@ export default function SeccionLiberacion({
 
                                                     <button
                                                         onClick={() => abrirDocumento(doc.url)}
-                                                        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition active:scale-[0.99]"
+                                                        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-dark text-white text-xs font-medium transition active:scale-[0.99]"
                                                     >
                                                         <Eye size={12} strokeWidth={1.5} />
                                                         Ver
@@ -993,7 +993,7 @@ function DocUploadRow({
             {!file && (
                 <button
                     onClick={() => inputRef.current?.click()}
-                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition active:scale-[0.99]"
+                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-dark text-white text-xs font-medium transition active:scale-[0.99]"
                 >
                     <Upload size={12} strokeWidth={1.5} />
                     Seleccionar

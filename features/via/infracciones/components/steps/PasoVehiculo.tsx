@@ -982,7 +982,7 @@ export default function PasoVehiculo({
                             ) : (
                                 <button
                                     type="button"
-                                    className="w-full px-3 py-2 text-left text-blue-600 hover:bg-blue-50"
+                                    className="w-full px-3 py-2 text-left text-primary hover:bg-primary-muted"
                                     onClick={() => {
                                         actualizarDatos({ marca: busquedaMarca });
                                         setMostrarOpciones(false);
@@ -1063,7 +1063,7 @@ export default function PasoVehiculo({
                             ) : (
                                 <button
                                     type="button"
-                                    className="w-full px-3 py-2 text-left text-blue-600 hover:bg-blue-50"
+                                    className="w-full px-3 py-2 text-left text-primary hover:bg-primary-muted"
                                     onClick={() => {
                                         actualizarDatos({ modelo: busquedaModelo });
                                         setMostrarModelos(false);
@@ -1169,7 +1169,7 @@ export default function PasoVehiculo({
                             ) : (
                                 <button
                                     type="button"
-                                    className="w-full px-3 py-2 text-left text-blue-600 hover:bg-blue-50"
+                                    className="w-full px-3 py-2 text-left text-primary hover:bg-primary-muted"
                                     onClick={() => {
                                         actualizarDatos({ color: busquedaColor });
                                         setMostrarColores(false);
@@ -1293,7 +1293,7 @@ export default function PasoVehiculo({
                             ) : (
                                 <button
                                     type="button"
-                                    className="w-full px-3 py-2 text-left text-blue-600 hover:bg-blue-50"
+                                    className="w-full px-3 py-2 text-left text-primary hover:bg-primary-muted"
                                     onClick={() => {
                                         actualizarDatos({ estadoOrigen: busquedaEstado });
                                         setMostrarEstados(false);

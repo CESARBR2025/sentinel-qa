@@ -2,9 +2,9 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ClipboardList, History, AlertTriangle, FileBadge2, Settings, Shield, Radio } from 'lucide-react'
+import { AlertTriangle, FileBadge2, Settings, Shield, Radio } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
-import { verificarRolOficial, contarDenunciasPendientesOficial, contarDespachosAsignadosOficial } from '@/lib/oficial/service'
+import { verificarRolOficial, contarDespachosAsignadosOficial } from '@/lib/oficial/service'
 import { DashboardHeader } from '@/components/partials/Header'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
@@ -22,10 +22,7 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
-  const [denunciasPendientes, despachosAsignados] = await Promise.all([
-    contarDenunciasPendientesOficial(session.user.id),
-    contarDespachosAsignadosOficial(session.user.id),
-  ])
+  const despachosAsignados = await contarDespachosAsignadosOficial(session.user.id)
 
   const params = await searchParams
 
@@ -64,15 +61,15 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
               </div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                DESPACHO
+                DESPACHOS
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
               <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Mis Despachos
+                Reportes y Despachos
               </h3>
               <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Solicitudes de despacho asignadas a ti — atiende y captura el reporte de campo para cerrarlas
+                Atiende tus despachos activos, revisa reportes cerrados y gestiona denuncias desde un solo lugar
               </p>
             </div>
             {despachosAsignados > 0 && (
@@ -106,60 +103,6 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
                 Registra un avistamiento en rondín — genera solicitud de despacho para asignación de unidades
               </p>
             </div>
-          </Link>
-
-          {/* Card: Reporte en Campo */}
-          <Link href="/oficial/nuevo" className="card-o" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <ClipboardList size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                ACCIÓN RÁPIDA
-              </div>
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Reporte en Campo
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Genera alta de reporte de incidencia en recorrido
-              </p>
-            </div>
-          </Link>
-
-          {/* Card: Mis Reportes */}
-          <Link href="/oficial/reportes" className="card-o" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <History size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                HISTORIAL
-              </div>
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Mis Reportes
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Consulta tus reportes y completa denuncias pendientes
-              </p>
-            </div>
-            {denunciasPendientes > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
-                  <AlertTriangle size={11} />
-                  {denunciasPendientes} DENUNCIA{denunciasPendientes !== 1 ? 'S' : ''} PENDIENTE{denunciasPendientes !== 1 ? 'S' : ''}
-                </span>
-              </div>
-            )}
           </Link>
 
           {/* Card: Captura de Infracciones */}

@@ -5,6 +5,7 @@ import {
   rowToReporteResumen,
   rowToReporteDetalle,
   rowToDespachoAsignado,
+  rowToDespachoAtendido,
   rowToRondinOficialResumen,
   rowToReporteCampoParaD1,
 } from "./mapper";
@@ -15,6 +16,7 @@ import type {
   OfiReporteDetalle,
   CatalogoItem,
   DespachoAsignado,
+  DespachoAtendido,
   RondinOficialResumen,
   ReporteCampoParaD1,
 } from "./types";
@@ -269,6 +271,59 @@ export async function contarDespachosAsignados(userId: string): Promise<number> 
   return parseInt(result.rows[0].count, 10);
 }
 
+export async function obtenerDespachosAtendidos(
+  userId: string,
+): Promise<DespachoAtendido[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       i.id AS incidente_id, i.folio, i.canal, i.estatus, i.descripcion,
+       i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion,
+       i.fecha_hora_inicio,
+       cti.nombre AS tipo_incidente_nombre,
+       cp.nombre AS prioridad_nombre,
+       d.fecha_hora_despacho,
+       u.name AS despachador_nombre,
+       COALESCE(
+         (SELECT array_agg(du.unidad_placa) FROM incidente_despacho_unidades du WHERE du.despacho_id = d.id),
+         '{}'
+       ) AS unidades,
+       rc.id AS reporte_campo_id,
+       rc.folio_reporte_campo,
+       rc.created_at AS fecha_cierre,
+       rc.ofi_hay_detencion,
+       rc.ofi_acciones,
+       rc.quiere_denuncia,
+       d1.id AS d1_id,
+       d1.folio_denuncia AS d1_folio
+     FROM incidente_despacho_elementos de
+     JOIN incidente_despacho d ON d.id = de.despacho_id
+     JOIN incidentes i ON i.id = d.incidente_id
+     JOIN ofi_reportes_campo rc ON rc.incidente_id = i.id
+     LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+     LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+     LEFT JOIN users u ON d.despachado_por = u.id
+     LEFT JOIN ofi_reporte_denuncia d1 ON d1.reporte_campo_id = rc.id
+       WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+         AND i.estatus IN ('atendido', 'cerrado_detencion')
+       ORDER BY rc.created_at DESC`,
+    [userId],
+  );
+  return result.rows.map(rowToDespachoAtendido);
+}
+
+export async function contarDespachosAtendidos(userId: string): Promise<number> {
+  const result = await query<{ count: string }>(
+    `SELECT COUNT(*)::int AS count
+     FROM incidente_despacho_elementos de
+     JOIN incidente_despacho d ON d.id = de.despacho_id
+     JOIN incidentes i ON i.id = d.incidente_id
+     JOIN ofi_reportes_campo rc ON rc.incidente_id = i.id
+       WHERE de.oficial_id = (SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1)
+         AND i.estatus IN ('atendido', 'cerrado_detencion')`,
+    [userId],
+  );
+  return parseInt(result.rows[0].count, 10);
+}
 
 export async function obtenerCatalogoIncidentes(): Promise<CatalogoItem[]> {
   const result = await query<CatalogoItem>(
@@ -544,4 +599,32 @@ export async function actualizarPatrullaOficial(
      WHERE user_id = $2`,
     [patrullaId, userId],
   );
+}
+
+export async function actualizarTelefonoOficial(
+  userId: string,
+  telefono: string,
+): Promise<void> {
+  await query(
+    `UPDATE ofi_oficiales
+     SET telefono = $1
+     WHERE user_id = $2`,
+    [telefono, userId],
+  );
+}
+
+export async function telefonoExiste(
+  telefono: string,
+  userId: string,
+): Promise<boolean> {
+  const result = await query<{ count: string }>(
+    `SELECT COUNT(*)::int AS count
+     FROM ofi_oficiales
+     WHERE telefono = $1
+       AND user_id != $2
+       AND telefono IS NOT NULL
+       AND telefono != ''`,
+    [telefono, userId],
+  );
+  return parseInt(result.rows[0].count, 10) > 0;
 }

@@ -172,7 +172,7 @@ export default function PasoConductor({
 
                                 {curpLoading && (
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                        <Loader2 size={16} className="animate-spin text-blue-500" strokeWidth={2} />
+                                        <Loader2 size={16} className="animate-spin text-primary-light" strokeWidth={2} />
                                     </div>
                                 )}
                             </div>
@@ -181,7 +181,7 @@ export default function PasoConductor({
                                 {fieldError(datos.curpInfractor) ? (
                                     <span className="text-red-500">La CURP es requerida</span>
                                 ) : curpLoading ? (
-                                    <span className="text-blue-500">Buscando datos...</span>
+                                    <span className="text-primary-light">Buscando datos...</span>
                                 ) : curpStatus === 'found' ? (
                                     <span className="text-green-600">✓ Datos encontrados y autocompletados</span>
                                 ) : curpStatus === 'not_found' ? (

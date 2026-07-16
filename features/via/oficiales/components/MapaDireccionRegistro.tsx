@@ -278,7 +278,7 @@ export function MapaDireccionRegistro({ onAddressChange }: MapaDireccionRegistro
                 type="button"
                 onClick={obtenerUbicacion}
                 disabled={geoLoading}
-                className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 rounded-lg transition-all active:scale-[0.98] disabled:opacity-50 shadow-md"
+                className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium text-white bg-primary hover:bg-primary-dark active:bg-primary-dark rounded-lg transition-all active:scale-[0.98] disabled:opacity-50 shadow-md"
             >
                 <Crosshair size={13} className={geoLoading ? 'animate-spin' : ''} />
                 {geoLoading ? 'Obteniendo…' : 'Ubicarme'}
@@ -288,7 +288,7 @@ export function MapaDireccionRegistro({ onAddressChange }: MapaDireccionRegistro
                 <button
                     type="button"
                     onClick={() => setSatellite(false)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 transition-all ${!satellite ? 'bg-blue-700 text-white' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 transition-all ${!satellite ? 'bg-primary text-white' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
                 >
                     <MapIcon size={13} />
                     Mapa
@@ -296,7 +296,7 @@ export function MapaDireccionRegistro({ onAddressChange }: MapaDireccionRegistro
                 <button
                     type="button"
                     onClick={() => setSatellite(true)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 transition-all ${satellite ? 'bg-blue-700 text-white' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 transition-all ${satellite ? 'bg-primary text-white' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
                 >
                     <Satellite size={13} />
                     Satélite

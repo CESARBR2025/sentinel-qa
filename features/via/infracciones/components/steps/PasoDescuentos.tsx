@@ -127,7 +127,7 @@ export default function PasoDecuentos({ loading, boolError }: Props) {
                                         error={boolError(datos.presentaInapam)}
                                     />
                                 </div>
-                                <div className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-200 mt-1">
+                                <div className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-muted text-primary text-xs font-semibold border border-primary/20 mt-1">
                                     <Percent size={12} />
                                     {datos.descuentoAplicado}%
                                 </div>
@@ -251,10 +251,10 @@ function FileUploadZone({
             className={`
                 relative rounded-xl border-2 p-4 transition-all duration-200
                 ${isDragOver
-                    ? 'border-blue-600 bg-blue-50'
+                    ? 'border-primary bg-primary-muted'
                     : file
                         ? 'border-green-500 bg-green-50'
-                        : 'border-dashed border-slate-200 bg-white hover:border-blue-600 hover:bg-slate-50'
+                        : 'border-dashed border-slate-200 bg-white hover:border-primary hover:bg-slate-50'
                 }
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             `}
@@ -310,7 +310,7 @@ function FileUploadZone({
                             {description}
                         </p>
                     </div>
-                    <div className="shrink-0 p-2 rounded-lg bg-blue-50 text-blue-600">
+                    <div className="shrink-0 p-2 rounded-lg bg-primary-muted text-primary">
                         <Upload size={16} />
                     </div>
                 </div>

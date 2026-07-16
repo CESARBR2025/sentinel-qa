@@ -81,14 +81,14 @@ export default function MapSectionCiudadano({ lat, lng }: Props) {
         <button
           type="button"
           onClick={() => setModo('mapa')}
-          className={`inline-flex items-center gap-1 px-3 py-1.5 transition-all ${modo === 'mapa' ? 'bg-blue-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+          className={`inline-flex items-center gap-1 px-3 py-1.5 transition-all ${modo === 'mapa' ? 'bg-primary text-white' : 'text-slate-600 hover:bg-slate-100'}`}
         >
           <MapIcon size={13} /> Mapa
         </button>
         <button
           type="button"
           onClick={() => setModo('satelite')}
-          className={`inline-flex items-center gap-1 px-3 py-1.5 transition-all ${modo === 'satelite' ? 'bg-blue-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+          className={`inline-flex items-center gap-1 px-3 py-1.5 transition-all ${modo === 'satelite' ? 'bg-primary text-white' : 'text-slate-600 hover:bg-slate-100'}`}
         >
           <Satellite size={13} /> Satélite
         </button>

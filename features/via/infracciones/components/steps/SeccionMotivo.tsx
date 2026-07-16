@@ -131,26 +131,26 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
             </div>
 
             {articuloSeleccionado && (
-                <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4 transition-all animate-fadeIn">
+                <div className="mt-4 rounded-xl border border-primary/20 bg-primary-muted p-4 transition-all animate-fadeIn">
                     <div className="flex items-start gap-3">
-                        <BookOpen size={20} className="mt-0.5 shrink-0 text-blue-600" strokeWidth={1.5} />
-                        <div className="space-y-3 text-xs leading-relaxed text-blue-900 w-full">
+                        <BookOpen size={20} className="mt-0.5 shrink-0 text-primary" strokeWidth={1.5} />
+                        <div className="space-y-3 text-xs leading-relaxed text-slate-800 w-full">
                             <div>
-                                <p className="font-semibold text-blue-950">ARTÍCULO {articuloSeleccionado.numero}</p>
-                                <p className="mt-1 text-blue-800">{articuloSeleccionado.descripcion}</p>
+                                <p className="font-semibold text-slate-900">ARTÍCULO {articuloSeleccionado.numero}</p>
+                                <p className="mt-1 text-slate-700">{articuloSeleccionado.descripcion}</p>
                             </div>
 
                             {fraccionSeleccionada && (
-                                <div className="border-t border-blue-200 pt-3">
-                                    <p className="font-semibold text-blue-950">
+                                <div className="border-t border-primary/20 pt-3">
+                                    <p className="font-semibold text-slate-900">
                                         FRACCIÓN {fraccionSeleccionada.numero}
                                     </p>
-                                    <p className="mt-1 text-blue-800">{fraccionSeleccionada.descripcion}</p>
+                                    <p className="mt-1 text-slate-700">{fraccionSeleccionada.descripcion}</p>
                                     <div className="mt-3 flex flex-wrap gap-2">
-                                        <span className="rounded-full bg-white px-2 py-1 text-[11px] font-medium border border-blue-200 shadow-sm">
+                                        <span className="rounded-full bg-white px-2 py-1 text-[11px] font-medium border border-primary/20 shadow-sm">
                                             Clasificación: {fraccionSeleccionada.clasificacion}
                                         </span>
-                                        <span className="rounded-full bg-white px-2 py-1 text-[11px] font-medium border border-blue-200 shadow-sm text-blue-700">
+                                        <span className="rounded-full bg-white px-2 py-1 text-[11px] font-medium border border-primary/20 shadow-sm text-primary">
                                             {fraccionSeleccionada.monto_umas} UMAS
                                         </span>
                                     </div>

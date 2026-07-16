@@ -74,7 +74,7 @@ export const PasoEvidencias: React.FC<Props> = ({
                     type="button"
                     disabled={loading}
                     onClick={() => inputRef.current?.click()}
-                    className="w-full py-8 rounded-xl border-2 border-dashed border-slate-200 hover:border-blue-600 hover:bg-blue-50/30 flex flex-col items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+                    className="w-full py-8 rounded-xl border-2 border-dashed border-slate-200 hover:border-primary hover:bg-primary-muted/30 flex flex-col items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
                 >
                     <Plus size={28} className="text-slate-400" strokeWidth={1.5} />
                     <p className="text-sm font-medium text-slate-500">Agregar evidencias</p>
@@ -106,7 +106,7 @@ export const PasoEvidencias: React.FC<Props> = ({
                         type="button"
                         disabled={loading}
                         onClick={() => inputRef.current?.click()}
-                        className="w-20 h-20 rounded-lg border-2 border-dashed border-slate-200 hover:border-blue-600 hover:bg-blue-50/30 flex items-center justify-center transition-all disabled:opacity-50"
+                        className="w-20 h-20 rounded-lg border-2 border-dashed border-slate-200 hover:border-primary hover:bg-primary-muted/30 flex items-center justify-center transition-all disabled:opacity-50"
                     >
                         <Plus size={24} className="text-slate-400" strokeWidth={1.5} />
                     </button>

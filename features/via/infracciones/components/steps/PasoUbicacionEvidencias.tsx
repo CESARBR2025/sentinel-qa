@@ -16,7 +16,7 @@ export default function PasoUbicacionEvidencias({
             {/* Mapa + dirección */}
             <div>
                 <div className="flex items-center gap-2 mb-3">
-                    <div className="w-1 h-4 rounded-full bg-blue-700" />
+                    <div className="w-1 h-4 rounded-full bg-primary" />
                     <p className="text-[13px] font-semibold text-slate-700">Ubicación</p>
                 </div>
                 <PasoUbicacion setDireccion={setDireccion} />
@@ -25,7 +25,7 @@ export default function PasoUbicacionEvidencias({
             {/* Evidencias */}
             <div>
                 <div className="flex items-center gap-2 mb-3">
-                    <div className="w-1 h-4 rounded-full bg-blue-700" />
+                    <div className="w-1 h-4 rounded-full bg-primary" />
                     <p className="text-[13px] font-semibold text-slate-700">Evidencias</p>
                 </div>
                 <PasoEvidencias loading={loading} />

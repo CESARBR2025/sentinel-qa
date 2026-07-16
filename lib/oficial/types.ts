@@ -164,6 +164,17 @@ export interface DespachoAsignado {
   unidades: string[];
 }
 
+export interface DespachoAtendido extends DespachoAsignado {
+  reporteCampoId: string;
+  folioReporteCampo: string | null;
+  fechaCierre: string | null;
+  hayDetencion: boolean;
+  acciones: string | null;
+  quiereDenuncia: boolean;
+  d1Id: string | null;
+  d1Folio: string | null;
+}
+
 export interface OfiD1Vinculada {
   id: string;
   folioDenuncia: string;
