@@ -12,6 +12,10 @@ import {
   templatePinAcceso,
   type EnviarCorreoPinAccesoParams,
 } from './templates/pin-acceso'
+import {
+  templatePagoConfirmado,
+  type EnviarCorreoPagoConfirmadoParams,
+} from './templates/pago-confirmado'
 
 export async function enviarCorreoAsignacionFiscalia(
   data: EnviarCorreoAsignacionFiscaliaParams,
@@ -71,6 +75,24 @@ export async function enviarCorreoPinAcceso(
   await sendMail({
     to: data.correoInfractor,
     subject: `SSPM - Código de Acceso #${data.folio}`,
+    text,
+    html,
+  })
+}
+
+export async function enviarCorreoPagoConfirmado(
+  data: EnviarCorreoPagoConfirmadoParams,
+) {
+  const urlVistaCiudadano = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://via-v2.vercel.app'}/infracciones/${data.idInfraccion}`
+
+  const { html, text } = templatePagoConfirmado({
+    ...data,
+    urlVistaCiudadano,
+  })
+
+  await sendMail({
+    to: data.correoInfractor,
+    subject: `SSPM - Pago Confirmado #${data.folio}`,
     text,
     html,
   })

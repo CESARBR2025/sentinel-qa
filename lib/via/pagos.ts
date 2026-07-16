@@ -1,6 +1,7 @@
 import { consultarEstatusSA7 } from "./sa7";
 import { query } from "@/lib/db";
 import { SA7Repository } from "@/features/via/saSiete/repository";
+import { enviarCorreoPagoConfirmado } from "@/lib/emails/server";
 
 type ResultadoPago = { pagado: boolean; estatusSA7?: string; error?: string };
 
@@ -58,5 +59,35 @@ export async function confirmarPago(
   );
 
   console.log("[VIA][PAGOS] BD actualizada correctamente");
+
+  notificarPagoConfirmado(infraccionId);
+
   return { pagado: true };
+}
+
+async function notificarPagoConfirmado(infraccionId: string) {
+  try {
+    const result = await query(
+      `SELECT correo_infractor, nombre_infractor, apellido_paterno_infractor,
+              apellido_materno_infractor, folio, placa, monto_final
+       FROM via.v2_infracciones WHERE id = $1`,
+      [infraccionId],
+    );
+    const row = result.rows[0] as Record<string, unknown> | undefined;
+    if (!row?.correo_infractor) return;
+
+    const nombre = [row.nombre_infractor, row.apellido_paterno_infractor, row.apellido_materno_infractor]
+      .filter(Boolean).join(" ") || "Ciudadano";
+
+    await enviarCorreoPagoConfirmado({
+      correoInfractor: row.correo_infractor as string,
+      nombreInfractor: nombre,
+      idInfraccion: infraccionId,
+      folio: row.folio as string,
+      placa: (row.placa as string) || "N/A",
+      monto: Number(row.monto_final),
+    });
+  } catch (err) {
+    console.error("[EMAIL][PAGO-CONFIRMADO]", err);
+  }
 }
