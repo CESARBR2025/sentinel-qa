@@ -66,6 +66,25 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
           </div>
         </div>
 
+        {/* Sin denuncia — opción de generarla (visible siempre que no haya D1) */}
+        {!tieneDenuncia && !pendienteDenu && (
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderLeft: '4px solid #1f355a', borderRadius: 2, padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 18, color: '#0f172a', textTransform: 'uppercase', marginBottom: 4 }}>
+                Sin denuncia registrada
+              </div>
+              <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b' }}>
+                No se vinculó una denuncia a este reporte. Puedes generar una ahora si la situación lo requiere.
+              </div>
+            </div>
+            <Link
+              href={`/denuncia/nuevo?reporteCampoId=${r.id}&calle=${encodeURIComponent(r.ofiCalle ?? '')}&colonia=${encodeURIComponent(r.ofiColonia ?? '')}&lat=${r.ofiLatitud ?? ''}&lng=${r.ofiLongitud ?? ''}&oficial=${encodeURIComponent(r.ofiOficialNombre ?? '')}`}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#1f355a', color: '#ffffff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2, whiteSpace: 'nowrap' }}>
+              GENERAR DENUNCIA
+            </Link>
+          </div>
+        )}
+
         {/* Origen */}
         <div style={CARD}>
           <div style={SEC}><User size={16} /> Origen e Identificación</div>

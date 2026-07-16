@@ -61,15 +61,15 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
               </div>
               <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                DESPACHO
+                DESPACHOS
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
               <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Mis Despachos
+                Reportes y Despachos
               </h3>
               <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Solicitudes de despacho asignadas a ti — atiende y captura el reporte de campo para cerrarlas
+                Atiende tus despachos activos, revisa reportes cerrados y gestiona denuncias desde un solo lugar
               </p>
             </div>
             {despachosAsignados > 0 && (

@@ -96,7 +96,7 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
             Oficial en Campo
           </span>
           <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 32, textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a' }}>
-            MIS <span style={{ color: '#1f355a' }}>DESPACHOS</span>
+            <span style={{ color: '#1f355a' }}>DESPACHOS</span> Y REPORTES
           </h1>
         </div>
 
