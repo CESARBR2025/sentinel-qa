@@ -49,6 +49,13 @@ export default function PageTransition() {
     timers.current.push(setTimeout(() => { setStage(0); running.current = false }, T_CLOSE + T_HOLD + T_OPEN))
   }, [])
 
+  // ── Disparo imperativo externo (ej. tras un login exitoso, antes de navegar) ──
+  useEffect(() => {
+    const onManual = () => startTransition()
+    window.addEventListener('app:transition', onManual)
+    return () => window.removeEventListener('app:transition', onManual)
+  }, [startTransition])
+
   // ── Disparo TEMPRANO al hacer clic en un enlace interno (antes de navegar) ────
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
