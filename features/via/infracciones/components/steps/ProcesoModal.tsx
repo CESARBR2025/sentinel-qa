@@ -16,30 +16,30 @@ const config: Record<ProcesoEstado, {
 }> = {
     inicio: {
         icon: FileText,
-        bgClass: "bg-blue-50",
-        textClass: "text-blue-600",
-        ringClass: "ring-blue-600/20",
+        bgClass: "bg-primary-muted",
+        textClass: "text-primary",
+        ringClass: "ring-primary/20",
         label: "",
     },
     creando: {
         icon: FileText,
-        bgClass: "bg-blue-50",
-        textClass: "text-blue-600",
-        ringClass: "ring-blue-600/20",
+        bgClass: "bg-primary-muted",
+        textClass: "text-primary",
+        ringClass: "ring-primary/20",
         label: "Creando infracción",
     },
     documentos: {
         icon: FileText,
-        bgClass: "bg-blue-50",
-        textClass: "text-blue-600",
-        ringClass: "ring-blue-600/20",
+        bgClass: "bg-primary-muted",
+        textClass: "text-primary",
+        ringClass: "ring-primary/20",
         label: "Creando infracción",
     },
     evidencias: {
         icon: FileText,
-        bgClass: "bg-blue-50",
-        textClass: "text-blue-600",
-        ringClass: "ring-blue-600/20",
+        bgClass: "bg-primary-muted",
+        textClass: "text-primary",
+        ringClass: "ring-primary/20",
         label: "Creando infracción",
     },
     orden: {
@@ -134,7 +134,7 @@ export function ProcesoModal({ estado, mensaje, onRetry }: ProcesoModalProps) {
                             <button
                                 type="button"
                                 onClick={onRetry}
-                                className="w-full h-11 rounded-lg text-[13px] font-medium text-white flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 transition-all active:scale-[0.99]"
+                                className="w-full h-11 rounded-lg text-[13px] font-medium text-white flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark active:bg-primary-dark transition-all active:scale-[0.99]"
                             >
                                 <RefreshCw size={15} />
                                 Reintentar
@@ -162,7 +162,7 @@ export function ProcesoModal({ estado, mensaje, onRetry }: ProcesoModalProps) {
                                                     w-7 h-7 rounded-full flex items-center justify-center
                                                     text-[11px] font-medium transition-all duration-300
                                                     ${isDone ? "bg-green-500 text-white" : ""}
-                                                    ${isActive ? "bg-blue-600 text-white ring-4 ring-blue-600/20" : ""}
+                                                    ${isActive ? "bg-primary text-white ring-4 ring-primary/20" : ""}
                                                     ${isPending ? "bg-slate-100 text-slate-400 border border-slate-200" : ""}
                                                 `}
                                             >
@@ -176,7 +176,7 @@ export function ProcesoModal({ estado, mensaje, onRetry }: ProcesoModalProps) {
                                                 className={`
                                                     text-[10px] text-center leading-tight
                                                     ${isDone ? "text-green-500 font-medium" : ""}
-                                                    ${isActive ? "text-blue-600 font-medium" : ""}
+                                                    ${isActive ? "text-primary font-medium" : ""}
                                                     ${isPending ? "text-slate-400" : ""}
                                                 `}
                                             >

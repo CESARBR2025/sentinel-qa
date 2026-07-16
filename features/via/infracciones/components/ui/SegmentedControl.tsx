@@ -50,11 +50,11 @@ export function SegmentedControl({
               text-sm font-medium
               transition-all duration-200
               ${selected
-                ? 'bg-blue-700 text-white shadow-[0_2px_8px_rgba(28, 48, 81,0.25)] active:scale-[0.98]'
+                ? 'bg-primary text-white shadow-[0_2px_8px_rgba(31,53,90,0.25)] active:scale-[0.98]'
                 : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 active:scale-[0.98]'
               }
               ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-1
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
             `}
           >
             {Icon && (

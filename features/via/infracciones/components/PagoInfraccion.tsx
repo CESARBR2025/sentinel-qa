@@ -112,12 +112,12 @@ export default function PagoInfraccion({
   return (
     <div className="p-5 space-y-5">
       <button onClick={() => setOpen(true)}
-        className="w-full h-14 rounded-lg bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-medium transition flex items-center justify-center gap-2 active:scale-[0.99]"
+        className="w-full h-14 rounded-lg bg-primary hover:bg-primary-dark active:bg-primary/80 text-white font-medium transition flex items-center justify-center gap-2 active:scale-[0.99]"
       >
         <CreditCard size={18} strokeWidth={1.5} /> Pagar infracción
       </button>
-      <div className="rounded-lg bg-blue-50 border border-blue-100 p-4">
-        <p className="text-xs text-blue-700 leading-relaxed">El pago será procesado mediante una plataforma segura externa.</p>
+      <div className="rounded-lg bg-primary-muted border border-primary/20 p-4">
+        <p className="text-xs text-primary leading-relaxed">El pago será procesado mediante una plataforma segura externa.</p>
       </div>
 
       {open && (
@@ -159,7 +159,7 @@ export default function PagoInfraccion({
                       { n: 4, t: '¡Listo!', d: 'Una vez procesado, presiona "Verificar pago" para confirmar.', emerald: true },
                     ].map((s) => (
                       <div key={s.n} className="flex gap-3">
-                        <span className={`w-7 h-7 rounded-full ${s.emerald ? 'bg-emerald-600' : 'bg-blue-700'} text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5`}>{s.n}</span>
+                        <span className={`w-7 h-7 rounded-full ${s.emerald ? 'bg-emerald-600' : 'bg-primary'} text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5`}>{s.n}</span>
                         <div>
                           <p className="text-sm font-medium text-slate-800">{s.t}</p>
                           <p className="text-xs text-slate-500 leading-relaxed">{s.d}</p>
@@ -167,14 +167,14 @@ export default function PagoInfraccion({
                       </div>
                     ))}
                   </div>
-                  <div className="rounded-lg bg-blue-50 border border-blue-100 p-3">
-                    <p className="text-[11px] text-blue-700 leading-relaxed">Tus datos están protegidos. La transacción se realiza en un entorno seguro.</p>
+                  <div className="rounded-lg bg-primary-muted border border-primary/20 p-3">
+                    <p className="text-[11px] text-primary leading-relaxed">Tus datos están protegidos. La transacción se realiza en un entorno seguro.</p>
                   </div>
                 </div>
 
                 <div className="flex-1 flex flex-col min-w-0">
                   <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-10 gap-6">
-                    <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-700">
+                    <div className="w-16 h-16 rounded-2xl bg-primary-muted border border-primary/20 flex items-center justify-center text-primary">
                       <CreditCard size={28} strokeWidth={1.5} />
                     </div>
                     <div className="text-center space-y-2 max-w-sm">
@@ -184,16 +184,16 @@ export default function PagoInfraccion({
                     <button
                       onClick={abrirPopup}
                       disabled={abriendoPopup || popupAbierta}
-                      className="h-14 px-10 rounded-lg bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] text-white font-medium flex items-center gap-2.5 transition-all shadow-lg shadow-blue-700/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="h-14 px-10 rounded-lg bg-primary hover:bg-primary-dark active:bg-primary/80 active:scale-[0.99] text-white font-medium flex items-center gap-2.5 transition-all shadow-lg shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {abriendoPopup ? <><Loader2 size={18} className="animate-spin" /> Abriendo...</>
                         : popupAbierta ? <><ExternalLink size={18} /> Ventana abierta</>
                         : <><CreditCard size={18} /> Ir a pagar</>}
                     </button>
                     {popupAbierta ? (
-                      <div className="flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-100 px-4 py-2.5">
-                        <span className="w-2 h-2 rounded-full bg-blue-700 animate-pulse" />
-                        <p className="text-xs text-blue-700 font-medium">Esperando que completes el pago en la ventana abierta...</p>
+                      <div className="flex items-center gap-2 rounded-lg bg-primary-muted border border-primary/20 px-4 py-2.5">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        <p className="text-xs text-primary font-medium">Esperando que completes el pago en la ventana abierta...</p>
                       </div>
                     ) : (
                       <p className="text-[11px] text-slate-400 text-center max-w-xs">Después de realizar el pago, cierra la ventana y presiona el botón de abajo para verificar.</p>

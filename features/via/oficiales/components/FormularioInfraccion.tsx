@@ -51,7 +51,7 @@ import { eliminarInfraccionAction } from '@/features/via/infracciones/actions';
 const inputBase = `
   w-full rounded-lg border border-slate-200 bg-white px-3 py-2
   text-sm text-slate-900 placeholder:text-slate-400
-  focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-700/15
+  focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15
   transition-all duration-200
   disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed
 `;
@@ -1055,7 +1055,7 @@ export default function FormularioInfraccion() {
                                         }
                                         setSessionToResume(null);
                                     }}
-                                    className="w-full py-2.5 px-4 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white text-sm font-medium rounded-lg transition-all active:scale-[0.99]"
+                                    className="w-full py-2.5 px-4 bg-primary hover:bg-primary-dark active:bg-primary-dark text-white text-sm font-medium rounded-lg transition-all active:scale-[0.99]"
                                 >
                                     Continuar al pago
                                 </button>
@@ -1147,7 +1147,7 @@ export default function FormularioInfraccion() {
                                         }
                                         setSessionToResume(null);
                                     }}
-                                    className="w-full py-2.5 px-4 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white text-sm font-medium rounded-lg transition-all active:scale-[0.99]"
+                                    className="w-full py-2.5 px-4 bg-primary hover:bg-primary-dark active:bg-primary-dark text-white text-sm font-medium rounded-lg transition-all active:scale-[0.99]"
                                 >
                                     Continuar al pago
                                 </button>
@@ -1203,9 +1203,9 @@ export default function FormularioInfraccion() {
                                         w-6 h-6 rounded-full flex items-center justify-center
                                         text-[10px] font-semibold transition-all duration-300 shrink-0
                                         ${isActive
-                                            ? 'bg-blue-700 text-white ring-2 ring-blue-700/20 cursor-default'
+                                            ? 'bg-primary text-white ring-2 ring-primary/20 cursor-default'
                                             : canNavigateBack
-                                                ? 'bg-blue-700 text-white cursor-pointer hover:scale-110'
+                                                ? 'bg-primary text-white cursor-pointer hover:scale-110'
                                                 : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-default'
                                         }
                                     `}
@@ -1219,7 +1219,7 @@ export default function FormularioInfraccion() {
                                     )}
                                 </button>
                                 {idx < steps.length - 1 && (
-                                    <div className={`flex-1 h-[2px] mx-1 transition-all duration-300 ${idx < currentStep ? 'bg-blue-700' : 'bg-slate-200'}`} />
+                                    <div className={`flex-1 h-[2px] mx-1 transition-all duration-300 ${idx < currentStep ? 'bg-primary' : 'bg-slate-200'}`} />
                                 )}
                             </div>
                         );
@@ -1236,13 +1236,13 @@ export default function FormularioInfraccion() {
                 {ausenteCompletado ? (
                     <div className="max-w-2xl mx-auto w-full px-0 py-4">
                         <div className="bg-white rounded-xl border border-slate-200 shadow-card overflow-hidden">
-                            <div className="h-1.5 bg-gradient-to-r from-blue-700 to-blue-400" />
+                            <div className="h-1.5 bg-gradient-to-r from-primary to-blue-400" />
 
                             <div className="p-6 sm:p-8 space-y-6">
                                 {/* Header */}
                                 <div className="text-center space-y-2">
-                                    <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto ring-4 ring-blue-700/15">
-                                        <Shield size={32} className="text-blue-700" strokeWidth={1.5} />
+                                    <div className="w-16 h-16 rounded-2xl bg-primary-muted flex items-center justify-center mx-auto ring-4 ring-primary/15">
+                                        <Shield size={32} className="text-primary" strokeWidth={1.5} />
                                     </div>
                                     <h2 className="text-[22px] font-medium text-slate-900">
                                         Infracción Registrada
@@ -1322,7 +1322,7 @@ export default function FormularioInfraccion() {
                                         limpiarSesionLocal();
                                         window.location.reload();
                                     }}
-                                    className="w-full bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-semibold text-[13px] py-3 px-4 rounded-lg transition-all active:scale-[0.99]"
+                                    className="w-full bg-primary hover:bg-primary-dark active:bg-primary-dark text-white font-semibold text-[13px] py-3 px-4 rounded-lg transition-all active:scale-[0.99]"
                                 >
                                     Terminar
                                 </button>
@@ -1369,7 +1369,7 @@ export default function FormularioInfraccion() {
                             type="button"
                             disabled={loading}
                             onClick={handleNextStep}
-                            className="px-5 py-2 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white text-[13px] font-semibold rounded-lg transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-5 py-2 bg-primary hover:bg-primary-dark active:bg-primary-dark text-white text-[13px] font-semibold rounded-lg transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Siguiente
                         </button>
@@ -1378,7 +1378,7 @@ export default function FormularioInfraccion() {
                             type="submit"
                             disabled={loading}
                             onClick={handleRegistrarNuevaInfraccion}
-                            className="px-5 py-2 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white text-[13px] font-semibold rounded-lg transition-all active:scale-[0.99] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-5 py-2 bg-primary hover:bg-primary-dark active:bg-primary-dark text-white text-[13px] font-semibold rounded-lg transition-all active:scale-[0.99] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
                                 <>

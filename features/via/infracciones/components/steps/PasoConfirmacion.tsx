@@ -153,15 +153,15 @@ export const PasoConfirmacion: React.FC<PasoConfirmacionProps> = ({
                 >
                     <div className="flex items-center justify-between px-5 py-4 bg-slate-50 border-b border-slate-100">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-blue-700/10 flex items-center justify-center">
-                                <Icon size={16} className="text-blue-700" />
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <Icon size={16} className="text-primary" />
                             </div>
                             <h3 className="text-sm font-medium text-slate-900 tracking-wide">{title}</h3>
                         </div>
                         <button
                             type="button"
                             onClick={() => onNavigateToStep(step)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-blue-700 hover:bg-blue-50 font-medium transition-all active:scale-95"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-primary hover:bg-primary-muted font-medium transition-all active:scale-95"
                         >
                             <Pencil size={13} />
                             Modificar

@@ -77,7 +77,7 @@ export const SeccionGarantia: React.FC<SeccionGarantiaProps> = ({
                                 })
                             }
                             disabled={loading}
-                            className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-blue-600 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.garantiaSeleccionada) ? 'border-red-400' : 'border-slate-200'}`}
+                            className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.garantiaSeleccionada) ? 'border-red-400' : 'border-slate-200'}`}
                         >
                             <option value="">Selecciona garantía</option>
                             <option value="TRJ_CIRCULACION">Tarjeta de circulación</option>
@@ -108,7 +108,7 @@ export const SeccionGarantia: React.FC<SeccionGarantiaProps> = ({
                                         })
                                     }
                                     disabled={loading}
-                                    className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-blue-600 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.motivoRetencionVehiculo) ? 'border-red-400' : 'border-slate-200'}`}
+                                    className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.motivoRetencionVehiculo) ? 'border-red-400' : 'border-slate-200'}`}
                                 >
                                     <option value="">Selecciona motivo</option>
                                     <option value="DELITO">Delito</option>
@@ -136,7 +136,7 @@ export const SeccionGarantia: React.FC<SeccionGarantiaProps> = ({
                                             })
                                         }
                                         disabled={loading}
-                                        className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-blue-600 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.gruaInvolucrada) ? 'border-red-400' : 'border-slate-200'}`}
+                                        className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.gruaInvolucrada) ? 'border-red-400' : 'border-slate-200'}`}
                                     >
                                         <option value="">Selecciona grúa</option>
                                         {gruas.map((g) => (
@@ -168,7 +168,7 @@ export const SeccionGarantia: React.FC<SeccionGarantiaProps> = ({
                                             })
                                         }
                                         disabled={loading}
-                                        className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-blue-600 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.dependenciaRemisora) ? 'border-red-400' : 'border-slate-200'}`}
+                                        className={`w-full appearance-none rounded-lg border bg-white px-3 py-2 pr-10 text-sm text-slate-900 transition-all cursor-pointer hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${fieldError(datos.dependenciaRemisora) ? 'border-red-400' : 'border-slate-200'}`}
                                     >
                                         <option value="">Selecciona dependencia</option>
                                         <option value="FISCALIA">FISCALIA</option>

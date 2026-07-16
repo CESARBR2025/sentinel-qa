@@ -119,7 +119,7 @@ export default async function InfraccionCiudadanoPage({
 
     return (
         <main className="min-h-dvh overflow-x-hidden bg-slate-100">
-            <div className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-primary-dark via-primary to-primary relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5" />
                 <div className="absolute top-20 -right-5 w-24 h-24 rounded-full bg-white/5" />
                 <div className="absolute -bottom-8 left-1/3 w-32 h-32 rounded-full bg-white/5" />
@@ -127,11 +127,11 @@ export default async function InfraccionCiudadanoPage({
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                                <FileText size={20} className="text-blue-200" strokeWidth={1.5} />
+                                <FileText size={20} className="text-white/70" strokeWidth={1.5} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-blue-300/80">SSPM · San Juan del Río</p>
-                                <p className="text-xs text-blue-300/60 -mt-0.5">Sistema Digital de Infracciones</p>
+                                <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-white/70">SSPM · San Juan del Río</p>
+                                <p className="text-xs text-white/50 -mt-0.5">Sistema Digital de Infracciones</p>
                             </div>
                         </div>
                         <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
@@ -141,10 +141,10 @@ export default async function InfraccionCiudadanoPage({
                     </div>
                     <div className="mt-5">
                         <h1 className="text-[28px] font-medium text-white tracking-tight">Folio #{infraccion.folio}</h1>
-                        <p className="text-sm text-blue-200/70 mt-1.5 flex items-center gap-2">
+                        <p className="text-sm text-white/70 mt-1.5 flex items-center gap-2">
                             <Clock size={13} strokeWidth={1.5} />
                             {formatDate(infraccion.created_at || infraccion.fechaInfraccion)}
-                            <span className="text-blue-300/40">&middot;</span>
+                            <span className="text-white/30">&middot;</span>
                             <span>{timeAgo(infraccion.created_at || infraccion.fechaInfraccion)}</span>
                         </p>
                     </div>
@@ -194,7 +194,7 @@ export default async function InfraccionCiudadanoPage({
                     </Card>
                 ) : mostrarPago ? (
                     <Card className="overflow-hidden p-0 shadow-[0_4px_12px_rgba(28, 48, 81,0.2)]">
-                        <div className="bg-gradient-to-br from-blue-700 to-blue-900 px-6 pt-6 pb-5 relative overflow-hidden">
+                        <div className="bg-gradient-to-br from-primary to-primary-dark px-6 pt-6 pb-5 relative overflow-hidden">
                             <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-white/5" />
                             <div className="absolute top-12 -right-3 w-16 h-16 rounded-full bg-white/5" />
                             <div className="relative">
@@ -206,11 +206,11 @@ export default async function InfraccionCiudadanoPage({
                                 </div>
                                 <div className="flex items-baseline gap-2 mt-2">
                                     <span className="text-[36px] font-medium text-white leading-none tracking-tight">${infraccion.total_pesos}</span>
-                                    <span className="text-sm text-blue-300/80 font-medium">MXN</span>
+                                    <span className="text-sm text-white/70 font-medium">MXN</span>
                                 </div>
                                 <div className="flex items-baseline gap-2 mt-1">
-                                    <span className="text-xl font-medium text-blue-200/90 leading-none">{totalUmasPagar.toFixed(1)}</span>
-                                    <span className="text-xs text-blue-300/70 font-medium">UMAs equivalentes</span>
+                                    <span className="text-xl font-medium text-white/80 leading-none">{totalUmasPagar.toFixed(1)}</span>
+                                    <span className="text-xs text-white/60 font-medium">UMAs equivalentes</span>
                                 </div>
                             </div>
                         </div>
@@ -274,11 +274,11 @@ export default async function InfraccionCiudadanoPage({
                             <div className="space-y-3">
                                 {infraccion.articulo_numero && (
                                     <div className="flex gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
-                                        <div className="w-9 h-9 rounded-md bg-blue-700/10 flex items-center justify-center shrink-0 self-center">
-                                            <BookOpen size={18} className="text-blue-700" strokeWidth={1.5} />
+                                        <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center shrink-0 self-center">
+                                            <BookOpen size={18} className="text-primary" strokeWidth={1.5} />
                                         </div>
                                         <div className="min-w-0">
-                                            <span className="inline-block px-2 py-1 rounded-md bg-blue-700 text-white text-[11px] font-medium font-mono leading-none mb-1.5">Art. {infraccion.articulo_numero}</span>
+                                            <span className="inline-block px-2 py-1 rounded-md bg-primary text-white text-[11px] font-medium font-mono leading-none mb-1.5">Art. {infraccion.articulo_numero}</span>
                                             {infraccion.articulo_descripcion && <p className="text-sm text-slate-700 leading-snug">{infraccion.articulo_descripcion}</p>}
                                         </div>
                                     </div>
@@ -320,7 +320,7 @@ export default async function InfraccionCiudadanoPage({
 
                 {(infractorNombre || (infraccion.curpInfractor && String(infraccion.curpInfractor) !== 'NO_DATA')) && (
                     <Card>
-                        <Section icon={User} iconBg="bg-blue-50" iconColor="text-blue-700" title="Infractor">
+                        <Section icon={User} iconBg="bg-primary-muted" iconColor="text-primary" title="Infractor">
                             <div className="space-y-3">
                                 {infractorNombre && <FieldWithIcon icon={User} label="Nombre completo" value={infractorNombre} />}
                                 {infraccion.curpInfractor && String(infraccion.curpInfractor) !== 'NO_DATA' && (
@@ -338,11 +338,11 @@ export default async function InfraccionCiudadanoPage({
                 )}
 
                 <Card>
-                    <Section icon={Car} iconBg="bg-indigo-50" iconColor="text-indigo-700" title="Vehículo">
+                    <Section icon={Car} iconBg="bg-primary-muted" iconColor="text-primary" title="Vehículo">
                         {infraccion.placa && (
-                            <div className="px-4 py-2.5 rounded-lg bg-indigo-50 border border-indigo-200 mb-4 inline-block">
-                                <p className="text-[10px] font-medium tracking-widest text-indigo-600 uppercase mb-0.5">Placa</p>
-                                <p className="text-lg font-medium text-indigo-900 tracking-[0.2em] font-mono">{infraccion.placa}</p>
+                            <div className="px-4 py-2.5 rounded-lg bg-primary-muted border border-primary/20 mb-4 inline-block">
+                                <p className="text-[10px] font-medium tracking-widest text-primary uppercase mb-0.5">Placa</p>
+                                <p className="text-lg font-medium text-primary tracking-[0.2em] font-mono">{infraccion.placa}</p>
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
@@ -356,7 +356,7 @@ export default async function InfraccionCiudadanoPage({
                 </Card>
 
                 <Card>
-                    <Section icon={MapPin} iconBg="bg-emerald-50" iconColor="text-emerald-700" title="Ubicación">
+                    <Section icon={MapPin} iconBg="bg-primary-muted" iconColor="text-primary" title="Ubicación">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
                             <FieldWithIcon icon={MapPin} label="Calle" value={sanitize(infraccion.calle)} />
                             <FieldWithIcon icon={MapPin} label="Número" value={sanitize(infraccion.numero, 's/n')} />
