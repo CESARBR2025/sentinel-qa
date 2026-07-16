@@ -4,6 +4,7 @@ import { Card } from '@/features/via/infracciones/components/ui/Card';
 import MapSectionCiudadano from '@/features/via/infracciones/components/MapSectionCiudadano';
 import PinBarrier from '@/features/via/infracciones/components/PinBarrier';
 import { InfraccionesService } from '@/features/via/infracciones/service';
+import { InfraccionesRepository } from '@/features/via/infracciones/repository';
 import { verificarCookieCiudadano } from '@/lib/via/auth-ciudadano';
 import { notFound } from 'next/navigation';
 import {
@@ -69,31 +70,54 @@ export default async function InfraccionCiudadanoPage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
+    console.log("[PAGE][INFRACCIONES/[id]] INICIO — id:", id);
 
-    let infraccion: any;
+    let tieneCookie = false;
     try {
-        infraccion = await InfraccionesService.obtenerPorId(id);
+      tieneCookie = await verificarCookieCiudadano(id);
+      console.log("[PAGE][INFRACCIONES/[id]] verificarCookieCiudadano:", tieneCookie);
     } catch (e) {
-        console.error("[PAGE][INFRACCIONES/[id]] Error al obtener infracción:", e);
-        if (e && typeof e === "object") {
-            const err = e as Record<string, unknown>;
-            console.error("  message:", err.message);
-            console.error("  detail:", err.detail);
-            console.error("  code:", err.code);
-        }
-        notFound();
+      console.error("[PAGE][INFRACCIONES/[id]] Error verificando cookie:", e);
     }
 
-    const tieneCookie = await verificarCookieCiudadano(id);
-
     if (!tieneCookie) {
+      console.log("[PAGE][INFRACCIONES/[id]] Sin cookie — consultando folio ligero...");
+      try {
+        const folioData = await InfraccionesRepository.obtenerFolio(id);
+        console.log("[PAGE][INFRACCIONES/[id]] obtenerFolio:", folioData ? folioData.folio : "NULL");
+        if (!folioData) {
+          console.log("[PAGE][INFRACCIONES/[id]] Folio no encontrado → notFound()");
+          notFound();
+        }
+        const nombreInfractor = [folioData.nombre_infractor, folioData.apellido_paterno_infractor, folioData.apellido_materno_infractor]
+          .filter(Boolean).join(" ") || null;
         return (
-            <PinBarrier
-                infraccionId={id}
-                folio={infraccion.folio}
-                nombreInfractor={infraccion.nombreInfractor || infraccion.nombreTitular}
-            />
+          <PinBarrier
+            infraccionId={id}
+            folio={folioData.folio}
+            nombreInfractor={nombreInfractor}
+          />
         );
+      } catch (e) {
+        console.error("[PAGE][INFRACCIONES/[id]] Error en query ligera:", e);
+        notFound();
+      }
+    }
+
+    console.log("[PAGE][INFRACCIONES/[id]] Cookie válida — consultando datos completos...");
+    let infraccion: any;
+    try {
+      infraccion = await InfraccionesService.obtenerPorId(id);
+      console.log("[PAGE][INFRACCIONES/[id]] obtenerPorId OK — folio:", infraccion?.folio);
+    } catch (e) {
+      console.error("[PAGE][INFRACCIONES/[id]] Error al obtener infracción:", e);
+      if (e && typeof e === "object") {
+        const err = e as Record<string, unknown>;
+        console.error("  message:", err.message);
+        console.error("  detail:", err.detail);
+        console.error("  code:", err.code);
+      }
+      notFound();
     }
 
     const isPagada = infraccion.estatusPago === 'P';

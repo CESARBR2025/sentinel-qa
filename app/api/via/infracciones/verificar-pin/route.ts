@@ -7,8 +7,10 @@ const getSecret = () => new TextEncoder().encode(process.env.BETTER_AUTH_SECRET)
 export async function POST(req: Request) {
   try {
     const { infraccionId, pin } = await req.json();
+    console.log("[API][VERIFICAR-PIN] INICIO — infraccionId:", infraccionId, "pin:", pin);
 
     if (!infraccionId || !pin) {
+      console.log("[API][VERIFICAR-PIN] Faltan parámetros");
       return NextResponse.json({ ok: false, error: "infraccionId y pin son requeridos" }, { status: 400 });
     }
 
@@ -16,20 +18,22 @@ export async function POST(req: Request) {
       `SELECT pin_acceso, intentos_pin, bloqueado_pin_hasta FROM via.v2_infracciones WHERE id = $1`,
       [infraccionId],
     );
+    console.log("[API][VERIFICAR-PIN] DB consulta OK — rows:", result.rows.length);
 
     if (result.rows.length === 0) {
+      console.log("[API][VERIFICAR-PIN] Infracción no encontrada");
       return NextResponse.json({ ok: false, error: "Infracción no encontrada" }, { status: 404 });
     }
 
     const row = result.rows[0] as { pin_acceso: string | null; intentos_pin: number; bloqueado_pin_hasta: string | null };
+    console.log("[API][VERIFICAR-PIN] pin_acceso DB:", row.pin_acceso, "intentos:", row.intentos_pin, "bloqueado:", row.bloqueado_pin_hasta);
 
-    // Verificar bloqueo
     if (row.bloqueado_pin_hasta && new Date(row.bloqueado_pin_hasta) > new Date()) {
       const hasta = new Date(row.bloqueado_pin_hasta).toISOString();
+      console.log("[API][VERIFICAR-PIN] Bloqueado hasta:", hasta);
       return NextResponse.json({ ok: false, bloqueado: true, hasta });
     }
 
-    // PIN incorrecto
     if (row.pin_acceso !== pin) {
       const intentos = (row.intentos_pin || 0) + 1;
       const bloqueado = intentos >= 3;
@@ -45,6 +49,7 @@ export async function POST(req: Request) {
     }
 
     // PIN correcto — resetear intentos y emitir cookie
+    console.log("[API][VERIFICAR-PIN] PIN correcto — emitiendo cookie...");
     await query(
       `UPDATE via.v2_infracciones SET intentos_pin = 0, bloqueado_pin_hasta = NULL WHERE id = $1`,
       [infraccionId],
@@ -64,10 +69,11 @@ export async function POST(req: Request) {
       maxAge: 3600,
       path: "/",
     });
+    console.log("[API][VERIFICAR-PIN] Cookie emitida OK");
 
     return res;
   } catch (error) {
-    console.error("[API][VIA][VERIFICAR-PIN]", error);
+    console.error("[API][VERIFICAR-PIN] ERROR:", error);
     return NextResponse.json({ ok: false, error: "Error interno" }, { status: 500 });
   }
 }

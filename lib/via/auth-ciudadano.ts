@@ -7,11 +7,17 @@ export async function verificarCookieCiudadano(infraccionId: string): Promise<bo
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("infraccion_access")?.value;
-    if (!token) return false;
+    if (!token) {
+      console.log("[AUTH-CIUDADANO] Cookie infraccion_access no encontrada");
+      return false;
+    }
 
     const { payload } = await jwtVerify(token, getSecret());
-    return payload.infraccionId === infraccionId;
-  } catch {
+    const match = payload.infraccionId === infraccionId;
+    console.log("[AUTH-CIUDADANO] Cookie válida — infraccionId cookie:", payload.infraccionId, "esperado:", infraccionId, "match:", match);
+    return match;
+  } catch (e) {
+    console.log("[AUTH-CIUDADANO] Error verificando token:", e instanceof Error ? e.message : e);
     return false;
   }
 }

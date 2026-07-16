@@ -118,6 +118,15 @@ export class InfraccionesRepository {
     await query(`DELETE FROM via.v2_infracciones WHERE id = $1`, [id]);
   }
 
+  static async obtenerFolio(id: string): Promise<{ folio: string; nombre_infractor: string | null; apellido_paterno_infractor: string | null; apellido_materno_infractor: string | null } | null> {
+    const result = await query(
+      `SELECT folio, nombre_infractor, apellido_paterno_infractor, apellido_materno_infractor
+       FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
+      [id],
+    );
+    return result.rows[0] as any || null;
+  }
+
   static async obtenerDatosInfraccionCiudadanoRP(id: string) {
     try {
       const result = await query(
