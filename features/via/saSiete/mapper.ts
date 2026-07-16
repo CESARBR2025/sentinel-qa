@@ -18,6 +18,7 @@ interface OrdenPagoRow {
   request_payload: any;
   created_at: string;
   updated_at: string;
+  vigente: boolean;
 }
 
 export function mapRowToOrdenPago(row: OrdenPagoRow): OrdenPagoSA7 {
@@ -39,5 +40,6 @@ export function mapRowToOrdenPago(row: OrdenPagoRow): OrdenPagoSA7 {
     requestPayload: row.request_payload,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    vigente: row.vigente,
   };
 }

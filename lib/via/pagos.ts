@@ -1,7 +1,7 @@
 import { consultarEstatusSA7 } from "./sa7";
 import { query } from "@/lib/db";
 
-type ResultadoPago = { pagado: boolean; estatusSA7?: string };
+type ResultadoPago = { pagado: boolean; estatusSA7?: string; error?: string };
 
 export async function confirmarPago(
   ordenPagoId: string,
@@ -20,7 +20,31 @@ export async function confirmarPago(
     return { pagado: false, estatusSA7: sa7.estatus };
   }
 
-  console.log("[VIA][PAGOS] SA7 dice PAGADO. Actualizando BD...");
+  console.log("[VIA][PAGOS] SA7 dice PAGADO. Validando monto...");
+
+  // P0.3: Validar que el monto pagado coincida con el monto final de la infracción
+  const ordenResult = await query<{ total_pesos: number }>(
+    `SELECT total_pesos FROM via.v2_ordenes_pago_sa7 WHERE orden_pago_id = $1 LIMIT 1`,
+    [ordenPagoId],
+  );
+
+  const infraccionResult = await query<{ monto_final: number }>(
+    `SELECT monto_final FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
+    [infraccionId],
+  );
+
+  const montoPagado = ordenResult.rows[0]?.total_pesos;
+  const montoEsperado = infraccionResult.rows[0]?.monto_final;
+
+  if (montoPagado == null || montoEsperado == null) {
+    return { pagado: false, error: "No se pudo validar el monto" };
+  }
+
+  if (Math.round(Number(montoPagado) * 100) !== Math.round(Number(montoEsperado) * 100)) {
+    return { pagado: false, error: `Monto pagado (${montoPagado}) no coincide con el esperado (${montoEsperado})` };
+  }
+
+  console.log("[VIA][PAGOS] Monto validado correctamente. Actualizando BD...");
 
   await query(
     `UPDATE via.v2_ordenes_pago_sa7 SET estatus = 'P', updated_at = CURRENT_TIMESTAMP WHERE orden_pago_id = $1`,
