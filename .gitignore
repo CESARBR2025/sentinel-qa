@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -9,40 +8,30 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
 # testing
 /coverage
-
 # next.js
 /.next/
 /out/
-
 # production
 /build
-
 # misc
 .DS_Store
 *.pem
-
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
 # env files (can opt-in for committing if needed)
 .env*
-
 # vercel
 .vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
 # Claude Code local config
 .claude/
-
 # graphify — cache files, never commit
 doc/Analisis_Algoritmos_C4.html
 *.xlsx
@@ -52,12 +41,9 @@ doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Diagrama de Flujo - UDAI.jpeg
 doc/Procesos_C4 y UDAI/Formatos UDAI Sistema/Formatos UDAI/FORMATO FICHA DE DETENIDOS.pptx
 doc/flujo_prevencion_delito.html
 doc/tutorial_prevencion_delito.html
-
 # Alexandria — vault y config MCP personal (rutas locales, no del repo)
 KnowledgeVault/
 Alexandria/
-
-# YouMindAG — archivos de sesión locales, no del repo
 /.youmindag/
 .youmindag/
 .vault.json
@@ -66,13 +52,12 @@ Alexandria/
 .vscode/mcp.json
 /.youmindag
 .youmindag/plugin-state.json
-
-# YouMindAG — generated knowledge graph
-.graphify/
 /.graphify/
-graphify-visual/
-
 # Alexandria (conocimiento y config personal — no del repo)
 .cursor/mcp.json
 opencode.json
 .gemini/settings.json
+
+# YouMindAG — generated knowledge graph
+.graphify/
+graphify-visual/
