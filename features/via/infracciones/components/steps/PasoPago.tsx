@@ -55,9 +55,7 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
     if (!infraccionCreada) return null;
 
     const baseUrl =
-        process.env.NODE_ENV === 'production'
-            ? 'https://via-v2.vercel.app'
-            : 'http://localhost:3000';
+        process.env.NEXT_PUBLIC_APP_URL || 'https://via-v2.vercel.app';
 
     const urlVistaCiudadano = `${baseUrl}/infracciones/${infraccionCreada.id}`;
 
