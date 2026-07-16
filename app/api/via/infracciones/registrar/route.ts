@@ -5,6 +5,7 @@ import { OficialesViaService } from "@/features/via/oficiales/service";
 import { InfraccionesService } from "@/features/via/infracciones/service";
 import { sanitizeCrearInfraccionPayload } from "@/features/via/infracciones/service";
 import { verificarRolOficial } from "@/lib/oficial/service";
+import { enviarCorreoPinAcceso } from "@/lib/emails/server";
 
 export async function POST(request: Request) {
   try {
@@ -25,6 +26,18 @@ export async function POST(request: Request) {
     console.log(payload);
     const result =
       await InfraccionesService.registrarNuevaInfraccionSV(payload);
+
+    // Enviar correo con PIN (fire-and-forget)
+    if (payload.correoInfractor && result.pin_acceso) {
+      const nombre = [payload.nombreInfractor, payload.apellidoPaternoInfractor, payload.apellidoMaternoInfractor].filter(Boolean).join(" ") || "Ciudadano";
+      enviarCorreoPinAcceso({
+        correoInfractor: payload.correoInfractor,
+        nombreInfractor: nombre,
+        idInfraccion: result.id,
+        folio: result.folio,
+        pin: result.pin_acceso,
+      }).catch((err) => console.error("[EMAIL][PIN] Error al enviar:", err));
+    }
 
     return NextResponse.json(
       { message: "Infracción registrada exitosamente", data: result },

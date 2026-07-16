@@ -8,6 +8,10 @@ import {
   templateOrdenLiberacion,
   type EnviarCorreoOrdenLiberacionParams,
 } from './templates/orden-liberacion'
+import {
+  templatePinAcceso,
+  type EnviarCorreoPinAccesoParams,
+} from './templates/pin-acceso'
 
 export async function enviarCorreoAsignacionFiscalia(
   data: EnviarCorreoAsignacionFiscaliaParams,
@@ -49,6 +53,24 @@ export async function enviarCorreoOrdenLiberacion(
   await sendMail({
     to: data.correoTitular,
     subject: `SSPM - Orden de Liberación #${data.folio}`,
+    text,
+    html,
+  })
+}
+
+export async function enviarCorreoPinAcceso(
+  data: EnviarCorreoPinAccesoParams,
+) {
+  const urlVistaCiudadano = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://via-v2.vercel.app'}/infracciones/${data.idInfraccion}`
+
+  const { html, text } = templatePinAcceso({
+    ...data,
+    urlVistaCiudadano,
+  })
+
+  await sendMail({
+    to: data.correoInfractor,
+    subject: `SSPM - Código de Acceso #${data.folio}`,
     text,
     html,
   })

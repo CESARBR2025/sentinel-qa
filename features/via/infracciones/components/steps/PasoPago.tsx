@@ -10,6 +10,7 @@ import {
     Smartphone,
     Wallet,
     Scan,
+    FlaskConical,
 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { SegmentedControl } from '../ui/SegmentedControl';
@@ -19,6 +20,7 @@ import { CardTitle } from '../ui/CardTitle';
 interface InfraccionCreada {
     id: string | number;
     folio: string;
+    pin_acceso?: string;
 }
 
 interface PasoPagoProps {
@@ -32,6 +34,7 @@ interface PasoPagoProps {
         [key: string]: any;
     };
     verificarPago: () => Promise<void> | void;
+    verificarPagoPruebas: () => Promise<void> | void;
     onFinalizarSinPago?: () => Promise<void> | void;
     loading: boolean;
     ordenPago?: { totalPesos: string; totalUmas: string } | null;
@@ -44,6 +47,7 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
     setDeseaPagar,
     datos,
     verificarPago,
+    verificarPagoPruebas,
     onFinalizarSinPago,
     loading,
     ordenPago,
@@ -230,6 +234,24 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
                                 <div className="space-y-3 mt-5">
                                     <button
                                         type="button"
+                                        onClick={verificarPagoPruebas}
+                                        disabled={loading}
+                                        className="w-full h-11 rounded-lg border-2 border-dashed border-amber-400 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 disabled:opacity-50 disabled:cursor-not-allowed text-amber-700 font-medium text-sm flex items-center justify-center gap-2.5 transition-all active:scale-[0.99]"
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <Loader2 size={18} className="animate-spin" />
+                                                Verificando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FlaskConical size={18} />
+                                                Verificar pago (pruebas)
+                                            </>
+                                        )}
+                                    </button>
+                                    <button
+                                        type="button"
                                         onClick={verificarPago}
                                         disabled={loading}
                                         className="w-full h-11 rounded-lg bg-primary hover:bg-primary-dark active:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
@@ -278,6 +300,26 @@ export const PasoPago: React.FC<PasoPagoProps> = ({
                                         {infraccionCreada.folio}
                                     </span>
                                 </div>
+
+                                {infraccionCreada.pin_acceso && (
+                                    <div className="w-full border-t border-slate-200 pt-4">
+                                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.1em] mb-2">
+                                            PIN de acceso
+                                        </p>
+                                        <p className="text-sm text-slate-500 leading-relaxed mb-2">
+                                            Comparte este código con el ciudadano para que consulte su infracción.
+                                        </p>
+                                        <div className="flex justify-center gap-2">
+                                            {infraccionCreada.pin_acceso.split('').map((d, i) => (
+                                                <span key={i}
+                                                    className="w-9 h-11 rounded-lg bg-amber-50 border border-amber-300 flex items-center justify-center text-lg font-bold text-amber-800 font-mono tracking-wider shadow-sm"
+                                                >
+                                                    {d}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </Card>
                         </div>
                     </div>

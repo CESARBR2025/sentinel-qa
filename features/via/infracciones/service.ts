@@ -46,6 +46,7 @@ export class InfraccionesService {
         folio: infraccion.folio,
         clasificacion: infraccion.clasificacion,
         concepto: infraccion.concept_id,
+        pin_acceso: infraccion.pin_acceso,
       };
     } catch (error) {
       console.error("[SERVICE][INFRACCIONES][CREAR]", error);

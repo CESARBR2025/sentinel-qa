@@ -2,7 +2,9 @@ import PagoInfraccion from '@/features/via/infracciones/components/PagoInfraccio
 import SeccionLiberacion from '@/features/via/infracciones/components/SeccionLiberacion';
 import { Card } from '@/features/via/infracciones/components/ui/Card';
 import MapSectionCiudadano from '@/features/via/infracciones/components/MapSectionCiudadano';
+import PinBarrier from '@/features/via/infracciones/components/PinBarrier';
 import { InfraccionesService } from '@/features/via/infracciones/service';
+import { verificarCookieCiudadano } from '@/lib/via/auth-ciudadano';
 import { notFound } from 'next/navigation';
 import {
     CheckCircle2,
@@ -80,6 +82,18 @@ export default async function InfraccionCiudadanoPage({
             console.error("  code:", err.code);
         }
         notFound();
+    }
+
+    const tieneCookie = await verificarCookieCiudadano(id);
+
+    if (!tieneCookie) {
+        return (
+            <PinBarrier
+                infraccionId={id}
+                folio={infraccion.folio}
+                nombreInfractor={infraccion.nombreInfractor || infraccion.nombreTitular}
+            />
+        );
     }
 
     const isPagada = infraccion.estatusPago === 'P';

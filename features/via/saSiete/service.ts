@@ -89,4 +89,28 @@ export class SA7Service {
     if (!orden) return null;
     return { ordenPagoId: orden.ordenPagoId };
   }
+
+  static async resolverOrdenVigente(infraccionId: string) {
+    return SA7Repository.resolverOrdenVigente(infraccionId);
+  }
+}
+
+export async function crearOrdenSA7(
+  infraccionId: string,
+  folioInfraccion: string,
+  nombreUsuario: string,
+  apellidosUsuario: string,
+  conceptoId: string,
+  montoTotal: number,
+  descuentoAplicado: number,
+): Promise<ResultadoSA7> {
+  return SA7Service.generarOrdenPago({
+    infraccionId,
+    folio: folioInfraccion,
+    nombreUsuario,
+    apellidosUsuario,
+    conceptoId: Number(conceptoId),
+    correoInfractor: "",
+    descuentoAplicado,
+  });
 }

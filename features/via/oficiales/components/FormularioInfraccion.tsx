@@ -201,6 +201,7 @@ export default function FormularioInfraccion() {
     const [infraccionCreada, setInfraccionCreada] = useState<{
         id: number;
         folio: string;
+        pin_acceso?: string;
     } | null>(null);
 
     const [ordenPago, setOrdenPago] = useState<{
@@ -345,6 +346,38 @@ export default function FormularioInfraccion() {
             }
         } catch (error) {
             console.error('🔥 ERROR GENERAL EN PAGO POLLING:', error);
+        } finally {
+            setLoading(false);
+        }
+    }, [loading, infraccionCreada, setLoading, setPagado, limpiarSesionLocal]);
+
+    /**
+     * Verifica pago consultando BD local (sin SA7). Ruta de pruebas.
+     */
+    const verificarPagoPruebas = useCallback(async () => {
+        if (loading) return;
+        if (!infraccionCreada?.id) {
+            console.warn('⚠️ No hay infracción creada aún');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await fetch(
+                `/api/via/pagos/verificar-pago-pruebas/${infraccionCreada.id}`,
+                { method: 'GET', cache: 'no-store' },
+            );
+            const data = await res.json();
+
+            if (data.pagado) {
+                setPagado(true);
+                limpiarSesionLocal();
+                return;
+            }
+
+            console.log('ℹ️ [PRUEBAS] Pago no detectado, estatus:', data.estatus);
+        } catch (error) {
+            console.error('❌ ERROR EN VERIFICAR PAGO (PRUEBAS):', error);
         } finally {
             setLoading(false);
         }
@@ -562,6 +595,7 @@ export default function FormularioInfraccion() {
                         setDeseaPagar={setDeseaPagar}
                         datos={datos}
                         verificarPago={verificarPago}
+                        verificarPagoPruebas={verificarPagoPruebas}
                         onFinalizarSinPago={handleFinalizarSinPago}
                         loading={loading}
                         ordenPago={ordenPago}
@@ -573,7 +607,7 @@ export default function FormularioInfraccion() {
         datos, loading, boolError, fieldError,
         articulos, cargandoArticulos,
         files, infraccionCreada, pagado, deseaPagar, setDeseaPagar,
-        verificarPago, ordenPago, handleFinalizarSinPago,
+        verificarPago, verificarPagoPruebas, ordenPago, handleFinalizarSinPago,
     ]);
 
     // ═══════════════════════════════════════════════════════════════════

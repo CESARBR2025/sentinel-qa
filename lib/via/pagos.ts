@@ -1,14 +1,20 @@
 import { consultarEstatusSA7 } from "./sa7";
 import { query } from "@/lib/db";
+import { SA7Repository } from "@/features/via/saSiete/repository";
 
 type ResultadoPago = { pagado: boolean; estatusSA7?: string; error?: string };
 
 export async function confirmarPago(
-  ordenPagoId: string,
   infraccionId: string,
   nuevoEstatus: string,
   nuevaDependencia: string,
 ): Promise<ResultadoPago> {
+  const orden = await SA7Repository.resolverOrdenVigente(infraccionId);
+  if (!orden || !orden.ordenPagoId) {
+    return { pagado: false, error: "Sin orden vigente para esta infracción" };
+  }
+
+  const ordenPagoId = orden.ordenPagoId;
   console.log("[VIA][PAGOS] confirmarPago - ordenPagoId:", ordenPagoId, "infraccionId:", infraccionId);
   console.log("[VIA][PAGOS] confirmarPago - nuevoEstatus:", nuevoEstatus, "nuevaDependencia:", nuevaDependencia);
 
@@ -22,26 +28,19 @@ export async function confirmarPago(
 
   console.log("[VIA][PAGOS] SA7 dice PAGADO. Validando monto...");
 
-  // P0.3: Validar que el monto pagado coincida con el monto final de la infracción
-  const ordenResult = await query<{ total_pesos: number }>(
-    `SELECT total_pesos FROM via.v2_ordenes_pago_sa7 WHERE orden_pago_id = $1 LIMIT 1`,
-    [ordenPagoId],
-  );
-
   const infraccionResult = await query<{ monto_final: number }>(
     `SELECT monto_final FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
     [infraccionId],
   );
 
-  const montoPagado = ordenResult.rows[0]?.total_pesos;
   const montoEsperado = infraccionResult.rows[0]?.monto_final;
 
-  if (montoPagado == null || montoEsperado == null) {
-    return { pagado: false, error: "No se pudo validar el monto" };
+  if (montoEsperado == null) {
+    return { pagado: false, error: "No se pudo validar el monto de la infracción" };
   }
 
-  if (Math.round(Number(montoPagado) * 100) !== Math.round(Number(montoEsperado) * 100)) {
-    return { pagado: false, error: `Monto pagado (${montoPagado}) no coincide con el esperado (${montoEsperado})` };
+  if (Math.round(Number(orden.totalPesos) * 100) !== Math.round(Number(montoEsperado) * 100)) {
+    return { pagado: false, error: `Monto pagado (${orden.totalPesos}) no coincide con el esperado (${montoEsperado})` };
   }
 
   console.log("[VIA][PAGOS] Monto validado correctamente. Actualizando BD...");

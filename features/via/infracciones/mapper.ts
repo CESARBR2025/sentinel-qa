@@ -1,4 +1,7 @@
 import { CrearInfraccionDTO, InfraccionDetalleDTO } from "./types";
+import crypto from "crypto";
+
+const generarPinAcceso = (): string => crypto.randomInt(100000, 999999).toString();
 
 export const mapCrearInfraccionToDB = (
   data: CrearInfraccionDTO,
@@ -48,6 +51,7 @@ export const mapCrearInfraccionToDB = (
     estatus: data.estatus,
     estatus_dependencia: data.estatusDependencia ?? null,
     grua_id: data.gruaId ?? null,
+    pin_acceso: generarPinAcceso(),
   };
 };
 

@@ -89,6 +89,7 @@ export interface InfraccionDB {
   grua_id: string | null;
   created_at: string;
   updated_at: string;
+  pin_acceso?: string | null;
 }
 
 export interface InfraccionDetalleDTO {
