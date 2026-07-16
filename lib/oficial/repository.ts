@@ -600,3 +600,31 @@ export async function actualizarPatrullaOficial(
     [patrullaId, userId],
   );
 }
+
+export async function actualizarTelefonoOficial(
+  userId: string,
+  telefono: string,
+): Promise<void> {
+  await query(
+    `UPDATE ofi_oficiales
+     SET telefono = $1
+     WHERE user_id = $2`,
+    [telefono, userId],
+  );
+}
+
+export async function telefonoExiste(
+  telefono: string,
+  userId: string,
+): Promise<boolean> {
+  const result = await query<{ count: string }>(
+    `SELECT COUNT(*)::int AS count
+     FROM ofi_oficiales
+     WHERE telefono = $1
+       AND user_id != $2
+       AND telefono IS NOT NULL
+       AND telefono != ''`,
+    [telefono, userId],
+  );
+  return parseInt(result.rows[0].count, 10) > 0;
+}

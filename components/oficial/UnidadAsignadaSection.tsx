@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Car, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { ModalSeleccionarUnidad } from "./ModalSeleccionarUnidad";
 import type { PatrullaAsignacion } from "@/lib/flota/types";
 
@@ -27,15 +27,7 @@ export function UnidadAsignadaSection({
         alignSelf: "flex-start",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          marginBottom: 24,
-        }}
-      >
-        <Car size={18} color="#1f355a" />
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
         <h2
           style={{
             fontFamily: "Barlow Condensed,sans-serif",
@@ -53,189 +45,70 @@ export function UnidadAsignadaSection({
 
       {patrullaActual ? (
         <>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "14px 0",
-              borderBottom: "1px solid #f1f5f9",
-            }}
-          >
-            <Car size={16} color="#94a3b8" style={{ flexShrink: 0 }} />
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontFamily: "JetBrains Mono,monospace",
-                  fontSize: 9,
-                  color: "#94a3b8",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 2,
-                }}
-              >
-                Placa / Identificador
-              </div>
-              <div
-                style={{
-                  fontFamily: "Inter,sans-serif",
-                  fontSize: 14,
-                  color: "#0f172a",
-                  fontWeight: 600,
-                }}
-              >
-                {patrullaActual.numeroUnidad}
-              </div>
+          {/* Placa — asignada */}
+          <div className="up-placa-box">
+            <div className="up-placa-header">
+              <span>SSPM</span>
+              <span>QRO</span>
             </div>
+            <div className="up-placa-numero">
+              {patrullaActual.numeroUnidad}
+            </div>
+            <div className="up-placa-footer">SAN JUAN DEL RÍO</div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 12,
-              padding: "14px 0",
-              borderBottom: "1px solid #f1f5f9",
-            }}
-          >
-            <div
-              style={{
-                width: 16,
-                flexShrink: 0,
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#16a34a",
-                  marginTop: 5,
-                }}
-              />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontFamily: "JetBrains Mono,monospace",
-                  fontSize: 9,
-                  color: "#94a3b8",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 2,
-                }}
-              >
-                Unidad
-              </div>
-              <div
-                style={{
-                  fontFamily: "Inter,sans-serif",
-                  fontSize: 14,
-                  color: "#0f172a",
-                  fontWeight: 500,
-                }}
-              >
-                {patrullaActual.descripcion}
-              </div>
-            </div>
+          <div className="up-modelo">{patrullaActual.descripcion}</div>
+
+          <div style={{ marginTop: 10, display: "flex", justifyContent: "center" }}>
+            <span className="up-badge up-badge-asignada">
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#16a34a" }} />
+              Asignada
+            </span>
           </div>
 
-          <div style={{ marginTop: 20 }}>
+          <div className="up-footer" style={{ display: "flex", justifyContent: "center" }}>
             <button
               type="button"
               onClick={() => setModalAbierto(true)}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 20px",
-                border: "1px solid #e2e8f0",
-                background: "#fff",
-                cursor: "pointer",
-                fontFamily: "Inter,sans-serif",
-                fontSize: 12,
-                fontWeight: 500,
-                color: "#475569",
-                transition: "all 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#1f355a";
-                e.currentTarget.style.color = "#1f355a";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#e2e8f0";
-                e.currentTarget.style.color = "#475569";
-              }}
+              className="up-btn-secondary"
             >
-              <Pencil size={14} />
+              <Pencil size={12} />
               Cambiar Unidad
             </button>
           </div>
         </>
       ) : (
         <>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "14px 0",
-              borderBottom: "1px solid #f1f5f9",
-            }}
-          >
-            <Car size={16} color="#94a3b8" style={{ flexShrink: 0 }} />
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontFamily: "JetBrains Mono,monospace",
-                  fontSize: 9,
-                  color: "#94a3b8",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 2,
-                }}
-              >
-                Placa / Identificador
-              </div>
-              <div
-                style={{
-                  fontFamily: "Inter,sans-serif",
-                  fontSize: 14,
-                  color: "#94a3b8",
-                  fontWeight: 500,
-                }}
-              >
-                Sin unidad asignada
-              </div>
+          {/* Placa — sin asignar */}
+          <div className="up-placa-box up-placa-box-empty">
+            <div className="up-placa-header">
+              <span style={{ color: "#94a3b8" }}>SSPM</span>
+              <span style={{ color: "#94a3b8" }}>QRO</span>
+            </div>
+            <div className="up-placa-numero up-placa-numero-empty">
+              — — — — —
+            </div>
+            <div className="up-placa-footer" style={{ color: "#94a3b8" }}>
+              SIN ASIGNAR
             </div>
           </div>
 
-          <div style={{ marginTop: 20 }}>
+          <div className="up-modelo up-modelo-empty">
+            No tienes una unidad asignada
+          </div>
+
+          <div style={{ marginTop: 10, display: "flex", justifyContent: "center" }}>
+            <span className="up-badge up-badge-sin">
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#94a3b8" }} />
+              Sin asignar
+            </span>
+          </div>
+
+          <div className="up-footer" style={{ display: "flex", justifyContent: "center" }}>
             <button
               type="button"
               onClick={() => setModalAbierto(true)}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 20px",
-                border: "1px solid #1f355a",
-                background: "#1f355a",
-                cursor: "pointer",
-                fontFamily: "Inter,sans-serif",
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#fff",
-                transition: "all 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#1c3051";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#1f355a";
-              }}
+              className="up-btn-primary"
             >
               Asignar Unidad
             </button>

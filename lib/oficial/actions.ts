@@ -6,7 +6,7 @@ import { redirect }       from 'next/navigation'
 import { crearReporte }   from './service'
 import { revalidatePath } from 'next/cache'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
-import { actualizarPatrullaOficial } from './repository'
+import { actualizarPatrullaOficial, actualizarTelefonoOficial, telefonoExiste } from './repository'
 
 export async function crearReporteCampoOficial(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -79,4 +79,22 @@ export async function asignarPatrulla(formData: FormData) {
 
   revalidatePath('/oficial/configuracion')
   revalidatePath('/oficial')
+}
+
+export async function actualizarTelefono(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  const telefono = formData.get('telefono') as string | null
+  if (!telefono) throw new ValidationError('El teléfono es requerido')
+
+  await tryActionRaw(async () => {
+    const duplicado = await telefonoExiste(telefono, session.user.id)
+    if (duplicado) {
+      throw new ValidationError('Este número de teléfono ya está registrado por otro oficial')
+    }
+    await actualizarTelefonoOficial(session.user.id, telefono)
+  })
+
+  revalidatePath('/oficial/configuracion')
 }
