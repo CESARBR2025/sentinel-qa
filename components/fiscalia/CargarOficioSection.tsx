@@ -34,13 +34,11 @@ export default function CargarOficioSection({
     onSuccess,
     onClose,
 }: CargarOficioSectionProps) {
-    console.log(curpInfractor)
     const [paso, setPaso] = useState(1)
     const [numeroOficio, setNumeroOficio] = useState(noOficioActual && noOficioActual !== 'NO_DATA' ? noOficioActual : '')
     const [noCarpeta, setNoCarpeta] = useState(noCarpetaActual && noCarpetaActual !== 'NO_DATA' ? noCarpetaActual : '')
     const [archivo, setArchivo] = useState<File | null>(null)
     const [saving, setSaving] = useState(false)
-    const [esTitularState, setEsTitularState] = useState<boolean | null>(null)
     const [errores, setErrores] = useState<Record<string, string>>({})
     const fileRef = useRef<HTMLInputElement>(null)
     const addToast = useToastStore((s) => s.addToast)
@@ -52,19 +50,9 @@ export default function CargarOficioSection({
     const [infractorCorreo, setInfractorCorreo] = useState('')
     const [infractorCurp, setInfractorCurp] = useState('')
 
-    // Titular capture (when No)
-    const [nombre, setNombre] = useState('')
-    const [appaterno, setAppaterno] = useState('')
-    const [apmaterno, setApmaterno] = useState('')
-    const [correoTitular, setCorreoTitular] = useState('')
-    const [curpTitular, setCurpTitular] = useState('')
-
     const necesitaCapturaInfractor = !curpInfractor || curpInfractor === 'NO_DATA'
-    const necesitaCapturaTitular = esTitularState === false
-    const necesitaCaptura = esTitularState === false || (esTitularState === true && necesitaCapturaInfractor)
     const pasoInfractorOffset = necesitaCapturaInfractor ? 1 : 0
-    const totalExtraSteps = pasoInfractorOffset + (necesitaCapturaTitular ? 1 : 0)
-    const totalPasos = 4 + totalExtraSteps
+    const totalPasos = 3 + pasoInfractorOffset
 
     function validarInfractor(): boolean {
         const e: Record<string, string> = {}
@@ -75,21 +63,6 @@ export default function CargarOficioSection({
             e.infractorCurp = 'Requerido'
         } else if (infractorCurp.trim().length !== 18) {
             e.infractorCurp = 'Debe tener 18 caracteres'
-        }
-        setErrores(e)
-        return Object.keys(e).length === 0
-    }
-
-    function validarTitular(): boolean {
-        const e: Record<string, string> = {}
-        if (!nombre.trim()) e.nombre = 'Requerido'
-        if (!appaterno.trim()) e.appaterno = 'Requerido'
-        if (!apmaterno.trim()) e.apmaterno = 'Requerido'
-        if (!correoTitular.trim()) e.correoTitular = 'Requerido'
-        if (!curpTitular.trim()) {
-            e.curpTitular = 'Requerido'
-        } else if (curpTitular.trim().length !== 18) {
-            e.curpTitular = 'Debe tener 18 caracteres'
         }
         setErrores(e)
         return Object.keys(e).length === 0
@@ -112,7 +85,6 @@ export default function CargarOficioSection({
 
     const handleSubmit = async () => {
         if (!validarOficio()) return
-        if (esTitularState === false && !validarTitular()) return
         if (!archivo) { setErrores({ archivo: 'Debe seleccionar un archivo' }); return }
         setSaving(true)
         try {
@@ -122,42 +94,7 @@ export default function CargarOficioSection({
             fd.append('archivoIne', archivo)
             if (noCarpeta.trim()) fd.append('no_carpeta_investigacion', noCarpeta.trim())
 
-            const titularData = esTitularState === true
-                ? necesitaCapturaInfractor
-                    ? {
-                        nombre: infractorNombre.trim().toUpperCase(),
-                        appaterno: infractorAppaterno.trim().toUpperCase(),
-                        apmaterno: infractorApmaterno.trim().toUpperCase(),
-                        correo: infractorCorreo.trim(),
-                        curp: infractorCurp.trim().toUpperCase(),
-                    }
-                    : {
-                        nombre: (() => {
-                            let n = nombreInfractor ?? '';
-                            if (apmaternoInfractor && n.endsWith(` ${apmaternoInfractor}`)) n = n.slice(0, -apmaternoInfractor.length - 1);
-                            if (appaternoInfractor && n.endsWith(` ${appaternoInfractor}`)) n = n.slice(0, -appaternoInfractor.length - 1);
-                            return n;
-                        })(),
-                        appaterno: appaternoInfractor ?? '',
-                        apmaterno: apmaternoInfractor ?? '',
-                        correo: correoInfractor ?? '',
-                        curp: curpInfractor ?? '',
-                    }
-                : {
-                    nombre: nombre.trim(),
-                    appaterno: appaterno.trim(),
-                    apmaterno: apmaterno.trim(),
-                    correo: correoTitular.trim(),
-                    curp: curpTitular.trim(),
-                }
-
-            if (titularData.nombre) fd.append('nombre_titular_liberacion', titularData.nombre)
-            if (titularData.appaterno) fd.append('appaterno_titular_liberacion', titularData.appaterno)
-            if (titularData.apmaterno) fd.append('apmaterno_titular_liberacion', titularData.apmaterno)
-            if (titularData.correo) fd.append('correo_titular_liberacion', titularData.correo)
-            if (titularData.curp) fd.append('curp_titular_liberacion', titularData.curp)
-
-            // También enviar datos del infractor cuando fueron capturados (CURP era NO_DATA)
+            // Enviar datos del infractor cuando fueron capturados (CURP era NO_DATA)
             if (necesitaCapturaInfractor) {
                 fd.append('nombre_infractor', infractorNombre.trim().toUpperCase())
                 fd.append('apellido_paterno_infractor', infractorAppaterno.trim().toUpperCase())
@@ -267,113 +204,23 @@ export default function CargarOficioSection({
                         </div>
                     )}
 
-                    {/* Paso 3 (o 2 si no hay captura infractor): Titularidad */}
-                    {paso === (necesitaCapturaInfractor ? 3 : 2) && (
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <p className="text-xs font-medium tracking-wider uppercase text-slate-500">El infractor es el titular</p>
-                                <div className="inline-flex items-center rounded-md p-0.5 bg-white border border-slate-200">
-                                    <button type="button" onClick={() => { setEsTitularState(true); setPaso(3 + pasoInfractorOffset) }} className={`px-4 py-1.5 rounded text-[13px] font-medium transition-all duration-150 ${esTitularState === true ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>Sí</button>
-                                    <button type="button" onClick={() => { setEsTitularState(false); setPaso(3 + pasoInfractorOffset) }} className={`px-4 py-1.5 rounded text-[13px] font-medium transition-all duration-150 ${esTitularState === false ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>No</button>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <button onClick={() => setPaso(p => p - 1)} className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 bg-transparent border border-slate-200 hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100 transition-colors duration-150">
-                                    <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" /><span>Regresar</span>
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Paso 3+offset: Documento (si Sí, con datos prop o capturados) */}
-                    {paso === (3 + pasoInfractorOffset) && esTitularState === true && (
-                        <div className="space-y-4">
-                            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-5 h-5 rounded flex items-center justify-center shrink-0 bg-primary-muted"><User size={11} strokeWidth={2.5} className="text-primary" /></div>
-                                    <p className="text-xs font-medium text-primary">Los datos del infractor se usarán como datos del titular</p>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                                    <div className="p-2.5 rounded-lg bg-white border border-slate-200">
-                                        <p className="text-[10px] font-medium tracking-wider uppercase text-slate-400 mb-0.5">Nombre completo</p>
-                                        <p className="text-xs font-medium text-slate-900 truncate">{necesitaCapturaInfractor ? [infractorNombre, infractorAppaterno, infractorApmaterno].filter(Boolean).join(' ') : nombreInfractor || '—'}</p>
-                                    </div>
-                                    <div className="p-2.5 rounded-lg bg-white border border-slate-200">
-                                        <p className="text-[10px] font-medium tracking-wider uppercase text-slate-400 mb-0.5">Correo</p>
-                                        <p className="text-xs font-medium text-slate-900 truncate">{necesitaCapturaInfractor ? infractorCorreo : correoInfractor || '—'}</p>
-                                    </div>
-                                    <div className="p-2.5 rounded-lg bg-white border border-slate-200">
-                                        <p className="text-[10px] font-medium tracking-wider uppercase text-slate-400 mb-0.5">CURP</p>
-                                        <p className="text-xs font-mono font-medium text-slate-900">{necesitaCapturaInfractor ? infractorCurp : curpInfractor || '—'}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <FileUpload archivo={archivo} setArchivo={setArchivo} fileRef={fileRef} error={errores.archivo} setError={setErrores} />
-                            <div className="flex items-center gap-3">
-                                <button onClick={() => { setEsTitularState(null); setPaso(p => p - 1) }} className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 bg-transparent border border-slate-200 hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100 transition-colors duration-150">
-                                    <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" /><span>Regresar</span>
-                                </button>
-                                <button onClick={() => { if (validarArchivo()) setPaso(4 + pasoInfractorOffset) }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark active:bg-primary-dark active:scale-[0.99] shadow-sm transition-all duration-150">
-                                    <span>Continuar</span><ArrowRight size={14} strokeWidth={2.5} />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Paso 3+offset: Capturar datos del titular (solo cuando No) */}
-                    {paso === (3 + pasoInfractorOffset) && esTitularState === false && (
-                        <div className="space-y-4">
-                            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-5 h-5 rounded flex items-center justify-center shrink-0 bg-primary-muted"><User size={11} strokeWidth={2.5} className="text-primary" /></div>
-                                    <p className="text-xs font-medium text-primary">Datos del titular (capturar)</p>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                                    <Campo label="Nombre(s)" value={nombre} onChange={setNombre} error={errores.nombre} limpiarError={() => setErrores(p => ({ ...p, nombre: '' }))} required />
-                                    <Campo label="A. Paterno" value={appaterno} onChange={setAppaterno} error={errores.appaterno} limpiarError={() => setErrores(p => ({ ...p, appaterno: '' }))} required />
-                                    <Campo label="A. Materno" value={apmaterno} onChange={setApmaterno} error={errores.apmaterno} limpiarError={() => setErrores(p => ({ ...p, apmaterno: '' }))} required />
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-medium tracking-wider uppercase text-slate-500">Correo Electrónico <span className="text-red-600" aria-hidden="true">*</span></label>
-                                        <input type="text" value={correoTitular} onChange={e => { setCorreoTitular(e.target.value); setErrores(p => ({ ...p, correoTitular: '' })) }} placeholder="correo@ejemplo.com" className={`${inputClass} ${errores.correoTitular ? 'border-red-300 focus:border-red-300 focus:ring-2 focus:ring-red-200/50' : ''}`} />
-                                        {errores.correoTitular && <p className="text-xs font-medium text-red-600">{errores.correoTitular}</p>}
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-medium tracking-wider uppercase text-slate-500">CURP <span className="text-red-600" aria-hidden="true">*</span></label>
-                                        <input type="text" value={curpTitular} onChange={e => { setCurpTitular(e.target.value.toUpperCase()); setErrores(p => ({ ...p, curpTitular: '' })) }} placeholder="CURP (18 caracteres)" maxLength={18} className={`${inputClass} font-mono tracking-wider ${errores.curpTitular ? 'border-red-300 focus:border-red-300 focus:ring-2 focus:ring-red-200/50' : ''}`} />
-                                        {errores.curpTitular && <p className="text-xs font-medium text-red-600">{errores.curpTitular}</p>}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <button onClick={() => { setEsTitularState(null); setPaso(p => p - 1) }} className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 bg-transparent border border-slate-200 hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100 transition-colors duration-150">
-                                    <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" /><span>Regresar</span>
-                                </button>
-                                <button onClick={() => { if (validarTitular()) setPaso(4 + pasoInfractorOffset) }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark active:bg-primary-dark active:scale-[0.99] shadow-sm transition-all duration-150">
-                                    <span>Continuar</span><ArrowRight size={14} strokeWidth={2.5} />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Paso 4+offset (captura): Documento (solo cuando No es titular) */}
-                    {paso === (4 + pasoInfractorOffset) && esTitularState === false && (
+                    {/* Paso 3 (o 2 si no hay captura infractor): Archivo */}
+                    {paso === (2 + pasoInfractorOffset) && (
                         <div className="space-y-4">
                             <FileUpload archivo={archivo} setArchivo={setArchivo} fileRef={fileRef} error={errores.archivo} setError={setErrores} />
                             <div className="flex items-center gap-3">
                                 <button onClick={() => setPaso(p => p - 1)} className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 bg-transparent border border-slate-200 hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100 transition-colors duration-150">
                                     <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" /><span>Regresar</span>
                                 </button>
-                                <button onClick={() => { if (validarArchivo()) setPaso(5 + pasoInfractorOffset) }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark active:bg-primary-dark active:scale-[0.99] shadow-sm transition-all duration-150">
+                                <button onClick={() => { if (validarArchivo()) setPaso(3 + pasoInfractorOffset) }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark active:bg-primary-dark active:scale-[0.99] shadow-sm transition-all duration-150">
                                     <span>Continuar</span><ArrowRight size={14} strokeWidth={2.5} />
                                 </button>
                             </div>
                         </div>
                     )}
 
-                    {/* Paso resumen (Sí+data: paso 4+offset, No/NO_DATA: paso 5+offset) */}
-                    {(paso === (4 + pasoInfractorOffset) && esTitularState === true) || (paso === (5 + pasoInfractorOffset) && necesitaCaptura) ? (
+                    {/* Paso resumen */}
+                    {paso === (3 + pasoInfractorOffset) && (
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
                                 <CheckCircle2 size={16} className="text-primary" />
@@ -405,37 +252,6 @@ export default function CargarOficioSection({
                                     </div>
                                 )}
                                 <div className="p-3 flex items-center justify-between">
-                                    <span className="text-xs text-slate-500">Titular</span>
-                                    <span className="text-xs font-medium text-slate-900">
-                                        {esTitularState === true
-                                            ? necesitaCapturaInfractor
-                                                ? [infractorNombre, infractorAppaterno, infractorApmaterno].filter(Boolean).join(' ')
-                                                : nombreInfractor
-                                            : [nombre, appaterno, apmaterno].filter(Boolean).join(' ') || '—'
-                                            || '—'}
-                                    </span>
-                                </div>
-                                <div className="p-3 flex items-center justify-between">
-                                    <span className="text-xs text-slate-500">Correo titular</span>
-                                    <span className="text-xs font-medium text-slate-900">
-                                        {esTitularState === true
-                                            ? necesitaCapturaInfractor
-                                                ? (infractorCorreo || '—')
-                                                : (correoInfractor || '—')
-                                            : (correoTitular || '—')}
-                                    </span>
-                                </div>
-                                <div className="p-3 flex items-center justify-between">
-                                    <span className="text-xs text-slate-500">CURP titular</span>
-                                    <span className="text-xs font-medium text-slate-900 font-mono">
-                                        {esTitularState === true
-                                            ? necesitaCapturaInfractor
-                                                ? (infractorCurp || '—')
-                                                : (curpInfractor || '—')
-                                            : (curpTitular || '—')}
-                                    </span>
-                                </div>
-                                <div className="p-3 flex items-center justify-between">
                                     <span className="text-xs text-slate-500">Archivo</span>
                                     <span className="text-xs font-medium text-slate-900">{archivo?.name || '—'}</span>
                                 </div>
@@ -450,7 +266,7 @@ export default function CargarOficioSection({
                                 </button>
                             </div>
                         </div>
-                    ) : null}
+                    )}
                 </>
             </div>
         </div>

@@ -20,6 +20,15 @@ import {
 export async function enviarCorreoAsignacionFiscalia(
   data: EnviarCorreoAsignacionFiscaliaParams,
 ) {
+  console.log('[enviarCorreoAsignacionFiscalia] Params:', JSON.stringify({
+    correo_infractor: data.correo_infractor,
+    correo_titular: data.correo_titular,
+    nombreInfractor: data.nombreInfractor,
+    folio: data.folio,
+    idInfraccion: data.idInfraccion,
+    tienePin: !!data.pin_acceso,
+  }))
+
   const urlVistaCiudadano = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://via-v2.vercel.app'}/infracciones/${data.idInfraccion}`
 
   const qrBuffer = await QRCode.toBuffer(urlVistaCiudadano)
@@ -29,8 +38,10 @@ export async function enviarCorreoAsignacionFiscalia(
     urlVistaCiudadano,
   })
 
-  await sendMail({
-    to: data.correo_titular_liberacion,
+  console.log('[enviarCorreoAsignacionFiscalia] Enviando mail...')
+  const result = await sendMail({
+    to: data.correo_infractor,
+    cc: data.correo_titular || undefined,
     subject: `SSPM - Documentación Requerida #${data.folio}`,
     text,
     html,
@@ -42,6 +53,7 @@ export async function enviarCorreoAsignacionFiscalia(
       },
     ],
   })
+  console.log('[enviarCorreoAsignacionFiscalia] Mail enviado, messageId:', result?.messageId)
 }
 
 export async function enviarCorreoOrdenLiberacion(

@@ -344,6 +344,7 @@ export default async function InfraccionCiudadanoPage({
                         urlOficio={infraccion.urlOficio}
                         estatusDependencia={infraccion.estatusDependencia}
                         estatusInfraccion={infraccion.estatusInfraccion}
+                        nombreInfractor={infractorNombre}
                         nombreTitular={infraccion.nombreTitular}
                         correoTitular={infraccion.correoTitular}
                         curpTitular={infraccion.curpTitular}
@@ -354,25 +355,6 @@ export default async function InfraccionCiudadanoPage({
                         esTitular={infraccion.esTitular}
                         urlOrdenSalida={infraccion.urlOrdenSalida}
                     />
-                )}
-
-                {(infractorNombre || (infraccion.curpInfractor && String(infraccion.curpInfractor) !== 'NO_DATA')) && (
-                    <Card>
-                        <Section icon={User} iconBg="bg-primary-muted" iconColor="text-primary" title="Infractor">
-                            <div className="space-y-3">
-                                {infractorNombre && <FieldWithIcon icon={User} label="Nombre completo" value={infractorNombre} />}
-                                {infraccion.curpInfractor && String(infraccion.curpInfractor) !== 'NO_DATA' && (
-                                    <div>
-                                        <p className="text-xs font-medium text-slate-500">CURP</p>
-                                        <p className="text-sm text-slate-900 mt-0.5 leading-snug flex items-center gap-1.5 font-mono tracking-wide">
-                                            <IdCard size={13} className="text-slate-400 shrink-0" strokeWidth={1.5} />
-                                            {infraccion.curpInfractor}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </Section>
-                    </Card>
                 )}
 
                 <Card>

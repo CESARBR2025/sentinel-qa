@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { abrirDocumento } from '@/lib/shared/abrirDocumento';
 import {
     Scale,
@@ -18,12 +18,16 @@ import {
     X,
     Eye,
     MessageSquare,
+    Mail,
+    Fingerprint,
+    HelpCircle,
 } from 'lucide-react';
 import { SegmentedControl } from './ui/SegmentedControl';
 
 type DocConfig = {
     id: string;
     label: string;
+    descripcion: string;
     formKey: string;
     tipoDocumento: string;
 };
@@ -31,27 +35,27 @@ type DocConfig = {
 type SubtipoTitular = 'infraccion' | 'delito' | 'accidente';
 
 const DOCS_EMPRESA: DocConfig[] = [
-    { id: 'factura', label: 'Factura', formKey: 'archivoFactura', tipoDocumento: 'factura' },
-    { id: 'ine_representante', label: 'INE del representante legal', formKey: 'archivoIneRepresentanteLegal', tipoDocumento: 'ine_representante_legal' },
-    { id: 'poder_notarial', label: 'Poder notarial o acta constitutiva', formKey: 'archivoPoderNotarial', tipoDocumento: 'poder_notarial' },
-    { id: 'constancia_fiscal', label: 'Constancia de situación fiscal', formKey: 'archivoConstanciaSituacionFiscal', tipoDocumento: 'constancia_situacion_fiscal' },
+    { id: 'factura', label: 'Factura', descripcion: 'Documento que acredita la propiedad del vehículo a nombre de la empresa.', formKey: 'archivoFactura', tipoDocumento: 'factura' },
+    { id: 'ine_representante', label: 'INE del representante legal', descripcion: 'Identificación oficial vigente de la persona que representa legalmente a la empresa.', formKey: 'archivoIneRepresentanteLegal', tipoDocumento: 'ine_representante_legal' },
+    { id: 'poder_notarial', label: 'Poder notarial o acta constitutiva', descripcion: 'Documento legal que acredita la facultad del representante para actuar en nombre de la empresa.', formKey: 'archivoPoderNotarial', tipoDocumento: 'poder_notarial' },
+    { id: 'constancia_fiscal', label: 'Constancia de situación fiscal', descripcion: 'Comprobante actualizado del registro fiscal de la empresa (RFC).', formKey: 'archivoConstanciaSituacionFiscal', tipoDocumento: 'constancia_situacion_fiscal' },
 ];
 
 const DOCS_INFRACCION: DocConfig[] = [
-    { id: 'factura', label: 'Factura original', formKey: 'archivoFactura', tipoDocumento: 'factura' },
-    { id: 'ine', label: 'INE', formKey: 'archivoIneTitular', tipoDocumento: 'ine_titular' },
-    { id: 'comprobante_domicilio', label: 'Comprobante de domicilio', formKey: 'archivoComprobanteDomicilio', tipoDocumento: 'comprobante_domicilio' },
-    { id: 'tarjeta_circulacion', label: 'Tarjeta de circulación', formKey: 'archivoTarjetaCirculacion', tipoDocumento: 'tarjeta_circulacion' },
+    { id: 'factura', label: 'Factura original', descripcion: 'Documento que acredita la titularidad del vehículo a tu nombre.', formKey: 'archivoFactura', tipoDocumento: 'factura' },
+    { id: 'ine', label: 'INE', descripcion: 'Identificación oficial vigente con fotografía (credencial de elector).', formKey: 'archivoIneTitular', tipoDocumento: 'ine_titular' },
+    { id: 'comprobante_domicilio', label: 'Comprobante de domicilio', descripcion: 'Recibo de luz, agua, teléfono o estado de cuenta bancario reciente (máximo 3 meses).', formKey: 'archivoComprobanteDomicilio', tipoDocumento: 'comprobante_domicilio' },
+    { id: 'tarjeta_circulacion', label: 'Tarjeta de circulación', descripcion: 'Documento oficial que acredita el registro del vehículo ante la autoridad de tránsito.', formKey: 'archivoTarjetaCirculacion', tipoDocumento: 'tarjeta_circulacion' },
 ];
 
 const DOCS_DELITO: DocConfig[] = [
-    { id: 'factura', label: 'Factura', formKey: 'archivoFactura', tipoDocumento: 'factura' },
-    { id: 'ine', label: 'INE', formKey: 'archivoIneTitular', tipoDocumento: 'ine_titular' },
+    { id: 'factura', label: 'Factura', descripcion: 'Documento que acredita la propiedad del vehículo.', formKey: 'archivoFactura', tipoDocumento: 'factura' },
+    { id: 'ine', label: 'INE', descripcion: 'Identificación oficial vigente con fotografía.', formKey: 'archivoIneTitular', tipoDocumento: 'ine_titular' },
 ];
 
 const DOCS_ACCIDENTE: DocConfig[] = [
-    { id: 'factura', label: 'Factura', formKey: 'archivoFactura', tipoDocumento: 'factura' },
-    { id: 'ine', label: 'INE', formKey: 'archivoIneTitular', tipoDocumento: 'ine_titular' },
+    { id: 'factura', label: 'Factura', descripcion: 'Documento que acredita la propiedad del vehículo.', formKey: 'archivoFactura', tipoDocumento: 'factura' },
+    { id: 'ine', label: 'INE', descripcion: 'Identificación oficial vigente con fotografía.', formKey: 'archivoIneTitular', tipoDocumento: 'ine_titular' },
 ];
 
 const SUBTIPOS_TITULAR: Record<SubtipoTitular, { label: string; docs: DocConfig[] }> = {
@@ -73,6 +77,7 @@ type Props = {
     urlOficio: string;
     estatusDependencia: string;
     estatusInfraccion: string
+    nombreInfractor: string;
     nombreTitular: string;
     correoTitular: string;
     curpTitular: string;
@@ -87,6 +92,15 @@ type Props = {
 function getEstatusConfig(estatus: string) {
     const s = (estatus || '').toLowerCase();
 
+    if (s === 'mesa_de_control_pendiente_docs') {
+        return {
+            icon: Upload,
+            bgClass: 'bg-amber-50',
+            borderClass: 'border-amber-300',
+            textClass: 'text-amber-700',
+            label: 'Sube toda la información requerida a continuación',
+        };
+    }
     if (s === 'espera_revision') {
         return {
             icon: Clock,
@@ -139,6 +153,7 @@ export default function SeccionLiberacion({
     urlOficio,
     estatusDependencia,
     estatusInfraccion,
+    nombreInfractor,
     nombreTitular,
     correoTitular,
     curpTitular,
@@ -198,7 +213,7 @@ export default function SeccionLiberacion({
 
     const motivoSubtipo = motivoRetencion ? MOTIVO_TO_SUBTIPO[motivoRetencion] : undefined;
 
-    const CARTA_PODER: DocConfig = { id: 'carta_poder', label: 'Carta poder', formKey: 'archivoCartaPoder', tipoDocumento: 'carta_poder' };
+    const CARTA_PODER: DocConfig = { id: 'carta_poder', label: 'Carta poder', descripcion: 'Documento legal que acredita que el propietario del vehículo te autoriza para realizar el trámite de liberación.', formKey: 'archivoCartaPoder', tipoDocumento: 'carta_poder' };
 
     const currentDocs: DocConfig[] = (() => {
         if (selectedType === 'empresa') return DOCS_EMPRESA;
@@ -284,6 +299,13 @@ export default function SeccionLiberacion({
                         appaternoRespFiscal: apPaternoRespFiscal.trim(),
                         apmaternoRespFiscal: apMaternoRespFiscal.trim(),
                     } : {}),
+                    ...(selectedType === 'titular' && esTitular === false ? {
+                        nombreTitular: titularNombre.trim().toUpperCase(),
+                        appaternoTitular: titularAppaterno.trim().toUpperCase(),
+                        apmaternoTitular: titularApmaterno.trim().toUpperCase(),
+                        curpTitular: titularCurp.trim().toUpperCase(),
+                        correoTitular: titularCorreo.trim(),
+                    } : {}),
                 }),
             });
 
@@ -326,7 +348,7 @@ export default function SeccionLiberacion({
             const finalData = await finalRes.json();
             if (!finalRes.ok) throw new Error(finalData.error);
 
-            setSubmitted(true);
+            window.location.reload();
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error al subir documentos');
         } finally {
@@ -379,7 +401,7 @@ export default function SeccionLiberacion({
             setReuploadFiles({});
             window.location.reload();
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Error al reenviar documentos');
+            setError(err instanceof Error ? err.message : 'Error al enviar documentos');
         } finally {
             setReuploading(false);
         }
@@ -396,7 +418,9 @@ export default function SeccionLiberacion({
                         Liberación
                     </h3>
                     <p className="text-xs text-slate-500">
-                        Estatus de gestión
+                        {estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'
+                            ? 'Sube toda la información requerida a continuación'
+                            : 'Estatus de gestión'}
                     </p>
                 </div>
             </div>
@@ -404,9 +428,9 @@ export default function SeccionLiberacion({
             <div className="p-6 space-y-5">
 
                 {/* STATUS BADGE */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="flex flex-col gap-3">
                     <div
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium shrink-0 ${estatusConfig.bgClass} ${estatusConfig.borderClass} ${estatusConfig.textClass}`}
+                        className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium w-full ${estatusConfig.bgClass} ${estatusConfig.borderClass} ${estatusConfig.textClass}`}
                     >
                         <estatusConfig.icon size={16} strokeWidth={1.5} />
                         {estatusConfig.label}
@@ -416,19 +440,22 @@ export default function SeccionLiberacion({
 
                 {/* DATOS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <InfoItem2 label="Dependencia receptora" value={dependenciaReceptora} />
-                    <InfoItem2 label="No. de oficio" value={noOficio} />
+                    <InfoItem2 label="Departamento" icon={Building2} value={{
+                        FISCALIA: 'Liberaciones de Tránsito',
+                        POLICIA_VIAL: 'Policía Vial',
+                    }[dependenciaReceptora] || dependenciaReceptora} />
+                    <InfoItem2 label="No. de oficio" icon={FileText} value={noOficio} />
                     {noCarpetaInvestigacion && (
-                        <InfoItem2 label="No. carpeta de investigación" value={noCarpetaInvestigacion} />
+                        <InfoItem2 label="Carpeta de investigación" icon={FileText} value={noCarpetaInvestigacion} />
                     )}
-                    {nombreTitular && (
-                        <InfoItem2 label="Nombre del titular" value={nombreTitular} />
+                    {nombreInfractor && (
+                        <InfoItem2 label="Nombre de la persona" icon={User} value={nombreInfractor} />
                     )}
                     {correoTitular && (
-                        <InfoItem2 label="Correo del titular" value={correoTitular} />
+                        <InfoItem2 label="Correo electrónico" icon={Mail} value={correoTitular} />
                     )}
                     {curpTitular && (
-                        <InfoItem2 label="CURP del titular" value={curpTitular} />
+                        <InfoItem2 label="CURP" icon={Fingerprint} value={curpTitular} />
                     )}
                 </div>
 
@@ -442,6 +469,9 @@ export default function SeccionLiberacion({
                         <div className="space-y-3">
                             <p className="text-sm font-medium text-slate-900">
                                 Emitir orden de liberación para:
+                            </p>
+                            <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 -mt-1">
+                                Elige si la orden de liberación será para una empresa o para ti como titular
                             </p>
                             <SegmentedControl
                                 options={[
@@ -482,10 +512,10 @@ export default function SeccionLiberacion({
                             <div className="space-y-4">
                                 <div className="border-t border-slate-200 pt-4">
                                     <p className="text-sm font-medium text-slate-900 mb-3">
-                                        Datos del titular
+                                        Información del propietario
                                     </p>
                                     <p className="text-xs text-slate-500 mb-4">
-                                        El infractor no es el titular del vehículo. Capture los datos del propietario.
+                                        La persona que cometió la infracción no es el dueño del vehículo. Por favor ingresa los datos del propietario.
                                     </p>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         <div>
@@ -634,7 +664,7 @@ export default function SeccionLiberacion({
                         {currentDocs.length > 0 && (
                             <div className="space-y-3">
                                 <p className="text-sm font-medium text-slate-900">
-                                    Documentos requeridos
+                                    Documentos que necesitas subir
                                 </p>
                                 <div className="space-y-2">
                                     {currentDocs.map(doc => (
@@ -674,12 +704,12 @@ export default function SeccionLiberacion({
                                 {submitting ? (
                                     <>
                                         <Loader2 size={16} className="animate-spin" />
-                                        Subiendo documentos...
+                                        Enviando documentos...
                                     </>
                                 ) : (
                                     <>
                                         <Upload size={16} strokeWidth={1.5} />
-                                        Subir documentos
+                                        Enviar documentos
                                     </>
                                 )}
                             </button>
@@ -697,12 +727,10 @@ export default function SeccionLiberacion({
                                 </div>
                                 <div>
                                     <h4 className="text-lg font-medium text-slate-900">
-                                        Documentos enviados para validación
+                                        Recibimos tus documentos
                                     </h4>
                                     <p className="text-sm text-slate-500 mt-1">
-                                        Los documentos fueron recibidos correctamente y están pendientes
-                                        de revisión por la autoridad. Recibirás una notificación cuando
-                                        sean revisados.
+                                        Los documentos se recibieron correctamente. La autoridad los revisará y te notificaremos cuando estén listos.
                                     </p>
                                 </div>
                             </div>
@@ -735,8 +763,7 @@ export default function SeccionLiberacion({
                                         Documentos rechazados
                                     </h4>
                                     <p className="text-sm text-slate-500 mt-1">
-                                        Algunos documentos fueron rechazados. Revisa el motivo
-                                        y vuelve a subir los documentos corregidos.
+                                        Algunos documentos no fueron aceptados. Revisa el motivo y vuelve a subir los documentos corregidos.
                                     </p>
                                 </div>
                             </div>
@@ -938,6 +965,33 @@ export default function SeccionLiberacion({
 // SUB COMPONENTES
 // =====================================================
 
+function DocTooltip({ descripcion }: { descripcion: string }) {
+    const [visible, setVisible] = useState(false);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    return (
+        <div
+            className="relative inline-flex"
+            onMouseEnter={() => { if (timerRef.current) clearTimeout(timerRef.current); setVisible(true) }}
+            onMouseLeave={() => { timerRef.current = setTimeout(() => setVisible(false), 200) }}
+        >
+            <HelpCircle size={14} className="text-slate-400 hover:text-primary cursor-help transition-colors shrink-0" strokeWidth={1.5} />
+            {visible && (
+                <div
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 shadow-lg z-50 pointer-events-auto"
+                    onMouseEnter={() => { if (timerRef.current) clearTimeout(timerRef.current); setVisible(true) }}
+                    onMouseLeave={() => { timerRef.current = setTimeout(() => setVisible(false), 200) }}
+                    style={{ fontFamily: "'Inter',sans-serif" }}
+                >
+                    <p className="text-[11px] text-slate-600 leading-relaxed">{descripcion}</p>
+                    {/* Flecha */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-2.5 h-2.5 rotate-45 bg-white border-r border-b border-slate-200 -mt-[5px]" />
+                </div>
+            )}
+        </div>
+    );
+}
+
 function DocUploadRow({
     doc,
     file,
@@ -974,9 +1028,12 @@ function DocUploadRow({
                 )}
             </div>
 
-            <span className={`text-sm flex-1 min-w-0 ${file ? 'text-green-600' : 'text-slate-900'}`}>
-                {file ? file.name : doc.label}
-            </span>
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className={`text-sm ${file ? 'text-green-600' : 'text-slate-900'}`}>
+                    {file ? file.name : doc.label}
+                </span>
+                {!file && <DocTooltip descripcion={doc.descripcion} />}
+            </div>
 
             <input
                 ref={inputRef}
@@ -1015,14 +1072,17 @@ function DocUploadRow({
 function InfoItem2({
     label,
     value,
+    icon: Icon,
 }: {
     label: string;
     value: string | null | undefined;
+    icon?: React.ElementType;
 }) {
     if (!value) return null;
     return (
         <div className="rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2.5">
-            <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-slate-400 mb-1">
+            <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-slate-400 mb-1 flex items-center gap-1.5">
+                {Icon && <Icon size={12} className="text-slate-400 shrink-0" strokeWidth={1.5} />}
                 {label}
             </p>
             <p className="text-sm font-medium text-slate-900 break-all">
