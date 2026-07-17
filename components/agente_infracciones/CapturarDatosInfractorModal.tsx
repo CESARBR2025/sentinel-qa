@@ -5,10 +5,6 @@ import { User, CheckCircle2, Loader2, AlertCircle, ArrowRight, X, Info } from 'l
 import { useCapturaInfractorStore } from '@/lib/agente_infracciones/storeCapturaInfractor'
 import { capturarInfractorInfraccionesAction } from '@/lib/agente_infracciones/actions'
 
-const accent = '#0891b2'
-const accentLight = '#ecfeff'
-const accentBorder = '#a5f3fc'
-
 interface Props {
   infraccionId: string
   onSuccess: () => void
@@ -43,15 +39,15 @@ export default function CapturarDatosInfractorModal({ infraccionId, onSuccess, o
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div className="w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200">
-        <div className="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-md shadow-2xl border border-slate-200 overflow-hidden">
           {/* ─── Header ─── */}
-          <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between" style={{ background: accentLight }}>
+          <div className="bg-primary-muted px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-md flex items-center justify-center" style={{ background: accent }}>
+              <div className="w-7 h-7 rounded-md flex items-center justify-center bg-primary">
                 <User size={13} strokeWidth={2.5} className="text-white" />
               </div>
               <div>
-                <h3 className="text-sm tracking-wider uppercase font-semibold" style={{ fontFamily: "'Barlow Condensed',sans-serif", color: accent }}>
+                <h3 className="text-sm text-primary tracking-wider uppercase font-semibold" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
                   Capturar datos del infractor
                 </h3>
                 <p className="text-[10px] text-slate-500 mt-0.5" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
@@ -61,7 +57,7 @@ export default function CapturarDatosInfractorModal({ infraccionId, onSuccess, o
             </div>
             <button
               onClick={onClose}
-              className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors bg-white border border-slate-200 text-slate-400 hover:text-slate-600"
+              className="w-7 h-7 rounded-md flex items-center justify-center transition-colors bg-white border border-slate-200 text-slate-400 hover:text-slate-600"
             >
               <X size={14} strokeWidth={2.5} />
             </button>
@@ -196,8 +192,8 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
   if (submitted) {
     return (
       <div className="text-center py-6">
-        <div className="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ background: accentLight }}>
-          <CheckCircle2 size={28} strokeWidth={2} style={{ color: accent }} />
+        <div className="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-primary-muted">
+          <CheckCircle2 size={28} strokeWidth={2} className="text-primary" />
         </div>
         <p className="text-base font-semibold text-slate-900 st-title">Datos guardados</p>
         <p className="mt-1 text-sm text-slate-500">El proceso ha sido iniciado correctamente.</p>
@@ -206,7 +202,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
   }
 
   const totalPasos = esTitular && paso === 2 ? 2 : 3
-  const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/10 disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
+  const inputClass = "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
 
   function avanzarPaso() {
     const errors: Partial<Record<FieldName, string>> = {}
@@ -230,10 +226,10 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
       {/* ─── Stepper ─── */}
       <div className="flex items-center justify-between">
         <span
-          className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full"
-          style={{ background: accentLight, color: accent, fontFamily: "'JetBrains Mono',monospace" }}
+          className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-primary-muted text-primary"
+          style={{ fontFamily: "'JetBrains Mono',monospace" }}
         >
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: accent }} />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
           PASO {paso} DE {totalPasos}
         </span>
         <div className="flex items-center gap-1.5">
@@ -248,8 +244,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
                     : stepNum < paso
                       ? 'h-[7px] w-[7px] opacity-40'
                       : 'h-[7px] w-[7px] bg-slate-200'
-                }`}
-                style={{ background: stepNum <= paso ? accent : undefined }}
+                } ${stepNum <= paso ? 'bg-primary' : ''}`}
               />
             )
           })}
@@ -260,14 +255,14 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
       {paso === 1 && (
         <div>
           <div className="flex items-center gap-2.5 mb-4">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white" style={{ background: accent, fontFamily: "'Barlow Condensed',sans-serif" }}>1</span>
+            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white bg-primary" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>1</span>
             <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Datos del infractor</p>
           </div>
 
-          <div className="border border-slate-200 rounded-xl p-4 space-y-3" style={{ background: '#fafafa' }}>
-            <div className="flex items-start gap-2 p-2.5 rounded-lg" style={{ background: accentLight, border: `1px solid ${accentBorder}` }}>
-              <AlertCircle size={12} style={{ color: accent }} className="shrink-0 mt-0.5" />
-              <p className="text-[11px] leading-relaxed" style={{ color: accent }}>
+          <div className="border border-slate-200 rounded-md p-4 space-y-3" style={{ background: '#fafafa' }}>
+            <div className="flex items-start gap-2 p-2.5 rounded-md bg-primary-muted border border-primary/20">
+              <AlertCircle size={12} className="text-primary shrink-0 mt-0.5" />
+              <p className="text-[11px] text-primary leading-relaxed">
                 Captura los datos del infractor registrados en la infracción.
               </p>
             </div>
@@ -316,10 +311,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
 
           <button
             onClick={avanzarPaso}
-            className="w-full mt-4 inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-[13px] font-medium text-white transition-all duration-150 active:scale-[0.99] shadow-sm"
-            style={{ background: accent }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#0e7490' }}
-            onMouseLeave={e => { e.currentTarget.style.background = accent }}
+            className="w-full mt-4 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark transition-all duration-150 active:scale-[0.99] shadow-sm"
           >
             <span>Continuar</span>
             <ArrowRight size={14} strokeWidth={2.5} />
@@ -331,19 +323,18 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
       {paso === 2 && (
         <div>
           <div className="flex items-center gap-2.5 mb-4">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white" style={{ background: accent, fontFamily: "'Barlow Condensed',sans-serif" }}>2</span>
+            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white bg-primary" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>2</span>
             <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>El infractor es el titular</p>
           </div>
 
-          <div className="border border-slate-200 rounded-xl overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-200" style={{ background: accentLight }}>
+          <div className="border border-slate-200 rounded-md overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-primary-muted">
               <p className="text-[11px] font-medium text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>¿El infractor es el propietario?</p>
               <div className="inline-flex items-center rounded-md p-0.5 bg-white border border-slate-200">
                 <button
                   type="button"
                   onClick={() => { setEsTitular(true); setPaso(4) }}
-                  className="px-3.5 py-1.5 rounded text-[11px] font-medium text-white transition-all duration-150 shadow-sm"
-                  style={{ background: accent }}
+                  className="px-3.5 py-1.5 rounded text-[11px] font-medium text-white bg-primary hover:bg-primary-dark transition-all duration-150 shadow-sm"
                 >
                   Sí
                 </button>
@@ -359,7 +350,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
 
             <div className="p-4">
               <div className="space-y-4">
-                <div className="flex items-start gap-2.5 p-3 rounded-lg" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
+                <div className="flex items-start gap-2.5 p-3 rounded-md" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
                   <AlertCircle size={14} className="text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-[11px] font-medium text-amber-800">El infractor y el titular son personas distintas</p>
@@ -369,21 +360,18 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setPaso(1)}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-[13px] font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors duration-150"
+                    className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors duration-150"
                   >
                     <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" />
                     <span>Regresar</span>
                   </button>
-                  <button
-                    onClick={() => { setEsTitular(false); setPaso(3) }}
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-[13px] font-medium text-white transition-all duration-150 active:scale-[0.99] shadow-sm"
-                    style={{ background: accent }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#0e7490'}
-                    onMouseLeave={e => e.currentTarget.style.background = accent}
-                  >
-                    <span>No, capturar datos</span>
-                    <ArrowRight size={14} strokeWidth={2.5} />
-                  </button>
+                <button
+                  onClick={() => { setEsTitular(false); setPaso(3) }}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark transition-all duration-150 active:scale-[0.99] shadow-sm"
+                >
+                  <span>No, capturar datos</span>
+                  <ArrowRight size={14} strokeWidth={2.5} />
+                </button>
                 </div>
               </div>
             </div>
@@ -395,16 +383,16 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
       {paso === 3 && (
         <div>
           <div className="flex items-center gap-2.5 mb-4">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white" style={{ background: accent, fontFamily: "'Barlow Condensed',sans-serif" }}>3</span>
+            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white bg-primary" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>3</span>
             <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Datos del titular</p>
           </div>
 
-          <div className="border border-slate-200 rounded-xl overflow-hidden">
-            <div className="px-4 py-2.5 border-b border-slate-200" style={{ background: accentLight }}>
+          <div className="border border-slate-200 rounded-md overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-slate-200 bg-primary-muted">
               <p className="text-[11px] font-medium text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Complete los datos del propietario</p>
             </div>
             <div className="p-4 space-y-3">
-              <div className="flex items-start gap-2.5 p-3 rounded-lg" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
+              <div className="flex items-start gap-2.5 p-3 rounded-md" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
                 <AlertCircle size={14} className="text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-[11px] font-medium text-amber-800">El infractor y el titular son personas distintas</p>
@@ -421,8 +409,8 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
                 <Field name="correo" label="Correo" value={correo} onChange={v => handleFieldChange('correo', setCorreo, v)} onBlur={() => handleBlur('correo', correo)} placeholder="correo@ejemplo.com" type="email" error={touched.has('correo') ? fieldErrors.correo : undefined} required />
               </div>
               <div className="flex items-start gap-1.5 px-0.5">
-                <Info size={12} style={{ color: accent }} className="shrink-0 mt-0.5" />
-                <p className="text-[11px] leading-relaxed" style={{ color: accent }}>
+                <Info size={12} className="text-primary shrink-0 mt-0.5" />
+                <p className="text-[11px] text-primary leading-relaxed">
                   Estos datos deben coincidir con los del propietario registrados en la tarjeta de circulación.
                 </p>
               </div>
@@ -432,17 +420,14 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
           <div className="flex items-center gap-3 mt-4">
             <button
               onClick={() => setPaso(2)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-[13px] font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors duration-150"
+              className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors duration-150"
             >
               <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" />
               <span>Regresar</span>
             </button>
             <button
               onClick={irAResumen}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-[13px] font-medium text-white transition-all duration-150 active:scale-[0.99] shadow-sm"
-              style={{ background: accent }}
-              onMouseEnter={e => e.currentTarget.style.background = '#0e7490'}
-              onMouseLeave={e => e.currentTarget.style.background = accent}
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark transition-all duration-150 active:scale-[0.99] shadow-sm"
             >
               <span>Continuar</span>
               <ArrowRight size={14} strokeWidth={2.5} />
@@ -455,16 +440,16 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
       {paso === 4 && (
         <div>
           <div className="flex items-center gap-2.5 mb-4">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white" style={{ background: accent, fontFamily: "'Barlow Condensed',sans-serif" }}>4</span>
+            <span className="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold text-white bg-primary" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>4</span>
             <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Resumen</p>
           </div>
 
-          <div className="border border-slate-200 rounded-xl overflow-hidden">
-            <div className="px-4 py-2.5 border-b border-slate-200" style={{ background: accentLight }}>
+          <div className="border border-slate-200 rounded-md overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-slate-200 bg-primary-muted">
               <p className="text-[11px] font-medium text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Confirme los datos antes de iniciar el proceso</p>
             </div>
             <div className="p-4 space-y-3">
-              <div className="rounded-lg border border-slate-200 divide-y divide-slate-100">
+              <div className="rounded-md border border-slate-200 divide-y divide-slate-100">
                 <div className="px-3 py-2 flex items-center justify-between">
                   <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Es titular</span>
                   <span className="text-[13px] font-medium text-slate-900">{esTitular ? 'Sí' : 'No'}</span>
@@ -486,7 +471,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
               </div>
 
               {submitError && (
-                <div className="flex items-start gap-2 p-2.5 rounded-lg bg-red-50 border border-red-200" role="alert">
+                <div className="flex items-start gap-2 p-2.5 rounded-md bg-red-50 border border-red-200" role="alert">
                   <AlertCircle size={12} className="text-red-600 shrink-0 mt-0.5" />
                   <p className="text-[11px] font-medium text-red-600">{submitError}</p>
                 </div>
@@ -495,7 +480,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setPaso(esTitular ? 2 : 3)}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-[13px] font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors duration-150"
+                  className="inline-flex items-center justify-center gap-2 rounded-md py-2.5 px-4 text-[13px] font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors duration-150"
                 >
                   <ArrowRight size={14} strokeWidth={2.5} className="rotate-180" />
                   <span>Regresar</span>
@@ -503,12 +488,9 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
                 <button
                   onClick={handleSubmit}
                   disabled={saving}
-                  className={`flex-1 inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-[13px] font-medium text-white transition-all duration-150 active:scale-[0.99] shadow-sm ${
-                    saving ? 'opacity-60 cursor-not-allowed' : ''
+                  className={`flex-1 inline-flex items-center justify-center gap-2 rounded-md py-2.5 text-[13px] font-medium text-white transition-all duration-150 active:scale-[0.99] shadow-sm ${
+                    saving ? 'opacity-60 cursor-not-allowed bg-slate-400' : 'bg-primary hover:bg-primary-dark'
                   }`}
-                  style={{ background: saving ? '#94a3b8' : accent }}
-                  onMouseEnter={e => { if (!saving) e.currentTarget.style.background = '#0e7490' }}
-                  onMouseLeave={e => { if (!saving) e.currentTarget.style.background = accent }}
                 >
                   {saving ? (
                     <><Loader2 size={14} className="animate-spin" /><span>Iniciando proceso…</span></>
@@ -524,7 +506,7 @@ function DatosForm({ infraccionId, onSuccess, onClose }: Props) {
 
       {/* ── Error (fallback) ── */}
       {submitError && (
-        <div className="flex items-start gap-2 p-2.5 rounded-lg bg-red-50 border border-red-200" role="alert">
+        <div className="flex items-start gap-2 p-2.5 rounded-md bg-red-50 border border-red-200" role="alert">
           <AlertCircle size={12} className="text-red-600 shrink-0 mt-0.5" />
           <p className="text-[11px] font-medium text-red-600">{submitError}</p>
         </div>
@@ -560,10 +542,10 @@ function Field({
           maxLength={maxLength}
           required={required}
           aria-invalid={!!error}
-          className={`w-full rounded-lg border bg-white px-3 py-1.5 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:ring-2 ${
+          className={`w-full rounded-md border bg-white px-3 py-1.5 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:ring-2 ${
             error
               ? 'border-red-300 focus:border-red-300 focus:ring-red-200/50'
-              : 'border-slate-200 focus:border-cyan-700 focus:ring-cyan-700/10'
+              : 'border-slate-200 focus:border-primary focus:ring-primary/10'
           }`}
           style={{
             fontFamily: uppercase ? "'JetBrains Mono',monospace" : "'Inter',sans-serif",
