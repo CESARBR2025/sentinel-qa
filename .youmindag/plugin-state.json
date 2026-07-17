@@ -175,5 +175,12 @@
       "result": "NODE 863c575 Merge pull request #24 from presidenciaSJR/feature/testing [src=git loc= community=5]\nNODE 22bf125 Merge pull request #20 from presidenciaSJR/conexion [src=git loc= community=43]\nNODE context-loader.js [src=.opencode/plugins/context-loader.js loc=L1 community=42]\nNODE 0d9172a mejorando flujo de 911-despacho [src=git loc= community=14]\nNODE benchmark.mjs [src=scripts/benchmark.mjs loc=L1 community=44]\nNODE ab-test.mjs [src=scripts/ab-test.mjs loc=L1 community=57]\nNODE 3c12c41 cambios en flujo de 911-despacho [src=git loc= community=10]\nNODE 7a1ae94 911-rondin [src=git loc= community=10]\nNODE cacheGet() [src=.opencode/plugins/context-loader.js loc=L79 community=42]\nNODE cacheSet() [src=.opencode/plugins/context-loader.js loc=L90 community=42]\nNODE graphifyQuery() [src=.opencode/plugins/context-loader.js loc=L179 community=42]\nNODE graphifySummary() [src=.opencode/plugins/context-loader.js loc=L202 community=42]\n  ... (truncated)",
       "ts": 1784221232311
     }
+  },
+  "ymEditCount": 9,
+  "ymLastSyncAt": 1784251755489,
+  "ymDocNudge": {
+    "Infracciones": 1784253472156,
+    "Liberaciones": 1784253659979,
+    "Juzgado": 1784253748519
   }
 }

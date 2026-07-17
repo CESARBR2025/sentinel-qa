@@ -15,3 +15,4 @@
 | `db:create-admin` | `tsx lib/db/create-admin.ts` |
 | `db:schema` | `tsx scripts/exportar-schema.ts` |
 <!-- AUTO-GENERATED END -->
+

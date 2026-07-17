@@ -103,12 +103,16 @@
 | `via/infracciones/registradas/[id]` | GET | (Pendiente) |
 | `via/infracciones/registrar` | POST | (Pendiente) |
 | `via/infracciones/retencion-placa` | PATCH | (Pendiente) |
+| `via/infracciones/verificar-pin` | POST | (Pendiente) |
 | `via/liberaciones/documentos/[infraccionId]` | GET | (Pendiente) |
-| `via/pagos/confirmar-ausente/[ordenPagoId]/[infraccionId]` | GET | (Pendiente) |
-| `via/pagos/confirmar-instante/[ordenPagoId]/[infraccionId]` | GET | (Pendiente) |
-| `via/pagos/confirmar-liberacion/[ordenPagoId]/[infraccionId]` | GET | (Pendiente) |
-| `via/pagos/confirmar-retenida/[ordenPagoId]/[infraccionId]` | GET | (Pendiente) |
-| `via/pagos/finalizar-instante/[ordenPagoId]/[infraccionId]` | GET | (Pendiente) |
+| `via/pagos/confirmar-ausente/[infraccionId]` | GET | (Pendiente) |
+| `via/pagos/confirmar-instante/[infraccionId]` | GET | (Pendiente) |
+| `via/pagos/confirmar-liberacion/[infraccionId]` | GET | (Pendiente) |
+| `via/pagos/confirmar-retenida/[infraccionId]` | GET | (Pendiente) |
+| `via/pagos/finalizar-instante/[infraccionId]` | GET | (Pendiente) |
+| `via/pagos/forzar-pago/[infraccionId]` | POST | (Pendiente) |
+| `via/pagos/verificar-pago-pruebas/[infraccionId]` | GET | (Pendiente) |
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+

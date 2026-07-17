@@ -17,6 +17,7 @@
 | drizzle-orm | ^0.45.2 |
 | exceljs | ^4.4.0 |
 | framer-motion | ^12.40.0 |
+| jose | ^6.2.3 |
 | jspdf | ^4.2.1 |
 | lenis | ^1.3.25 |
 | lucide-react | ^1.21.0 |
@@ -53,3 +54,4 @@
 | tsx | ^4.21.0 |
 | typescript | 5.9.3 |
 <!-- AUTO-GENERATED END -->
+

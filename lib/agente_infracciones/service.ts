@@ -92,21 +92,6 @@ export async function procesarCapturaInfractor(
     console.error('[procesarCapturaInfractor] Error generando orden de pago:', err)
   }
 
-  if (correo) {
-    try {
-      const emailModule: Record<string, unknown> = await import('@/lib/emails/server')
-      if (typeof emailModule.enviarCorreoInfraccion === 'function') {
-        ;(emailModule.enviarCorreoInfraccion as (...args: unknown[]) => Promise<unknown>)({
-          idInfraccion: input.id,
-          correoInfractor: correo,
-          nombreInfractor: `${nombreUsuario} ${apellidosUsuario}`.trim(),
-          folio,
-        }).catch((e: unknown) => console.error('Error enviando correo orden pago:', e))
-      }
-    } catch {
-      console.warn('enviarCorreoInfraccion no disponible')
-    }
-  }
 
   return {
     success: true,

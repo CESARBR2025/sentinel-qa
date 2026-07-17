@@ -280,7 +280,8 @@
 │   │       │   ├── liberar-garantia/
 │   │       │   ├── registradas/
 │   │       │   ├── registrar/
-│   │       │   └── retencion-placa/
+│   │       │   ├── retencion-placa/
+│   │       │   └── verificar-pin/
 │   │       ├── liberaciones/
 │   │       │   └── documentos/
 │   │       ├── pagos/
@@ -288,7 +289,9 @@
 │   │       │   ├── confirmar-instante/
 │   │       │   ├── confirmar-liberacion/
 │   │       │   ├── confirmar-retenida/
-│   │       │   └── finalizar-instante/
+│   │       │   ├── finalizar-instante/
+│   │       │   ├── forzar-pago/
+│   │       │   └── verificar-pago-pruebas/
 │   │       └── sa7/
 │   │           ├── buscar-orden/
 │   │           └── generar-orden-pago/
@@ -433,18 +436,16 @@
 │   │   └── page.tsx
 │   ├── oficial/
 │   │   ├── configuracion/
+│   │   │   ├── EditarTelefono.tsx
 │   │   │   └── page.tsx
 │   │   ├── despachos/
 │   │   │   ├── [id]/
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
 │   │   ├── reportes/
-│   │   │   ├── [id]/
-│   │   │   │   ├── fotos/
-│   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
+│   │   │   └── [id]/
+│   │   │       ├── fotos/
+│   │   │       └── page.tsx
 │   │   ├── rondin/
 │   │   │   └── page.tsx
 │   │   └── page.tsx
@@ -597,6 +598,7 @@
 │   │   ├── MarcarEnSitioButton.tsx
 │   │   ├── ModalSeleccionarUnidad.tsx
 │   │   ├── ProfileDropdown.tsx
+│   │   ├── SegmentControl.tsx
 │   │   ├── SelectorDestinoLegal.tsx
 │   │   ├── ToastExito.tsx
 │   │   └── UnidadAsignadaSection.tsx
@@ -706,6 +708,7 @@
 │       │   │   ├── MapSectionCiudadano.tsx
 │       │   │   ├── ModalEntregarGarantia.tsx
 │       │   │   ├── PagoInfraccion.tsx
+│       │   │   ├── PinBarrier.tsx
 │       │   │   └── SeccionLiberacion.tsx
 │       │   ├── actions.ts
 │       │   ├── constants.ts
@@ -839,7 +842,9 @@
 │   │   ├── templates/
 │   │   │   ├── asignacion-fiscalia.ts
 │   │   │   ├── layout.ts
-│   │   │   └── orden-liberacion.ts
+│   │   │   ├── orden-liberacion.ts
+│   │   │   ├── pago-confirmado.ts
+│   │   │   └── pin-acceso.ts
 │   │   ├── mailer.ts
 │   │   └── server.ts
 │   ├── expediente/
@@ -962,6 +967,7 @@
 │   │   ├── generateIPHPPT.ts
 │   │   └── generatePPT.ts
 │   ├── via/
+│   │   ├── auth-ciudadano.ts
 │   │   ├── expediente.ts
 │   │   ├── online.ts
 │   │   ├── pagos.ts
@@ -1027,7 +1033,11 @@
 │   ├── trace-components.mjs
 │   ├── trace-server.mjs
 │   ├── trace-utils.mjs
-│   └── ym-dev.mjs
+│   ├── ym-dev.mjs
+│   ├── ym-hook-guard.mjs
+│   ├── ym-hook-posttool.mjs
+│   ├── ym-hook-session-start.mjs
+│   └── ym-sync-background.mjs
 ├── services/
 │   ├── analisisService.ts
 │   ├── analistaService.ts
@@ -1053,3 +1063,4 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+

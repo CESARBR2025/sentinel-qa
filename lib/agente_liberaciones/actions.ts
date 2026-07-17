@@ -90,20 +90,6 @@ export async function capturarInfractorAction(body: {
     const concepto_id = conceptoResult.rows[0]?.concept_id ?? null
 
     const nombreUsuario = `${nombre || ''} ${apellidoP || ''}`.trim()
-    if (correo) {
-      try {
-        const emailModule: Record<string, unknown> = await import('@/lib/emails/server')
-        if (typeof emailModule.enviarCorreoCapturaInfractor === 'function') {
-          ;(emailModule.enviarCorreoCapturaInfractor as (...args: unknown[]) => Promise<unknown>)({
-            idInfraccion: infraccion.id,
-            correoInfractor: correo,
-            nombreInfractor: nombreUsuario,
-          }).catch((e: unknown) => console.error('Error enviando correo captura infractor:', e))
-        }
-      } catch {
-        console.warn('enviarCorreoCapturaInfractor no disponible')
-      }
-    }
 
     return {
       success: true,
@@ -451,21 +437,6 @@ export async function generarOrdenPagoAction(payload: {
       ],
     )
 
-    if (correoInfractor) {
-      try {
-        const emailModule: Record<string, unknown> = await import('@/lib/emails/server')
-        if (typeof emailModule.enviarCorreoInfraccion === 'function') {
-          ;(emailModule.enviarCorreoInfraccion as (...args: unknown[]) => Promise<unknown>)({
-            idInfraccion: infraccion_id,
-            correoInfractor: correoInfractor,
-            nombreInfractor: nombre_usuario,
-            folio: folio,
-          }).catch((e: unknown) => console.error('Error enviando correo orden pago:', e))
-        }
-      } catch {
-        console.warn('enviarCorreoInfraccion no disponible')
-      }
-    }
 
     return {
       ok: true,
