@@ -215,5 +215,6 @@
       "result": "NODE 863c575 Merge pull request #24 from presidenciaSJR/feature/testing [src=git loc= community=10]\nNODE page.tsx [src=app/prevencion/medidas/[id]/page.tsx loc=L1 community=2]\nNODE conexion [src=git loc= community=9]\nNODE testing [src=git loc= community=9]\nNODE feature/testing [src=git loc= community=9]\nNODE main [src=git loc= community=9]\nNODE 0068216 Mejora de Dashboard, Login y transiciones de pantallas [src=git loc= community=48]\nNODE auth.ts [src=lib/auth.ts loc=L1 community=0]\nNODE auth [src=lib/auth.ts loc=L7 community=0]\nNODE page.tsx [src=app/monitorista/incidentes-camara/nuevo/page.tsx loc=L1 community=36]\nNODE service.ts [src=lib/oficial/service.ts loc=L1 community=13]\nNODE actions.ts [src=lib/fiscalia/actions.ts loc=L1 community=11]\n  ... (truncated)",
       "ts": 1784310498001
     }
-  }
+  },
+  "ymEditCount": 1
 }
