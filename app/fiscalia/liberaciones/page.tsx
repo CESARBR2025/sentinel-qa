@@ -41,7 +41,7 @@ export default async function LiberacionesPage() {
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span>CENTINELA {APP_VERSION} · FISCALÍA · LIBERACIONES</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }}></span>
           </div>
         </div>
 
