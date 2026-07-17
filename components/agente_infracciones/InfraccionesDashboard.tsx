@@ -310,7 +310,7 @@ export default function InfraccionesDashboard({
                                     value={folioGlobal}
                                     onChange={e => { setFolioGlobal(e.target.value); setErrorFolio('') }}
                                     onKeyDown={e => { if (e.key === 'Enter') handleBuscarFolioGlobal() }}
-                                    placeholder="SSPM-26-07-17-XXXXXX"
+                                    placeholder="SSPM/INF/20260417/XXXXXX"
                                     disabled={buscandoFolio}
                                     className="w-[220px] rounded-md border border-cyan-200 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/10 disabled:opacity-60"
                                     style={{ fontFamily: "'JetBrains Mono',monospace" }}

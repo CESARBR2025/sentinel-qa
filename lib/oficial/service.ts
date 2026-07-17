@@ -56,7 +56,7 @@ function generarFolio(): string {
   for (let i = 0; i < 6; i++) {
     codigo += chars.charAt(Math.floor(Math.random() * chars.length))
   }
-  return `SSPM/${fecha}/${codigo}`
+  return `SSPM/CAM/${fecha}/${codigo}`
 }
 
 async function generarFolioUnico(): Promise<string> {

@@ -17,7 +17,7 @@ function generarFolioDenuncia(): string {
   for (let i = 0; i < 6; i++) {
     codigo += chars.charAt(Math.floor(Math.random() * chars.length))
   }
-  return `SSPM/${fecha}/${codigo}`
+  return `SSPM/D1/${fecha}/${codigo}`
 }
 
 async function generarFolioDenunciaUnico(): Promise<string> {

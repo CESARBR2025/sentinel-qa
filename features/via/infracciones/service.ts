@@ -70,12 +70,12 @@ const rellenarBase36 = (value: string, totalLength: number) => {
 
 export const generarFolioInfraccion = (seq: number) => {
   const now = new Date();
-  const year = now.getFullYear().toString().slice(-2);
+  const year = now.getFullYear().toString();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const base36 = seq.toString(36).toUpperCase();
   const secuencia = rellenarBase36(base36, 6);
-  return `SSPM-${year}-${month}-${day}-${secuencia}`;
+  return `SSPM/INF/${year}${month}${day}/${secuencia}`;
 };
 
 export class InfraccionesService {
