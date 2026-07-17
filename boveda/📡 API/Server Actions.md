@@ -26,3 +26,5 @@
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
 
+
+

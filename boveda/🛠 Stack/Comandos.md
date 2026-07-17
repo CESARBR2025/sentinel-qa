@@ -16,3 +16,5 @@
 | `db:schema` | `tsx scripts/exportar-schema.ts` |
 <!-- AUTO-GENERATED END -->
 
+
+

@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Mic, MicOff, RotateCcw, Loader2 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { CardTitle } from '../ui/CardTitle';
 import { FieldLabel } from '../ui/FieldLabel';
 import { CustomSelect } from '../ui/CustomSelect';
 import { useInfraccionStore } from '@/stores/useInfraccionStore';
-import { obtenerFraccionesAction } from '@/features/via/legalidad/actions';
+import { obtenerFraccionesAction, buscarFraccionesPorDescripcionAction } from '@/features/via/legalidad/actions';
+import { ResultadoBusquedaMotivo } from '@/features/via/legalidad/types';
+import { useReconocimientoVoz } from '../../hooks/useReconocimientoVoz';
 
 interface Fraccion {
     id: string;
@@ -45,6 +47,56 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
     const articuloSeleccionado = articulos.find((a) => a.id === datos.articuloId);
     const fraccionSeleccionada = fracciones.find((f) => f.id === datos.fraccionId);
 
+    // ─────────────────────────────────────────────────────────────
+    // BÚSQUEDA POR VOZ - Reconocimiento de voz + búsqueda anclada al catálogo
+    // ─────────────────────────────────────────────────────────────
+    const { soportado, escuchando, transcripcion, error: errorVoz, iniciar, reiniciar } = useReconocimientoVoz();
+    const [resultadosVoz, setResultadosVoz] = useState<ResultadoBusquedaMotivo[]>([]);
+    const [buscandoMotivo, setBuscandoMotivo] = useState(false);
+    const [busquedaSinResultados, setBusquedaSinResultados] = useState(false);
+
+    useEffect(() => {
+        if (!transcripcion) return;
+
+        setBuscandoMotivo(true);
+        setBusquedaSinResultados(false);
+        buscarFraccionesPorDescripcionAction(transcripcion)
+            .then((res) => {
+                const data = res.success ? res.data : [];
+                setResultadosVoz(data);
+                setBusquedaSinResultados(data.length === 0);
+            })
+            .finally(() => setBuscandoMotivo(false));
+    }, [transcripcion]);
+
+    const seleccionarResultadoVoz = (resultado: ResultadoBusquedaMotivo) => {
+        actualizarDatos({
+            articuloId: resultado.articuloId,
+            articuloNumero: resultado.articuloNumero,
+            articuloDescripcion: resultado.articuloDescripcion,
+            fraccionId: resultado.fraccionId,
+            fraccionNumero: resultado.fraccionNumero,
+            fraccionDescripcion: resultado.fraccionDescripcion,
+            fraccionMonto: resultado.fraccionMonto.toString(),
+            fraccionClasificacion: resultado.fraccionClasificacion,
+        });
+        setFracciones([
+            {
+                id: resultado.fraccionId,
+                numero: resultado.fraccionNumero,
+                descripcion: resultado.fraccionDescripcion,
+                monto_umas: resultado.fraccionMonto,
+                clasificacion: resultado.fraccionClasificacion,
+            },
+        ]);
+    };
+
+    const reintentarVoz = () => {
+        reiniciar();
+        setResultadosVoz([]);
+        setBusquedaSinResultados(false);
+    };
+
     useEffect(() => {
         if (!datos.articuloId) {
             setFracciones([]);
@@ -60,8 +112,101 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
     }, [datos.articuloId]);
 
     return (
+        <div className="space-y-4">
+            {soportado && (
+                <Card>
+                    <CardTitle>Describe lo que pasó</CardTitle>
+
+                    <div className="flex items-center gap-4">
+                        <button
+                            type="button"
+                            onClick={escuchando ? undefined : iniciar}
+                            disabled={loading || escuchando}
+                            className={`shrink-0 w-14 h-14 rounded-full flex items-center justify-center transition-all ${
+                                escuchando
+                                    ? 'bg-red-500 text-white animate-pulse'
+                                    : 'bg-primary text-white hover:bg-primary-dark active:scale-95'
+                            } disabled:opacity-60`}
+                        >
+                            {escuchando ? <MicOff size={22} /> : <Mic size={22} />}
+                        </button>
+
+                        <div className="flex-1 min-w-0">
+                            {escuchando && (
+                                <p className="text-sm text-slate-600">Escuchando… habla ahora</p>
+                            )}
+
+                            {!escuchando && transcripcion && (
+                                <div className="flex items-start gap-2">
+                                    <p className="text-sm text-slate-800 italic">&ldquo;{transcripcion}&rdquo;</p>
+                                    <button
+                                        type="button"
+                                        onClick={reintentarVoz}
+                                        className="shrink-0 text-slate-400 hover:text-slate-600"
+                                        title="Volver a intentar"
+                                    >
+                                        <RotateCcw size={14} />
+                                    </button>
+                                </div>
+                            )}
+
+                            {!escuchando && !transcripcion && !errorVoz && (
+                                <p className="text-sm text-slate-500">Toca el micrófono y describe la infracción, por ejemplo: &ldquo;por exceso de velocidad y se saltó la luz roja&rdquo;.</p>
+                            )}
+
+                            {errorVoz && (
+                                <p className="text-sm text-red-600">{errorVoz}</p>
+                            )}
+
+                            {buscandoMotivo && (
+                                <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+                                    <Loader2 size={12} className="animate-spin" /> Buscando en el reglamento...
+                                </p>
+                            )}
+
+                            {busquedaSinResultados && (
+                                <p className="mt-1 text-xs text-amber-600">No se encontraron coincidencias. Intenta de nuevo o usa la selección manual.</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {resultadosVoz.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                            {resultadosVoz.map((r) => {
+                                const seleccionado = datos.fraccionId === r.fraccionId;
+                                return (
+                                    <button
+                                        type="button"
+                                        key={r.fraccionId}
+                                        onClick={() => seleccionarResultadoVoz(r)}
+                                        className={`w-full text-left rounded-lg border p-3 transition-all ${
+                                            seleccionado
+                                                ? 'border-primary bg-primary-muted'
+                                                : 'border-slate-200 bg-white hover:border-primary/40 hover:bg-primary-muted/40'
+                                        }`}
+                                    >
+                                        <p className="text-xs font-semibold text-slate-900">
+                                            ART. {r.articuloNumero} — FRACC. {r.fraccionNumero}
+                                        </p>
+                                        <p className="mt-0.5 text-xs text-slate-600">{r.fraccionDescripcion}</p>
+                                        <div className="mt-1.5 flex flex-wrap gap-1.5">
+                                            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium border border-primary/20">
+                                                {r.fraccionClasificacion}
+                                            </span>
+                                            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium border border-primary/20 text-primary">
+                                                {r.fraccionMonto} UMAS
+                                            </span>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                </Card>
+            )}
+
         <Card>
-            <CardTitle>Motivo de infracción</CardTitle>
+            <CardTitle>{soportado ? 'Selección manual (respaldo)' : 'Motivo de infracción'}</CardTitle>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="relative pb-5">
                     <FieldLabel required>Artículo</FieldLabel>
@@ -161,5 +306,6 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
                 </div>
             )}
         </Card>
+        </div>
     );
 };

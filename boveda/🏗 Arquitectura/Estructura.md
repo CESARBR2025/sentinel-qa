@@ -710,6 +710,8 @@
 │       │   │   ├── PagoInfraccion.tsx
 │       │   │   ├── PinBarrier.tsx
 │       │   │   └── SeccionLiberacion.tsx
+│       │   ├── hooks/
+│       │   │   └── useReconocimientoVoz.ts
 │       │   ├── actions.ts
 │       │   ├── constants.ts
 │       │   ├── mapper.ts
@@ -792,6 +794,8 @@
 │   │   ├── repository.ts
 │   │   ├── service.ts
 │   │   └── types.ts
+│   ├── ai/
+│   │   └── client.ts
 │   ├── analisis/
 │   │   └── permisos.ts
 │   ├── auth/
@@ -1063,4 +1067,6 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
 

@@ -37,5 +37,10 @@
 | `KEY_USER_VALIDATE_STATUS` | No | — |
 | `KEY_PD_VALIDATE_STATUS` | No | — |
 | `NEXT_PUBLIC_FLOTA_API_KEY` | No | FLOTA DE POLICIAS |
+| `LLM_API_KEY` | No (feature se degrada sin ella) | Búsqueda inteligente de motivo por voz (paso 4 captura infracción, rol Oficial) — LLM compatible OpenAI (ej. DeepSeek). Sin esta variable, `iaDisponible=false` y el flujo manual de selects sigue funcionando. |
+| `LLM_BASE_URL` | No | Default `https://api.deepseek.com` |
+| `LLM_MODEL` | No | Default `deepseek-chat` |
 <!-- AUTO-GENERATED END -->
+
+
 

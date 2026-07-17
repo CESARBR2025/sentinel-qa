@@ -17,6 +17,7 @@
 | agente_infracciones | (Pendiente) | ✨ Detectado |
 | agente_juzgado | (Pendiente) | ✨ Detectado |
 | agente_liberaciones | (Pendiente) | ✨ Detectado |
+| ai | (Pendiente) | ✨ Detectado |
 | analisis | (Pendiente) | ✨ Detectado |
 | auth | (Pendiente) | ✨ Detectado |
 | auxiliar | (Pendiente) | ✨ Detectado |
@@ -69,4 +70,6 @@
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
 <!-- AUTO-GENERATED END -->
+
+
 

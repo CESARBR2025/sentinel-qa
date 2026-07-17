@@ -23,6 +23,7 @@
 | lucide-react | ^1.21.0 |
 | next | 16.2.4 |
 | nodemailer | ^9.0.3 |
+| openai | ^6.47.0 |
 | pdfkit | ^0.19.1 |
 | pg | ^8.20.0 |
 | pptxgenjs | ^4.0.1 |
@@ -54,4 +55,6 @@
 | tsx | ^4.21.0 |
 | typescript | 5.9.3 |
 <!-- AUTO-GENERATED END -->
+
+
 
