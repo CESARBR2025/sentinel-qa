@@ -34,18 +34,28 @@ function obtenerConstructor(): SpeechRecognitionConstructor | null {
     return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
+interface OpcionesIniciar {
+    /** true = dictado largo (varias oraciones, no corta al primer silencio). Default false (Fase 1: frase corta). */
+    continuous?: boolean;
+    /** Si es false, no borra lo ya transcrito — útil para reanudar tras un corte automático del navegador. */
+    reiniciarTexto?: boolean;
+}
+
 export function useReconocimientoVoz() {
     const [soportado] = useState(() => obtenerConstructor() !== null);
     const [escuchando, setEscuchando] = useState(false);
     const [transcripcion, setTranscripcion] = useState('');
+    const [interim, setInterim] = useState('');
     const [error, setError] = useState<string | null>(null);
     const reconocimientoRef = useRef<SpeechRecognitionLike | null>(null);
+    const acumuladoRef = useRef('');
 
     const detener = useCallback(() => {
         reconocimientoRef.current?.stop();
     }, []);
 
-    const iniciar = useCallback(() => {
+    const iniciar = useCallback((opciones: OpcionesIniciar = {}) => {
+        const { continuous = false, reiniciarTexto = true } = opciones;
         const Constructor = obtenerConstructor();
         if (!Constructor) {
             setError('Tu navegador no soporta reconocimiento de voz');
@@ -53,22 +63,29 @@ export function useReconocimientoVoz() {
         }
 
         setError(null);
-        setTranscripcion('');
+        setInterim('');
+        if (reiniciarTexto) {
+            acumuladoRef.current = '';
+            setTranscripcion('');
+        }
 
         const reconocimiento = new Constructor();
         reconocimiento.lang = 'es-MX';
-        reconocimiento.continuous = false;
-        reconocimiento.interimResults = false;
+        reconocimiento.continuous = continuous;
+        reconocimiento.interimResults = true;
 
         reconocimiento.onresult = (event) => {
-            let textoFinal = '';
+            let textoInterino = '';
             for (let i = event.resultIndex; i < event.results.length; i++) {
                 const resultado = event.results[i];
                 if (resultado.isFinal) {
-                    textoFinal += resultado[0].transcript;
+                    acumuladoRef.current = `${acumuladoRef.current} ${resultado[0].transcript}`.trim();
+                } else {
+                    textoInterino += resultado[0].transcript;
                 }
             }
-            if (textoFinal) setTranscripcion(textoFinal.trim());
+            setTranscripcion(acumuladoRef.current);
+            setInterim(textoInterino);
         };
 
         reconocimiento.onerror = (event) => {
@@ -82,6 +99,7 @@ export function useReconocimientoVoz() {
 
         reconocimiento.onend = () => {
             setEscuchando(false);
+            setInterim('');
         };
 
         reconocimientoRef.current = reconocimiento;
@@ -90,9 +108,11 @@ export function useReconocimientoVoz() {
     }, []);
 
     const reiniciar = useCallback(() => {
+        acumuladoRef.current = '';
         setTranscripcion('');
+        setInterim('');
         setError(null);
     }, []);
 
-    return { soportado, escuchando, transcripcion, error, iniciar, detener, reiniciar };
+    return { soportado, escuchando, transcripcion, interim, error, iniciar, detener, reiniciar };
 }

@@ -40,6 +40,7 @@ export interface CrearInfraccionDTO {
   gruaId?: string | null;
   estatus: string;
   estatusDependencia?: string | null;
+  narrativaHechos?: string | null;
 }
 
 export interface InfraccionDB {
@@ -90,6 +91,7 @@ export interface InfraccionDB {
   created_at: string;
   updated_at: string;
   pin_acceso?: string | null;
+  narrativa_hechos?: string | null;
 }
 
 export interface InfraccionDetalleDTO {

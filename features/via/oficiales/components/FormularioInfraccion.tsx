@@ -28,6 +28,7 @@ import { ProcesoModal } from '@/features/via/infracciones/components/steps/Proce
 import PasoCiudadanoConductor from '@/features/via/infracciones/components/steps/PasoCiudadanoConductor';
 import PasoUbicacionEvidencias from '@/features/via/infracciones/components/steps/PasoUbicacionEvidencias';
 import PasoConfirmacionPago from '@/features/via/infracciones/components/steps/PasoConfirmacionPago';
+import DictadoInicialInfraccion from '@/features/via/infracciones/components/DictadoInicialInfraccion';
 
 // ═══════════════════════════════════════════════════════════════════
 // IMPORTS - Zustand Store
@@ -74,6 +75,7 @@ export default function FormularioInfraccion() {
     // ───────────────────────────────────────────────────────────────────
     const [mounted, setMounted] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
+    const [mostrarGateDictado, setMostrarGateDictado] = useState(true);
 
     const [success, setSuccess] = useState<string | null | boolean>(null);
     const [error, setError] = useState<string | null>(null);
@@ -424,6 +426,11 @@ export default function FormularioInfraccion() {
         if (error || success) window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [error, success]);
 
+    // Si hay una sesión previa que retomar, se salta el gate de dictado inicial
+    useEffect(() => {
+        if (sessionToResume) setMostrarGateDictado(false);
+    }, [sessionToResume]);
+
     // Auto-limpiar mensaje de éxito después de 2.5 segundos
     useEffect(() => {
         if (success) {
@@ -657,6 +664,15 @@ export default function FormularioInfraccion() {
                 return true;
         }
     }, [datos]);
+
+    // ═══════════════════════════════════════════════════════════════════
+    // GATE DE DICTADO INICIAL - Aterriza en el primer paso que aún falte
+    // ═══════════════════════════════════════════════════════════════════
+    const irAPrimerPasoIncompleto = useCallback(() => {
+        const idx = stepIds.findIndex((id) => !validateStep(id));
+        setCurrentStep(idx === -1 ? 0 : idx);
+        setMostrarGateDictado(false);
+    }, [stepIds, validateStep, setCurrentStep]);
 
     // ═══════════════════════════════════════════════════════════════════
     // FUNCIONES HANDLER - Registro e Interacción
@@ -1204,6 +1220,13 @@ export default function FormularioInfraccion() {
             ) : (
 
             <>
+            {mostrarGateDictado ? (
+                <DictadoInicialInfraccion
+                    onOmitir={() => setMostrarGateDictado(false)}
+                    onListoParaContinuar={irAPrimerPasoIncompleto}
+                />
+            ) : (
+            <>
             {/* Stepper Header */}
             <div className="shrink-0 px-0 pb-3 space-y-2">
                 <div className="flex items-center justify-between gap-4">
@@ -1425,6 +1448,8 @@ export default function FormularioInfraccion() {
                         </button>
                     )}
                 </footer>
+            )}
+            </>
             )}
             </>
             )}

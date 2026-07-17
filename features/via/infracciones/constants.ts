@@ -49,4 +49,5 @@ export const datosIniciales: DatosInfraccion = {
   gruaInvolucrada: "",
   agregarEvidencia: false,
   pagoAlMomento: false,
+  narrativaHechos: "",
 };

@@ -5,7 +5,8 @@ import CapturarDatosInfractorModal from './CapturarDatosInfractorModal'
 import ModalEntregarGarantia from './ModalEntregarGarantia'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Clock, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X, Shield } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X, Shield, SlidersHorizontal, FileSearch, Loader2 } from 'lucide-react'
+import { buscarInfraccionPorFolioAction } from '@/lib/agente_infracciones/actions'
 
 const AVATAR_COLORS = [
     { bg: '#eff1f3', text: '#1f355a' },
@@ -39,39 +40,55 @@ interface Props {
 
 type EstatusInfracciones =
     | 'PENDIENTE_DATOS_INFRACTOR'
-    | 'PENDIENTE_PAGO'
+    | 'LIBERADO_INFRACCIONES_INSTANTE'
     | 'PENDIENTE_DEVOLUCION_GARANTIA'
     | 'LIBERADA_POR_INFRACCION'
-    | 'LIBERADO_INFRACCIONES_INSTANTE'
 
 const STATUS_TABS: { key: EstatusInfracciones; label: string; icon: typeof Clock; color: string }[] = [
     { key: 'PENDIENTE_DATOS_INFRACTOR', label: 'Pendiente datos', icon: Clock, color: '#F59E0B' },
-    { key: 'PENDIENTE_PAGO', label: 'Pendiente pago', icon: Clock, color: '#F97316' },
+    { key: 'LIBERADO_INFRACCIONES_INSTANTE', label: 'Pagadas instante', icon: CheckCircle2, color: '#10B981' },
     { key: 'PENDIENTE_DEVOLUCION_GARANTIA', label: 'Pendiente devolución', icon: Clock, color: '#EC4899' },
     { key: 'LIBERADA_POR_INFRACCION', label: 'Liberadas', icon: CheckCircle2, color: '#22C55E' },
-    { key: 'LIBERADO_INFRACCIONES_INSTANTE', label: 'Pagadas instante', icon: CheckCircle2, color: '#10B981' },
 ]
 
 const STATUS_BADGE: Record<string, { bg: string; text: string; dot: string; label: string }> = {
     PENDIENTE_DATOS_INFRACTOR: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Pendiente datos' },
     LIBERADO_POR_INFRACCIONES: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADO_INFRACCIONES_INSTANTE: { bg: '#D1FAE5', text: '#065F46', dot: '#10B981', label: 'Pagada instante' },
-    PENDIENTE_PAGO_LIBERACION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
-    PENDIENTE_PAGO_INFRACCION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
     PENDIENTE_DEVOLUCION_GARANTIA: { bg: '#FCE7F3', text: '#9D174D', dot: '#EC4899', label: 'Pendiente devolución' },
-    LIBERADA_POR_INFRACCION: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
-    LIBERADA_POR_DELITO: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
-    LIBERADA_POR_ACCIDENTE: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
-    FINALIZADA_ACCIDENTE: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Finalizada' },
-    FINALIZADA_INFRACCION: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Finalizada' },
-    FINALIZADA_DELITO: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Finalizada' },
 }
 
 function getBadge(status: string) {
     return STATUS_BADGE[status] ?? { bg: '#F1F5F9', text: '#475569', dot: '#94A3B8', label: status }
 }
 
-const SORTABLE_KEYS = new Set(['folio', 'nombre_infractor', 'correo_infractor', 'placa'])
+// Infracciones sólo controla garantías no vehiculares: placa, tarjeta de
+// circulación y licencia. VEHICULO (corralón) es de Liberaciones.
+const GARANTIA_BADGE: Record<string, { bg: string; text: string; label: string }> = {
+    PLACA: { bg: '#FEF9C3', text: '#854D0E', label: 'Placa' },
+    TRJ_CIRCULACION: { bg: '#E0F2FE', text: '#075985', label: 'Tarjeta circulación' },
+    LICENCIA: { bg: '#FCE7F3', text: '#9D174D', label: 'Licencia' },
+}
+
+function getGarantiaBadge(tipo: string) {
+    return GARANTIA_BADGE[tipo] ?? { bg: '#F1F5F9', text: '#475569', label: tipo || 'Sin especificar' }
+}
+
+const GARANTIA_OPTS = [
+    { key: '', label: 'Toda garantía' },
+    { key: 'PLACA', label: 'Placa' },
+    { key: 'TRJ_CIRCULACION', label: 'Tarjeta circulación' },
+    { key: 'LICENCIA', label: 'Licencia' },
+]
+
+function formatFecha(value: string) {
+    if (!value) return '—'
+    const fecha = new Date(value)
+    if (Number.isNaN(fecha.getTime())) return '—'
+    return fecha.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+const SORTABLE_KEYS = new Set(['folio', 'nombre_infractor', 'correo_infractor', 'placa', 'tipoGarantia', 'created_at'])
 
 export default function InfraccionesDashboard({
     data,
@@ -87,21 +104,43 @@ export default function InfraccionesDashboard({
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
     const [fechaInicio, setFechaInicio] = useState('')
     const [fechaFin, setFechaFin] = useState('')
+    const [garantiaFiltro, setGarantiaFiltro] = useState('')
     const [capturarDatosId, setCapturarDatosId] = useState<string | null>(null)
     const [garantiaId, setGarantiaId] = useState<string | null>(null)
+
+    const [folioGlobal, setFolioGlobal] = useState('')
+    const [buscandoFolio, setBuscandoFolio] = useState(false)
+    const [errorFolio, setErrorFolio] = useState('')
 
     function handleFiltroChange(key: EstatusInfracciones) {
         setFiltro(key)
         setPagina(1)
     }
 
+    async function handleBuscarFolioGlobal() {
+        if (!folioGlobal.trim() || buscandoFolio) return
+        setBuscandoFolio(true)
+        setErrorFolio('')
+        try {
+            const result = await buscarInfraccionPorFolioAction(folioGlobal)
+            if (!result.success || !result.id) {
+                setErrorFolio(result.error || 'Folio no encontrado')
+                return
+            }
+            router.push(`/agente_infracciones/revision-documental/${result.id}`)
+        } catch {
+            setErrorFolio('Error al buscar el folio')
+        } finally {
+            setBuscandoFolio(false)
+        }
+    }
+
     const estadisticas = useMemo(() => {
         const capturarDatos = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'PENDIENTE_DATOS_INFRACTOR').length
-        const pendientesPago = data.filter(x => x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_INFRACCION').length
         const pendientesDevolucion = data.filter(x => x.estatusInfraccion === 'PAGADA' && x.estatusDependencia === 'PENDIENTE_DEVOLUCION_GARANTIA').length
         const liberadas = data.filter(x => x.estatusInfraccion === 'CERRADA' && x.estatusDependencia === 'LIBERADO_POR_INFRACCIONES').length
         const pagadasInstante = data.filter(x => x.estatusInfraccion === 'CERRADA' && x.estatusDependencia === 'LIBERADO_INFRACCIONES_INSTANTE').length
-    return { capturarDatos, pendientesPago, pendientesDevolucion, liberadas, pagadasInstante }
+    return { capturarDatos, pendientesDevolucion, liberadas, pagadasInstante }
   }, [data])
 
     const registrosFiltrados = useMemo(
@@ -109,8 +148,6 @@ export default function InfraccionesDashboard({
             switch (filtro) {
                 case 'PENDIENTE_DATOS_INFRACTOR':
                     return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'PENDIENTE_DATOS_INFRACTOR'
-                case 'PENDIENTE_PAGO':
-                    return x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_INFRACCION'
                 case 'PENDIENTE_DEVOLUCION_GARANTIA':
                     return x.estatusInfraccion === 'PAGADA' && x.estatusDependencia === 'PENDIENTE_DEVOLUCION_GARANTIA'
                 case 'LIBERADA_POR_INFRACCION':
@@ -124,13 +161,29 @@ export default function InfraccionesDashboard({
         [data, filtro],
     )
 
+    const conteoGarantia = useMemo(() => {
+        const base: Record<string, number> = { '': registrosFiltrados.length, PLACA: 0, TRJ_CIRCULACION: 0, LICENCIA: 0 }
+        registrosFiltrados.forEach(x => {
+            if (x.tipoGarantia && base[x.tipoGarantia] !== undefined) base[x.tipoGarantia]++
+        })
+        return base
+    }, [registrosFiltrados])
+
+    const registrosPorGarantia = useMemo(
+        () => garantiaFiltro ? registrosFiltrados.filter(x => x.tipoGarantia === garantiaFiltro) : registrosFiltrados,
+        [registrosFiltrados, garantiaFiltro],
+    )
+
     const busquedaLower = busqueda.toLowerCase().trim()
     const registrosVisibles = busqueda
-        ? registrosFiltrados.filter(row => {
+        ? registrosPorGarantia.filter(row => {
             const folio = String(row.folio ?? '').toLowerCase()
-            return folio.includes(busquedaLower)
+            const placa = String(row.placa ?? '').toLowerCase()
+            const nombre = String(row.nombre_infractor ?? '').toLowerCase()
+            const correo = String(row.correo_infractor ?? '').toLowerCase()
+            return folio.includes(busquedaLower) || placa.includes(busquedaLower) || nombre.includes(busquedaLower) || correo.includes(busquedaLower)
         })
-        : registrosFiltrados
+        : registrosPorGarantia
 
     const registrosFiltradosFecha = useMemo(() => {
         if (!fechaInicio && !fechaFin) return registrosVisibles
@@ -162,7 +215,6 @@ export default function InfraccionesDashboard({
 
     const STATS_KEY: Record<EstatusInfracciones, keyof typeof estadisticas> = {
         PENDIENTE_DATOS_INFRACTOR: 'capturarDatos',
-        PENDIENTE_PAGO: 'pendientesPago',
         PENDIENTE_DEVOLUCION_GARANTIA: 'pendientesDevolucion',
         LIBERADA_POR_INFRACCION: 'liberadas',
         LIBERADO_INFRACCIONES_INSTANTE: 'pagadasInstante',
@@ -178,12 +230,28 @@ export default function InfraccionesDashboard({
         setPagina(1)
     }
 
+    const filtrosActivos = Boolean(busqueda || fechaInicio || fechaFin || garantiaFiltro)
+
+    function limpiarFiltros() {
+        setBusqueda('')
+        setFechaInicio('')
+        setFechaFin('')
+        setGarantiaFiltro('')
+        setPagina(1)
+    }
+
     function exportarCSV() {
         const headers = visibleColumns.filter(c => c.key !== 'acciones').map(c => c.label)
         const rows = registrosOrdenados.map(row => {
             return visibleColumns.filter(c => c.key !== 'acciones').map(c => {
                 if (c.key === 'estatus') {
                     return getBadge(row.estatusDependencia ?? row.estatusInfraccion).label
+                }
+                if (c.key === 'tipoGarantia') {
+                    return getGarantiaBadge(row.tipoGarantia).label
+                }
+                if (c.key === 'created_at') {
+                    return formatFecha(row.created_at)
                 }
                 return row[c.key] ?? ''
             })
@@ -220,6 +288,56 @@ export default function InfraccionesDashboard({
                 </div>
             ) : (
                 <div className="rounded-xl border overflow-hidden bg-white border-slate-200 shadow-card">
+                    {/* ─── Búsqueda global por folio ─── */}
+                    <div className="px-5 py-3.5 border-b border-slate-100" style={{ background: '#ecfeff' }}>
+                        <div className="flex items-center justify-between gap-3 flex-wrap">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: '#0891b2' }}>
+                                    <FileSearch size={13} strokeWidth={2.5} className="text-white" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wider text-cyan-800" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                        Buscar cualquier folio
+                                    </p>
+                                    <p className="text-[11px] text-cyan-700/70">
+                                        Consulta el estado global de una infracción, sin importar su estatus.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={folioGlobal}
+                                    onChange={e => { setFolioGlobal(e.target.value); setErrorFolio('') }}
+                                    onKeyDown={e => { if (e.key === 'Enter') handleBuscarFolioGlobal() }}
+                                    placeholder="SSPM-26-07-17-XXXXXX"
+                                    disabled={buscandoFolio}
+                                    className="w-[220px] rounded-md border border-cyan-200 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/10 disabled:opacity-60"
+                                    style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                />
+                                <button
+                                    onClick={handleBuscarFolioGlobal}
+                                    disabled={buscandoFolio || !folioGlobal.trim()}
+                                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-semibold text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    style={{ background: '#0891b2' }}
+                                >
+                                    {buscandoFolio ? (
+                                        <Loader2 size={13} className="animate-spin" strokeWidth={2.5} />
+                                    ) : (
+                                        <Search size={13} strokeWidth={2.5} />
+                                    )}
+                                    Buscar
+                                </button>
+                            </div>
+                        </div>
+                        {errorFolio && (
+                            <p className="mt-2 text-[11px] font-medium text-red-600 flex items-center gap-1.5">
+                                <AlertCircle size={12} strokeWidth={2} />
+                                {errorFolio}
+                            </p>
+                        )}
+                    </div>
+
                     {/* ─── Segmented control + CSV ─── */}
                     <div className="px-5 py-3 border-b flex items-center justify-between border-slate-100 bg-slate-50">
                         <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-200/60">
@@ -249,6 +367,15 @@ export default function InfraccionesDashboard({
                             })}
                         </div>
                         <div className="flex items-center gap-3">
+                            {filtrosActivos && (
+                                <button
+                                    onClick={limpiarFiltros}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100 border border-transparent transition-colors"
+                                >
+                                    <X size={12} strokeWidth={2} />
+                                    Limpiar filtros
+                                </button>
+                            )}
                             <button
                                 onClick={exportarCSV}
                                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-cyan-700 bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 transition-colors"
@@ -262,6 +389,33 @@ export default function InfraccionesDashboard({
                         </div>
                     </div>
 
+                    {/* ─── Sub-filtro: tipo de garantía retenida ─── */}
+                    <div className="px-5 py-2 border-b border-slate-100 bg-white flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                            <SlidersHorizontal size={11} strokeWidth={2} />
+                            Garantía
+                        </span>
+                        <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-cyan-50 w-fit">
+                            {GARANTIA_OPTS.map(opt => (
+                                <button
+                                    key={opt.key}
+                                    onClick={() => { setGarantiaFiltro(opt.key); setPagina(1) }}
+                                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                                        garantiaFiltro === opt.key
+                                            ? 'bg-white text-cyan-800 shadow-sm'
+                                            : 'text-cyan-700/70 hover:text-cyan-800'
+                                    }`}
+                                    style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                >
+                                    {opt.label}
+                                    <span className={`tabular-nums ${garantiaFiltro === opt.key ? 'text-cyan-900' : 'text-cyan-700/50'}`}>
+                                        {conteoGarantia[opt.key] ?? 0}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* ─── Search + Date filter ─── */}
                     <div className="px-5 py-2.5 border-b flex items-center gap-3 border-slate-100 bg-white flex-wrap">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -270,7 +424,7 @@ export default function InfraccionesDashboard({
                                 type="text"
                                 value={busqueda}
                                 onChange={e => { setBusqueda(e.target.value); setPagina(1) }}
-                                placeholder="Buscar por folio..."
+                                placeholder="Buscar por folio, placa, nombre o correo..."
                                 className="w-full border-none bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                             />
                             {busqueda && (
@@ -341,7 +495,19 @@ export default function InfraccionesDashboard({
                                             <div className="flex flex-col items-center gap-2">
                                                 <AlertCircle size={22} strokeWidth={1.5} className="text-slate-300" />
                                                 <p className="text-sm font-medium text-slate-400">No hay registros</p>
-                                                <p className="text-xs text-slate-300">No existen solicitudes con este estatus.</p>
+                                                <p className="text-xs text-slate-300">
+                                                    {filtrosActivos
+                                                        ? 'Ningún registro coincide con los filtros aplicados.'
+                                                        : 'No existen solicitudes con este estatus.'}
+                                                </p>
+                                                {filtrosActivos && (
+                                                    <button
+                                                        onClick={limpiarFiltros}
+                                                        className="mt-1 text-[11px] font-medium uppercase tracking-wider text-cyan-700 hover:text-cyan-800 transition-colors"
+                                                    >
+                                                        Limpiar filtros
+                                                    </button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>
@@ -400,6 +566,28 @@ export default function InfraccionesDashboard({
                                                                 <span className="w-1.5 h-1.5 rounded-full" style={{ background: badge.dot }} />
                                                                 {badge.label}
                                                             </span>
+                                                        </td>
+                                                    )
+                                                }
+
+                                                if (column.key === 'tipoGarantia') {
+                                                    const badge = getGarantiaBadge(row.tipoGarantia)
+                                                    return (
+                                                        <td key={column.key} className="px-4 py-2.5">
+                                                            <span
+                                                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
+                                                                style={{ background: badge.bg, color: badge.text, fontFamily: "'JetBrains Mono',monospace" }}
+                                                            >
+                                                                {badge.label}
+                                                            </span>
+                                                        </td>
+                                                    )
+                                                }
+
+                                                if (column.key === 'created_at') {
+                                                    return (
+                                                        <td key={column.key} className="px-4 py-2.5 text-xs text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                                            {formatFecha(row.created_at)}
                                                         </td>
                                                     )
                                                 }

@@ -49,6 +49,7 @@ interface DatosInfraccion {
   gruaInvolucrada: string;
   agregarEvidencia: boolean;
   pagoAlMomento: boolean;
+  narrativaHechos: string;
 }
 
 const datosIniciales: DatosInfraccion = {
@@ -100,6 +101,7 @@ const datosIniciales: DatosInfraccion = {
   gruaInvolucrada: "",
   agregarEvidencia: false,
   pagoAlMomento: false,
+  narrativaHechos: "",
 };
 
 interface InfraccionStore {

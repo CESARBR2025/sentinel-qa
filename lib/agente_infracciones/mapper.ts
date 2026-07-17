@@ -15,6 +15,7 @@ export function rowToLiberacion(row: Record<string, unknown>): LiberacionRow {
     correo_infractor:         str(row.correo_infractor) ?? '',
     nombre_infractor:         str(row.nombre_infractor) ?? '',
     estatusDependencia:       str(row.estatus_dependencia) ?? '',
+    tipoGarantia:             str(row.tipo_garantia) ?? '',
     no_carpeta_investigacion: str(row.no_carpeta_investigacion) ?? '',
     url_orden_salida_liberaciones: str(row.url_orden_salida_liberaciones) ?? undefined,
   }

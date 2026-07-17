@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-const apiKey = process.env.LLM_API_KEY;
+const apiKey = process.env.GEO_LOCATION_KEY;
 const baseURL = process.env.LLM_BASE_URL || "https://api.deepseek.com";
 
 export const iaDisponible = Boolean(apiKey);

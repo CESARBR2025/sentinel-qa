@@ -52,6 +52,7 @@ export const mapCrearInfraccionToDB = (
     estatus_dependencia: data.estatusDependencia ?? null,
     grua_id: data.gruaId ?? null,
     pin_acceso: generarPinAcceso(),
+    narrativa_hechos: data.narrativaHechos ?? null,
   };
 };
 

@@ -10,6 +10,7 @@ import { useInfraccionStore } from '@/stores/useInfraccionStore';
 import { obtenerFraccionesAction, buscarFraccionesPorDescripcionAction } from '@/features/via/legalidad/actions';
 import { ResultadoBusquedaMotivo } from '@/features/via/legalidad/types';
 import { useReconocimientoVoz } from '../../hooks/useReconocimientoVoz';
+import { ResultadoMotivoCard } from '../ui/ResultadoMotivoCard';
 
 interface Fraccion {
     id: string;
@@ -120,7 +121,7 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
                     <div className="flex items-center gap-4">
                         <button
                             type="button"
-                            onClick={escuchando ? undefined : iniciar}
+                            onClick={escuchando ? undefined : () => iniciar()}
                             disabled={loading || escuchando}
                             className={`shrink-0 w-14 h-14 rounded-full flex items-center justify-center transition-all ${
                                 escuchando
@@ -172,34 +173,14 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
 
                     {resultadosVoz.length > 0 && (
                         <div className="mt-4 space-y-2">
-                            {resultadosVoz.map((r) => {
-                                const seleccionado = datos.fraccionId === r.fraccionId;
-                                return (
-                                    <button
-                                        type="button"
-                                        key={r.fraccionId}
-                                        onClick={() => seleccionarResultadoVoz(r)}
-                                        className={`w-full text-left rounded-lg border p-3 transition-all ${
-                                            seleccionado
-                                                ? 'border-primary bg-primary-muted'
-                                                : 'border-slate-200 bg-white hover:border-primary/40 hover:bg-primary-muted/40'
-                                        }`}
-                                    >
-                                        <p className="text-xs font-semibold text-slate-900">
-                                            ART. {r.articuloNumero} — FRACC. {r.fraccionNumero}
-                                        </p>
-                                        <p className="mt-0.5 text-xs text-slate-600">{r.fraccionDescripcion}</p>
-                                        <div className="mt-1.5 flex flex-wrap gap-1.5">
-                                            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium border border-primary/20">
-                                                {r.fraccionClasificacion}
-                                            </span>
-                                            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-medium border border-primary/20 text-primary">
-                                                {r.fraccionMonto} UMAS
-                                            </span>
-                                        </div>
-                                    </button>
-                                );
-                            })}
+                            {resultadosVoz.map((r) => (
+                                <ResultadoMotivoCard
+                                    key={r.fraccionId}
+                                    resultado={r}
+                                    seleccionado={datos.fraccionId === r.fraccionId}
+                                    onClick={() => seleccionarResultadoVoz(r)}
+                                />
+                            ))}
                         </div>
                     )}
                 </Card>

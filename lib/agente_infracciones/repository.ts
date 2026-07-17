@@ -3,6 +3,13 @@ import type { CapturaInfractorInput } from "./types";
 import { inputToDbParams } from './mapper'
 
 export async function obtenerLiberaciones() {
+  // Mesa de trabajo del agente de Infracciones: sólo los 4 estados que le
+  // interesan operar (garantías no vehiculares — placa/tarjeta/licencia;
+  // VEHÍCULO/corralón es de Liberaciones). Estados intermedios de pago
+  // (PENDIENTE_PAGO_INSTANTE, PLACA_RETENIDA_EN_TRANSITO, PENDIENTE_PAGO_INFRACCION,
+  // PAGADA_PENDIENTE_VERIFICACION) se resuelven solos vía el portal del ciudadano
+  // y no requieren acción del agente; siguen consultables con la búsqueda global
+  // por folio (obtenerInfraccionIdPorFolio).
   return query<Record<string, unknown>>(`
     SELECT
       id,
@@ -13,15 +20,22 @@ export async function obtenerLiberaciones() {
       correo_infractor,
       nombre_infractor,
       estatus_dependencia,
+      tipo_garantia,
       no_carpeta_investigacion,
       url_orden_salida_liberaciones
     FROM via.v2_infracciones
     WHERE estatus_dependencia IN ('LIBERADO_POR_INFRACCIONES', 'LIBERADO_INFRACCIONES_INSTANTE')
        OR (estatus = 'REGISTRADA' AND estatus_dependencia = 'PENDIENTE_DATOS_INFRACTOR')
-       OR (estatus = 'PENDIENTE_PAGO' AND estatus_dependencia IN ('PENDIENTE_PAGO_LIBERACION', 'PENDIENTE_PAGO_INFRACCION'))
        OR (estatus = 'PAGADA' AND estatus_dependencia = 'PENDIENTE_DEVOLUCION_GARANTIA')
-       OR (estatus = 'FINALIZADA' AND estatus_dependencia IN ('FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'))
   `);
+}
+
+export async function obtenerInfraccionIdPorFolio(folio: string): Promise<{ id: string; folio: string } | null> {
+  const result = await query<{ id: string; folio: string }>(
+    `SELECT id, folio FROM via.v2_infracciones WHERE folio = $1 LIMIT 1`,
+    [folio],
+  )
+  return result.rows[0] ?? null
 }
 
 export interface InfraccionUpdateRow {

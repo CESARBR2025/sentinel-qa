@@ -705,6 +705,8 @@
 │       │   │   ├── steps/
 │       │   │   ├── ui/
 │       │   │   ├── CapturarDatosTitularSection.tsx
+│       │   │   ├── DictadoInicialInfraccion.tsx
+│       │   │   ├── DictadoRevision.tsx
 │       │   │   ├── MapSectionCiudadano.tsx
 │       │   │   ├── ModalEntregarGarantia.tsx
 │       │   │   ├── PagoInfraccion.tsx
@@ -835,7 +837,8 @@
 │   │   │   ├── 0010_permisos_seccion_libre.sql
 │   │   │   ├── 0011_permisos_plantillas.sql
 │   │   │   ├── 0012_permisos_eliminar.sql
-│   │   │   └── 0013_roles_es_admin.sql
+│   │   │   ├── 0013_roles_es_admin.sql
+│   │   │   └── 0014_infracciones_narrativa.sql
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
 │   │   ├── schema.ts
@@ -1067,6 +1070,13 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
 
 
 

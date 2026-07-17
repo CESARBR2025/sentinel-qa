@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     CheckCircle,
     Pencil,
@@ -7,10 +7,14 @@ import {
     Car,
     User,
     Camera,
+    Sparkles,
+    RotateCw,
+    Loader2,
     type LucideIcon,
     CircleDashedIcon
 } from 'lucide-react';
 import { useInfraccionStore } from '@/stores/useInfraccionStore';
+import { generarNarrativaAction } from '@/features/via/infracciones/actions';
 
 interface PasoConfirmacionProps {
     files?: File[];
@@ -30,6 +34,50 @@ export const PasoConfirmacion: React.FC<PasoConfirmacionProps> = ({
 }) => {
     // Obtener datos del store Zustand
     const datos = useInfraccionStore((s) => s.datos);
+    const actualizarDatos = useInfraccionStore((s) => s.actualizarDatos);
+
+    // ─────────────────────────────────────────────────────────────
+    // NARRATIVA DE HECHOS - Redactada por IA a partir de lo ya capturado
+    // ─────────────────────────────────────────────────────────────
+    const [generandoNarrativa, setGenerandoNarrativa] = useState(false);
+    const hayDatosMinimos = Boolean(
+        (datos.fraccionId || datos.articuloId) && datos.placa
+    );
+
+    const generarNarrativa = () => {
+        setGenerandoNarrativa(true);
+        generarNarrativaAction({
+            motivoDetectado: datos.fraccionDescripcion,
+            articuloNumero: datos.articuloNumero,
+            articuloDescripcion: datos.articuloDescripcion,
+            fraccionNumero: datos.fraccionNumero,
+            fraccionDescripcion: datos.fraccionDescripcion,
+            marca: datos.marca,
+            modelo: datos.modelo,
+            color: datos.color,
+            placa: datos.placa,
+            anio: datos.anio,
+            calle: datos.calle,
+            numero: datos.numero,
+            colonia: datos.colonia,
+            municipio: datos.municipio,
+            estado: datos.estado,
+        })
+            .then((res) => {
+                if (res.success && res.narrativa) {
+                    actualizarDatos({ narrativaHechos: res.narrativa });
+                }
+            })
+            .finally(() => setGenerandoNarrativa(false));
+    };
+
+    useEffect(() => {
+        if (!datos.narrativaHechos && hayDatosMinimos) {
+            generarNarrativa();
+        }
+        // Solo se auto-genera una vez, al entrar al paso con datos listos.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     // Formatear la dirección completa si existe
     const direccionCompleta = [
         datos.calle && `Calle ${datos.calle}`,
@@ -145,8 +193,103 @@ export const PasoConfirmacion: React.FC<PasoConfirmacionProps> = ({
                 </div>
             </div>
 
-            {/* Mapeo de secciones optimizadas */}
-            {secciones.map(({ step, title, Icon, rows }) => (
+            {/* Primera sección (Detalles de la Infracción) */}
+            {secciones.slice(0, 1).map(({ step, title, Icon, rows }) => (
+                <div
+                    key={title}
+                    className="bg-white rounded-xl border border-slate-200 shadow-card overflow-hidden"
+                >
+                    <div className="flex items-center justify-between px-5 py-4 bg-slate-50 border-b border-slate-100">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <Icon size={16} className="text-primary" />
+                            </div>
+                            <h3 className="text-sm font-medium text-slate-900 tracking-wide">{title}</h3>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => onNavigateToStep(step)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-primary hover:bg-primary-muted font-medium transition-all active:scale-95"
+                        >
+                            <Pencil size={13} />
+                            Modificar
+                        </button>
+                    </div>
+
+                    <div className="px-5 py-2 divide-y divide-slate-100">
+                        {rows.map(([label, value]) => {
+                            const isLongText = String(value).length > 55;
+
+                            return (
+                                <div
+                                    key={label}
+                                    className={`py-3 ${isLongText
+                                        ? 'flex flex-col space-y-1.5'
+                                        : 'flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1'
+                                        }`}
+                                >
+                                    <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider block shrink-0">
+                                        {label}
+                                    </span>
+
+                                    <span
+                                        className={`text-sm font-medium leading-relaxed ${isLongText
+                                            ? 'text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100 text-justify text-xs'
+                                            : label.includes('Monto')
+                                                ? 'text-green-500 font-medium bg-green-50 px-2.5 py-0.5 rounded-lg border border-green-500/30'
+                                                : 'text-slate-900 sm:text-right break-words'
+                                            }`}
+                                    >
+                                        {value}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            ))}
+
+            {/* Narrativa de hechos — redactada por IA, siempre editable */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-card overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 bg-slate-50 border-b border-slate-100">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Sparkles size={16} className="text-primary" />
+                        </div>
+                        <h3 className="text-sm font-medium text-slate-900 tracking-wide">Narrativa de hechos</h3>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={generarNarrativa}
+                        disabled={generandoNarrativa || !hayDatosMinimos}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-primary hover:bg-primary-muted font-medium transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {generandoNarrativa ? <Loader2 size={13} className="animate-spin" /> : <RotateCw size={13} />}
+                        {datos.narrativaHechos ? 'Regenerar con IA' : 'Generar con IA'}
+                    </button>
+                </div>
+
+                <div className="px-5 py-4 space-y-2">
+                    <textarea
+                        value={datos.narrativaHechos}
+                        onChange={(e) => actualizarDatos({ narrativaHechos: e.target.value })}
+                        disabled={generandoNarrativa}
+                        rows={4}
+                        placeholder={
+                            generandoNarrativa
+                                ? 'Redactando narrativa...'
+                                : 'Describe brevemente lo ocurrido (opcional)'
+                        }
+                        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 leading-relaxed outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:bg-slate-50 disabled:text-slate-400 resize-none"
+                    />
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                        Generado por IA a partir de los datos ya capturados — revisa y edita antes de guardar. No sustituye tu criterio como oficial.
+                    </p>
+                </div>
+            </div>
+
+            {/* Resto de secciones */}
+            {secciones.slice(1).map(({ step, title, Icon, rows }) => (
                 <div
                     key={title}
                     className="bg-white rounded-xl border border-slate-200 shadow-card overflow-hidden"

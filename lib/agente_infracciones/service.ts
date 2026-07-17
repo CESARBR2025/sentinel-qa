@@ -1,4 +1,4 @@
-import { obtenerLiberaciones, actualizarDatosInfractor, obtenerConceptoId, insertarOrdenPagoSa7, liberarGarantia } from './repository'
+import { obtenerLiberaciones, actualizarDatosInfractor, obtenerConceptoId, insertarOrdenPagoSa7, liberarGarantia, obtenerInfraccionIdPorFolio } from './repository'
 import { rowToLiberacion } from './mapper'
 import { obtenerTokenGuest } from '@/lib/shared/infracciones'
 import { tienePermiso } from './permisos'
@@ -14,6 +14,12 @@ export async function verificarRolInfracciones(userId: string): Promise<boolean>
 export async function listarLiberaciones(): Promise<LiberacionRow[]> {
   const result = await obtenerLiberaciones()
   return result.rows.map(rowToLiberacion)
+}
+
+// Búsqueda global por folio: no está restringida a los 4 estados de la mesa
+// de trabajo — encuentra cualquier infracción sin importar su estatus actual.
+export async function buscarFolioGlobal(folio: string): Promise<{ id: string; folio: string } | null> {
+  return obtenerInfraccionIdPorFolio(folio.trim().toUpperCase())
 }
 
 export async function procesarCapturaInfractor(
