@@ -41,6 +41,9 @@ interface OpcionesIniciar {
     reiniciarTexto?: boolean;
 }
 
+/** Tope de reintentos automáticos por sesión de dictado — evita un loop de start/stop si el micrófono queda en mal estado. */
+const MAX_REINICIOS_AUTOMATICOS = 6;
+
 export function useReconocimientoVoz() {
     const [soportado] = useState(() => obtenerConstructor() !== null);
     const [escuchando, setEscuchando] = useState(false);
@@ -49,8 +52,12 @@ export function useReconocimientoVoz() {
     const [error, setError] = useState<string | null>(null);
     const reconocimientoRef = useRef<SpeechRecognitionLike | null>(null);
     const acumuladoRef = useRef('');
+    const detenidoManualmenteRef = useRef(false);
+    const errorFatalRef = useRef(false);
+    const reiniciosRef = useRef(0);
 
     const detener = useCallback(() => {
+        detenidoManualmenteRef.current = true;
         reconocimientoRef.current?.stop();
     }, []);
 
@@ -62,11 +69,14 @@ export function useReconocimientoVoz() {
             return;
         }
 
+        detenidoManualmenteRef.current = false;
         setError(null);
         setInterim('');
         if (reiniciarTexto) {
             acumuladoRef.current = '';
             setTranscripcion('');
+            errorFatalRef.current = false;
+            reiniciosRef.current = 0;
         }
 
         const reconocimiento = new Constructor();
@@ -89,17 +99,35 @@ export function useReconocimientoVoz() {
         };
 
         reconocimiento.onerror = (event) => {
-            setError(
-                event.error === 'not-allowed'
-                    ? 'Permiso de micrófono denegado'
-                    : 'No se pudo escuchar, intenta de nuevo'
-            );
-            setEscuchando(false);
+            if (event.error === 'not-allowed') {
+                errorFatalRef.current = true;
+                setError('Permiso de micrófono denegado');
+            } else if (event.error !== 'no-speech') {
+                // 'no-speech' es un corte normal por silencio en modo continuo — no se
+                // muestra como error porque el reintento automático de onend lo resuelve solo.
+                setError('No se pudo escuchar, intenta de nuevo');
+            }
         };
 
         reconocimiento.onend = () => {
-            setEscuchando(false);
             setInterim('');
+
+            // El navegador (sobre todo en móvil) corta el reconocimiento continuo por
+            // silencio o límites internos sin que el oficial haya soltado el botón.
+            // Reintentamos preservando lo ya dictado en vez de perder la captura a medias.
+            const debeReintentar =
+                continuous &&
+                !detenidoManualmenteRef.current &&
+                !errorFatalRef.current &&
+                reiniciosRef.current < MAX_REINICIOS_AUTOMATICOS;
+
+            if (debeReintentar) {
+                reiniciosRef.current += 1;
+                setTimeout(() => iniciar({ continuous: true, reiniciarTexto: false }), 300);
+                return;
+            }
+
+            setEscuchando(false);
         };
 
         reconocimientoRef.current = reconocimiento;
@@ -112,6 +140,8 @@ export function useReconocimientoVoz() {
         setTranscripcion('');
         setInterim('');
         setError(null);
+        errorFatalRef.current = false;
+        reiniciosRef.current = 0;
     }, []);
 
     return { soportado, escuchando, transcripcion, interim, error, iniciar, detener, reiniciar };

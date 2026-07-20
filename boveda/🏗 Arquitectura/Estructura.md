@@ -705,14 +705,20 @@
 │       │   │   ├── steps/
 │       │   │   ├── ui/
 │       │   │   ├── CapturarDatosTitularSection.tsx
+│       │   │   ├── DictadoGuiadoInfraccion.tsx
 │       │   │   ├── DictadoInicialInfraccion.tsx
 │       │   │   ├── DictadoRevision.tsx
+│       │   │   ├── EspectroVoz.tsx
 │       │   │   ├── MapSectionCiudadano.tsx
 │       │   │   ├── ModalEntregarGarantia.tsx
 │       │   │   ├── PagoInfraccion.tsx
 │       │   │   ├── PinBarrier.tsx
 │       │   │   └── SeccionLiberacion.tsx
+│       │   ├── constants/
+│       │   │   ├── preguntasGuiadas.ts
+│       │   │   └── vehiculo.ts
 │       │   ├── hooks/
+│       │   │   ├── useEspectroAudio.ts
 │       │   │   └── useReconocimientoVoz.ts
 │       │   ├── actions.ts
 │       │   ├── constants.ts
@@ -1070,6 +1076,13 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
 
 
 
