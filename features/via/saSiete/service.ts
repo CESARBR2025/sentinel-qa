@@ -60,6 +60,12 @@ export class SA7Service {
       body: JSON.stringify(sa7Payload),
     });
 
+    if (!sa7Res.ok) {
+      const detalle = await sa7Res.text().catch(() => "");
+      console.error("SA7 respondió con error:", sa7Res.status, detalle);
+      throw new Error("El servicio de pagos no pudo generar la orden");
+    }
+
     const result: ResultadoSA7 = {
       ordenPagoId: sa7Res.headers.get("x-orden-pago-id") || null,
       estatus: sa7Res.headers.get("x-estatus") || null,
@@ -70,6 +76,11 @@ export class SA7Service {
       totalPesos: Number(sa7Res.headers.get("x-total-pesos") || 0),
       totalUmas: Number(sa7Res.headers.get("x-total-umas") || 0),
     };
+
+    if (!result.ordenPagoId || !result.estatus) {
+      console.error("SA7 no devolvió orden_pago_id/estatus en headers:", result);
+      throw new Error("El servicio de pagos no devolvió los datos de la orden");
+    }
 
     await SA7Repository.insertarOrdenPago({
       infraccionId: payload.infraccionId,
