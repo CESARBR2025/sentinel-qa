@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Mic, MicOff, Loader2, X, Keyboard, CheckCircle2 } from 'lucide-react';
+import { Mic, MicOff, Loader2, X, Keyboard, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useReconocimientoVoz } from '../hooks/useReconocimientoVoz';
 import { EspectroVoz } from './EspectroVoz';
 import { extraerCapturaDeNarrativaAction } from '../actions';
@@ -301,7 +301,16 @@ export const DictadoGuiadoInfraccion: React.FC<DictadoGuiadoInfraccionProps> = (
 
     return (
         <div className="max-w-md mx-auto w-full px-4 py-8 flex flex-col items-center gap-6">
-            <div className="w-full flex justify-end">
+            <div className="w-full flex items-center justify-between">
+                <button
+                    type="button"
+                    onClick={onCancelar}
+                    className="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-700 transition-colors text-sm font-medium"
+                    aria-label="Volver a selección de modos"
+                >
+                    <ArrowLeft size={16} />
+                    Volver
+                </button>
                 <button
                     type="button"
                     onClick={onCancelar}
