@@ -3,6 +3,7 @@ import type { DatosExtraidosDeNarrativa } from "../service";
 export type IdPreguntaGuiada =
   | "presencia"
   | "vehiculo"
+  | "tipoVehiculoServicio"
   | "placa"
   | "placaConfirmacion"
   | "estadoOrigen"
@@ -49,16 +50,32 @@ export const PREGUNTAS_GUIADAS: PreguntaGuiada[] = [
   },
   {
     id: "vehiculo",
-    texto: "Descríbeme el vehículo: marca, modelo, color, año, tipo y servicio.",
+    texto: "Descríbeme el vehículo: marca, modelo, color y año.",
     reintentoGenerico:
-      'No logré identificar el vehículo. Intenta de nuevo, por ejemplo: "Nissan Versa gris, año 2022, tipo sedán, particular."',
+      'No logré identificar el vehículo. Intenta de nuevo, por ejemplo: "Nissan Versa gris, año 2022."',
     campos: [
       { campo: "marca", etiqueta: "la marca" },
       { campo: "modelo", etiqueta: "el modelo" },
       { campo: "color", etiqueta: "el color" },
       { campo: "anio", etiqueta: "el año" },
     ],
-    camposOpcionales: [
+    requiereTodosLosCampos: true,
+  },
+  {
+    id: "tipoVehiculoServicio",
+    texto: `¿Qué tipo de vehículo es y qué tipo de servicio presta?
+Tipo de vehículo:
+• AUTOMÓVIL
+• CAMIONETA
+• TRANSPORTE PÚBLICO
+• VEHÍCULO DE CARGA
+• MOTOCICLETA
+Tipo de servicio:
+• PARTICULAR
+• PÚBLICO
+• FEDERAL`,
+    reintentoGenerico: 'No logré identificar el tipo de vehículo o servicio. Intenta de nuevo, por ejemplo: "Es un sedán particular".',
+    campos: [
       { campo: "tipoVehiculo", etiqueta: "el tipo de vehículo" },
       { campo: "servicio", etiqueta: "el tipo de servicio" },
     ],

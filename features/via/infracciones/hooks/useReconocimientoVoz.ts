@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface SpeechRecognitionResultLike {
     isFinal: boolean;
@@ -45,7 +45,8 @@ interface OpcionesIniciar {
 const MAX_REINICIOS_AUTOMATICOS = 6;
 
 export function useReconocimientoVoz() {
-    const [soportado] = useState(() => obtenerConstructor() !== null);
+    const [soportado, setSoportado] = useState(true);
+    useEffect(() => { setSoportado(obtenerConstructor() !== null); }, []);
     const [escuchando, setEscuchando] = useState(false);
     const [transcripcion, setTranscripcion] = useState('');
     const [interim, setInterim] = useState('');

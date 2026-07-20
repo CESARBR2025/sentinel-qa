@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mic, MicOff, Loader2, Sparkles, ListChecks, AlertCircle, AudioLines, BadgeCheck } from 'lucide-react';
 import { useReconocimientoVoz } from '../hooks/useReconocimientoVoz';
 import { extraerCapturaDeNarrativaAction } from '../actions';
@@ -31,6 +31,8 @@ export const DictadoInicialInfraccion: React.FC<DictadoInicialInfraccionProps> =
     const [datosExtraidos, setDatosExtraidos] = useState<DatosExtraidosDeNarrativa | null>(null);
     const [mostrarGuia, setMostrarGuia] = useState(false);
     const [mostrarEjemplo, setMostrarEjemplo] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
 
     // Entrar a la pantalla de dictado NO enciende el micrófono — solo lo prepara.
     // El micrófono arranca únicamente cuando el oficial toca el botón, de forma explícita.
@@ -88,16 +90,16 @@ export const DictadoInicialInfraccion: React.FC<DictadoInicialInfraccionProps> =
                 titulo: 'Dictar todo',
                 descripcion: 'Habla libremente y el sistema transcribe toda la boleta de una sola vez.',
                 tags: ['Potenciado con IA'],
-                action: soportado ? irAPantallaDeDictado : undefined,
-                disabled: !soportado,
+                action: mounted ? (soportado ? irAPantallaDeDictado : undefined) : undefined,
+                disabled: mounted ? !soportado : false,
             },
             {
                 icon: AudioLines,
                 titulo: 'Modo guiado',
                 descripcion: 'Responde preguntas una por una para capturar la infracción sin esfuerzo.',
                 tags: ['Potenciado con IA', 'Recomendado'],
-                action: soportado ? irAModoGuiado : undefined,
-                disabled: !soportado,
+                action: mounted ? (soportado ? irAModoGuiado : undefined) : undefined,
+                disabled: mounted ? !soportado : false,
                 recomendado: true,
             },
             {
