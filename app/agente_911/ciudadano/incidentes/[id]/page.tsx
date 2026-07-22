@@ -30,11 +30,16 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
                 <Link href="/agente_911/ciudadano/incidentes" style={btnBackStyle}><ArrowLeft size={14} /> BITÁCORA GENERAL</Link>
 
-                <div style={headerStyle}>
-                    <div>
-                        <span style={labelTopStyle}>FICHA TÉCNICA DE EMERGENCIA 911</span>
-                        <h1 style={titleStyle}>{inc.folio}</h1>
-                    </div>
+                    <div style={headerStyle}>
+                        <div>
+                            <span style={labelTopStyle}>FICHA TÉCNICA DE EMERGENCIA 911</span>
+                            <h1 style={titleStyle}>{inc.folio}</h1>
+                            {inc.folio_cad && (
+                                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>
+                                    FOLIO CAD: {inc.folio_cad}
+                                </span>
+                            )}
+                        </div>
                     <div style={getStatusBadgeStyle(inc.estatus)}>{inc.estatus?.toUpperCase()}</div>
                 </div>
 
@@ -46,6 +51,7 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                             <h2 style={sectionTitleStyle}><User size={18}/> DATOS DEL REPORTANTE</h2>
                             <div style={infoGridStyle}>
                                 <div style={itemGroupStyle}><label style={labelStyle}>NOMBRE</label><span style={valueStyle}>{inc.anonimo ? 'MODO ANÓNIMO' : inc.nombre_reportante}</span></div>
+                                <div style={itemGroupStyle}><label style={labelStyle}>TELÉFONO (ANI)</label><span style={valueStyle}>{inc.telefono_reportante || '—'}</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>SEXO / EDAD</label><span style={valueStyle}>{inc.sexo || 'NE'} / {inc.edad || '--'} AÑOS</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>¿MIGRANTE?</label><span style={valueStyle}>{inc.es_migrante ? 'SÍ' : 'NO'}</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>¿USUARIO FRECUENTE?</label><span style={valueStyle}>{inc.es_usuario_frecuente ? 'SÍ' : 'NO'}</span></div>
@@ -59,6 +65,12 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                                 <div style={itemGroupStyle}><label style={labelStyle}>EMERGENCIA</label><span style={valueStyle}>{data.emergencia_nombre}</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>INCIDENTE</label><span style={valueStyle}>{data.tipo_nombre}</span></div>
                                 <div style={itemGroupStyle}><label style={labelStyle}>PRIORIDAD</label><span style={{...valueStyle, fontWeight: 800}}>{data.prioridad_nombre}</span></div>
+                                {inc.svv_notificado && (
+                                    <div style={itemGroupStyle}><label style={labelStyle}>SVV</label><span style={{...valueStyle, color: '#1c3051', fontWeight: 600}}>Monitoristas notificados</span></div>
+                                )}
+                                {data.dependencia_nombre && (
+                                    <div style={itemGroupStyle}><label style={labelStyle}>DEPENDENCIA</label><span style={valueStyle}>{data.dependencia_nombre}</span></div>
+                                )}
                             </div>
                         </section>
 

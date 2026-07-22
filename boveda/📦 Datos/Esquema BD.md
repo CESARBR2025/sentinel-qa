@@ -109,19 +109,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 6 | `activo` | `boolean` | NO | true |
 | 7 | `creado_en` | `timestamp without time zone` | NO | now() |
 
-### \`cat_estatus_evento\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `integer` | NO | nextval('cat_estatus_evento_id_seq'::regclass) |
-| 2 | `clave` | `character varying` | NO | — |
-| 3 | `nombre` | `character varying` | NO | — |
-| 4 | `descripcion` | `text` | SÍ | — |
-| 5 | `area_responsable` | `character varying` | SÍ | — |
-| 6 | `orden` | `integer` | NO | — |
-| 7 | `es_estado_final` | `boolean` | NO | false |
-| 8 | `activo` | `boolean` | NO | true |
-
 ### \`cat_medios_canalizacion\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -131,15 +118,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 3 | `nombre` | `character varying` | NO | — |
 | 4 | `activo` | `boolean` | NO | true |
 | 5 | `creado_en` | `timestamp without time zone` | NO | now() |
-
-### \`cat_origenes_evento\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `integer` | NO | nextval('cat_origenes_evento_id_seq'::regclass) |
-| 2 | `clave` | `character varying` | NO | — |
-| 3 | `nombre` | `character varying` | NO | — |
-| 4 | `activo` | `boolean` | NO | true |
 
 ### \`cat_prioridades\`
 
@@ -226,31 +204,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 7 | `nombre_quien_recibio` | `character varying` | SÍ | — |
 | 8 | `creado_por` | `text` | SÍ | — |
 | 9 | `creado_en` | `timestamp without time zone` | NO | now() |
-
-### \`eventos\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `uuid` | NO | gen_random_uuid() |
-| 2 | `folio_cad` | `character varying` | NO | — |
-| 3 | `origen_id` | `integer` | NO | — |
-| 4 | `tipo_incidente_id` | `integer` | NO | — |
-| 5 | `prioridad_id` | `integer` | NO | — |
-| 6 | `estatus_id` | `integer` | NO | 1 |
-| 7 | `turno_id` | `integer` | SÍ | — |
-| 8 | `descripcion_inicial` | `text` | NO | — |
-| 9 | `nombre_reportante` | `character varying` | SÍ | — |
-| 10 | `telefono_reportante` | `character varying` | SÍ | — |
-| 11 | `calle` | `character varying` | NO | — |
-| 12 | `numero_ext` | `character varying` | SÍ | — |
-| 13 | `colonia` | `character varying` | SÍ | — |
-| 14 | `municipio` | `character varying` | NO | 'San Juan del Río'::character varying |
-| 15 | `referencias` | `text` | SÍ | — |
-| 16 | `fecha_hora_reporte` | `timestamp with time zone` | NO | now() |
-| 17 | `fecha_hora_cierre` | `timestamp with time zone` | SÍ | — |
-| 18 | `creado_por` | `text` | NO | — |
-| 19 | `creado_en` | `timestamp with time zone` | NO | now() |
-| 20 | `actualizado_en` | `timestamp with time zone` | NO | now() |
 
 ### \`evidencias\`
 

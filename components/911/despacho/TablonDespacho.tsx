@@ -132,7 +132,13 @@ export function TablonDespacho() {
                     </span>
                   )}
                   {inc.prioridad && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
+                    <span style={{
+                      fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700,
+                      padding: '2px 8px', borderRadius: 2,
+                      background: inc.prioridad.toUpperCase() === 'ALTA' ? '#fef2f2' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#fffbeb' : '#f8fafc',
+                      color: inc.prioridad.toUpperCase() === 'ALTA' ? '#dc2626' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#b45309' : '#64748b',
+                      border: `1px solid ${inc.prioridad.toUpperCase() === 'ALTA' ? '#fecaca' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#fde68a' : '#e2e8f0'}`,
+                    }}>
                       {inc.prioridad.toUpperCase()}
                     </span>
                   )}

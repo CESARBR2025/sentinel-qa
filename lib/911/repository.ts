@@ -1,24 +1,45 @@
 import { query } from '@/lib/db'
-import type { CatalogoItem, IncidenteDetalle, IncidenteStats } from './types'
+import type { CatalogoItem, IncidenteDetalle, IncidenteStats, CatalogosJerarquicos, SubtipoEmergencia, IncidenteCatalogo, Dependencia } from './types'
 import { rowToCatalogo, rowToIncidenteDetalle } from './mapper'
 
-export async function obtenerCatalogos(): Promise<{
-  emergencias: CatalogoItem[]
-  incidentes: CatalogoItem[]
-  prioridades: CatalogoItem[]
-  canalizaciones: CatalogoItem[]
-}> {
-  const [e, i, p, c] = await Promise.all([
-    query<Record<string, unknown>>('SELECT id, nombre FROM cat_tipos_emergencia WHERE activo = $1 ORDER BY nombre', [true]),
-    query<Record<string, unknown>>('SELECT id, nombre FROM cat_tipos_incidente WHERE activo = $1 ORDER BY nombre', [true]),
+function rowToSubtipo(row: Record<string, unknown>): SubtipoEmergencia {
+  return {
+    id: Number(row.id),
+    tipoEmergenciaId: Number(row.tipo_emergencia_id),
+    codigo: String(row.codigo),
+    nombre: String(row.nombre),
+    activo: Boolean(row.activo),
+  }
+}
+
+function rowToIncidenteCatalogo(row: Record<string, unknown>): IncidenteCatalogo {
+  return {
+    id: Number(row.id),
+    clave: String(row.clave),
+    nombre: String(row.nombre),
+    subtipoEmergenciaId: row.subtipo_emergencia_id != null ? Number(row.subtipo_emergencia_id) : null,
+    codigoCatalogo: row.codigo_catalogo != null ? String(row.codigo_catalogo) : null,
+    prioridadCatalogo: row.prioridad_catalogo != null ? String(row.prioridad_catalogo) : null,
+    activo: Boolean(row.activo),
+  }
+}
+
+export async function obtenerCatalogos(): Promise<CatalogosJerarquicos> {
+  const [e, st, i, p, c, d] = await Promise.all([
+    query<Record<string, unknown>>('SELECT id, codigo, nombre FROM cat_tipos_emergencia WHERE activo = $1 ORDER BY codigo', [true]),
+    query<Record<string, unknown>>('SELECT * FROM cat_subtipos_emergencia WHERE activo = $1 ORDER BY codigo', [true]),
+    query<Record<string, unknown>>('SELECT * FROM cat_tipos_incidente WHERE activo = $1 ORDER BY codigo_catalogo NULLS LAST, nombre', [true]),
     query<Record<string, unknown>>('SELECT id, nombre FROM cat_prioridades WHERE activo = $1 ORDER BY orden', [true]),
     query<Record<string, unknown>>('SELECT id, nombre FROM cat_medios_canalizacion WHERE activo = $1 ORDER BY nombre', [true]),
+    query<Record<string, unknown>>('SELECT id, clave, nombre, tipo FROM cat_dependencias WHERE activo = $1 ORDER BY nombre', [true]),
   ])
   return {
-    emergencias: e.rows.map(rowToCatalogo),
-    incidentes: i.rows.map(rowToCatalogo),
+    emergencias: e.rows.map(r => ({ id: Number(r.id), codigo: String(r.codigo), nombre: String(r.nombre) })),
+    subtipos: st.rows.map(rowToSubtipo),
+    incidentes: i.rows.map(rowToIncidenteCatalogo),
     prioridades: p.rows.map(rowToCatalogo),
     canalizaciones: c.rows.map(rowToCatalogo),
+    dependencias: d.rows.map(r => ({ id: Number(r.id), clave: String(r.clave), nombre: String(r.nombre), tipo: String(r.tipo) })),
   }
 }
 
@@ -72,11 +93,12 @@ export async function listarIncidentes(
   const dataParams = [...params, pageSize, offset]
 
   const dataResult = await query<Record<string, unknown>>(
-    `SELECT i.*, cti.nombre AS tipo_nombre, cp.nombre AS prioridad_nombre, cte.nombre AS emergencia_nombre
+    `SELECT i.*, cti.nombre AS tipo_nombre, cti.codigo_catalogo AS codigo_catalogo, cp.nombre AS prioridad_nombre, cte.nombre AS emergencia_nombre, cd.nombre AS dependencia_nombre
      FROM incidentes i
      LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
      LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
      LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
+     LEFT JOIN cat_dependencias cd ON i.dependencia_id = cd.id
      ${whereClause}
      ORDER BY i.fecha_hora_inicio DESC, i.creado_en DESC
      LIMIT $${idx + 1} OFFSET $${idx + 2}`,
@@ -88,11 +110,12 @@ export async function listarIncidentes(
 
 export async function obtenerIncidente(id: string): Promise<IncidenteDetalle | null> {
   const result = await query<Record<string, unknown>>(
-    `SELECT i.*, cti.nombre AS tipo_nombre, cp.nombre AS prioridad_nombre, cte.nombre AS emergencia_nombre
+    `SELECT i.*, cti.nombre AS tipo_nombre, cti.codigo_catalogo AS codigo_catalogo, cp.nombre AS prioridad_nombre, cte.nombre AS emergencia_nombre, cd.nombre AS dependencia_nombre
      FROM incidentes i
      LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
      LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
      LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
+     LEFT JOIN cat_dependencias cd ON i.dependencia_id = cd.id
      WHERE i.id = $1
      LIMIT 1`,
     [id],
@@ -145,6 +168,16 @@ export async function contarPorEstatus(canal: string): Promise<{ estatus: string
   const result = await query<{ estatus: string; count: number }>(
     `SELECT estatus, count(*)::int as count FROM incidentes WHERE canal = $1 GROUP BY estatus`,
     [canal],
+  )
+  return result.rows
+}
+
+export async function obtenerDespachadores(): Promise<{ id: string; name: string }[]> {
+  const result = await query<{ id: string; name: string }>(
+    `SELECT DISTINCT u.id, u.name FROM users u
+     INNER JOIN permisos p ON p.usuario_id = u.id
+     WHERE p.seccion = '911_despacho' AND p.puede_ver = true
+     ORDER BY u.name`,
   )
   return result.rows
 }

@@ -7,15 +7,21 @@ import { createIncidenteCliente } from "@/lib/incidentes/actions";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { toast } from "sonner"
 
+const COORDS_DEFAULT = { lat: 20.3889, lng: -99.9961 }
+
 const libraries: ("places")[] = ["places"];
 
-export default function Formulario911({ user, catalogos }: {
-    user: { name: string; apellido?: string },     catalogos: {
-        emergencias: any[],
-        incidentes: any[],
-        prioridades: any[],
-        canalizaciones: any[]
+export default function Formulario911({ user, catalogos, despachadores }: {
+    user: { name: string; apellido?: string }
+    catalogos: {
+        emergencias: { id: number; codigo: string; nombre: string }[]
+        subtipos: { id: number; tipoEmergenciaId: number; codigo: string; nombre: string }[]
+        incidentes: { id: number; nombre: string; subtipoEmergenciaId: number | null; codigoCatalogo: string | null; prioridadCatalogo: string | null }[]
+        prioridades: { id: number; nombre: string }[]
+        canalizaciones: { id: number; nombre: string }[]
+        dependencias: { id: number; clave: string; nombre: string; tipo: string }[]
     }
+    despachadores: { id: string; name: string }[]
 }) {
     const router = useRouter()
     const [anonimo, setAnonimo] = useState(false);
@@ -31,6 +37,21 @@ export default function Formulario911({ user, catalogos }: {
 
     const [esLlamadaAlarma, setEsLlamadaAlarma] = useState(false);
     const [nombreResponsable, setNombreResponsable] = useState("");
+    const [despachadorId, setDespachadorId] = useState("");
+
+    // Estado para selects jerárquicos de 3 niveles
+    const [selectedTipo, setSelectedTipo] = useState<string>("")
+    const [selectedSubtipo, setSelectedSubtipo] = useState<string>("")
+    const [selectedIncidente, setSelectedIncidente] = useState<string>("")
+    const subTiposFiltrados = selectedTipo
+        ? catalogos.subtipos.filter(s => s.tipoEmergenciaId === Number(selectedTipo))
+        : []
+    const incidentesFiltrados = selectedSubtipo
+        ? catalogos.incidentes.filter(i => i.subtipoEmergenciaId === Number(selectedSubtipo))
+        : []
+    const prioridadAutocompletada = selectedIncidente
+        ? catalogos.incidentes.find(i => i.id === Number(selectedIncidente))?.prioridadCatalogo
+        : null
 
     // Estado del modal
     const [modalAbierto, setModalAbierto] = useState(false)
@@ -54,9 +75,6 @@ export default function Formulario911({ user, catalogos }: {
                 if (first) sel.value = first.getAttribute('value') || ''
             }
         }
-        autoSelectFirst('tipoEmergenciaId')
-        autoSelectFirst('tipoIncidenteId')
-        autoSelectFirst('prioridadId')
         autoSelectFirst('medioCanalizacionId')
     }, [catalogos])
 
@@ -134,15 +152,22 @@ export default function Formulario911({ user, catalogos }: {
     };
 
     const handleSubmit = () => {
+        if (coords.lat === COORDS_DEFAULT.lat && coords.lng === COORDS_DEFAULT.lng) {
+            toast.error('Coloca el marcador en la ubicación del incidente en el mapa')
+            return
+        }
         setModalAbierto(true)
     }
 
-    const confirmarEnvio = async () => {
+    const confirmarEnvio = async (canalizar: boolean) => {
         setEnviando(true)
         try {
             const fd = new FormData(formRef.current!)
             fd.append("latitud", coords.lat.toString());
             fd.append("longitud", coords.lng.toString());
+            if (canalizar && despachadorId) {
+                fd.append("despachadorId", despachadorId);
+            }
 
             const result = await createIncidenteCliente(fd)
             setModalAbierto(false)
@@ -171,6 +196,7 @@ export default function Formulario911({ user, catalogos }: {
             { label: 'Fecha/Hora Inicio', value: f('fechaHoraInicio') },
             { label: 'Anónimo', value: f('anonimo') === 'true' ? 'Sí' : 'No' },
             { label: 'Nombre del Reportante', value: f('anonimo') === 'true' ? '[ANÓNIMO]' : f('nombreReportante') },
+            { label: 'Teléfono (ANI)', value: f('telefonoReportante') || '—' },
             { label: 'Sexo', value: f('sexo') },
             { label: 'Edad', value: f('edad') },
             { label: 'Usuario Frecuente', value: f('esUsuarioFrecuente') === 'true' ? 'Sí' : 'No' },
@@ -183,11 +209,15 @@ export default function Formulario911({ user, catalogos }: {
             { label: 'Municipio', value: f('municipio') },
             { label: 'Referencia', value: f('referenciaUbicacion') },
             { label: 'Tipo de Emergencia', value: catNombre(catalogos.emergencias, f('tipoEmergenciaId')) },
-            { label: 'Tipo de Incidente', value: catNombre(catalogos.incidentes, f('tipoIncidenteId')) },
-            { label: 'Prioridad', value: catNombre(catalogos.prioridades, f('prioridadId')) },
+            { label: 'Subtipo', value: catNombre(catalogos.subtipos, f('subtipoEmergenciaId')) },
+            { label: 'Incidente', value: catNombre(catalogos.incidentes, f('tipoIncidenteId')) },
+            { label: 'Prioridad Catálogo', value: f('prioridadCatalogo') },
+            { label: 'Prioridad (ajuste)', value: catNombre(catalogos.prioridades, f('prioridadId')) || 'Automática' },
             { label: 'Descripción', value: f('descripcion') },
             { label: 'Medio de Canalización', value: catNombre(catalogos.canalizaciones, f('medioCanalizacionId')) },
             { label: 'Requiere Despacho', value: f('requiereDespacho') === 'true' ? 'Sí' : 'No' },
+            { label: 'Notificar SVV', value: f('svvNotificado') === 'true' ? 'Sí' : 'No' },
+            { label: 'Dependencia', value: catNombre(catalogos.dependencias, f('dependenciaId')) },
             { label: 'Observaciones Operador', value: f('observaciones') },
         ]
 
@@ -285,6 +315,10 @@ export default function Formulario911({ user, catalogos }: {
                             disabled={anonimo}
                             placeholder={anonimo ? "N/A" : "00"}
                         />
+                    </div>
+                    <div>
+                        <label>Teléfono del reportante (ANI)</label>
+                        <input type="text" name="telefonoReportante" defaultValue="4421234567" placeholder="442..." />
                     </div>
 
                     <div>
@@ -538,44 +572,92 @@ export default function Formulario911({ user, catalogos }: {
             {/* MODIFICACIÓN: Si es extorsión, se ocultan estas dos secciones */}
             {tipoReporte !== "extorsion" && (
                 <>
-                    {/* SECCIÓN 05 */}
+                    {/* SECCIÓN 05 — Clasificación Técnica (Jerárquica 3 niveles) */}
                     <div className="panel">
                         <h2 className="sentinel-title">Clasificación Técnica</h2>
                         <div className="grid">
                             <div>
                                 <label>Tipo de Emergencia</label>
-                                {/* Agregamos el condicional al required para que no bloquee el envío si está oculto */}
-                                <select name="tipoEmergenciaId" required={tipoReporte !== "extorsion"}>
+                                <select
+                                    name="tipoEmergenciaId"
+                                    required={tipoReporte !== "extorsion"}
+                                    value={selectedTipo}
+                                    onChange={(e) => {
+                                        setSelectedTipo(e.target.value)
+                                        setSelectedSubtipo("")
+                                        setSelectedIncidente("")
+                                    }}
+                                >
                                     <option value="">Seleccionar...</option>
                                     {catalogos.emergencias.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.nombre}</option>
+                                        <option key={item.id} value={item.id}>
+                                            {item.codigo} - {item.nombre}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
                             <div>
-                                <label>Tipo de Incidente</label>
-                                <select name="tipoIncidenteId" required={tipoReporte !== "extorsion"}>
-                                    <option value="">Seleccionar...</option>
-                                    {catalogos.incidentes.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.nombre}</option>
+                                <label>Subtipo de Emergencia</label>
+                                <select
+                                    name="subtipoEmergenciaId"
+                                    required={tipoReporte !== "extorsion"}
+                                    value={selectedSubtipo}
+                                    onChange={(e) => {
+                                        setSelectedSubtipo(e.target.value)
+                                        setSelectedIncidente("")
+                                    }}
+                                    disabled={!selectedTipo}
+                                >
+                                    <option value="">{selectedTipo ? "Seleccionar subtipo..." : "Primero seleccione tipo"}</option>
+                                    {subTiposFiltrados.map((item) => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.codigo} - {item.nombre}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
-
                             <div>
-                                <label>Prioridad</label>
-                                <select name="prioridadId" required={tipoReporte !== "extorsion"}>
+                                <label>Incidente Específico</label>
+                                <select
+                                    name="tipoIncidenteId"
+                                    required={tipoReporte !== "extorsion"}
+                                    value={selectedIncidente}
+                                    onChange={(e) => setSelectedIncidente(e.target.value)}
+                                    disabled={!selectedSubtipo}
+                                >
+                                    <option value="">{selectedSubtipo ? "Seleccionar incidente..." : "Primero seleccione subtipo"}</option>
+                                    {incidentesFiltrados.map((item) => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.codigoCatalogo && `${item.codigoCatalogo} - `}{item.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label>Prioridad (autocompletada)</label>
+                                <input
+                                    type="text"
+                                    className="readonly-input"
+                                    readOnly
+                                    value={prioridadAutocompletada || "—"}
+                                />
+                                <input type="hidden" name="prioridadCatalogo" value={prioridadAutocompletada || ""} />
+                            </div>
+                            <div>
+                                <label>Ajuste Manual de Prioridad</label>
+                                <select name="prioridadId">
+                                    <option value="">Automática (por catálogo)</option>
                                     {catalogos.prioridades.map((item) => (
                                         <option key={item.id} value={item.id}>{item.nombre}</option>
                                     ))}
                                 </select>
+                                <span style={{ fontSize: 10, color: '#94a3b8' }}>Sobrescribe la prioridad del catálogo si es necesario</span>
                             </div>
-
-                            <div style={{ marginTop: "16px" }}>
-                                    <label>Descripción del Incidente</label>
+                            <div style={{ gridColumn: "1 / -1" }}>
+                                <label>Descripción del Incidente</label>
                                 <textarea
                                     name="descripcion"
-                                    rows={5}
+                                    rows={4}
                                     defaultValue="Reporte de prueba – persona sospechosa en via publica"
                                     placeholder="Describa brevemente lo reportado por el ciudadano..."
                                 />
@@ -607,6 +689,26 @@ export default function Formulario911({ user, catalogos }: {
                             <div>
                                 <label>Estatus Inicial</label>
                                 <input value="SIN DESPACHAR" className="readonly-input" readOnly />
+                            </div>
+                            <div>
+                                <label>Dependencia Responsable</label>
+                                <select name="dependenciaId" className="readonly-input" style={{ borderLeftColor: '#cbd5e1' }}>
+                                    {catalogos.dependencias.filter(d => d.clave === 'SEGURIDAD_PUBLICA').map(d => (
+                                        <option key={d.id} value={d.id}>{d.nombre}</option>
+                                    ))}
+                                </select>
+                                <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'Inter, sans-serif' }}>
+                                    Por el momento, todos los despachos se canalizan a Seguridad Pública
+                                </span>
+                            </div>
+                            <div>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                                    <input type="checkbox" name="svvNotificado" value="true" style={{ width: 'auto', borderLeft: 'none' }} />
+                                    Notificar a Monitoristas (SVV)
+                                </label>
+                                <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'Inter, sans-serif' }}>
+                                    Los monitoristas recibirán una notificación para revisar cámaras cercanas
+                                </span>
                             </div>
                         </div>
 
@@ -804,6 +906,36 @@ export default function Formulario911({ user, catalogos }: {
                                 </div>
                             ))}
                         </div>
+                        {(() => {
+                            const fd = new FormData(formRef.current ?? undefined);
+                            const requiere = fd.get('requiereDespacho') === 'true';
+                            if (!requiere) return null;
+                            return (
+                                <div style={{ marginTop: 24, padding: '16px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                                    <label style={{
+                                        display: 'block', marginBottom: 8,
+                                        fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 600,
+                                        textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b',
+                                    }}>
+                                        Despachador asignado
+                                    </label>
+                                    <select
+                                        value={despachadorId}
+                                        onChange={(e) => setDespachadorId(e.target.value)}
+                                        style={{
+                                            width: '100%', padding: '10px 12px',
+                                            border: '1px solid #e2e8f0', borderLeft: '3px solid #0f172a',
+                                            borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
+                                        }}
+                                    >
+                                        <option value="">Seleccionar despachador...</option>
+                                        {despachadores.map((d) => (
+                                            <option key={d.id} value={d.id}>{d.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            );
+                        })()}
                     </div>
                     <div style={{
                         padding: '16px 32px', borderTop: '1px solid #e2e8f0',
@@ -816,14 +948,41 @@ export default function Formulario911({ user, catalogos }: {
                         }}>
                             CANCELAR
                         </button>
-                        <button onClick={confirmarEnvio} disabled={enviando} style={{
-                            padding: '10px 32px', background: enviando ? '#94a3b8' : '#0f172a', border: 'none',
-                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
-                            fontWeight: 700, color: '#ffffff', cursor: enviando ? 'not-allowed' : 'pointer',
-                            letterSpacing: '0.1em',
-                        }}>
-                            {enviando ? 'GUARDANDO...' : 'CONFIRMAR Y GUARDAR'}
-                        </button>
+                        {(() => {
+                            const fd = new FormData(formRef.current ?? undefined);
+                            const requiere = fd.get('requiereDespacho') === 'true';
+                            if (requiere) {
+                                return (
+                                    <>
+                                        <button onClick={() => confirmarEnvio(false)} disabled={enviando} style={{
+                                            padding: '10px 24px', background: '#f1f5f9', border: '1px solid #e2e8f0',
+                                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                                            fontWeight: 600, color: '#475569', cursor: enviando ? 'not-allowed' : 'pointer',
+                                        }}>
+                                            {enviando ? 'GUARDANDO...' : 'GUARDAR COMO INFORME'}
+                                        </button>
+                                        <button onClick={() => confirmarEnvio(true)} disabled={enviando || !despachadorId} style={{
+                                            padding: '10px 32px', background: enviando || !despachadorId ? '#94a3b8' : '#1c3051', border: 'none',
+                                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                                            fontWeight: 700, color: '#ffffff', cursor: enviando || !despachadorId ? 'not-allowed' : 'pointer',
+                                            letterSpacing: '0.1em',
+                                        }}>
+                                            {enviando ? 'CANALIZANDO...' : 'CANALIZAR A DESPACHO'}
+                                        </button>
+                                    </>
+                                );
+                            }
+                            return (
+                                <button onClick={() => confirmarEnvio(false)} disabled={enviando} style={{
+                                    padding: '10px 32px', background: enviando ? '#94a3b8' : '#0f172a', border: 'none',
+                                    borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                                    fontWeight: 700, color: '#ffffff', cursor: enviando ? 'not-allowed' : 'pointer',
+                                    letterSpacing: '0.1em',
+                                }}>
+                                    {enviando ? 'GUARDANDO...' : 'CONFIRMAR Y GUARDAR'}
+                                </button>
+                            );
+                        })()}
                     </div>
                 </div>
             </div>

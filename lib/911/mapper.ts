@@ -67,6 +67,12 @@ export function rowToIncidenteDetalle(row: Record<string, unknown>): IncidenteDe
     tipoNombre: toStr(row.tipo_nombre),
     prioridadNombre: toStr(row.prioridad_nombre),
     emergenciaNombre: toStr(row.emergencia_nombre),
+    codigoCatalogo: toStr(row.codigo_catalogo),
+    folioCad: toStr(row.folio_cad),
+    svvNotificado: Boolean(row.svv_notificado),
+    dependenciaId: toNum(row.dependencia_id),
+    dependenciaNombre: toStr(row.dependencia_nombre),
+    telefonoReportante: toStr(row.telefono_reportante),
   }
 }
 
