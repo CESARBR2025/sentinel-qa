@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createIncidenteCliente } from "@/lib/incidentes/actions";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { toast } from "sonner"
 
@@ -21,7 +20,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
         canalizaciones: { id: number; nombre: string }[]
         dependencias: { id: number; clave: string; nombre: string; tipo: string }[]
     }
-    despachadores: { id: string; name: string }[]
+    despachadores: { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }[]
 }) {
     const router = useRouter()
     const [anonimo, setAnonimo] = useState(false);
@@ -37,7 +36,6 @@ export default function Formulario911({ user, catalogos, despachadores }: {
 
     const [esLlamadaAlarma, setEsLlamadaAlarma] = useState(false);
     const [nombreResponsable, setNombreResponsable] = useState("");
-    const [despachadorId, setDespachadorId] = useState("");
 
     // Estado para selects jerárquicos de 3 niveles
     const [selectedTipo, setSelectedTipo] = useState<string>("")
@@ -54,8 +52,6 @@ export default function Formulario911({ user, catalogos, despachadores }: {
         : null
 
     // Estado del modal
-    const [modalAbierto, setModalAbierto] = useState(false)
-    const [enviando, setEnviando] = useState(false)
     const formRef = useRef<HTMLFormElement>(null)
 
     // Auto-llenar fecha/hora actual al montar el formulario
@@ -156,90 +152,16 @@ export default function Formulario911({ user, catalogos, despachadores }: {
             toast.error('Coloca el marcador en la ubicación del incidente en el mapa')
             return
         }
-        setModalAbierto(true)
+        const fd = new FormData(formRef.current!)
+        fd.append("latitud", coords.lat.toString());
+        fd.append("longitud", coords.lng.toString());
+        const data = Object.fromEntries(fd.entries())
+        sessionStorage.setItem('revisar_form_data', JSON.stringify(data))
+        sessionStorage.setItem('revisar_coords', JSON.stringify(coords))
+        sessionStorage.setItem('revisar_catalogos', JSON.stringify(catalogos))
+        sessionStorage.setItem('revisar_despachadores', JSON.stringify(despachadores))
+        router.push('/agente_911/ciudadano/revisar')
     }
-
-    const confirmarEnvio = async (canalizar: boolean) => {
-        setEnviando(true)
-        try {
-            const fd = new FormData(formRef.current!)
-            fd.append("latitud", coords.lat.toString());
-            fd.append("longitud", coords.lng.toString());
-            if (canalizar && despachadorId) {
-                fd.append("despachadorId", despachadorId);
-            }
-
-            const result = await createIncidenteCliente(fd)
-            setModalAbierto(false)
-            router.push(`/agente_911/ciudadano/incidentes?creado=true&folio=${encodeURIComponent(result.folio)}`)
-        } catch (e: any) {
-            toast.error(e?.message || 'Error al guardar el reporte')
-            setEnviando(false)
-            setModalAbierto(false)
-        }
-    }
-
-    const resumenItems = useCallback(() => {
-        const fd = new FormData(formRef.current ?? undefined)
-        const f = (k: string) => fd.get(k) as string || '—'
-
-        const catNombre = (cat: any[], id: string | null) => {
-            if (!id) return '—'
-            const item = cat.find(c => String(c.id) === id)
-            return item?.nombre || id
-        }
-
-        const items: { label: string; value: string }[] = [
-            { label: 'Canal', value: '911' },
-            { label: 'Folio CAD', value: f('folioCad') },
-            { label: 'Tipo de Reporte', value: f('tipoReporte') },
-            { label: 'Fecha/Hora Inicio', value: f('fechaHoraInicio') },
-            { label: 'Anónimo', value: f('anonimo') === 'true' ? 'Sí' : 'No' },
-            { label: 'Nombre del Reportante', value: f('anonimo') === 'true' ? '[ANÓNIMO]' : f('nombreReportante') },
-            { label: 'Teléfono (ANI)', value: f('telefonoReportante') || '—' },
-            { label: 'Sexo', value: f('sexo') },
-            { label: 'Edad', value: f('edad') },
-            { label: 'Usuario Frecuente', value: f('esUsuarioFrecuente') === 'true' ? 'Sí' : 'No' },
-            { label: 'Persona Afectada', value: f('esPersonaAfectada') === 'true' ? 'Sí' : 'No' },
-            { label: 'Es Migrante', value: f('esMigrante') === 'true' ? 'Sí' : 'No' },
-            { label: 'Calle', value: f('calle') },
-            { label: 'No. Exterior', value: f('numero_exterior') },
-            { label: 'No. Interior', value: f('numero_interior') },
-            { label: 'Colonia', value: f('colonia') },
-            { label: 'Municipio', value: f('municipio') },
-            { label: 'Referencia', value: f('referenciaUbicacion') },
-            { label: 'Tipo de Emergencia', value: catNombre(catalogos.emergencias, f('tipoEmergenciaId')) },
-            { label: 'Subtipo', value: catNombre(catalogos.subtipos, f('subtipoEmergenciaId')) },
-            { label: 'Incidente', value: catNombre(catalogos.incidentes, f('tipoIncidenteId')) },
-            { label: 'Prioridad Catálogo', value: f('prioridadCatalogo') },
-            { label: 'Prioridad (ajuste)', value: catNombre(catalogos.prioridades, f('prioridadId')) || 'Automática' },
-            { label: 'Descripción', value: f('descripcion') },
-            { label: 'Medio de Canalización', value: catNombre(catalogos.canalizaciones, f('medioCanalizacionId')) },
-            { label: 'Requiere Despacho', value: f('requiereDespacho') === 'true' ? 'Sí' : 'No' },
-            { label: 'Notificar SVV', value: f('svvNotificado') === 'true' ? 'Sí' : 'No' },
-            { label: 'Dependencia', value: catNombre(catalogos.dependencias, f('dependenciaId')) },
-            { label: 'Observaciones Operador', value: f('observaciones') },
-        ]
-
-        if (f('tipoReporte') === 'extorsion') {
-            items.push(
-                { label: 'Teléfono Extorsión', value: f('telefonoExtorsion') },
-                { label: 'Grupo Delictivo', value: f('grupoDelictivo') },
-                { label: 'Modus Operandi', value: f('modusOperandi') },
-            )
-        }
-
-        if (f('tipoReporte') === 'alarma_escolar') {
-            items.push(
-                { label: 'Establecimiento', value: f('establecimiento') },
-                { label: 'Nombre Responsable', value: f('nombreResponsable') },
-                { label: 'Inmueble', value: f('inmueble') },
-                { label: 'Activaciones', value: f('numeroActivaciones') },
-            )
-        }
-
-        return items
-    }, [catalogos])
 
     return (
         <><form ref={formRef} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
@@ -670,20 +592,10 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         <h2>Canalización</h2>
                         <div className="grid">
                             <div>
-                                <label>Medio de Canalización</label>
-                                <select name="medioCanalizacionId">
-                                    <option value="">Seleccionar...</option>
-                                    {catalogos.canalizaciones.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.nombre}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
                                 <label>¿Requiere Despacho?</label>
                                 <select name="requiereDespacho">
                                     <option value="true">Sí (Enviar a despacho)</option>
-                                    <option value="false">No (Informativo)</option>
+                                    <option value="false">Solo registro estadístico</option>
                                 </select>
                             </div>
                             <div>
@@ -866,128 +778,6 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                 }
             `}</style>
         </form>
-
-        {/* Modal de confirmación */}
-        {modalAbierto && (
-            <div style={{
-                position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                background: 'rgba(0,0,0,0.5)', zIndex: 9998,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                padding: 24,
-            }}>
-                <div style={{
-                    background: '#ffffff', borderRadius: 4, maxWidth: 640, width: '100%',
-                    maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 48px rgba(0,0,0,0.2)',
-                }}>
-                    <div style={{
-                        padding: '24px 32px', borderBottom: '1px solid #e2e8f0',
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    }}>
-                        <h2 style={{
-                            fontFamily: 'Barlow Condensed, sans-serif', fontSize: 22, fontWeight: 800,
-                            color: '#0f172a', textTransform: 'uppercase', margin: 0,
-                        }}>
-                            Confirmar Reporte
-                        </h2>
-                        <button onClick={() => setModalAbierto(false)} style={{
-                            background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 20,
-                        }}>✕</button>
-                    </div>
-                    <div style={{ padding: '24px 32px', fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#334155', lineHeight: 1.6 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px' }}>
-                            {resumenItems().map((item, i) => (
-                                <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                        {item.label}
-                                    </span>
-                                    <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#1e293b', fontWeight: 500 }}>
-                                        {item.value || '—'}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                        {(() => {
-                            const fd = new FormData(formRef.current ?? undefined);
-                            const requiere = fd.get('requiereDespacho') === 'true';
-                            if (!requiere) return null;
-                            return (
-                                <div style={{ marginTop: 24, padding: '16px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2 }}>
-                                    <label style={{
-                                        display: 'block', marginBottom: 8,
-                                        fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 600,
-                                        textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b',
-                                    }}>
-                                        Despachador asignado
-                                    </label>
-                                    <select
-                                        value={despachadorId}
-                                        onChange={(e) => setDespachadorId(e.target.value)}
-                                        style={{
-                                            width: '100%', padding: '10px 12px',
-                                            border: '1px solid #e2e8f0', borderLeft: '3px solid #0f172a',
-                                            borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
-                                        }}
-                                    >
-                                        <option value="">Seleccionar despachador...</option>
-                                        {despachadores.map((d) => (
-                                            <option key={d.id} value={d.id}>{d.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            );
-                        })()}
-                    </div>
-                    <div style={{
-                        padding: '16px 32px', borderTop: '1px solid #e2e8f0',
-                        display: 'flex', justifyContent: 'flex-end', gap: 12,
-                    }}>
-                        <button onClick={() => setModalAbierto(false)} style={{
-                            padding: '10px 24px', background: '#f1f5f9', border: '1px solid #e2e8f0',
-                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
-                            fontWeight: 600, color: '#475569', cursor: 'pointer',
-                        }}>
-                            CANCELAR
-                        </button>
-                        {(() => {
-                            const fd = new FormData(formRef.current ?? undefined);
-                            const requiere = fd.get('requiereDespacho') === 'true';
-                            if (requiere) {
-                                return (
-                                    <>
-                                        <button onClick={() => confirmarEnvio(false)} disabled={enviando} style={{
-                                            padding: '10px 24px', background: '#f1f5f9', border: '1px solid #e2e8f0',
-                                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
-                                            fontWeight: 600, color: '#475569', cursor: enviando ? 'not-allowed' : 'pointer',
-                                        }}>
-                                            {enviando ? 'GUARDANDO...' : 'GUARDAR COMO INFORME'}
-                                        </button>
-                                        <button onClick={() => confirmarEnvio(true)} disabled={enviando || !despachadorId} style={{
-                                            padding: '10px 32px', background: enviando || !despachadorId ? '#94a3b8' : '#1c3051', border: 'none',
-                                            borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
-                                            fontWeight: 700, color: '#ffffff', cursor: enviando || !despachadorId ? 'not-allowed' : 'pointer',
-                                            letterSpacing: '0.1em',
-                                        }}>
-                                            {enviando ? 'CANALIZANDO...' : 'CANALIZAR A DESPACHO'}
-                                        </button>
-                                    </>
-                                );
-                            }
-                            return (
-                                <button onClick={() => confirmarEnvio(false)} disabled={enviando} style={{
-                                    padding: '10px 32px', background: enviando ? '#94a3b8' : '#0f172a', border: 'none',
-                                    borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
-                                    fontWeight: 700, color: '#ffffff', cursor: enviando ? 'not-allowed' : 'pointer',
-                                    letterSpacing: '0.1em',
-                                }}>
-                                    {enviando ? 'GUARDANDO...' : 'CONFIRMAR Y GUARDAR'}
-                                </button>
-                            );
-                        })()}
-                    </div>
-                </div>
-            </div>
-        )}
-
     </>
-    );
+)
 }

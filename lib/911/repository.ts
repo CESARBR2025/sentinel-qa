@@ -172,12 +172,21 @@ export async function contarPorEstatus(canal: string): Promise<{ estatus: string
   return result.rows
 }
 
-export async function obtenerDespachadores(): Promise<{ id: string; name: string }[]> {
-  const result = await query<{ id: string; name: string }>(
-    `SELECT DISTINCT u.id, u.name FROM users u
+export async function obtenerDespachadores(): Promise<{ id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT DISTINCT u.id, u.name, u.apellido, u.activo, r.nombre AS rol_nombre
+     FROM users u
      INNER JOIN permisos p ON p.usuario_id = u.id
+     LEFT JOIN roles r ON u.rol_id = r.id
      WHERE p.seccion = '911_despacho' AND p.puede_ver = true
+     AND u.dependencia_id = (SELECT id FROM cat_dependencias WHERE clave = 'SEGURIDAD_PUBLICA' LIMIT 1)
      ORDER BY u.name`,
   )
-  return result.rows
+  return result.rows.map(r => ({
+    id: String(r.id),
+    name: String(r.name),
+    apellido: r.apellido ? String(r.apellido) : '',
+    rolNombre: r.rol_nombre ? String(r.rol_nombre) : null,
+    activo: Boolean(r.activo),
+  }))
 }
