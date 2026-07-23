@@ -218,6 +218,14 @@ export async function createIncidente(formData: FormData) {
     targetPath = `/agente_911/rondin/incidentes/${incidenteId}`;
   }
 
+  const despachadorId = str(formData, 'despachadorId')
+  if (despachadorId) {
+    await query(
+      `INSERT INTO notificaciones (user_id, tipo, titulo, mensaje, href) VALUES ($1, $2, $3, $4, $5)`,
+      [despachadorId, 'despacho_asignado', `🚨 Nuevo despacho — ${folio}`, `Se te ha asignado el incidente ${folio}. Revisa el tablón de despacho.`, targetPath],
+    )
+  }
+
   revalidatePath('/agente_911/whatsapp');
   revalidatePath('/agente_911/rondin');
   revalidatePath('/agente_911/ciudadano');
@@ -771,28 +779,6 @@ export async function marcarHoraUnidadDespacho(unidadId: string, campo: 'salida'
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidente_despacho_unidades', entidadId: unidadId, payload: { campo: columna } })
   revalidatePath(`/incidentes/${incidenteId}`)
   revalidatePath('/incidentes')
-}
-
-// ─── Marcar en sitio ──────────────────────────────────────────────────────────
-export async function marcarEnSitio(incidenteId: string) {
-  const session = await requireOperador()
-
-  await tryActionRaw(async () => {
-    const inc = await query<{ estatus: string }>(
-      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-      [incidenteId],
-    )
-    if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
-    if (inc.rows[0].estatus !== 'en_despacho') throw new ValidationError('El incidente debe estar en_despacho para marcar en sitio')
-
-    await query(
-      `UPDATE incidentes SET estatus = 'en_sitio', actualizado_en = NOW() WHERE id = $1`,
-      [incidenteId],
-    )
-  })
-
-  await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'en_despacho', estatus_nuevo: 'en_sitio' } })
-  revalidatePath(`/incidentes/${incidenteId}`)
 }
 
 // ─── Cerrar por detención (desde D1) ──────────────────────────────────────────

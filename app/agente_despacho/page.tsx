@@ -67,8 +67,8 @@ export default async function AgenteDespachoDashboardPage() {
         {/* Cards */}
         <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 20 }}>
 
-          {/* Card: Reportes de Rondín */}
-          <Link href="/agente_911/rondin/incidentes" className="card-911" style={{ textDecoration: 'none' }}>
+          {/* Card: Reportes de Rondín — el oficial es quien levanta el reporte; despacho solo consulta vía bitácora general */}
+          <Link href="/incidentes?canal=radio" className="card-911" style={{ textDecoration: 'none' }}>
             <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
             <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>

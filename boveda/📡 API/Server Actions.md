@@ -15,7 +15,7 @@
 | `lib/auxiliar/actions.ts` | upsertChecklistAction |
 | `lib/corralon/actions.ts` | obtenerDashboardCorralon, obtenerSolicitudes |
 | `lib/fiscalia/actions.ts` | obtenerDashboardFiscalia, obtenerSolicitudes, accionTomarCaso, accionPedirEvidencias, obtenerDatosAseguradoAction, guardarDetallesAseguradoAction, obtenerLiberacionesAction, obtenerAseguradosAction, obtenerDetalleAseguradoCompletoAction, guardarDetallesAseguradosAction, obtenerPuestaDisposicionAction, guardarPuestaDisposicionAction, obtenerDetalleInfraccionViaAction, guardarOficioAction, obtenerDashboardJuzgado, obtenerAseguradosJuzgadoAction, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarPuestaDisposicionJuzgadoAction |
-| `lib/incidentes/actions.ts` | createIncidente, createIncidenteCliente, addPersonaAfectada, deletePersonaAfectada, createRondinEscalado, createRecorridoCompleto, createDespacho, enviarRefuerzos, marcarHoraUnidadDespacho, marcarEnSitio, cerrarPorDetencion, createReporteCampo, createExtorsion, createAlarmaEscolar |
+| `lib/incidentes/actions.ts` | createIncidente, createIncidenteCliente, addPersonaAfectada, deletePersonaAfectada, createRondinEscalado, createRecorridoCompleto, createDespacho, enviarRefuerzos, marcarHoraUnidadDespacho, cerrarPorDetencion, createReporteCampo, createExtorsion, createAlarmaEscolar |
 | `lib/monitorista/actions.ts` | solicitarEvidencia, subirEvidencia, completarSolicitud, cancelarSolicitud |
 | `lib/n-coordinacion/actions.ts` | guardarDatosCoordinacion |
 | `lib/notificaciones/actions.ts` | marcarLeida, marcarTodasLeidas, generarAlertasDebug |
@@ -25,6 +25,10 @@
 | `lib/rol-servicios/actions.ts` | createRol, updateEncabezadoRol, createAsignacion, deleteAsignacion, upsertEstadoFuerza, createObservacion, deleteObservacion, guardarFirmas |
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
+
+
+
+
 
 
 

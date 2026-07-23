@@ -60,6 +60,18 @@ export async function marcarEnSitioOficial(incidenteId: string) {
       `UPDATE incidentes SET estatus = 'en_sitio', actualizado_en = NOW() WHERE id = $1`,
       [incidenteId],
     )
+
+    // Backfill de seguimiento por unidad (form-003 del estándar SEGOB-CNI): si el despachador
+    // nunca marcó salida/llegada manualmente en el tablón, "Marcar en Sitio" del oficial las
+    // infiere — hora_salida = hora del despacho, hora_llegada = ahora. No pisa lo ya registrado.
+    await query(
+      `UPDATE incidente_despacho_unidades du
+       SET hora_salida = COALESCE(du.hora_salida, d.fecha_hora_despacho),
+           hora_llegada = COALESCE(du.hora_llegada, NOW())
+       FROM incidente_despacho d
+       WHERE du.despacho_id = d.id AND d.incidente_id = $1`,
+      [incidenteId],
+    )
   })
 
   revalidatePath('/oficial/despachos')

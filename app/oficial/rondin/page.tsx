@@ -1,7 +1,8 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { verificarRolOficial, obtenerCatalogos, obtenerMiPerfil, listarRondinesOficial } from '@/lib/oficial/service'
+import { verificarRolOficial, obtenerMiPerfil, listarRondinesOficial } from '@/lib/oficial/service'
+import { getCatalogos } from '@/lib/911/service'
 import { generarFolioIncidente } from '@/lib/incidentes/folio'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { RondinPageClient } from '@/components/oficial/rondin/RondinPageClient'
@@ -14,7 +15,7 @@ export default async function RondinOficialPage({ searchParams }: { searchParams
   if (!esOficial) redirect('/dashboard')
 
   const [catalogos, perfil, folioData, rondines] = await Promise.all([
-    obtenerCatalogos(),
+    getCatalogos(),
     obtenerMiPerfil(session.user.id),
     generarFolioIncidente(),
     listarRondinesOficial(session.user.id),
@@ -31,7 +32,7 @@ export default async function RondinOficialPage({ searchParams }: { searchParams
       <ToastExito show={params.exito === '1'} folio={params.folio} />
       <RondinPageClient
         rondines={rondines}
-        catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
+        catalogos={{ emergencias: catalogos.emergencias, subtipos: catalogos.subtipos, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
         nombreOficial={nombreOficial}
         folio={folioData.folio}
         folioConsecutivo={folioData.consecutivo}

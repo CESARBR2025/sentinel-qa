@@ -18,7 +18,7 @@ export default async function ReporteRecorridoPage() {
 
   return (
     <FormRondinEscalado
-      catalogos={{ emergencias: catalogos.emergencias, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
+      catalogos={{ emergencias: catalogos.emergencias, subtipos: catalogos.subtipos, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}
       backHref="/agente_911"
       folio={folioData.folio}
       folioConsecutivo={folioData.consecutivo}

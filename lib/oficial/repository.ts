@@ -161,6 +161,16 @@ export async function insertarReporteCampo(
         `UPDATE incidentes SET estatus = $1, actualizado_en = NOW() WHERE id = $2 AND estatus IN ('en_despacho', 'en_sitio')`,
         [nuevoEstatus, data.incidenteId],
       );
+
+      // Red de seguridad de la Regla 3 (form-003): garantizar hora_salida por unidad al cerrar,
+      // por si el oficial cerró directo desde en_despacho sin pasar por "Marcar en Sitio".
+      await cliente.query(
+        `UPDATE incidente_despacho_unidades du
+         SET hora_salida = COALESCE(du.hora_salida, d.fecha_hora_despacho)
+         FROM incidente_despacho d
+         WHERE du.despacho_id = d.id AND d.incidente_id = $1`,
+        [data.incidenteId],
+      );
     }
 
     await cliente.query("COMMIT");

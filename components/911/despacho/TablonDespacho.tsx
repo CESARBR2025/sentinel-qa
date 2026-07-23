@@ -11,6 +11,16 @@ import React from 'react'
 
 const INTERVALO_MS = 20_000
 
+// SLA por prioridad (minutos) — valores genéricos iniciales, ajustables con operación.
+const SLA_MINUTOS: Record<string, number> = { ALTA: 10, MEDIA: 20, BAJA: 40 }
+
+function slaVencido(fechaISO: string | null, prioridad: string | null): boolean {
+  if (!fechaISO) return false
+  const umbral = SLA_MINUTOS[(prioridad ?? '').toUpperCase()] ?? SLA_MINUTOS.MEDIA
+  const minutosTranscurridos = (Date.now() - new Date(fechaISO).getTime()) / 60_000
+  return minutosTranscurridos > umbral
+}
+
 type Tab = 'pendientes' | 'en_despacho' | 'atendidos'
 
 interface IncRow {
@@ -153,6 +163,11 @@ export function TablonDespacho() {
                       border: `1px solid ${inc.prioridad.toUpperCase() === 'ALTA' ? '#fecaca' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#fde68a' : '#e2e8f0'}`,
                     }}>
                       {inc.prioridad.toUpperCase()}
+                    </span>
+                  )}
+                  {(tab === 'pendientes' || tab === 'en_despacho') && slaVencido(tab === 'pendientes' ? inc.fechaHoraInicio : inc.fechaHoraDespacho, inc.prioridad) && (
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 2, background: '#450a0a', color: '#fff', border: '1px solid #7f1d1d' }}>
+                      ⏱ SLA VENCIDO
                     </span>
                   )}
                   <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b' }}>{inc.tipoIncidente || 'Sin clasificar'}</span>

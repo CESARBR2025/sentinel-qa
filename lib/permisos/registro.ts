@@ -95,10 +95,9 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
     },
   },
   agente_despacho: {
-    labelModulo: '911 (Despacho y Rondín)',
-    secciones: ['911_rondin', '911_despacho'] satisfies readonly (typeof SECCIONES_911)[number][],
+    labelModulo: '911 (Despacho)',
+    secciones: ['911_despacho'] satisfies readonly (typeof SECCIONES_911)[number][],
     seccionLabels: {
-      '911_rondin': 'Rondín / Recorrido',
       '911_despacho': 'Despacho de Unidades',
     },
   },

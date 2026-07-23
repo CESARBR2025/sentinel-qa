@@ -9,15 +9,10 @@ import React from 'react'
 import { useRondinFormStore } from '@/stores/useRondinFormStore'
 import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
 
-interface CatalogoItem { id: number; nombre: string }
-interface EmergenciaItem { id: number; nombre: string; codigo?: string }
+import type { CatalogosJerarquicos } from '@/lib/911/types'
 
 interface Props {
-  catalogos: {
-    emergencias: EmergenciaItem[]
-    incidentes: CatalogoItem[]
-    prioridades: CatalogoItem[]
-  }
+  catalogos: Pick<CatalogosJerarquicos, 'emergencias' | 'subtipos' | 'incidentes' | 'prioridades'>
   backHref: string
   nombreOficial?: string
   folio: string
@@ -42,9 +37,23 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
 
   const calleRef = useRef<HTMLInputElement>(null)
   const coloniaRef = useRef<HTMLInputElement>(null)
-  const [tipoEmergenciaId, setTipoEmergenciaId] = useState(String(catalogos.emergencias[0]?.id ?? ''))
-  const esImprocedente = tipoEmergenciaId
-    ? catalogos.emergencias.find((c) => c.id === Number(tipoEmergenciaId))?.codigo === '7'
+
+  // Clasificación jerárquica (Tipo -> Subtipo -> Incidente), igual que los canales ciudadano y WhatsApp
+  const [selectedTipo, setSelectedTipo] = useState<string>(String(catalogos.emergencias[0]?.id ?? ''))
+  const [selectedSubtipo, setSelectedSubtipo] = useState<string>('')
+  const [selectedIncidente, setSelectedIncidente] = useState<string>('')
+  const [prioridadManualId, setPrioridadManualId] = useState<string>('')
+  const subTiposFiltrados = selectedTipo
+    ? catalogos.subtipos.filter((s) => s.tipoEmergenciaId === Number(selectedTipo))
+    : []
+  const incidentesFiltrados = selectedSubtipo
+    ? catalogos.incidentes.filter((i) => i.subtipoEmergenciaId === Number(selectedSubtipo))
+    : []
+  const prioridadAutocompletada = selectedIncidente
+    ? catalogos.incidentes.find((i) => i.id === Number(selectedIncidente))?.prioridadCatalogo
+    : null
+  const esImprocedente = selectedTipo
+    ? catalogos.emergencias.find((c) => c.id === Number(selectedTipo))?.codigo === '7'
     : false
 
   useEffect(() => {
@@ -179,8 +188,9 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
           {/* Avistamiento */}
           <Seccion titulo="Avistamiento">
             <Campo label="Tipo de emergencia" requerido>
-              <select name="tipoEmergenciaId" required style={inputStyle} value={tipoEmergenciaId} onChange={(e) => setTipoEmergenciaId(e.target.value)}>
-                {catalogos.emergencias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+              <select name="tipoEmergenciaId" required style={inputStyle} value={selectedTipo}
+                onChange={(e) => { setSelectedTipo(e.target.value); setSelectedSubtipo(''); setSelectedIncidente('') }}>
+                {catalogos.emergencias.map((c) => <option key={c.id} value={c.id}>{c.codigo} - {c.nombre}</option>)}
               </select>
               {esImprocedente && (
                 <span style={{ fontSize: 10, color: '#b45309', display: 'block', marginTop: 4 }}>
@@ -188,13 +198,30 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
                 </span>
               )}
             </Campo>
-            <Campo label="Tipo de incidente" requerido>
-              <select name="tipoIncidenteId" required style={inputStyle}>
-                {catalogos.incidentes.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+            <Campo label="Subtipo" requerido>
+              <select name="subtipoEmergenciaId" required style={inputStyle} value={selectedSubtipo}
+                onChange={(e) => { setSelectedSubtipo(e.target.value); setSelectedIncidente('') }}
+                disabled={!selectedTipo}>
+                <option value="">{selectedTipo ? 'Seleccionar subtipo...' : 'Primero seleccione tipo'}</option>
+                {subTiposFiltrados.map((item) => <option key={item.id} value={item.id}>{item.codigo} - {item.nombre}</option>)}
               </select>
             </Campo>
-            <Campo label="Prioridad" requerido>
-              <select name="prioridadId" required style={inputStyle}>
+            <Campo label="Incidente específico" requerido>
+              <select name="tipoIncidenteId" required style={inputStyle} value={selectedIncidente}
+                onChange={(e) => setSelectedIncidente(e.target.value)}
+                disabled={!selectedSubtipo}>
+                <option value="">{selectedSubtipo ? 'Seleccionar incidente...' : 'Primero seleccione subtipo'}</option>
+                {incidentesFiltrados.map((item) => (
+                  <option key={item.id} value={item.id}>{item.codigoCatalogo && `${item.codigoCatalogo} - `}{item.nombre}</option>
+                ))}
+              </select>
+            </Campo>
+            <Campo label="Prioridad (autocompletada)">
+              <input value={prioridadAutocompletada || '—'} disabled style={inputStyle} />
+            </Campo>
+            <Campo label="Ajuste manual de prioridad">
+              <select name="prioridadId" style={inputStyle} value={prioridadManualId} onChange={(e) => setPrioridadManualId(e.target.value)}>
+                <option value="">Automática (por catálogo)</option>
                 {catalogos.prioridades.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
               </select>
             </Campo>
