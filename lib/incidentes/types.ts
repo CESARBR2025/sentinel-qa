@@ -40,7 +40,7 @@ export interface IncidenteConDespacho {
   ofiAutoridadRecibe: string | null
   d1Pendiente: boolean
   origenRondin: boolean
-  unidades: { placa: string; esRefuerzo: boolean }[]
+  unidades: { id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null }[]
   elementos: { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]
 }
 

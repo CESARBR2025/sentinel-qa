@@ -29,6 +29,17 @@ async function resolverPrioridadId(tipoIncidenteId: number | null, prioridadForm
   return cat ? (PRIORIDAD_MAP[cat] ?? null) : null
 }
 
+// Tipo 7 del Catálogo Nacional de Incidentes de Emergencias (Improcedentes): se registra
+// con fines estadísticos pero nunca se canaliza a despacho (regla del estándar SEGOB-CNI).
+async function esTipoImprocedente(tipoEmergenciaId: number | null): Promise<boolean> {
+  if (!tipoEmergenciaId) return false
+  const result = await query<{ codigo: string | null }>(
+    `SELECT codigo FROM cat_tipos_emergencia WHERE id = $1 LIMIT 1`,
+    [tipoEmergenciaId],
+  )
+  return result.rows[0]?.codigo === '7'
+}
+
 async function notificarMonitoristas(incidenteId: string, folio: string) {
   const monitoristas = await query<{ id: string; name: string }>(
     `SELECT DISTINCT u.id, u.name FROM users u
@@ -123,6 +134,10 @@ export async function createIncidente(formData: FormData) {
     }
   }
 
+  if (bool(formData, 'requiereDespacho') && await esTipoImprocedente(num(formData, 'tipoEmergenciaId'))) {
+    throw new ValidationError('Un incidente de tipo Improcedentes no se puede canalizar a despacho — solo se registra con fines estadísticos')
+  }
+
 
   const inc = await query<{ id: string }>(
     `INSERT INTO incidentes (
@@ -157,7 +172,7 @@ export async function createIncidente(formData: FormData) {
   const incidenteId = inc.rows[0].id
 
   const svvNotificado = bool(formData, 'svvNotificado')
-  if ((prioridadId === 3 && bool(formData, 'requiereDespacho')) || svvNotificado) {
+  if (prioridadId === 3 || svvNotificado) {
     await notificarMonitoristas(incidenteId, folio)
   }
 
@@ -248,6 +263,10 @@ export async function createIncidenteCliente(formData: FormData) {
     }
   }
 
+  if (bool(formData, 'requiereDespacho') && await esTipoImprocedente(num(formData, 'tipoEmergenciaId'))) {
+    throw new ValidationError('Un incidente de tipo Improcedentes no se puede canalizar a despacho — solo se registra con fines estadísticos')
+  }
+
   const inc = await query<{ id: string }>(
     `INSERT INTO incidentes (
       folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
@@ -281,7 +300,7 @@ export async function createIncidenteCliente(formData: FormData) {
   const incidenteId = inc.rows[0].id
 
   const svvNotificado = bool(formData, 'svvNotificado')
-  if ((prioridadId === 3 && bool(formData, 'requiereDespacho')) || svvNotificado) {
+  if (prioridadId === 3 || svvNotificado) {
     await notificarMonitoristas(incidenteId, folio)
   }
 
@@ -420,6 +439,9 @@ export async function createRondinEscalado(formData: FormData) {
         const nombreOficial = str(formData, 'nombreOficial')
         console.log('[RONDIN] anonimo:', anonimo, 'nombreOficial:', nombreOficial)
 
+        const esImprocedente = await esTipoImprocedente(num(formData, 'tipoEmergenciaId'))
+        console.log('[RONDIN] esImprocedente:', esImprocedente)
+
         const { incidenteId, esOficial } = await tryActionRaw(async () => {
           const cliente = await pool.connect()
           try {
@@ -433,7 +455,7 @@ export async function createRondinEscalado(formData: FormData) {
                 tipo_emergencia_id, tipo_incidente_id, prioridad_id,
                 descripcion, observaciones, fecha_hora_inicio,
                 nombre_oficial, requiere_despacho, estatus, origen_rondin, capturado_por, folio_cad, svv_notificado, dependencia_id, telefono_reportante
-              ) VALUES ($1,$2,$3,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,true,'sin_despachar',true,$19,$20,false,23,null)
+              ) VALUES ($1,$2,'radio','normal',$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'sin_despachar',true,$20,$21,false,23,null)
               RETURNING id`,
               [
                 folio, consecutivo,
@@ -447,6 +469,7 @@ export async function createRondinEscalado(formData: FormData) {
             str(formData, 'descripcion'), str(formData, 'observaciones'),
             fechaHoraInicio,
             nombreOficial,
+            !esImprocedente,
             session.user.id, str(formData, 'folioCad'),
           ],
         )
@@ -461,16 +484,20 @@ export async function createRondinEscalado(formData: FormData) {
         const oficialNomina = ofi.rows[0]?.no_nomina ?? null
         console.log('[RONDIN] oficial match:', { oficialId, oficialNomina })
 
-        const despacho = await cliente.query<{ id: string }>(
-          `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
-          [incId, session.user.id],
-        )
-        await cliente.query(
-          `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_prioritario)
-           VALUES ($1, $2, $3, $4, $5, true)`,
-          [despacho.rows[0].id, oficialNomina, oficialNomina, nombreOficial, oficialId],
-        )
-        console.log('[RONDIN] despacho + elementos INSERT OK')
+        if (esImprocedente) {
+          console.log('[RONDIN] tipo Improcedentes: se omite creación de despacho — solo registro estadístico')
+        } else {
+          const despacho = await cliente.query<{ id: string }>(
+            `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
+            [incId, session.user.id],
+          )
+          await cliente.query(
+            `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_prioritario)
+             VALUES ($1, $2, $3, $4, $5, true)`,
+            [despacho.rows[0].id, oficialNomina, oficialNomina, nombreOficial, oficialId],
+          )
+          console.log('[RONDIN] despacho + elementos INSERT OK')
+        }
 
         await cliente.query('COMMIT')
         console.log('[RONDIN] TRANSACTION COMMITTED')
@@ -716,6 +743,34 @@ export async function enviarRefuerzos(formData: FormData) {
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidente_despacho', entidadId: incidenteId, payload: { refuerzo: true } })
   revalidatePath(`/incidentes/${incidenteId}`)
+}
+
+// ─── Hora de salida/llegada por unidad despachada ──────────────────────────────
+/** Timestamp por unidad (no por incidente) — alinea con form-003 del estándar SEGOB-CNI. Idempotente: no sobrescribe una hora ya registrada. */
+export async function marcarHoraUnidadDespacho(unidadId: string, campo: 'salida' | 'llegada') {
+  const session = await requireOperador()
+  const columna = campo === 'salida' ? 'hora_salida' : 'hora_llegada'
+
+  const incidenteId = await tryActionRaw(async () => {
+    const row = await query<{ incidente_id: string }>(
+      `SELECT i.id AS incidente_id FROM incidente_despacho_unidades du
+       JOIN incidente_despacho d ON du.despacho_id = d.id
+       JOIN incidentes i ON d.incidente_id = i.id
+       WHERE du.id = $1 LIMIT 1`,
+      [unidadId],
+    )
+    if (!row.rows[0]) throw new NotFoundError('Unidad de despacho no encontrada')
+
+    await query(
+      `UPDATE incidente_despacho_unidades SET ${columna} = COALESCE(${columna}, NOW()) WHERE id = $1`,
+      [unidadId],
+    )
+    return row.rows[0].incidente_id
+  })
+
+  await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidente_despacho_unidades', entidadId: unidadId, payload: { campo: columna } })
+  revalidatePath(`/incidentes/${incidenteId}`)
+  revalidatePath('/incidentes')
 }
 
 // ─── Marcar en sitio ──────────────────────────────────────────────────────────

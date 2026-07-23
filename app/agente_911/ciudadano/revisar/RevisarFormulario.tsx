@@ -98,6 +98,13 @@ export default function RevisarFormulario() {
     const totalSteps = requiere ? 3 : 2;
     const items = getItems();
 
+    const prioridadEfectiva = f('prioridadId')
+        ? catNombre(catalogos?.prioridades, f('prioridadId'))
+        : f('prioridadCatalogo');
+    const esAltaPrioridad = String(prioridadEfectiva).toUpperCase() === 'ALTA';
+    const despachadorSeleccionado = despachadores.find((d: any) => d.id === despachadorId);
+    const despachadorNoDisponible = Boolean(despachadorSeleccionado && !despachadorSeleccionado.activo);
+
     const stepLabel = (s: number) => {
         if (s === 1) return 'Datos del Reporte';
         if (s === 2) return requiere ? 'Asignar Despacho' : 'Confirmación';
@@ -234,6 +241,15 @@ export default function RevisarFormulario() {
                                 border: '1px solid #e2e8f0',
                             }}>
                                 No hay despachadores disponibles
+                            </div>
+                        )}
+                        {esAltaPrioridad && despachadorNoDisponible && (
+                            <div style={{
+                                padding: '10px 14px', background: '#fef2f2', border: '1px solid #fecaca',
+                                borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 10,
+                                color: '#dc2626', display: 'flex', alignItems: 'center', gap: 8,
+                            }}>
+                                ⚠ Prioridad ALTA: el despachador seleccionado figura como inactivo — considera elegir otro
                             </div>
                         )}
                         {despachadores.map((d: any) => {

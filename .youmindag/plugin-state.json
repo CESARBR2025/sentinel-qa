@@ -1,10 +1,10 @@
 {
-  "toolCallCount": 5264,
+  "toolCallCount": 5310,
   "lastTask": "aplica los cambios",
   "lastCheckpointKey": "",
-  "editsSinceLastCheck": 1,
+  "editsSinceLastCheck": 0,
   "editsSinceGraphifyUpdate": 1,
-  "grepCount": 28,
+  "grepCount": 39,
   "graphifyQueryCount": 21,
   "_graphifyCache": {
     "39797648": {
@@ -353,7 +353,12 @@
     },
     "-2102532823": {
       "result": "Graphify First-Hop Summary\nGraph: 3924 nodes, 14027 edges, 144 communities, density 0.0018, average degree 7.1493, undirected\n\nTop hubs:\n  1. auth (degree 147, community 1 Community 1, lib/auth.ts)\n  2. query() (degree 68, community 39 Community 39, lib/db.ts)\n  3. DashboardHeader() (degree 49, community 2 Community 2, components/partials/Header.tsx)\n  4. getUserWithRole() (degree 40, community 2 Community 2, lib/auth/helpers.ts)\n  5. tienePermiso() (degree 22, community 24 Community 24, lib/monitorista/permisos.ts)\n\nKey communities:\n  1. Community 1 - Community 1: 113 nodes, 362 internal edges, density 0.0572; top nodes: auth.ts, auth, 5618308 guardado e evidencias con ed\n  2. Community 0 - Community 0: 113 nodes, 208 internal edges, density 0.0329; top nodes: actions.ts, service.ts, repository.ts\n  3. Community 2 - Community 2: 107 nodes, 318 internal edges, density 0.0561; top nodes: Header.tsx, 3ec7484 Header y Footer Fix, page.tsx\n  4. Community 3 - Community 3: 101 nodes, 117 internal edges, density 0.0232; top nodes: page.tsx, InfraccionCiudadanoPage(), ProrrogaViewerModal.tsx\n  ... (truncated)",
-      "ts": 1784756727177
+      "ts": 1784757149857
     }
-  }
+  },
+  "ymEditCount": 3,
+  "ymDocNudge": {
+    "911": 1784826205749
+  },
+  "ymLastSyncAt": 1784826280897
 }

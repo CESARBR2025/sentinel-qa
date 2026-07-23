@@ -50,6 +50,9 @@ export default function Formulario911({ user, catalogos, despachadores }: {
     const prioridadAutocompletada = selectedIncidente
         ? catalogos.incidentes.find(i => i.id === Number(selectedIncidente))?.prioridadCatalogo
         : null
+    const esImprocedente = selectedTipo
+        ? catalogos.emergencias.find(e => e.id === Number(selectedTipo))?.codigo === '7'
+        : false
 
     // Estado del modal
     const formRef = useRef<HTMLFormElement>(null)
@@ -593,10 +596,15 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         <div className="grid">
                             <div>
                                 <label>¿Requiere Despacho?</label>
-                                <select name="requiereDespacho">
+                                <select key={esImprocedente ? "imp" : "normal"} name="requiereDespacho" disabled={esImprocedente} defaultValue={esImprocedente ? "false" : "true"}>
                                     <option value="true">Sí (Enviar a despacho)</option>
                                     <option value="false">Solo registro estadístico</option>
                                 </select>
+                                {esImprocedente && (
+                                    <span style={{ fontSize: 10, color: '#b45309', fontFamily: 'Inter, sans-serif' }}>
+                                        Tipo Improcedentes: no se canaliza a despacho, solo se registra con fines estadísticos
+                                    </span>
+                                )}
                             </div>
                             <div>
                                 <label>Estatus Inicial</label>

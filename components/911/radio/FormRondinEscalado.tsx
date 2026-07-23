@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { createRondinEscalado } from '@/lib/incidentes/actions'
 import { ArrowLeft, MapPin, Radio, Crosshair, Loader2 } from 'lucide-react'
@@ -10,10 +10,11 @@ import { useRondinFormStore } from '@/stores/useRondinFormStore'
 import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
 
 interface CatalogoItem { id: number; nombre: string }
+interface EmergenciaItem { id: number; nombre: string; codigo?: string }
 
 interface Props {
   catalogos: {
-    emergencias: CatalogoItem[]
+    emergencias: EmergenciaItem[]
     incidentes: CatalogoItem[]
     prioridades: CatalogoItem[]
   }
@@ -41,6 +42,10 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
 
   const calleRef = useRef<HTMLInputElement>(null)
   const coloniaRef = useRef<HTMLInputElement>(null)
+  const [tipoEmergenciaId, setTipoEmergenciaId] = useState(String(catalogos.emergencias[0]?.id ?? ''))
+  const esImprocedente = tipoEmergenciaId
+    ? catalogos.emergencias.find((c) => c.id === Number(tipoEmergenciaId))?.codigo === '7'
+    : false
 
   useEffect(() => {
     let cancelled = false
@@ -174,9 +179,14 @@ export function FormRondinEscalado({ catalogos, backHref, nombreOficial, folio, 
           {/* Avistamiento */}
           <Seccion titulo="Avistamiento">
             <Campo label="Tipo de emergencia" requerido>
-              <select name="tipoEmergenciaId" required style={inputStyle}>
+              <select name="tipoEmergenciaId" required style={inputStyle} value={tipoEmergenciaId} onChange={(e) => setTipoEmergenciaId(e.target.value)}>
                 {catalogos.emergencias.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
               </select>
+              {esImprocedente && (
+                <span style={{ fontSize: 10, color: '#b45309', display: 'block', marginTop: 4 }}>
+                  Tipo Improcedentes: el reporte se guarda pero no se canaliza a despacho
+                </span>
+              )}
             </Campo>
             <Campo label="Tipo de incidente" requerido>
               <select name="tipoIncidenteId" required style={inputStyle}>
