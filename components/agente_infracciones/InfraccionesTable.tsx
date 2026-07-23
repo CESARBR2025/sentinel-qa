@@ -24,6 +24,8 @@ const columns = [
     { key: "folio", label: "Folio" },
     { key: "nombre_infractor", label: "Nombre Infractor" },
     { key: "placa", label: "Placa" },
+    { key: "tipoGarantia", label: "Garantía" },
+    { key: "created_at", label: "Fecha" },
     { key: "estatus", label: "Estatus" },
     { key: "acciones", label: "Acciones" },
 ]

@@ -8,10 +8,27 @@ import {
   templateOrdenLiberacion,
   type EnviarCorreoOrdenLiberacionParams,
 } from './templates/orden-liberacion'
+import {
+  templatePinAcceso,
+  type EnviarCorreoPinAccesoParams,
+} from './templates/pin-acceso'
+import {
+  templatePagoConfirmado,
+  type EnviarCorreoPagoConfirmadoParams,
+} from './templates/pago-confirmado'
 
 export async function enviarCorreoAsignacionFiscalia(
   data: EnviarCorreoAsignacionFiscaliaParams,
 ) {
+  console.log('[enviarCorreoAsignacionFiscalia] Params:', JSON.stringify({
+    correo_infractor: data.correo_infractor,
+    correo_titular: data.correo_titular,
+    nombreInfractor: data.nombreInfractor,
+    folio: data.folio,
+    idInfraccion: data.idInfraccion,
+    tienePin: !!data.pin_acceso,
+  }))
+
   const urlVistaCiudadano = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://via-v2.vercel.app'}/infracciones/${data.idInfraccion}`
 
   const qrBuffer = await QRCode.toBuffer(urlVistaCiudadano)
@@ -21,8 +38,10 @@ export async function enviarCorreoAsignacionFiscalia(
     urlVistaCiudadano,
   })
 
-  await sendMail({
-    to: data.correo_titular_liberacion,
+  console.log('[enviarCorreoAsignacionFiscalia] Enviando mail...')
+  const result = await sendMail({
+    to: data.correo_infractor,
+    cc: data.correo_titular || undefined,
     subject: `SSPM - Documentación Requerida #${data.folio}`,
     text,
     html,
@@ -34,6 +53,7 @@ export async function enviarCorreoAsignacionFiscalia(
       },
     ],
   })
+  console.log('[enviarCorreoAsignacionFiscalia] Mail enviado, messageId:', result?.messageId)
 }
 
 export async function enviarCorreoOrdenLiberacion(
@@ -49,6 +69,42 @@ export async function enviarCorreoOrdenLiberacion(
   await sendMail({
     to: data.correoTitular,
     subject: `SSPM - Orden de Liberación #${data.folio}`,
+    text,
+    html,
+  })
+}
+
+export async function enviarCorreoPinAcceso(
+  data: EnviarCorreoPinAccesoParams,
+) {
+  const urlVistaCiudadano = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://via-v2.vercel.app'}/infracciones/${data.idInfraccion}`
+
+  const { html, text } = templatePinAcceso({
+    ...data,
+    urlVistaCiudadano,
+  })
+
+  await sendMail({
+    to: data.correoInfractor,
+    subject: `SSPM - Código de Acceso #${data.folio}`,
+    text,
+    html,
+  })
+}
+
+export async function enviarCorreoPagoConfirmado(
+  data: EnviarCorreoPagoConfirmadoParams,
+) {
+  const urlVistaCiudadano = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://via-v2.vercel.app'}/infracciones/${data.idInfraccion}`
+
+  const { html, text } = templatePagoConfirmado({
+    ...data,
+    urlVistaCiudadano,
+  })
+
+  await sendMail({
+    to: data.correoInfractor,
+    subject: `SSPM - Pago Confirmado #${data.folio}`,
     text,
     html,
   })

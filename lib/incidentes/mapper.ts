@@ -181,6 +181,8 @@ export function rowToDespachoUnidad(row: Record<string, unknown>): DespachoUnida
     id: String(row.id ?? ''),
     unidadExtId: toStr(row.unidad_ext_id),
     unidadPlaca: toStr(row.unidad_placa),
+    horaSalida: toStr(row.hora_salida),
+    horaLlegada: toStr(row.hora_llegada),
   }
 }
 

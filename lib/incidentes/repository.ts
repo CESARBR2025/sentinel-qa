@@ -68,20 +68,26 @@ export async function listarIncidentesEnDespacho(): Promise<IncidenteConDespacho
   }))
 }
 
-async function obtenerUnidadesElementos(despachoId: string): Promise<[{ placa: string; esRefuerzo: boolean }[], { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]]> {
+async function obtenerUnidadesElementos(despachoId: string): Promise<[{ id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null }[], { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]]> {
   const [unidadesResult, elementosResult] = await Promise.all([
-    query<Record<string, unknown>>(`SELECT unidad_placa, es_refuerzo FROM incidente_despacho_unidades WHERE despacho_id = $1 ORDER BY es_refuerzo, creado_en`, [despachoId]),
+    query<Record<string, unknown>>(`SELECT id, unidad_placa, es_refuerzo, hora_salida, hora_llegada FROM incidente_despacho_unidades WHERE despacho_id = $1 ORDER BY es_refuerzo, creado_en`, [despachoId]),
     query<Record<string, unknown>>(`SELECT elemento_nombre, elemento_nomina, es_prioritario, es_refuerzo FROM incidente_despacho_elementos WHERE despacho_id = $1 ORDER BY es_prioritario DESC, es_refuerzo, creado_en`, [despachoId]),
   ])
   return [
-    unidadesResult.rows.map(r => ({ placa: toStr(r.unidad_placa) ?? '', esRefuerzo: Boolean(r.es_refuerzo) })),
+    unidadesResult.rows.map(r => ({
+      id: toStr(r.id) ?? '',
+      placa: toStr(r.unidad_placa) ?? '',
+      esRefuerzo: Boolean(r.es_refuerzo),
+      horaSalida: r.hora_salida ? new Date(r.hora_salida as string).toISOString() : null,
+      horaLlegada: r.hora_llegada ? new Date(r.hora_llegada as string).toISOString() : null,
+    })),
     elementosResult.rows.map(r => ({ nombre: toStr(r.elemento_nombre) ?? '', nomina: toStr(r.elemento_nomina) ?? '', esPrioritario: Boolean(r.es_prioritario), esRefuerzo: Boolean(r.es_refuerzo) })),
   ]
 }
 
 export async function listarIncidentesPendientesDespacho(): Promise<IncidentePendiente[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.fecha_hora_inicio, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.descripcion, i.origen_rondin, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, cp.orden AS prioridad_orden, u.name AS capturado_por_nombre, ide.elemento_nombre AS prioritario_nombre, ide.elemento_nomina AS prioritario_nomina FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON d.incidente_id = i.id AND i.origen_rondin = true LEFT JOIN incidente_despacho_elementos ide ON ide.despacho_id = d.id AND ide.es_prioritario = true WHERE i.estatus = 'sin_despachar' AND i.requiere_despacho = true ORDER BY cp.orden, i.fecha_hora_inicio DESC`,
+    `SELECT i.id, i.folio, i.canal, i.fecha_hora_inicio, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.descripcion, i.origen_rondin, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, cp.orden AS prioridad_orden, u.name AS capturado_por_nombre, ide.elemento_nombre AS prioritario_nombre, ide.elemento_nomina AS prioritario_nomina FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON d.incidente_id = i.id AND i.origen_rondin = true LEFT JOIN incidente_despacho_elementos ide ON ide.despacho_id = d.id AND ide.es_prioritario = true     WHERE i.estatus = 'sin_despachar' AND i.requiere_despacho = true ORDER BY cp.orden DESC NULLS LAST, i.fecha_hora_inicio DESC`,
   )
   return result.rows.map(rowToIncidentePendiente)
 }
@@ -139,7 +145,7 @@ export async function obtenerDespachoDeIncidente(incidenteId: string): Promise<{
 
 export async function obtenerUnidadesDeDespacho(despachoId: string): Promise<DespachoUnidadRow[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT id, unidad_ext_id, unidad_placa FROM incidente_despacho_unidades WHERE despacho_id = $1`,
+    `SELECT id, unidad_ext_id, unidad_placa, hora_salida, hora_llegada FROM incidente_despacho_unidades WHERE despacho_id = $1`,
     [despachoId],
   )
   return result.rows.map(rowToDespachoUnidad)
@@ -161,145 +167,3 @@ export async function obtenerReporteCampoDeIncidente(incidenteId: string): Promi
   return result.rows[0] ? rowToReporteCampoDetalle(result.rows[0]) : null
 }
 
-export async function insertarReporteCampo(params: {
-    incidenteId: string
-    contenidoReporte: string | null
-    lugarCalle: string | null
-    lugarColonia: string | null
-    lugarEntreCalles: string | null
-    lugarReferencia: string | null
-    datosPositivosNegativos: string | null
-    accionesRealizadas: string | null
-    hayDetencion: boolean
-    nombreDetenidos: string | null
-    autoridadRecibe: string | null
-    expedienteCi: string | null
-    delitoFalta: string | null
-    hayRobo: boolean
-    montoRobo: number | null
-    objetosRecuperados: string | null
-    hayVehiculo: boolean
-    vehiculos: object[]
-    hayCateo: boolean
-    domicilioCateado: string | null
-    cateoCalle: string | null
-    cateoColonia: string | null
-    cateoLatitud: string | null
-    cateoLongitud: string | null
-    resultadoCateo: string | null
-    policiaACargo: string | null
-    personalIngresoCi: string | null
-    capturadoPor: string
-    hayOrdenAprehension: boolean
-    ordenesAprehension: object[]
-    hayHidrocarburo: boolean
-    hidrocarburos: object[]
-    hayArmaFuego: boolean
-    armasFuego: object[]
-    hayDroga: boolean
-    drogas: object[]
-    observaciones: string | null
-    apoyoFiestasPatronales : boolean
-    operativosMetropolitano : boolean
-    eco8 : boolean
-    alcoholimetria : boolean
-    motocicletas : boolean
-    apoyoActuarios : boolean
-    apoyoCateosFgr : boolean
-    apoyoCateosFge : boolean
-}) {
-    await query(
-        `INSERT INTO incidente_reporte_campo (
-    incidente_id,
-    contenido_reporte, lugar_calle, lugar_colonia, lugar_entre_calles, lugar_referencia,
-    datos_positivos_negativos, acciones_realizadas,
-    hay_detencion, nombre_detenidos, autoridad_recibe, expediente_ci, delito_falta,
-    hay_robo, monto_robo, objetos_recuperados,
-    hay_vehiculo, vehiculos,
-    hay_cateo, domicilio_cateado, cateo_calle, cateo_colonia, cateo_latitud, cateo_longitud, resultado_cateo,
-    policia_a_cargo, personal_ingreso_ci,
-    capturado_por,
-    hay_orden_aprehension, ordenes_aprehension,
-    hay_hidrocarburo,      hidrocarburos,
-    hay_arma_fuego,        armas_fuego,
-    hay_droga,             drogas, observaciones,
-    apoyo_fiestas_patronales, operativos_metropolitano, eco8,
-    alcoholimetria, motocicletas, apoyo_actuarios,
-    apoyo_cateos_fgr, apoyo_cateos_fge
-  ) VALUES (
-    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18::jsonb,
-    $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,
-    $29, $30::jsonb, $31, $32::jsonb, $33, $34::jsonb, $35, $36::jsonb, $37,
-    $38,$39,$40,$41,$42,$43,$44,$45
-  )`,
-        [
-            params.incidenteId,
-            params.contenidoReporte,
-            params.lugarCalle,
-            params.lugarColonia,
-            params.lugarEntreCalles,
-            params.lugarReferencia,
-            params.datosPositivosNegativos,
-            params.accionesRealizadas,
-            params.hayDetencion,
-            params.nombreDetenidos,
-            params.autoridadRecibe,
-            params.expedienteCi,
-            params.delitoFalta,
-            params.hayRobo,
-            params.montoRobo,
-            params.objetosRecuperados,
-            params.hayVehiculo,
-            JSON.stringify(params.vehiculos),
-            params.hayCateo,
-            params.domicilioCateado,
-            params.cateoCalle,
-            params.cateoColonia,
-            params.cateoLatitud,
-            params.cateoLongitud,
-            params.resultadoCateo,
-            params.policiaACargo,
-            params.personalIngresoCi,
-            params.capturadoPor,
-            params.hayOrdenAprehension, JSON.stringify(params.ordenesAprehension),
-            params.hayHidrocarburo, JSON.stringify(params.hidrocarburos),
-            params.hayArmaFuego, JSON.stringify(params.armasFuego),
-            params.hayDroga, JSON.stringify(params.drogas),
-            params.observaciones,
-            params.apoyoFiestasPatronales, 
-            params.operativosMetropolitano, 
-            params.eco8,
-            params.alcoholimetria, 
-            params.motocicletas, 
-            params.apoyoActuarios,
-            params.apoyoCateosFgr, 
-            params.apoyoCateosFge,
-        ]
-    )
-
-    if (!params.hayDetencion) {
-        await query(
-            `UPDATE incidentes SET estatus = 'atendido', actualizado_en = now() WHERE id = $1`,
-            [params.incidenteId]
-        )
-    }
-}
-
-export async function verificarReporteCampo(incidenteId: string) {
-    const incResult = await query<{ estatus: string }>(
-        `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
-        [incidenteId]
-    )
-    // Cierre vigente (ofi_reportes_campo) o legacy (incidente_reporte_campo)
-    const existeResult = await query<{ id: string }>(
-        `SELECT id FROM ofi_reportes_campo WHERE incidente_id = $1
-         UNION ALL
-         SELECT id FROM incidente_reporte_campo WHERE incidente_id = $1
-         LIMIT 1`,
-        [incidenteId]
-    )
-    return {
-        inc: incResult.rows[0] ?? null,
-        existe: existeResult.rows.length > 0,
-    }
-}

@@ -399,6 +399,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             value={oficialId}
             readOnly
           />
+          <SentinelField label="Policía a Cargo" name="policiaACargo" icon={Shield} defaultValue={prefill?.nominaOficial ?? ''} />
+          <SentinelField label="Mando Responsable" name="nominaMando" icon={Shield} placeholder="Nómina del mando" />
+          <SentinelField label="Policía que Toma la Denuncia" name="policiaDenuncia" icon={Shield} defaultValue={prefill?.nominaOficial ?? ''} />
+          <SentinelField label="Policía que Firma el D1" name="policiaFirmaD1" icon={Shield} defaultValue={prefill?.nominaOficial ?? ''} />
+          <SentinelField label="Policía que Ingresa el CU" name="policiaIngresaCu" icon={Shield} defaultValue={prefill?.nominaOficial ?? ''} />
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Se requirió Tablet?</label>
             <select name="requirioTablet" style={inputStyle} defaultValue="true">

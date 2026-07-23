@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import RegistroIncidenteForm from "@/components/911/whatsapp/RegistroIncidenteForm";
-import { getTiposIncidente } from "@/lib/911/service";
+import { getCatalogos, getDespachadores } from "@/lib/911/service";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 
 export default async function RegistroIncidentePage() {
@@ -18,12 +18,14 @@ export default async function RegistroIncidentePage() {
     redirect("/dashboard");
   }
 
-  const tiposIncidente = await getTiposIncidente();
+  const catalogos = await getCatalogos();
+  const despachadores = await getDespachadores();
 
   return (
-    <RegistroIncidenteForm 
-      user={session.user} 
-      tiposIncidente={tiposIncidente} 
+    <RegistroIncidenteForm
+      user={session.user}
+      catalogos={catalogos}
+      despachadores={despachadores}
     />
   );
 }

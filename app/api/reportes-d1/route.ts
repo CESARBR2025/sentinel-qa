@@ -17,7 +17,7 @@ function generarFolioDenuncia(): string {
   for (let i = 0; i < 6; i++) {
     codigo += chars.charAt(Math.floor(Math.random() * chars.length))
   }
-  return `SSPM/${fecha}/${codigo}`
+  return `SSPM/D1/${fecha}/${codigo}`
 }
 
 async function generarFolioDenunciaUnico(): Promise<string> {
@@ -83,6 +83,11 @@ export async function POST(request: Request) {
       delito: clean(body.delito),
       violencia: toBool(body.violencia),
       crp: clean(body.crp),
+      policiaACargo: clean(body.policiaACargo),
+      nominaMando: clean(body.nominaMando),
+      policiaDenuncia: clean(body.policiaDenuncia),
+      policiaFirmaD1: clean(body.policiaFirmaD1),
+      policiaIngresaCu: clean(body.policiaIngresaCu),
       requirioTablet: toBool(body.requirioTablet),
       funcionabaTablet: toBool(body.funcionabaTablet),
       ofendidoHombre: Number(body.ofendidoHombre) || 0,

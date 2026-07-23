@@ -15,3 +15,15 @@ export interface ArticuloLey {
   activo: boolean;
   fracciones: FraccionLey[];
 }
+
+export interface ResultadoBusquedaMotivo {
+  articuloId: string;
+  articuloNumero: string;
+  articuloDescripcion: string;
+  fraccionId: string;
+  fraccionNumero: string;
+  fraccionDescripcion: string;
+  fraccionMonto: number;
+  fraccionClasificacion: FraccionLey["clasificacion"];
+  motivoDetectado: string;
+}

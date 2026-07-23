@@ -53,9 +53,11 @@ export class InfraccionesRepository {
           tipo_vehiculo,
           estatus,
           estatus_dependencia,
-          no_serie_vehiculo
+          no_serie_vehiculo,
+          pin_acceso,
+          narrativa_hechos
         )
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$40,$41)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$40,$41,$42,$43)
         RETURNING *
       )
       SELECT
@@ -107,6 +109,8 @@ export class InfraccionesRepository {
         data.estatus ?? "REGISTRADA",
         data.estatus_dependencia ?? "NO APLICA",
         data.no_serie_vehiculo,
+        data.pin_acceso,
+        data.narrativa_hechos ?? null,
       ],
     );
     return result.rows[0];
@@ -114,6 +118,15 @@ export class InfraccionesRepository {
 
   static async eliminarInfraccion(id: string): Promise<void> {
     await query(`DELETE FROM via.v2_infracciones WHERE id = $1`, [id]);
+  }
+
+  static async obtenerFolio(id: string): Promise<{ folio: string; nombre_infractor: string | null; apellido_paterno_infractor: string | null; apellido_materno_infractor: string | null } | null> {
+    const result = await query(
+      `SELECT folio, nombre_infractor, apellido_paterno_infractor, apellido_materno_infractor
+       FROM via.v2_infracciones WHERE id = $1 LIMIT 1`,
+      [id],
+    );
+    return result.rows[0] as any || null;
   }
 
   static async obtenerDatosInfraccionCiudadanoRP(id: string) {

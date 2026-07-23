@@ -50,6 +50,12 @@ export interface IncidenteDetalle {
   tipoNombre: string | null
   prioridadNombre: string | null
   emergenciaNombre: string | null
+  codigoCatalogo: string | null
+  folioCad: string | null
+  svvNotificado: boolean
+  dependenciaId: number | null
+  dependenciaNombre: string | null
+  telefonoReportante: string | null
 }
 
 export interface IncidenteStats {
@@ -63,4 +69,38 @@ export interface IncidenteStats {
 export interface CatalogoItem {
   id: number
   nombre: string
+}
+
+export interface Dependencia {
+  id: number
+  clave: string
+  nombre: string
+  tipo: string
+}
+
+export interface SubtipoEmergencia {
+  id: number
+  tipoEmergenciaId: number
+  codigo: string
+  nombre: string
+  activo: boolean
+}
+
+export interface IncidenteCatalogo {
+  id: number
+  clave: string
+  nombre: string
+  subtipoEmergenciaId: number | null
+  codigoCatalogo: string | null
+  prioridadCatalogo: string | null
+  activo: boolean
+}
+
+export interface CatalogosJerarquicos {
+  emergencias: (CatalogoItem & { codigo: string })[]
+  subtipos: SubtipoEmergencia[]
+  incidentes: IncidenteCatalogo[]
+  prioridades: CatalogoItem[]
+  canalizaciones: CatalogoItem[]
+  dependencias: Dependencia[]
 }

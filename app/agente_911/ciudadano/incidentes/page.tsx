@@ -130,6 +130,8 @@ export default async function Listado911Page({
                         <thead>
                             <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
                                 <th style={thStyle}><div style={headerInnerStyle}><Hash size={12}/> FOLIO</div></th>
+                                <th style={{ ...thStyle, fontFamily: 'JetBrains Mono', fontSize: '9px' }}>FOLIO CAD</th>
+                                <th style={{ ...thStyle, fontFamily: 'JetBrains Mono', fontSize: '9px' }}>CÓDIGO</th>
                                 <th style={thStyle}><div style={headerInnerStyle}><Clock size={12}/> HORA</div></th>
                                 <th style={thStyle}><div style={headerInnerStyle}><AlertTriangle size={12}/> INCIDENTE</div></th>
                                 <th style={thStyle}><div style={headerInnerStyle}><MapPin size={12}/> COLONIA</div></th>
@@ -141,7 +143,7 @@ export default async function Listado911Page({
                         <tbody>
                             {listado.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} style={{ padding: '60px', textAlign: 'center', color: '#94a3b8', fontFamily: 'JetBrains Mono', fontSize: 12 }}>
+                                    <td colSpan={8} style={{ padding: '60px', textAlign: 'center', color: '#94a3b8', fontFamily: 'JetBrains Mono', fontSize: 12 }}>
                                         {estatusActivo
                                             ? `NO HAY REPORTES EN ESTADO "${ESTATUS_ETIQUETA}"`
                                             : 'SIN REPORTES 911 REGISTRADOS'}
@@ -168,6 +170,21 @@ export default async function Listado911Page({
                                                     verticalAlign: 'middle',
                                                 }}>NUEVO</span>
                                             )}
+                                            {(item as any).svvNotificado && (
+                                                <span style={{
+                                                    marginLeft: 6, padding: '2px 6px', borderRadius: 2, fontSize: 8,
+                                                    fontWeight: 700, background: '#eff1f3', color: '#1c3051',
+                                                    border: '1px solid #c3c8d2',
+                                                    fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.05em',
+                                                    verticalAlign: 'middle',
+                                                }}>SVV</span>
+                                            )}
+                                        </td>
+                                        <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8' }}>
+                                            {(item as any).folioCad || '—'}
+                                        </td>
+                                        <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8', letterSpacing: '0.02em' }}>
+                                            {(item as any).codigoCatalogo || '—'}
                                         </td>
                                         <td style={tdStyle}>
                                             <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{fechaStr}</span>

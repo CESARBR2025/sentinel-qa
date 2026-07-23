@@ -72,9 +72,6 @@ export default function FiscaliaDashboard({
     visibleColumns,
     loading = false,
 }: Props) {
-    console.log(data
-
-    )
     const router = useRouter()
     const [filtro, setFiltro] = useState<EstatusFiscalia>('REGISTRADA')
     const [busqueda, setBusqueda] = useState('')
@@ -104,7 +101,6 @@ export default function FiscaliaDashboard({
     }
 
     // ─── Stats ───
-    console.log(data)
     const estadisticas = useMemo(() => {
         const pendientes = data.filter(
             x =>
@@ -140,8 +136,6 @@ export default function FiscaliaDashboard({
                 return []
         }
     }, [data, filtro])
-
-    console.log(registrosFiltrados)
 
     const busquedaLower = busqueda.toLowerCase().trim()
     const registrosVisibles = busqueda
@@ -272,10 +266,10 @@ export default function FiscaliaDashboard({
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
 
             {loading ? (
-                <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-hidden animate-pulse">
+                <div className="rounded-lg border border-slate-200 bg-white shadow-card overflow-hidden animate-pulse">
                     <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50">
                         <div className="h-5 w-48 rounded bg-slate-200" />
                     </div>
@@ -285,7 +279,7 @@ export default function FiscaliaDashboard({
                                 <div className="h-3.5 w-16 rounded bg-slate-200" />
                                 <div className="h-3.5 w-32 rounded bg-slate-200" />
                                 <div className="h-3.5 w-28 rounded bg-slate-200" />
-                                <div className="h-5 w-14 rounded-full bg-slate-200" />
+                                <div className="h-5 w-14 rounded bg-slate-200" />
                                 <div className="h-7 w-20 rounded-md bg-slate-200 ml-auto" />
                             </div>
                         ))}
@@ -294,10 +288,23 @@ export default function FiscaliaDashboard({
             ) : (
                 <>
 
+                    {/* ═══ TITLE ═══ */}
+                    <div style={{ borderLeft: '4px solid #1f355a', paddingLeft: '20px' }}>
+                        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '0.4em', color: '#64748B', fontWeight: 700 }}>
+                            SSPM · FISCALÍA
+                        </span>
+                        <h1 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '48px', fontWeight: 800, margin: '8px 0 0', lineHeight: 1, textTransform: 'uppercase' }}>
+                            GESTIÓN DE <span style={{ color: '#1f355a' }}>LIBERACIONES</span>
+                        </h1>
+                        <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', color: '#64748B', marginTop: '12px', letterSpacing: '0.05em' }}>
+                            Administra las liberaciones de vehículos remitidas por la Policía Vial.
+                        </p>
+                    </div>
+
                     {/* ─── TABLA (with segment control) ─── */}
-                    <div className="rounded-xl border overflow-hidden bg-white border-slate-200 shadow-card">
+                    <div className="rounded-lg border overflow-hidden bg-white border-slate-200 shadow-card">
                         <div className="px-5 py-3 border-b flex items-center justify-between border-slate-100 bg-slate-50">
-                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-200/60">
+                            <div className="flex items-center gap-1.5 p-0.5 rounded-md bg-slate-200/60">
                                 {STATUS_TABS.map(tab => {
                                     const count = estadisticas[tab.key === 'REGISTRADA' ? 'pendientes' : 'liberadas']
                                     const activo = filtro === tab.key
@@ -327,7 +334,7 @@ export default function FiscaliaDashboard({
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={exportarCSV}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-primary bg-primary-muted border border-primary/20 hover:bg-primary/10 transition-colors"
                                 >
                                     <Download size={12} strokeWidth={1.5} />
                                     CSV
@@ -352,7 +359,7 @@ export default function FiscaliaDashboard({
                                 {busqueda && (
                                     <button
                                         onClick={() => { setBusqueda(''); setPagina(1) }}
-                                        className="text-[10px] font-medium uppercase tracking-wider text-blue-700 hover:text-blue-800 transition-colors shrink-0"
+                                        className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
                                     >
                                         Limpiar
                                     </button>
@@ -364,19 +371,19 @@ export default function FiscaliaDashboard({
                                     type="date"
                                     value={fechaInicio}
                                     onChange={e => { setFechaInicio(e.target.value); setPagina(1) }}
-                                    className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-700/10"
+                                    className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                                 />
                                 <span className="text-xs text-slate-300">—</span>
                                 <input
                                     type="date"
                                     value={fechaFin}
                                     onChange={e => { setFechaFin(e.target.value); setPagina(1) }}
-                                    className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-700/10"
+                                    className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                                 />
                                 {(fechaInicio || fechaFin) && (
                                     <button
                                         onClick={() => { setFechaInicio(''); setFechaFin(''); setPagina(1) }}
-                                        className="text-[10px] font-medium uppercase tracking-wider text-blue-700 hover:text-blue-800 transition-colors shrink-0"
+                                        className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
                                     >
                                         Limpiar
                                     </button>
@@ -391,7 +398,7 @@ export default function FiscaliaDashboard({
                                         {visibleColumns.map(column => (
                                             <th
                                                 key={column.key}
-                                                className={`px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b border-slate-100`}
+                                                className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b-2 border-slate-100`}
                                                     style={{ fontFamily: "'JetBrains Mono',monospace" }}
                                                 onClick={SORTABLE_KEYS.has(column.key) ? () => handleSort(column.key) : undefined}
                                             >
@@ -424,7 +431,7 @@ export default function FiscaliaDashboard({
                                         registrosPaginados.map((row) => (
                                             <tr
                                                 key={row.id}
-                                                className="transition-colors hover:bg-slate-50 border-b border-slate-100"
+                                                className="transition-colors hover:bg-slate-50 border-b border-slate-100 even:bg-slate-50/50"
                                             >
                                                 {visibleColumns.map(column => {
                                                     if (column.key === 'acciones') {
@@ -439,7 +446,7 @@ export default function FiscaliaDashboard({
                                                                     {['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO', 'EN_REVISION_MW'].includes(estatusDep) && (
                                                                         <button
                                                                             onClick={() => handleOpenOficioForm(row.id)}
-                                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 border border-orange-200 rounded-md hover:bg-orange-100 transition-colors"
+                                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary bg-primary-muted border border-primary/20 rounded-md hover:bg-primary/10 transition-colors"
                                                                         >
                                                                             <FileText size={14} />
                                                                             Cargar oficio
@@ -449,7 +456,7 @@ export default function FiscaliaDashboard({
                                                                     {estatusDep === 'LIBERADO_POR_LIBERACIONES' && (
                                                                         <button
                                                                             onClick={() => handleTomarCaso(row.id)}
-                                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors"
+                                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-primary hover:bg-primary-dark rounded-md transition-colors"
                                                                         >
                                                                             <Play size={14} />
                                                                             Tomar caso
@@ -460,7 +467,7 @@ export default function FiscaliaDashboard({
                                                                         <button
                                                                             onClick={() => handleFinalizarProceso(row.id)}
                                                                             disabled={finalizandoId === row.id}
-                                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 transition-colors disabled:opacity-50"
+                                                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary bg-primary-muted border border-primary/20 rounded-md hover:bg-primary/10 transition-colors disabled:opacity-50"
                                                                         >
                                                                             {finalizandoId === row.id ? (
                                                                                 <Loader2 size={14} className="animate-spin" />
@@ -480,10 +487,10 @@ export default function FiscaliaDashboard({
                                                         return (
                                                             <td key={column.key} className="px-4 py-2.5">
                                                                 <span
-                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
+                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-semibold"
                                                                     style={{ background: badge.bg, color: badge.text, fontFamily: "'JetBrains Mono',monospace" }}
                                                                 >
-                                                                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: badge.dot }} />
+                                                                    <span className="w-1.5 h-1.5 rounded-sm" style={{ background: badge.dot }} />
                                                                     {badge.label}
                                                                 </span>
                                                             </td>
@@ -503,7 +510,7 @@ export default function FiscaliaDashboard({
                                                                     >
                                                                         {initials || <User size={13} strokeWidth={2.5} />}
                                                                     </div>
-                                                                    <span className="font-medium text-sm text-slate-900">
+                                                                    <span className="font-medium text-sm text-slate-700">
                                                                         {name || '—'}
                                                                     </span>
                                                                 </div>
@@ -512,7 +519,7 @@ export default function FiscaliaDashboard({
                                                     }
 
                                                     return (
-                                                        <td key={column.key} className="px-4 py-2.5 font-medium text-slate-900">
+                                                        <td key={column.key} className="px-4 py-2.5 font-medium text-slate-700">
                                                             {row[column.key] ?? '—'}
                                                         </td>
                                                     )
@@ -554,7 +561,7 @@ export default function FiscaliaDashboard({
                                                 <button
                                                     key={p}
                                                     onClick={() => setPagina(p)}
-                                                    className={`w-7 h-7 text-xs font-medium rounded-md transition-colors ${p === paginaSegura ? 'bg-blue-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                                                    className={`w-7 h-7 text-xs font-medium rounded-md transition-colors ${p === paginaSegura ? 'bg-primary-dark text-white' : 'text-slate-600 hover:bg-slate-100'}`}
                                                 >
                                                     {p}
                                                 </button>
@@ -591,9 +598,9 @@ export default function FiscaliaDashboard({
             {/* ─── MODAL: Cargar oficio ─── */}
             {loadingOficioForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm">
-                    <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white">
-                        <Loader2 size={24} className="animate-spin text-blue-700" />
-                        <p className="text-sm font-medium text-slate-500">Cargando datos del oficio...</p>
+                    <div className="flex flex-col items-center gap-3 p-6 rounded-lg bg-white">
+                        <Loader2 size={24} className="animate-spin text-primary" />
+                        <p className="text-sm font-medium text-slate-600">Cargando datos del oficio...</p>
                     </div>
                 </div>
             )}
@@ -601,7 +608,7 @@ export default function FiscaliaDashboard({
             {oficioFormId && oficioFormData && !loadingOficioForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm" onClick={() => handleCloseOficioForm()}>
                     <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="bg-white border border-slate-200 rounded-xl shadow-card overflow-hidden">
+                        <div className="bg-white border border-slate-200 rounded-lg shadow-card overflow-hidden">
                             <CargarOficioSection
                                 idInfraccion={oficioFormId}
                                 folio={oficioFormData.Header.folio_de_infraccion}

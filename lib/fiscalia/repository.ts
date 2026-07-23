@@ -465,7 +465,7 @@ export async function generarFolioAsegurados(): Promise<string> {
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, '0');
   const d = String(now.getDate()).padStart(2, '0');
-  const prefix = `SSPM/${y}${m}${d}/FAS/`;
+  const prefix = `SSPM/FAS/${y}${m}${d}/`;
 
   for (let attempt = 0; attempt < 10; attempt++) {
     const nums = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');

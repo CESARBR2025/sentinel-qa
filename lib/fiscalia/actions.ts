@@ -353,7 +353,12 @@ export async function guardarOficioAction(
           correo_titular_liberacion,
           nombre_titular_liberacion,
           appaterno_titular_liberacion,
-          apmaterno_titular_liberacion
+          apmaterno_titular_liberacion,
+          correo_infractor,
+          nombre_infractor,
+          apellido_paterno_infractor,
+          apellido_materno_infractor,
+          pin_acceso
         `,
         [
           folio,
@@ -375,17 +380,42 @@ export async function guardarOficioAction(
 
       const updated = updateResult.rows[0]
 
-      if (updated.correo_titular_liberacion) {
-        await enviarCorreoAsignacionFiscalia({
-          correo_titular_liberacion: updated.correo_titular_liberacion,
-          nombreTitular: `${updated.nombre_titular_liberacion} ${updated.appaterno_titular_liberacion} ${updated.apmaterno_titular_liberacion}`.trim(),
+      // Generar PIN de acceso si no existe
+      if (!updated.pin_acceso) {
+        const pin = String(Math.floor(100000 + Math.random() * 900000))
+        await client.query(
+          'UPDATE via.v2_infracciones SET pin_acceso = $1 WHERE id = $2',
+          [pin, updated.id]
+        )
+        updated.pin_acceso = pin
+      }
+
+      console.log('[guardarOficioAction] updated row:', JSON.stringify({
+        id: updated.id,
+        folio: updated.folio,
+        correo_infractor: updated.correo_infractor,
+        correo_titular_liberacion: updated.correo_titular_liberacion,
+        nombre_infractor: updated.nombre_infractor,
+        pin: updated.pin_acceso,
+      }))
+
+      await client.query('COMMIT')
+
+      // Envío de correo después del COMMIT para no revertir la transacción si falla el SMTP
+      if (updated.correo_infractor) {
+        console.log('[guardarOficioAction] Enviando correo a infractor:', updated.correo_infractor, 'CC titular:', updated.correo_titular_liberacion)
+        enviarCorreoAsignacionFiscalia({
+          correo_infractor: updated.correo_infractor,
+          correo_titular: updated.correo_titular_liberacion || undefined,
+          nombreInfractor: `${updated.nombre_infractor} ${updated.apellido_paterno_infractor} ${updated.apellido_materno_infractor}`.trim(),
           idInfraccion: updated.id,
           folio: updated.folio,
           numero_oficio: numero_oficio ?? '',
-        })
+          pin_acceso: updated.pin_acceso ?? '',
+        }).catch(err => console.error('[guardarOficioAction] Error enviando correo:', err))
+      } else {
+        console.log('[guardarOficioAction] correo_infractor vacío, omitiendo envío')
       }
-
-      await client.query('COMMIT')
 
       revalidatePath('/fiscalia/liberaciones')
 

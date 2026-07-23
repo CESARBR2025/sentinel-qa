@@ -37,7 +37,7 @@ function formatFecha(iso: string) {
   return `${dia}/${mes} ${hora}:${min}`
 }
 
-export function RondinTabla({ rondines }: { rondines: RondinOficialResumen[] }) {
+export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialResumen[]; folioNuevo?: string }) {
   const COLUMNS = ['FOLIO', 'FECHA', 'TIPO', 'UBICACIÓN', 'ESTATUS']
 
   return (
@@ -75,7 +75,20 @@ export function RondinTabla({ rondines }: { rondines: RondinOficialResumen[] }) 
                 color: '#0f172a',
                 borderBottom: '1px solid #f1f5f9',
               }}>
-                {r.folio}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {r.folio}
+                  {folioNuevo && r.folio === folioNuevo && (
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center',
+                      fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 700,
+                      padding: '2px 6px', borderRadius: 2,
+                      background: '#22c55e', color: '#ffffff',
+                      letterSpacing: '0.08em',
+                    }}>
+                      NUEVO
+                    </span>
+                  )}
+                </div>
               </td>
               <td style={{
                 padding: '10px 14px', fontSize: 12,

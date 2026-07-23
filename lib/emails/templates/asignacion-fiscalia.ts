@@ -1,11 +1,13 @@
 import { emailLayout, emailStyles, inlineStyles } from './layout'
 
 export interface EnviarCorreoAsignacionFiscaliaParams {
-  correo_titular_liberacion: string
-  nombreTitular: string
+  correo_infractor: string
+  correo_titular?: string
+  nombreInfractor: string
   idInfraccion: string
   folio: string
   numero_oficio: string
+  pin_acceso: string
 }
 
 export function templateAsignacionFiscalia(
@@ -17,7 +19,7 @@ export function templateAsignacionFiscalia(
 
   const html = emailLayout(`
     <p style="${inlineStyles(emailStyles.greeting)}">
-      Estimado(a) <strong>${data.nombreTitular}</strong>,
+      Estimado(a) <strong>${data.nombreInfractor}</strong>,
     </p>
 
     <p style="${inlineStyles(emailStyles.body)}">
@@ -28,6 +30,22 @@ export function templateAsignacionFiscalia(
       <p style="margin:0 0 8px 0;"><b>Número de Folio:</b> ${data.folio}</p>
       <p style="margin:0 0 8px 0;"><b>Número de Oficio:</b> ${data.numero_oficio}</p>
       <p style="margin:0;"><b>Estado del Expediente:</b> PENDIENTE DE DOCUMENTACIÓN</p>
+    </div>
+
+    <hr style="${inlineStyles(emailStyles.divider)}" />
+
+    <h2 style="${inlineStyles(emailStyles.title)}">Código de Acceso</h2>
+
+    <p style="${inlineStyles(emailStyles.body)}">
+      Para acceder al portal ciudadano, utilice el siguiente código de acceso de 6 dígitos:
+    </p>
+
+    <div style="text-align:center; margin: 24px 0;">
+      <div style="display:inline-block; background:#fef3c7; border:2px solid #f59e0b; border-radius:12px; padding:16px 32px; letter-spacing:8px;">
+        <span style="font-size:32px; font-weight:700; font-family:monospace; color:#92400e;">
+          ${data.pin_acceso.split('').join(' ')}
+        </span>
+      </div>
     </div>
 
     <hr style="${inlineStyles(emailStyles.divider)}" />
@@ -75,7 +93,7 @@ export function templateAsignacionFiscalia(
 SECRETARÍA DE SEGURIDAD PÚBLICA MUNICIPAL
 FISCALÍA DE SJR
 
-Estimado(a) ${data.nombreTitular},
+Estimado(a) ${data.nombreInfractor},
 
 Por este medio se le notifica que su expediente ha sido registrado en Fiscalía de SJR. A partir de este momento, puede subir la documentación requerida para continuar con el proceso de liberación.
 
@@ -85,6 +103,8 @@ Folio:                ${data.folio}
 Número de Oficio:     ${data.numero_oficio}
 Estado:               PENDIENTE DE DOCUMENTACIÓN
 
+CÓDIGO DE ACCESO: ${data.pin_acceso}
+
 DOCUMENTACIÓN REQUERIDA:
 ─────────────────────────────────────────
 - Factura original del vehículo
@@ -93,7 +113,7 @@ DOCUMENTACIÓN REQUERIDA:
 - Tarjeta de circulación
 - Poder notarial (si aplica)
 
-Para acceder al portal de documentación y subir sus archivos, escanee el código QR incluido en este correo o ingrese al siguiente enlace:
+Para acceder al portal de documentación y subir sus archivos, utilice el código de acceso de 6 dígitos, escanee el código QR incluido en este correo o ingrese al siguiente enlace:
 ${urlVistaCiudadano}
 
 Atentamente,

@@ -3,11 +3,11 @@ import { confirmarPago } from "@/lib/via/pagos";
 
 export async function GET(
   _req: Request,
-  context: { params: Promise<{ ordenPagoId: string; infraccionId: string }> },
+  context: { params: Promise<{ infraccionId: string }> },
 ) {
   try {
-    const { ordenPagoId, infraccionId } = await context.params;
-    const result = await confirmarPago(ordenPagoId, infraccionId, "PAGADA", "PENDIENTE_DEVOLUCION_GARANTIA");
+    const { infraccionId } = await context.params;
+    const result = await confirmarPago(infraccionId, "PAGADA", "PENDIENTE_DEVOLUCION_GARANTIA");
     return NextResponse.json(result);
   } catch (error) {
     console.error("[VIA][PAGOS][CONFIRMAR-AUSENTE]", error);

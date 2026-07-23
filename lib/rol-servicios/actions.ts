@@ -25,7 +25,7 @@ async function generarFolio(): Promise<{ folio: string; consecutivo: number }> {
     [año],
   )
   const consecutivo = result.rows[0].next
-  const folio = `SSPM/SS/${String(consecutivo).padStart(3, '0')}/${año}`
+  const folio = `SSPM/ROL/${año}/${String(consecutivo).padStart(3, '0')}`
   return { folio, consecutivo }
 }
 

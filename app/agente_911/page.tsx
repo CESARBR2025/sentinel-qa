@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Users, MessageSquare } from 'lucide-react'
+import { Users } from 'lucide-react'
 import { verificarRolAgente911 } from '@/lib/agente_911/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -28,7 +28,6 @@ export default async function Agente911DashboardPage() {
   const stats = await getStats(hoyISO)
 
   const hoy911 = stats.channels.find(c => c.canal === '911')?.count ?? 0
-  const hoyWA = stats.channels.find(c => c.canal === 'whatsapp')?.count ?? 0
 
 
   return (
@@ -62,10 +61,6 @@ export default async function Agente911DashboardPage() {
             <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>911 Hoy</span>
             <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{hoy911}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px' }}>
-            <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>WhatsApp Hoy</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{hoyWA}</span>
-          </div>
         </div>
 
         {/* Cards */}
@@ -96,39 +91,6 @@ export default async function Agente911DashboardPage() {
               <div>
                 <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hoy</div>
                 <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{hoy911}</div>
-              </div>
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.total}</div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Card: WhatsApp */}
-          <Link href="/agente_911/whatsapp/incidentes" className="card-911" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <MessageSquare size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                CANAL WHATSAPP
-              </div>
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                WhatsApp
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Gestión de reportes entrantes vía mensajería instantánea y despacho digital
-              </p>
-            </div>
-            <div style={{ marginTop: 16, display: 'flex', gap: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hoy</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{hoyWA}</div>
               </div>
               <div>
                 <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total</div>

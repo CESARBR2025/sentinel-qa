@@ -1,4 +1,4 @@
-import { obtenerCatalogos, obtenerStats, listarIncidentes, obtenerIncidente, obtenerIncidenteConExtras, obtenerTiposIncidente, contarPorEstatus } from './repository'
+import { obtenerCatalogos, obtenerStats, listarIncidentes, obtenerIncidente, obtenerIncidenteConExtras, obtenerTiposIncidente, contarPorEstatus, obtenerDespachadores } from './repository'
 import type { CatalogoItem, IncidenteDetalle, IncidenteStats } from './types'
 
 export async function getCatalogos() {
@@ -32,4 +32,8 @@ export async function getTiposIncidente(): Promise<CatalogoItem[]> {
 
 export async function getConteoEstatus(canal: string) {
   return contarPorEstatus(canal)
+}
+
+export async function getDespachadores() {
+  return obtenerDespachadores()
 }

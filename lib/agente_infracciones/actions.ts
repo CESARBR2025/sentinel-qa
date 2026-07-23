@@ -3,7 +3,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { verificarRolInfracciones, listarLiberaciones, procesarCapturaInfractor, procesarLiberarGarantia } from './service'
+import { verificarRolInfracciones, listarLiberaciones, procesarCapturaInfractor, procesarLiberarGarantia, buscarFolioGlobal } from './service'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import type { UserInfo, LiberacionesResponse, ViaInfraccionDetalle, CapturaInfractorInput, CapturaInfractorResult } from './types'
 
@@ -72,6 +72,29 @@ export async function capturarInfractorInfraccionesAction(
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error al capturar datos del infractor'
     console.error('[capturarInfractorInfraccionesAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function buscarInfraccionPorFolioAction(
+  folio: string,
+): Promise<{ success: boolean; id?: string; folio?: string; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolInfracciones(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    if (!folio.trim()) return { success: false, error: 'Ingresa un folio' }
+
+    const encontrada = await buscarFolioGlobal(folio)
+    if (!encontrada) return { success: false, error: `No se encontró ninguna infracción con el folio "${folio.trim()}"` }
+
+    return { success: true, id: encontrada.id, folio: encontrada.folio }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error al buscar el folio'
+    console.error('[buscarInfraccionPorFolioAction]', msg)
     return { success: false, error: msg }
   }
 }

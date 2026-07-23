@@ -37,4 +37,37 @@
 | `KEY_USER_VALIDATE_STATUS` | No | — |
 | `KEY_PD_VALIDATE_STATUS` | No | — |
 | `NEXT_PUBLIC_FLOTA_API_KEY` | No | FLOTA DE POLICIAS |
+| `GEO_LOCATION_KEY` | No | Búsqueda inteligente de motivo (paso 4 captura infracción) — LLM compatible OpenAI (ej. DeepSeek) |
+| `LLM_BASE_URL` | No | — |
+| `LLM_MODEL` | No | — |
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

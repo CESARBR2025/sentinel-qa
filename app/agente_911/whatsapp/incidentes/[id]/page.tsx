@@ -10,13 +10,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
+import { obtenerRolNombre } from "@/lib/911/permisos";
+import { tienePermiso } from "@/lib/permisos/core";
 
 export default async function DetalleWhatsAppPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
-    if (!(await tieneAccesoSeccion(session.user.id, "911_whatsapp"))) redirect("/dashboard");
+    // 911_whatsapp ya no se asigna a ningún rol operativo (canal eliminado) — el detalle de
+    // incidentes históricos sigue visible para quien tenga acceso a la bitácora general.
+    const tieneAcceso = (await tienePermiso(session.user.id, "911_whatsapp", "ver")) || (await tienePermiso(session.user.id, "incidentes", "ver"))
+    if (!tieneAcceso) redirect("/dashboard");
 
     const rolNombre = await obtenerRolNombre(session.user.id)
     const backHref = rolNombre === 'agente_911' ? '/agente_911' : '/dashboard'

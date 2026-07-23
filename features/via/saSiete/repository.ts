@@ -56,7 +56,18 @@ export class SA7Repository {
 
   static async buscarOrdenPorInfraccionId(infraccionId: string): Promise<OrdenPagoSA7 | null> {
     const result = await query(
-      `SELECT * FROM via.v2_ordenes_pago_sa7 WHERE infraccion_id = $1 LIMIT 1`,
+      `SELECT * FROM via.v2_ordenes_pago_sa7 WHERE infraccion_id = $1 AND vigente = true LIMIT 1`,
+      [infraccionId],
+    );
+    return result.rows.length ? mapRowToOrdenPago(result.rows[0] as any) : null;
+  }
+
+  static async resolverOrdenVigente(infraccionId: string): Promise<OrdenPagoSA7 | null> {
+    const result = await query(
+      `SELECT * FROM via.v2_ordenes_pago_sa7
+       WHERE infraccion_id = $1 AND vigente = true
+       AND (fecha_vencimiento IS NULL OR fecha_vencimiento > NOW())
+       LIMIT 1`,
       [infraccionId],
     );
     return result.rows.length ? mapRowToOrdenPago(result.rows[0] as any) : null;

@@ -19,6 +19,7 @@ export interface MailAttachment {
 
 export interface MailOptions {
   to?: string
+  cc?: string
   subject: string
   text: string
   html: string
@@ -31,14 +32,19 @@ export async function sendMail(options: MailOptions) {
     return null
   }
 
+  console.log('[mailer] Enviando a:', options.to, 'CC:', options.cc || '(sin CC)')
+
   const info = await transporter.sendMail({
     from: `"SSPM - San Juan del Río" <${process.env.SMTP_USER}>`,
     to: options.to,
+    cc: options.cc,
     subject: options.subject,
     text: options.text,
     html: options.html,
     attachments: options.attachments ?? [],
   })
+
+  console.log('[mailer] Enviado, messageId:', info.messageId)
 
   return info
 }

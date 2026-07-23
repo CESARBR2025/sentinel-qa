@@ -227,7 +227,7 @@ Estos roles se separan del flujo de incidentes, aunque comparten oficiales y, en
 6. **P2 — Entregables externos**: automatizar envío de Formato N, Excel y presentaciones con versión, acuse y control de acceso.
 7. **P2 — Seguridad y auditoría**: permisos mínimos, motivo de acceso a evidencia sensible, retención de archivos y bitácora inmutable de acciones relevantes.
 
-> **Info — cat_estatus_evento**: Existe en BD una máquina de 11 estados con `area_responsable` (NUEVO→VALIDADO→DESPACHADO→EN_ATENCION→ATENDIDO→EN_BITACORA→EN_NOVEDADES→CLASIFICADO→INVESTIGADO→GEOREFERENCIADO→CERRADO). No está integrada al flujo principal de incidentes/reportes. Considerar si unificarla con la máquina del P0.
+> ~~**Info — cat_estatus_evento**: Tabla legacy eliminada. Tenía una máquina de 11 estados (NUEVO→VALIDADO→DESPACHADO→EN_ATENCION→ATENDIDO→EN_BITACORA→EN_NOVEDADES→CLASIFICADO→INVESTIGADO→GEOREFERENCIADO→CERRADO) sin integración con ningún flujo. Junto con la tabla eventos (0 registros) fueron eliminadas en migration 0018.~~
 
 ## Decisiones necesarias con operación
 

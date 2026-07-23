@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { ArrowLeft, Plus, Radio, FileText } from 'lucide-react'
 import { RondinTabla } from './RondinTabla'
 import { FormRondinEscalado } from '@/components/911/radio/FormRondinEscalado'
-import type { RondinOficialResumen, CatalogoItem } from '@/lib/oficial/types'
+import type { RondinOficialResumen } from '@/lib/oficial/types'
+import type { CatalogosJerarquicos } from '@/lib/911/types'
 
 type View = 'list' | 'form'
 
@@ -14,12 +15,14 @@ export function RondinPageClient({
   nombreOficial,
   folio,
   folioConsecutivo,
+  folioNuevo,
 }: {
   rondines: RondinOficialResumen[]
-  catalogos: { emergencias: CatalogoItem[]; incidentes: CatalogoItem[]; prioridades: CatalogoItem[] }
+  catalogos: Pick<CatalogosJerarquicos, 'emergencias' | 'subtipos' | 'incidentes' | 'prioridades'>
   nombreOficial: string
   folio: string
   folioConsecutivo: number
+  folioNuevo?: string
 }) {
   const [view, setView] = useState<View>('list')
 
@@ -154,7 +157,7 @@ export function RondinPageClient({
           background: '#ffffff', border: '1px solid #e2e8f0',
           borderRadius: 2, overflow: 'hidden',
         }}>
-          <RondinTabla rondines={rondines} />
+          <RondinTabla rondines={rondines} folioNuevo={folioNuevo} />
         </div>
       </div>
     </div>

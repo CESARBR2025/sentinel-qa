@@ -1,8 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { CheckCircle2, CreditCard, ExternalLink, Loader2, X } from 'lucide-react';
+import { CheckCircle2, CreditCard, Loader2, ShieldCheck, X } from 'lucide-react';
 
 type Props = {
   infraccionId: string;
@@ -15,57 +15,33 @@ type Props = {
 
 export default function PagoInfraccion({
   infraccionId,
-  ordenPagoId,
+  urlPago,
   estatusDependencia,
   estatusInfraccion,
 }: Props) {
   const router = useRouter();
-  const urlPagoFinal = `https://municipio.azurewebsites.net/PagoOP.aspx?id=${ordenPagoId}`;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pagado, setPagado] = useState(false);
   const [mostrandoExito, setMostrandoExito] = useState(false);
-  const popupRef = useRef<Window | null>(null);
-  const [popupAbierta, setPopupAbierta] = useState(false);
-  const [abriendoPopup, setAbriendoPopup] = useState(false);
+  const [iframeCargado, setIframeCargado] = useState(false);
+  const [modalAbiertaAntes, setModalAbiertaAntes] = useState(false);
 
-  useEffect(() => {
-    if (!popupAbierta) return;
-    const interval = setInterval(() => {
-      if (popupRef.current?.closed) {
-        setPopupAbierta(false);
-        popupRef.current = null;
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [popupAbierta]);
-
-  const abrirPopup = () => {
-    setAbriendoPopup(true);
-    setTimeout(() => {
-      const ancho = 800, alto = 750;
-      const left = (screen.width - ancho) / 2, top = (screen.height - alto) / 2;
-      popupRef.current = window.open(urlPagoFinal, 'PagoInfraccion',
-        `width=${ancho},height=${alto},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`);
-      setPopupAbierta(true);
-      setAbriendoPopup(false);
-    }, 300);
-  };
-
-  const verificarPago = async () => {
-    if (loading) return;
+  const verificarPago = async (): Promise<boolean> => {
+    if (loading) return false;
     try {
       setLoading(true);
       let url = '';
       if (estatusInfraccion === 'PENDIENTE_PAGO' && estatusDependencia === 'PENDIENTE_PAGO_INFRACCION') {
-        url = `/api/via/pagos/confirmar-ausente/${ordenPagoId}/${infraccionId}`;
+        url = `/api/via/pagos/confirmar-ausente/${infraccionId}`;
       } else if (estatusInfraccion === 'PENDIENTE_PAGO' && estatusDependencia === 'PENDIENTE_PAGO_INSTANTE') {
-        url = `/api/via/pagos/confirmar-instante/${ordenPagoId}/${infraccionId}`;
+        url = `/api/via/pagos/confirmar-instante/${infraccionId}`;
       } else if (estatusInfraccion === 'PENDIENTE_PAGO' && estatusDependencia === 'PLACA_RETENIDA_EN_TRANSITO') {
-        url = `/api/via/pagos/confirmar-retenida/${ordenPagoId}/${infraccionId}`;
+        url = `/api/via/pagos/confirmar-retenida/${infraccionId}`;
       } else if (estatusInfraccion === 'PENDIENTE_PAGO' && estatusDependencia === 'PENDIENTE_PAGO_LIBERACION') {
-        url = `/api/via/pagos/confirmar-liberacion/${ordenPagoId}/${infraccionId}`;
+        url = `/api/via/pagos/confirmar-liberacion/${infraccionId}`;
       }
+      if (!url) return false;
       const res = await fetch(url, { method: 'GET', cache: 'no-store' });
       const data = await res.json();
       if (data.pagado) {
@@ -76,23 +52,45 @@ export default function PagoInfraccion({
           setMostrandoExito(false);
           router.refresh();
         }, 3000);
+        return true;
       }
+      return false;
     } catch (error) {
       console.error('ERROR VERIFICANDO PAGO:', error);
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (!open || pagado) return;
-    const interval = setInterval(verificarPago, 5000);
-    return () => clearInterval(interval);
-  }, [open, pagado]);
+  const forzarPago = async () => {
+    if (loading) return;
+    if (!confirm('¿Forzar pago de esta infracción? (solo pruebas)')) return;
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/via/pagos/forzar-pago/${infraccionId}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.pagado) {
+        setPagado(true);
+        setMostrandoExito(true);
+        setTimeout(() => {
+          setOpen(false);
+          setMostrandoExito(false);
+          router.refresh();
+        }, 3000);
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo forzar el pago'));
+      }
+    } catch (error) {
+      console.error('ERROR FORZANDO PAGO:', error);
+      alert('Error al forzar pago');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleClose = async () => {
+  const handleClose = () => {
     setOpen(false);
-    await verificarPago();
   };
 
   if (pagado && !open) {
@@ -111,7 +109,7 @@ export default function PagoInfraccion({
 
   return (
     <div className="p-5 space-y-5">
-      <button onClick={() => setOpen(true)}
+      <button onClick={() => { setOpen(true); setModalAbiertaAntes(true); }}
         className="w-full h-14 rounded-lg bg-primary hover:bg-primary-dark active:bg-primary/80 text-white font-medium transition flex items-center justify-center gap-2 active:scale-[0.99]"
       >
         <CreditCard size={18} strokeWidth={1.5} /> Pagar infracción
@@ -122,11 +120,16 @@ export default function PagoInfraccion({
 
       {open && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-4xl xl:max-w-6xl h-[90vh] md:h-[85vh] overflow-hidden shadow-modal flex flex-col">
-            <div className="h-16 border-b border-slate-200 px-5 flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-slate-800">Pago Digital</h3>
-                <p className="text-xs text-slate-500">Plataforma segura</p>
+          <div className="bg-white rounded-xl w-full max-w-2xl h-[88vh] overflow-hidden shadow-modal flex flex-col">
+            <div className="h-16 border-b border-slate-200 px-5 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <ShieldCheck size={16} className="text-emerald-600" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <h3 className="font-medium text-slate-800 text-sm">Pago Digital</h3>
+                  <p className="text-[11px] text-slate-500">Getnet · Pago seguro con tarjeta</p>
+                </div>
               </div>
               {!mostrandoExito && (
                 <button onClick={handleClose} className="w-10 h-10 rounded-lg hover:bg-slate-100 flex items-center justify-center">
@@ -136,7 +139,7 @@ export default function PagoInfraccion({
             </div>
 
             {mostrandoExito ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-b from-emerald-50 to-white">
+              <div className="flex-1 flex flex-col items-center justify-center text-center px-6 py-16 bg-gradient-to-b from-emerald-50 to-white">
                 <div className="w-28 h-28 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 mb-8">
                   <CheckCircle2 size={56} strokeWidth={1.5} />
                 </div>
@@ -145,64 +148,35 @@ export default function PagoInfraccion({
                 <p className="mt-6 text-sm text-slate-500 max-w-md leading-relaxed">El pago de tu infracción fue validado correctamente en el sistema digital.</p>
               </div>
             ) : (
-              <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-                <div className="lg:w-72 lg:border-r border-slate-200 bg-slate-50 p-5 space-y-5 overflow-y-auto shrink-0 max-h-64 lg:max-h-none">
-                  <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">Indicaciones</h4>
-                    <p className="text-[11px] text-slate-400 mt-1">Sigue estos pasos para completar tu pago</p>
-                  </div>
-                  <div className="space-y-4">
-                    {[
-                      { n: 1, t: 'Calcula el pago', d: 'Da clic en el botón "Calcular pago" dentro del formulario.' },
-                      { n: 2, t: 'Selecciona Visa', d: 'Elige la opción "Tarjeta Visa" como método de pago.' },
-                      { n: 3, t: 'Ingresa tus datos', d: 'Proporciona los datos de tu tarjeta: número, fecha de vencimiento y CVV.' },
-                      { n: 4, t: '¡Listo!', d: 'Una vez procesado, presiona "Verificar pago" para confirmar.', emerald: true },
-                    ].map((s) => (
-                      <div key={s.n} className="flex gap-3">
-                        <span className={`w-7 h-7 rounded-full ${s.emerald ? 'bg-emerald-600' : 'bg-primary'} text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5`}>{s.n}</span>
-                        <div>
-                          <p className="text-sm font-medium text-slate-800">{s.t}</p>
-                          <p className="text-xs text-slate-500 leading-relaxed">{s.d}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="rounded-lg bg-primary-muted border border-primary/20 p-3">
-                    <p className="text-[11px] text-primary leading-relaxed">Tus datos están protegidos. La transacción se realiza en un entorno seguro.</p>
-                  </div>
+              <div className="flex-1 flex flex-col min-h-0">
+                <div className="flex-1 relative bg-slate-100">
+                  {!iframeCargado && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
+                      <Loader2 size={32} className="animate-spin text-primary" strokeWidth={1.5} />
+                      <p className="text-sm text-slate-500">Cargando plataforma de pago...</p>
+                    </div>
+                  )}
+                  <iframe
+                    src={urlPago}
+                    onLoad={() => setIframeCargado(true)}
+                    className="w-full h-full border-0"
+                    title="Plataforma de pago"
+                    allow="payment"
+                    sandbox="allow-forms allow-scripts allow-same-origin allow-top-navigation allow-popups"
+                  />
                 </div>
-
-                <div className="flex-1 flex flex-col min-w-0">
-                  <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-10 gap-6">
-                    <div className="w-16 h-16 rounded-2xl bg-primary-muted border border-primary/20 flex items-center justify-center text-primary">
-                      <CreditCard size={28} strokeWidth={1.5} />
-                    </div>
-                    <div className="text-center space-y-2 max-w-sm">
-                      <h4 className="text-base font-semibold text-slate-800">Abrir plataforma de pago</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">Serás redirigido a una ventana segura para realizar el pago con tu tarjeta.</p>
-                    </div>
-                    <button
-                      onClick={abrirPopup}
-                      disabled={abriendoPopup || popupAbierta}
-                      className="h-14 px-10 rounded-lg bg-primary hover:bg-primary-dark active:bg-primary/80 active:scale-[0.99] text-white font-medium flex items-center gap-2.5 transition-all shadow-lg shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                <div className="border-t border-slate-200 p-4 flex items-center justify-between gap-2 bg-white shrink-0">
+                  <p className="text-xs text-slate-400 hidden sm:block">
+                    Completa el formulario y presiona Verificar pago
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <button onClick={forzarPago} disabled={loading}
+                      className="text-[11px] text-slate-400 hover:text-red-600 disabled:opacity-30 transition-colors"
                     >
-                      {abriendoPopup ? <><Loader2 size={18} className="animate-spin" /> Abriendo...</>
-                        : popupAbierta ? <><ExternalLink size={18} /> Ventana abierta</>
-                        : <><CreditCard size={18} /> Ir a pagar</>}
+                      {loading ? null : 'Forzar pago'}
                     </button>
-                    {popupAbierta ? (
-                      <div className="flex items-center gap-2 rounded-lg bg-primary-muted border border-primary/20 px-4 py-2.5">
-                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        <p className="text-xs text-primary font-medium">Esperando que completes el pago en la ventana abierta...</p>
-                      </div>
-                    ) : (
-                      <p className="text-[11px] text-slate-400 text-center max-w-xs">Después de realizar el pago, cierra la ventana y presiona el botón de abajo para verificar.</p>
-                    )}
-                  </div>
-                  <div className="border-t border-slate-200 p-4 flex items-center justify-between gap-4">
-                    <p className="text-xs text-slate-400 hidden sm:block">El pago se verifica automáticamente cada 5 segundos</p>
                     <button onClick={verificarPago} disabled={loading}
-                      className="h-12 px-6 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-medium flex items-center gap-2 active:scale-[0.99] ml-auto"
+                      className="h-11 px-6 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-medium flex items-center gap-2 active:scale-[0.99]"
                     >
                       {loading ? <><Loader2 size={18} className="animate-spin" /> Verificando...</>
                       : <><CheckCircle2 size={18} /> Verificar pago</>}
@@ -212,6 +186,22 @@ export default function PagoInfraccion({
               </div>
             )}
           </div>
+        </div>
+      )}
+      {modalAbiertaAntes && !pagado && (
+        <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+              <CheckCircle2 size={16} className="text-amber-600" strokeWidth={1.5} />
+            </div>
+            <p className="text-sm text-amber-800">¿Ya realizaste el pago? Verifica el estatus aquí.</p>
+          </div>
+          <button onClick={verificarPago} disabled={loading}
+            className="h-10 px-5 rounded-lg bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium flex items-center gap-2 shrink-0 active:scale-[0.99] transition-colors"
+          >
+            {loading ? <><Loader2 size={16} className="animate-spin" /> Verificando...</>
+            : <><CheckCircle2 size={16} /> Verificar pago</>}
+          </button>
         </div>
       )}
     </div>

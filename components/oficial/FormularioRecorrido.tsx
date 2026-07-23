@@ -57,8 +57,9 @@ interface PrefillDespacho {
   descripcion?: string
   calle?: string
   colonia?: string
-  tipoIncidente?: string
-  prioridad?: string
+  tipoEmergenciaId?: number
+  tipoIncidenteId?: number
+  prioridadId?: number
 }
 
 export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, embedded = false }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho, embedded?: boolean }) {
@@ -68,8 +69,9 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
   const step = store.step
   const setStep = store.setStep
   const isAnonimo = store.isAnonimo
-  const tipoIncidente = store.tipoIncidente
   const tipoEmergenciaId = store.tipoEmergenciaId
+  const subtipoEmergenciaId = store.subtipoEmergenciaId
+  const tipoIncidenteId = store.tipoIncidenteId
   const prioridadId = store.prioridadId
   const descripcion = store.descripcion
   const contenidoReporte = store.contenidoReporte
@@ -91,12 +93,40 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
   const currentLocDisplay = store.calle ? `${store.calle}${store.colonia ? `, ${store.colonia}` : ''}` : ''
   const $ = store.setField
 
+  // Clasificación jerárquica (Tipo -> Subtipo -> Incidente), igual que 911/whatsapp/rondín
+  const subTiposFiltrados = tipoEmergenciaId
+    ? catalogos.subtipos.filter((s: any) => s.tipoEmergenciaId === Number(tipoEmergenciaId))
+    : []
+  const incidentesFiltrados = subtipoEmergenciaId
+    ? catalogos.incidentes.filter((i: any) => i.subtipoEmergenciaId === Number(subtipoEmergenciaId))
+    : []
+  const prioridadAutocompletada = tipoIncidenteId
+    ? catalogos.incidentes.find((i: any) => i.id === Number(tipoIncidenteId))?.prioridadCatalogo
+    : null
+  const esImprocedente = tipoEmergenciaId
+    ? catalogos.emergencias.find((c: any) => c.id === Number(tipoEmergenciaId))?.codigo === '7'
+    : false
+  const nombreTipoEmergencia = tipoEmergenciaId ? catalogos.emergencias.find((c: any) => c.id === Number(tipoEmergenciaId))?.nombre ?? '' : ''
+  const nombreTipoIncidente = tipoIncidenteId ? catalogos.incidentes.find((c: any) => c.id === Number(tipoIncidenteId))?.nombre ?? '' : ''
+  const nombrePrioridad = prioridadId ? catalogos.prioridades.find((c: any) => c.id === Number(prioridadId))?.nombre ?? '' : ''
+
+  const resolverPrioridadIdPorCatalogo = (incidenteIdSel: string): string => {
+    const inc = catalogos.incidentes.find((i: any) => i.id === Number(incidenteIdSel))
+    const match = inc ? catalogos.prioridades.find((p: any) => p.nombre?.toUpperCase() === inc.prioridadCatalogo) : null
+    return match ? String(match.id) : ''
+  }
 
   console.log(store)
+
+  const primerIncidente = catalogos.incidentes[0]
+  const primerSubtipo = primerIncidente
+    ? catalogos.subtipos.find((s: any) => s.id === primerIncidente.subtipoEmergenciaId)
+    : catalogos.subtipos[0]
   const defaults = {
-    dIncidente: catalogos.incidentes[0]?.nombre ?? '',
-    dEmergencia: catalogos.emergencias[0]?.nombre ?? '',
-    dPrioridad: catalogos.prioridades[0]?.nombre ?? '',
+    dTipoEmergenciaId: String(primerSubtipo?.tipoEmergenciaId ?? catalogos.emergencias[0]?.id ?? ''),
+    dSubtipoEmergenciaId: String(primerSubtipo?.id ?? ''),
+    dTipoIncidenteId: String(primerIncidente?.id ?? ''),
+    dPrioridadId: primerIncidente ? resolverPrioridadIdPorCatalogo(String(primerIncidente.id)) : '',
     dDescripcion: 'Reporte generado por oficial en campo — sin descripción detallada.',
     dContenido: 'Sin contenido adicional registrado en este reporte.',
     dDatosPN: 'Sin datos positivos o negativos registrados.',
@@ -106,10 +136,20 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
   }
 
   useEffect(() => {
+    // Si viene un incidente prellenado (cierre de despacho), derivar SU subtipo real —
+    // nunca el subtipo del default, o la cascada no encontraría el incidente en la lista filtrada.
+    const incidentePrefill = prefill?.tipoIncidenteId != null
+      ? catalogos.incidentes.find((i: any) => i.id === prefill.tipoIncidenteId)
+      : null
+    const subtipoPrefillId = incidentePrefill
+      ? String(incidentePrefill.subtipoEmergenciaId ?? '')
+      : defaults.dSubtipoEmergenciaId
+
     store.reset()
-    store.setField('tipoIncidente', prefill?.tipoIncidente ?? defaults.dIncidente)
-    store.setField('tipoEmergenciaId', defaults.dEmergencia)
-    store.setField('prioridadId', prefill?.prioridad ?? defaults.dPrioridad)
+    store.setField('tipoEmergenciaId', prefill?.tipoEmergenciaId != null ? String(prefill.tipoEmergenciaId) : defaults.dTipoEmergenciaId)
+    store.setField('subtipoEmergenciaId', subtipoPrefillId)
+    store.setField('tipoIncidenteId', prefill?.tipoIncidenteId != null ? String(prefill.tipoIncidenteId) : defaults.dTipoIncidenteId)
+    store.setField('prioridadId', prefill?.prioridadId != null ? String(prefill.prioridadId) : defaults.dPrioridadId)
     store.setField('descripcion', prefill?.descripcion ?? defaults.dDescripcion)
     store.setField('contenidoReporte', defaults.dContenido)
     store.setField('datosPositivosNegativos', defaults.dDatosPN)
@@ -123,9 +163,10 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
     const onPageShow = (e: PageTransitionEvent) => {
       if (e.persisted) {
         store.reset()
-        store.setField('tipoIncidente', defaults.dIncidente)
-        store.setField('tipoEmergenciaId', defaults.dEmergencia)
-        store.setField('prioridadId', defaults.dPrioridad)
+        store.setField('tipoEmergenciaId', defaults.dTipoEmergenciaId)
+        store.setField('subtipoEmergenciaId', defaults.dSubtipoEmergenciaId)
+        store.setField('tipoIncidenteId', defaults.dTipoIncidenteId)
+        store.setField('prioridadId', defaults.dPrioridadId)
         store.setField('descripcion', defaults.dDescripcion)
         store.setField('contenidoReporte', defaults.dContenido)
         store.setField('datosPositivosNegativos', defaults.dDatosPN)
@@ -145,9 +186,9 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
     fd.set('ofi_folio_cad', st.folioCad)
     fd.set('ofi_nombre_reportante', st.isAnonimo ? '' : st.nombreReportante)
     fd.set('ofi_anonimo', String(st.isAnonimo))
-    fd.set('ofi_tipo_incidente', st.tipoIncidente)
-    fd.set('ofi_tipo_emergencia', st.tipoEmergenciaId)
-    fd.set('ofi_prioridad', st.prioridadId)
+    fd.set('ofi_tipo_emergencia_id', st.tipoEmergenciaId)
+    fd.set('ofi_tipo_incidente_id', st.tipoIncidenteId)
+    fd.set('ofi_prioridad_id', st.prioridadId)
     fd.set('ofi_descripcion', st.descripcion)
     fd.set('ofi_contenido_reporte', st.contenidoReporte)
     fd.set('ofi_datos_pn', st.datosPositivosNegativos)
@@ -327,19 +368,39 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
             <section className="of-card">
               <h2 className="of-section-title">Detalles del Incidente</h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
-                <SentinelField label="Tipo de Incidente" name="ofi_tipo_incidente" as="select" required value={tipoIncidente} onChange={(e: any) => $('tipoIncidente', e.target.value)}>
-                  {catalogos.incidentes.map((c: any) => (
-                    <option key={c.id} value={c.nombre}>{c.nombre}</option>
-                  ))}
-                </SentinelField>
-                <SentinelField label="Tipo de Emergencia" name="ofi_tipo_emergencia" as="select" required value={tipoEmergenciaId} onChange={(e: any) => $('tipoEmergenciaId', e.target.value)}>
+                <SentinelField label="Tipo de Emergencia" name="ofi_tipo_emergencia_id" as="select" required
+                  value={tipoEmergenciaId}
+                  onChange={(e: any) => { $('tipoEmergenciaId', e.target.value); $('subtipoEmergenciaId', ''); $('tipoIncidenteId', '') }}>
                   {catalogos.emergencias.map((c: any) => (
-                    <option key={c.id} value={c.nombre}>{c.nombre}</option>
+                    <option key={c.id} value={c.id}>{c.codigo} - {c.nombre}</option>
                   ))}
                 </SentinelField>
-                <SentinelField label="Prioridad" name="ofi_prioridad" as="select" required value={prioridadId} onChange={(e: any) => $('prioridadId', e.target.value)}>
+                <SentinelField label="Subtipo" name="ofi_subtipo_emergencia_id" as="select" required
+                  value={subtipoEmergenciaId} disabled={!tipoEmergenciaId}
+                  onChange={(e: any) => { $('subtipoEmergenciaId', e.target.value); $('tipoIncidenteId', '') }}>
+                  <option value="">{tipoEmergenciaId ? 'Seleccionar subtipo...' : 'Primero seleccione tipo'}</option>
+                  {subTiposFiltrados.map((item: any) => (
+                    <option key={item.id} value={item.id}>{item.codigo} - {item.nombre}</option>
+                  ))}
+                </SentinelField>
+                <SentinelField label="Incidente Específico" name="ofi_tipo_incidente_id" as="select" required
+                  value={tipoIncidenteId} disabled={!subtipoEmergenciaId}
+                  onChange={(e: any) => { $('tipoIncidenteId', e.target.value); $('prioridadId', resolverPrioridadIdPorCatalogo(e.target.value)) }}>
+                  <option value="">{subtipoEmergenciaId ? 'Seleccionar incidente...' : 'Primero seleccione subtipo'}</option>
+                  {incidentesFiltrados.map((item: any) => (
+                    <option key={item.id} value={item.id}>{item.codigoCatalogo && `${item.codigoCatalogo} - `}{item.nombre}</option>
+                  ))}
+                </SentinelField>
+                {esImprocedente && (
+                  <div style={{ gridColumn: 'span 3', fontSize: 11, color: '#b45309' }}>
+                    Tipo Improcedentes según el Catálogo Nacional.
+                  </div>
+                )}
+                <SentinelField label="Prioridad (autocompletada)" value={prioridadAutocompletada || '—'} disabled />
+                <SentinelField label="Ajuste manual de prioridad" name="ofi_prioridad_id" as="select" value={prioridadId} onChange={(e: any) => $('prioridadId', e.target.value)}>
+                  <option value="">Automática (por catálogo)</option>
                   {catalogos.prioridades.map((c: any) => (
-                    <option key={c.id} value={c.nombre}>{c.nombre}</option>
+                    <option key={c.id} value={c.id}>{c.nombre}</option>
                   ))}
                 </SentinelField>
                 <SentinelField name="ofi_descripcion" label="Incidente (Descripción)" as="textarea" fullWidth placeholder="Descripción breve..." value={descripcion} onChange={(e: any) => $('descripcion', e.target.value)} />
@@ -446,10 +507,6 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                     <SelectorDestinoLegal value={autoridadRecibe} onChange={(v) => $('autoridadRecibe', v)} />
 
                   </>
-                )}
-
-                {tipoIncidente === "1" && (
-                  <SentinelField label="Monto de lo Robado (Solo números)" name="ofi_monto_robo" type="number" placeholder="0" value={montoRobo} onChange={(e: any) => $('montoRobo', e.target.value)} />
                 )}
               </div>
             </section>
@@ -813,9 +870,9 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 <div className="of-resumen-block">
                   <span className="of-resumen-label">Incidente</span>
                   <div className="of-resumen-grid">
-                    <div><span>Tipo:</span> {tipoIncidente}</div>
-                    <div><span>Emergencia:</span> {tipoEmergenciaId}</div>
-                    <div><span>Prioridad:</span> {prioridadId}</div>
+                    <div><span>Tipo:</span> {nombreTipoIncidente}</div>
+                    <div><span>Emergencia:</span> {nombreTipoEmergencia}</div>
+                    <div><span>Prioridad:</span> {nombrePrioridad}</div>
                     <div style={{ gridColumn: '1 / -1' }}><span>Descripción:</span> {descripcion}</div>
                     <div style={{ gridColumn: '1 / -1' }}><span>Contenido:</span> {contenidoReporte}</div>
                   </div>

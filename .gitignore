@@ -45,7 +45,6 @@ doc/tutorial_prevencion_delito.html
 KnowledgeVault/
 Alexandria/
 /.youmindag/
-.youmindag/
 .vault.json
 .mcp.json
 /opencode.json
@@ -61,3 +60,4 @@ opencode.json
 # YouMindAG — generated knowledge graph
 .graphify/
 graphify-visual/
+.youmindag/

@@ -142,7 +142,7 @@ export function rowToInfraccionDetalle(row: Record<string, unknown>): ViaInfracc
       color:                        str(row.color) ?? '',
     },
     garantia: {
-      garantia_retenida:            str(row.garantia_entregada) ?? '',
+      garantia_retenida:            str(row.tipo_garantia) ?? '',
     },
     ubicacion: {
       latitud:                      str(row.latitud) ?? '',

@@ -17,6 +17,7 @@ export interface LiberacionRow {
   correo_infractor: string;
   nombre_infractor: string;
   estatusDependencia: string;
+  tipoGarantia: string;
   no_carpeta_investigacion: string;
   url_orden_salida_liberaciones?: string;
 }

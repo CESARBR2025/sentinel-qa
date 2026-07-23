@@ -105,6 +105,15 @@ export async function PATCH(request: Request) {
       body: JSON.stringify(payloadSA7),
     });
 
+    if (!sa7Res.ok) {
+      const detalle = await sa7Res.text().catch(() => "");
+      console.error("SA7 respondió con error:", sa7Res.status, detalle);
+      return NextResponse.json(
+        { error: "El servicio de pagos no pudo generar la orden" },
+        { status: 502 },
+      );
+    }
+
     const result = {
       ordenPagoId: sa7Res.headers.get("x-orden-pago-id") || null,
       estatus: sa7Res.headers.get("x-estatus") || null,
@@ -115,6 +124,14 @@ export async function PATCH(request: Request) {
       totalPesos: Number(sa7Res.headers.get("x-total-pesos") || 0),
       totalUmas: Number(sa7Res.headers.get("x-total-umas") || 0),
     };
+
+    if (!result.ordenPagoId || !result.estatus) {
+      console.error("SA7 no devolvió orden_pago_id/estatus en headers:", result);
+      return NextResponse.json(
+        { error: "El servicio de pagos no devolvió los datos de la orden" },
+        { status: 502 },
+      );
+    }
 
     await SA7Repository.insertarOrdenPago({
       infraccionId: id,

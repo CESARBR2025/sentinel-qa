@@ -87,18 +87,16 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
     },
   },
   agente_911: {
-    labelModulo: '911 (Captura Ciudadano/WhatsApp)',
-    secciones: ['911_ciudadano', '911_whatsapp'] satisfies readonly (typeof SECCIONES_911)[number][],
+    labelModulo: '911 (Captura Ciudadano)',
+    secciones: ['911_ciudadano'] satisfies readonly (typeof SECCIONES_911)[number][],
     seccionLabels: {
       '911_ciudadano': 'Línea Ciudadana',
-      '911_whatsapp': 'WhatsApp',
     },
   },
   agente_despacho: {
-    labelModulo: '911 (Despacho y Rondín)',
-    secciones: ['911_rondin', '911_despacho'] satisfies readonly (typeof SECCIONES_911)[number][],
+    labelModulo: '911 (Despacho)',
+    secciones: ['911_despacho'] satisfies readonly (typeof SECCIONES_911)[number][],
     seccionLabels: {
-      '911_rondin': 'Rondín / Recorrido',
       '911_despacho': 'Despacho de Unidades',
     },
   },

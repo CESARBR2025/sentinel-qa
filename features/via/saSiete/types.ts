@@ -24,6 +24,7 @@ export interface OrdenPagoSA7 {
   requestPayload: any;
   createdAt: string;
   updatedAt: string;
+  vigente: boolean;
 }
 
 export interface GenerarOrdenPagoDTO {

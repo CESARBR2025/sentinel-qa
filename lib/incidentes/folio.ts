@@ -12,6 +12,6 @@ export async function generarFolioIncidente(): Promise<{ folio: string; consecut
     [año],
   )
   const consecutivo = result.rows[0].next
-  const folio = `SSPM/INC/${String(consecutivo).padStart(3, '0')}/${año}`
+  const folio = `SSPM/INC/${año}/${String(consecutivo).padStart(3, '0')}`
   return { folio, consecutivo }
 }

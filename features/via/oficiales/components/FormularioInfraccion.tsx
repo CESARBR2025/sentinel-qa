@@ -28,6 +28,7 @@ import { ProcesoModal } from '@/features/via/infracciones/components/steps/Proce
 import PasoCiudadanoConductor from '@/features/via/infracciones/components/steps/PasoCiudadanoConductor';
 import PasoUbicacionEvidencias from '@/features/via/infracciones/components/steps/PasoUbicacionEvidencias';
 import PasoConfirmacionPago from '@/features/via/infracciones/components/steps/PasoConfirmacionPago';
+import DictadoInicialInfraccion from '@/features/via/infracciones/components/DictadoInicialInfraccion';
 
 // ═══════════════════════════════════════════════════════════════════
 // IMPORTS - Zustand Store
@@ -37,31 +38,12 @@ import { ProcesoEstado, ViewArticulosLista } from '@/features/via/infracciones/t
 import { generarOrdenPago } from '@/features/via/saSiete/client';
 import { obtenerArticulosAction } from '@/features/via/legalidad/actions';
 import { eliminarInfraccionAction } from '@/features/via/infracciones/actions';
+import { inputBase, inputError } from '@/features/via/infracciones/components/ui/inputStyles';
 
 
 // ═══════════════════════════════════════════════════════════════════
 // TIPOS
 // ═══════════════════════════════════════════════════════════════════
-
-
-
-// ═══════════════════════════════════════════════════════════════════
-// CLASES TAILWIND - Reutilización de estilos
-// ═══════════════════════════════════════════════════════════════════
-const inputBase = `
-  w-full rounded-lg border border-slate-200 bg-white px-3 py-2
-  text-sm text-slate-900 placeholder:text-slate-400
-  focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15
-  transition-all duration-200
-  disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed
-`;
-
-const inputError = `
-  w-full rounded-lg border border-red-400 bg-red-50 px-3 py-2
-  text-sm text-slate-900 placeholder:text-slate-400
-  focus:border-red-500 focus:ring-2 focus:ring-red-500/15 focus:outline-none
-  transition-all duration-200
-`;
 
 
 
@@ -74,6 +56,7 @@ export default function FormularioInfraccion() {
     // ───────────────────────────────────────────────────────────────────
     const [mounted, setMounted] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
+    const [mostrarGateDictado, setMostrarGateDictado] = useState(true);
 
     const [success, setSuccess] = useState<string | null | boolean>(null);
     const [error, setError] = useState<string | null>(null);
@@ -201,6 +184,7 @@ export default function FormularioInfraccion() {
     const [infraccionCreada, setInfraccionCreada] = useState<{
         id: number;
         folio: string;
+        pin_acceso?: string;
     } | null>(null);
 
     const [ordenPago, setOrdenPago] = useState<{
@@ -350,6 +334,38 @@ export default function FormularioInfraccion() {
         }
     }, [loading, infraccionCreada, setLoading, setPagado, limpiarSesionLocal]);
 
+    /**
+     * Verifica pago consultando BD local (sin SA7). Ruta de pruebas.
+     */
+    const verificarPagoPruebas = useCallback(async () => {
+        if (loading) return;
+        if (!infraccionCreada?.id) {
+            console.warn('⚠️ No hay infracción creada aún');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await fetch(
+                `/api/via/pagos/verificar-pago-pruebas/${infraccionCreada.id}`,
+                { method: 'GET', cache: 'no-store' },
+            );
+            const data = await res.json();
+
+            if (data.pagado) {
+                setPagado(true);
+                limpiarSesionLocal();
+                return;
+            }
+
+            console.log('ℹ️ [PRUEBAS] Pago no detectado, estatus:', data.estatus);
+        } catch (error) {
+            console.error('❌ ERROR EN VERIFICAR PAGO (PRUEBAS):', error);
+        } finally {
+            setLoading(false);
+        }
+    }, [loading, infraccionCreada, setLoading, setPagado, limpiarSesionLocal]);
+
     // ═══════════════════════════════════════════════════════════════════
     // EFECTOS - Inicialización y sincronización
     // ═══════════════════════════════════════════════════════════════════
@@ -390,6 +406,11 @@ export default function FormularioInfraccion() {
     useEffect(() => {
         if (error || success) window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [error, success]);
+
+    // Si hay una sesión previa que retomar, se salta el gate de dictado inicial
+    useEffect(() => {
+        if (sessionToResume) setMostrarGateDictado(false);
+    }, [sessionToResume]);
 
     // Auto-limpiar mensaje de éxito después de 2.5 segundos
     useEffect(() => {
@@ -562,6 +583,7 @@ export default function FormularioInfraccion() {
                         setDeseaPagar={setDeseaPagar}
                         datos={datos}
                         verificarPago={verificarPago}
+                        verificarPagoPruebas={verificarPagoPruebas}
                         onFinalizarSinPago={handleFinalizarSinPago}
                         loading={loading}
                         ordenPago={ordenPago}
@@ -573,7 +595,7 @@ export default function FormularioInfraccion() {
         datos, loading, boolError, fieldError,
         articulos, cargandoArticulos,
         files, infraccionCreada, pagado, deseaPagar, setDeseaPagar,
-        verificarPago, ordenPago, handleFinalizarSinPago,
+        verificarPago, verificarPagoPruebas, ordenPago, handleFinalizarSinPago,
     ]);
 
     // ═══════════════════════════════════════════════════════════════════
@@ -623,6 +645,15 @@ export default function FormularioInfraccion() {
                 return true;
         }
     }, [datos]);
+
+    // ═══════════════════════════════════════════════════════════════════
+    // GATE DE DICTADO INICIAL - Aterriza en el primer paso que aún falte
+    // ═══════════════════════════════════════════════════════════════════
+    const irAPrimerPasoIncompleto = useCallback(() => {
+        const idx = stepIds.findIndex((id) => !validateStep(id));
+        setCurrentStep(idx === -1 ? 0 : idx);
+        setMostrarGateDictado(false);
+    }, [stepIds, validateStep, setCurrentStep]);
 
     // ═══════════════════════════════════════════════════════════════════
     // FUNCIONES HANDLER - Registro e Interacción
@@ -1170,6 +1201,13 @@ export default function FormularioInfraccion() {
             ) : (
 
             <>
+            {mostrarGateDictado ? (
+                <DictadoInicialInfraccion
+                    onOmitir={() => setMostrarGateDictado(false)}
+                    onListoParaContinuar={irAPrimerPasoIncompleto}
+                />
+            ) : (
+            <>
             {/* Stepper Header */}
             <div className="shrink-0 px-0 pb-3 space-y-2">
                 <div className="flex items-center justify-between gap-4">
@@ -1391,6 +1429,8 @@ export default function FormularioInfraccion() {
                         </button>
                     )}
                 </footer>
+            )}
+            </>
             )}
             </>
             )}

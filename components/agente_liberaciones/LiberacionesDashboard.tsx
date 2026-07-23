@@ -3,9 +3,10 @@
 import { BotonVerDetalle } from '@/features/compartido/components/ButtonVerDetalles'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Clock, RefreshCw, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X } from 'lucide-react'
+import { Clock, RefreshCw, CheckCircle2, AlertCircle, Search, User, ArrowUpDown, ArrowUp, ArrowDown, Download, Calendar, X, FileSearch, Loader2, SlidersHorizontal } from 'lucide-react'
 import CapturarInfractorSection from '@/features/liberaciones/components/CapturarInfractorSection'
 import RevisionDocumentosSection from '@/features/liberaciones/components/RevisionDocumentosSection'
+import { buscarInfraccionPorFolioAction } from '@/lib/agente_infracciones/actions'
 
 const AVATAR_COLORS = [
     { bg: '#eff1f3', text: '#1f355a' },
@@ -76,7 +77,14 @@ const TIPO_LIBERACION_OPTS = [
     { key: 'LIBERADA_POR_ACCIDENTE', label: 'Por accidente' },
 ]
 
-const SORTABLE_KEYS = new Set(['folio', 'nombre_infractor', 'correo_infractor', 'placa'])
+function formatFecha(value: string) {
+    if (!value) return '—'
+    const fecha = new Date(value)
+    if (Number.isNaN(fecha.getTime())) return '—'
+    return fecha.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+const SORTABLE_KEYS = new Set(['folio', 'nombre_infractor', 'correo_infractor', 'placa', 'created_at'])
 
 export default function LiberacionesDashboard({
     data,
@@ -97,10 +105,32 @@ export default function LiberacionesDashboard({
     const [capturarInfractorId, setCapturarInfractorId] = useState<string | null>(null)
     const [revisionModalId, setRevisionModalId] = useState<string | null>(null)
 
+    const [folioGlobal, setFolioGlobal] = useState('')
+    const [buscandoFolio, setBuscandoFolio] = useState(false)
+    const [errorFolio, setErrorFolio] = useState('')
+
     function handleFiltroChange(key: EstatusLiberaciones) {
         setFiltro(key)
         setPagina(1)
         setTipoLiberacion('')
+    }
+
+    async function handleBuscarFolioGlobal() {
+        if (!folioGlobal.trim() || buscandoFolio) return
+        setBuscandoFolio(true)
+        setErrorFolio('')
+        try {
+            const result = await buscarInfraccionPorFolioAction(folioGlobal)
+            if (!result.success || !result.id) {
+                setErrorFolio(result.error || 'Folio no encontrado')
+                return
+            }
+            router.push(`/agente_liberaciones/revision-documental/${result.id}`)
+        } catch {
+            setErrorFolio('Error al buscar el folio')
+        } finally {
+            setBuscandoFolio(false)
+        }
     }
 
     const estadisticas = useMemo(() => {
@@ -142,7 +172,10 @@ export default function LiberacionesDashboard({
     const registrosVisibles = busqueda
         ? registrosFiltrados.filter(row => {
             const folio = String(row.folio ?? '').toLowerCase()
-            return folio.includes(busquedaLower)
+            const placa = String(row.placa ?? '').toLowerCase()
+            const nombre = String(row.nombre_infractor ?? '').toLowerCase()
+            const correo = String(row.correo_infractor ?? '').toLowerCase()
+            return folio.includes(busquedaLower) || placa.includes(busquedaLower) || nombre.includes(busquedaLower) || correo.includes(busquedaLower)
         })
         : registrosFiltrados
 
@@ -192,12 +225,25 @@ export default function LiberacionesDashboard({
         setPagina(1)
     }
 
+    const filtrosActivos = Boolean(busqueda || fechaInicio || fechaFin || tipoLiberacion)
+
+    function limpiarFiltros() {
+        setBusqueda('')
+        setFechaInicio('')
+        setFechaFin('')
+        setTipoLiberacion('')
+        setPagina(1)
+    }
+
     function exportarCSV() {
         const headers = visibleColumns.filter(c => c.key !== 'acciones').map(c => c.label)
         const rows = registrosOrdenados.map(row => {
             return visibleColumns.filter(c => c.key !== 'acciones').map(c => {
                 if (c.key === 'estatus') {
                     return getBadge(row.estatusDependencia ?? row.estatusInfraccion).label
+                }
+                if (c.key === 'created_at') {
+                    return formatFecha(row.created_at)
                 }
                 return row[c.key] ?? ''
             })
@@ -214,9 +260,9 @@ export default function LiberacionesDashboard({
     }
 
     return (
-        <>
+        <div className="space-y-8">
             {loading ? (
-                <div className="rounded-xl border border-slate-200 bg-white shadow-card overflow-hidden animate-pulse">
+                <div className="rounded-lg border border-slate-200 bg-white shadow-card overflow-hidden animate-pulse">
                     <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50">
                         <div className="h-5 w-48 rounded bg-slate-200" />
                     </div>
@@ -226,14 +272,81 @@ export default function LiberacionesDashboard({
                                 <div className="h-3.5 w-16 rounded bg-slate-200" />
                                 <div className="h-3.5 w-32 rounded bg-slate-200" />
                                 <div className="h-3.5 w-28 rounded bg-slate-200" />
-                                <div className="h-5 w-14 rounded-full bg-slate-200" />
+                                <div className="h-5 w-14 rounded bg-slate-200" />
                                 <div className="h-7 w-20 rounded-md bg-slate-200 ml-auto" />
                             </div>
                         ))}
                     </div>
                 </div>
             ) : (
-                <div className="rounded-xl border overflow-hidden bg-white border-slate-200 shadow-card">
+                <>
+                    {/* ═══ TITLE ═══ */}
+                    <div style={{ borderLeft: '4px solid #1f355a', paddingLeft: '20px' }}>
+                        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '0.4em', color: '#64748B', fontWeight: 700 }}>
+                            SSPM · LIBERACIONES
+                        </span>
+                        <h1 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '48px', fontWeight: 800, margin: '8px 0 0', lineHeight: 1, textTransform: 'uppercase' }}>
+                            GESTIÓN DE <span style={{ color: '#1f355a' }}>LIBERACIONES</span>
+                        </h1>
+                        <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', color: '#64748B', marginTop: '12px', letterSpacing: '0.05em' }}>
+                            Consulta y gestiona las solicitudes de liberación de vehículos en el sistema.
+                        </p>
+                    </div>
+
+                    {/* ═══ BÚSQUEDA GLOBAL ═══ */}
+                    <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
+                        <div className="px-5 py-3.5 bg-primary-muted">
+                            <div className="flex items-center justify-between gap-3 flex-wrap">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-primary">
+                                        <FileSearch size={13} strokeWidth={2.5} className="text-white" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-dark" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                            Buscar cualquier folio
+                                        </p>
+                                        <p className="text-[11px] text-primary/70">
+                                            Consulta el estado global de una solicitud, sin importar su estatus.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        value={folioGlobal}
+                                        onChange={e => { setFolioGlobal(e.target.value); setErrorFolio('') }}
+                                        onKeyDown={e => { if (e.key === 'Enter') handleBuscarFolioGlobal() }}
+                                        placeholder="SSPM/INF/20260417/XXXXXX"
+                                        disabled={buscandoFolio}
+                                        className="w-[220px] rounded-md border border-primary/20 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 disabled:opacity-60"
+                                        style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                    />
+                                    <button
+                                        onClick={handleBuscarFolioGlobal}
+                                        disabled={buscandoFolio || !folioGlobal.trim()}
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-semibold text-white bg-primary hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {buscandoFolio ? (
+                                            <Loader2 size={13} className="animate-spin" strokeWidth={2.5} />
+                                        ) : (
+                                            <Search size={13} strokeWidth={2.5} />
+                                        )}
+                                        Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            {errorFolio && (
+                                <p className="mt-2 text-[11px] font-medium text-red-600 flex items-center gap-1.5">
+                                    <AlertCircle size={12} strokeWidth={2} />
+                                    {errorFolio}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* ═══ TABLA PRINCIPAL ═══ */}
+                    <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
+
                     {/* ─── Segmented control + CSV ─── */}
                     <div className="px-5 py-3 border-b flex items-center justify-between border-slate-100 bg-slate-50">
                         <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-200/60">
@@ -263,9 +376,18 @@ export default function LiberacionesDashboard({
                             })}
                         </div>
                         <div className="flex items-center gap-3">
+                            {filtrosActivos && (
+                                <button
+                                    onClick={limpiarFiltros}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100 border border-transparent transition-colors"
+                                >
+                                    <X size={12} strokeWidth={2} />
+                                    Limpiar filtros
+                                </button>
+                            )}
                             <button
                                 onClick={exportarCSV}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-cyan-700 bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 transition-colors"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-primary bg-primary-muted border border-primary/20 hover:bg-primary-muted transition-colors"
                             >
                                 <Download size={12} strokeWidth={1.5} />
                                 CSV
@@ -276,18 +398,22 @@ export default function LiberacionesDashboard({
                         </div>
                     </div>
 
-                    {/* ─── Sub-segment: tipo liberación ─── */}
+                    {/* ─── Sub-filtro: tipo liberación ─── */}
                     {filtro === 'LIBERADA_POR_INFRACCION' && (
-                        <div className="px-5 py-2 border-b border-slate-100 bg-white">
-                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-green-100/60 w-fit">
+                        <div className="px-5 py-2 border-b border-slate-100 bg-white flex items-center gap-2 flex-wrap">
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                <SlidersHorizontal size={11} strokeWidth={2} />
+                                Tipo
+                            </span>
+                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-primary-muted w-fit">
                                 {TIPO_LIBERACION_OPTS.map(opt => (
                                     <button
                                         key={opt.key}
                                         onClick={() => { setTipoLiberacion(opt.key); setPagina(1) }}
                                         className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
                                             tipoLiberacion === opt.key
-                                                ? 'bg-white text-green-800 shadow-sm'
-                                                : 'text-green-600 hover:text-green-700'
+                                                ? 'bg-white text-primary-dark shadow-sm'
+                                                : 'text-primary/70 hover:text-primary-dark'
                                         }`}
                                         style={{ fontFamily: "'JetBrains Mono',monospace" }}
                                     >
@@ -306,13 +432,13 @@ export default function LiberacionesDashboard({
                                 type="text"
                                 value={busqueda}
                                 onChange={e => { setBusqueda(e.target.value); setPagina(1) }}
-                                placeholder="Buscar por folio..."
+                                placeholder="Buscar por folio, placa, nombre o correo..."
                                 className="w-full border-none bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                             />
                             {busqueda && (
                                 <button
                                     onClick={() => { setBusqueda(''); setPagina(1) }}
-                                    className="text-[10px] font-medium uppercase tracking-wider text-cyan-700 hover:text-cyan-800 transition-colors shrink-0"
+                                    className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
                                 >
                                     Limpiar
                                 </button>
@@ -324,19 +450,19 @@ export default function LiberacionesDashboard({
                                 type="date"
                                 value={fechaInicio}
                                 onChange={e => { setFechaInicio(e.target.value); setPagina(1) }}
-                                className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/10"
+                                className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                             />
                             <span className="text-xs text-slate-300">—</span>
                             <input
                                 type="date"
                                 value={fechaFin}
                                 onChange={e => { setFechaFin(e.target.value); setPagina(1) }}
-                                className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/10"
+                                className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                             />
                             {(fechaInicio || fechaFin) && (
                                 <button
                                     onClick={() => { setFechaInicio(''); setFechaFin(''); setPagina(1) }}
-                                    className="text-[10px] font-medium uppercase tracking-wider text-cyan-700 hover:text-cyan-800 transition-colors shrink-0"
+                                    className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
                                 >
                                     Limpiar
                                 </button>
@@ -352,7 +478,7 @@ export default function LiberacionesDashboard({
                                     {visibleColumns.map(column => (
                                         <th
                                             key={column.key}
-                                            className={`px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b border-slate-100`}
+                                            className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b-2 border-slate-100`}
                                             style={{ fontFamily: "'JetBrains Mono',monospace" }}
                                             onClick={SORTABLE_KEYS.has(column.key) ? () => handleSort(column.key) : undefined}
                                         >
@@ -377,15 +503,27 @@ export default function LiberacionesDashboard({
                                             <div className="flex flex-col items-center gap-2">
                                                 <AlertCircle size={22} strokeWidth={1.5} className="text-slate-300" />
                                                 <p className="text-sm font-medium text-slate-400">No hay registros</p>
-                                                <p className="text-xs text-slate-300">No existen solicitudes con este estatus.</p>
+                                                <p className="text-xs text-slate-300">
+                                                    {filtrosActivos
+                                                        ? 'Ningún registro coincide con los filtros aplicados.'
+                                                        : 'No existen solicitudes con este estatus.'}
+                                                </p>
+                                                {filtrosActivos && (
+                                                    <button
+                                                        onClick={limpiarFiltros}
+                                                        className="mt-1 text-[11px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors"
+                                                    >
+                                                        Limpiar filtros
+                                                    </button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>
                                 ) : (
-                                    registrosPaginados.map((row) => (
+                                    registrosPaginados.map((row, index) => (
                                         <tr
                                             key={row.id}
-                                            className="transition-colors hover:bg-slate-50 border-b border-slate-100"
+                                            className={`${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100/70 border-b border-slate-100`}
                                         >
                                             {visibleColumns.map(column => {
                                                 if (column.key === 'acciones') {
@@ -399,7 +537,7 @@ export default function LiberacionesDashboard({
                                                                 {estatusDep === 'VEHICULO_EN_CORRALON' && (
                                                                     <button
                                                                         onClick={() => setCapturarInfractorId(row.id)}
-                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 active:scale-[0.99] transition-colors duration-150"
+                                                                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 active:scale-[0.99] transition-colors duration-150"
                                                                     >
                                                                         <User size={11} strokeWidth={2.5} />
                                                                         Capturar datos
@@ -408,7 +546,7 @@ export default function LiberacionesDashboard({
                                                                 {estatusDep === 'MESA_DE_CONTROL_REVISION' && (
                                                                     <button
                                                                         onClick={() => setRevisionModalId(row.id)}
-                                                                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
+                                                                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
                                                                     >
                                                                         <Search size={11} strokeWidth={2.5} />
                                                                         Revisar documentos
@@ -424,12 +562,20 @@ export default function LiberacionesDashboard({
                                                     return (
                                                         <td key={column.key} className="px-4 py-2.5">
                                                             <span
-                                                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
+                                                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-semibold"
                                                                 style={{ background: badge.bg, color: badge.text, fontFamily: "'JetBrains Mono',monospace" }}
                                                             >
-                                                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: badge.dot }} />
+                                                                <span className="w-1.5 h-1.5 rounded-sm" style={{ background: badge.dot }} />
                                                                 {badge.label}
                                                             </span>
+                                                        </td>
+                                                    )
+                                                }
+
+                                                if (column.key === 'created_at') {
+                                                    return (
+                                                        <td key={column.key} className="px-4 py-2.5 text-xs text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                                            {formatFecha(row.created_at)}
                                                         </td>
                                                     )
                                                 }
@@ -456,7 +602,7 @@ export default function LiberacionesDashboard({
                                                 }
 
                                                 return (
-                                                    <td key={column.key} className="px-4 py-2.5 font-medium text-slate-900">
+                                                    <td key={column.key} className="px-4 py-2.5 font-medium text-slate-700">
                                                         {row[column.key] ?? '—'}
                                                     </td>
                                                 )
@@ -499,7 +645,7 @@ export default function LiberacionesDashboard({
                                             <button
                                                 key={p}
                                                 onClick={() => setPagina(p)}
-                                                className={`w-7 h-7 text-xs font-medium rounded-md transition-colors ${p === paginaSegura ? 'bg-cyan-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                                                className={`w-7 h-7 text-xs font-medium rounded-md transition-colors ${p === paginaSegura ? 'bg-primary-dark text-white' : 'text-slate-600 hover:bg-slate-100'}`}
                                             >
                                                 {p}
                                             </button>
@@ -517,6 +663,7 @@ export default function LiberacionesDashboard({
                         </div>
                     )}
                 </div>
+                </>
             )}
 
             {/* ─── Revisión Documentos Modal ─── */}
@@ -544,7 +691,7 @@ export default function LiberacionesDashboard({
                     onClick={(e) => { if (e.target === e.currentTarget) setCapturarInfractorId(null) }}
                 >
                     <div className="w-full max-w-lg">
-                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-200 bg-orange-50 rounded-t-xl">
+                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-200 bg-orange-50 rounded-t-lg">
                             <div className="flex items-center gap-2.5">
                                 <div className="w-6 h-6 rounded-md flex items-center justify-center bg-orange-500">
                                     <User size={12} strokeWidth={2.5} className="text-white" />
@@ -553,12 +700,12 @@ export default function LiberacionesDashboard({
                             </div>
                             <button
                                 onClick={() => setCapturarInfractorId(null)}
-                                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors bg-slate-100 text-slate-500 hover:text-slate-600"
+                                className="w-7 h-7 rounded-md flex items-center justify-center transition-colors bg-slate-100 text-slate-500 hover:text-slate-600"
                             >
                                 <X size={14} strokeWidth={2.5} />
                             </button>
                         </div>
-                        <div className="p-5 bg-white border-x border-b border-slate-200 rounded-b-xl">
+                        <div className="p-5 bg-white border-x border-b border-slate-200 rounded-b-lg">
                             <CapturarInfractorSection
                                 infraccionId={capturarInfractorId}
                                 onSuccess={() => { setCapturarInfractorId(null); router.refresh() }}
@@ -567,6 +714,6 @@ export default function LiberacionesDashboard({
                     </div>
                 </div>
             )}
-        </>
+        </div>
     )
 }

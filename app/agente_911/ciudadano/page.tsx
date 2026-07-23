@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getCatalogos } from "@/lib/911/service";
+import { getDespachadores } from "@/lib/911/service";
 import { DashboardHeader } from "@/components/partials/Header";
 import { DashboardFooter } from "@/components/partials/Footer";
 import Formulario911 from "./Formulario911";
@@ -31,6 +32,7 @@ export default async function Ciudadano911Page() {
   };
 
     const catalogos = await getCatalogos();
+    const despachadores = await getDespachadores();
 
   return (
     <main
@@ -102,12 +104,8 @@ export default async function Ciudadano911Page() {
           {/* AQUÍ VA EL FORMULARIO DE TU AMIGO */}
           <Formulario911 
             user={user} 
-            catalogos={{
-              emergencias: catalogos.emergencias,
-              incidentes: catalogos.incidentes,
-              prioridades: catalogos.prioridades,
-              canalizaciones: catalogos.canalizaciones
-            }}
+            catalogos={catalogos}
+            despachadores={despachadores}
           />
         </div>
 

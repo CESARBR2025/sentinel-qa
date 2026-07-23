@@ -4,11 +4,21 @@ import { useEffect, useState } from 'react'
 import { useDespacho }  from '@/hooks/useDespacho'
 import { usePolling }   from '@/hooks/usePolling'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
-import { MapPin, Clock, Phone, MessageSquare, AlertTriangle, Radio, RefreshCw, ChevronDown, ChevronUp, Shield, CheckCircle2 } from 'lucide-react'
+import { MapPin, Clock, Phone, MessageSquare, AlertTriangle, Radio, RefreshCw, ChevronDown, ChevronUp, Shield, CheckCircle2, LogOut, Flag } from 'lucide-react'
 import Link  from 'next/link'
 import React from 'react'
 
 const INTERVALO_MS = 20_000
+
+// SLA por prioridad (minutos) — valores genéricos iniciales, ajustables con operación.
+const SLA_MINUTOS: Record<string, number> = { ALTA: 10, MEDIA: 20, BAJA: 40 }
+
+function slaVencido(fechaISO: string | null, prioridad: string | null): boolean {
+  if (!fechaISO) return false
+  const umbral = SLA_MINUTOS[(prioridad ?? '').toUpperCase()] ?? SLA_MINUTOS.MEDIA
+  const minutosTranscurridos = (Date.now() - new Date(fechaISO).getTime()) / 60_000
+  return minutosTranscurridos > umbral
+}
 
 type Tab = 'pendientes' | 'en_despacho' | 'atendidos'
 
@@ -18,7 +28,7 @@ interface IncRow {
   descripcion: string | null; tipoIncidente: string | null
   prioridad: string | null; capturadoPor: string | null
   despachoId: string | null; fechaHoraDespacho: string | null
-  unidades: { placa: string | null; esRefuerzo?: boolean }[]
+  unidades: { id?: string; placa: string | null; esRefuerzo?: boolean; horaSalida?: string | null; horaLlegada?: string | null }[]
   elementos: { nombre: string | null; nomina: string | null; esPrioritario?: boolean; esRefuerzo?: boolean }[]
   accionesRealizadas?: string | null
   hayDetencion?: boolean | null
@@ -132,8 +142,19 @@ export function TablonDespacho() {
                     </span>
                   )}
                   {inc.prioridad && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
+                    <span style={{
+                      fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700,
+                      padding: '2px 8px', borderRadius: 2,
+                      background: inc.prioridad.toUpperCase() === 'ALTA' ? '#fef2f2' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#fffbeb' : '#f8fafc',
+                      color: inc.prioridad.toUpperCase() === 'ALTA' ? '#dc2626' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#b45309' : '#64748b',
+                      border: `1px solid ${inc.prioridad.toUpperCase() === 'ALTA' ? '#fecaca' : inc.prioridad.toUpperCase() === 'MEDIA' ? '#fde68a' : '#e2e8f0'}`,
+                    }}>
                       {inc.prioridad.toUpperCase()}
+                    </span>
+                  )}
+                  {(tab === 'pendientes' || tab === 'en_despacho') && slaVencido(tab === 'pendientes' ? inc.fechaHoraInicio : inc.fechaHoraDespacho, inc.prioridad) && (
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 2, background: '#450a0a', color: '#fff', border: '1px solid #7f1d1d' }}>
+                      ⏱ SLA VENCIDO
                     </span>
                   )}
                   <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b' }}>{inc.tipoIncidente || 'Sin clasificar'}</span>
@@ -187,11 +208,27 @@ export function TablonDespacho() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                       <div>
                         <label style={labelStyle}>UNIDADES ASIGNADAS</label>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                           {inc.unidades.map((u, i) => (
-                            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff1f3', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#c3c8d2'}`, color: u.esRefuerzo ? '#c2410c' : '#1c3051', borderRadius: 2 }}>
-                              {u.placa || '—'}{u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
-                            </span>
+                            <div key={u.id || i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '6px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff1f3', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#c3c8d2'}`, borderRadius: 2 }}>
+                              <span style={{ color: u.esRefuerzo ? '#c2410c' : '#1c3051', fontWeight: 700 }}>{u.placa || '—'}</span>
+                              {u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
+                              {/* Horas reportadas por el propio oficial — despacho solo consulta, no las captura */}
+                              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, color: '#64748b', fontSize: 10 }}>
+                                {u.horaSalida ? (
+                                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                    <LogOut size={10} /> SALIÓ {new Date(u.horaSalida).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                ) : (
+                                  <span style={{ opacity: 0.6 }}>PENDIENTE DE SALIR</span>
+                                )}
+                                {u.horaLlegada && (
+                                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                    <Flag size={10} /> LLEGÓ {new Date(u.horaLlegada).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           ))}
                         </div>
                       </div>

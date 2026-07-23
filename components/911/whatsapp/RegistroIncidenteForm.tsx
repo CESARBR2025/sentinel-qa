@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import {
     MessageSquare, User, AlertTriangle, MapPin,
-    ClipboardCheck, Clock, Shield, Send, Hash, Search
+    ClipboardCheck, Shield, Send, Hash, Search
 } from 'lucide-react';
 import { RolField } from '@/components/rol_servicios/RolInputs';
 import { DashboardHeader } from "@/components/partials/Header";
@@ -12,7 +12,9 @@ import { createIncidente } from '@/lib/incidentes/actions';
 // 1. LAS LIBRERÍAS SIEMPRE FUERA DEL COMPONENTE
 const libraries: ("places")[] = ["places"];
 
-export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: any, tiposIncidente: any[] }) {
+interface Despachador { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }
+
+export default function RegistroIncidenteZen({ user, catalogos, despachadores }: { user: any, catalogos: any, despachadores: Despachador[] }) {
     // 2. TODOS LOS ESTADOS DENTRO DE LA FUNCIÓN
     const [canal, setCanal] = useState('WHATSAPP');
     const [isAnonimo, setIsAnonimo] = useState(false);
@@ -26,6 +28,35 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
         colonia: "",
         numeroExterior: ""
     });
+
+    // Clasificación jerárquica (Tipo -> Subtipo -> Incidente), igual que el canal ciudadano
+    const [selectedTipo, setSelectedTipo] = useState<string>("")
+    const [selectedSubtipo, setSelectedSubtipo] = useState<string>("")
+    const [selectedIncidente, setSelectedIncidente] = useState<string>("")
+    const subTiposFiltrados = selectedTipo
+        ? catalogos.subtipos.filter((s: any) => s.tipoEmergenciaId === Number(selectedTipo))
+        : []
+    const incidentesFiltrados = selectedSubtipo
+        ? catalogos.incidentes.filter((i: any) => i.subtipoEmergenciaId === Number(selectedSubtipo))
+        : []
+    const prioridadAutocompletada = selectedIncidente
+        ? catalogos.incidentes.find((i: any) => i.id === Number(selectedIncidente))?.prioridadCatalogo
+        : null
+    const esImprocedente = selectedTipo
+        ? catalogos.emergencias.find((e: any) => e.id === Number(selectedTipo))?.codigo === '7'
+        : false
+
+    // Canalización a despacho
+    const [requiereDespacho, setRequiereDespacho] = useState('true')
+    const [prioridadManualId, setPrioridadManualId] = useState('')
+    const [despachadorId, setDespachadorId] = useState('')
+    const prioridadEfectiva = prioridadManualId
+        ? catalogos.prioridades.find((p: any) => p.id === Number(prioridadManualId))?.nombre
+        : prioridadAutocompletada
+    const esAltaPrioridad = String(prioridadEfectiva).toUpperCase() === 'ALTA'
+    const despachadorSeleccionado = despachadores.find((d) => d.id === despachadorId)
+    const despachadorNoDisponible = Boolean(despachadorSeleccionado && !despachadorSeleccionado.activo)
+    const dependenciaSspm = catalogos.dependencias.find((d: any) => d.clave === 'SEGURIDAD_PUBLICA')
 
     // Cargar la API de Google
     const { isLoaded } = useJsApiLoader({
@@ -113,12 +144,42 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
                     <section className="sentinel-card">
                         <h2 className="sentinel-section-title">Detalles del Suceso</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                            <RolField label="Tipo de Incidente" icon={AlertTriangle} as="select" name="tipoIncidenteId">
-                                <option value="">Seleccione un tipo...</option>
-                                {tiposIncidente?.map((tipo) => (
-                                    <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
-                                ))}
-                            </RolField>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+                                <RolField label="Tipo de Emergencia" icon={AlertTriangle} as="select" name="tipoEmergenciaId"
+                                    value={selectedTipo}
+                                    onChange={(e: any) => { setSelectedTipo(e.target.value); setSelectedSubtipo(""); setSelectedIncidente("") }}>
+                                    <option value="">Seleccionar...</option>
+                                    {catalogos.emergencias.map((item: any) => (
+                                        <option key={item.id} value={item.id}>{item.codigo} - {item.nombre}</option>
+                                    ))}
+                                </RolField>
+                                <RolField label="Subtipo" icon={AlertTriangle} as="select" name="subtipoEmergenciaId"
+                                    value={selectedSubtipo}
+                                    onChange={(e: any) => { setSelectedSubtipo(e.target.value); setSelectedIncidente("") }}
+                                    disabled={!selectedTipo}>
+                                    <option value="">{selectedTipo ? "Seleccionar subtipo..." : "Primero seleccione tipo"}</option>
+                                    {subTiposFiltrados.map((item: any) => (
+                                        <option key={item.id} value={item.id}>{item.codigo} - {item.nombre}</option>
+                                    ))}
+                                </RolField>
+                                <RolField label="Incidente Específico" icon={AlertTriangle} as="select" name="tipoIncidenteId"
+                                    value={selectedIncidente}
+                                    onChange={(e: any) => setSelectedIncidente(e.target.value)}
+                                    disabled={!selectedSubtipo}>
+                                    <option value="">{selectedSubtipo ? "Seleccionar incidente..." : "Primero seleccione subtipo"}</option>
+                                    {incidentesFiltrados.map((item: any) => (
+                                        <option key={item.id} value={item.id}>{item.codigoCatalogo && `${item.codigoCatalogo} - `}{item.nombre}</option>
+                                    ))}
+                                </RolField>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
+                                <RolField label="Prioridad (autocompletada)" icon={AlertTriangle} value={prioridadAutocompletada || "—"} disabled />
+                                <RolField label="Ajuste Manual de Prioridad" icon={AlertTriangle} as="select" name="prioridadId"
+                                    value={prioridadManualId} onChange={(e: any) => setPrioridadManualId(e.target.value)}>
+                                    <option value="">Automática (por catálogo)</option>
+                                    {catalogos.prioridades.map((item: any) => <option key={item.id} value={item.id}>{item.nombre}</option>)}
+                                </RolField>
+                            </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                 <label>Descripción de los Hechos</label>
                                 <textarea name="descripcion" placeholder="Describa la situación reportada..." style={{ width: '100%', height: '120px', padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0', borderLeft: '4px solid #3e5171', borderRadius: '2px', fontFamily: 'Inter, sans-serif', fontSize: '14px', outline: 'none', resize: 'none' }} />
@@ -232,15 +293,52 @@ export default function RegistroIncidenteZen({ user, tiposIncidente }: { user: a
 
                     {/* SECCIÓN DESPACHO */}
                     <section className="sentinel-card">
-                        <h2 className="sentinel-section-title">Despacho y Control</h2>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', alignItems: 'end' }}>
+                        <h2 className="sentinel-section-title">Canalización a Despacho</h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', alignItems: 'end' }}>
                             <RolField label="Operador" icon={User} value={`${user?.name || ''} ${user?.apellido || ''}`.trim()} disabled />
-                            <RolField label="Estatus Inicial" icon={ClipboardCheck} as="select" defaultValue="SIN DESPACHAR">
-                                <option value="sin_despachar">SIN DESPACHAR</option>
+                            <RolField label="¿Requiere Despacho?" icon={ClipboardCheck} as="select" name="requiereDespacho"
+                                key={esImprocedente ? 'imp' : 'normal'}
+                                disabled={esImprocedente}
+                                defaultValue={esImprocedente ? 'false' : 'true'}
+                                onChange={(e: any) => setRequiereDespacho(e.target.value)}>
+                                <option value="true">Sí (Enviar a despacho)</option>
+                                <option value="false">Solo registro estadístico</option>
                             </RolField>
-                            <RolField label="Inicio" icon={Clock} type="time" />
-                            <RolField label="Fin" icon={Clock} type="time" />
+                            <RolField label="Dependencia Responsable" icon={Shield} value={dependenciaSspm?.nombre || 'Seguridad Pública'} disabled />
                         </div>
+                        {esImprocedente && (
+                            <p style={{ fontSize: 10, color: '#b45309', fontFamily: 'JetBrains Mono, monospace', marginTop: 8 }}>
+                                Tipo Improcedentes: no se canaliza a despacho, solo se registra con fines estadísticos
+                            </p>
+                        )}
+                        {dependenciaSspm && <input type="hidden" name="dependenciaId" value={dependenciaSspm.id} />}
+
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 20 }}>
+                            <input type="checkbox" name="svvNotificado" value="true" style={{ width: 'auto' }} />
+                            Notificar a Monitoristas (SVV)
+                        </label>
+
+                        {!esImprocedente && requiereDespacho === 'true' && (
+                            <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #e2e8f0' }}>
+                                <label style={{ display: 'block', marginBottom: 12, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                    Asignar Despachador
+                                </label>
+                                {esAltaPrioridad && despachadorNoDisponible && (
+                                    <div style={{ padding: '10px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#dc2626', marginBottom: 10 }}>
+                                        ⚠ Prioridad ALTA: el despachador seleccionado figura como inactivo — considera elegir otro
+                                    </div>
+                                )}
+                                <select name="despachadorId" value={despachadorId} onChange={(e) => setDespachadorId(e.target.value)}
+                                    style={{ width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13 }}>
+                                    <option value="">Seleccionar despachador...</option>
+                                    {despachadores.map((d) => (
+                                        <option key={d.id} value={d.id}>
+                                            {d.name} {d.apellido} {d.activo ? '' : '(inactivo)'}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
                     </section>
                 </div>
 

@@ -56,7 +56,7 @@ function generarFolio(): string {
   for (let i = 0; i < 6; i++) {
     codigo += chars.charAt(Math.floor(Math.random() * chars.length))
   }
-  return `SSPM/${fecha}/${codigo}`
+  return `SSPM/CAM/${fecha}/${codigo}`
 }
 
 async function generarFolioUnico(): Promise<string> {
@@ -154,9 +154,9 @@ export async function crearReporte(userId: string, formData: FormData): Promise<
     ofiFolioCad: str(formData, 'ofi_folio_cad') ?? 'S/C',
     ofiNombreReportante: str(formData, 'ofi_nombre_reportante'),
     ofiAnonimo: bool(formData, 'ofi_anonimo'),
-    ofiTipoIncidente: str(formData, 'ofi_tipo_incidente'),
-    ofiTipoEmergencia: str(formData, 'ofi_tipo_emergencia'),
-    ofiPrioridad: str(formData, 'ofi_prioridad'),
+    tipoEmergenciaId: num(formData, 'ofi_tipo_emergencia_id'),
+    tipoIncidenteId: num(formData, 'ofi_tipo_incidente_id'),
+    prioridadId: num(formData, 'ofi_prioridad_id'),
     ofiDescripcion: str(formData, 'ofi_descripcion'),
     ofiContenidoReporte: str(formData, 'ofi_contenido_reporte'),
     ofiCalle: calle,
