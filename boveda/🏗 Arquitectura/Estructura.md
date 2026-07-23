@@ -856,7 +856,8 @@
 │   │   │   ├── 0020_incidentes_dependencia_id.sql
 │   │   │   ├── 0021_incidentes_telefono_reportante.sql
 │   │   │   ├── 0022_dependencia_sugerida_por_tipo.sql
-│   │   │   └── 0023_despacho_unidades_horarios.sql
+│   │   │   ├── 0023_despacho_unidades_horarios.sql
+│   │   │   └── 0024_reportes_campo_catalogo_fk.sql
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
 │   │   ├── schema.ts
@@ -1090,6 +1091,10 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
+
 
 
 

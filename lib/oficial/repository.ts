@@ -51,6 +51,19 @@ export async function insertarReporteCampo(
   try {
     await cliente.query("BEGIN");
 
+    // Resolver los nombres del catálogo en el servidor — nunca se confía en texto libre
+    // del cliente para lo que ya es un catálogo real (regla: sin datos genéricos).
+    const catalogo = await cliente.query<{ tipo_emergencia: string | null; tipo_incidente: string | null; prioridad: string | null }>(
+      `SELECT
+         (SELECT nombre FROM cat_tipos_emergencia WHERE id = $1) AS tipo_emergencia,
+         (SELECT nombre FROM cat_tipos_incidente WHERE id = $2) AS tipo_incidente,
+         (SELECT nombre FROM cat_prioridades WHERE id = $3) AS prioridad`,
+      [data.tipoEmergenciaId, data.tipoIncidenteId, data.prioridadId],
+    );
+    const nombreTipoEmergencia = catalogo.rows[0].tipo_emergencia;
+    const nombreTipoIncidente = catalogo.rows[0].tipo_incidente;
+    const nombrePrioridad = catalogo.rows[0].prioridad;
+
     // Reporte vinculado a solicitud de despacho: validar y cerrar en la misma transacción
     if (data.incidenteId) {
       const inc = await cliente.query<{ estatus: string }>(
@@ -91,14 +104,16 @@ export async function insertarReporteCampo(
     ofi_telefono_reportante, ofi_observaciones,
     ofi_apoyo_fiestas_patronales, ofi_operativos_metropolitano, ofi_eco8,
     ofi_alcoholimetria, ofi_motocicletas, ofi_apoyo_actuarios,
-    ofi_apoyo_cateos_fgr, ofi_apoyo_cateos_fge
+    ofi_apoyo_cateos_fgr, ofi_apoyo_cateos_fge,
+    tipo_emergencia_id, tipo_incidente_id, prioridad_id
   ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
     $11, $12, $13, $14, $15, $16, $17, $18, $19, $20::jsonb,
     $21, $22, $23, $24, $25, $26, $27, $28::jsonb,
     $29, $30::jsonb, $31,
     $32, $33, $34, $35::jsonb, $36, $37::jsonb, $38, $39::jsonb, $40, $41::jsonb, $42, $43,
-    $44, $45, $46, $47, $48, $49, $50, $51
+    $44, $45, $46, $47, $48, $49, $50, $51,
+    $52, $53, $54
   ) RETURNING id`,
       [
         data.incidenteId,
@@ -106,9 +121,9 @@ export async function insertarReporteCampo(
         data.ofiFolioCad,
         data.ofiNombreReportante,
         data.ofiAnonimo,
-        data.ofiTipoIncidente,
-        data.ofiTipoEmergencia,
-        data.ofiPrioridad,
+        nombreTipoIncidente,
+        nombreTipoEmergencia,
+        nombrePrioridad,
         data.ofiDescripcion,
         data.ofiContenidoReporte,
         data.ofiCalle,
@@ -152,6 +167,9 @@ export async function insertarReporteCampo(
         data.ofiApoyoActuarios,
         data.ofiApoyoCateosFgr,
         data.ofiApoyoCateosFge,
+        data.tipoEmergenciaId,
+        data.tipoIncidenteId,
+        data.prioridadId,
       ],
     );
 
@@ -244,6 +262,7 @@ export async function obtenerDespachosAsignados(
        i.id AS incidente_id, i.folio, i.canal, i.estatus, i.descripcion,
        i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion,
        i.fecha_hora_inicio,
+       i.tipo_emergencia_id, i.tipo_incidente_id, i.prioridad_id,
        cti.nombre AS tipo_incidente_nombre,
        cp.nombre AS prioridad_nombre,
        d.fecha_hora_despacho,

@@ -36,6 +36,7 @@ export default async function RondinOficialPage({ searchParams }: { searchParams
         nombreOficial={nombreOficial}
         folio={folioData.folio}
         folioConsecutivo={folioData.consecutivo}
+        folioNuevo={params.exito === '1' ? params.folio : undefined}
       />
     </>
   )

@@ -15,12 +15,14 @@ export function RondinPageClient({
   nombreOficial,
   folio,
   folioConsecutivo,
+  folioNuevo,
 }: {
   rondines: RondinOficialResumen[]
   catalogos: Pick<CatalogosJerarquicos, 'emergencias' | 'subtipos' | 'incidentes' | 'prioridades'>
   nombreOficial: string
   folio: string
   folioConsecutivo: number
+  folioNuevo?: string
 }) {
   const [view, setView] = useState<View>('list')
 
@@ -155,7 +157,7 @@ export function RondinPageClient({
           background: '#ffffff', border: '1px solid #e2e8f0',
           borderRadius: 2, overflow: 'hidden',
         }}>
-          <RondinTabla rondines={rondines} />
+          <RondinTabla rondines={rondines} folioNuevo={folioNuevo} />
         </div>
       </div>
     </div>

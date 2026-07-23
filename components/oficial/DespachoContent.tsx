@@ -12,6 +12,9 @@ interface Asignacion {
   colonia?: string | null
   tipoIncidente?: string | null
   prioridad?: string | null
+  tipoEmergenciaId?: number | null
+  tipoIncidenteId?: number | null
+  prioridadId?: number | null
 }
 
 interface Props {
@@ -38,8 +41,9 @@ export function DespachoContent({ historial, estatusInicial, incidenteId, asigna
           descripcion: asignacion.descripcion ?? undefined,
           calle: asignacion.calle ?? undefined,
           colonia: asignacion.colonia ?? undefined,
-          tipoIncidente: asignacion.tipoIncidente ?? undefined,
-          prioridad: asignacion.prioridad ?? undefined,
+          tipoEmergenciaId: asignacion.tipoEmergenciaId ?? undefined,
+          tipoIncidenteId: asignacion.tipoIncidenteId ?? undefined,
+          prioridadId: asignacion.prioridadId ?? undefined,
         }}
       />
     )

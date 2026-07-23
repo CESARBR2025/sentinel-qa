@@ -47,6 +47,9 @@ export interface OfiReporteCampo {
   ofiTipoIncidente: string | null;
   ofiTipoEmergencia: string | null;
   ofiPrioridad: string | null;
+  tipoEmergenciaId: number | null;
+  tipoIncidenteId: number | null;
+  prioridadId: number | null;
   ofiDescripcion: string | null;
   ofiContenidoReporte: string | null;
   ofiCalle: string | null;
@@ -82,9 +85,9 @@ export interface CrearReporteCampoInput {
   ofiFolioCad: string;
   ofiNombreReportante: string | null;
   ofiAnonimo: boolean;
-  ofiTipoIncidente: string | null;
-  ofiTipoEmergencia: string | null;
-  ofiPrioridad: string | null;
+  tipoEmergenciaId: number | null;
+  tipoIncidenteId: number | null;
+  prioridadId: number | null;
   ofiDescripcion: string | null;
   ofiContenidoReporte: string | null;
   ofiCalle: string | null;
@@ -158,6 +161,9 @@ export interface DespachoAsignado {
   referenciaUbicacion: string | null;
   tipoIncidente: string | null;
   prioridad: string | null;
+  tipoEmergenciaId: number | null;
+  tipoIncidenteId: number | null;
+  prioridadId: number | null;
   fechaHoraInicio: string;
   fechaHoraDespacho: string | null;
   despachadorNombre: string | null;
@@ -228,6 +234,7 @@ export interface RondinOficialResumen {
   estatus: string
   fechaHoraDespacho: string | null
   capturadoPor: string | null
+  esNuevo?: boolean
 }
 
 export interface CatalogoItem {

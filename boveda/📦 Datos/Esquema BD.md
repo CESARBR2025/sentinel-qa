@@ -487,6 +487,8 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 4 | `unidad_placa` | `text` | SÍ | — |
 | 5 | `creado_en` | `timestamp` | NO | `now()` |
 | 6 | `es_refuerzo` | `boolean` | NO | `false` |
+| 7 | `hora_salida` | `timestamp` | SÍ | — |
+| 8 | `hora_llegada` | `timestamp` | SÍ | — |
 
 ### \`incidente_extorsion\`
 
@@ -1030,6 +1032,9 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 60 | `ofi_referencia` | `text` | SÍ | — |
 | 61 | `expediente_ci` | `text` | SÍ | — |
 | 62 | `personal_ingreso_ci` | `text` | SÍ | — |
+| 63 | `tipo_emergencia_id` | `integer` | SÍ | — |
+| 64 | `tipo_incidente_id` | `integer` | SÍ | — |
+| 65 | `prioridad_id` | `integer` | SÍ | — |
 
 ### \`permisos\`
 

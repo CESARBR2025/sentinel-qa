@@ -1,7 +1,8 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
-import { verificarRolOficial, listarDespachosAsignados, obtenerCatalogos } from '@/lib/oficial/service'
+import { verificarRolOficial, listarDespachosAsignados } from '@/lib/oficial/service'
+import { getCatalogos } from '@/lib/911/service'
 import { obtenerHistorialCompleto } from '@/lib/incidentes/service'
 import { obtenerIncidenteBasico } from '@/lib/incidentes/repository'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -24,7 +25,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
 
   const [historial, catalogos, incidenteBasico] = await Promise.all([
     obtenerHistorialCompleto(id),
-    obtenerCatalogos(),
+    getCatalogos(),
     obtenerIncidenteBasico(id),
   ])
   if (!historial || !incidenteBasico) notFound()
