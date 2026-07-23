@@ -42,6 +42,40 @@ export async function crearReporteCampoOficial(formData: FormData) {
   redirect('/oficial?exito=1')
 }
 
+// Despacho solo asigna unidades y recibe reportes — nunca captura hora_salida/hora_llegada
+// a mano, porque sin AVL/GPS real no tiene forma confiable de saberlo (el despachador solo
+// podría adivinar o esperar que alguien le avise por radio, el mismo problema de "transcribir
+// por otro" que ya se descartó para rondín). Es el propio oficial quien reporta sus dos
+// momentos reales: "voy en camino" (sale) y "marcar en sitio" (llega).
+export async function marcarEnCaminoOficial(incidenteId: string) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect('/login')
+
+  await tryActionRaw(async () => {
+    const { query } = await import('@/lib/db')
+    const inc = await query<{ estatus: string }>(
+      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      [incidenteId],
+    )
+    if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
+    if (inc.rows[0].estatus !== 'en_despacho')
+      throw new ValidationError('El incidente debe estar en_despacho para marcar en camino')
+
+    // Solo registra hora_salida — el estatus del incidente sigue en_despacho hasta "Marcar en Sitio"
+    await query(
+      `UPDATE incidente_despacho_unidades du
+       SET hora_salida = COALESCE(du.hora_salida, NOW())
+       FROM incidente_despacho d
+       WHERE du.despacho_id = d.id AND d.incidente_id = $1`,
+      [incidenteId],
+    )
+  })
+
+  revalidatePath('/oficial/despachos')
+  revalidatePath(`/oficial/despachos/${incidenteId}`)
+  revalidatePath('/incidentes')
+}
+
 export async function marcarEnSitioOficial(incidenteId: string) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
@@ -61,9 +95,8 @@ export async function marcarEnSitioOficial(incidenteId: string) {
       [incidenteId],
     )
 
-    // Backfill de seguimiento por unidad (form-003 del estándar SEGOB-CNI): si el despachador
-    // nunca marcó salida/llegada manualmente en el tablón, "Marcar en Sitio" del oficial las
-    // infiere — hora_salida = hora del despacho, hora_llegada = ahora. No pisa lo ya registrado.
+    // Si el oficial nunca marcó "voy en camino" (ej. trayecto muy corto), hora_salida se infiere
+    // aquí como respaldo — nunca pisa lo que ya haya quedado registrado.
     await query(
       `UPDATE incidente_despacho_unidades du
        SET hora_salida = COALESCE(du.hora_salida, d.fecha_hora_despacho),

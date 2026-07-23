@@ -1,6 +1,8 @@
 # Reporte Campo — Reportes de Oficiales en Campo
 
-**Propósito**: Oficial de campo crea reporte de recorrido, captura incidentes, vincula con D1, sube fotos de detenidos y gestiona el estatus. Desde el flujo de despacho, **también cierra solicitudes de despacho** — es la única tabla de reporte de campo (`incidente_reporte_campo` quedó legacy). Ver [[Plan Flujo Despacho]].
+**Propósito**: Oficial de campo crea reporte de recorrido, captura incidentes, vincula con D1, sube fotos de detenidos y gestiona el estatus. Desde el flujo de despacho, **también cierra solicitudes de despacho** — es la única tabla de reporte de campo (`incidente_reporte_campo` quedó legacy, solo lectura histórica). Ver [[Plan Flujo Despacho]].
+
+**Código muerto eliminado**: la cadena de escritura vieja hacia `incidente_reporte_campo` (`ReporteRecorridoZen` en `components/911/radio/FormSection.tsx` — sin rutas que lo importaran —, `createRecorridoCompleto`/`createReporteCampo`/`insertarIncidente` en `lib/incidentes/actions.ts`, `crearReporteCampo` en `lib/incidentes/service.ts`, `insertarReporteCampo`/`verificarReporteCampo` en `lib/incidentes/repository.ts`) se eliminó por completo — era el flujo de "auto-cierre" de rondín reemplazado hace varias fases por `createRondinEscalado` + `ofi_reportes_campo`, y nadie lo había retirado. La **lectura** histórica de `incidente_reporte_campo` (`rowToReporteCampo` en `lib/incidentes/mapper.ts`, usada por `obtenerIncidenteCompleto`) se conserva intacta.
 
 ---
 
@@ -14,6 +16,10 @@ Cuando el reporte se crea con `incidente_id` (desde `/oficial/despachos/[id]`), 
 
 - `obtenerDespachosAsignados(userId)` — asignaciones activas del oficial (JOIN `incidente_despacho_elementos.oficial_id` → `ofi_oficiales.user_id`).
 - Bandera calculada "D1 pendiente": `ofi_hay_detencion = true` sin `ofi_reporte_denuncia` vinculada. Al crear la D1 se hereda `incidente_id` y la bandera se limpia.
+
+**Voy en Camino / Marcar en Sitio** (`components/oficial/MarcarEnCaminoButton.tsx` + `MarcarEnSitioButton.tsx`): el oficial captura sus propios `hora_salida`/`hora_llegada` en dos momentos reales que él vive — el despachador ya no tiene botones para esto en `TablonDespacho.tsx` (solo lectura). Decisión de negocio: sin AVL/GPS real, el despachador no puede saber esas horas de forma confiable — mismo criterio que "solo el oficial levanta rondín" (ver [[911]] regla 14).
+
+**Campos "quién" del D1** (`ofi_reporte_denuncia`): además de `oficial_id` (quien abre el reporte), existen 5 columnas de personal — `policia_a_cargo`, `nomina_mando`, `policia_denuncia`, `policia_firma_d1`, `policia_ingresa_cu` — que estaban en el esquema desde hace tiempo pero **ningún formulario las llenaba** (siempre `NULL`). Se agregaron a `FormularioD1.tsx` (sección "Personal y Equipamiento"), al mapeo de `app/api/reportes-d1/route.ts` y al INSERT de `lib/d1/repository.ts::insertarReporteDenuncia`. Por defecto se prellenan con la nómina del oficial en sesión (mismo criterio que "cargo"/"denuncia"/"firma"/"CU" suelen ser la misma persona), excepto `nomina_mando` que siempre queda vacío por ser una persona distinta (el mando responsable). `policia_a_cargo` y `nomina_mando` ya se mostraban en el reporte de consulta (`lib/d1/repository.ts::obtenerReportesD1`) pero salían vacíos por falta de este fix; `policia_denuncia`/`policia_firma_d1`/`policia_ingresa_cu` solo se capturan, no se muestran todavía en ningún reporte.
 
 ---
 

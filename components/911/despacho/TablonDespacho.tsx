@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useDespacho }  from '@/hooks/useDespacho'
 import { usePolling }   from '@/hooks/usePolling'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
-import { marcarHoraUnidadDespacho } from '@/lib/incidentes/actions'
 import { MapPin, Clock, Phone, MessageSquare, AlertTriangle, Radio, RefreshCw, ChevronDown, ChevronUp, Shield, CheckCircle2, LogOut, Flag } from 'lucide-react'
 import Link  from 'next/link'
 import React from 'react'
@@ -47,7 +46,6 @@ export function TablonDespacho() {
   const [atendidos,  setAtendidos]  = useState<IncRow[]>([])
   const [cargandoTab, setCargandoTab] = useState(false)
   const [expandido,  setExpandido]  = useState<string | null>(null)
-  const [marcando,   setMarcando]   = useState<string | null>(null)
 
   useEffect(() => { cargarPendientes() }, [cargarPendientes])
   usePolling(cargarPendientes, INTERVALO_MS, tab === 'pendientes')
@@ -65,17 +63,6 @@ export function TablonDespacho() {
   }
 
   const cambiarTab = (t: Tab) => { setTab(t); setExpandido(null); cargarTab(t) }
-
-  const marcarHora = async (unidadId: string, campo: 'salida' | 'llegada') => {
-    const key = unidadId + campo
-    setMarcando(key)
-    try {
-      await marcarHoraUnidadDespacho(unidadId, campo)
-      await cargarTab('en_despacho')
-    } finally {
-      setMarcando(null)
-    }
-  }
 
   const lista: IncRow[] = tab === 'pendientes'
     ? (pendientes as unknown as IncRow[])
@@ -221,50 +208,29 @@ export function TablonDespacho() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                       <div>
                         <label style={labelStyle}>UNIDADES ASIGNADAS</label>
-                        {tab === 'en_despacho' ? (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                            {inc.unidades.map((u, i) => (
-                              <div key={u.id || i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '6px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff1f3', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#c3c8d2'}`, borderRadius: 2 }}>
-                                <span style={{ color: u.esRefuerzo ? '#c2410c' : '#1c3051', fontWeight: 700 }}>{u.placa || '—'}</span>
-                                {u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
-                                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  {u.horaSalida ? (
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: 10 }}>
-                                      <LogOut size={10} /> SALIÓ {new Date(u.horaSalida).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                  ) : u.id ? (
-                                    <button type="button" onClick={() => marcarHora(u.id!, 'salida')} disabled={marcando === u.id + 'salida'} style={btnHoraStyle}>
-                                      {marcando === u.id + 'salida' ? '...' : 'MARCAR SALIDA'}
-                                    </button>
-                                  ) : null}
-                                  {u.horaLlegada ? (
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: 10 }}>
-                                      <Flag size={10} /> LLEGÓ {new Date(u.horaLlegada).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                  ) : u.id && u.horaSalida ? (
-                                    <button type="button" onClick={() => marcarHora(u.id!, 'llegada')} disabled={marcando === u.id + 'llegada'} style={btnHoraStyle}>
-                                      {marcando === u.id + 'llegada' ? '...' : 'MARCAR LLEGADA'}
-                                    </button>
-                                  ) : null}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                            {inc.unidades.map((u, i) => (
-                              <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '3px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff1f3', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#c3c8d2'}`, color: u.esRefuerzo ? '#c2410c' : '#1c3051', borderRadius: 2 }}>
-                                {u.placa || '—'}{u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
-                                {tab === 'atendidos' && u.horaSalida && (
-                                  <span style={{ fontSize: 9, opacity: 0.7 }}>
-                                    · {new Date(u.horaSalida).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
-                                    {u.horaLlegada && `–${new Date(u.horaLlegada).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}`}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          {inc.unidades.map((u, i) => (
+                            <div key={u.id || i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'JetBrains Mono', fontSize: 11, padding: '6px 10px', background: u.esRefuerzo ? '#fff7ed' : '#eff1f3', border: `1px solid ${u.esRefuerzo ? '#fed7aa' : '#c3c8d2'}`, borderRadius: 2 }}>
+                              <span style={{ color: u.esRefuerzo ? '#c2410c' : '#1c3051', fontWeight: 700 }}>{u.placa || '—'}</span>
+                              {u.esRefuerzo && <b style={{ fontSize: 9, letterSpacing: '0.05em' }}>REFUERZO</b>}
+                              {/* Horas reportadas por el propio oficial — despacho solo consulta, no las captura */}
+                              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, color: '#64748b', fontSize: 10 }}>
+                                {u.horaSalida ? (
+                                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                    <LogOut size={10} /> SALIÓ {new Date(u.horaSalida).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                ) : (
+                                  <span style={{ opacity: 0.6 }}>PENDIENTE DE SALIR</span>
+                                )}
+                                {u.horaLlegada && (
+                                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                    <Flag size={10} /> LLEGÓ {new Date(u.horaLlegada).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
                                   </span>
                                 )}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                       <div>
                         <label style={labelStyle}>ELEMENTOS ASIGNADOS</label>
@@ -385,4 +351,3 @@ const labelTopStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontS
 const titleStyle: React.CSSProperties    = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 36, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' }
 const btnBackStyle: React.CSSProperties  = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textDecoration: 'none', letterSpacing: '0.1em' }
 const labelStyle: React.CSSProperties   = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 6 }
-const btnHoraStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, letterSpacing: '0.05em', padding: '4px 10px', background: '#0f172a', color: '#ffffff', border: 'none', borderRadius: 2, cursor: 'pointer' }

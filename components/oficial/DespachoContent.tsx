@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { HistorialIncidente } from '@/components/incidentes/HistorialIncidente'
+import { MarcarEnCaminoButton } from '@/components/oficial/MarcarEnCaminoButton'
 import { MarcarEnSitioButton } from '@/components/oficial/MarcarEnSitioButton'
 import { FormularioRecorrido } from '@/components/oficial/FormularioRecorrido'
 
@@ -28,6 +29,8 @@ interface Props {
 
 export function DespachoContent({ historial, estatusInicial, incidenteId, asignacion, catalogos, user }: Props) {
   const [enSitio, setEnSitio] = useState(estatusInicial === 'en_sitio')
+  const unidadesDespacho: { horaSalida?: string | null }[] = historial?.despacho?.unidades ?? []
+  const [yaSalio, setYaSalio] = useState(unidadesDespacho.some(u => u.horaSalida))
 
   if (enSitio) {
     return (
@@ -63,6 +66,13 @@ export function DespachoContent({ historial, estatusInicial, incidenteId, asigna
         }}>
           {estatusInicial === 'en_despacho' ? 'UNIDADES ASIGNADAS' : estatusInicial.toUpperCase()}
         </span>
+
+        <MarcarEnCaminoButton
+          incidenteId={incidenteId}
+          estatusActual={estatusInicial}
+          yaSalio={yaSalio}
+          onMarcado={() => setYaSalio(true)}
+        />
 
         <MarcarEnSitioButton
           incidenteId={incidenteId}

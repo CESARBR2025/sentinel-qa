@@ -177,6 +177,8 @@ export interface DespachoUnidadRow {
   id: string
   unidadExtId: string | null
   unidadPlaca: string | null
+  horaSalida: string | null
+  horaLlegada: string | null
 }
 
 export interface DespachoElementoRow {
