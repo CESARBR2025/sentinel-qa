@@ -186,12 +186,15 @@ function LoginContent() {
   const [failed,  setFailed]  = useState<'credentials'|'otp'|null>(null)
   const [focusOtpInput, setFocusOtpInput] = useState(false)
 
-  // Flujo de éxito: navegación directa sin loader overlay
+  // Flujo de éxito: dispara la transición global de la app y navega
   useEffect(() => {
     if (phase !== 'success') return
-    const t = setTimeout(() => { window.location.href = fromPath }, 1200)
+    const t = setTimeout(() => {
+      window.dispatchEvent(new Event('app:transition'))
+      router.push(fromPath)
+    }, 1200)
     return () => clearTimeout(t)
-  }, [phase, fromPath])
+  }, [phase, fromPath, router])
 
   // Limpiar overlay en OTP mode para reintentos
   const [email,   setEmail]   = useState('')
