@@ -1,5 +1,7 @@
-import { estaStale, upsertPatrullas, listarActivas, obtenerPorId } from "./repository";
-import type { FlotaVehiculoRaw, PatrullaAsignacion } from "./types";
+import { estaStale, upsertPatrullas, listarActivas, obtenerPorId, listarUnidadesConTripulacionRaw } from "./repository";
+import { agruparUnidadesConTripulacion } from "./mapper";
+import type { FlotaVehiculoRaw, PatrullaAsignacion, UnidadParaDespacho } from "./types";
+import { distanciaHaversineKm } from "@/lib/shared/geo";
 
 const FLOTA_API_URL =
   "http://proyecto-flota.vercel.app/api/publica?placa";
@@ -106,6 +108,29 @@ export async function listarPatrullasParaAsignacion(): Promise<
     placas: r.placas,
     descripcion: r.descripcion,
   }));
+}
+
+export async function listarUnidadesParaDespacho(
+  incidenteLat: number | null,
+  incidenteLng: number | null,
+): Promise<UnidadParaDespacho[]> {
+  const rows = await listarUnidadesConTripulacionRaw();
+  const unidades = agruparUnidadesConTripulacion(rows);
+
+  const conDistancia = unidades.map((u) => ({
+    ...u,
+    distanciaKm:
+      incidenteLat != null && incidenteLng != null && u.ultimaLat != null && u.ultimaLng != null
+        ? distanciaHaversineKm(incidenteLat, incidenteLng, u.ultimaLat, u.ultimaLng)
+        : null,
+  }));
+
+  return conDistancia.sort((a, b) => {
+    if (a.distanciaKm == null && b.distanciaKm == null) return 0;
+    if (a.distanciaKm == null) return 1;
+    if (b.distanciaKm == null) return -1;
+    return a.distanciaKm - b.distanciaKm;
+  });
 }
 
 export async function obtenerPatrullaPorId(

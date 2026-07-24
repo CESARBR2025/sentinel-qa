@@ -147,6 +147,11 @@
 │   │   ├── d1/
 │   │   │   └── exportar/
 │   │   │       └── route.ts
+│   │   ├── despacho/
+│   │   │   ├── buscar-oficial/
+│   │   │   │   └── route.ts
+│   │   │   └── unidades-cercanas/
+│   │   │       └── route.ts
 │   │   ├── detenidos/
 │   │   │   ├── detalle/
 │   │   │   │   └── [id]/
@@ -451,6 +456,7 @@
 │   │   │       └── page.tsx
 │   │   ├── rondin/
 │   │   │   └── page.tsx
+│   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── prevencion/
 │   │   ├── busquedas/
@@ -491,7 +497,9 @@
 │   ├── 911/
 │   │   ├── despacho/
 │   │   │   ├── DespachoForm.tsx
-│   │   │   └── TablonDespacho.tsx
+│   │   │   ├── SeleccionarUnidadesModal.tsx
+│   │   │   ├── TablonDespacho.tsx
+│   │   │   └── UnidadCards.tsx
 │   │   ├── radio/
 │   │   │   ├── FormRondinEscalado.tsx
 │   │   │   └── Input.tsx
@@ -543,6 +551,8 @@
 │   │   └── TablonAnalisis.tsx
 │   ├── auxiliar/
 │   │   └── ProfileDropdownAuxiliar.tsx
+│   ├── debug/
+│   │   └── TestModalScroll.tsx
 │   ├── denuncias/
 │   │   └── FormularioD1.tsx
 │   ├── fiscalia/
@@ -599,7 +609,9 @@
 │   │   ├── MapaUbicacion.tsx
 │   │   ├── MarcarEnCaminoButton.tsx
 │   │   ├── MarcarEnSitioButton.tsx
+│   │   ├── MiUbicacionSection.tsx
 │   │   ├── ModalSeleccionarUnidad.tsx
+│   │   ├── OficialUbicacionTracker.tsx
 │   │   ├── ProfileDropdown.tsx
 │   │   ├── SegmentControl.tsx
 │   │   ├── SelectorDestinoLegal.tsx
@@ -680,8 +692,7 @@
 │   │   └── ToastAuto.tsx
 │   ├── FilaDetenidoRol.tsx
 │   ├── LoadingProvider.tsx
-│   ├── PageTransition.tsx
-│   └── SmoothScroll.tsx
+│   └── PageTransition.tsx
 ├── features/
 │   ├── compartido/
 │   │   └── components/
@@ -857,7 +868,8 @@
 │   │   │   ├── 0021_incidentes_telefono_reportante.sql
 │   │   │   ├── 0022_dependencia_sugerida_por_tipo.sql
 │   │   │   ├── 0023_despacho_unidades_horarios.sql
-│   │   │   └── 0024_reportes_campo_catalogo_fk.sql
+│   │   │   ├── 0024_reportes_campo_catalogo_fk.sql
+│   │   │   └── 0025_ubicacion_oficiales.sql
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
 │   │   ├── schema.ts
@@ -989,6 +1001,7 @@
 │   │   └── types.ts
 │   ├── shared/
 │   │   ├── abrirDocumento.ts
+│   │   ├── geo.ts
 │   │   └── infracciones.ts
 │   ├── utils/
 │   │   ├── generateIPHPPT.ts
@@ -1091,6 +1104,16 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
+
+
+
 
 
 

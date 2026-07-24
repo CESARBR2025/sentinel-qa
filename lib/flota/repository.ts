@@ -58,3 +58,21 @@ export async function obtenerPorId(id: string): Promise<Patrulla | null> {
   )
   return result.rows.length ? rowToPatrulla(result.rows[0]) : null
 }
+
+// Una fila por oficial de la tripulación (o una sola fila con oficial_id NULL
+// si la patrulla no tiene nadie asignado); el service agrupa por patrulla_id.
+export async function listarUnidadesConTripulacionRaw(): Promise<Record<string, unknown>[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT
+       p.id, p.numero_unidad, p.placas,
+       o.id AS oficial_id, o.no_nomina,
+       u.name AS oficial_name, u.apellido AS oficial_apellido,
+       o.ultima_lat, o.ultima_lng, o.ultima_ubicacion_en
+     FROM via.v2_patrullas p
+     LEFT JOIN ofi_oficiales o ON o.patrulla_id = p.id AND o.ofi_estatus = 'activo'
+     LEFT JOIN users u ON u.id = o.user_id
+     WHERE p.activo = true
+     ORDER BY p.numero_unidad, o.ultima_ubicacion_en DESC NULLS LAST`,
+  )
+  return result.rows
+}

@@ -183,7 +183,7 @@ function LoginContent() {
   const fromPath     = searchParams.get('from') ?? '/dashboard'
 
   const [phase,   setPhase]   = useState<'idle'|'submitting-1'|'otp'|'submitting-2'|'success'>('idle')
-  const [failed,  setFailed]  = useState<'credentials'|'otp'|null>(null)
+  const [failed,  setFailed]  = useState<'credentials'|'otp'|'server'|null>(null)
   const [focusOtpInput, setFocusOtpInput] = useState(false)
 
   // Flujo de éxito: dispara la transición global de la app y navega
@@ -235,22 +235,29 @@ function LoginContent() {
     
     await new Promise(r => setTimeout(r, 1200)) // Animation 1.2s
     setGenerating2FA(false)
-    
-    const { data, error } = await authClient.signIn.email({ email, password: pwd })
 
-    if (error) {
-      setFailed('credentials')
+    try {
+      const { data, error } = await authClient.signIn.email({ email, password: pwd })
+
+      if (error) {
+        setFailed('credentials')
+        setPhase('idle')
+        return
+      }
+
+      // better-auth retorna twoFactorRedirect:true (HTTP 200) cuando 2FA está activo
+      if ((data as { twoFactorRedirect?: boolean } | null)?.twoFactorRedirect) {
+        setPhase('otp')
+        return
+      }
+
+      setPhase('success')
+    } catch {
+      // Fetch/red o servidor caído (ej. BD sin conexión) — el cliente de better-auth
+      // no siempre resuelve {error} en ese caso, puede lanzar directamente.
+      setFailed('server')
       setPhase('idle')
-      return
     }
-
-    // better-auth retorna twoFactorRedirect:true (HTTP 200) cuando 2FA está activo
-    if ((data as { twoFactorRedirect?: boolean } | null)?.twoFactorRedirect) {
-      setPhase('otp')
-      return
-    }
-
-    setPhase('success')
   }
 
   async function handleOtpSubmit() {
@@ -258,20 +265,27 @@ function LoginContent() {
     setPhase('submitting-2')
     setFailed(null)
 
-    await authClient.twoFactor.verifyTotp(
-      { code: otp },
-      {
-        onSuccess: () => {
-          setPhase('success')
-        },
-        onError: () => {
-          setFailed('otp')
-          setPhase('otp')
-          setOtp('')
-          setFocusOtpInput(true)
-        },
-      }
-    )
+    try {
+      await authClient.twoFactor.verifyTotp(
+        { code: otp },
+        {
+          onSuccess: () => {
+            setPhase('success')
+          },
+          onError: () => {
+            setFailed('otp')
+            setPhase('otp')
+            setOtp('')
+            setFocusOtpInput(true)
+          },
+        }
+      )
+    } catch {
+      setFailed('server')
+      setPhase('otp')
+      setOtp('')
+      setFocusOtpInput(true)
+    }
   }
 
   const step = phase === 'idle' || phase === 'submitting-1' ? 1 : phase === 'success' ? 3 : 2
@@ -515,6 +529,12 @@ function LoginContent() {
                   </div>
                 )}
 
+                {failed === 'server' && (
+                  <div style={{ marginTop:16,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <span>⚠</span><span>No se pudo conectar con el servidor · Intenta de nuevo en unos momentos</span>
+                  </div>
+                )}
+
 <button type="submit" disabled={phase==='submitting-1'||!email||!pwd}
                   style={{ marginTop:28,display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%',padding:'18px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15.5,letterSpacing:'0.2em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
                   onMouseEnter={e=>{if(phase!=='submitting-1')e.currentTarget.style.background='var(--red-hi)'}}
@@ -544,6 +564,12 @@ function LoginContent() {
                 {failed === 'otp' && (
                   <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
                     <span>⚠</span><span>Token incorrecto · Verifica tu app autenticadora e intenta de nuevo</span>
+                  </div>
+                )}
+
+                {failed === 'server' && (
+                  <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <span>⚠</span><span>No se pudo conectar con el servidor · Intenta de nuevo en unos momentos</span>
                   </div>
                 )}
 

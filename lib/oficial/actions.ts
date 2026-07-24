@@ -6,7 +6,7 @@ import { redirect }       from 'next/navigation'
 import { crearReporte }   from './service'
 import { revalidatePath } from 'next/cache'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
-import { actualizarPatrullaOficial, actualizarTelefonoOficial, telefonoExiste } from './repository'
+import { actualizarPatrullaOficial, actualizarTelefonoOficial, actualizarUbicacionOficial, telefonoExiste } from './repository'
 
 export async function crearReporteCampoOficial(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -124,6 +124,17 @@ export async function asignarPatrulla(formData: FormData) {
 
   revalidatePath('/oficial/configuracion')
   revalidatePath('/oficial')
+}
+
+export async function reportarUbicacionOficial(lat: number, lng: number) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return // heartbeat silencioso: no interrumpe la navegación si la sesión venció
+
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return
+
+  await tryActionRaw(async () => {
+    await actualizarUbicacionOficial(session.user.id, lat, lng)
+  })
 }
 
 export async function actualizarTelefono(formData: FormData) {

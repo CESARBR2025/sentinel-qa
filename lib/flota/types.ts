@@ -24,3 +24,23 @@ export interface PatrullaAsignacion {
   placas: string;
   descripcion: string;
 }
+
+export interface OficialTripulacion {
+  id: string;
+  nombre: string;
+  noNomina: string | null;
+}
+
+export interface UnidadConTripulacion {
+  id: string;
+  numeroUnidad: string;
+  placas: string;
+  oficiales: OficialTripulacion[];
+  ultimaLat: number | null;
+  ultimaLng: number | null;
+  ultimaUbicacionEn: string | null;
+}
+
+export interface UnidadParaDespacho extends UnidadConTripulacion {
+  distanciaKm: number | null;
+}

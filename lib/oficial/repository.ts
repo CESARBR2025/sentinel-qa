@@ -630,6 +630,48 @@ export async function actualizarPatrullaOficial(
   );
 }
 
+export async function actualizarUbicacionOficial(
+  userId: string,
+  lat: number,
+  lng: number,
+): Promise<void> {
+  await query(
+    `UPDATE ofi_oficiales
+     SET ultima_lat = $1, ultima_lng = $2, ultima_ubicacion_en = NOW()
+     WHERE user_id = $3`,
+    [lat, lng, userId],
+  );
+}
+
+export interface OficialBusqueda {
+  id: string;
+  nombre: string;
+  noNomina: string | null;
+}
+
+// Búsqueda local para el "elemento suelto sin patrulla" del modal de
+// despacho — reemplaza el proxy externo de RH/Nómina (admin-only) porque el
+// oficial ya vive en esta tabla, sincronizado por su propia sesión.
+export async function buscarOficialesPorNominaONombre(
+  termino: string,
+): Promise<OficialBusqueda[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT o.id, o.no_nomina, u.name, u.apellido
+     FROM ofi_oficiales o
+     JOIN users u ON u.id = o.user_id
+     WHERE o.ofi_estatus = 'activo'
+       AND (o.no_nomina ILIKE $1 OR u.name ILIKE $1 OR u.apellido ILIKE $1)
+     ORDER BY u.name
+     LIMIT 10`,
+    [`%${termino}%`],
+  );
+  return result.rows.map(r => ({
+    id: String(r.id),
+    nombre: [r.name, r.apellido].filter(Boolean).join(' '),
+    noNomina: r.no_nomina ? String(r.no_nomina) : null,
+  }));
+}
+
 export async function actualizarTelefonoOficial(
   userId: string,
   telefono: string,
