@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { TabSolicitudes } from '@/lib/corralon/types'
 import { SubirOficioModal } from './subir-oficio-modal'
+import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 
 const estatusLabels: Record<string, string> = {
@@ -173,10 +174,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                           Subir Oficio
                         </button>
                         {row.urlOrdenSalida && (
-                          <a
-                            href={`/api/expediente/proxy?url=${encodeURIComponent(row.urlOrdenSalida)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <a href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(row.urlOrdenSalida ?? ''); }} rel="noopener noreferrer"
                             style={{
                               padding: '6px 14px',
                               border: '1px solid #1f355a',
@@ -278,10 +276,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                     <td style={{ ...tdStyle, textAlign: 'center' }}>
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                         {row.urlOrdenSalida && (
-                          <a
-                            href={`/api/expediente/proxy?url=${encodeURIComponent(row.urlOrdenSalida)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <a href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(row.urlOrdenSalida ?? ''); }} rel="noopener noreferrer"
                             style={{
                               padding: '6px 14px',
                               border: '1px solid #1f355a',
@@ -303,10 +298,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                           </a>
                         )}
                         {row.urlOficioPagoCorralon && (
-                          <a
-                            href={`/api/expediente/proxy?url=${encodeURIComponent(row.urlOficioPagoCorralon)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <a href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(row.urlOficioPagoCorralon ?? ''); }} rel="noopener noreferrer"
                             style={{
                               padding: '6px 14px',
                               border: '1px solid #059669',

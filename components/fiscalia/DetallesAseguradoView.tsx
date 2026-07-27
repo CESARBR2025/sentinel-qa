@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User, Shield, BadgeCheck, UserCheck, ScrollText, Gavel, MapPin, Map, Image, File, Camera } from 'lucide-react'
+import { SecureImg } from '@/components/shared/SecureImg'
 import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 import { PedirEvidenciasBoton } from '@/components/fiscalia/PedirEvidenciasModal'
 import type { DetalleAsegurado, EvidenciaMonitorista } from '@/lib/fiscalia/types'
@@ -255,11 +256,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
               >
                 {esImagen(ev.urlArchivo) ? (
                   <div style={{ width: '100%', height: 140, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                    <img
-                      src={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`}
-                      alt={ev.nombreArchivo ?? 'Evidencia'}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                    <SecureImg ref={ev.urlArchivo} alt={ev.nombreArchivo ?? 'Evidencia'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 ) : (
                   <div style={{ width: '100%', height: 140, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

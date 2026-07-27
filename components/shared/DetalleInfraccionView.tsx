@@ -8,6 +8,7 @@ import {
   Navigation, Hash, Building2, Flag, Crosshair,
 } from 'lucide-react'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
+import { SecureImg } from '@/components/shared/SecureImg'
 import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 /* ─── INTERFACES ─── */
@@ -363,9 +364,7 @@ function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbica
                   >
                     <div className="h-16 sm:h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
                       {isImage ? (
-                        <img
-                          src={`/api/expediente/proxy?url=${encodeURIComponent(url)}`}
-                          alt={`Evidencia ${i + 1}`}
+                        <SecureImg ref={url} alt={`Evidencia ${i + 1}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           onError={(e) => {
                             const t = e.currentTarget
@@ -752,9 +751,7 @@ function TimelineNode({ nombre, fecha, items }: { nombre: string; fecha: string;
             >
               <div className="h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
                 {isImage ? (
-                  <img
-                    src={`/api/expediente/proxy?url=${encodeURIComponent(item.ruta)}`}
-                    alt={item.nombre}
+                  <SecureImg ref={item.ruta} alt={item.nombre}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
                       const target = e.currentTarget

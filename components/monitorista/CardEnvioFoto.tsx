@@ -6,6 +6,7 @@ import { Send, RefreshCw, ExternalLink, CheckCircle, XCircle } from 'lucide-reac
 import React from 'react'
 import { SubirFotoDetenido } from './SubirFotoDetenido'
 import { Toast } from '@/components/ui/Toast'
+import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 const ETIQUETAS: Record<string, string> = {
   frontal: 'Foto Frontal',
@@ -123,7 +124,7 @@ export function CardEnvioFoto({
       {evidencias.length > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
           {evidencias.map((ev) => (
-            <a key={ev.id} href={`/api/expediente/proxy?url=${encodeURIComponent(ev.url)}`} target="_blank" rel="noreferrer"
+            <a key={ev.id} href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(ev.url); }} rel="noreferrer"
               style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#1f355a', textDecoration: 'none', padding: '4px 10px', border: '1px solid #c3c8d2', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 4, background: '#eff1f3' }}>
               <ExternalLink size={10} /> {ev.nombre || `Foto ${ev.id.substring(0, 8)}`}
             </a>

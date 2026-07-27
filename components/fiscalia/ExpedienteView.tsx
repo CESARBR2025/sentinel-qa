@@ -7,7 +7,9 @@ import {
   Calendar, ArrowLeft, Printer
 } from 'lucide-react'
 import Link from 'next/link'
+import { SecureImg } from '@/components/shared/SecureImg'
 import type { ExpedienteExp } from '@/lib/fiscalia/types'
+import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 const labelSx: React.CSSProperties = {
   display: 'block', fontFamily: 'JetBrains Mono,monospace', fontSize: 9,
@@ -192,11 +194,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
             {fotos.map(f => (
               <div key={f.id} style={{ border: '1px solid #e2e8f0', overflow: 'hidden', background: '#f8fafc' }}>
                 <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', overflow: 'hidden' }}>
-                  <img
-                    src={`/api/expediente/proxy?url=${encodeURIComponent(f.url)}`}
-                    alt={f.tipoFoto}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
+                  <SecureImg ref={f.url} alt={f.tipoFoto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div style={{ padding: '6px 8px', fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>
                   Detenido {f.detenidoIndex ?? '?'} · {f.tipoFoto}
@@ -216,10 +214,10 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
               const esImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(ev.urlArchivo)
               return (
                 <div key={ev.id} style={{ border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', background: '#f8fafc' }}
-                  onClick={() => window.open(`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`, '_blank')}>
+                  onClick={() => abrirDocumento(ev.urlArchivo)}>
                   <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
                     {esImg ? (
-                      <img src={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`} alt={dsp(ev.nombreArchivo)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <SecureImg ref={ev.urlArchivo} alt={dsp(ev.nombreArchivo)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <FileText size={32} color="#94a3b8" />
                     )}
