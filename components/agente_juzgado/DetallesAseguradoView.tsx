@@ -245,7 +245,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
                 {esImagen(ev.urlArchivo) ? (
                   <div style={{ width: '100%', height: 140, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                     <img
-                      src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`}
+                      src={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`}
                       alt={ev.nombreArchivo ?? 'Evidencia'}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />

@@ -1,6 +1,5 @@
 export async function abrirDocumento(urlArchivo: string) {
-  const proxyUrl = `/api/expediente/proxy?url=${encodeURIComponent(urlArchivo)}`
-
+  const proxyUrl = `/api/expediente/proxy?ref=${encodeURIComponent(urlArchivo)}`
   try {
     const res = await fetch(proxyUrl)
     if (!res.ok) throw new Error('Error al obtener documento')

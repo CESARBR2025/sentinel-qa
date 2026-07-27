@@ -15,9 +15,7 @@ function getExtension(url: string): string {
 }
 
 export function VerDocumentoModal({ url, titulo, onClose }: Props) {
-  const baseUrl = process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''
-  const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`
-  const proxyUrl = `/api/expediente/proxy?url=${encodeURIComponent(fullUrl)}`
+  const proxyUrl = `/api/expediente/proxy?url=${encodeURIComponent(url)}`
   const [imgError, setImgError] = useState(false)
 
   return (

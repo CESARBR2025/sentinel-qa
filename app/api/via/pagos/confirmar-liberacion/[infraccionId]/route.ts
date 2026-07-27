@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { consultarEstatusSA7 } from "@/lib/via/sa7";
 import { SA7Repository } from "@/features/via/saSiete/repository";
-import { getExpedienteToken } from "@/lib/via/expediente";
+import { subir } from "@/lib/expediente/v2/client";
+import { serializarRef } from "@/lib/expediente/v2/ref";
+import { carpetaOrdenSalida } from "@/lib/expediente/v2/carpetas";
 import { generarOrdenSalidaVehiculo } from "@/lib/ordenSalida/generarOrdenSalida";
 import { enviarCorreoOrdenLiberacion } from "@/lib/emails/server";
 import {
@@ -91,38 +93,12 @@ export async function GET(
         try {
           const pdfBuffer = await generarOrdenSalidaVehiculo({ data: dataParaPDF });
 
-          // Subir a expediente digital
-          const token = await getExpedienteToken();
-          const ahora = new Date();
-          const anio = ahora.getFullYear().toString();
-          const mes = String(ahora.getMonth() + 1).padStart(2, "0");
-          const folio = (dbData.folio || infraccionId).replace(/[^a-zA-Z0-9_-]/g, "_");
-          const pdfFile = new File(
-            [new Uint8Array(pdfBuffer)],
-            `orden_salida_${folio}.pdf`,
-            { type: "application/pdf" },
+          // Subir a expediente v2
+          const ref = await subir(
+            { buffer: Buffer.from(pdfBuffer), nombre: `orden_salida_${infraccionId}.pdf`, tipo: 'application/pdf' },
+            carpetaOrdenSalida(infraccionId),
           );
-          const formData = new FormData();
-          formData.append("file", pdfFile);
-          formData.append("ruta_personalizada", `${anio}/${mes}/${infraccionId}`);
-          formData.append("sistema", process.env.EXPEDIENTE_SISTEMA ?? "sspm");
-
-          const uploadRes = await fetch(
-            `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? process.env.EXPEDIENTE_DIGITAL_URL ?? 'https://sanjuandelrio.sytes.net:3044'}/api/upload-custom`,
-            {
-              method: "POST",
-              headers: { Authorization: `Bearer ${token}` },
-              body: formData,
-            },
-          );
-
-          if (uploadRes.ok) {
-            const uploadJson = await uploadRes.json();
-            const urlOrdenSalida = uploadJson.data?.ruta_relativa;
-            if (urlOrdenSalida) {
-              await actualizarUrlOrdenSalida(infraccionId, urlOrdenSalida);
-            }
-          }
+          await actualizarUrlOrdenSalida(infraccionId, serializarRef(ref));
         } catch (err) {
           console.error("[CONFIRMAR-LIBERACION] Error al generar/subir orden de salida:", err);
           throw err;

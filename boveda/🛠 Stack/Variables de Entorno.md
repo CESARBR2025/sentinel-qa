@@ -20,12 +20,15 @@
 | `NOMINA_API_URL` | No | — |
 | `SECRET_NOMINA` | No | — |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | — |
-| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | — |
-| `NEXT_PUBLIC_GUEST` | No | — |
-| `EXPEDIENTE_DIGITAL_URL` | No | — |
+| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | Expediente v1 (lectura legado) |
+| `EXPEDIENTE_DIGITAL_URL` | No | Expediente v1 (lectura legado) |
+| `EXPEDIENTE_SISTEMA` | No | Expediente v1 — sistema |
+| `EXPEDIENTE_CODIGO_INVITACION` | No | Expediente v1 — código invitación |
+| `EXPEDIENTE_URL` | **Sí** | Expediente v2 — URL del servidor |
+| `EXPEDIENTE_API_KEY` | **Sí** | Expediente v2 — API key (hex64) |
+| `EXPEDIENTE_GUEST_CODE` | **Sí** | Expediente v2 — código invitación |
+| `EXPEDIENTE_FOLDER` | No | Expediente v2 — carpeta raíz (default Centinela) |
 | `DB_NAME_VIA` | No | — |
-| `EXPEDIENTE_SISTEMA` | No | CONTROL DE PDF - VISUALIZACION |
-| `EXPEDIENTE_CODIGO_INVITACION` | No | — |
 | `SMTP_HOST` | No | SMTP Server (Gmail ejemplo) |
 | `SMTP_PORT` | No | — |
 | `SMTP_SECURE` | No | — |

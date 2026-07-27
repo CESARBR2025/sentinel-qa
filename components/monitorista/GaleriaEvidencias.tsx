@@ -49,7 +49,7 @@ export function GaleriaEvidencias({ evidencias }: { evidencias: EvidenciaRow[] }
                     flexShrink: 0, overflow: 'hidden', border: '1px solid rgba(27,39,66,0.5)',
                   }}>
                     <img
-                      src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlExpediente)}`}
+                      src={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlExpediente)}`}
                       alt={ev.nombreOriginal || ''}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
@@ -75,7 +75,7 @@ export function GaleriaEvidencias({ evidencias }: { evidencias: EvidenciaRow[] }
                 </div>
               </div>
               <a
-                href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlExpediente)}`}
+                href={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlExpediente)}`}
                 target="_blank"
                 rel="noreferrer"
                 style={{

@@ -97,7 +97,7 @@ export function FotosExpedienteSection({ detenidos, reporteCampoId, hayArmaFuego
                         </div>
                         {existente ? (
                           <div style={{ position: 'relative', display: 'inline-block' }}>
-                            <img src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(existente.url_archivo)}`} alt={tipo}
+                            <img src={`/api/expediente/proxy?url=${encodeURIComponent(existente.url_archivo)}`} alt={tipo}
                               style={{ width: 100, height: 80, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
                             <button onClick={() => fileRefs.current[key]?.click()} style={{
                               position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.6)', color: '#fff',
@@ -153,7 +153,7 @@ export function FotosExpedienteSection({ detenidos, reporteCampoId, hayArmaFuego
               </span>
               {existente ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <img src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(existente.url_archivo)}`} alt={tipo} style={{ width: 50, height: 40, objectFit: 'cover' }} />
+                  <img src={`/api/expediente/proxy?url=${encodeURIComponent(existente.url_archivo)}`} alt={tipo} style={{ width: 50, height: 40, objectFit: 'cover' }} />
                   <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, color: '#16a34a' }}>✓</span>
                   <button onClick={() => fileRefs.current[key]?.click()} style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer' }}>Cambiar</button>
                 </div>

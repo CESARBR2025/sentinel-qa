@@ -127,7 +127,7 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
                         {(evidenciasPorSolicitud.get(sol.solicitudId) ?? []).length > 0 && (
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                             {(evidenciasPorSolicitud.get(sol.solicitudId) ?? []).map((ev) => (
-                              <a key={ev.id} href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
+                              <a key={ev.id} href={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
 fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a',
                       textDecoration: 'none', padding: '6px 12px',
                       border: '1px solid #c3c8d2', borderRadius: 2,
@@ -160,7 +160,7 @@ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a',
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                           {evs.map((ev) => (
-                            <a key={ev.id} href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
+                            <a key={ev.id} href={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`} target="_blank" rel="noreferrer" style={{
                               fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a',
                               textDecoration: 'none', padding: '6px 12px',
                               border: '1px solid rgba(212,164,58,0.3)', borderRadius: 2,

@@ -193,7 +193,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
               <div key={f.id} style={{ border: '1px solid #e2e8f0', overflow: 'hidden', background: '#f8fafc' }}>
                 <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', overflow: 'hidden' }}>
                   <img
-                    src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(f.url)}`}
+                    src={`/api/expediente/proxy?url=${encodeURIComponent(f.url)}`}
                     alt={f.tipoFoto}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
@@ -216,10 +216,10 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
               const esImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(ev.urlArchivo)
               return (
                 <div key={ev.id} style={{ border: '1px solid #e2e8f0', overflow: 'hidden', cursor: 'pointer', background: '#f8fafc' }}
-                  onClick={() => window.open(`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`, '_blank')}>
+                  onClick={() => window.open(`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`, '_blank')}>
                   <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9' }}>
                     {esImg ? (
-                      <img src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlArchivo)}`} alt={dsp(ev.nombreArchivo)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={`/api/expediente/proxy?url=${encodeURIComponent(ev.urlArchivo)}`} alt={dsp(ev.nombreArchivo)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <FileText size={32} color="#94a3b8" />
                     )}

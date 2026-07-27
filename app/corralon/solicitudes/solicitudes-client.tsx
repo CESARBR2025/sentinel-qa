@@ -27,7 +27,6 @@ function formatDate(dateStr: string): string {
 export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes }) {
   const [tab, setTab] = useState<'pendientes' | 'finalizadas'>('pendientes')
   const [modalInfraccion, setModalInfraccion] = useState<{ id: string; folio: string } | null>(null)
-  const baseUrl = process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''
 
   const { pendientes, finalizadas } = solicitudes
 
@@ -175,7 +174,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                         </button>
                         {row.urlOrdenSalida && (
                           <a
-                            href={`/api/expediente/proxy?url=${encodeURIComponent(`${baseUrl}${row.urlOrdenSalida}`)}`}
+                            href={`/api/expediente/proxy?url=${encodeURIComponent(row.urlOrdenSalida)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
@@ -280,7 +279,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                       <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                         {row.urlOrdenSalida && (
                           <a
-                            href={`/api/expediente/proxy?url=${encodeURIComponent(`${baseUrl}${row.urlOrdenSalida}`)}`}
+                            href={`/api/expediente/proxy?url=${encodeURIComponent(row.urlOrdenSalida)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
@@ -305,7 +304,7 @@ export function SolicitudesClient({ solicitudes }: { solicitudes: TabSolicitudes
                         )}
                         {row.urlOficioPagoCorralon && (
                           <a
-                            href={`/api/expediente/proxy?url=${encodeURIComponent(`${baseUrl}${row.urlOficioPagoCorralon}`)}`}
+                            href={`/api/expediente/proxy?url=${encodeURIComponent(row.urlOficioPagoCorralon)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{

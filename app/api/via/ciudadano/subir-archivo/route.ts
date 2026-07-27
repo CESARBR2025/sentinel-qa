@@ -1,111 +1,45 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getExpedienteToken, getExpedienteHost } from "@/lib/via/expediente";
-import { insertarDocumentoLiberacion } from "@/lib/agente_infracciones/repository";
-import crypto from "crypto";
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { subir } from '@/lib/expediente/v2/client'
+import { serializarRef } from '@/lib/expediente/v2/ref'
+import { carpetaLiberacionCiudadana } from '@/lib/expediente/v2/carpetas'
+import { insertarDocumentoLiberacion } from '@/lib/agente_infracciones/repository'
+import crypto from 'crypto'
 
 export async function POST(req: NextRequest) {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
+
   try {
-    const formData = await req.formData();
-    const solicitudId = formData.get("solicitudId") as string;
-    const tipoDocumento = formData.get("tipoDocumento") as string;
-    const archivo = formData.get("file") as File;
+    const formData = await req.formData()
+    const solicitudId = formData.get('solicitudId') as string
+    const tipoDocumento = formData.get('tipoDocumento') as string
+    const archivo = formData.get('file') as File
 
     if (!solicitudId || !tipoDocumento || !archivo) {
-      return NextResponse.json(
-        { error: "solicitudId, tipoDocumento y archivo son requeridos" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'solicitudId, tipoDocumento y archivo son requeridos' }, { status: 400 })
     }
 
-    const esValido =
-      archivo.type.startsWith("image/") || archivo.type === "application/pdf";
+    const esValido = archivo.type.startsWith('image/') || archivo.type === 'application/pdf'
     if (!esValido) {
-      return NextResponse.json(
-        { error: "Tipo de archivo no permitido" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Tipo de archivo no permitido' }, { status: 400 })
     }
 
-    let token: string;
-    try {
-      token = await getExpedienteToken();
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Error desconocido";
-      return NextResponse.json(
-        { error: `Error de autenticación con expediente: ${msg}` },
-        { status: 500 },
-      );
-    }
+    const buffer = Buffer.from(await archivo.arrayBuffer())
+    const ref = await subir({ buffer, nombre: archivo.name, tipo: archivo.type }, carpetaLiberacionCiudadana(solicitudId))
 
-    const now = new Date();
-    const anio = now.getFullYear().toString();
-    const mes = String(now.getMonth() + 1).padStart(2, "0");
-
-    const host = getExpedienteHost();
-    if (!host) {
-      return NextResponse.json(
-        { error: "EXPEDIENTE_HOST no configurado" },
-        { status: 500 },
-      );
-    }
-
-    const expedienteForm = new FormData();
-    expedienteForm.append("file", archivo);
-    expedienteForm.append(
-      "ruta_personalizada",
-      `${anio}/${mes}/${solicitudId}`,
-    );
-    expedienteForm.append("sistema", process.env.EXPEDIENTE_SISTEMA ?? "sspm");
-
-    let expedienteRes: Response;
-    try {
-      expedienteRes = await fetch(`${host}/api/upload-custom`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: expedienteForm,
-      });
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Error desconocido";
-      return NextResponse.json(
-        { error: `Error de conexión con expediente: ${msg}` },
-        { status: 500 },
-      );
-    }
-
-    if (!expedienteRes.ok) {
-      const body = await expedienteRes.text().catch(() => "");
-      return NextResponse.json(
-        { error: `Expediente respondió con ${expedienteRes.status}: ${body}` },
-        { status: 500 },
-      );
-    }
-
-    const uploadData = await expedienteRes.json().catch(() => null);
-    if (!uploadData?.data?.ruta_relativa) {
-      return NextResponse.json(
-        { error: "Expediente no devolvió ruta_relativa" },
-        { status: 500 },
-      );
-    }
-
-    const id = crypto.randomUUID();
-
+    const id = crypto.randomUUID()
     await insertarDocumentoLiberacion({
       id,
       solicitudId,
       tipoDocumento,
-      urlDocumento: uploadData.data.ruta_relativa,
-    });
+      urlDocumento: serializarRef(ref),
+    })
 
-    return NextResponse.json({
-      success: true,
-      data: { ruta: uploadData.data.ruta_relativa },
-    });
+    return NextResponse.json({ success: true, data: { ruta: serializarRef(ref) } })
   } catch (error) {
-    console.error("[VIA][CIUDADANO][SUBIR-ARCHIVO]", error);
-    return NextResponse.json(
-      { error: "Error al subir archivo" },
-      { status: 500 },
-    );
+    console.error('[VIA][CIUDADANO][SUBIR-ARCHIVO]', error)
+    return NextResponse.json({ error: 'Error al subir archivo' }, { status: 500 })
   }
 }
