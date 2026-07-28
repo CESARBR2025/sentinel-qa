@@ -322,4 +322,46 @@ Un ciudadano anónimo nunca tiene esa sesión, así que ambos siempre regresaban
 - En `documentos/[infraccionId]/route.ts`: verificar contra el `infraccionId` de la ruta.
 - En `subir-archivo/route.ts`: el body solo trae `solicitudId`, así que primero se resuelve el `infraccionId` con la nueva función `obtenerInfraccionIdDeSolicitud(solicitudId)` (`lib/agente_infracciones/repository.ts`) y luego se valida la cookie contra ese id.
 
+---
+
+## Modal "Liberación por infracción" → Guardar y generar orden de pago: null value in column "orden_pago_id" (2026-07-28)
+
+**Síntoma**: al hacer clic en "Guardar y generar orden de pago" en el modal de liberación por infracción, la acción falla con:
+```
+el valor nulo en la columna «orden_pago_id» de la relación «v2_ordenes_pago_sa7» viola la restricción de no nulo
+```
+
+**Causa raíz (síntoma inmediato)**: `generarOrdenPagoAction` (`lib/agente_liberaciones/actions.ts`) llama al servicio externo SA7 (`https://sanjuandelrio.sytes.net:3044/api/sasiete/generar-orden-completa`) y lee el resultado de los headers de la respuesta (`x-orden-pago-id`, `x-estatus`, etc.), pero **nunca validaba `responseSA7.ok`**. Cuando SA7 responde con error, esos headers vienen vacíos y el código igual ejecutaba el `INSERT INTO via.v2_ordenes_pago_sa7` con `orden_pago_id = null`, que es `NOT NULL`.
+
+**Causa raíz real (por qué SA7 devolvía 500)**: en `generarOrdenPagoAction` el default de `descuento` era **0**:
+```ts
+let descuento = 0
+const descuentoNum = Number(descuentoAplicado)
+if (descuentoNum) {
+  if (descuentoNum === 70) descuento = 0.3
+  else if (descuentoNum === 50) descuento = 0.5
+  if (cantidad) descuento = cantidad
+}
+```
+Si el usuario no aplicaba 50%/70% de descuento (caso normal: pagar el 100%), `descuento` se quedaba en `0` y se mandaba `cantidades: {"31378": 0}` a SA7 — una cantidad de **cero** para generar la orden, que el servicio rechaza con un 500 genérico (`"No se puede mostrar la página. Error interno en el servidor."`, la página de error default de su servidor, no un JSON con detalle).
+
+La confirmación vino de comparar con `app/api/via/sa7/generar-orden-pago/route.ts:98`, el flujo de creación de infracción que sí funciona: ahí el default es `let descuento = 1` (100%, sin descuento) y solo baja a 0.3/0.5 si aplica.
+
+El mismo patrón (llamar SA7 y confiar en los headers sin chequear `.ok`) también existe en `lib/agente_infracciones/service.ts:69-96` (`procesarCapturaInfractor`), pero ahí está envuelto en un `try/catch` que traga el error silenciosamente y regresa `success: true` sin orden de pago — un bug relacionado, pendiente de revisar (`task_237f3d22`).
+
+**Fix** en `lib/agente_liberaciones/actions.ts`:
+1. Default de `descuento` corregido de `0` a `1`, igual que en `generar-orden-pago/route.ts`.
+2. Si `!responseSA7.ok`, leer el body (texto/JSON) y regresar `{ ok: false, message }` con el mensaje de SA7, sin tocar la BD (siguiendo el patrón de `obtenerTokenGuest` en `lib/shared/infracciones.ts:31`).
+3. Si `orden_pago_id` sigue viniendo nulo aun con `ok`, regresar error igual antes del `INSERT`.
+
+**Bug adicional en el modal (por qué "parecía" funcionar aunque SA7 siguiera fallando)**: `handleFinalizar` en `features/liberaciones/components/RevisionDocumentosSection.tsx` hace dos pasos independientes: (1) `finalizarRevisionAction` — cambia el estatus de la infracción en BD a `PENDIENTE_PAGO`, éxito real e independiente de SA7; (2) `generarOrdenPagoAction` — cuyo resultado **se descartaba sin revisar**. Como `onValidated?.()` se llamaba siempre (sin importar si la orden falló), y el padre (`LiberacionesDashboard.tsx:681`) hace `setRevisionModalId(null)` ahí mismo, el modal se cerraba de inmediato aunque la orden de pago nunca se hubiera generado — dando la impresión de éxito (el registro "desaparece" de la vista porque su estatus sí cambió), cuando en realidad no hay fila en `v2_ordenes_pago_sa7` para ese folio.
+
+**Fix**: capturar el resultado de `generarOrdenPagoAction`; si `!ok`, guardar el mensaje en un estado dedicado (`ordenPagoError`) y **no** llamar a `onValidated?.()` (el modal se queda abierto mostrando un banner rojo con el error en vez del banner verde de éxito).
+
+**Causa raíz definitiva del 500 de SA7 (2026-07-28, segunda vuelta)**: el 500 seguía apareciendo aun con `descuento=1` y con el chequeo de `.ok`. La diferencia real está en cómo se obtiene el `token guest`:
+- Los 3 flujos que **sí** funcionan (`app/api/via/sa7/generar-orden-pago/route.ts`, `app/api/via/infracciones/iniciar-proceso/route.ts`, `features/via/saSiete/service.ts`) piden el token a través de la ruta interna `app/api/auth/token-guest/route.ts`. Esa ruta, por un bug de nombres de campo, termina mandándole a SA7 `codigo_invitacion = INV-<año>-<fecha>` (código fijo del día) y `nombre_invitado = INV-<Date.now()>` (**único por request**, tomado del `codigo_invitacion` que mandó el caller).
+- Los 2 flujos rotos (`generarOrdenPagoAction` en `lib/agente_liberaciones/actions.ts` y `procesarCapturaInfractor` en `lib/agente_infracciones/service.ts`) usan `obtenerTokenGuest()` (`lib/shared/infracciones.ts`), que llama a SA7 **directo** mandando `codigo_invitacion` y `nombre_invitado` con el **mismo valor repetido** (`INV-<año>-<fecha>`, fijo para todo el día). Con múltiples requests el mismo día, SA7 recibe el mismo "invitado" repetido una y otra vez, lo cual dispara su 500 genérico (`"No se puede mostrar la página. Error interno en el servidor."`).
+
+**Fix** en `lib/shared/infracciones.ts` → `obtenerTokenGuest()`: generar `nombre_invitado` único por llamada (`INV-${Date.now()}`) en vez de reusar el código fijo del día, igual que hace el flujo que sí funciona.
+
 **Contexto**: encontrado auditando el flujo de `InfraccionCiudadanoPage` como Fase 0 de un plan más amplio para exponer esta misma lógica como API para una app Flutter — las fases siguientes reusan `verificarCookieCiudadano` extendido para aceptar también un header `Authorization: Bearer` (ya que Flutter no maneja cookies httpOnly de forma nativa).

@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import {
-  FileText, MapPin, Car, User, Gavel,
+  FileText, FileImage, MapPin, Car, User, Gavel,
   FileSearch, Mail, Tag, Layers, Calendar, Palette,
   IdCard, BadgeCheck, Loader2,
   Navigation, Hash, Building2, Flag, Crosshair,
@@ -657,31 +657,31 @@ function OficialSection({ detalle }: { detalle: InfraccionDetalle }) {
 /* ══ DOCUMENTACIÓN ══ */
 
 function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
-  const documentos: { nombre: string; ruta: string; ext: string }[] = [
+  const documentos: { nombre: string; ruta: string; tipo: 'imagen' | 'documento' }[] = [
     detalle.Header.url_ine && detalle.Header.url_ine !== 'NO_DATA'
-      ? { nombre: 'INE', ruta: detalle.Header.url_ine, ext: detalle.Header.url_ine.split('.').pop()?.toLowerCase() ?? '' } : null,
+      ? { nombre: 'INE', ruta: detalle.Header.url_ine, tipo: 'imagen' } : null,
     detalle.Header.url_inapam && detalle.Header.url_inapam !== 'NO_DATA'
-      ? { nombre: 'INAPAM', ruta: detalle.Header.url_inapam, ext: detalle.Header.url_inapam.split('.').pop()?.toLowerCase() ?? '' } : null,
+      ? { nombre: 'INAPAM', ruta: detalle.Header.url_inapam, tipo: 'imagen' } : null,
     detalle.Header.url_tarjeta_circulacion && detalle.Header.url_tarjeta_circulacion !== 'NO_DATA'
-      ? { nombre: 'Tarjeta de Circulación', ruta: detalle.Header.url_tarjeta_circulacion, ext: detalle.Header.url_tarjeta_circulacion.split('.').pop()?.toLowerCase() ?? '' } : null,
-  ].filter(Boolean) as { nombre: string; ruta: string; ext: string }[]
+      ? { nombre: 'Tarjeta de Circulación', ruta: detalle.Header.url_tarjeta_circulacion, tipo: 'imagen' } : null,
+  ].filter(Boolean) as { nombre: string; ruta: string; tipo: 'imagen' | 'documento' }[]
 
   const fiscaliaDoc = detalle.Header.url_oficio_fiscalia && detalle.Header.url_oficio_fiscalia !== 'NO_DATA'
-    ? { nombre: 'Oficio Fiscalía', ruta: detalle.Header.url_oficio_fiscalia, ext: detalle.Header.url_oficio_fiscalia.split('.').pop()?.toLowerCase() ?? '' }
+    ? { nombre: 'Oficio Fiscalía', ruta: detalle.Header.url_oficio_fiscalia, tipo: 'documento' as const }
     : null
 
   const liberacionesDoc = detalle.Header.url_orden_salida_liberaciones && detalle.Header.url_orden_salida_liberaciones !== 'NO_DATA'
-    ? { nombre: 'Orden de Salida (Liberaciones)', ruta: detalle.Header.url_orden_salida_liberaciones, ext: detalle.Header.url_orden_salida_liberaciones.split('.').pop()?.toLowerCase() ?? '' }
+    ? { nombre: 'Orden de Salida (Liberaciones)', ruta: detalle.Header.url_orden_salida_liberaciones, tipo: 'documento' as const }
     : null
 
   const oficioCorralonDoc = detalle.Header.url_oficio_pago_corralon && detalle.Header.url_oficio_pago_corralon !== 'NO_DATA'
-    ? { nombre: 'Oficio de Corralón', ruta: detalle.Header.url_oficio_pago_corralon, ext: detalle.Header.url_oficio_pago_corralon.split('.').pop()?.toLowerCase() ?? '' }
+    ? { nombre: 'Oficio de Corralón', ruta: detalle.Header.url_oficio_pago_corralon, tipo: 'documento' as const }
     : null
 
   const evidencias = (detalle.Header.url_evidencias ?? []).map((ruta: string, i: number) => ({
     nombre: `Evidencia ${i + 1}`,
     ruta,
-    ext: ruta.split('.').pop()?.toLowerCase() ?? '',
+    tipo: 'imagen' as const,
   }))
 
   const viaItems = [...documentos, ...evidencias]
@@ -726,9 +726,7 @@ function DocumentacionSection({ detalle }: { detalle: InfraccionDetalle }) {
 
 /* ══ TIMELINE NODE ══ */
 
-function TimelineNode({ nombre, fecha, items }: { nombre: string; fecha: string; items: { nombre: string; ruta: string; ext: string }[] }) {
-  const isImageExt = (ext: string) => ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)
-
+function TimelineNode({ nombre, fecha, items }: { nombre: string; fecha: string; items: { nombre: string; ruta: string; tipo: 'imagen' | 'documento' }[] }) {
   return (
     <div className="relative pl-9">
       <div className="absolute left-[11px] top-6 bottom-0 w-px bg-slate-200" />
@@ -740,41 +738,30 @@ function TimelineNode({ nombre, fecha, items }: { nombre: string; fecha: string;
         <span className="text-xs text-slate-400">{fecha}</span>
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-        {items.map((item) => {
-          const isImage = isImageExt(item.ext)
-
-          return (
-            <div
-              key={item.ruta}
-              onClick={() => abrirDocumento(item.ruta)}
-              className="group cursor-pointer rounded-lg border border-slate-200 bg-white overflow-hidden hover:scale-[1.04] hover:shadow-lg transition-all duration-200"
-            >
-              <div className="h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
-                {isImage ? (
-                  <SecureImg ref={item.ruta} alt={item.nombre}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    onError={(e) => {
-                      const target = e.currentTarget
-                      target.style.display = 'none'
-                      const parent = target.parentElement
-                      if (parent) {
-                        parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="2.5"/></svg></div>`
-                      }
-                    }}
-                  />
-                ) : (
-                  <div className="flex flex-col items-center gap-1 text-slate-400">
-                    <FileText size={20} strokeWidth={1.5} />
-                    <span className="text-[9px] font-medium st-label">{item.ext.toUpperCase()}</span>
-                  </div>
-                )}
-              </div>
-              <div className="px-2 py-1.5 border-t border-slate-100">
-                <p className="text-[11px] font-medium text-slate-700 truncate text-center">{item.nombre}</p>
-              </div>
+        {items.map((item) => (
+          <div
+            key={item.ruta}
+            onClick={() => abrirDocumento(item.ruta)}
+            className="group cursor-pointer rounded-lg border border-slate-200 bg-white overflow-hidden hover:scale-[1.04] hover:shadow-lg transition-all duration-200"
+          >
+            <div className="h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
+              {item.tipo === 'imagen' ? (
+                <div className="flex flex-col items-center gap-1 text-sky-500">
+                  <FileImage size={22} strokeWidth={1.5} />
+                  <span className="text-[9px] font-medium st-label text-sky-500">JPEG</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-1 text-rose-500">
+                  <FileText size={22} strokeWidth={1.5} />
+                  <span className="text-[9px] font-medium st-label text-rose-500">PDF</span>
+                </div>
+              )}
             </div>
-          )
-        })}
+            <div className="px-2 py-1.5 border-t border-slate-100">
+              <p className="text-[11px] font-medium text-slate-700 truncate text-center">{item.nombre}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

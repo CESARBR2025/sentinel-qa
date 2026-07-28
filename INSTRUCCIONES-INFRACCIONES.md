@@ -159,7 +159,7 @@ no lo normalices en tu capa de deserialización sin revisar esto.
 | `tipoGarantia` | string\|null | `'PLACA'`, `'TARJETA'`, `'LICENCIA'`, o `'VEHICULO'` — **`'VEHICULO'` es el único caso que activa el flujo de liberación (sección 7)** |
 | `garantiaEntregada` | boolean | |
 | `motivoRetencion` | string\|null | `'ACCIDENTE'` \| `'DELITO'` \| `'INFRACCION'` — solo relevante si `tipoGarantia === 'VEHICULO'` |
-| `urlOrdenSalida` | string\|null | PDF de la orden de salida del vehículo, disponible cuando ya se liberó |
+| `urlOrdenSalida` | string\|null | Referencia opaca de almacenamiento (`exp2://...`), **no una URL descargable directamente** — ver advertencia en sección 9.5 antes de intentar mostrarla/descargarla en la app |
 | `latitud`, `longitud` | number\|null | |
 | `calle`, `numero`, `colonia`, `municipio`, `estado` | string\|null | dirección de la infracción |
 | `articuloId`, `articulo_numero`, `articulo_descripcion` | | fundamento legal (snake_case en los dos últimos) |
@@ -175,7 +175,7 @@ no lo normalices en tu capa de deserialización sin revisar esto.
 | `total_pesos`, `total_umas` | number (snake_case) | montos ya resueltos para mostrar |
 | `created_at` | string (ISO, snake_case) | |
 | `concepto_id` | string (snake_case) | |
-| `documentosLiberacion` | `Record<string, {url: string, label: string}>` | documentos de liberación ya subidos, llave = `tipoDocumento` (ver sección 7) |
+| `documentosLiberacion` | `Record<string, {url: string, label: string}>` | documentos de liberación ya subidos, llave = `tipoDocumento` (ver sección 7). `url` es la misma referencia opaca `exp2://...` de arriba — mismo aviso, sección 9.5 |
 | `dl_tipo_liberacion`, `dl_es_empresa`, `dl_nombre_empresa`, `dl_rfc_empresa` | (snake_case) | datos de la solicitud de liberación ya creada, si existe |
 
 ## 5. Pago
@@ -449,7 +449,9 @@ no lo revisa — a pesar del nombre, **no** es lo mismo que "pendiente" en la
 UI; trátalo como "en revisión"), `ACEPTADO`, `RECHAZADO`. Si es `RECHAZADO`,
 muestra `observaciones` (el motivo) y permite volver a subir **ese mismo**
 `tipoDocumento` repitiendo el paso 2 (`subir-archivo`) y luego el paso 3
-(`completar-solicitud`) de nuevo.
+(`completar-solicitud`) de nuevo. Para saber **qué** volver a subir necesitas
+solo `tipo_documento` — no necesitas (ni puedes, ver 9.5) abrir `url_documento`
+para mostrarle al ciudadano una vista previa de lo que subió.
 
 **No existe un motivo de rechazo agregado a nivel de toda la solicitud** —
 solo por documento individual. Si `estatusDependencia === MESA_DE_CONTROL_RECHAZADA`,
@@ -490,6 +492,28 @@ esquema global.
    staff sobre este punto (ver `Troubleshooting.md` de la bóveda si necesitas
    el detalle); para el lado ciudadano no cambia nada, pero no asumas que el
    string literal es `'PENDIENTE'`.
+5. **🚧 Bloqueante confirmado — ver/descargar documentos NO funciona para el
+   ciudadano todavía.** `urlOrdenSalida` y `documentosLiberacion[...].url` (y
+   `url_documento` en la sección 7.3) son referencias opacas de almacenamiento
+   (`exp2://{folderPath}#{uuid}`) que el backend genera con
+   `lib/expediente/v2/ref.ts` — **no son URLs que puedas abrir directamente**.
+   Para resolverlas a un archivo real hoy existen solo tres rutas:
+   `POST /api/expediente/token`, `GET /api/expediente/vista/[token]` y
+   `GET /api/expediente/proxy` (`app/api/expediente/*`) — **las tres exigen
+   una sesión de staff `better-auth`** (`auth.api.getSession`), no aceptan el
+   JWT de ciudadano de este documento. Esto **no es un problema nuevo de tu
+   integración**: el propio botón "ver documento" de la web ciudadana
+   (`SeccionLiberacion.tsx` → `lib/shared/abrirDocumento.ts`) llama exactamente
+   a esas mismas rutas y hoy le regresaría 401 a cualquier ciudadano real que
+   lo intente — confirmado revisando el código, no es una suposición.
+   **No intentes resolver esto del lado de Flutter** (ni construyendo la URL
+   a mano, ni intentando reusar el JWT de ciudadano contra esas rutas — no va
+   a funcionar). Es un hueco de backend: alguien tiene que extender esas tres
+   rutas para aceptar también `verificarAccesoCiudadano` (el mismo patrón dual
+   cookie/Bearer que ya usan `documentos/[infraccionId]` y `subir-archivo`,
+   ver `lib/via/auth-ciudadano.ts`). Repórtalo al equipo web antes de
+   comprometerte a una fecha de entrega que incluya "ver documentos ya
+   subidos" o "descargar la orden de salida" desde la app.
 
 ## 10. Cómo conseguir datos de prueba
 
@@ -516,3 +540,12 @@ prueba (`SSPM/INF/20260728/SPQC2A`). Ver también
 (incluye también el lado del oficial de tránsito, fuera de alcance para
 Flutter) y `boveda/🏗 Arquitectura/Proxy y Auth.md` para entender por qué el
 gate de sesión de staff (`proxy.ts`) no bloquea estas rutas.*
+
+*Corrección 2026-07-28 (misma fecha, sesión posterior): el servicio de
+almacenamiento se reestructuró — todos los archivos de una infracción ahora
+viven bajo una sola carpeta por infracción en el backend (sin impacto en los
+contratos de API de este documento) y el servicio v1 legado fue retirado por
+completo. De paso se auditaron los campos `urlOrdenSalida`/
+`documentosLiberacion`/`url_documento` contra el código real de las rutas de
+`/api/expediente/*` y se encontró el bloqueante de la sección 9.5 (ver ahí) —
+no existía antes de esta revisión en el documento.*

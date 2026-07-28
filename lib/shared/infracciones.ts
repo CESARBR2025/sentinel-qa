@@ -10,13 +10,14 @@ export async function obtenerTokenGuest(): Promise<string> {
   const dd = String(fecha.getDate()).padStart(2, "0");
   const fechaCompacta = `${yy}${mm}${dd}`;
   const codigoFinal = `INV-${year}-${fechaCompacta}`;
+  const nombreInvitado = `INV-${Date.now()}`;
 
   const response = await fetch(GUEST_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       codigo_invitacion: codigoFinal,
-      nombre_invitado: codigoFinal,
+      nombre_invitado: nombreInvitado,
     }),
   });
 

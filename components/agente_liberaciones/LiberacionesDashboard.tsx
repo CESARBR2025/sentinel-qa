@@ -347,322 +347,321 @@ export default function LiberacionesDashboard({
                     {/* ═══ TABLA PRINCIPAL ═══ */}
                     <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
 
-                    {/* ─── Segmented control + CSV ─── */}
-                    <div className="px-5 py-3 border-b flex items-center justify-between border-slate-100 bg-slate-50">
-                        <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-200/60">
-                            {STATUS_TABS.map(tab => {
-                                const count = estadisticas[STATS_KEY[tab.key]]
-                                const activo = filtro === tab.key
-                                return (
-                                    <button
-                                        key={tab.key}
-                                        onClick={() => handleFiltroChange(tab.key)}
-                                        className={`relative flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${activo
+                        {/* ─── Segmented control + CSV ─── */}
+                        <div className="px-5 py-3 border-b flex items-center justify-between border-slate-100 bg-slate-50">
+                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-slate-200/60">
+                                {STATUS_TABS.map(tab => {
+                                    const count = estadisticas[STATS_KEY[tab.key]]
+                                    const activo = filtro === tab.key
+                                    return (
+                                        <button
+                                            key={tab.key}
+                                            onClick={() => handleFiltroChange(tab.key)}
+                                            className={`relative flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${activo
                                                 ? 'bg-white text-slate-900 shadow-sm'
                                                 : 'text-slate-500 hover:text-slate-700'
-                                            }`}
-                                        style={{ fontFamily: "'JetBrains Mono',monospace" }}
-                                    >
-                                        <span
-                                            className={`w-1.5 h-1.5 rounded-full ${activo ? '' : 'opacity-40'}`}
-                                            style={{ background: tab.color }}
-                                        />
-                                        {tab.label}
-                                        <span className={`tabular-nums ${activo ? 'text-slate-900' : 'text-slate-400'}`}>
-                                            {count}
-                                        </span>
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        <div className="flex items-center gap-3">
-                            {filtrosActivos && (
-                                <button
-                                    onClick={limpiarFiltros}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100 border border-transparent transition-colors"
-                                >
-                                    <X size={12} strokeWidth={2} />
-                                    Limpiar filtros
-                                </button>
-                            )}
-                            <button
-                                onClick={exportarCSV}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-primary bg-primary-muted border border-primary/20 hover:bg-primary-muted transition-colors"
-                            >
-                                <Download size={12} strokeWidth={1.5} />
-                                CSV
-                            </button>
-                            <span className="text-xs font-medium text-slate-400">
-                                {registrosOrdenados.length} registro{registrosOrdenados.length !== 1 ? 's' : ''}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* ─── Sub-filtro: tipo liberación ─── */}
-                    {filtro === 'LIBERADA_POR_INFRACCION' && (
-                        <div className="px-5 py-2 border-b border-slate-100 bg-white flex items-center gap-2 flex-wrap">
-                            <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
-                                <SlidersHorizontal size={11} strokeWidth={2} />
-                                Tipo
-                            </span>
-                            <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-primary-muted w-fit">
-                                {TIPO_LIBERACION_OPTS.map(opt => (
+                                                }`}
+                                            style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                        >
+                                            <span
+                                                className={`w-1.5 h-1.5 rounded-full ${activo ? '' : 'opacity-40'}`}
+                                                style={{ background: tab.color }}
+                                            />
+                                            {tab.label}
+                                            <span className={`tabular-nums ${activo ? 'text-slate-900' : 'text-slate-400'}`}>
+                                                {count}
+                                            </span>
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                            <div className="flex items-center gap-3">
+                                {filtrosActivos && (
                                     <button
-                                        key={opt.key}
-                                        onClick={() => { setTipoLiberacion(opt.key); setPagina(1) }}
-                                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
-                                            tipoLiberacion === opt.key
+                                        onClick={limpiarFiltros}
+                                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100 border border-transparent transition-colors"
+                                    >
+                                        <X size={12} strokeWidth={2} />
+                                        Limpiar filtros
+                                    </button>
+                                )}
+                                <button
+                                    onClick={exportarCSV}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium text-primary bg-primary-muted border border-primary/20 hover:bg-primary-muted transition-colors"
+                                >
+                                    <Download size={12} strokeWidth={1.5} />
+                                    CSV
+                                </button>
+                                <span className="text-xs font-medium text-slate-400">
+                                    {registrosOrdenados.length} registro{registrosOrdenados.length !== 1 ? 's' : ''}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* ─── Sub-filtro: tipo liberación ─── */}
+                        {filtro === 'LIBERADA_POR_INFRACCION' && (
+                            <div className="px-5 py-2 border-b border-slate-100 bg-white flex items-center gap-2 flex-wrap">
+                                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                    <SlidersHorizontal size={11} strokeWidth={2} />
+                                    Tipo
+                                </span>
+                                <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-primary-muted w-fit">
+                                    {TIPO_LIBERACION_OPTS.map(opt => (
+                                        <button
+                                            key={opt.key}
+                                            onClick={() => { setTipoLiberacion(opt.key); setPagina(1) }}
+                                            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${tipoLiberacion === opt.key
                                                 ? 'bg-white text-primary-dark shadow-sm'
                                                 : 'text-primary/70 hover:text-primary-dark'
-                                        }`}
-                                        style={{ fontFamily: "'JetBrains Mono',monospace" }}
-                                    >
-                                        {opt.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ─── Search + Date filter ─── */}
-                    <div className="px-5 py-2.5 border-b flex items-center gap-3 border-slate-100 bg-white flex-wrap">
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <Search size={13} strokeWidth={1.8} className="text-slate-400 shrink-0" />
-                            <input
-                                type="text"
-                                value={busqueda}
-                                onChange={e => { setBusqueda(e.target.value); setPagina(1) }}
-                                placeholder="Buscar por folio, placa, nombre o correo..."
-                                className="w-full border-none bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
-                            />
-                            {busqueda && (
-                                <button
-                                    onClick={() => { setBusqueda(''); setPagina(1) }}
-                                    className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
-                                >
-                                    Limpiar
-                                </button>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                            <Calendar size={13} strokeWidth={1.5} className="text-slate-400" />
-                            <input
-                                type="date"
-                                value={fechaInicio}
-                                onChange={e => { setFechaInicio(e.target.value); setPagina(1) }}
-                                className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                            />
-                            <span className="text-xs text-slate-300">—</span>
-                            <input
-                                type="date"
-                                value={fechaFin}
-                                onChange={e => { setFechaFin(e.target.value); setPagina(1) }}
-                                className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                            />
-                            {(fechaInicio || fechaFin) && (
-                                <button
-                                    onClick={() => { setFechaInicio(''); setFechaFin(''); setPagina(1) }}
-                                    className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
-                                >
-                                    Limpiar
-                                </button>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* ─── Table ─── */}
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr>
-                                    {visibleColumns.map(column => (
-                                        <th
-                                            key={column.key}
-                                            className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b-2 border-slate-100`}
+                                                }`}
                                             style={{ fontFamily: "'JetBrains Mono',monospace" }}
-                                            onClick={SORTABLE_KEYS.has(column.key) ? () => handleSort(column.key) : undefined}
                                         >
-                                            <span className="inline-flex items-center gap-1">
-                                                {column.label}
-                                                {SORTABLE_KEYS.has(column.key) && (
-                                                    sortField === column.key ? (
-                                                        sortDirection === 'asc' ? <ArrowUp size={11} strokeWidth={2} /> : <ArrowDown size={11} strokeWidth={2} />
-                                                    ) : (
-                                                        <ArrowUpDown size={11} strokeWidth={1.5} className="text-slate-300" />
-                                                    )
-                                                )}
-                                            </span>
-                                        </th>
+                                            {opt.label}
+                                        </button>
                                     ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {registrosOrdenados.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={visibleColumns.length} className="py-12 text-center">
-                                            <div className="flex flex-col items-center gap-2">
-                                                <AlertCircle size={22} strokeWidth={1.5} className="text-slate-300" />
-                                                <p className="text-sm font-medium text-slate-400">No hay registros</p>
-                                                <p className="text-xs text-slate-300">
-                                                    {filtrosActivos
-                                                        ? 'Ningún registro coincide con los filtros aplicados.'
-                                                        : 'No existen solicitudes con este estatus.'}
-                                                </p>
-                                                {filtrosActivos && (
-                                                    <button
-                                                        onClick={limpiarFiltros}
-                                                        className="mt-1 text-[11px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors"
-                                                    >
-                                                        Limpiar filtros
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    registrosPaginados.map((row, index) => (
-                                        <tr
-                                            key={row.id}
-                                            className={`${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100/70 border-b border-slate-100`}
-                                        >
-                                            {visibleColumns.map(column => {
-                                                if (column.key === 'acciones') {
-                                                    const estatusDep = row.estatusDependencia ?? ''
-                                                    return (
-                                                        <td key={column.key} className="px-4 py-2.5">
-                                                            <div className="flex items-center gap-2">
-                                                                <BotonVerDetalle
-                                                                    idInfraccion={row.id}
-                                                                />
-                                                                {estatusDep === 'VEHICULO_EN_CORRALON' && (
-                                                                    <button
-                                                                        onClick={() => setCapturarInfractorId(row.id)}
-                                                                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 active:scale-[0.99] transition-colors duration-150"
-                                                                    >
-                                                                        <User size={11} strokeWidth={2.5} />
-                                                                        Capturar datos
-                                                                    </button>
-                                                                )}
-                                                                {estatusDep === 'MESA_DE_CONTROL_REVISION' && (
-                                                                    <button
-                                                                        onClick={() => setRevisionModalId(row.id)}
-                                                                        className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
-                                                                    >
-                                                                        <Search size={11} strokeWidth={2.5} />
-                                                                        Revisar documentos
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        </td>
-                                                    )
-                                                }
+                                </div>
+                            </div>
+                        )}
 
-                                                if (column.key === 'estatus') {
-                                                    const badge = getBadge(row.estatusDependencia ?? row.estatusInfraccion)
-                                                    return (
-                                                        <td key={column.key} className="px-4 py-2.5">
-                                                            <span
-                                                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-semibold"
-                                                                style={{ background: badge.bg, color: badge.text, fontFamily: "'JetBrains Mono',monospace" }}
-                                                            >
-                                                                <span className="w-1.5 h-1.5 rounded-sm" style={{ background: badge.dot }} />
-                                                                {badge.label}
-                                                            </span>
-                                                        </td>
-                                                    )
-                                                }
-
-                                                if (column.key === 'created_at') {
-                                                    return (
-                                                        <td key={column.key} className="px-4 py-2.5 text-xs text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
-                                                            {formatFecha(row.created_at)}
-                                                        </td>
-                                                    )
-                                                }
-
-                                                if (column.key === 'nombre_infractor') {
-                                                    const name = row['nombre_infractor'] ?? ''
-                                                    const initials = getInitials(name)
-                                                    const color = hashColor(name, AVATAR_COLORS)
-                                                    return (
-                                                        <td key={column.key} className="px-4 py-2.5">
-                                                            <div className="flex items-center gap-3">
-                                                                <div
-                                                                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium shrink-0"
-                                                                    style={{ background: color.bg, color: color.text }}
-                                                                >
-                                                                    {initials || <User size={13} strokeWidth={2.5} />}
-                                                                </div>
-                                                                <span className="font-medium text-sm text-slate-900">
-                                                                    {name || '—'}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                    )
-                                                }
-
-                                                return (
-                                                    <td key={column.key} className="px-4 py-2.5 font-medium text-slate-700">
-                                                        {row[column.key] ?? '—'}
-                                                    </td>
-                                                )
-                                            })}
-                                        </tr>
-                                    ))
+                        {/* ─── Search + Date filter ─── */}
+                        <div className="px-5 py-2.5 border-b flex items-center gap-3 border-slate-100 bg-white flex-wrap">
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <Search size={13} strokeWidth={1.8} className="text-slate-400 shrink-0" />
+                                <input
+                                    type="text"
+                                    value={busqueda}
+                                    onChange={e => { setBusqueda(e.target.value); setPagina(1) }}
+                                    placeholder="Buscar por folio, placa, nombre o correo..."
+                                    className="w-full border-none bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                                />
+                                {busqueda && (
+                                    <button
+                                        onClick={() => { setBusqueda(''); setPagina(1) }}
+                                        className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
+                                    >
+                                        Limpiar
+                                    </button>
                                 )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {/* ─── Pagination ─── */}
-                    {totalPaginas > 1 && (
-                        <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-white">
-                            <span className="text-xs text-slate-400">
-                                {registrosOrdenados.length} registros — Página {paginaSegura} de {totalPaginas}
-                            </span>
-                            <div className="flex items-center gap-1">
-                                <button
-                                    onClick={() => setPagina(p => Math.max(1, p - 1))}
-                                    disabled={paginaSegura <= 1}
-                                    className="inline-flex items-center justify-center w-8 h-8 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    ‹
-                                </button>
-                                {(() => {
-                                    const pages: (number | '...')[] = []
-                                    const delta = 1
-                                    const start = Math.max(2, paginaSegura - delta)
-                                    const end = Math.min(totalPaginas - 1, paginaSegura + delta)
-                                    pages.push(1)
-                                    if (start > 2) pages.push('...')
-                                    for (let i = start; i <= end; i++) pages.push(i)
-                                    if (end < totalPaginas - 1) pages.push('...')
-                                    if (totalPaginas > 1) pages.push(totalPaginas)
-                                    return pages.map((p, i) =>
-                                        p === '...' ? (
-                                            <span key={`e${i}`} className="w-7 h-7 flex items-center justify-center text-xs text-slate-300">···</span>
-                                        ) : (
-                                            <button
-                                                key={p}
-                                                onClick={() => setPagina(p)}
-                                                className={`w-7 h-7 text-xs font-medium rounded-md transition-colors ${p === paginaSegura ? 'bg-primary-dark text-white' : 'text-slate-600 hover:bg-slate-100'}`}
-                                            >
-                                                {p}
-                                            </button>
-                                        )
-                                    )
-                                })()}
-                                <button
-                                    onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))}
-                                    disabled={paginaSegura >= totalPaginas}
-                                    className="inline-flex items-center justify-center w-8 h-8 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    ›
-                                </button>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                                <Calendar size={13} strokeWidth={1.5} className="text-slate-400" />
+                                <input
+                                    type="date"
+                                    value={fechaInicio}
+                                    onChange={e => { setFechaInicio(e.target.value); setPagina(1) }}
+                                    className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                                />
+                                <span className="text-xs text-slate-300">—</span>
+                                <input
+                                    type="date"
+                                    value={fechaFin}
+                                    onChange={e => { setFechaFin(e.target.value); setPagina(1) }}
+                                    className="w-[130px] rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-900 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                                />
+                                {(fechaInicio || fechaFin) && (
+                                    <button
+                                        onClick={() => { setFechaInicio(''); setFechaFin(''); setPagina(1) }}
+                                        className="text-[10px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors shrink-0"
+                                    >
+                                        Limpiar
+                                    </button>
+                                )}
                             </div>
                         </div>
-                    )}
-                </div>
+
+                        {/* ─── Table ─── */}
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr>
+                                        {visibleColumns.map(column => (
+                                            <th
+                                                key={column.key}
+                                                className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest ${SORTABLE_KEYS.has(column.key) ? 'cursor-pointer select-none hover:text-slate-700' : ''} text-slate-500 bg-slate-50 border-b-2 border-slate-100`}
+                                                style={{ fontFamily: "'JetBrains Mono',monospace" }}
+                                                onClick={SORTABLE_KEYS.has(column.key) ? () => handleSort(column.key) : undefined}
+                                            >
+                                                <span className="inline-flex items-center gap-1">
+                                                    {column.label}
+                                                    {SORTABLE_KEYS.has(column.key) && (
+                                                        sortField === column.key ? (
+                                                            sortDirection === 'asc' ? <ArrowUp size={11} strokeWidth={2} /> : <ArrowDown size={11} strokeWidth={2} />
+                                                        ) : (
+                                                            <ArrowUpDown size={11} strokeWidth={1.5} className="text-slate-300" />
+                                                        )
+                                                    )}
+                                                </span>
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {registrosOrdenados.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={visibleColumns.length} className="py-12 text-center">
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <AlertCircle size={22} strokeWidth={1.5} className="text-slate-300" />
+                                                    <p className="text-sm font-medium text-slate-400">No hay registros</p>
+                                                    <p className="text-xs text-slate-300">
+                                                        {filtrosActivos
+                                                            ? 'Ningún registro coincide con los filtros aplicados.'
+                                                            : 'No existen solicitudes con este estatus.'}
+                                                    </p>
+                                                    {filtrosActivos && (
+                                                        <button
+                                                            onClick={limpiarFiltros}
+                                                            className="mt-1 text-[11px] font-medium uppercase tracking-wider text-primary hover:text-primary-dark transition-colors"
+                                                        >
+                                                            Limpiar filtros
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        registrosPaginados.map((row, index) => (
+                                            <tr
+                                                key={row.id}
+                                                className={`${index % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100/70 border-b border-slate-100`}
+                                            >
+                                                {visibleColumns.map(column => {
+                                                    if (column.key === 'acciones') {
+                                                        const estatusDep = row.estatusDependencia ?? ''
+                                                        return (
+                                                            <td key={column.key} className="px-4 py-2.5">
+                                                                <div className="flex items-center gap-2">
+                                                                    <BotonVerDetalle
+                                                                        idInfraccion={row.id}
+                                                                    />
+                                                                    {estatusDep === 'VEHICULO_EN_CORRALON' && (
+                                                                        <button
+                                                                            onClick={() => setCapturarInfractorId(row.id)}
+                                                                            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 active:scale-[0.99] transition-colors duration-150"
+                                                                        >
+                                                                            <User size={11} strokeWidth={2.5} />
+                                                                            Capturar datos
+                                                                        </button>
+                                                                    )}
+                                                                    {estatusDep === 'MESA_DE_CONTROL_REVISION' && (
+                                                                        <button
+                                                                            onClick={() => setRevisionModalId(row.id)}
+                                                                            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
+                                                                        >
+                                                                            <Search size={11} strokeWidth={2.5} />
+                                                                            Revisar documentos
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                        )
+                                                    }
+
+                                                    if (column.key === 'estatus') {
+                                                        const badge = getBadge(row.estatusDependencia ?? row.estatusInfraccion)
+                                                        return (
+                                                            <td key={column.key} className="px-4 py-2.5">
+                                                                <span
+                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-semibold"
+                                                                    style={{ background: badge.bg, color: badge.text, fontFamily: "'JetBrains Mono',monospace" }}
+                                                                >
+                                                                    <span className="w-1.5 h-1.5 rounded-sm" style={{ background: badge.dot }} />
+                                                                    {badge.label}
+                                                                </span>
+                                                            </td>
+                                                        )
+                                                    }
+
+                                                    if (column.key === 'created_at') {
+                                                        return (
+                                                            <td key={column.key} className="px-4 py-2.5 text-xs text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
+                                                                {formatFecha(row.created_at)}
+                                                            </td>
+                                                        )
+                                                    }
+
+                                                    if (column.key === 'nombre_infractor') {
+                                                        const name = row['nombre_infractor'] ?? ''
+                                                        const initials = getInitials(name)
+                                                        const color = hashColor(name, AVATAR_COLORS)
+                                                        return (
+                                                            <td key={column.key} className="px-4 py-2.5">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div
+                                                                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium shrink-0"
+                                                                        style={{ background: color.bg, color: color.text }}
+                                                                    >
+                                                                        {initials || <User size={13} strokeWidth={2.5} />}
+                                                                    </div>
+                                                                    <span className="font-medium text-sm text-slate-900">
+                                                                        {name || '—'}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                        )
+                                                    }
+
+                                                    return (
+                                                        <td key={column.key} className="px-4 py-2.5 font-medium text-slate-700">
+                                                            {row[column.key] ?? '—'}
+                                                        </td>
+                                                    )
+                                                })}
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* ─── Pagination ─── */}
+                        {totalPaginas > 1 && (
+                            <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-white">
+                                <span className="text-xs text-slate-400">
+                                    {registrosOrdenados.length} registros — Página {paginaSegura} de {totalPaginas}
+                                </span>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        onClick={() => setPagina(p => Math.max(1, p - 1))}
+                                        disabled={paginaSegura <= 1}
+                                        className="inline-flex items-center justify-center w-8 h-8 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        ‹
+                                    </button>
+                                    {(() => {
+                                        const pages: (number | '...')[] = []
+                                        const delta = 1
+                                        const start = Math.max(2, paginaSegura - delta)
+                                        const end = Math.min(totalPaginas - 1, paginaSegura + delta)
+                                        pages.push(1)
+                                        if (start > 2) pages.push('...')
+                                        for (let i = start; i <= end; i++) pages.push(i)
+                                        if (end < totalPaginas - 1) pages.push('...')
+                                        if (totalPaginas > 1) pages.push(totalPaginas)
+                                        return pages.map((p, i) =>
+                                            p === '...' ? (
+                                                <span key={`e${i}`} className="w-7 h-7 flex items-center justify-center text-xs text-slate-300">···</span>
+                                            ) : (
+                                                <button
+                                                    key={p}
+                                                    onClick={() => setPagina(p)}
+                                                    className={`w-7 h-7 text-xs font-medium rounded-md transition-colors ${p === paginaSegura ? 'bg-primary-dark text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                                                >
+                                                    {p}
+                                                </button>
+                                            )
+                                        )
+                                    })()}
+                                    <button
+                                        onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))}
+                                        disabled={paginaSegura >= totalPaginas}
+                                        className="inline-flex items-center justify-center w-8 h-8 text-xs font-medium rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        ›
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </>
             )}
 
@@ -696,7 +695,7 @@ export default function LiberacionesDashboard({
                                 <div className="w-6 h-6 rounded-md flex items-center justify-center bg-orange-500">
                                     <User size={12} strokeWidth={2.5} className="text-white" />
                                 </div>
-                                <h3 className="text-sm font-medium tracking-wider uppercase text-orange-800">Liberación por infracción</h3>
+                                <h3 className="text-sm font-medium tracking-wider uppercase text-orange-800">Liberación por infracción 123</h3>
                             </div>
                             <button
                                 onClick={() => setCapturarInfractorId(null)}
