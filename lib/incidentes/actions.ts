@@ -597,8 +597,8 @@ export async function createDespacho(formData: FormData) {
         // Match automático nómina → oficial con cuenta en el sistema (NULL si es elemento externo)
         await cliente.query(
           `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id)
-           VALUES ($1, $2, $3, $4, (SELECT id FROM ofi_oficiales WHERE no_nomina = $3 AND ofi_estatus = 'activo' LIMIT 1))`,
-          [despachoId, e.extId, e.nomina, e.nombre],
+           VALUES ($1, $2, $3, $4, (SELECT id FROM ofi_oficiales WHERE no_nomina = $5 AND ofi_estatus = 'activo' LIMIT 1))`,
+          [despachoId, e.extId, e.nomina, e.nombre, e.nomina],
         )
       }
 
@@ -662,8 +662,8 @@ export async function enviarRefuerzos(formData: FormData) {
       for (const e of elementos) {
         await cliente.query(
           `INSERT INTO incidente_despacho_elementos (despacho_id, elemento_ext_id, elemento_nomina, elemento_nombre, oficial_id, es_refuerzo)
-           VALUES ($1, $2, $3, $4, (SELECT id FROM ofi_oficiales WHERE no_nomina = $3 AND ofi_estatus = 'activo' LIMIT 1), true)`,
-          [despachoId, e.extId, e.nomina, e.nombre],
+           VALUES ($1, $2, $3, $4, (SELECT id FROM ofi_oficiales WHERE no_nomina = $5 AND ofi_estatus = 'activo' LIMIT 1), true)`,
+          [despachoId, e.extId, e.nomina, e.nombre, e.nomina],
         )
       }
 

@@ -36,6 +36,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
     const params = new URLSearchParams()
     if (incidenteLat != null) params.set('lat', String(incidenteLat))
     if (incidenteLng != null) params.set('lng', String(incidenteLng))
+    if (prioritarioPatrullaId) params.set('prioritarioPatrullaId', prioritarioPatrullaId)
     fetch(`/api/despacho/unidades-cercanas?${params.toString()}`)
       .then(res => res.json())
       .then((data: UnidadParaDespacho[]) => {

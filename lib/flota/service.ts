@@ -110,9 +110,12 @@ export async function listarPatrullasParaAsignacion(): Promise<
   }));
 }
 
+const TOP_UNIDADES_CERCANAS = 10;
+
 export async function listarUnidadesParaDespacho(
   incidenteLat: number | null,
   incidenteLng: number | null,
+  prioritarioPatrullaId?: string | null,
 ): Promise<UnidadParaDespacho[]> {
   const rows = await listarUnidadesConTripulacionRaw();
   const unidades = agruparUnidadesConTripulacion(rows);
@@ -125,12 +128,24 @@ export async function listarUnidadesParaDespacho(
         : null,
   }));
 
-  return conDistancia.sort((a, b) => {
-    if (a.distanciaKm == null && b.distanciaKm == null) return 0;
-    if (a.distanciaKm == null) return 1;
-    if (b.distanciaKm == null) return -1;
-    return a.distanciaKm - b.distanciaKm;
-  });
+  // La unidad prioritaria (la del oficial que ya está en el lugar, si el incidente viene
+  // de un rondín escalado) siempre debe poder resolverse — no se le aplican el filtro de
+  // ubicación ni el tope de 10, aunque no aparezca en "cercanas" para elegir de nuevo.
+  const prioritaria = prioritarioPatrullaId
+    ? conDistancia.find((u) => u.id === prioritarioPatrullaId) ?? null
+    : null;
+
+  const cercanas = conDistancia
+    // Sin ubicación (ningún oficial de la tripulación reportó posición) no hay forma de
+    // saber si está cerca — se descarta en vez de mostrarla como "más cercana" al final.
+    .filter((u): u is typeof u & { distanciaKm: number } => u.distanciaKm != null)
+    .sort((a, b) => a.distanciaKm - b.distanciaKm)
+    .slice(0, TOP_UNIDADES_CERCANAS);
+
+  if (prioritaria && !cercanas.find((u) => u.id === prioritaria.id)) {
+    return [prioritaria, ...cercanas];
+  }
+  return cercanas;
 }
 
 export async function obtenerPatrullaPorId(

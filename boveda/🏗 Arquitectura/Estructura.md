@@ -551,8 +551,6 @@
 │   │   └── TablonAnalisis.tsx
 │   ├── auxiliar/
 │   │   └── ProfileDropdownAuxiliar.tsx
-│   ├── debug/
-│   │   └── TestModalScroll.tsx
 │   ├── denuncias/
 │   │   └── FormularioD1.tsx
 │   ├── fiscalia/
@@ -1104,6 +1102,7 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
 
 
 
