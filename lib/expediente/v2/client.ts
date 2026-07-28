@@ -4,7 +4,6 @@ import type { RefExpediente } from './ref'
 const BASE_URL = process.env.EXPEDIENTE_URL
 const API_KEY = process.env.EXPEDIENTE_API_KEY
 const GUEST_CODE = process.env.EXPEDIENTE_GUEST_CODE
-const ROOT = process.env.EXPEDIENTE_FOLDER ?? 'Centinela'
 
 let guestToken: { token: string; expiresAt: number } | null = null
 let refreshPromise: Promise<string> | null = null
@@ -68,7 +67,7 @@ export async function subir(
   subcarpeta: string,
 ): Promise<RefExpediente> {
   const token = await getToken()
-  const folderPath = `${ROOT}/${subcarpeta}`
+  const folderPath = subcarpeta
 
   const formData = new FormData()
   const blob = new Blob([archivo.buffer as BlobPart], { type: archivo.tipo || 'application/octet-stream' })
