@@ -2,6 +2,7 @@ import type {
   IncidenteListItem,
   IncidenteConDespacho,
   IncidentePendiente,
+  IncidenteGeo,
   PersonaAfectadaRow,
   DespachoRow,
   ReporteCampoRow,
@@ -97,6 +98,30 @@ export function rowToIncidentePendiente(row: Record<string, unknown>): Incidente
     prioritarioPatrullaId: toStr(row.prioritario_patrulla_id),
     latitud: toNum(row.latitud),
     longitud: toNum(row.longitud),
+  }
+}
+
+export function rowToIncidenteGeo(row: Record<string, unknown>): IncidenteGeo {
+  const origen = toStr(row.origen_coordenada)
+  return {
+    id: String(row.id ?? ''),
+    folio: String(row.folio ?? ''),
+    canal: String(row.canal ?? ''),
+    estatus: String(row.estatus ?? ''),
+    fechaHoraInicio: toStr(row.fecha_hora_inicio) ?? '',
+    calle: toStr(row.calle),
+    colonia: toStr(row.colonia),
+    entreCalles: toStr(row.entre_calles),
+    referenciaUbicacion: toStr(row.referencia_ubicacion),
+    descripcion: toStr(row.descripcion),
+    tipoIncidente: toStr(row.tipo_incidente_nombre),
+    prioridad: toStr(row.prioridad_nombre),
+    prioridadOrden: toNum(row.prioridad_orden),
+    capturadoPor: toStr(row.capturado_por_nombre),
+    origenRondin: Boolean(row.origen_rondin),
+    latitud: toNum(row.latitud),
+    longitud: toNum(row.longitud),
+    origenCoordenada: origen === 'reporte_campo' || origen === 'incidente' ? origen : null,
   }
 }
 

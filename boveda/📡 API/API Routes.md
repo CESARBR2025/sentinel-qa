@@ -38,6 +38,7 @@
 | `incidentes/[id]/reporte` | GET | (Pendiente) |
 | `incidentes/atendidos` | GET | (Pendiente) |
 | `incidentes/en-despacho` | GET | (Pendiente) |
+| `incidentes/kpi-geo` | GET | Incidencias geolocalizadas + KPIs por rango de fecha/hora. Params: `desde`, `hasta`, `estatus?`, `canal?`, `prioridadId?`, `tipoIncidenteId?`. Coordenada del reporte de campo con prioridad sobre la del incidente. Ver [[KPI Incidencias]] |
 | `incidentes/pendientes-despacho` | GET | (Pendiente) |
 | `monitorista/denuncias/[id]/completar-solicitud` | POST | (Pendiente) |
 | `monitorista/denuncias/subir` | POST | (Pendiente) |

@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Shield } from 'lucide-react'
+import { Shield, MapPin } from 'lucide-react'
 import { verificarRolAgenteDespacho } from '@/lib/agente_despacho/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -96,6 +96,39 @@ export default async function AgenteDespachoDashboardPage() {
               <div>
                 <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>En Campo</div>
                 <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.enDespacho}</div>
+              </div>
+            </div>
+          </Link>
+
+          {/* KPI geolocalizado: mapa de puntos + mapa de calor por rango de fecha/hora */}
+          <Link href="/agente_despacho/kpi-incidencias" className="card-911" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <MapPin size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
+                ANÁLISIS
+              </div>
+            </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+                KPI Incidencias
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Mapa de ubicación y mapa de calor de las incidencias por rango de fecha y hora, con tabla y detalle
+              </p>
+            </div>
+            <div style={{ marginTop: 16, display: 'flex', gap: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
+              <div>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hoy</div>
+                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.hoy}</div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Histórico</div>
+                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.total}</div>
               </div>
             </div>
           </Link>
