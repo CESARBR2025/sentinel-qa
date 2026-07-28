@@ -40,11 +40,26 @@ flowchart TD
 | `via.v2_fracciones_ley` | `id`, `clasificacion` | Fracciones para mapeo de concepto SA7 |
 | `via.v2_catalogo_conceptos_sa7` | `id`, `concept_id`, `clasificacion_type` | Conceptos SA7 |
 
+## Dashboard de 5 tabs
+
+El dashboard del agente organiza las infracciones en 5 tabs según `estatus_dependencia`:
+
+| Tab | Clave UI | `estatus_dependencia` incluidos | `estatus` requerido |
+|---|---|---|---|
+| Captura de datos | `VEHICULO_EN_CORRALON` | `VEHICULO_EN_CORRALON` | `REGISTRADA` |
+| En espera de documentos | `MESA_DE_CONTROL_PENDIENTE_DOCS` | `MESA_DE_CONTROL_PENDIENTE_DOCS`, `MESA_DE_CONTROL_RECHAZADA` | `REGISTRADA` |
+| Revisión documentos | `MESA_DE_CONTROL_REVISION` | `MESA_DE_CONTROL_REVISION` | `REGISTRADA` |
+| Pendiente pago | `PENDIENTE_PAGO` | `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO`, `LIBERACION_PENDIENTE_DOCUMENTOS` | `PENDIENTE_PAGO` |
+| Liberadas | `LIBERADA_POR_INFRACCION` | estados finales (LIBERADA_*, FINALIZADA_*) | `CERRADA`, `FINALIZADA` |
+
+El mapa centralizado `TAB_ESTATUS` en `LiberacionesDashboard.tsx` es la fuente única de verdad para esta asignación.
+
 ## Reglas de negocio
 
-1. Las infracciones elegibles para liberación tienen `estatus_dependencia` en: `ESPERA_REVISION`, `EN_PROCESO_LIBERACIONES`, `MESA_DE_CONTROL_REVISION`, `MESA_DE_CONTROL_PENDIENTE_DOCS`
+1. Las infracciones elegibles para liberación tienen `estatus_dependencia` en: `VEHICULO_EN_CORRALON`, `MESA_DE_CONTROL_PENDIENTE_DOCS`, `MESA_DE_CONTROL_REVISION`, `MESA_DE_CONTROL_RECHAZADA`, `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO`, `LIBERACION_PENDIENTE_DOCUMENTOS`
 2. Los documentos se revisan individualmente: cada `tipo_documento` tiene su propio `estatus_revision` (ENVIADO → APROBADO/RECHAZADO)
 3. `finalizarRevisionAction` verifica que todos los documentos estén aprobados antes de continuar
 4. `actualizarInfractor` actualiza datos del infractor y cambia estatus a `MESA_DE_CONTROL_PENDIENTE_DOCS`
-5. La orden de pago se genera contra SA7 y almacena el payload completo
-6. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último
+5. La orden de pago solo se genera desde `RevisionDocumentosSection` tras aprobar todos los documentos. `generarOrdenPagoAction` tiene guard server-side que exige `PENDIENTE_PAGO_LIBERACION`.
+6. `confirmar-liberacion/route.ts` tiene guard server-side que exige `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO` o `LIBERACION_PENDIENTE_DOCUMENTOS` antes de mutar.
+7. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último

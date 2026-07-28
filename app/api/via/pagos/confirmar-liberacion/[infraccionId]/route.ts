@@ -27,6 +27,26 @@ export async function GET(
       return NextResponse.json({ pagado: false, error: "No autorizado" }, { status: 401 });
     }
 
+    // Solo se puede confirmar el pago de liberación si el agente ya aprobó los
+    // documentos (PENDIENTE_PAGO_LIBERACION), o si ya se está procesando/reintentando
+    // esta misma confirmación (LIBERACION_EN_PROCESO / LIBERACION_PENDIENTE_DOCUMENTOS,
+    // manejados por el lock de idempotencia y el fallback más abajo).
+    const infraccionRow = await query<{ estatus_dependencia: string }>(
+      `SELECT estatus_dependencia FROM via.v2_infracciones WHERE id = $1`,
+      [infraccionId],
+    );
+    const estatusPrevio = infraccionRow.rows[0]?.estatus_dependencia;
+    if (
+      estatusPrevio !== "PENDIENTE_PAGO_LIBERACION" &&
+      estatusPrevio !== "LIBERACION_EN_PROCESO" &&
+      estatusPrevio !== "LIBERACION_PENDIENTE_DOCUMENTOS"
+    ) {
+      return NextResponse.json(
+        { pagado: false, error: "La infracción no está en etapa de pago" },
+        { status: 400 },
+      );
+    }
+
     const orden = await SA7Repository.resolverOrdenVigente(infraccionId);
     if (!orden || !orden.ordenPagoId) {
       return NextResponse.json({ pagado: false, error: "Sin orden vigente" }, { status: 400 });

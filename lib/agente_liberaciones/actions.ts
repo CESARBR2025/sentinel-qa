@@ -81,6 +81,14 @@ export async function capturarInfractorAction(body: {
 
     if (!id) return { success: false, error: "El campo id es requerido" };
 
+    const tipoGarantia = await query<{ tipo_garantia: string }>(
+      `SELECT tipo_garantia FROM via.v2_infracciones WHERE id = $1`,
+      [id],
+    );
+    if (tipoGarantia.rows[0]?.tipo_garantia !== 'VEHICULO') {
+      return { success: false, error: "Esta infracción no es de tipo vehículo. No puede pasar por el flujo de liberación." };
+    }
+
     const updateResult = await query<any>(
       `UPDATE via.v2_infracciones
        SET nombre_infractor = COALESCE($2, nombre_infractor),
@@ -459,6 +467,18 @@ export async function generarOrdenPagoAction(payload: {
       !descuentoAplicado
     ) {
       return { ok: false, message: "Faltan campos obligatorios" };
+    }
+
+    const infraccionRow = await query<{ estatus_dependencia: string }>(
+      `SELECT estatus_dependencia FROM via.v2_infracciones WHERE id = $1`,
+      [infraccion_id],
+    );
+    if (infraccionRow.rows[0]?.estatus_dependencia !== "PENDIENTE_PAGO_LIBERACION") {
+      return {
+        ok: false,
+        message:
+          "No se puede generar la orden de pago: la infracción no está en etapa de pendiente de pago (faltan documentos por aprobar)",
+      };
     }
 
     let tokenGuest: string;

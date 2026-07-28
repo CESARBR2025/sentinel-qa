@@ -365,3 +365,43 @@ El mismo patrón (llamar SA7 y confiar en los headers sin chequear `.ok`) tambi�
 **Fix** en `lib/shared/infracciones.ts` → `obtenerTokenGuest()`: generar `nombre_invitado` único por llamada (`INV-${Date.now()}`) en vez de reusar el código fijo del día, igual que hace el flujo que sí funciona.
 
 **Contexto**: encontrado auditando el flujo de `InfraccionCiudadanoPage` como Fase 0 de un plan más amplio para exponer esta misma lógica como API para una app Flutter — las fases siguientes reusan `verificarCookieCiudadano` extendido para aceptar también un header `Authorization: Bearer` (ya que Flutter no maneja cookies httpOnly de forma nativa).
+
+---
+
+## Dashboard de liberaciones pierde casos completos (corregido)
+
+**Síntoma**: Al agente rechazar un documento, o al fallar la generación del PDF/correo post-pago, el caso desaparecía del dashboard.
+
+**Causa raíz**: El switch de tabs en `LiberacionesDashboard.tsx` usaba `default: return false` con filtros restrictivos que no incluían:
+- `MESA_DE_CONTROL_RECHAZADA` en la tab "En espera de documentos"
+- `LIBERACION_EN_PROCESO` y `LIBERACION_PENDIENTE_DOCUMENTOS` en la tab "Pendiente pago"
+
+**Fix**: Se introdujo `TAB_ESTATUS` (mapa centralizado `Record<EstatusLiberaciones, string[]>`) que gobierna los 3 sitios donde se filtra por estatus (switch de `registrosFiltrados`, `useMemo` de `estadisticas`, `STATUS_BADGE`). Los nuevos badges:
+- `MESA_DE_CONTROL_RECHAZADA` → "Rechazado — reenviando" (rojo)
+- `LIBERACION_EN_PROCESO` → "Procesando pago" (ámbar)
+- `LIBERACION_PENDIENTE_DOCUMENTOS` → "Requiere atención" (ámbar)
+
+El botón "Revisar documentos" ahora también aparece para `MESA_DE_CONTROL_RECHAZADA`.
+
+---
+
+## Ciudadano no puede completar subida de documentos si se interrumpe (corregido)
+
+**Síntoma**: Si la subida se interrumpía después del documento 1 o 2 de N (red, tamaño de archivo, cierre accidental), el formulario de subida desaparecía para siempre.
+
+**Causa raíz**: `SeccionLiberacion.tsx` originalmente ocultaba el formulario con `!tieneDocs` (si ya existía al menos 1 documento). Al interrumpirse la subida a medias, `tieneDocs` pasaba a `true` y el formulario no se volvía a mostrar, aunque la infracción siguiera en `MESA_DE_CONTROL_PENDIENTE_DOCS`.
+
+**Fix**: El gate del formulario ahora usa `estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'` sin importar si hay documentos parciales. El estatus lo controla el servidor (`finalizarRevisionAction` lo cambia a `MESA_DE_CONTROL_REVISION` solo cuando el agente aprueba todos).
+
+---
+
+## Ciudadano podía pagar antes de que existiera revisión de documentos (corregido)
+
+**Síntoma**: Se creaba una orden de pago SA7 real mientras el estatus seguía en `MESA_DE_CONTROL_PENDIENTE_DOCS`.
+
+**Causa raíz**: `CapturarInfractorSection.tsx` (tab 1) originalmente llamaba `generarOrdenPagoAction` inmediatamente tras guardar datos del infractor, sin esperar a que existieran documentos ni revisión.
+
+**Fix**: 
+- `CapturarInfractorSection.tsx` ya no llama `generarOrdenPagoAction` — solo guarda datos y pasa a tab 2.
+- `generarOrdenPagoAction` ahora tiene guard server-side que exige `estatus_dependencia === 'PENDIENTE_PAGO_LIBERACION'`.
+- `confirmar-liberacion/route.ts` ahora exige `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO` o `LIBERACION_PENDIENTE_DOCUMENTOS` antes de consultar SA7.

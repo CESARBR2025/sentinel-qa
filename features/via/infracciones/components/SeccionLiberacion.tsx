@@ -101,7 +101,7 @@ function getEstatusConfig(estatus: string) {
             label: 'Sube toda la información requerida a continuación',
         };
     }
-    if (s === 'espera_revision') {
+    if (s === 'mesa_de_control_revision') {
         return {
             icon: Clock,
             bgClass: 'bg-amber-50',
@@ -168,7 +168,6 @@ export default function SeccionLiberacion({
     const [selectedType, setSelectedType] = useState<'empresa' | 'titular' | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<Record<string, File>>({});
     const [submitting, setSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [nombreEmpresa, setNombreEmpresa] = useState('');
     const [rfcEmpresa, setRfcEmpresa] = useState('');
@@ -460,10 +459,10 @@ export default function SeccionLiberacion({
                 </div>
 
                 {/* SEPARADOR */}
-                {!tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && <div className="h-px bg-slate-200" />}
+                {estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS' && <div className="h-px bg-slate-200" />}
 
-                {/* FORMULARIO (solo si no hay docs) */}
-                {!esLiberada && !tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && (
+                {/* FORMULARIO (mientras la infracción siga en espera de documentos, sin importar si ya hay una subida parcial) */}
+                {!esLiberada && estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS' && (
                     <>
                         {/* SELECCIÓN TIPO */}
                         <div className="space-y-3">
@@ -493,7 +492,7 @@ export default function SeccionLiberacion({
                         </div>
 
                         {/* TIPO LIBERACIÓN (auto desde DB) */}
-                        {selectedType === 'titular' && (
+                        {selectedType === 'titular' && subtipoLabel && (
                             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex items-center gap-3">
                                 <div className="w-9 h-9 rounded-lg bg-primary-muted flex items-center justify-center shrink-0">
                                     <FileText size={16} className="text-primary" strokeWidth={1.5} />
@@ -501,9 +500,19 @@ export default function SeccionLiberacion({
                                 <div>
                                     <p className="text-xs text-slate-500">Tipo de liberación</p>
                                     <p className="text-sm font-medium text-slate-900">
-                                        {subtipoLabel || 'No determinado'}
+                                        {subtipoLabel}
                                     </p>
                                 </div>
+                            </div>
+                        )}
+
+                        {/* Motivo de retención no reconocido: no se puede determinar qué documentos pedir */}
+                        {selectedType === 'titular' && !subtipoLabel && (
+                            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 flex items-start gap-3">
+                                <AlertCircle size={16} className="text-red-600 shrink-0 mt-0.5" strokeWidth={1.5} />
+                                <p className="text-sm text-red-700">
+                                    No se pudo determinar el tipo de liberación para esta infracción. Contacta a la autoridad para que complete el motivo de retención antes de continuar.
+                                </p>
                             </div>
                         )}
 
@@ -718,24 +727,9 @@ export default function SeccionLiberacion({
                 )}
 
                 {/* DOCUMENTOS SUBIDOS */}
-                {!esLiberada && (tieneDocs || submitted || estatusDependencia === 'ESPERA_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
+                {!esLiberada && (estatusDependencia === 'MESA_DE_CONTROL_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
                     <div className="space-y-4">
-                        {(tieneDocs && estatusDependencia !== 'ESPERA_REVISION' && estatusDependencia !== 'MESA_DE_CONTROL_RECHAZADA') && (
-                            <div className="rounded-xl border border-primary/30 bg-primary-muted p-6 text-center space-y-3">
-                                <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
-                                    <FileText size={32} className="text-primary" strokeWidth={1.5} />
-                                </div>
-                                <div>
-                                    <h4 className="text-lg font-medium text-slate-900">
-                                        Recibimos tus documentos
-                                    </h4>
-                                    <p className="text-sm text-slate-500 mt-1">
-                                        Los documentos se recibieron correctamente. La autoridad los revisará y te notificaremos cuando estén listos.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                        {estatusDependencia === 'ESPERA_REVISION' && (
+                        {estatusDependencia === 'MESA_DE_CONTROL_REVISION' && (
                             <div className="rounded-xl border border-green-500/30 bg-green-50 p-6 text-center space-y-3">
                                 <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
                                     <CheckCircle2 size={32} className="text-green-600" strokeWidth={1.5} />

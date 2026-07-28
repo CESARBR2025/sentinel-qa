@@ -3,14 +3,14 @@
 import { useState } from 'react'
 import { Loader2, Save, AlertCircle } from 'lucide-react'
 import { useToastStore } from '@/stores/useToastStore'
-import { capturarInfractorAction, generarOrdenPagoAction } from '@/lib/agente_liberaciones/actions'
+import { capturarInfractorAction } from '@/lib/agente_liberaciones/actions'
 
 type Props = {
   infraccionId: string
   onSuccess: () => void
 }
 
-const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-700/10"
+const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition-all duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
 
 function Field({ label, value, onChange, placeholder, error, required, type }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string
@@ -19,7 +19,7 @@ function Field({ label, value, onChange, placeholder, error, required, type }: {
   const fieldId = `field-${label.toLowerCase().replace(/\s+/g, '-')}`
   return (
     <div className="space-y-1">
-      <label htmlFor={fieldId} className="text-xs font-medium tracking-wider uppercase text-slate-500">
+      <label htmlFor={fieldId} className="text-[10px] font-medium tracking-wider uppercase text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
         {label}
         {required && <span className="text-red-600 ml-0.5" aria-hidden="true">*</span>}
       </label>
@@ -46,7 +46,6 @@ export default function CapturarInfractorSection({ infraccionId, onSuccess }: Pr
   const [correo, setCorreo] = useState('')
   const [esTitular, setEsTitular] = useState<boolean | null>(null)
   const [saving, setSaving] = useState(false)
-  const [step, setStep] = useState<'save' | 'order' | null>(null)
   const [error, setError] = useState('')
   const [errores, setErrores] = useState<Record<string, string>>({})
   const addToast = useToastStore((s) => s.addToast)
@@ -55,14 +54,13 @@ export default function CapturarInfractorSection({ infraccionId, onSuccess }: Pr
     const nuevos: Record<string, string> = {}
     if (!nombre.trim()) nuevos.nombre = 'Requerido'
     if (!appaterno.trim()) nuevos.appaterno = 'Requerido'
-    if (!correo.trim()) nuevos.correo = 'Requerido para la orden de pago'
+    if (!correo.trim()) nuevos.correo = 'Requerido para notificar al ciudadano'
     if (esTitular === null) nuevos.esTitular = 'Selecciona una opción'
     setErrores(nuevos)
     setError('')
     if (Object.keys(nuevos).length > 0) return
 
     setSaving(true)
-    setStep('save')
     try {
       const result = await capturarInfractorAction({
         id: infraccionId,
@@ -77,29 +75,7 @@ export default function CapturarInfractorSection({ infraccionId, onSuccess }: Pr
         throw new Error(result.error ?? 'Error al guardar')
       }
 
-      const { folio, concepto_id, descuento_aplicado } = result.data
-
-      if (!folio || !concepto_id || !descuento_aplicado) {
-        throw new Error('No se pudieron obtener los datos para generar la orden de pago')
-      }
-
-      // ─── Generar orden de pago ───
-      setStep('order')
-      const orderResult = await generarOrdenPagoAction({
-        infraccion_id: infraccionId,
-        nombre_usuario: nombre.trim().toUpperCase(),
-        apellidos_usuario: `${appaterno.trim().toUpperCase()} ${apmaterno.trim().toUpperCase()}`.trim(),
-        concepto_id: Number(concepto_id),
-        folio,
-        correoInfractor: correo.trim(),
-        descuentoAplicado: String(descuento_aplicado),
-      })
-
-      if (!orderResult.ok) {
-        throw new Error(orderResult.message ?? 'Error al generar orden de pago')
-      }
-
-      addToast('Datos guardados y orden de pago generada correctamente', 'success')
+      addToast('Datos guardados correctamente. En espera de que el ciudadano suba sus documentos.', 'success')
       onSuccess()
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error al procesar'
@@ -107,14 +83,13 @@ export default function CapturarInfractorSection({ infraccionId, onSuccess }: Pr
       addToast(msg, 'error')
     } finally {
       setSaving(false)
-      setStep(null)
     }
   }
 
   return (
     <div className="space-y-4">
-      <span className="inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 text-[11px] font-medium px-2.5 py-1 rounded-full">
-        <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+      <span className="inline-flex items-center gap-1.5 bg-primary-muted text-primary-dark text-[11px] font-medium px-2.5 py-1 rounded-full">
+        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
         Liberación por infracción
       </span>
 
@@ -155,14 +130,14 @@ export default function CapturarInfractorSection({ infraccionId, onSuccess }: Pr
 
       {/* ¿Es el titular? */}
       <div className="space-y-2">
-        <p className="text-xs font-medium tracking-wider uppercase text-slate-500">
+        <p className="text-[10px] font-medium tracking-wider uppercase text-slate-500" style={{ fontFamily: "'JetBrains Mono',monospace" }}>
           ¿Es el titular? <span className="text-red-600 ml-0.5" aria-hidden="true">*</span>
         </p>
         <div className="inline-flex items-center rounded-md p-0.5 bg-white border border-slate-200">
           <button
             type="button"
             onClick={() => { setEsTitular(true); setErrores(p => ({ ...p, esTitular: '' })) }}
-            className={`px-4 py-1.5 rounded text-[13px] font-medium transition-all duration-150 ${esTitular === true ? 'bg-blue-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+            className={`px-4 py-1.5 rounded text-[13px] font-medium transition-all duration-150 ${esTitular === true ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
           >
             Sí
           </button>
@@ -190,16 +165,12 @@ export default function CapturarInfractorSection({ infraccionId, onSuccess }: Pr
         onClick={handleSubmit}
         disabled={saving}
         aria-busy={saving}
-        className="w-full inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-[13px] font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] shadow-sm transition-all duration-150 disabled:bg-blue-200 disabled:text-blue-300 disabled:cursor-not-allowed"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-[13px] font-medium text-white bg-primary hover:bg-primary-dark active:bg-primary-dark active:scale-[0.99] shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {saving ? (
-          step === 'order' ? (
-            <><Loader2 size={14} className="animate-spin" /><span>Generando orden de pago…</span></>
-          ) : (
-            <><Loader2 size={14} className="animate-spin" /><span>Guardando…</span></>
-          )
+          <><Loader2 size={14} className="animate-spin" /><span>Guardando…</span></>
         ) : (
-          <><Save size={14} strokeWidth={2.5} /><span>Guardar y generar orden de pago</span></>
+          <><Save size={14} strokeWidth={2.5} /><span>Guardar datos</span></>
         )}
       </button>
     </div>

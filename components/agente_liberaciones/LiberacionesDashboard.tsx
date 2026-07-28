@@ -45,6 +45,14 @@ type EstatusLiberaciones =
     | 'PENDIENTE_PAGO'
     | 'LIBERADA_POR_INFRACCION'
 
+const TAB_ESTATUS: Record<EstatusLiberaciones, string[]> = {
+    VEHICULO_EN_CORRALON: ['VEHICULO_EN_CORRALON'],
+    MESA_DE_CONTROL_PENDIENTE_DOCS: ['MESA_DE_CONTROL_PENDIENTE_DOCS', 'MESA_DE_CONTROL_RECHAZADA'],
+    MESA_DE_CONTROL_REVISION: ['MESA_DE_CONTROL_REVISION'],
+    PENDIENTE_PAGO: ['PENDIENTE_PAGO_LIBERACION', 'LIBERACION_EN_PROCESO', 'LIBERACION_PENDIENTE_DOCUMENTOS'],
+    LIBERADA_POR_INFRACCION: ['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'],
+}
+
 const STATUS_TABS: { key: EstatusLiberaciones; label: string; icon: typeof Clock; color: string }[] = [
     { key: 'VEHICULO_EN_CORRALON', label: 'Captura de datos', icon: Clock, color: '#F59E0B' },
     { key: 'MESA_DE_CONTROL_PENDIENTE_DOCS', label: 'En espera de documentos', icon: Clock, color: '#8B5CF6' },
@@ -57,7 +65,10 @@ const STATUS_BADGE: Record<string, { bg: string; text: string; dot: string; labe
     VEHICULO_EN_CORRALON: { bg: '#FEF3C7', text: '#78350F', dot: '#F59E0B', label: 'Sin datos' },
     MESA_DE_CONTROL_PENDIENTE_DOCS: { bg: '#F3E8FF', text: '#6B21A8', dot: '#8B5CF6', label: 'Espera docs' },
     MESA_DE_CONTROL_REVISION: { bg: '#dbdfe5', text: '#172844', dot: '#3e5171', label: 'En revisión' },
+    MESA_DE_CONTROL_RECHAZADA: { bg: '#FEE2E2', text: '#991B1B', dot: '#EF4444', label: 'Rechazado — reenviando' },
     PENDIENTE_PAGO_LIBERACION: { bg: '#FED7AA', text: '#7C2D12', dot: '#F97316', label: 'Pendiente pago' },
+    LIBERACION_EN_PROCESO: { bg: '#FEF3C7', text: '#92400E', dot: '#F59E0B', label: 'Procesando pago' },
+    LIBERACION_PENDIENTE_DOCUMENTOS: { bg: '#FEF3C7', text: '#92400E', dot: '#F59E0B', label: 'Requiere atención' },
     LIBERADA_POR_INFRACCION: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_DELITO: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
     LIBERADA_POR_ACCIDENTE: { bg: '#DCFCE7', text: '#166534', dot: '#22C55E', label: 'Liberada' },
@@ -134,28 +145,28 @@ export default function LiberacionesDashboard({
     }
 
     const estadisticas = useMemo(() => {
-        const capturarDatos = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'VEHICULO_EN_CORRALON').length
-        const pendientesDocs = data.filter(x => x.estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS').length
-        const pendientesPago = data.filter(x => x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_LIBERACION').length
-        const revision = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'MESA_DE_CONTROL_REVISION').length
-        const liberadas = data.filter(x => (['CERRADA', 'FINALIZADA'].includes(x.estatusInfraccion)) && ['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'].includes(x.estatusDependencia)).length
+        const capturarDatos = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && TAB_ESTATUS.VEHICULO_EN_CORRALON.includes(x.estatusDependencia)).length
+        const pendientesDocs = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && TAB_ESTATUS.MESA_DE_CONTROL_PENDIENTE_DOCS.includes(x.estatusDependencia)).length
+        const revision = data.filter(x => x.estatusInfraccion === 'REGISTRADA' && TAB_ESTATUS.MESA_DE_CONTROL_REVISION.includes(x.estatusDependencia)).length
+        const pendientesPago = data.filter(x => x.estatusInfraccion === 'PENDIENTE_PAGO' && TAB_ESTATUS.PENDIENTE_PAGO.includes(x.estatusDependencia)).length
+        const liberadas = data.filter(x => ['CERRADA', 'FINALIZADA'].includes(x.estatusInfraccion) && TAB_ESTATUS.LIBERADA_POR_INFRACCION.includes(x.estatusDependencia)).length
         return { capturarDatos, pendientesDocs, pendientesPago, revision, liberadas }
     }, [data])
 
     const registrosFiltrados = useMemo(
         () => data.filter(x => {
+            const validaDep = TAB_ESTATUS[filtro]?.includes(x.estatusDependencia)
+            if (!validaDep) return false
+
             switch (filtro) {
                 case 'VEHICULO_EN_CORRALON':
-                    return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'VEHICULO_EN_CORRALON'
                 case 'MESA_DE_CONTROL_PENDIENTE_DOCS':
-                    return x.estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'
                 case 'MESA_DE_CONTROL_REVISION':
-                    return x.estatusInfraccion === 'REGISTRADA' && x.estatusDependencia === 'MESA_DE_CONTROL_REVISION'
+                    return x.estatusInfraccion === 'REGISTRADA'
                 case 'PENDIENTE_PAGO':
-                    return x.estatusInfraccion === 'PENDIENTE_PAGO' && x.estatusDependencia === 'PENDIENTE_PAGO_LIBERACION'
+                    return x.estatusInfraccion === 'PENDIENTE_PAGO'
                 case 'LIBERADA_POR_INFRACCION':
                     if (!['CERRADA', 'FINALIZADA'].includes(x.estatusInfraccion)) return false
-                    if (!['LIBERADA_POR_INFRACCION', 'LIBERADA_POR_ACCIDENTE', 'LIBERADA_POR_DELITO', 'FINALIZADA_ACCIDENTE', 'FINALIZADA_INFRACCION', 'FINALIZADA_DELITO'].includes(x.estatusDependencia)) return false
                     if (tipoLiberacion) {
                         const suffix = tipoLiberacion.replace('LIBERADA_', '')
                         if (!x.estatusDependencia.endsWith(suffix)) return false
@@ -542,7 +553,7 @@ export default function LiberacionesDashboard({
                                                                             Capturar datos
                                                                         </button>
                                                                     )}
-                                                                    {estatusDep === 'MESA_DE_CONTROL_REVISION' && (
+                                                                    {(estatusDep === 'MESA_DE_CONTROL_REVISION' || estatusDep === 'MESA_DE_CONTROL_RECHAZADA') && (
                                                                         <button
                                                                             onClick={() => setRevisionModalId(row.id)}
                                                                             className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-900 active:scale-[0.99] transition-colors duration-150"
@@ -690,12 +701,12 @@ export default function LiberacionesDashboard({
                     onClick={(e) => { if (e.target === e.currentTarget) setCapturarInfractorId(null) }}
                 >
                     <div className="w-full max-w-lg">
-                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-200 bg-orange-50 rounded-t-lg">
+                        <div className="px-5 py-3.5 border-b flex items-center justify-between border-slate-200 bg-primary-muted rounded-t-lg">
                             <div className="flex items-center gap-2.5">
-                                <div className="w-6 h-6 rounded-md flex items-center justify-center bg-orange-500">
-                                    <User size={12} strokeWidth={2.5} className="text-white" />
+                                <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-primary">
+                                    <User size={13} strokeWidth={2.5} className="text-white" />
                                 </div>
-                                <h3 className="text-sm font-medium tracking-wider uppercase text-orange-800">Liberación por infracción 123</h3>
+                                <h3 className="text-[11px] font-semibold tracking-wider uppercase text-primary-dark" style={{ fontFamily: "'JetBrains Mono',monospace" }}>Liberación por infracción</h3>
                             </div>
                             <button
                                 onClick={() => setCapturarInfractorId(null)}
