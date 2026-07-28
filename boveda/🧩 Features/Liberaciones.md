@@ -28,13 +28,14 @@ flowchart TD
 | `lib/agente_liberaciones/repository.ts` | `obtenerLiberaciones`, `actualizarInfractor`, `obtenerConceptoPorFraccion`, `obtenerSolicitudPorInfraccion`, `obtenerDocumentosPorSolicitud`, `actualizarRevisionDocumento`, `actualizarInfraccionEstatus`, `insertarOrdenPago` |
 | `lib/agente_liberaciones/service.ts` | Orquestación de flujo de liberación |
 | `lib/agente_liberaciones/actions.ts` | Server actions: capturar infractor, revisar documento, finalizar revisión, generar orden de pago |
-| `app/api/via/descargar-orden/[infraccionId]/route.ts` | Endpoint público (ciudadano) que sirve/genera la orden de salida PDF con auth de ciudadano |
+| `app/api/via/descargar-orden/[infraccionId]/route.ts` | Endpoint ciudadano que sirve/genera la orden de salida PDF on-demand, la guarda en Expediente y envía correo con PIN + PDF adjunto |
+| `lib/ordenSalida/generarOrdenSalida.ts` | Genera el PDF de la orden de salida con jsPDF, marca de agua desde `public/marca_agua/plantilla-orden-salida.png`, opacidad vía GState |
 
 ## BD (schema `via`)
 
 | Tabla | Columnas clave | Uso |
 |-------|---------------|-----|
-| `via.v2_infracciones` | `id`, `folio`, `estatus`, `estatus_dependencia`, `placa`, `es_titular`, `nombre_infractor`, `correo_infractor`, `nombre_titular_liberacion`, `descuento_aplicado`, `fraccion_id`, `url_orden_salida_liberaciones` | Infracciones en proceso de liberación |
+| `via.v2_infracciones` | `id`, `folio`, `estatus`, `estatus_dependencia`, `placa`, `pin_acceso`, `es_titular`, `nombre_infractor`, `apellido_paterno_infractor`, `apellido_materno_infractor`, `correo_infractor`, `nombre_titular_liberacion`, `appaterno_titular_liberacion`, `apmaterno_titular_liberacion`, `descuento_aplicado`, `fraccion_id`, `url_orden_salida_liberaciones` | Infracciones en proceso de liberación. `es_titular` determina si el nombre para la orden sale del infractor o del titular |
 | `via.v2_solicitudes_liberacion` | `id`, `infraccion_id`, `tipo_liberacion`, `es_empresa`, `nombre_empresa`, `rfc_empresa`, `estatus` | Solicitudes de liberación |
 | `via.v2_documentos_liberacion` | `id`, `solicitud_id`, `tipo_documento`, `url_documento`, `estatus_revision`, `observaciones`, `fecha_revision` | Documentos para revisión |
 | `via.v2_ordenes_pago_sa7` | `id`, `infraccion_id`, `folio_infraccion`, `concepto_id`, `orden_pago_id`, `estatus`, `url_pago`, `total_pesos`, `total_umas`, `request_payload` | Órdenes de pago |
@@ -67,4 +68,8 @@ El mapa centralizado `TAB_ESTATUS` en `LiberacionesDashboard.tsx` es la fuente �
 8. `capturarInfractorAction` valida `tipo_garantia = 'VEHICULO'` antes de cambiar el estatus. Si no es vehículo, devuelve error.
 9. La orden de salida (PDF) se genera en `confirmar-liberacion/route.ts` tras el pago. Si por alguna razón no se guardó (error de Expediente, flujo alternativo), el endpoint `GET /api/via/descargar-orden/[infraccionId]` la regenera on-demand y la guarda en Expediente. Está protegido con `verificarAccesoCiudadano`.
 10. En la vista pública (`SeccionLiberacion.tsx`), cuando `esLiberada === true` aparece una sección principal destacada con un botón para descargar la orden de salida — sin depender de `url_orden_salida_liberaciones`.
-11. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último
+11. El nombre del titular en la orden de salida se resuelve con esta regla: `esEmpresa` → nombre del resp. fiscal; `es_titular === true` → nombre del infractor; otherwise → nombre_titular_liberacion. Aplica también a apellidos (`tPaterno`/`tMaterno`).
+12. El correo de orden de liberación (`enviarCorreoOrdenLiberacion`) se envía al titular y al infractor, incluye el `pin_acceso` como código de acceso, y adjunta el PDF de la orden de salida como archivo.
+13. El correo de pago confirmado (`enviarCorreoPagoConfirmado`) también incluye `pin_acceso` como código de desbloqueo.
+14. La marca de agua en el PDF de la orden de salida se carga desde `public/marca_agua/plantilla-orden-salida.png` usando `fs.readFileSync` (no `fetch`), con opacidad 1.0 vía `GState`.
+15. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último

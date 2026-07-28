@@ -1,32 +1,71 @@
-import jsPDF from 'jspdf'
+import jsPDF from "jspdf";
+import fs from "fs";
+import path from "path";
 
 function formatearFecha(): string {
-  const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO']
-  const meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
-  const hoy = new Date()
-  return `${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()}`
+  const dias = [
+    "DOMINGO",
+    "LUNES",
+    "MARTES",
+    "MIÉRCOLES",
+    "JUEVES",
+    "VIERNES",
+    "SÁBADO",
+  ];
+  const meses = [
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE",
+  ];
+  const hoy = new Date();
+  return `${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()}`;
 }
 
 function formatearOficio(noOficio: string, anio: number): string {
-  return `${noOficio}/${anio}`
+  return `${noOficio}/${anio}`;
 }
 
-async function loadImageAsBase64(path: string): Promise<string> {
-  const response = await fetch(path)
-  const blob = await response.blob()
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
-  })
+async function loadImageAsBase64(imagePath: string): Promise<string> {
+  const absolutePath = path.join(process.cwd(), "public", imagePath);
+  console.log("[MARCA-AGUA] Leyendo desde:", absolutePath);
+  if (!fs.existsSync(absolutePath)) {
+    console.warn("[MARCA-AGUA] Archivo no encontrado en:", absolutePath);
+    throw new Error(`Archivo no encontrado: ${absolutePath}`);
+  }
+  const buffer = fs.readFileSync(absolutePath);
+  const base64 = buffer.toString("base64");
+  const ext = path.extname(imagePath).slice(1);
+  console.log("[MARCA-AGUA] OK:", buffer.length, "bytes, extensión:", ext);
+  return `data:image/${ext};base64,${base64}`;
 }
 
 function drawWatermark(doc: jsPDF, base64: string): void {
   try {
-    doc.addImage(base64, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), undefined, 'NONE', 0)
-  } catch {
-    console.warn('Error al dibujar marca de agua')
+    const d = doc as any;
+    console.log("[MARCA-AGUA] Dibujando marca de agua con opacidad 1.0");
+    const gs = new d.GState({ opacity: 1 });
+    d.setGState(gs);
+    d.addImage(
+      base64,
+      "PNG",
+      0,
+      0,
+      d.internal.pageSize.getWidth(),
+      d.internal.pageSize.getHeight(),
+    );
+    d.setGState(new d.GState({ opacity: 1 }));
+    console.log("[MARCA-AGUA] OK");
+  } catch (e) {
+    console.warn("[MARCA-AGUA] Error:", e);
   }
 }
 
@@ -39,21 +78,21 @@ function parrafoMixtoConWrap(
   fontSize: number,
   lineHeight: number,
 ): void {
-  let currentX = x
-  let currentY = y
-  doc.setFontSize(fontSize)
+  let currentX = x;
+  let currentY = y;
+  doc.setFontSize(fontSize);
 
   for (const part of parts) {
-    doc.setFont('helvetica', part.bold ? 'bold' : 'normal')
-    const words = part.text.split(' ')
+    doc.setFont("helvetica", part.bold ? "bold" : "normal");
+    const words = part.text.split(" ");
     for (const word of words) {
-      const wordWidth = doc.getTextWidth(word + ' ')
+      const wordWidth = doc.getTextWidth(word + " ");
       if (currentX + wordWidth > x + maxWidth) {
-        currentX = x
-        currentY += lineHeight
+        currentX = x;
+        currentY += lineHeight;
       }
-      doc.text(word + ' ', currentX, currentY)
-      currentX += doc.getTextWidth(word + ' ')
+      doc.text(word + " ", currentX, currentY);
+      currentX += doc.getTextWidth(word + " ");
     }
   }
 }
@@ -106,7 +145,9 @@ export async function generarOrdenSalidaVehiculo({ data }: any) {
   doc.rect(0, 0, pw, doc.internal.pageSize.getHeight(), "F");
 
   try {
-    const wmBase64 = await loadImageAsBase64("/marca_agua/header.png");
+    const wmBase64 = await loadImageAsBase64(
+      "/marca_agua/plantilla-orden-salida.png",
+    );
     await drawWatermark(doc, wmBase64);
   } catch {
     console.warn("Marca de agua no disponible.");
