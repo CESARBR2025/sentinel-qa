@@ -1,14 +1,14 @@
 export async function abrirDocumento(urlArchivo: string) {
-  const proxyUrl = `/api/expediente/proxy?url=${encodeURIComponent(urlArchivo)}`
-
   try {
-    const res = await fetch(proxyUrl)
-    if (!res.ok) throw new Error('Error al obtener documento')
-    const blob = await res.blob()
-    const blobUrl = URL.createObjectURL(blob)
-    window.open(blobUrl, '_blank')
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 30000)
+    const tokenRes = await fetch('/api/expediente/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: urlArchivo }),
+    })
+    if (!tokenRes.ok) throw new Error('No autorizado')
+    const { token } = await tokenRes.json()
+    window.open(`/api/expediente/vista/${encodeURIComponent(token)}`, '_blank')
   } catch {
-    window.open(proxyUrl, '_blank', 'noopener,noreferrer')
+    window.open(`/api/expediente/proxy?ref=${encodeURIComponent(urlArchivo)}`, '_blank', 'noopener,noreferrer')
   }
 }

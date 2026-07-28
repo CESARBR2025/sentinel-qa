@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { SecureImg } from '@/components/shared/SecureImg'
+import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 interface Props {
   url: string
@@ -15,9 +17,6 @@ function getExtension(url: string): string {
 }
 
 export function VerDocumentoModal({ url, titulo, onClose }: Props) {
-  const baseUrl = process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''
-  const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`
-  const proxyUrl = `/api/expediente/proxy?url=${encodeURIComponent(fullUrl)}`
   const [imgError, setImgError] = useState(false)
 
   return (
@@ -101,9 +100,7 @@ export function VerDocumentoModal({ url, titulo, onClose }: Props) {
           minHeight: 200,
         }}>
           {!imgError ? (
-            <img
-              src={proxyUrl}
-              alt={titulo}
+            <SecureImg ref={url} alt={titulo}
               style={{
                 maxWidth: '100%',
                 maxHeight: '60vh',
@@ -147,10 +144,7 @@ export function VerDocumentoModal({ url, titulo, onClose }: Props) {
           padding: '16px 24px',
           borderTop: '1px solid #e2e8f0',
         }}>
-          <a
-            href={proxyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <a href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(url); }} rel="noopener noreferrer"
             style={{
               padding: '8px 20px',
               border: '1px solid #d97706',

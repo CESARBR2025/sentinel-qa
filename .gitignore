@@ -61,3 +61,9 @@ opencode.json
 .graphify/
 graphify-visual/
 .youmindag/
+.freebuff/
+.youmindag/
+.youmindag/plugin-heartbeat.log
+/.youmindag
+.youmindag/plugin-state.json
+.youmindag/token-usage.jsonl

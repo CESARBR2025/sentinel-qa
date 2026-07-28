@@ -1,6 +1,8 @@
 import { query } from '@/lib/db'
 import PptxGenJS from 'pptxgenjs'
 import { obtenerGuestToken } from '@/lib/expediente/client'
+import { esRefV2, parsearRef } from '@/lib/expediente/v2/ref'
+import { descargar as descargarV2 } from '@/lib/expediente/v2/client'
 
 const EXP_HOST = process.env.EXPEDIENTE_DIGITAL_URL ?? 'https://sanjuandelrio.sytes.net:3044'
 
@@ -26,20 +28,21 @@ async function descargarFoto(url: string, token: string): Promise<{ base64: stri
     return null
   }
   try {
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-      signal: AbortSignal.timeout(15000),
-    })
+    let res: Response
+    if (esRefV2(url)) {
+      const ref = parsearRef(url)
+      if (!ref) return null
+      res = await descargarV2(ref)
+    } else {
+      const normalUrl = normalizarUrl(url)
+      if (!normalUrl || !normalUrl.startsWith('http')) return null
+      res = await fetch(normalUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout(15000),
+      })
+    }
     if (!res.ok) {
       console.error(`[ppt] descargarFoto fail HTTP ${res.status} for:`, url.substring(0, 80))
-      if (res.status === 401 || res.status === 403) {
-        const res2 = await fetch(url, { signal: AbortSignal.timeout(10000) })
-        if (res2.ok) {
-          const buf2 = await res2.arrayBuffer()
-          const mime2 = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg'
-          return { base64: Buffer.from(buf2).toString('base64'), mime: mime2 }
-        }
-      }
       return null
     }
     const buf = await res.arrayBuffer()
@@ -53,13 +56,11 @@ async function descargarFoto(url: string, token: string): Promise<{ base64: stri
 
 function getAspectRatio(base64: string): number {
   const buf = Buffer.from(base64, 'base64')
-  // PNG: first 8 bytes are signature, then IHDR chunk (4 len + 4 type + 4 w + 4 h)
   if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47) {
     const w = buf.readUInt32BE(16)
     const h = buf.readUInt32BE(20)
     return w && h ? w / h : 1
   }
-  // JPEG: look for SOF0 marker (0xFF 0xC0)
   let off = 0
   while (off < buf.length - 1) {
     if (buf[off] === 0xFF && buf[off + 1] === 0xC0) {
@@ -121,7 +122,6 @@ export async function generarPpt(
     const faltaAdmin = String(row.falta_administrativa || marcoLegal || '—')
     const modusOp = String(row.modus_operandi || '—')
 
-    // Cargar fotos (solo la última por tipo)
     const evs = await query<Record<string, unknown>>(
       `SELECT url_archivo, tipo_foto FROM (
          SELECT url_archivo, tipo_foto, ROW_NUMBER() OVER (PARTITION BY tipo_foto ORDER BY creado_en DESC) as rn
@@ -133,9 +133,7 @@ export async function generarPpt(
     const buffers = await Promise.all(
       evs.rows.map(e => {
         const raw = String(e.url_archivo)
-        const url = normalizarUrl(raw)
-        if (!url || !url.startsWith('http')) return Promise.resolve(null)
-        return descargarFoto(url, token)
+        return descargarFoto(raw, token)
       }),
     )
     console.log(`[ppt] report ${id.substring(0,8)}: ${evs.rows.length} evidencias, ${buffers.filter(Boolean).length} downloaded`)
@@ -145,12 +143,10 @@ export async function generarPpt(
     const marginX = 0.6
     const contentW = 9
 
-    // Header
     slide.addText('Reporte de Detenido', { x: marginX, y: 0.15, w: contentW, h: 0.35, fontSize: 22, fontFace: 'Arial', bold: true, color: '1E40AF' })
     slide.addText(`SSPM San Juan del Río · ${new Date().toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })}`, { x: marginX, y: 0.5, w: contentW, h: 0.2, fontSize: 10, fontFace: 'Arial', color: '64748B' })
     slide.addShape('line', { x: marginX, y: 0.75, w: contentW, h: 0 })
 
-    // Tabla de datos (siempre en la misma posición)
     const tablaY = 0.9
     const rowH = 0.3
     const fs = 9
@@ -168,7 +164,6 @@ export async function generarPpt(
 
     const finTabla = tablaY + datos.length * rowH
 
-    // Fotos debajo de la tabla
     let imgH = 0
     if (imgCount > 0) {
       imgH = 1.6
@@ -199,7 +194,6 @@ export async function generarPpt(
       }
     }
 
-    // Footer
     const footerY = imgCount > 0 ? finTabla + 0.15 + imgH + 0.22 + 0.1 : finTabla + 0.15
     slide.addText(`Generado por SSPM Monitorista · ${new Date().toLocaleString('es-MX')}`, { x: marginX, y: footerY, w: contentW, h: 0.2, fontSize: 8, fontFace: 'Arial', color: '94A3B8' })
   }

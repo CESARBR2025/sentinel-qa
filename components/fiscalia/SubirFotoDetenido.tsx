@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Upload, CheckCircle2, XCircle } from 'lucide-react'
+import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 function compressImage(file: File, maxW = 1920, quality = 0.7): Promise<File> {
   return new Promise((resolve, reject) => {
@@ -121,7 +122,7 @@ export function SubirFotoDetenido({
 
       {urlArchivo && (
         <div style={{ marginBottom: 8, fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#1f355a' }}>
-          <a href={`/api/expediente/proxy?url=${encodeURIComponent(urlArchivo)}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
+          <a href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(urlArchivo); }} style={{ textDecoration: 'underline' }}>
             Ver foto actual
           </a>
           {nombreArchivo && <span style={{ color: '#64748b', marginLeft: 8 }}>({nombreArchivo})</span>}

@@ -2,6 +2,8 @@
 
 import { Camera, Image, Film, FileText, ExternalLink } from 'lucide-react'
 import React from 'react'
+import { SecureImg } from '@/components/shared/SecureImg'
+import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 interface EvidenciaRow {
   id: string
@@ -48,11 +50,7 @@ export function GaleriaEvidencias({ evidencias }: { evidencias: EvidenciaRow[] }
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0, overflow: 'hidden', border: '1px solid rgba(27,39,66,0.5)',
                   }}>
-                    <img
-                      src={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlExpediente)}`}
-                      alt={ev.nombreOriginal || ''}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                    <SecureImg ref={ev.urlExpediente} alt={ev.nombreOriginal || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 )}
                 {!isImage && (
@@ -74,10 +72,7 @@ export function GaleriaEvidencias({ evidencias }: { evidencias: EvidenciaRow[] }
                   </div>
                 </div>
               </div>
-              <a
-                href={`/api/monitorista/expediente-proxy?url=${encodeURIComponent(ev.urlExpediente)}`}
-                target="_blank"
-                rel="noreferrer"
+              <a href="#" onClick={(e) => { e.preventDefault(); abrirDocumento(ev.urlExpediente); }} rel="noreferrer"
                 style={{
                   fontFamily: 'JetBrains Mono', fontSize: 10, color: '#d4a43a',
                   textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4,

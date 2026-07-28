@@ -8,6 +8,7 @@ import {
   Navigation, Hash, Building2, Flag, Crosshair,
 } from 'lucide-react'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
+import { SecureImg } from '@/components/shared/SecureImg'
 import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 /* ─── INTERFACES ─── */
@@ -353,20 +354,17 @@ function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbica
             </h4>
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
               {evidencias.map((url, i) => {
-                const fullUrl = `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''}${url}`
                 const ext = url.split('.').pop()?.toLowerCase() ?? ''
                 const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)
                 return (
                   <div
                     key={url}
-                    onClick={() => abrirDocumento(fullUrl)}
+                    onClick={() => abrirDocumento(url)}
                     className="group cursor-pointer rounded-lg border border-slate-200 bg-white overflow-hidden hover:scale-[1.04] hover:shadow-md transition-all duration-200"
                   >
                     <div className="h-16 sm:h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
                       {isImage ? (
-                        <img
-                          src={`/api/expediente/proxy?url=${encodeURIComponent(fullUrl)}`}
-                          alt={`Evidencia ${i + 1}`}
+                        <SecureImg ref={url} alt={`Evidencia ${i + 1}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           onError={(e) => {
                             const t = e.currentTarget
@@ -743,20 +741,17 @@ function TimelineNode({ nombre, fecha, items }: { nombre: string; fecha: string;
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
         {items.map((item) => {
-          const fullUrl = `${process.env.NEXT_PUBLIC_WS_EXPEDIENTE ?? ''}${item.ruta}`
           const isImage = isImageExt(item.ext)
 
           return (
             <div
               key={item.ruta}
-              onClick={() => abrirDocumento(fullUrl)}
+              onClick={() => abrirDocumento(item.ruta)}
               className="group cursor-pointer rounded-lg border border-slate-200 bg-white overflow-hidden hover:scale-[1.04] hover:shadow-lg transition-all duration-200"
             >
               <div className="h-20 bg-slate-50 flex items-center justify-center overflow-hidden">
                 {isImage ? (
-                  <img
-                    src={`/api/expediente/proxy?url=${encodeURIComponent(fullUrl)}`}
-                    alt={item.nombre}
+                  <SecureImg ref={item.ruta} alt={item.nombre}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
                       const target = e.currentTarget
