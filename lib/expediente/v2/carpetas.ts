@@ -1,5 +1,3 @@
-const ROOT = process.env.EXPEDIENTE_FOLDER ?? 'Centinela'
-
 function fecha() {
   const now = new Date()
   const YYYY = now.getFullYear().toString()
@@ -9,22 +7,22 @@ function fecha() {
 
 export function carpetaEvidenciaMonitorista(incidenteId: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/monitorista/${YYYY}/${MM}/${incidenteId}`
+  return `monitorista/${YYYY}/${MM}/${incidenteId}`
 }
 
 export function carpetaFotoDetenido(reporteCampoId: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/detenidos/${YYYY}/${MM}/${reporteCampoId}`
+  return `detenidos/${YYYY}/${MM}/${reporteCampoId}`
 }
 
 export function carpetaFotoFiscalia(reporteCampoId: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/fiscalia/${YYYY}/${MM}/${reporteCampoId}`
+  return `fiscalia/${YYYY}/${MM}/${reporteCampoId}`
 }
 
 export function carpetaInfraccion(idInfraccion: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/SSPM_INFRACCIONES/${YYYY}/${MM}/${idInfraccion}`
+  return `SSPM_INFRACCIONES/${YYYY}/${MM}/${idInfraccion}`
 }
 
 export function carpetaOficios(idInfraccion: string): string {
@@ -53,10 +51,10 @@ export function carpetaOrdenSalida(infraccionId: string): string {
 
 export function carpetaPrevencion(folio: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/prevencion/${YYYY}/${MM}/${folio}`
+  return `prevencion/${YYYY}/${MM}/${folio}`
 }
 
 export function carpetaGenerica(subdir: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/${subdir}/${YYYY}/${MM}`
+  return `${subdir}/${YYYY}/${MM}`
 }
