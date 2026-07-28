@@ -305,3 +305,21 @@ useEffect(() => {
 ```
 
 El overlay de éxito cyberpunk del propio login ("Acceso concedido") ya da suficiente feedback visual durante el 1.2s de transición. No se necesita un loader externo.
+
+---
+
+## Ciudadano no puede subir/ver estatus de documentos de liberación — 401 silencioso (2026-07-28)
+
+**Síntoma**: en `/infracciones/[id]` (público, `InfraccionCiudadanoPage`), la sección `SeccionLiberacion` no muestra el estatus de revisión de documentos (`GET /api/via/liberaciones/documentos/[infraccionId]` falla en un `.catch(() => {})` mudo) y `POST /api/via/ciudadano/subir-archivo` regresa 401 al intentar subir/reenviar un documento.
+
+**Causa raíz**: dos endpoints consumidos desde la página pública del ciudadano (sin sesión de staff, solo el JWT de `infraccion_access` emitido tras verificar el PIN) fueron modificados en commits no relacionados a exigir `auth.api.getSession()` de staff:
+- `app/api/via/liberaciones/documentos/[infraccionId]/route.ts` — commit `3ec7484` ("Header y Footer Fix", 2026-07-15) le agregó sesión + `verificarRolLiberaciones`.
+- `app/api/via/ciudadano/subir-archivo/route.ts` — commit `f35a38e` ("Migración Expediente SSMP", 2026-07-27) le agregó sesión de staff.
+
+Un ciudadano anónimo nunca tiene esa sesión, así que ambos siempre regresaban 401/403 para tráfico real de ciudadanos.
+
+**Fix**: reemplazar la guarda de sesión de staff por `verificarCookieCiudadano(infraccionId)` (`lib/via/auth-ciudadano.ts`), la misma que ya protege la página:
+- En `documentos/[infraccionId]/route.ts`: verificar contra el `infraccionId` de la ruta.
+- En `subir-archivo/route.ts`: el body solo trae `solicitudId`, así que primero se resuelve el `infraccionId` con la nueva función `obtenerInfraccionIdDeSolicitud(solicitudId)` (`lib/agente_infracciones/repository.ts`) y luego se valida la cookie contra ese id.
+
+**Contexto**: encontrado auditando el flujo de `InfraccionCiudadanoPage` como Fase 0 de un plan más amplio para exponer esta misma lógica como API para una app Flutter — las fases siguientes reusan `verificarCookieCiudadano` extendido para aceptar también un header `Authorization: Bearer` (ya que Flutter no maneja cookies httpOnly de forma nativa).

@@ -3,7 +3,17 @@ import type { Session } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/api/auth']
+const PUBLIC_PATHS = [
+  '/login',
+  '/api/auth',
+  // Flujo público de ciudadano (infracciones): protegido por su propio PIN/JWT
+  // (verificarCookieCiudadano / verificarAccesoCiudadano), no por sesión de staff.
+  '/infracciones/',
+  '/api/via/infracciones',
+  '/api/via/pagos',
+  '/api/via/liberaciones',
+  '/api/via/ciudadano',
+]
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.some((p) => pathname.startsWith(p))

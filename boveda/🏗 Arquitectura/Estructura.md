@@ -164,8 +164,12 @@
 │   │   │   │   └── route.ts
 │   │   │   ├── subir/
 │   │   │   │   └── route.ts
-│   │   │   └── subir-foto-detenido/
-│   │   │       └── route.ts
+│   │   │   ├── subir-foto-detenido/
+│   │   │   │   └── route.ts
+│   │   │   ├── token/
+│   │   │   │   └── route.ts
+│   │   │   └── vista/
+│   │   │       └── [token]/
 │   │   ├── fiscalia/
 │   │   │   └── expediente/
 │   │   │       └── subir-foto/
@@ -192,8 +196,6 @@
 │   │   │   │   └── generar-ppt/
 │   │   │   ├── evidencias/
 │   │   │   │   └── subir/
-│   │   │   ├── expediente-proxy/
-│   │   │   │   └── route.ts
 │   │   │   ├── historial/
 │   │   │   │   └── route.ts
 │   │   │   ├── incidentes-camara/
@@ -281,9 +283,9 @@
 │   │       │   └── route.ts
 │   │       ├── exp-digital/
 │   │       │   ├── guardar-docs/
-│   │       │   ├── guardar-evidencias/
-│   │       │   └── token/
+│   │       │   └── guardar-evidencias/
 │   │       ├── infracciones/
+│   │       │   ├── [id]/
 │   │       │   ├── iniciar-proceso/
 │   │       │   ├── liberar-garantia/
 │   │       │   ├── registradas/
@@ -684,7 +686,8 @@
 │   ├── shared/
 │   │   ├── DetalleInfraccionView.tsx
 │   │   ├── DireccionGoogleMaps.tsx
-│   │   └── PedirEvidenciasModal.tsx
+│   │   ├── PedirEvidenciasModal.tsx
+│   │   └── SecureImg.tsx
 │   ├── ui/
 │   │   ├── Toast.tsx
 │   │   └── ToastAuto.tsx
@@ -709,9 +712,6 @@
 │       │       └── detalleInfraccion.ts
 │       ├── emails/
 │       │   └── templates/
-│       ├── expediente/
-│       │   └── helpers/
-│       │       └── abrirDocumento.ts
 │       ├── infracciones/
 │       │   ├── components/
 │       │   │   ├── steps/
@@ -885,9 +885,14 @@
 │   │   ├── mailer.ts
 │   │   └── server.ts
 │   ├── expediente/
+│   │   ├── v2/
+│   │   │   ├── carpetas.ts
+│   │   │   ├── client.ts
+│   │   │   ├── ref.ts
+│   │   │   ├── token.ts
+│   │   │   └── view-store.ts
 │   │   └── client.ts
 │   ├── fiscalia/
-│   │   ├── abrirDocumento.ts
 │   │   ├── actions.ts
 │   │   ├── expediente.ts
 │   │   ├── mapper.ts
@@ -1064,6 +1069,8 @@
 │   ├── exportar-schema.ts
 │   ├── extract-domain.mjs
 │   ├── load-context.mjs
+│   ├── migrar-evidencias-json.ts
+│   ├── migrar-legado-a-v2.ts
 │   ├── populate-vault.mjs
 │   ├── session-checkpoint.mjs
 │   ├── token-summary.mjs
@@ -1098,10 +1105,13 @@
 ├── postcss.config.mjs
 ├── proxy.ts
 ├── README.md
+├── tmp-consulta-infraccion.ts
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

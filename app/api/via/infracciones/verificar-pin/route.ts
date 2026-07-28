@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       .setExpirationTime("1h")
       .sign(secret);
 
-    const res = NextResponse.json({ ok: true });
+    const res = NextResponse.json({ ok: true, token });
     res.cookies.set("infraccion_access", token, {
       httpOnly: true,
       sameSite: "strict",

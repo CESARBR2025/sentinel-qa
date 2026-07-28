@@ -1,23 +1,42 @@
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
+import type { NextRequest } from "next/server";
 
 const getSecret = () => new TextEncoder().encode(process.env.BETTER_AUTH_SECRET);
 
-export async function verificarCookieCiudadano(infraccionId: string): Promise<boolean> {
+async function tokenCorrespondeAInfraccion(token: string | undefined, infraccionId: string): Promise<boolean> {
+  if (!token) return false;
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("infraccion_access")?.value;
-    if (!token) {
-      console.log("[AUTH-CIUDADANO] Cookie infraccion_access no encontrada");
-      return false;
-    }
-
     const { payload } = await jwtVerify(token, getSecret());
-    const match = payload.infraccionId === infraccionId;
-    console.log("[AUTH-CIUDADANO] Cookie válida — infraccionId cookie:", payload.infraccionId, "esperado:", infraccionId, "match:", match);
-    return match;
+    return payload.infraccionId === infraccionId;
   } catch (e) {
     console.log("[AUTH-CIUDADANO] Error verificando token:", e instanceof Error ? e.message : e);
     return false;
   }
+}
+
+/**
+ * Válido solo para Server Components / Server Actions (Next.js): lee el JWT
+ * desde la cookie httpOnly `infraccion_access` que emite verificar-pin.
+ */
+export async function verificarCookieCiudadano(infraccionId: string): Promise<boolean> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("infraccion_access")?.value;
+  console.log("[AUTH-CIUDADANO] Cookie infraccion_access:", token ? "presente" : "ausente");
+  return tokenCorrespondeAInfraccion(token, infraccionId);
+}
+
+/**
+ * Para Route Handlers: acepta el mismo JWT vía header `Authorization: Bearer`
+ * (usado por clientes que no manejan cookies httpOnly, como la app Flutter)
+ * o, si no viene header, cae de vuelta a la cookie (usado por el propio front
+ * web al hacer fetch same-origin).
+ */
+export async function verificarAccesoCiudadano(req: NextRequest, infraccionId: string): Promise<boolean> {
+  const authHeader = req.headers.get("authorization");
+  const bearer = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
+  if (bearer) {
+    return tokenCorrespondeAInfraccion(bearer, infraccionId);
+  }
+  return verificarCookieCiudadano(infraccionId);
 }

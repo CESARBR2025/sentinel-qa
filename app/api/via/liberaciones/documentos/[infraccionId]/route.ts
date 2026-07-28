@@ -1,26 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import {
   obtenerSolicitudLiberacion,
   obtenerDocumentosLiberacion,
 } from "@/lib/agente_infracciones/repository";
-import { verificarRolLiberaciones } from "@/lib/agente_liberaciones/service";
+import { verificarAccesoCiudadano } from "@/lib/via/auth-ciudadano";
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   context: { params: Promise<{ infraccionId: string }> },
 ) {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-  if (!(await verificarRolLiberaciones(session.user.id))) {
-    return NextResponse.json({ error: "Sin permiso" }, { status: 403 });
-  }
-
   try {
     const { infraccionId } = await context.params;
+
+    if (!(await verificarAccesoCiudadano(req, infraccionId))) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    }
 
     const solicitud = await obtenerSolicitudLiberacion(infraccionId);
     const documentos = await obtenerDocumentosLiberacion(infraccionId);

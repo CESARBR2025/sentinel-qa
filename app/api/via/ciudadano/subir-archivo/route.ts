@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { headers } from 'next/headers'
 import { subir } from '@/lib/expediente/v2/client'
 import { serializarRef } from '@/lib/expediente/v2/ref'
 import { carpetaLiberacionCiudadana } from '@/lib/expediente/v2/carpetas'
-import { insertarDocumentoLiberacion } from '@/lib/agente_infracciones/repository'
+import { insertarDocumentoLiberacion, obtenerInfraccionIdDeSolicitud } from '@/lib/agente_infracciones/repository'
+import { verificarAccesoCiudadano } from '@/lib/via/auth-ciudadano'
 import crypto from 'crypto'
 
 export async function POST(req: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
-
   try {
     const formData = await req.formData()
     const solicitudId = formData.get('solicitudId') as string
@@ -19,6 +15,11 @@ export async function POST(req: NextRequest) {
 
     if (!solicitudId || !tipoDocumento || !archivo) {
       return NextResponse.json({ error: 'solicitudId, tipoDocumento y archivo son requeridos' }, { status: 400 })
+    }
+
+    const infraccionId = await obtenerInfraccionIdDeSolicitud(solicitudId)
+    if (!infraccionId || !(await verificarAccesoCiudadano(req, infraccionId))) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
     const esValido = archivo.type.startsWith('image/') || archivo.type === 'application/pdf'
