@@ -1,11 +1,11 @@
 {
-  "toolCallCount": 5336,
-  "lastTask": "es esta: http://localhost:3000/oficial/rondin",
+  "toolCallCount": 5560,
+  "lastTask": "que diga: \"Mas detalles de reporte\" con iconos",
   "lastCheckpointKey": "",
-  "editsSinceLastCheck": 1,
+  "editsSinceLastCheck": 2,
   "editsSinceGraphifyUpdate": 1,
-  "grepCount": 6,
-  "graphifyQueryCount": 1,
+  "grepCount": 31,
+  "graphifyQueryCount": 0,
   "_graphifyCache": {
     "39797648": {
       "result": "NODE 863c575 Merge pull request #24 from presidenciaSJR/feature/testing [src=git loc= community=1]\nNODE page.tsx [src=app/prevencion/medidas/[id]/page.tsx loc=L1 community=6]\nNODE testing [src=git loc= community=10]\nNODE conexion [src=git loc= community=10]\nNODE feature/testing [src=git loc= community=10]\nNODE main [src=git loc= community=10]\nNODE 27dcb21 Merge branch 'feature/testing' into feature/reportes [src=git loc= community=1]\nNODE 0068216 Mejora de Dashboard, Login y transiciones de pantallas [src=git loc= community=46]\nNODE auth.ts [src=lib/auth.ts loc=L1 community=0]\nNODE auth [src=lib/auth.ts loc=L7 community=0]\nNODE 5618308 guardado e evidencias con ed [src=git loc= community=0]\nNODE fix/subir-fotografias [src=git loc= community=4]\n  ... (truncated)",
@@ -360,10 +360,10 @@
       "ts": 1784837737227
     }
   },
+  "ymEditCount": 1,
+  "ymLastSyncAt": 1784926271823,
   "ymDocNudge": {
-    "911": 1784839646288,
-    "Reporte Campo": 1784840861360
-  },
-  "ymEditCount": 7,
-  "ymLastSyncAt": 1784841043276
+    "911": 1784926271822,
+    "Flota": 1784925860150
+  }
 }

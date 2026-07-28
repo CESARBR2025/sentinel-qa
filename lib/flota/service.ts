@@ -1,5 +1,7 @@
-import { estaStale, upsertPatrullas, listarActivas, obtenerPorId } from "./repository";
-import type { FlotaVehiculoRaw, PatrullaAsignacion } from "./types";
+import { estaStale, upsertPatrullas, listarActivas, obtenerPorId, listarUnidadesConTripulacionRaw } from "./repository";
+import { agruparUnidadesConTripulacion } from "./mapper";
+import type { FlotaVehiculoRaw, PatrullaAsignacion, UnidadParaDespacho } from "./types";
+import { distanciaHaversineKm } from "@/lib/shared/geo";
 
 const FLOTA_API_URL =
   "http://proyecto-flota.vercel.app/api/publica?placa";
@@ -106,6 +108,44 @@ export async function listarPatrullasParaAsignacion(): Promise<
     placas: r.placas,
     descripcion: r.descripcion,
   }));
+}
+
+const TOP_UNIDADES_CERCANAS = 10;
+
+export async function listarUnidadesParaDespacho(
+  incidenteLat: number | null,
+  incidenteLng: number | null,
+  prioritarioPatrullaId?: string | null,
+): Promise<UnidadParaDespacho[]> {
+  const rows = await listarUnidadesConTripulacionRaw();
+  const unidades = agruparUnidadesConTripulacion(rows);
+
+  const conDistancia = unidades.map((u) => ({
+    ...u,
+    distanciaKm:
+      incidenteLat != null && incidenteLng != null && u.ultimaLat != null && u.ultimaLng != null
+        ? distanciaHaversineKm(incidenteLat, incidenteLng, u.ultimaLat, u.ultimaLng)
+        : null,
+  }));
+
+  // La unidad prioritaria (la del oficial que ya está en el lugar, si el incidente viene
+  // de un rondín escalado) siempre debe poder resolverse — no se le aplican el filtro de
+  // ubicación ni el tope de 10, aunque no aparezca en "cercanas" para elegir de nuevo.
+  const prioritaria = prioritarioPatrullaId
+    ? conDistancia.find((u) => u.id === prioritarioPatrullaId) ?? null
+    : null;
+
+  const cercanas = conDistancia
+    // Sin ubicación (ningún oficial de la tripulación reportó posición) no hay forma de
+    // saber si está cerca — se descarta en vez de mostrarla como "más cercana" al final.
+    .filter((u): u is typeof u & { distanciaKm: number } => u.distanciaKm != null)
+    .sort((a, b) => a.distanciaKm - b.distanciaKm)
+    .slice(0, TOP_UNIDADES_CERCANAS);
+
+  if (prioritaria && !cercanas.find((u) => u.id === prioritaria.id)) {
+    return [prioritaria, ...cercanas];
+  }
+  return cercanas;
 }
 
 export async function obtenerPatrullaPorId(

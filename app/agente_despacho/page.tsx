@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { MapPin, Shield } from 'lucide-react'
+import { Shield } from 'lucide-react'
 import { verificarRolAgenteDespacho } from '@/lib/agente_despacho/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -67,40 +67,7 @@ export default async function AgenteDespachoDashboardPage() {
         {/* Cards */}
         <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 20 }}>
 
-          {/* Card: Reportes de Rondín — el oficial es quien levanta el reporte; despacho solo consulta vía bitácora general */}
-          <Link href="/incidentes?canal=radio" className="card-911" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <MapPin size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                REPORTES
-              </div>
-            </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Reportes de Rondín
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Control de patrullaje preventivo, puntos de firma y geolocalización de unidades
-              </p>
-            </div>
-            <div style={{ marginTop: 16, display: 'flex', gap: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.total}</div>
-              </div>
-              <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hoy</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.hoy}</div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Card: Reportes de Despacho */}
+          {/* Card única: tablón unificado — 911, whatsapp y rondín (auto-escalado) convergen aquí, no hay universo separado que consultar */}
           <Link href="/agente_911/despacho" className="card-911" style={{ textDecoration: 'none' }}>
             <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
             <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />

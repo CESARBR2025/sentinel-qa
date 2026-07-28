@@ -20,7 +20,7 @@ export default async function DespachoPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}} />
       <DashboardHeader user={user} backHref={backHref} backLabel={backLabel} />

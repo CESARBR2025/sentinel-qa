@@ -20,6 +20,8 @@
 | `complementos/gruas` | GET | (Pendiente) |
 | `corralon/subir-archivo` | POST | (Pendiente) |
 | `d1/exportar` | GET | (Pendiente) |
+| `despacho/buscar-oficial` | GET | (Pendiente) |
+| `despacho/unidades-cercanas` | GET | (Pendiente) |
 | `detenidos/detalle/[id]` | GET | (Pendiente) |
 | `detenidos/listar` | GET | (Pendiente) |
 | `detenidos/registrar` | POST | (Pendiente) |
@@ -115,6 +117,17 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
+
+
+
+
 
 
 

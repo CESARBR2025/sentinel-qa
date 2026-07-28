@@ -40,6 +40,8 @@ export interface IncidenteConDespacho {
   ofiAutoridadRecibe: string | null
   d1Pendiente: boolean
   origenRondin: boolean
+  latitud: number | null
+  longitud: number | null
   unidades: { id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null }[]
   elementos: { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]
 }
@@ -61,6 +63,9 @@ export interface IncidentePendiente {
   origenRondin: boolean
   prioritarioNombre: string | null
   prioritarioNomina: string | null
+  prioritarioPatrullaId: string | null
+  latitud: number | null
+  longitud: number | null
 }
 
 export interface PersonaAfectadaRow {

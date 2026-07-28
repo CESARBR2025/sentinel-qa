@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Fingerprint, BadgeCheck, Phone, Calendar } from 'lucide-react'
 import { verificarRolOficial, obtenerMiPerfil } from '@/lib/oficial/service'
 import { UnidadAsignadaSection } from '@/components/oficial/UnidadAsignadaSection'
+import { MiUbicacionSection } from '@/components/oficial/MiUbicacionSection'
 import { listarPatrullasParaAsignacion, obtenerPatrullaPorId } from '@/lib/flota/service'
 import { DashboardHeader } from '@/components/partials/Header'
 import { APP_VERSION } from "@/lib/constants"
@@ -171,6 +172,8 @@ export default async function ConfiguracionPerfilPage() {
                 patrullaActual={patrullaActual}
                 patrullas={patrullas}
               />
+
+              <MiUbicacionSection />
             </div>
           </>
         ) : (

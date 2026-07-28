@@ -71,6 +71,8 @@ export function rowToIncidenteConDespachoBase(row: Record<string, unknown>): Omi
     ofiAutoridadRecibe: toStr(row.ofi_autoridad_recibe),
     d1Pendiente: Boolean(row.d1_pendiente),
     origenRondin: Boolean(row.origen_rondin),
+    latitud: toNum(row.latitud),
+    longitud: toNum(row.longitud),
   }
 }
 
@@ -92,6 +94,9 @@ export function rowToIncidentePendiente(row: Record<string, unknown>): Incidente
     origenRondin: Boolean(row.origen_rondin),
     prioritarioNombre: toStr(row.prioritario_nombre),
     prioritarioNomina: toStr(row.prioritario_nomina),
+    prioritarioPatrullaId: toStr(row.prioritario_patrulla_id),
+    latitud: toNum(row.latitud),
+    longitud: toNum(row.longitud),
   }
 }
 

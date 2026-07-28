@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "lenis/dist/lenis.css";
-import SmoothScroll from "@/components/SmoothScroll";
 import PageTransition from "@/components/PageTransition";
 import { Toaster } from "sonner";
 
@@ -18,7 +16,6 @@ export default function RootLayout({
   return (
     <html lang="es" style={{ background: '#070b16' }}>
       <body style={{ margin: 0, background: '#070b16' }} suppressHydrationWarning>
-        <SmoothScroll />
         <PageTransition />
         {children}
         <Toaster
