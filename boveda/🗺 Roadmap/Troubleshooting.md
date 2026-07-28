@@ -405,3 +405,29 @@ El botón "Revisar documentos" ahora también aparece para `MESA_DE_CONTROL_RECH
 - `CapturarInfractorSection.tsx` ya no llama `generarOrdenPagoAction` — solo guarda datos y pasa a tab 2.
 - `generarOrdenPagoAction` ahora tiene guard server-side que exige `estatus_dependencia === 'PENDIENTE_PAGO_LIBERACION'`.
 - `confirmar-liberacion/route.ts` ahora exige `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO` o `LIBERACION_PENDIENTE_DOCUMENTOS` antes de consultar SA7.
+
+---
+
+## Dashboard muestra infracciones no vehiculares en tabs de liberación (corregido)
+
+**Síntoma**: Un ciudadano no podía subir documentos desde la vista pública, aunque el dashboard del agente mostraba la infracción en "En espera de documentos".
+
+**Causa raíz**: `obtenerLiberaciones` (`lib/agente_liberaciones/repository.ts`) no filtraba por `tipo_garantia`. Infracciones con `tipo_garantia = 'PLACA'` (o TARJETA/LICENCIA) cuyo `estatus_dependencia` coincidía con los valores de liberación aparecían en el dashboard, pero la vista pública solo renderiza `SeccionLiberacion` cuando `tipo_garantia === 'VEHICULO'` (`app/infracciones/[id]/page.tsx:340`). El ciudadano veía el estatus "pendiente de documentos" sin poder subir nada.
+
+Adicionalmente, `capturarInfractorAction` no validaba `tipo_garantia`, permitiendo que un agente procesara infracciones no vehiculares por el flujo de liberación.
+
+**Fix**:
+- `obtenerLiberaciones`: agregado `AND tipo_garantia = 'VEHICULO'` a la query del dashboard.
+- `capturarInfractorAction`: agregado SELECT previo que verifica `tipo_garantia` antes de mutar estatus; devuelve error si no es `'VEHICULO'`.
+
+---
+
+## Botón "Descargar orden de salida" no aparece aunque la infracción esté liberada (corregido)
+
+**Síntoma**: Un ciudadano veía "Vehículo liberado" en la página, pero no había botón para descargar la orden de salida.
+
+**Causa raíz**: El botón de descarga (línea 944 de `SeccionLiberacion.tsx`) estaba gated por `urlOrdenSalida && urlOrdenSalida !== 'NO_DATA'`. Si `confirmar-liberacion` no logró guardar el PDF en Expediente (error de subida, flujo alternativo que liberó sin pasar por `confirmar-liberacion`), `url_orden_salida_liberaciones` quedaba como `null` y el botón no se renderizaba.
+
+**Fix**:
+- Creado `GET /api/via/descargar-orden/[infraccionId]` que genera el PDF on-demand si no existe, lo guarda en Expediente y lo sirve como descarga. Reusa toda la infraestructura existente (`subir()`, `parsearRef()`, `generarOrdenSalidaVehiculo`, etc.).
+- `SeccionLiberacion.tsx` ahora muestra una sección principal destacada cuando `esLiberada === true`, con botón de descarga apuntando a la nueva ruta — sin depender de `url_orden_salida_liberaciones`.

@@ -7,6 +7,7 @@ export interface EnviarCorreoPagoConfirmadoParams {
   folio: string
   placa: string
   monto: number
+  pinAcceso?: string
   urlVistaCiudadano?: string
 }
 
@@ -33,6 +34,7 @@ export function templatePagoConfirmado(data: EnviarCorreoPagoConfirmadoParams) {
       <p style="margin:0 0 8px 0;"><b>Folio:</b> ${data.folio}</p>
       <p style="margin:0 0 8px 0;"><b>Placa:</b> ${data.placa || 'N/A'}</p>
       <p style="margin:0 0 8px 0;"><b>Monto pagado:</b> $${montoFormateado} MXN</p>
+      ${data.pinAcceso ? `<p style="margin:0 0 8px 0;"><b>Código de desbloqueo:</b> <span style="font-family:monospace;font-size:16px;letter-spacing:0.2em;background:#f0f0f0;padding:2px 8px;border-radius:4px;">${data.pinAcceso}</span></p>` : ''}
       <p style="margin:0;"><b>Estatus:</b> PAGADA</p>
     </div>
 
@@ -49,18 +51,21 @@ export function templatePagoConfirmado(data: EnviarCorreoPagoConfirmadoParams) {
 
   const text = `
 SECRETARÍA DE SEGURIDAD PÚBLICA MUNICIPAL
-SAN JUAN DEL RÍO
+Fiscalía de San Juan del Río
 
 Estimado(a) ${data.nombreInfractor},
 
-Su infracción ha sido confirmada como pagada en el sistema digital.
+Su infracción ha sido confirmada como pagada en el sistema digital de la Secretaría de Seguridad Pública Municipal.
 
-DATOS DE LA INFRACCIÓN:
-─────────────────────────────────────────
-Folio:                ${data.folio}
-Placa:                ${data.placa || 'N/A'}
-Monto pagado:         $${montoFormateado} MXN
-Estatus:              PAGADA
+Folio: ${data.folio}
+
+Placa: ${data.placa || 'N/A'}
+
+Monto pagado: $${montoFormateado} MXN
+
+${data.pinAcceso ? `Código de desbloqueo: ${data.pinAcceso}` : ''}
+
+Estatus: PAGADA
 
 Consulte los detalles en:
 ${urlVistaCiudadano}
@@ -68,7 +73,7 @@ ${urlVistaCiudadano}
 Atentamente,
 
 Secretaría de Seguridad Pública Municipal
-San Juan del Río, Qro.
+Fiscalía de San Juan del Río, Qro.
 `
 
   return { html, text }

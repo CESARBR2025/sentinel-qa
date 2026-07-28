@@ -28,6 +28,7 @@ flowchart TD
 | `lib/agente_liberaciones/repository.ts` | `obtenerLiberaciones`, `actualizarInfractor`, `obtenerConceptoPorFraccion`, `obtenerSolicitudPorInfraccion`, `obtenerDocumentosPorSolicitud`, `actualizarRevisionDocumento`, `actualizarInfraccionEstatus`, `insertarOrdenPago` |
 | `lib/agente_liberaciones/service.ts` | Orquestación de flujo de liberación |
 | `lib/agente_liberaciones/actions.ts` | Server actions: capturar infractor, revisar documento, finalizar revisión, generar orden de pago |
+| `app/api/via/descargar-orden/[infraccionId]/route.ts` | Endpoint público (ciudadano) que sirve/genera la orden de salida PDF con auth de ciudadano |
 
 ## BD (schema `via`)
 
@@ -62,4 +63,8 @@ El mapa centralizado `TAB_ESTATUS` en `LiberacionesDashboard.tsx` es la fuente �
 4. `actualizarInfractor` actualiza datos del infractor y cambia estatus a `MESA_DE_CONTROL_PENDIENTE_DOCS`
 5. La orden de pago solo se genera desde `RevisionDocumentosSection` tras aprobar todos los documentos. `generarOrdenPagoAction` tiene guard server-side que exige `PENDIENTE_PAGO_LIBERACION`.
 6. `confirmar-liberacion/route.ts` tiene guard server-side que exige `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO` o `LIBERACION_PENDIENTE_DOCUMENTOS` antes de mutar.
-7. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último
+7. El dashboard de agente (`obtenerLiberaciones`) filtra por `tipo_garantia = 'VEHICULO'`. Infracciones con otro tipo de garantía (PLACA, TARJETA, LICENCIA) no aparecen en las tabs de liberación — el flujo de liberación es exclusivo para vehículos.
+8. `capturarInfractorAction` valida `tipo_garantia = 'VEHICULO'` antes de cambiar el estatus. Si no es vehículo, devuelve error.
+9. La orden de salida (PDF) se genera en `confirmar-liberacion/route.ts` tras el pago. Si por alguna razón no se guardó (error de Expediente, flujo alternativo), el endpoint `GET /api/via/descargar-orden/[infraccionId]` la regenera on-demand y la guarda en Expediente. Está protegido con `verificarAccesoCiudadano`.
+10. En la vista pública (`SeccionLiberacion.tsx`), cuando `esLiberada === true` aparece una sección principal destacada con un botón para descargar la orden de salida — sin depender de `url_orden_salida_liberaciones`.
+11. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último

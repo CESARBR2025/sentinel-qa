@@ -115,8 +115,9 @@ export async function GET(
           curp_titular: dbData.curp_titular_liberacion,
         };
 
+        let pdfBuffer: Buffer | undefined;
         try {
-          const pdfBuffer = await generarOrdenSalidaVehiculo({ data: dataParaPDF });
+          pdfBuffer = await generarOrdenSalidaVehiculo({ data: dataParaPDF });
 
           // Subir a expediente v2
           const ref = await subir(
@@ -136,10 +137,13 @@ export async function GET(
           try {
             await enviarCorreoOrdenLiberacion({
               correoTitular,
+              correoInfractor: dbData.correo_infractor,
               nombreTitular,
               idInfraccion: infraccionId,
               folio: dbData.folio || '—',
               placa: dbData.placa || '—',
+              pinAcceso: dbData.pin_acceso || undefined,
+              pdfBuffer,
             });
           } catch (err) {
             console.error("[CONFIRMAR-LIBERACION] Error al enviar correo:", err);

@@ -426,7 +426,32 @@ export default function SeccionLiberacion({
 
             <div className="p-6 space-y-5">
 
+                {/* ─── ORDEN DE SALIDA (infracción liberada) ─── */}
+                {esLiberada && (
+                    <div className="rounded-xl border border-green-500/30 bg-gradient-to-br from-green-50 to-emerald-50 p-8 text-center space-y-6">
+                        <div className="w-20 h-20 rounded-full bg-green-100 border-2 border-green-300 flex items-center justify-center mx-auto shadow-sm">
+                            <CheckCircle2 size={40} className="text-green-600" strokeWidth={1.5} />
+                        </div>
+                        <div className="space-y-2">
+                            <h4 className="text-xl font-bold text-slate-900" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
+                                VEHÍCULO LIBERADO
+                            </h4>
+                            <p className="text-sm text-slate-500 max-w-md mx-auto">
+                                El proceso de liberación ha sido completado. Descarga la orden de salida para presentarla en el corralón y recoger tu vehículo.
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => window.open(`/api/via/descargar-orden/${infraccionId}`, '_blank')}
+                            className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-green-600 hover:bg-green-700 active:bg-green-800 active:scale-[0.99] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all duration-150"
+                        >
+                            <FileText size={20} strokeWidth={2} />
+                            DESCARGAR ORDEN DE SALIDA
+                        </button>
+                    </div>
+                )}
+
                 {/* STATUS BADGE */}
+                {!esLiberada && (
                 <div className="flex flex-col gap-3">
                     <div
                         className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium w-full ${estatusConfig.bgClass} ${estatusConfig.borderClass} ${estatusConfig.textClass}`}
@@ -436,6 +461,7 @@ export default function SeccionLiberacion({
 
                     </div>
                 </div>
+                )}
 
                 {/* DATOS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -941,15 +967,6 @@ export default function SeccionLiberacion({
                     </div>
                 )}
 
-                {urlOrdenSalida && urlOrdenSalida !== 'NO_DATA' && (
-                    <button
-                        onClick={() => abrirDocumento(urlOrdenSalida)}
-                        className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium flex items-center justify-center gap-2 transition active:scale-[0.99]"
-                    >
-                        <FileText size={16} strokeWidth={1.5} />
-                        DESCARGAR ORDEN DE LIBERACIÓN
-                    </button>
-                )}
             </div>
         </section>
     );
