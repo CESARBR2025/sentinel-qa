@@ -67,16 +67,23 @@ export async function GET(
 
     // ── Generar PDF on-demand ──
     const esEmpresa = dbData.es_persona_moral || dbData.es_empresa;
+    const esTitular = dbData.es_titular === true;
 
-    const tNombre = !esEmpresa
-      ? dbData.nombre_titular_liberacion
-      : dbData.nombre_resp_fiscal;
-    const tPaterno = !esEmpresa
-      ? dbData.appaterno_titular_liberacion
-      : dbData.appaterno_resp_fiscal;
-    const tMaterno = !esEmpresa
-      ? dbData.apmaterno_titular_liberacion
-      : dbData.apmaterno_resp_fiscal;
+    const tNombre = esEmpresa
+      ? dbData.nombre_resp_fiscal
+      : esTitular
+        ? dbData.nombre_infractor
+        : dbData.nombre_titular_liberacion;
+    const tPaterno = esEmpresa
+      ? dbData.appaterno_resp_fiscal
+      : esTitular
+        ? dbData.apellido_paterno_infractor
+        : dbData.appaterno_titular_liberacion;
+    const tMaterno = esEmpresa
+      ? dbData.apmaterno_resp_fiscal
+      : esTitular
+        ? dbData.apellido_materno_infractor
+        : dbData.apmaterno_titular_liberacion;
 
     const nombreRecibe = `${tNombre || ""} ${tPaterno || ""} ${tMaterno || ""}`
       .trim()

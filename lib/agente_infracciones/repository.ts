@@ -227,30 +227,28 @@ export async function actualizarDatosInfractorIniciarProceso(params: {
   const result = await query<Record<string, unknown>>(
     `UPDATE via.v2_infracciones
      SET es_titular = $2,
-         nombre_titular_liberacion = COALESCE($3, nombre_titular_liberacion),
-         appaterno_titular_liberacion = COALESCE($4, appaterno_titular_liberacion),
-         apmaterno_titular_liberacion = COALESCE($5, apmaterno_titular_liberacion),
-         curp_titular_liberacion = COALESCE($6, curp_titular_liberacion),
-         correo_titular_liberacion = COALESCE($7, correo_titular_liberacion),
+         nombre_titular_liberacion = CASE WHEN $2 = true THEN COALESCE($3, $8, nombre_titular_liberacion) ELSE COALESCE($3, nombre_titular_liberacion) END,
+         appaterno_titular_liberacion = CASE WHEN $2 = true THEN COALESCE($4, $9, appaterno_titular_liberacion) ELSE COALESCE($4, appaterno_titular_liberacion) END,
+         apmaterno_titular_liberacion = CASE WHEN $2 = true THEN COALESCE($5, $10, apmaterno_titular_liberacion) ELSE COALESCE($5, apmaterno_titular_liberacion) END,
+         curp_titular_liberacion = CASE WHEN $2 = true THEN COALESCE($6, $11, curp_titular_liberacion) ELSE COALESCE($6, curp_titular_liberacion) END,
+         correo_titular_liberacion = CASE WHEN $2 = true THEN COALESCE($7, $12, correo_titular_liberacion) ELSE COALESCE($7, correo_titular_liberacion) END,
          nombre_infractor = COALESCE(NULLIF($8, ''), nombre_infractor),
          apellido_paterno_infractor = COALESCE(NULLIF($9, ''), apellido_paterno_infractor),
          apellido_materno_infractor = COALESCE(NULLIF($10, ''), apellido_materno_infractor),
          curp_infractor = COALESCE(NULLIF($11, ''), curp_infractor),
          correo_infractor = COALESCE(NULLIF($12, ''), correo_infractor),
-         updated_at = NOW()
-     WHERE id = $1
-     RETURNING id, folio, clasificacion, descuento_aplicado, monto_total, nombre_infractor,
-               apellido_paterno_infractor, apellido_materno_infractor, correo_infractor,
-               fecha_limite_descuento`,
-    [
-      params.id, params.es_titular ?? null,
+          updated_at = NOW()
+      WHERE id = $1
+      RETURNING id, folio, clasificacion, descuento_aplicado, monto_total, nombre_infractor,
+                apellido_paterno_infractor, apellido_materno_infractor, correo_infractor,
+                fecha_limite_descuento`,
+     [params.id, params.es_titular ?? null,
       params.nombre_titular, params.appaterno_titular, params.apmaterno_titular,
       params.curp_titular, params.correo_titular,
       params.nombre_infractor, params.appaterno_infractor, params.apmaterno_infractor,
-      params.curp_infractor, params.correo_infractor,
-    ],
-  )
-  return result.rows[0] ?? null
+      params.curp_infractor, params.correo_infractor],
+   )
+   return result.rows[0] ?? null
 }
 
 export async function actualizarEstatusPendientePagoInfraccion(id: string) {
