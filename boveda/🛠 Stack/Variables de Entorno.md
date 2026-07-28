@@ -20,12 +20,7 @@
 | `NOMINA_API_URL` | No | — |
 | `SECRET_NOMINA` | No | — |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | — |
-| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | — |
-| `NEXT_PUBLIC_GUEST` | No | — |
-| `EXPEDIENTE_DIGITAL_URL` | No | — |
 | `DB_NAME_VIA` | No | — |
-| `EXPEDIENTE_SISTEMA` | No | CONTROL DE PDF - VISUALIZACION |
-| `EXPEDIENTE_CODIGO_INVITACION` | No | — |
 | `SMTP_HOST` | No | SMTP Server (Gmail ejemplo) |
 | `SMTP_PORT` | No | — |
 | `SMTP_SECURE` | No | — |
@@ -33,8 +28,7 @@
 | `SMTP_PASS` | No | — |
 | `X_API_KEY` | No | CUS |
 | `NODE_ENV` | No | — |
-| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | SA7 |
-| `KEY_USER_VALIDATE_STATUS` | No | — |
+| `KEY_USER_VALIDATE_STATUS` | No | SA7 |
 | `KEY_PD_VALIDATE_STATUS` | No | — |
 | `NEXT_PUBLIC_FLOTA_API_KEY` | No | FLOTA DE POLICIAS |
 | `GEO_LOCATION_KEY` | No | Búsqueda inteligente de motivo (paso 4 captura infracción) — LLM compatible OpenAI (ej. DeepSeek) |
@@ -45,6 +39,8 @@
 | `EXPEDIENTE_GUEST_CODE` | No | — |
 | `EXPEDIENTE_FOLDER` | No | — |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

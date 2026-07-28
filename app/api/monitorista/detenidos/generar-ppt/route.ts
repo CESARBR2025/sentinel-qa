@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const filtro = body.filtro ?? 'todos'
 
   try {
-    const buf = await generarPpt(session.user.name || 'Monitorista', desde, hasta, filtro)
+    const buf = await generarPpt(desde, hasta, filtro)
 
     await insertHistorial(session.user.id, 'ppt_generado')
 

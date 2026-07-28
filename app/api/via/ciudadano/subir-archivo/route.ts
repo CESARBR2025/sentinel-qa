@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await archivo.arrayBuffer())
-    const ref = await subir({ buffer, nombre: archivo.name, tipo: archivo.type }, carpetaLiberacionCiudadana(solicitudId))
+    const ref = await subir({ buffer, nombre: archivo.name, tipo: archivo.type }, carpetaLiberacionCiudadana(infraccionId))
 
     const id = crypto.randomUUID()
     await insertarDocumentoLiberacion({

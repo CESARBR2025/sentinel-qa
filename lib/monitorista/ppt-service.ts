@@ -1,10 +1,7 @@
 import { query } from '@/lib/db'
 import PptxGenJS from 'pptxgenjs'
-import { obtenerGuestToken } from '@/lib/expediente/client'
 import { esRefV2, parsearRef } from '@/lib/expediente/v2/ref'
 import { descargar as descargarV2 } from '@/lib/expediente/v2/client'
-
-const EXP_HOST = process.env.EXPEDIENTE_DIGITAL_URL ?? 'https://sanjuandelrio.sytes.net:3044'
 
 function parseDetenidos(raw: unknown): string {
   if (typeof raw === 'string') {
@@ -15,32 +12,20 @@ function parseDetenidos(raw: unknown): string {
   return 'Sin nombre'
 }
 
-function normalizarUrl(url: string): string | null {
-  if (!url) return null
-  if (url.startsWith('/')) return `${EXP_HOST}${url}`
-  return url
-}
-
-async function descargarFoto(url: string, token: string): Promise<{ base64: string; mime: string } | null> {
+async function descargarFoto(url: string): Promise<{ base64: string; mime: string } | null> {
   const ext = url.split('.').pop()?.toLowerCase() || ''
   if (ext === 'pdf') {
     console.error('[ppt] skip .pdf URL:', url.substring(0, 80))
     return null
   }
+  if (!esRefV2(url)) {
+    console.error('[ppt] skip URL legada (v1 no soportado):', url.substring(0, 80))
+    return null
+  }
   try {
-    let res: Response
-    if (esRefV2(url)) {
-      const ref = parsearRef(url)
-      if (!ref) return null
-      res = await descargarV2(ref)
-    } else {
-      const normalUrl = normalizarUrl(url)
-      if (!normalUrl || !normalUrl.startsWith('http')) return null
-      res = await fetch(normalUrl, {
-        headers: { Authorization: `Bearer ${token}` },
-        signal: AbortSignal.timeout(15000),
-      })
-    }
+    const ref = parsearRef(url)
+    if (!ref) return null
+    const res = await descargarV2(ref)
     if (!res.ok) {
       console.error(`[ppt] descargarFoto fail HTTP ${res.status} for:`, url.substring(0, 80))
       return null
@@ -74,7 +59,6 @@ function getAspectRatio(base64: string): number {
 }
 
 export async function generarPpt(
-  monitoristaNombre: string,
   desde: string,
   hasta: string,
   filtro: string = 'todos',
@@ -106,7 +90,6 @@ export async function generarPpt(
 
   if (rows.rows.length === 0) throw new Error('No hay reportes con detenidos en el período seleccionado')
 
-  const token = await obtenerGuestToken(monitoristaNombre)
   const pptx = new PptxGenJS()
   pptx.author = 'SSPM - Módulo Monitorista'
   pptx.title = 'Reporte de Detenidos'
@@ -133,7 +116,7 @@ export async function generarPpt(
     const buffers = await Promise.all(
       evs.rows.map(e => {
         const raw = String(e.url_archivo)
-        return descargarFoto(raw, token)
+        return descargarFoto(raw)
       }),
     )
     console.log(`[ppt] report ${id.substring(0,8)}: ${evs.rows.length} evidencias, ${buffers.filter(Boolean).length} downloaded`)
