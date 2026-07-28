@@ -3,6 +3,7 @@ import {
   actualizarEstatusSolicitudLiberacion,
   actualizarEstatusDependenciaMesaControl,
 } from "@/lib/agente_infracciones/repository";
+import { verificarAccesoCiudadano } from "@/lib/via/auth-ciudadano";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,6 +12,10 @@ export async function POST(req: NextRequest) {
 
     if (!infraccionId) {
       return NextResponse.json({ error: "infraccionId es requerido" }, { status: 400 });
+    }
+
+    if (!(await verificarAccesoCiudadano(req, infraccionId))) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
 
     await actualizarEstatusSolicitudLiberacion(infraccionId);

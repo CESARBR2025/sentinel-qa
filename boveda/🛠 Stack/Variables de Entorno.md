@@ -20,15 +20,12 @@
 | `NOMINA_API_URL` | No | — |
 | `SECRET_NOMINA` | No | — |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | — |
-| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | Expediente v1 (lectura legado) |
-| `EXPEDIENTE_DIGITAL_URL` | No | Expediente v1 (lectura legado) |
-| `EXPEDIENTE_SISTEMA` | No | Expediente v1 — sistema |
-| `EXPEDIENTE_CODIGO_INVITACION` | No | Expediente v1 — código invitación |
-| `EXPEDIENTE_URL` | **Sí** | Expediente v2 — URL del servidor |
-| `EXPEDIENTE_API_KEY` | **Sí** | Expediente v2 — API key (hex64) |
-| `EXPEDIENTE_GUEST_CODE` | **Sí** | Expediente v2 — código invitación |
-| `EXPEDIENTE_FOLDER` | No | Expediente v2 — carpeta raíz (default Centinela) |
+| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | — |
+| `NEXT_PUBLIC_GUEST` | No | — |
+| `EXPEDIENTE_DIGITAL_URL` | No | — |
 | `DB_NAME_VIA` | No | — |
+| `EXPEDIENTE_SISTEMA` | No | CONTROL DE PDF - VISUALIZACION |
+| `EXPEDIENTE_CODIGO_INVITACION` | No | — |
 | `SMTP_HOST` | No | SMTP Server (Gmail ejemplo) |
 | `SMTP_PORT` | No | — |
 | `SMTP_SECURE` | No | — |
@@ -43,7 +40,13 @@
 | `GEO_LOCATION_KEY` | No | Búsqueda inteligente de motivo (paso 4 captura infracción) — LLM compatible OpenAI (ej. DeepSeek) |
 | `LLM_BASE_URL` | No | — |
 | `LLM_MODEL` | No | — |
+| `EXPEDIENTE_URL` | No | Nuevo expediente |
+| `EXPEDIENTE_API_KEY` | No | — |
+| `EXPEDIENTE_GUEST_CODE` | No | — |
+| `EXPEDIENTE_FOLDER` | No | — |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

@@ -9,7 +9,7 @@
 |------|-------------|
 | [Estructura](🏗%20Arquitectura/Estructura.md) | Árbol de directorios del proyecto |
 | [Decisiones](🏗%20Arquitectura/Decisiones.md) | ADRs y por qué se tomaron |
-| [Middleware y Auth](🏗%20Arquitectura/Middleware%20y%20Auth.md) | Flujo de autenticación y autorización |
+| [Proxy y Auth](🏗%20Arquitectura/Proxy%20y%20Auth.md) | Flujo de autenticación y autorización (Next 16: `proxy.ts`, no `middleware.ts`) |
 
 ## 🧩 Features
 | Nota | Descripción |

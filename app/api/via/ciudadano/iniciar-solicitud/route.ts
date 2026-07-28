@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { insertarSolicitudLiberacion } from "@/lib/agente_infracciones/repository";
 import { query } from "@/lib/db";
+import { verificarAccesoCiudadano } from "@/lib/via/auth-ciudadano";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -14,6 +15,10 @@ export async function POST(req: NextRequest) {
 
     if (!infraccionId) {
       return NextResponse.json({ error: "infraccionId es requerido" }, { status: 400 });
+    }
+
+    if (!(await verificarAccesoCiudadano(req, infraccionId))) {
+      return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
 
     const id = crypto.randomUUID();

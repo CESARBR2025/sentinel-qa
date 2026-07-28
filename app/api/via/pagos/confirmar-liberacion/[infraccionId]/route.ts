@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { consultarEstatusSA7 } from "@/lib/via/sa7";
 import { SA7Repository } from "@/features/via/saSiete/repository";
@@ -14,13 +14,18 @@ import {
   obtenerDatosOrdenSalida,
   actualizarUrlOrdenSalida,
 } from "@/lib/agente_infracciones/repository";
+import { verificarAccesoCiudadano } from "@/lib/via/auth-ciudadano";
 
 export async function GET(
-  _req: Request,
+  req: NextRequest,
   context: { params: Promise<{ infraccionId: string }> },
 ) {
   try {
     const { infraccionId } = await context.params;
+
+    if (!(await verificarAccesoCiudadano(req, infraccionId))) {
+      return NextResponse.json({ pagado: false, error: "No autorizado" }, { status: 401 });
+    }
 
     const orden = await SA7Repository.resolverOrdenVigente(infraccionId);
     if (!orden || !orden.ordenPagoId) {

@@ -241,4 +241,4 @@ Estos roles se separan del flujo de incidentes, aunque comparten oficiales y, en
 ## Fuentes consultadas
 
 - Levantamiento operativo adjunto: “CESAR: 1 DIA PARA MIGRAR…”
-- `911.md`, `Reporte Campo.md`, `Monitorista.md`, `Fiscalia.md`, `Juzgado.md`, `Infracciones.md`, `Liberaciones.md`, `Formato N.md`, `Middleware y Auth.md` y el código de rutas/roles actual.
+- `911.md`, `Reporte Campo.md`, `Monitorista.md`, `Fiscalia.md`, `Juzgado.md`, `Infracciones.md`, `Liberaciones.md`, `Formato N.md`, `Proxy y Auth.md` y el código de rutas/roles actual.

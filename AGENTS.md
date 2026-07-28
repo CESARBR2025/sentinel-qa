@@ -80,7 +80,7 @@ Si al leer `boveda/` encuentras archivos con "Pendiente de documentar" o conteni
 Para cada sección pendiente:
 
 1. **`🏗 Arquitectura/Estructura.md`** — ✅ Ya poblado durante install con el árbol de directorios.
-2. **`🏗 Arquitectura/Middleware y Auth.md`** — ⚠️ Parcialmente poblado (archivo + librerías detectadas). Completar con análisis del flujo de autenticación, rutas protegidas, roles.
+2. **`🏗 Arquitectura/Proxy y Auth.md`** — ✅ Poblado (este proyecto corre Next.js 16: el gate de auth es `proxy.ts`, no `middleware.ts` — ver el archivo para la explicación del rename).
 3. **`🏗 Arquitectura/Decisiones.md`** — Crear ADRs iniciales para decisiones obvias del stack detectado (ej: "Por qué framework X", "Por qué BD Y", etc.). Si no hay decisiones claras, dejarlo como template.
 4. **`🧩 Features/Index.md`** — ✅ Ya poblado durante install con módulos detectados. Completar la descripción de cada módulo analizando su estructura y propósito.
 5. **`🧩 Features/[nombre].md`** — Para cada módulo/feature detectado, crear su archivo de documentación individual usando `Feature Example.md` como template. Usar `graphify summary` para identificar módulos.

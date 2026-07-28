@@ -28,6 +28,8 @@
 | `expediente/proxy` | GET | (Pendiente) |
 | `expediente/subir` | POST | (Pendiente) |
 | `expediente/subir-foto-detenido` | POST | (Pendiente) |
+| `expediente/token` | POST | (Pendiente) |
+| `expediente/vista/[token]` | GET | (Pendiente) |
 | `fiscalia/expediente/subir-foto` | POST | (Pendiente) |
 | `health` | GET | (Pendiente) |
 | `incidentes` | GET | (Pendiente) |
@@ -44,7 +46,6 @@
 | `monitorista/detenidos/[id]/subir-foto` | POST | (Pendiente) |
 | `monitorista/detenidos/generar-ppt` | POST | (Pendiente) |
 | `monitorista/evidencias/subir` | POST | (Pendiente) |
-| `monitorista/expediente-proxy` | GET | (Pendiente) |
 | `monitorista/historial` | GET | (Pendiente) |
 | `monitorista/incidentes-camara` | GET, POST | (Pendiente) |
 | `monitorista/incidentes-camara/[id]` | GET, PATCH | (Pendiente) |
@@ -99,7 +100,7 @@
 | `via/curp` | POST | (Pendiente) |
 | `via/exp-digital/guardar-docs` | POST | (Pendiente) |
 | `via/exp-digital/guardar-evidencias` | POST | (Pendiente) |
-| `via/exp-digital/token` | GET | (Pendiente) |
+| `via/infracciones/[id]` | GET | (Pendiente) |
 | `via/infracciones/iniciar-proceso` | PATCH | (Pendiente) |
 | `via/infracciones/liberar-garantia` | PATCH | (Pendiente) |
 | `via/infracciones/registradas/[id]` | GET | (Pendiente) |
@@ -117,6 +118,8 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

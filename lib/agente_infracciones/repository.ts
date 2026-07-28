@@ -306,6 +306,14 @@ export async function insertarDocumentoLiberacion(params: {
   )
 }
 
+export async function obtenerInfraccionIdDeSolicitud(solicitudId: string): Promise<string | null> {
+  const result = await query<{ infraccion_id: string }>(
+    `SELECT infraccion_id FROM via.v2_solicitudes_liberacion WHERE id = $1 LIMIT 1`,
+    [solicitudId],
+  )
+  return result.rows[0]?.infraccion_id ?? null
+}
+
 export async function insertarSolicitudLiberacion(params: {
   id: string
   infraccionId: string

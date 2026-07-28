@@ -157,3 +157,57 @@ el navegador no soporta reconocimiento de voz, la pantalla de elección ni
 muestra el botón de dictado. Si la extracción falla o no hay
 `GEO_LOCATION_KEY`, la pantalla de revisión llega con los campos vacíos
 pero editables — nunca bloquea continuar.
+
+## Sub-flujo: API pública para app móvil (Flutter) — Ciudadano
+
+**Propósito**: `InfraccionCiudadanoPage` (`app/infracciones/[id]/page.tsx`) es
+un Server Component pensado solo para navegador. Para que la app Flutter
+replique el mismo flujo (consultar, pagar, subir documentos de liberación)
+se expuso/endureció la misma lógica como API JSON, sin duplicarla — todos
+los endpoints reusan los mismos `repository.ts`/`service.ts`/`lib/via/pagos.ts`
+que ya usaba la página web.
+
+**Auth (`lib/via/auth-ciudadano.ts`)**: el acceso a una infracción se resuelve
+con un JWT de corta vida (1h) cuyo payload es `{ infraccionId }`, firmado con
+`BETTER_AUTH_SECRET`. No hay usuario/password — solo el PIN de 6 dígitos que
+ya traía cada infracción (`pin_acceso`).
+
+- `verificarCookieCiudadano(infraccionId)` — solo Server Components, lee la
+  cookie httpOnly `infraccion_access` (la usa `page.tsx`).
+- `verificarAccesoCiudadano(req, infraccionId)` — para Route Handlers. Si el
+  request trae header `Authorization: Bearer <token>` (app Flutter), valida
+  ese token; si no, cae a la cookie (web). Un solo guard sirve para ambos
+  clientes.
+
+**Flujo de acceso**:
+1. `GET /api/via/infracciones/[id]` sin token → `{ autenticado: false, folio, nombreInfractor }` (pantalla de PIN).
+2. `POST /api/via/infracciones/verificar-pin` con `{ infraccionId, pin }` → `{ ok: true, token }` (y setea la cookie para el caso web). Bloqueo de 3 intentos / 15 min igual que antes.
+3. `GET /api/via/infracciones/[id]` con `Authorization: Bearer <token>` (o cookie) → `{ autenticado: true, infraccion: InfraccionDetalleDTO }`, el mismo objeto completo que arma `mapInfraccionDetalle`.
+
+**Pago** — mismo mecanismo que antes (SA7 vía `lib/via/pagos.ts::confirmarPago`), ahora exigiendo el mismo JWT en cada llamada:
+
+| Endpoint | Cuándo se usa (según `estatusDependencia`) |
+|---|---|
+| `GET /api/via/pagos/confirmar-ausente/[infraccionId]` | `PENDIENTE_PAGO_INFRACCION` |
+| `GET /api/via/pagos/confirmar-instante/[infraccionId]` | `PENDIENTE_PAGO_INSTANTE` |
+| `GET /api/via/pagos/confirmar-retenida/[infraccionId]` | `PLACA_RETENIDA_EN_TRANSITO` |
+| `GET /api/via/pagos/confirmar-liberacion/[infraccionId]` | `PENDIENTE_PAGO_LIBERACION` (además genera la orden de salida en PDF y notifica por correo) |
+
+`url_pago` (del detalle) es un iframe Getnet en web; en Flutter se abre en
+WebView/browser externo — no hay endpoint nuevo para esto, es la misma URL.
+
+`forzar-pago` y `verificar-pago-pruebas` **no** son parte de este contrato —
+son atajos de QA, fuera del alcance de la app.
+
+**Liberación de vehículo** (solo si `tipoGarantia === 'VEHICULO'`) — mismos 3
+pasos que hace `SeccionLiberacion.tsx`, ahora protegidos por el JWT:
+
+1. `POST /api/via/ciudadano/iniciar-solicitud` — body JSON con `infraccionId`, `tipoLiberacion`, `esEmpresa` y los datos de empresa/titular según aplique. Regresa `{ solicitudId }`.
+2. `POST /api/via/ciudadano/subir-archivo` — `multipart/form-data` con campos `solicitudId`, `tipoDocumento` (ver catálogos `DOCS_EMPRESA`/`DOCS_INFRACCION`/`DOCS_DELITO`/`DOCS_ACCIDENTE`/`carta_poder` en `SeccionLiberacion.tsx`) y `file` (imagen o PDF). Se llama una vez por documento. El guard resuelve `infraccionId` desde `solicitudId` vía `obtenerInfraccionIdDeSolicitud`.
+3. `POST /api/via/ciudadano/completar-solicitud` — body `{ infraccionId }`, marca la solicitud `EN_PROCESO_LIBERACIONES` y la infracción `MESA_DE_CONTROL_REVISION`.
+4. `GET /api/via/liberaciones/documentos/[infraccionId]` — para consultar estatus de revisión (`ACEPTADO`/`RECHAZADO`/pendiente) y reenviar documentos rechazados repitiendo el paso 2 + 3.
+
+**Nota histórica**: los pasos 2 y 4 estuvieron rotos para ciudadanos reales
+entre el 15-jul y el 28-jul (exigían sesión de staff por error de
+copy/paste en dos commits no relacionados) — ver la entrada correspondiente
+en `Troubleshooting.md`.
