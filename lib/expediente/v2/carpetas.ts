@@ -22,34 +22,33 @@ export function carpetaFotoFiscalia(reporteCampoId: string): string {
   return `${ROOT}/fiscalia/${YYYY}/${MM}/${reporteCampoId}`
 }
 
-export function carpetaOficios(idInfraccion: string): string {
+export function carpetaInfraccion(idInfraccion: string): string {
   const { YYYY, MM } = fecha()
-  return `${ROOT}/oficios/${YYYY}/${MM}/${idInfraccion}`
+  return `${ROOT}/SSPM_INFRACCIONES/${YYYY}/${MM}/${idInfraccion}`
+}
+
+export function carpetaOficios(idInfraccion: string): string {
+  return `${carpetaInfraccion(idInfraccion)}/oficios`
 }
 
 export function carpetaDocsInfraccion(idInfraccion: string): string {
-  const { YYYY, MM } = fecha()
-  return `${ROOT}/via/${YYYY}/${MM}/${idInfraccion}/documentos`
+  return `${carpetaInfraccion(idInfraccion)}/documentos`
 }
 
 export function carpetaEvidenciasInfraccion(idInfraccion: string): string {
-  const { YYYY, MM } = fecha()
-  return `${ROOT}/via/${YYYY}/${MM}/${idInfraccion}/evidencias`
+  return `${carpetaInfraccion(idInfraccion)}/evidencias`
 }
 
-export function carpetaLiberacionCiudadana(solicitudId: string): string {
-  const { YYYY, MM } = fecha()
-  return `${ROOT}/via/${YYYY}/${MM}/${solicitudId}/liberacion`
+export function carpetaLiberacionCiudadana(idInfraccion: string): string {
+  return `${carpetaInfraccion(idInfraccion)}/liberacion`
 }
 
 export function carpetaCorralon(infraccionId: string): string {
-  const { YYYY, MM } = fecha()
-  return `${ROOT}/corralon/${YYYY}/${MM}/${infraccionId}`
+  return `${carpetaInfraccion(infraccionId)}/corralon`
 }
 
 export function carpetaOrdenSalida(infraccionId: string): string {
-  const { YYYY, MM } = fecha()
-  return `${ROOT}/via/${YYYY}/${MM}/${infraccionId}/orden-salida`
+  return `${carpetaInfraccion(infraccionId)}/orden-salida`
 }
 
 export function carpetaPrevencion(folio: string): string {

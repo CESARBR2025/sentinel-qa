@@ -360,11 +360,14 @@
       "ts": 1784837737227
     }
   },
-  "ymEditCount": 5,
-  "ymLastSyncAt": 1785254447953,
+  "ymEditCount": 1,
+  "ymLastSyncAt": 1785258282753,
   "ymDocNudge": {
     "911": 1784926271822,
     "Flota": 1784925860150,
-    "Infracciones": 1785253253431
+    "Infracciones": 1785253253431,
+    "Fiscalia": 1785258079368,
+    "Expediente": 1785258095894,
+    "Monitorista": 1785258119082
   }
 }

@@ -1011,7 +1011,6 @@
 │   │   └── generatePPT.ts
 │   ├── via/
 │   │   ├── auth-ciudadano.ts
-│   │   ├── expediente.ts
 │   │   ├── online.ts
 │   │   ├── pagos.ts
 │   │   └── sa7.ts
@@ -1069,8 +1068,6 @@
 │   ├── exportar-schema.ts
 │   ├── extract-domain.mjs
 │   ├── load-context.mjs
-│   ├── migrar-evidencias-json.ts
-│   ├── migrar-legado-a-v2.ts
 │   ├── populate-vault.mjs
 │   ├── session-checkpoint.mjs
 │   ├── token-summary.mjs
@@ -1097,6 +1094,7 @@
 ├── CLAUDE.md
 ├── CREACION_BOVEDA.md
 ├── eslint.config.mjs
+├── INSTRUCCIONES-INFRACCIONES.md
 ├── next-env.d.ts
 ├── next.config.ts
 ├── opencode.json
@@ -1105,11 +1103,12 @@
 ├── postcss.config.mjs
 ├── proxy.ts
 ├── README.md
-├── tmp-consulta-infraccion.ts
 ├── tsconfig.json
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

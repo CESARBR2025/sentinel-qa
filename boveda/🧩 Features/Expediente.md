@@ -4,8 +4,8 @@ Sistema de gestión documental cifrada. Provee almacenamiento, visualización y 
 
 ## Stack
 
-- **v1** (lectura legado): `sanjuandelrio.sytes.net:3044` — API anterior, texto plano
-- **v2** (escritura nueva): `sanjuandelrio.sytes.net:3066` — Archivos cifrados (AES-256-GCM + gzip)
+- **v2** (único, `sanjuandelrio.sytes.net:3066`): Archivos cifrados (AES-256-GCM + gzip). Único servicio soportado.
+- **v1 descontinuado** (2026-07-28): el servicio legado (`sanjuandelrio.sytes.net:3044`) fue retirado por completo — código, envs (`EXPEDIENTE_DIGITAL_URL`, `NEXT_PUBLIC_WS_EXPEDIENTE`, `NEXT_PUBLIC_GUEST`, `EXPEDIENTE_SISTEMA`, `EXPEDIENTE_CODIGO_INVITACION`) y scripts de migración (`scripts/migrar-legado-a-v2.ts`, `scripts/migrar-evidencias-json.ts`) eliminados. Refs no-`exp2://` ya no se resuelven (proxy/vista devuelven 410). Antes de este cambio no estaba en producción, así que no se migraron archivos legado pendientes.
 
 ## Cliente v2
 
@@ -27,21 +27,31 @@ Las columnas `text` existentes almacenan este string. El prefijo `exp2://` disti
 
 ## Proxy único
 
-`app/api/expediente/proxy/route.ts` — Acepta `?ref=` o `?url=`, auto-detecta si es v2 o legado. **Nunca expone el Bearer token al frontend.**
+`app/api/expediente/proxy/route.ts` y `app/api/expediente/vista/[token]/route.ts` — Solo aceptan refs `exp2://`; cualquier otro formato devuelve 410 (legado no soportado). **Nunca exponen el Bearer token al frontend.**
 
 ## Taxonomía de carpetas
+
+Todo lo relacionado a una infracción (VIA) vive bajo una única carpeta raíz por infracción, vía `carpetaInfraccion(idInfraccion)` en `lib/expediente/v2/carpetas.ts`:
+
+```
+{ROOT}/SSPM_INFRACCIONES/{YYYY}/{MM}/{idInfraccion}/
+├── documentos/     (INE, INAPAM, tarjeta de circulación)
+├── evidencias/     (fotos de la infracción)
+├── liberacion/     (docs de la solicitud de liberación ciudadana)
+├── orden-salida/   (PDF de orden de salida del vehículo)
+├── oficios/        (oficio fiscalía y oficio juzgado, mismo helper)
+└── corralon/       (oficio de finalización en corralón)
+```
+
+Decisión (2026-07-28): antes cada subflujo (docs, evidencias, liberación, orden-salida, oficios fiscalía/juzgado, corralón) tenía su propia raíz de carpeta dispersa (`via/`, `oficios/`, `corralon/`), aunque la BD confirma que todos son columnas del mismo registro `via.v2_infracciones`. Se unificó para que todos los archivos de una infracción queden en un mismo lugar. La carpeta de liberación ciudadana usaba antes `solicitudId`; ahora usa el `idInfraccion` resuelto (`obtenerInfraccionIdDeSolicitud`) para caer en la misma carpeta raíz.
+
+Otros dominios (no infracciones, sin cambios):
 
 | Dominio | Subcarpeta |
 |---|---|
 | Evidencias monitorista | `monitorista/{YYYY}/{MM}/{incidenteId}` |
 | Fotos detenido | `detenidos/{YYYY}/{MM}/{reporteCampoId}` |
-| Fotos fiscalía | `fiscalia/{YYYY}/{MM}/{reporteCampoId}` |
-| Oficios fiscalía/juzgado | `oficios/{YYYY}/{MM}/{idInfraccion}` |
-| Docs infracción (INE/INAPAM/tarjeta) | `via/{YYYY}/{MM}/{idInfraccion}/documentos` |
-| Evidencias infracción | `via/{YYYY}/{MM}/{idInfraccion}/evidencias` |
-| Liberación ciudadana | `via/{YYYY}/{MM}/{solicitudId}/liberacion` |
-| Corralón | `corralon/{YYYY}/{MM}/{infraccionId}` |
-| Orden de salida | `via/{YYYY}/{MM}/{infraccionId}/orden-salida` |
+| Prevención | `prevencion/{YYYY}/{MM}/{folio}` |
 
 ## Limitaciones
 
