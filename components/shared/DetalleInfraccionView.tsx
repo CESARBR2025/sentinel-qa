@@ -10,6 +10,7 @@ import {
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import { SecureImg } from '@/components/shared/SecureImg'
 import { abrirDocumento } from '@/lib/shared/abrirDocumento'
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
 
 /* ─── INTERFACES ─── */
 
@@ -214,8 +215,9 @@ function MapSection({ ubicacion, evidencias = [] }: { ubicacion: InfraccionUbica
   const hasCoords = !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
 
   const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: GMAPS_KEY ?? '',
+    id: GOOGLE_MAPS_LOADER_ID,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES,
   })
 
   useEffect(() => {

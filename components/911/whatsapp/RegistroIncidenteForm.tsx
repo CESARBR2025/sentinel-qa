@@ -8,9 +8,7 @@ import { RolField } from '@/components/rol_servicios/RolInputs';
 import { DashboardHeader } from "@/components/partials/Header";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { createIncidente } from '@/lib/incidentes/actions';
-
-// 1. LAS LIBRERÍAS SIEMPRE FUERA DEL COMPONENTE
-const libraries: ("places")[] = ["places"];
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
 
 interface Despachador { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }
 
@@ -60,9 +58,9 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
 
     // Cargar la API de Google
     const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
-        libraries
+        id: GOOGLE_MAPS_LOADER_ID,
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        libraries: GOOGLE_MAPS_LIBRARIES
     });
 
     const onPlaceChanged = () => {

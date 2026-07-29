@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { useOficialFormStore } from '@/lib/oficial/store'
 import { useD1FormStore } from '@/lib/denuncias/storeD1'
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
 
 const mapContainerStyle = { width: '100%', height: '350px', borderRadius: '4px' };
 const center = { lat: 20.3889, lng: -99.9961 };
@@ -138,9 +139,9 @@ export default function FormularioD1({ user, prefill, gruposAdscripcion }: { use
   const hReporte = store.horaReporte
 
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries: ['places']
+    id: GOOGLE_MAPS_LOADER_ID,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES
   });
 
   const reverseGeocode = (lat: number, lng: number, type: 'hecho' | 'apoyo') => {

@@ -5,10 +5,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { toast } from "sonner"
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from "@/lib/maps/googleMapsConfig"
 
 const COORDS_DEFAULT = { lat: 20.3889, lng: -99.9961 }
-
-const libraries: ("places")[] = ["places"];
 
 export default function Formulario911({ user, catalogos, despachadores }: {
     user: { name: string; apellido?: string }
@@ -79,9 +78,9 @@ export default function Formulario911({ user, catalogos, despachadores }: {
 
     // 1. Cargar la API
     const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
-        libraries
+        id: GOOGLE_MAPS_LOADER_ID,
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        libraries: GOOGLE_MAPS_LIBRARIES
     });
 
     // 2. Estados para coordenadas (San Juan del Río por defecto)

@@ -1,22 +1,17 @@
 'use client'
 
 import { useJsApiLoader } from '@react-google-maps/api'
-import type { Libraries } from '@react-google-maps/api'
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
 
-// 'visualization' se pide en la URL del script por si el loader clásico lo
-// necesita, pero la capa de calor se construye imperativamente con
-// importLibrary('visualization') sin depender del namespace global.
-const LIBRERIAS: Libraries = ['visualization']
-
-export const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''
+export const MAPS_API_KEY = GOOGLE_MAPS_API_KEY
 
 export const CENTRO_SJR = { lat: 20.3889, lng: -99.9895 }
 
 export function useMapaIncidencias() {
   return useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: MAPS_API_KEY,
-    libraries: LIBRERIAS,
+    id: GOOGLE_MAPS_LOADER_ID,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES,
   })
 }
 

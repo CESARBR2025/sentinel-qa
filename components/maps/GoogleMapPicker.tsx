@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
-import type { Library } from '@googlemaps/js-api-loader';
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig';
 
 const containerStyle = { width: '100%', height: '350px', borderRadius: '2px', border: '1px solid #e2e8f0' };
 const center = { lat: 20.3889, lng: -99.9895 }; // San Juan del Río
@@ -10,16 +10,15 @@ const center = { lat: 20.3889, lng: -99.9895 }; // San Juan del Río
 interface Props {
   onLocationSelect: (loc: { lat: number; lng: number; calle: string; colonia: string; numero: string }) => void
   markerPosition?: { lat: number; lng: number } | null
-  libraries?: Library[]
   readOnly?: boolean
   onError?: (error: string) => void
 }
 
-export default function GoogleMapPicker({ onLocationSelect, markerPosition: externalMarker, libraries, readOnly, onError }: Props) {
+export default function GoogleMapPicker({ onLocationSelect, markerPosition: externalMarker, readOnly, onError }: Props) {
   const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries,
+    id: GOOGLE_MAPS_LOADER_ID,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES,
   });
 
   React.useEffect(() => {

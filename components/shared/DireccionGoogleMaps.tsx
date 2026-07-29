@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Autocomplete, useLoadScript } from '@react-google-maps/api'
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
 
 export interface Direccion {
   calle: string
@@ -17,8 +18,9 @@ interface Props {
 
 export function DireccionGoogleMaps({ value, onChange }: Props) {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries: ['places'],
+    id: GOOGLE_MAPS_LOADER_ID,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES,
   })
 
   const [ac, setAc] = useState<google.maps.places.Autocomplete | null>(null)

@@ -3,10 +3,9 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Crosshair, Satellite, Map as MapIcon } from "lucide-react";
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from "@/lib/maps/googleMapsConfig";
 
 const DEFAULT_CENTER = { lat: 20.3869, lng: -99.9962 };
-
-const LIBRARIES: ("places")[] = ["places"];
 
 const containerStyle = {
     width: "100%",
@@ -140,9 +139,9 @@ function getMunicipioEstado(
 
 export function MapaDireccionRegistro({ onAddressChange }: MapaDireccionRegistroProps) {
     const loaderConfig = useMemo(() => ({
-        id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-        libraries: LIBRARIES,
+        id: GOOGLE_MAPS_LOADER_ID,
+        googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+        libraries: GOOGLE_MAPS_LIBRARIES,
     }), []);
     const { isLoaded, loadError } = useJsApiLoader(loaderConfig);
 

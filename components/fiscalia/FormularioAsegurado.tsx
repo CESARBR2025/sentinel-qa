@@ -723,7 +723,6 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
               />
             ) : (
               <GoogleMapPicker
-                libraries={['places']}
                 readOnly={readOnly}
                 markerPosition={detenidosDir[i].latitud ? { lat: detenidosDir[i].latitud!, lng: detenidosDir[i].longitud! } : null}
                 onLocationSelect={(loc) => {

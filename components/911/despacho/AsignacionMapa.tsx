@@ -4,6 +4,7 @@ import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import type { UnidadParaDespacho } from '@/lib/flota/types';
 import { formatAntiguedad } from './UnidadCards';
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores';
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig';
 
 const containerStyle: React.CSSProperties = {
   width: '100%',
@@ -71,8 +72,9 @@ export default function AsignacionMapa({
   prioridad,
 }: AsignacionMapaProps) {
   const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    id: GOOGLE_MAPS_LOADER_ID,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES,
   });
 
   const mapRef = useRef<google.maps.Map | null>(null);

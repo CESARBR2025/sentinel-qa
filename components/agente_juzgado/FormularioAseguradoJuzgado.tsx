@@ -291,7 +291,6 @@ export function FormularioAseguradoJuzgado({ reporteCampoId, data, puestaDisposi
                   />
                 ) : (
                   <GoogleMapPicker
-                    libraries={['places']}
                     readOnly
                     markerPosition={{ lat: dir!.latitud!, lng: dir!.longitud! }}
                     onLocationSelect={() => {}}
