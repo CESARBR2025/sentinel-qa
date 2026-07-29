@@ -469,7 +469,7 @@ export async function createRondinEscalado(formData: FormData) {
         const esImprocedente = await esTipoImprocedente(num(formData, 'tipoEmergenciaId'))
         console.log('[RONDIN] esImprocedente:', esImprocedente)
 
-        const { incidenteId, esOficial } = await tryActionRaw(async () => {
+        const { incidenteId, esOficial, ocupado } = await tryActionRaw(async () => {
           const cliente = await pool.connect()
           try {
             await cliente.query('BEGIN')
@@ -503,16 +503,38 @@ export async function createRondinEscalado(formData: FormData) {
         const incId = inc.rows[0].id
         console.log('[RONDIN] incidente creado ID:', incId)
 
-        const ofi = await cliente.query<{ id: string; no_nomina: string | null }>(
-          `SELECT id, no_nomina FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
+        const ofi = await cliente.query<{ id: string; no_nomina: string | null; patrulla_id: string | null }>(
+          `SELECT id, no_nomina, patrulla_id FROM ofi_oficiales WHERE user_id = $1 AND ofi_estatus = 'activo' LIMIT 1`,
           [session.user.id],
         )
         const oficialId = ofi.rows[0]?.id ?? null
         const oficialNomina = ofi.rows[0]?.no_nomina ?? null
-        console.log('[RONDIN] oficial match:', { oficialId, oficialNomina })
+        const oficialPatrullaId = ofi.rows[0]?.patrulla_id ?? null
+        console.log('[RONDIN] oficial match:', { oficialId, oficialNomina, oficialPatrullaId })
+
+        let ocupadoEnOtroIncidente = false
+        if (oficialId) {
+          const ocupado = await cliente.query(
+            `SELECT 1 FROM incidente_despacho_elementos ide
+             JOIN incidente_despacho d ON d.id = ide.despacho_id
+             JOIN incidentes i ON i.id = d.incidente_id
+             WHERE i.estatus IN ('en_despacho', 'en_sitio') AND ide.oficial_id = $1
+             UNION
+             SELECT 1 FROM incidente_despacho_unidades idu
+             JOIN incidente_despacho d ON d.id = idu.despacho_id
+             JOIN incidentes i ON i.id = d.incidente_id
+             WHERE i.estatus IN ('en_despacho', 'en_sitio') AND idu.unidad_ext_id = $2
+             LIMIT 1`,
+            [oficialId, oficialPatrullaId],
+          )
+          ocupadoEnOtroIncidente = ocupado.rows.length > 0
+          console.log('[RONDIN] ocupadoEnOtroIncidente:', ocupadoEnOtroIncidente)
+        }
 
         if (esImprocedente) {
           console.log('[RONDIN] tipo Improcedentes: se omite creación de despacho — solo registro estadístico')
+        } else if (ocupadoEnOtroIncidente) {
+          console.log('[RONDIN] oficial/patrulla ya ocupado en otro incidente activo: se omite personal prioritario')
         } else {
           const despacho = await cliente.query<{ id: string }>(
             `INSERT INTO incidente_despacho (incidente_id, despachado_por) VALUES ($1, $2) RETURNING id`,
@@ -528,7 +550,7 @@ export async function createRondinEscalado(formData: FormData) {
 
         await cliente.query('COMMIT')
         console.log('[RONDIN] TRANSACTION COMMITTED')
-        return { incidenteId: incId, esOficial: oficialId !== null }
+        return { incidenteId: incId, esOficial: oficialId !== null, ocupado: ocupadoEnOtroIncidente }
       } catch (err) {
         await cliente.query('ROLLBACK')
         console.error('[RONDIN] TRANSACTION ROLLBACK:', err)
@@ -545,7 +567,7 @@ export async function createRondinEscalado(formData: FormData) {
       accion: 'CREATE',
       entidad: 'incidentes',
       entidadId: incidenteId,
-      payload: { origen: 'rondin_escalado', prioritario: nombreOficial },
+      payload: { origen: 'rondin_escalado', prioritario: nombreOficial, ocupado_en_otro_incidente: ocupado },
     })
     console.log('[RONDIN] audit registrado')
 
@@ -553,12 +575,29 @@ export async function createRondinEscalado(formData: FormData) {
       await notificarMonitoristas(incidenteId, folio)
     }
 
+    // Avisa al rol de despacho: sin esto, un incidente escalado desde rondín
+    // solo aparecía si alguien entraba manualmente al tablón. Se omite en
+    // incidentes Improcedentes porque esos no generan fila en
+    // incidente_despacho ni deben aparecer en el tablón de despacho.
+    if (!esImprocedente) {
+      await emitir('rondin.escalado', {
+        titulo: `📻 Rondín escalado — ${folio}`,
+        mensaje: ocupado
+          ? `Un oficial en rondín escaló el incidente ${folio}, pero ya atiende otro caso activo — requiere asignar personal disponible.`
+          : `Un oficial en rondín escaló el incidente ${folio}. Revisa el tablón de despacho.`,
+        entidadTipo: 'incidente',
+        entidadId: incidenteId,
+        emitidaPor: session.user.id,
+      })
+    }
+
     revalidatePath('/agente_911/rondin')
     revalidatePath('/oficial/despachos')
     revalidatePath('/incidentes')
 
-    console.log('[RONDIN] redirigiendo a:', esOficial ? `/oficial/rondin?exito=1&folio=${encodeURIComponent(folio)}` : `/agente_911/rondin/incidentes/${incidenteId}`)
-    if (esOficial) redirect(`/oficial/rondin?exito=1&folio=${encodeURIComponent(folio)}`)
+    const destinoOficial = `/oficial/rondin?exito=1&folio=${encodeURIComponent(folio)}${ocupado ? '&ocupado=1' : ''}`
+    console.log('[RONDIN] redirigiendo a:', esOficial ? destinoOficial : `/agente_911/rondin/incidentes/${incidenteId}`)
+    if (esOficial) redirect(destinoOficial)
     redirect(`/agente_911/rondin/incidentes/${incidenteId}`)
   } catch (err) {
     if (err instanceof Error && 'digest' in err && String(err.digest).startsWith('NEXT_REDIRECT')) throw err
@@ -572,15 +611,25 @@ export async function createDespacho(formData: FormData) {
   const session = await requireOperador()
   const incidenteId = req(formData, 'incidenteId')
 
+  let usuariosNotificar: { user_id: string }[] = []
+  let folioNotificar = ''
+  let tipoNombreNotificar: string | null = null
+
   await tryActionRaw(async () => {
     const cliente = await pool.connect()
     try {
-      const inc = await cliente.query<{ estatus: string }>(
-        `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      const inc = await cliente.query<{ estatus: string; folio: string; tipo_nombre: string | null }>(
+        `SELECT i.estatus, i.folio, cti.nombre AS tipo_nombre
+         FROM incidentes i
+         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+         WHERE i.id = $1 LIMIT 1`,
         [incidenteId],
       )
       if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
       if (inc.rows[0].estatus !== 'sin_despachar') throw new ValidationError('El incidente no está en estado sin_despachar')
+      const { folio, tipo_nombre: tipoNombre } = inc.rows[0]
+      folioNotificar = folio
+      tipoNombreNotificar = tipoNombre
 
       const existe = await cliente.query<{ id: string }>(
         `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
@@ -663,6 +712,15 @@ export async function createDespacho(formData: FormData) {
         [incidenteId],
       )
 
+      const resultado = elementos.length > 0
+        ? await cliente.query<{ user_id: string }>(
+            `SELECT DISTINCT o.user_id FROM ofi_oficiales o
+             WHERE o.no_nomina = ANY($1::text[]) AND o.ofi_estatus = 'activo' AND o.user_id IS NOT NULL`,
+            [elementos.map(e => e.nomina)],
+          )
+        : { rows: [] as { user_id: string }[] }
+      usuariosNotificar = resultado.rows
+
       await cliente.query('COMMIT')
     } catch (err) {
       await cliente.query('ROLLBACK')
@@ -673,6 +731,20 @@ export async function createDespacho(formData: FormData) {
   })
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_anterior: 'sin_despachar', estatus_nuevo: 'en_despacho' } })
+
+  if (usuariosNotificar.length > 0) {
+    await emitir('despacho.asignado', {
+      titulo: `🚨 Nuevo despacho — ${folioNotificar}`,
+      mensaje: `Se te asignó el incidente ${folioNotificar}${tipoNombreNotificar ? ` — ${tipoNombreNotificar}` : ''}. Revisa el detalle.`,
+      entidadTipo: 'incidente',
+      entidadId: incidenteId,
+      usuarios: usuariosNotificar.map(r => r.user_id),
+      roles: [],
+      emitidaPor: session.user.id,
+      dedup: `despacho.asignado:${incidenteId}`,
+    })
+  }
+
   revalidatePath('/incidentes')
   revalidatePath('/agente_911/despacho')
 }
@@ -683,16 +755,26 @@ export async function enviarRefuerzos(formData: FormData) {
   const session = await requireOperador()
   const incidenteId = req(formData, 'incidenteId')
 
+  let usuariosNotificar: { user_id: string }[] = []
+  let folioNotificar = ''
+  let tipoNombreNotificar: string | null = null
+
   await tryActionRaw(async () => {
     const cliente = await pool.connect()
     try {
-      const inc = await cliente.query<{ estatus: string }>(
-        `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+      const inc = await cliente.query<{ estatus: string; folio: string; tipo_nombre: string | null }>(
+        `SELECT i.estatus, i.folio, cti.nombre AS tipo_nombre
+         FROM incidentes i
+         LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+         WHERE i.id = $1 LIMIT 1`,
         [incidenteId],
       )
       if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
       if (inc.rows[0].estatus !== 'en_despacho' && inc.rows[0].estatus !== 'en_sitio')
         throw new ValidationError('Solo se pueden enviar refuerzos a un folio activo (en despacho o en sitio)')
+      const { folio, tipo_nombre: tipoNombre } = inc.rows[0]
+      folioNotificar = folio
+      tipoNombreNotificar = tipoNombre
 
       const desp = await cliente.query<{ id: string }>(
         `SELECT id FROM incidente_despacho WHERE incidente_id = $1 LIMIT 1`,
@@ -745,6 +827,15 @@ export async function enviarRefuerzos(formData: FormData) {
         [incidenteId],
       )
 
+      const resultado = elementos.length > 0
+        ? await cliente.query<{ user_id: string }>(
+            `SELECT DISTINCT o.user_id FROM ofi_oficiales o
+             WHERE o.no_nomina = ANY($1::text[]) AND o.ofi_estatus = 'activo' AND o.user_id IS NOT NULL`,
+            [elementos.map(e => e.nomina)],
+          )
+        : { rows: [] as { user_id: string }[] }
+      usuariosNotificar = resultado.rows
+
       await cliente.query('COMMIT')
     } catch (err) {
       await cliente.query('ROLLBACK')
@@ -755,6 +846,19 @@ export async function enviarRefuerzos(formData: FormData) {
   })
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidente_despacho', entidadId: incidenteId, payload: { refuerzo: true } })
+
+  if (usuariosNotificar.length > 0) {
+    await emitir('despacho.refuerzos', {
+      titulo: `🚨 Refuerzo solicitado — ${folioNotificar}`,
+      mensaje: `Se solicitó tu apoyo en el incidente ${folioNotificar}${tipoNombreNotificar ? ` — ${tipoNombreNotificar}` : ''}. Revisa el detalle.`,
+      entidadTipo: 'incidente',
+      entidadId: incidenteId,
+      usuarios: usuariosNotificar.map(r => r.user_id),
+      roles: [],
+      emitidaPor: session.user.id,
+    })
+  }
+
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 

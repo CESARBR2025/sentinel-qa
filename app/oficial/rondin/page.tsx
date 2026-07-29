@@ -7,7 +7,7 @@ import { generarFolioIncidente } from '@/lib/incidentes/folio'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import { RondinPageClient } from '@/components/oficial/rondin/RondinPageClient'
 
-export default async function RondinOficialPage({ searchParams }: { searchParams: Promise<{ exito?: string; folio?: string }> }) {
+export default async function RondinOficialPage({ searchParams }: { searchParams: Promise<{ exito?: string; folio?: string; ocupado?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
@@ -29,7 +29,7 @@ export default async function RondinOficialPage({ searchParams }: { searchParams
 
   return (
     <>
-      <ToastExito show={params.exito === '1'} folio={params.folio} />
+      <ToastExito show={params.exito === '1'} folio={params.folio} ocupado={params.ocupado === '1'} />
       <RondinPageClient
         rondines={rondines}
         catalogos={{ emergencias: catalogos.emergencias, subtipos: catalogos.subtipos, incidentes: catalogos.incidentes, prioridades: catalogos.prioridades }}

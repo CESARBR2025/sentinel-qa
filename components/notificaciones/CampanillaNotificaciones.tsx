@@ -5,6 +5,13 @@ import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { usePolling } from '@/hooks/usePolling'
+import {
+  Bell, BellRing, BellOff, CheckCheck,
+  Siren, Shield, Gavel, Scale, Video, Search, KeyRound, Ticket, Truck,
+  ShieldAlert, Car, ClipboardList, FileText, Megaphone,
+  type LucideIcon,
+} from 'lucide-react'
+import { definicionEvento } from '@/lib/notificaciones/catalogo'
 
 // Cuántas notificaciones se muestran en el dropdown. El resto vive en /notificaciones.
 const MAX_DROPDOWN = 5
@@ -26,6 +33,28 @@ const COLOR_SEVERIDAD: Record<string, string> = {
   info: '#0284c7',
   aviso: '#ea580c',
   critico: '#dc2626',
+}
+
+const ICONO_MODULO: Record<string, LucideIcon> = {
+  'Incidentes': Siren,
+  'Oficial': Shield,
+  'Fiscalía': Gavel,
+  'Juzgado': Scale,
+  'Monitorista': Video,
+  'Análisis': Search,
+  'Liberaciones': KeyRound,
+  'Infracciones': Ticket,
+  'Corralón': Truck,
+  'Prevención': ShieldAlert,
+  'Tránsito': Car,
+  'Novedades': ClipboardList,
+  'Reportes': FileText,
+  'Administración': Megaphone,
+}
+
+function iconoDeEvento(evento: string): LucideIcon {
+  const modulo = definicionEvento(evento)?.modulo
+  return (modulo && ICONO_MODULO[modulo]) || Bell
 }
 
 function haceCuanto(fecha: string): string {
@@ -71,6 +100,7 @@ export function CampanillaNotificaciones() {
   const [posicion, setPosicion] = useState<{ top: number; right: number } | null>(null)
   const botonRef = useRef<HTMLButtonElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const [sacudir, setSacudir] = useState(false)
   const previoRef = useRef(0)
   const router = useRouter()
 
@@ -82,7 +112,11 @@ export function CampanillaNotificaciones() {
       if (!r.ok) return
       const { noLeidas: n } = await r.json() as { noLeidas: number }
       setNoLeidas(n)
-      if (n > previoRef.current && previoRef.current !== 0) sonarAlerta()
+      if (n > previoRef.current && previoRef.current !== 0) {
+        sonarAlerta()
+        setSacudir(true)
+        setTimeout(() => setSacudir(false), 600)
+      }
       previoRef.current = n
     } catch {
       // Sin red: se reintenta en el siguiente intervalo.
@@ -168,6 +202,15 @@ export function CampanillaNotificaciones() {
 
   return (
     <div style={{ position: 'relative' }}>
+      <style>{`
+  @keyframes campanilla-shake {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-14deg); }
+    40% { transform: rotate(12deg); }
+    60% { transform: rotate(-8deg); }
+    80% { transform: rotate(6deg); }
+  }
+`}</style>
       <button
         ref={botonRef}
         type="button"
@@ -177,13 +220,10 @@ export function CampanillaNotificaciones() {
           position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
           width: 38, height: 38, border: '1px solid #e2e8f0', background: '#fff',
           cursor: 'pointer', color: noLeidas > 0 ? '#1f355a' : '#64748b',
+          animation: sacudir ? 'campanilla-shake 0.5s ease-in-out' : 'none',
         }}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
+        {noLeidas > 0 ? <BellRing size={18} /> : <Bell size={18} />}
         {noLeidas > 0 && (
           <span style={{
             position: 'absolute', top: -6, right: -6, minWidth: 18, height: 18, padding: '0 4px',
@@ -229,11 +269,12 @@ export function CampanillaNotificaciones() {
             </span>
             {noLeidas > 0 && (
               <button type="button" onClick={() => void marcarTodas()} style={{
+                display: 'flex', alignItems: 'center', gap: 4,
                 border: 'none', background: 'transparent', cursor: 'pointer',
                 fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.1em',
                 textTransform: 'uppercase', color: '#64748b',
               }}>
-                Marcar todas
+                <CheckCheck size={12} /> Marcar todas
               </button>
             )}
           </div>
@@ -245,46 +286,62 @@ export function CampanillaNotificaciones() {
               </p>
             )}
             {!cargando && items.length === 0 && (
-              <p style={{ margin: 0, padding: '22px 14px', textAlign: 'center', color: '#94a3b8', fontSize: 12 }}>
-                Sin notificaciones
-              </p>
+              <div style={{ padding: '28px 14px', textAlign: 'center', color: '#94a3b8' }}>
+                <BellOff size={22} style={{ marginBottom: 6, opacity: 0.6 }} />
+                <p style={{ margin: 0, fontSize: 12 }}>Sin notificaciones</p>
+              </div>
             )}
-            {items.map(n => (
-              <button
-                key={n.id}
-                type="button"
-                onClick={() => void abrirNotificacion(n)}
-                style={{
-                  display: 'block', width: '100%', textAlign: 'left', cursor: 'pointer',
-                  padding: '11px 14px', border: 'none', borderBottom: '1px solid #f1f5f9',
-                  background: n.leida ? '#fff' : '#f8fafc',
-                  borderLeft: `3px solid ${n.leida ? 'transparent' : COLOR_SEVERIDAD[n.severidad] ?? '#0284c7'}`,
-                }}
-              >
-                <span style={{
-                  display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8,
-                }}>
+            {items.map(n => {
+              const Icono = iconoDeEvento(n.evento)
+              const color = COLOR_SEVERIDAD[n.severidad] ?? '#0284c7'
+              return (
+                <button
+                  key={n.id}
+                  type="button"
+                  onClick={() => void abrirNotificacion(n)}
+                  style={{
+                    display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%',
+                    textAlign: 'left', cursor: 'pointer',
+                    padding: '11px 14px', border: 'none', borderBottom: '1px solid #f1f5f9',
+                    background: n.leida ? '#fff' : '#f8fafc',
+                  }}
+                >
                   <span style={{
-                    fontFamily: 'Inter, sans-serif', fontSize: 12.5,
-                    fontWeight: n.leida ? 500 : 700, color: '#0f172a',
-                    minWidth: 0, overflowWrap: 'break-word',
+                    flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${color}1a`, color,
                   }}>
-                    {n.titulo}
+                    <Icono size={15} />
                   </span>
-                  <span style={{
-                    flexShrink: 0, fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94a3b8',
-                  }}>
-                    {haceCuanto(n.creadoEn)}
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+                      <span style={{
+                        fontFamily: 'Inter, sans-serif', fontSize: 12.5,
+                        fontWeight: n.leida ? 500 : 700, color: '#0f172a',
+                        minWidth: 0, overflowWrap: 'break-word',
+                      }}>
+                        {n.titulo}
+                      </span>
+                      <span style={{ flexShrink: 0, fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94a3b8' }}>
+                        {haceCuanto(n.creadoEn)}
+                      </span>
+                    </span>
+                    <span style={{
+                      display: 'block', marginTop: 3, fontFamily: 'Inter, sans-serif',
+                      fontSize: 11.5, color: '#64748b', lineHeight: 1.45,
+                    }}>
+                      {n.mensaje}
+                    </span>
                   </span>
-                </span>
-                <span style={{
-                  display: 'block', marginTop: 3, fontFamily: 'Inter, sans-serif',
-                  fontSize: 11.5, color: '#64748b', lineHeight: 1.45,
-                }}>
-                  {n.mensaje}
-                </span>
-              </button>
-            ))}
+                  {!n.leida && (
+                    <span style={{
+                      flexShrink: 0, width: 7, height: 7, borderRadius: '50%',
+                      background: color, marginTop: 5,
+                    }} />
+                  )}
+                </button>
+              )
+            })}
           </div>
 
           <Link
