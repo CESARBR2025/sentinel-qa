@@ -84,20 +84,37 @@ export function TripulacionList({ oficiales, prioritarioNomina, esPrioritaria = 
 // Card de unidad: unidad + tripulación + ubicación/distancia. Vive dentro del modal
 // de selección (SeleccionarUnidadesModal) — seleccionar una unidad selecciona a toda
 // su tripulación, porque las patrullas salen con su personal ya asignado arriba.
-export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomina, onToggle }: {
-  unidad: UnidadParaDespacho; seleccionada: boolean; esMasCercana: boolean; prioritarioNomina?: string | null; onToggle: () => void
+export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomina, esPrioritaria = false, onToggle }: {
+  unidad: UnidadParaDespacho; seleccionada: boolean; esMasCercana: boolean; prioritarioNomina?: string | null; esPrioritaria?: boolean; onToggle: () => void
 }) {
   const antiguedad = unidad.ultimaUbicacionEn ? formatAntiguedad(unidad.ultimaUbicacionEn) : null
+  const ocupada = unidad.ocupada
 
   return (
     <div
-      onClick={onToggle}
+      onClick={ocupada ? undefined : onToggle}
       className={`dq-unidad-card${seleccionada ? ' dq-selected' : ''}`}
-      style={{ position: 'relative', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      style={{
+        position: 'relative', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10,
+        ...(ocupada ? { cursor: 'not-allowed', opacity: 0.6 } : {}),
+      }}>
 
       <div className="dq-check">
         <Check size={12} strokeWidth={3} color="#fff" />
       </div>
+
+      {esPrioritaria && (
+        <span style={{
+          alignSelf: 'flex-start',
+          display: 'inline-flex', alignItems: 'center', gap: 3,
+          padding: '2px 8px', borderRadius: 999,
+          background: '#eef2ff', color: '#7c3aed',
+          border: '1px solid #c7d2fe',
+          fontFamily: 'Inter,sans-serif', fontSize: 8.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+        }}>
+          PRIORITARIO
+        </span>
+      )}
 
       {esMasCercana && (
         <span style={{
@@ -108,6 +125,19 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
           fontFamily: 'Inter,sans-serif', fontSize: 8.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
         }}>
           <Navigation size={9} /> Más cercana
+        </span>
+      )}
+
+      {ocupada && (
+        <span style={{
+          alignSelf: 'flex-start',
+          display: 'inline-flex', alignItems: 'center', gap: 3,
+          padding: '2px 8px', borderRadius: 999,
+          background: '#fef2f2', color: '#dc2626',
+          border: '1px solid #fecaca',
+          fontFamily: 'Inter,sans-serif', fontSize: 8.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+        }}>
+          OCUPADA
         </span>
       )}
 
@@ -185,11 +215,12 @@ export function UnidadResumenCard({ unidad, prioritarioNomina, esPrioritaria = f
             )}
           </div>
         </div>
-        {esPrioritaria ? (
+        {esPrioritaria && (
           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, fontWeight: 700, padding: '2px 7px', background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 999, letterSpacing: '0.06em' }}>
             PRIORITARIO
           </span>
-        ) : onQuitar && (
+        )}
+        {onQuitar && (
           <button onClick={onQuitar} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#94a3b8', display: 'flex' }} title="Quitar unidad">
             <X size={13} />
           </button>

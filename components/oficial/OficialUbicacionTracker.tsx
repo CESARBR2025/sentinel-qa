@@ -36,6 +36,7 @@ export function useUbicacionOficial() {
 // la última posición conocida con su antigüedad, no una posición en vivo.
 export function OficialUbicacionProvider({ children }: { children: React.ReactNode }) {
   const ultimaPosicionRef = useRef<{ lat: number; lng: number } | null>(null)
+  const primerEnvioRef = useRef(false)
   const soportado = typeof navigator !== 'undefined' && !!navigator.geolocation
 
   const [posicionActual, setPosicionActual] = useState<{ lat: number; lng: number } | null>(null)
@@ -47,9 +48,20 @@ export function OficialUbicacionProvider({ children }: { children: React.ReactNo
   useEffect(() => {
     if (!soportado) return
 
+    const enviarUbicacion = (lat: number, lng: number) => {
+      reportarUbicacionOficial(lat, lng)
+      setUltimoEnvio({ lat, lng, en: new Date() })
+      setSegundosParaProximoEnvio(HEARTBEAT_SEGUNDOS)
+    }
+
     const watchId = navigator.geolocation.watchPosition(
       pos => {
-        ultimaPosicionRef.current = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        ultimaPosicionRef.current = coords
+        if (!primerEnvioRef.current) {
+          primerEnvioRef.current = true
+          enviarUbicacion(coords.lat, coords.lng)
+        }
       },
       err => {
         if (err.code === err.PERMISSION_DENIED) setPermisoDenegado(true)
@@ -63,10 +75,7 @@ export function OficialUbicacionProvider({ children }: { children: React.ReactNo
         if (s > 1) return s - 1
 
         const pos = ultimaPosicionRef.current
-        if (pos) {
-          reportarUbicacionOficial(pos.lat, pos.lng)
-          setUltimoEnvio({ ...pos, en: new Date() })
-        }
+        if (pos) enviarUbicacion(pos.lat, pos.lng)
         return HEARTBEAT_SEGUNDOS
       })
     }, 1000)

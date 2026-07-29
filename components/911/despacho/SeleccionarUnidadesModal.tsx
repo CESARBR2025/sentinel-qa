@@ -10,13 +10,15 @@ import AsignacionMapa from './AsignacionMapa'
 // Modal de selección de unidades cercanas. Se monta vía createPortal directo en
 // document.body (buena práctica general para modales: lo saca del árbol del acordeón
 // del tablón, sin depender del posicionamiento de ancestros).
-export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioNomina, incidenteLat, incidenteLng, prioritarioPatrullaId, onConfirmar, onClose }: {
+export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioNomina, incidenteLat, incidenteLng, prioritarioPatrullaId, incidenteId, incidentePrioridad, onConfirmar, onClose }: {
   unidades: UnidadParaDespacho[]
   seleccionadas: UnidadParaDespacho[]
   prioritarioNomina?: string | null
   incidenteLat?: number | null
   incidenteLng?: number | null
   prioritarioPatrullaId?: string | null
+  incidenteId?: string | null
+  incidentePrioridad?: string | null
   onConfirmar: (unidades: UnidadParaDespacho[]) => void
   onClose: () => void
 }) {
@@ -59,18 +61,23 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
     if (incidenteLat != null) params.set('lat', String(incidenteLat))
     if (incidenteLng != null) params.set('lng', String(incidenteLng))
     if (prioritarioPatrullaId) params.set('prioritarioPatrullaId', prioritarioPatrullaId)
+    if (incidenteId) params.set('incidenteId', incidenteId)
 
-    const id = setInterval(() => {
+    const fetchUnidades = () => {
       fetch(`/api/despacho/unidades-cercanas?${params.toString()}`)
         .then(res => res.json())
         .then((data: UnidadParaDespacho[]) => {
           setUnidadesActuales(data)
         })
         .catch(() => {})
-    }, 18_000)
+    }
+
+    fetchUnidades() // refresco inmediato al abrir el modal — no esperar el primer tick del interval
+
+    const id = setInterval(fetchUnidades, 18_000)
 
     return () => clearInterval(id)
-  }, [mostrarMapa, incidenteLat, incidenteLng, prioritarioPatrullaId])
+  }, [mostrarMapa, incidenteLat, incidenteLng, prioritarioPatrullaId, incidenteId])
 
   const filtradas = unidadesActuales.filter(u =>
     u.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -80,6 +87,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
   const masCercanaId = unidadesActuales.find(u => u.distanciaKm != null)?.id
 
   const toggle = (u: UnidadParaDespacho) => {
+    if (u.ocupada) return
     setSeleccionLocal(prev => prev.find(x => x.id === u.id) ? prev.filter(x => x.id !== u.id) : [...prev, u])
   }
 
@@ -118,6 +126,8 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
               incidenteLng={incidenteLng}
               seleccionadas={seleccionLocal.map(u => u.id)}
               onToggleUnidad={(id) => { const u = unidadesActuales.find(x => x.id === id); if (u) toggle(u) }}
+              prioritarioPatrullaId={prioritarioPatrullaId}
+              prioridad={incidentePrioridad}
             />
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
@@ -149,6 +159,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
                       seleccionada={!!seleccionLocal.find(x => x.id === u.id)}
                       esMasCercana={u.id === masCercanaId}
                       prioritarioNomina={prioritarioNomina}
+                      esPrioritaria={u.id === prioritarioPatrullaId}
                       onToggle={() => toggle(u)}
                     />
                   ))

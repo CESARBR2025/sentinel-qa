@@ -21,7 +21,7 @@ export async function listarIncidentesConFiltros(filtros: IncidenteFiltros): Pro
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
 
   const result = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.tipo_reporte, i.estatus, i.fecha_hora_inicio, i.colonia, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id ${where} ORDER BY i.creado_en DESC LIMIT 200`,
+    `SELECT i.id, i.folio, i.canal, i.tipo_reporte, i.estatus, i.fecha_hora_inicio, i.colonia, cti.nombre AS tipo_incidente_nombre, cp.clave AS prioridad_nombre, u.name AS capturado_por_nombre FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id ${where} ORDER BY i.creado_en DESC LIMIT 200`,
     params.length ? params : undefined,
   )
   return result.rows.map(rowToIncidenteListItem)
@@ -31,7 +31,7 @@ export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[
   // Cierre actual: ofi_reportes_campo (orc). Fallback legacy: incidente_reporte_campo (rc).
   const result = await query<Record<string, unknown>>(
     `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion, i.origen_rondin,
-      cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre,
+      cti.nombre AS tipo_incidente_nombre, cp.clave AS prioridad_nombre, u.name AS capturado_por_nombre,
       d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora,
       COALESCE(orc.ofi_acciones, rc.acciones_realizadas) AS acciones_realizadas,
       COALESCE(orc.ofi_hay_detencion, rc.hay_detencion) AS hay_detencion,
@@ -58,7 +58,7 @@ export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[
 
 export async function listarIncidentesEnDespacho(): Promise<IncidenteConDespacho[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion, i.origen_rondin, i.latitud, i.longitud, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, u.name AS capturado_por_nombre, d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON i.id = d.incidente_id WHERE i.estatus IN ('en_despacho', 'en_sitio') ORDER BY i.creado_en DESC LIMIT 100`,
+    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.descripcion, i.origen_rondin, i.latitud, i.longitud, cti.nombre AS tipo_incidente_nombre, cp.clave AS prioridad_nombre, u.name AS capturado_por_nombre, d.id AS despacho_id, d.fecha_hora_despacho AS despacho_fecha_hora FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON i.id = d.incidente_id WHERE i.estatus IN ('en_despacho', 'en_sitio') ORDER BY i.creado_en DESC LIMIT 100`,
   )
   const rows = result.rows.map(rowToIncidenteConDespachoBase)
   return Promise.all(rows.map(async (inc) => {
@@ -87,14 +87,14 @@ async function obtenerUnidadesElementos(despachoId: string): Promise<[{ id: stri
 
 export async function listarIncidentesPendientesDespacho(): Promise<IncidentePendiente[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.fecha_hora_inicio, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.descripcion, i.origen_rondin, i.latitud, i.longitud, cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, cp.orden AS prioridad_orden, u.name AS capturado_por_nombre, ide.elemento_nombre AS prioritario_nombre, ide.elemento_nomina AS prioritario_nomina, po.patrulla_id AS prioritario_patrulla_id FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON d.incidente_id = i.id AND i.origen_rondin = true LEFT JOIN incidente_despacho_elementos ide ON ide.despacho_id = d.id AND ide.es_prioritario = true LEFT JOIN ofi_oficiales po ON po.no_nomina = ide.elemento_nomina AND po.ofi_estatus = 'activo'     WHERE i.estatus = 'sin_despachar' AND i.requiere_despacho = true ORDER BY cp.orden DESC NULLS LAST, i.fecha_hora_inicio DESC`,
+    `SELECT i.id, i.folio, i.canal, i.fecha_hora_inicio, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.descripcion, i.origen_rondin, i.latitud, i.longitud, cti.nombre AS tipo_incidente_nombre, cp.clave AS prioridad_nombre, cp.orden AS prioridad_orden, u.name AS capturado_por_nombre, ide.elemento_nombre AS prioritario_nombre, ide.elemento_nomina AS prioritario_nomina, po.patrulla_id AS prioritario_patrulla_id FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN users u ON i.capturado_por = u.id LEFT JOIN incidente_despacho d ON d.incidente_id = i.id AND i.origen_rondin = true LEFT JOIN incidente_despacho_elementos ide ON ide.despacho_id = d.id AND ide.es_prioritario = true LEFT JOIN ofi_oficiales po ON po.no_nomina = ide.elemento_nomina AND po.ofi_estatus = 'activo'     WHERE i.estatus = 'sin_despachar' AND i.requiere_despacho = true ORDER BY cp.orden DESC NULLS LAST, i.fecha_hora_inicio DESC`,
   )
   return result.rows.map(rowToIncidentePendiente)
 }
 
 export async function obtenerIncidenteCompleto(id: string): Promise<IncidenteDetalleCompleto | null> {
   const incResult = await query<Record<string, unknown>>(
-    `SELECT i.id, i.folio, i.canal, i.tipo_reporte, i.estatus, i.nombre_reportante, i.anonimo, i.sexo, i.edad, i.es_usuario_frecuente, i.es_persona_afectada, i.es_migrante, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.municipio, i.descripcion, i.observaciones, i.fecha_hora_inicio, i.fecha_hora_fin, i.grupo_whatsapp, i.nombre_oficial, i.requiere_despacho, i.origen_rondin, i.creado_en, cti.nombre AS tipo_incidente_nombre, cte.nombre AS tipo_emergencia_nombre, cp.nombre AS prioridad_nombre, cmc.nombre AS medio_canalizacion_nombre, u.name AS capturado_por_nombre FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN cat_medios_canalizacion cmc ON i.medio_canalizacion_id = cmc.id LEFT JOIN users u ON i.capturado_por = u.id WHERE i.id = $1 LIMIT 1`,
+    `SELECT i.id, i.folio, i.canal, i.tipo_reporte, i.estatus, i.nombre_reportante, i.anonimo, i.sexo, i.edad, i.es_usuario_frecuente, i.es_persona_afectada, i.es_migrante, i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion, i.municipio, i.descripcion, i.observaciones, i.fecha_hora_inicio, i.fecha_hora_fin, i.grupo_whatsapp, i.nombre_oficial, i.requiere_despacho, i.origen_rondin, i.creado_en, cti.nombre AS tipo_incidente_nombre, cte.nombre AS tipo_emergencia_nombre, cp.clave AS prioridad_nombre, cmc.nombre AS medio_canalizacion_nombre, u.name AS capturado_por_nombre FROM incidentes i LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id LEFT JOIN cat_medios_canalizacion cmc ON i.medio_canalizacion_id = cmc.id LEFT JOIN users u ON i.capturado_por = u.id WHERE i.id = $1 LIMIT 1`,
     [id],
   )
   if (!incResult.rows[0]) return null

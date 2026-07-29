@@ -3,6 +3,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import type { UnidadParaDespacho } from '@/lib/flota/types';
 import { formatAntiguedad } from './UnidadCards';
+import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores';
 
 const containerStyle: React.CSSProperties = {
   width: '100%',
@@ -11,12 +12,15 @@ const containerStyle: React.CSSProperties = {
   border: '1px solid #e2e8f0',
 };
 
-const INCIDENTE_SVG = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-  <circle cx="18" cy="14" r="14" fill="#dc2626" stroke="#fff" stroke-width="2"/>
-  <polygon points="18,36 10,24 26,24" fill="#dc2626" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-  <line x1="18" y1="8" x2="18" y2="16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="18" cy="20" r="1.5" fill="#fff"/>
-</svg>`)}`;
+function buildIncidenteSvgIcon(color: string): { url: string } {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
+  <circle cx="27" cy="21" r="24" fill="#fff" fill-opacity="0.55"/>
+  <circle cx="27" cy="21" r="21" fill="${color}" stroke="#fff" stroke-width="3"/>
+  <polygon points="27,54 15,36 39,36" fill="${color}" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="28,9 18,21 27,21 26,29 36,17 27,17 28,9" fill="#fff"/>
+</svg>`;
+  return { url: `data:image/svg+xml,${encodeURIComponent(svg)}` };
+}
 
 const MAX_UNIDADES_CERCANAS = 10;
 
@@ -53,6 +57,8 @@ interface AsignacionMapaProps {
   incidenteLng: number | null;
   seleccionadas: string[];
   onToggleUnidad: (id: string) => void;
+  prioritarioPatrullaId?: string | null;
+  prioridad?: string | null;
 }
 
 export default function AsignacionMapa({
@@ -61,6 +67,8 @@ export default function AsignacionMapa({
   incidenteLng,
   seleccionadas,
   onToggleUnidad,
+  prioritarioPatrullaId,
+  prioridad,
 }: AsignacionMapaProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
@@ -110,7 +118,22 @@ export default function AsignacionMapa({
       .map(u => u.id)
   );
 
+  const esPrioritario = (id: string) => prioritarioPatrullaId != null && id === prioritarioPatrullaId;
+
   function buildUnidadSvgIcon(u: UnidadParaDespacho): { url: string } {
+    const ocupada = u.ocupada;
+    const prioritario = esPrioritario(u.id);
+    if (ocupada) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="42" viewBox="0 0 34 42">
+  <circle cx="17" cy="15" r="13" fill="#b91c1c" fill-opacity="0.55" stroke="#fff" stroke-width="2"/>
+  <polygon points="17,40 9,25 25,25" fill="#b91c1c" fill-opacity="0.55" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+  <text x="17" y="19" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="10" font-weight="bold">P</text>
+${prioritario ? `  <circle cx="7" cy="3" r="5" fill="#7c3aed" stroke="#fff" stroke-width="1.2"/>
+  <text x="7" y="5" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="6" font-weight="bold">P</text>` : ''}
+</svg>`;
+      return { url: `data:image/svg+xml,${encodeURIComponent(svg)}` };
+    }
+
     const esMasCercana = u.id === masCercanaId;
     const esCercana = idsCercanas.has(u.id);
     const fresco = u.ultimaUbicacionEn ? formatAntiguedad(u.ultimaUbicacionEn).fresco : false;
@@ -134,6 +157,8 @@ export default function AsignacionMapa({
   <text x="17" y="19" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="10" font-weight="bold">P</text>
 ${seleccionada ? `  <circle cx="29" cy="8" r="7" fill="#1f355a" stroke="#fff" stroke-width="1.5"/>
   <polyline points="25,8 28,11 32,5" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+${prioritario ? `  <circle cx="7" cy="3" r="5" fill="#7c3aed" stroke="#fff" stroke-width="1.2"/>
+  <text x="7" y="5" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="6" font-weight="bold">P</text>` : ''}
 </svg>`;
 
     return { url: `data:image/svg+xml,${encodeURIComponent(svg)}` };
@@ -175,7 +200,7 @@ ${seleccionada ? `  <circle cx="29" cy="8" r="7" fill="#1f355a" stroke="#fff" st
     >
       <MarkerF
         position={{ lat: incidenteLat, lng: incidenteLng }}
-        icon={{ url: INCIDENTE_SVG }}
+        icon={buildIncidenteSvgIcon(colorPorPrioridad(prioridad).principal)}
         clickable={false}
       />
 
@@ -184,7 +209,7 @@ ${seleccionada ? `  <circle cx="29" cy="8" r="7" fill="#1f355a" stroke="#fff" st
           key={u.id}
           position={{ lat: u.ultimaLat!, lng: u.ultimaLng! }}
           icon={buildUnidadSvgIcon(u)}
-          onClick={() => onToggleUnidad(u.id)}
+          onClick={u.ocupada ? undefined : () => onToggleUnidad(u.id)}
         />
       ))}
     </GoogleMap>

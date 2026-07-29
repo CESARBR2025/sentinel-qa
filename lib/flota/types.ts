@@ -39,6 +39,7 @@ export interface UnidadConTripulacion {
   ultimaLat: number | null;
   ultimaLng: number | null;
   ultimaUbicacionEn: string | null;
+  ocupada: boolean;
 }
 
 export interface UnidadParaDespacho extends UnidadConTripulacion {
