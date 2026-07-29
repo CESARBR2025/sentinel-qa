@@ -26,13 +26,15 @@ export const EVENTOS = {
   // ── Incidentes / despacho ──────────────────────────────────────────────────
   'incidente.creado': {
     label: 'Incidente creado', modulo: 'Incidentes', severidad: 'aviso',
+    // Destinatario es el rol agente_despacho — su tablón, no la vista ciudadano
+    // (esa requiere permiso 911_ciudadano, que este rol no tiene).
     rolesPorDefecto: ['agente_despacho'],
-    href: id => `/agente_911/ciudadano/incidentes/${id}`,
+    href: () => `/agente_911/despacho`,
   },
   'rondin.escalado': {
     label: 'Rondín escalado a incidente', modulo: 'Incidentes', severidad: 'aviso',
     rolesPorDefecto: ['agente_despacho'],
-    href: id => `/agente_911/rondin/incidentes/${id}`,
+    href: () => `/agente_911/despacho`,
   },
   'despacho.asignado': {
     label: 'Despacho asignado', modulo: 'Incidentes', severidad: 'critico',

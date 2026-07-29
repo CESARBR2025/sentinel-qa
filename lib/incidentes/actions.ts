@@ -47,6 +47,9 @@ async function notificarMonitoristas(incidenteId: string, folio: string) {
   await emitir('incidente.creado', {
     titulo: `SVV — ${folio}`,
     mensaje: `Incidente ${folio} — revisar cámaras cercanas.`,
+    // Href explícito: el default del catálogo apunta al tablón de despacho
+    // (911_despacho), permiso que el rol Monitorista no tiene.
+    href: '/monitorista',
     entidadTipo: 'incidente',
     entidadId: incidenteId,
     roles: ['Monitorista'],
@@ -210,10 +213,13 @@ export async function createIncidente(formData: FormData) {
   const despachadorId = str(formData, 'despachadorId')
   if (despachadorId) {
     // Destinatario directo (no por rol): el despacho es de una persona concreta.
+    // Href al tablón (no a targetPath): el rol despachador solo tiene permiso
+    // 911_despacho, no 911_ciudadano/whatsapp/rondin — ese es el detalle del
+    // incidente, no lo que el despachador puede abrir.
     await emitir('despacho.asignado', {
       titulo: `🚨 Nuevo despacho — ${folio}`,
       mensaje: `Se te ha asignado el incidente ${folio}. Revisa el tablón de despacho.`,
-      href: targetPath,
+      href: '/agente_911/despacho',
       entidadTipo: 'incidente',
       entidadId: incidenteId,
       usuarios: [despachadorId],
@@ -222,9 +228,11 @@ export async function createIncidente(formData: FormData) {
     })
   } else {
     // Sin despachador asignado, avisa al rol para que alguien lo tome.
+    // Href al tablón (no targetPath): el rol agente_despacho solo tiene
+    // permiso 911_despacho, no el de la vista de detalle por canal.
     await emitir('incidente.creado', {
       mensaje: `Incidente ${folio} sin despachar.`,
-      href: targetPath,
+      href: '/agente_911/despacho',
       entidadTipo: 'incidente',
       entidadId: incidenteId,
       emitidaPor: session.user.id,
@@ -319,10 +327,16 @@ export async function createIncidenteCliente(formData: FormData) {
 
   const despachadorId = str(formData, 'despachadorId')
   if (despachadorId) {
-    await query(
-      `INSERT INTO notificaciones (user_id, tipo, titulo, mensaje, href) VALUES ($1, $2, $3, $4, $5)`,
-      [despachadorId, 'despacho_asignado', `🚨 Nuevo despacho — ${folio}`, `Se te ha asignado el incidente ${folio}. Revisa el tablón de despacho.`, `/agente_911/ciudadano/incidentes/${incidenteId}`],
-    )
+    await emitir('despacho.asignado', {
+      titulo: `🚨 Nuevo despacho — ${folio}`,
+      mensaje: `Se te ha asignado el incidente ${folio}. Revisa el tablón de despacho.`,
+      href: '/agente_911/despacho',
+      entidadTipo: 'incidente',
+      entidadId: incidenteId,
+      usuarios: [despachadorId],
+      roles: [],
+      emitidaPor: session.user.id,
+    })
   }
 
   const pNombres = formData.getAll('p_nombre') as string[];
