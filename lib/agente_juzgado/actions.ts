@@ -23,6 +23,7 @@ import {
 import { listarAseguradosConDisposicionService, obtenerDetalleAseguradoCompletoService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService, guardarDetallesAseguradosService } from "../fiscalia/service"
 import { generarFolioAsegurados } from "../fiscalia/repository"
 import { obtenerDetalleInfraccionVia } from "@/lib/shared/infracciones";
+import { emitir } from "@/lib/notificaciones/emisor";
 import type {
   UserInfo,
   SolicitudEvidencia,
@@ -123,6 +124,14 @@ export async function accionPedirEvidencias(
       return { success: false, error: "Debe agregar al menos una ubicación" };
 
     await pedirEvidencias(id, evidencias);
+
+    // Igual que en fiscalía: el monitorista es quien tiene que actuar.
+    await emitir('evidencia.solicitada', {
+      mensaje: 'Juzgado solicitó evidencias del expediente. Revisa la bandeja de solicitudes.',
+      entidadTipo: 'solicitud_evidencia',
+      entidadId: id,
+      emitidaPor: session.user.id,
+    });
 
     revalidatePath("/agente_juzgado/solicitudes");
     return { success: true };

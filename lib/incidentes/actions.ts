@@ -9,6 +9,7 @@ import pool from '@/lib/db'
 import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
 import { tienePermiso, Accion } from '@/lib/incidentes/permisos'
+import { emitir } from '@/lib/notificaciones/emisor'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -39,28 +40,17 @@ async function esTipoImprocedente(tipoEmergenciaId: number | null): Promise<bool
   return result.rows[0]?.codigo === '7'
 }
 
+// Antes resolvía los destinatarios a mano por permiso y hacía un fan-out de una
+// fila por monitorista. Ahora emite una sola notificación dirigida al rol, con
+// la audiencia configurable desde la matriz del panel de administración.
 async function notificarMonitoristas(incidenteId: string, folio: string) {
-  const monitoristas = await query<{ id: string; name: string }>(
-    `SELECT DISTINCT u.id, u.name FROM users u
-     INNER JOIN permisos p ON p.usuario_id = u.id
-     WHERE p.seccion IN ('solicitudes','detenidos','incidentes_camara')
-     AND p.puede_ver = true`,
-  )
-  if (!monitoristas.rows.length) return
-
-  const values = monitoristas.rows.map((_, i) =>
-    `($${i * 5 + 1}, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, $${i * 5 + 5})`
-  ).join(', ')
-  const params = monitoristas.rows.flatMap(m => [
-    m.id, 'incidente_svv',
-    `SVV — ${folio}`,
-    `Incidente ${folio} — revisar cámaras cercanas.`,
-    `/agente_911/ciudadano/incidentes/${incidenteId}`,
-  ])
-  await query(
-    `INSERT INTO notificaciones (user_id, tipo, titulo, mensaje, href) VALUES ${values}`,
-    params,
-  )
+  await emitir('incidente.creado', {
+    titulo: `SVV — ${folio}`,
+    mensaje: `Incidente ${folio} — revisar cámaras cercanas.`,
+    entidadTipo: 'incidente',
+    entidadId: incidenteId,
+    roles: ['Monitorista'],
+  })
 }
 async function requireOperador(accion: Accion = 'crear') {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -219,10 +209,26 @@ export async function createIncidente(formData: FormData) {
 
   const despachadorId = str(formData, 'despachadorId')
   if (despachadorId) {
-    await query(
-      `INSERT INTO notificaciones (user_id, tipo, titulo, mensaje, href) VALUES ($1, $2, $3, $4, $5)`,
-      [despachadorId, 'despacho_asignado', `🚨 Nuevo despacho — ${folio}`, `Se te ha asignado el incidente ${folio}. Revisa el tablón de despacho.`, targetPath],
-    )
+    // Destinatario directo (no por rol): el despacho es de una persona concreta.
+    await emitir('despacho.asignado', {
+      titulo: `🚨 Nuevo despacho — ${folio}`,
+      mensaje: `Se te ha asignado el incidente ${folio}. Revisa el tablón de despacho.`,
+      href: targetPath,
+      entidadTipo: 'incidente',
+      entidadId: incidenteId,
+      usuarios: [despachadorId],
+      roles: [],
+      emitidaPor: session.user.id,
+    })
+  } else {
+    // Sin despachador asignado, avisa al rol para que alguien lo tome.
+    await emitir('incidente.creado', {
+      mensaje: `Incidente ${folio} sin despachar.`,
+      href: targetPath,
+      entidadTipo: 'incidente',
+      entidadId: incidenteId,
+      emitidaPor: session.user.id,
+    })
   }
 
   revalidatePath('/agente_911/whatsapp');

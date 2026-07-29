@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { insertarSolicitudLiberacion } from "@/lib/agente_infracciones/repository";
 import { query } from "@/lib/db";
 import { verificarAccesoCiudadano } from "@/lib/via/auth-ciudadano";
+import { emitir } from "@/lib/notificaciones/emisor";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -56,6 +57,14 @@ export async function POST(req: NextRequest) {
         ],
       )
     }
+
+    // El ciudadano abre la solicitud desde el portal público: sin esto,
+    // liberaciones no se enteraba hasta revisar la bandeja a mano.
+    await emitir('liberacion.solicitada', {
+      mensaje: 'Un ciudadano inició una solicitud de liberación. Pendiente de revisión documental.',
+      entidadTipo: 'infraccion',
+      entidadId: String(infraccionId),
+    });
 
     return NextResponse.json({ solicitudId });
   } catch (error) {

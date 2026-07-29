@@ -1,54 +1,67 @@
 import { query } from '@/lib/db'
 import { calcularFechaEsperada, getLabelSeguimiento } from '@/lib/prevencion/timeline'
+import { emitir } from './emisor'
 
 const HITOS_ALERTAR = ['CONTESTACION_INICIAL', '24H', '48H', '72H'] as const
 const UNA_HORA_MS   = 60 * 60 * 1000
 
-export async function generarAlertasBusquedas(userId: string, debug = false) {
-  const fichas = await query<{ id: string; fecha_activacion: string; nombre_desaparecida: string; status: string }>(
-    `SELECT id, fecha_activacion, nombre_desaparecida, status
-     FROM fichas_busqueda WHERE status = 'activa'`,
+/**
+ * Genera las alertas de plazo de las fichas de búsqueda activas.
+ *
+ * Antes esto corría en CADA GET de /api/notificaciones, con el cliente
+ * polleando cada 2 minutos: un escaneo de fichas_busqueda más INSERTs por cada
+ * usuario conectado, cada 2 minutos, aunque no hubiera pasado nada. Ahora lo
+ * dispara el cron (/api/cron/notificaciones) y la ruta de lectura no escribe.
+ *
+ * Las alertas van dirigidas al ROL, no a un usuario: antes se generaba una copia
+ * por cada persona que abriera la campanita.
+ */
+export async function generarAlertasBusquedas(): Promise<number> {
+  const fichas = await query<{ id: string; fecha_activacion: string; nombre_desaparecida: string }>(
+    `SELECT id, fecha_activacion, nombre_desaparecida
+       FROM fichas_busqueda WHERE status = 'activa'`,
   )
+  if (fichas.rows.length === 0) return 0
+
+  // Una sola consulta para todos los seguimientos, en vez de una por ficha.
+  const seguimientos = await query<{ ficha_id: string; tipo: string }>(
+    `SELECT ficha_id, tipo FROM seguimientos_busqueda WHERE ficha_id = ANY($1)`,
+    [fichas.rows.map(f => f.id)],
+  )
+  const registrados = new Map<string, Set<string>>()
+  for (const s of seguimientos.rows) {
+    const set = registrados.get(String(s.ficha_id)) ?? new Set<string>()
+    set.add(String(s.tipo))
+    registrados.set(String(s.ficha_id), set)
+  }
+
+  const ahora = Date.now()
+  let emitidas = 0
 
   for (const ficha of fichas.rows) {
     const fechaActivacion = new Date(String(ficha.fecha_activacion))
-
-    let registrados = new Set<string>()
-    if (!debug) {
-      const segs = await query<{ tipo: string }>(
-        `SELECT tipo FROM seguimientos_busqueda WHERE ficha_id = $1`,
-        [ficha.id],
-      )
-      registrados = new Set(segs.rows.map(s => s.tipo))
-    }
+    const yaRegistrados = registrados.get(String(ficha.id)) ?? new Set<string>()
 
     for (const hito of HITOS_ALERTAR) {
-      if (!debug && registrados.has(hito)) continue
+      if (yaRegistrados.has(hito)) continue
 
-      const fechaEsperada = calcularFechaEsperada(fechaActivacion, hito)
-      const ahora         = new Date()
-      const msRestantes   = fechaEsperada.getTime() - ahora.getTime()
-
-      if (!debug && msRestantes > UNA_HORA_MS) continue
+      const msRestantes = calcularFechaEsperada(fechaActivacion, hito).getTime() - ahora
+      if (msRestantes > UNA_HORA_MS) continue
 
       const vencido = msRestantes < 0
       const label   = getLabelSeguimiento(hito)
 
-      await query(
-        `INSERT INTO notificaciones
-         (user_id, tipo, titulo, mensaje, href, ficha_id, hito)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
-         ON CONFLICT DO NOTHING`,
-        [
-          userId,
-          'busqueda_plazo',
-          `${vencido ? '⚠ VENCIDO' : '⏰ Próximo'} — ${label}`,
-          `${ficha.nombre_desaparecida} — reporte de ${label} ${vencido ? 'VENCIDO' : 'vence en menos de 1 hora'}.`,
-          `/prevencion/busquedas/${ficha.id}`,
-          ficha.id,
-          hito,
-        ],
-      )
+      await emitir('busqueda_plazo', {
+        titulo: `${vencido ? '⚠ VENCIDO' : '⏰ Próximo'} — ${label}`,
+        mensaje: `${ficha.nombre_desaparecida} — reporte de ${label} ${vencido ? 'VENCIDO' : 'vence en menos de 1 hora'}.`,
+        entidadTipo: 'ficha_busqueda',
+        entidadId: String(ficha.id),
+        // Idempotente: el cron puede correr muchas veces sin duplicar la alerta.
+        dedup: `busqueda_plazo:${ficha.id}:${hito}`,
+      })
+      emitidas++
     }
   }
+
+  return emitidas
 }

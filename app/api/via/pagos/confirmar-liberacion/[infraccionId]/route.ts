@@ -15,6 +15,7 @@ import {
   actualizarUrlOrdenSalida,
 } from "@/lib/agente_infracciones/repository";
 import { verificarAccesoCiudadano } from "@/lib/via/auth-ciudadano";
+import { emitir } from "@/lib/notificaciones/emisor";
 
 export async function GET(
   req: NextRequest,
@@ -129,6 +130,14 @@ export async function GET(
       }
 
       await cerrarInfraccion(infraccionId, estatusDep);
+
+      // Al cerrarse con estatus LIBERADA_POR_*, la infracción cae justo en el
+      // filtro de la bandeja de corralón, que hasta ahora no recibía aviso.
+      await emitir('infraccion.cerrada', {
+        mensaje: 'Infracción liberada — lista para salida de corralón.',
+        entidadTipo: 'infraccion',
+        entidadId: infraccionId,
+      });
 
       return NextResponse.json({ pagado: true });
     } catch (err) {
