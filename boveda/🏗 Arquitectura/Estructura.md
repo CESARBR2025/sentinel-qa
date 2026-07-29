@@ -281,6 +281,8 @@
 │   │       │   └── subir-archivo/
 │   │       ├── curp/
 │   │       │   └── route.ts
+│   │       ├── descargar-orden/
+│   │       │   └── [infraccionId]/
 │   │       ├── exp-digital/
 │   │       │   ├── guardar-docs/
 │   │       │   └── guardar-evidencias/
@@ -689,6 +691,9 @@
 │   │   ├── PedirEvidenciasModal.tsx
 │   │   └── SecureImg.tsx
 │   ├── ui/
+│   │   ├── badge.tsx
+│   │   ├── button.tsx
+│   │   ├── separator.tsx
 │   │   ├── Toast.tsx
 │   │   └── ToastAuto.tsx
 │   ├── FilaDetenidoRol.tsx
@@ -1019,7 +1024,8 @@
 │   ├── constants.ts
 │   ├── db.ts
 │   ├── detenidos-compartido.ts
-│   └── error-handler.ts
+│   ├── error-handler.ts
+│   └── utils.ts
 ├── login-desing/
 │   ├── assets/
 │   │   ├── logo-shield.png
@@ -1040,7 +1046,14 @@
 │   ├── Login Hi-Fi.html
 │   ├── Login Wireframes.html
 │   └── login-app.jsx
+├── plan-mapa-despacho/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   └── README.md
 ├── public/
+│   ├── marca_agua/
+│   │   └── plantilla-orden-salida.png
 │   ├── uploads/
 │   │   └── detenidos/
 │   │       ├── FRONTAL_1782840405256_wp2881829.jpg
@@ -1092,6 +1105,7 @@
 ├── AGENTS.md.bak
 ├── cesar.md
 ├── CLAUDE.md
+├── components.json
 ├── CREACION_BOVEDA.md
 ├── eslint.config.mjs
 ├── INSTRUCCIONES-INFRACCIONES.md
@@ -1107,6 +1121,9 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

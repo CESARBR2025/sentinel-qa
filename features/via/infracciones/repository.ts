@@ -156,6 +156,7 @@ export class InfraccionesRepository {
         sl.nombre_empresa AS sl_nombre_empresa,
         sl.rfc_empresa AS sl_rfc_empresa,
         sl.estatus AS sl_estatus,
+        g.nombre AS nombre_grua,
         COALESCE(
           (SELECT jsonb_agg(sub.docs ORDER BY sub.docs->>'tipo')
            FROM (
@@ -185,11 +186,13 @@ export class InfraccionesRepository {
       JOIN via.v2_fracciones_ley vfl ON i.fraccion_id = vfl.id
       LEFT JOIN via.v2_ordenes_pago_sa7 ops ON ops.infraccion_id = i.id
       LEFT JOIN via.v2_solicitudes_liberacion sl ON sl.infraccion_id = i.id
+      LEFT JOIN via.v2_gruas g ON g.id = i.grua_id
       WHERE i.id = $1
       GROUP BY i.id, val.numero, val.descripcion, vfl.clasificacion, vfl.numero, vfl.descripcion,
                ops.id, ops.orden_pago_id, ops.estatus, ops.url_pago, ops.url_guardado, ops.folio_orden,
                ops.fecha_vencimiento, ops.total_pesos, ops.total_umas, ops.created_at, ops.concepto_id,
-               sl.id, sl.tipo_liberacion, sl.es_empresa, sl.nombre_empresa, sl.rfc_empresa, sl.estatus
+               sl.id, sl.tipo_liberacion, sl.es_empresa, sl.nombre_empresa, sl.rfc_empresa, sl.estatus,
+               g.nombre
       ORDER BY ops.created_at DESC NULLS LAST, sl.id DESC NULLS LAST`,
         [id],
       );

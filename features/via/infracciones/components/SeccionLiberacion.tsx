@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { abrirDocumento } from '@/lib/shared/abrirDocumento';
+import MapSectionCiudadano from './MapSectionCiudadano';
 import {
     Scale,
     FileText,
@@ -87,6 +88,10 @@ type Props = {
     documentosLiberacion: Record<string, { url: string; label: string }>;
     esTitular: boolean | null;
     urlOrdenSalida?: string | null;
+    nombreGrua?: string | null;
+    gruaLatitud?: number | null;
+    gruaLongitud?: number | null;
+    gruaDireccion?: string | null;
 };
 
 function getEstatusConfig(estatus: string) {
@@ -163,6 +168,10 @@ export default function SeccionLiberacion({
     documentosLiberacion,
     esTitular,
     urlOrdenSalida,
+    nombreGrua,
+    gruaLatitud,
+    gruaLongitud,
+    gruaDireccion,
 }: Props) {
 
     const [selectedType, setSelectedType] = useState<'empresa' | 'titular' | null>(null);
@@ -447,6 +456,37 @@ export default function SeccionLiberacion({
                             <FileText size={20} strokeWidth={2} />
                             DESCARGAR ORDEN DE SALIDA
                         </button>
+
+                        {/*nombreGrua && (
+                            <div className="border-t border-green-500/20 pt-6 space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                                        <span className="text-amber-700 text-lg font-bold" style={{ fontFamily: "'JetBrains Mono',monospace" }}>!</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-sm font-semibold text-slate-900">
+                                            Tu vehículo está alojado en:
+                                        </p>
+                                        <p className="text-base font-bold text-amber-700" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
+                                            GRÚA {nombreGrua}
+                                        </p>
+                                        {gruaDireccion && (
+                                            <p className="text-xs text-slate-500 mt-0.5">
+                                                {gruaDireccion}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                {gruaLatitud && gruaLongitud && (
+                                    <div className="rounded-lg overflow-hidden border border-slate-200">
+                                        <MapSectionCiudadano lat={gruaLatitud} lng={gruaLongitud} />
+                                    </div>
+                                )}
+                                <p className="text-xs text-slate-400 text-left">
+                                    Acude al corralón con tu orden de salida para recoger tu vehículo.
+                                </p>
+                            </div>
+                        )*/}
                     </div>
                 )}
 

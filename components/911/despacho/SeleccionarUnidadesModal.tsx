@@ -5,20 +5,27 @@ import { createPortal } from 'react-dom'
 import { X, Search, ShieldCheck } from 'lucide-react'
 import type { UnidadParaDespacho } from '@/lib/flota/types'
 import { UnidadCard, UnidadCardsStyles } from './UnidadCards'
+import AsignacionMapa from './AsignacionMapa'
 
 // Modal de selección de unidades cercanas. Se monta vía createPortal directo en
 // document.body (buena práctica general para modales: lo saca del árbol del acordeón
 // del tablón, sin depender del posicionamiento de ancestros).
-export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioNomina, onConfirmar, onClose }: {
+export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioNomina, incidenteLat, incidenteLng, prioritarioPatrullaId, onConfirmar, onClose }: {
   unidades: UnidadParaDespacho[]
   seleccionadas: UnidadParaDespacho[]
   prioritarioNomina?: string | null
+  incidenteLat?: number | null
+  incidenteLng?: number | null
+  prioritarioPatrullaId?: string | null
   onConfirmar: (unidades: UnidadParaDespacho[]) => void
   onClose: () => void
 }) {
   const [busqueda, setBusqueda] = useState('')
   const [seleccionLocal, setSeleccionLocal] = useState<UnidadParaDespacho[]>(seleccionadas)
+  const [unidadesActuales, setUnidadesActuales] = useState(unidades)
   const overlayRef = useRef<HTMLDivElement>(null)
+
+  const mostrarMapa = incidenteLat != null && incidenteLng != null
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -45,12 +52,32 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
     }
   }, [onClose])
 
-  const filtradas = unidades.filter(u =>
+  useEffect(() => {
+    if (!mostrarMapa) return;
+
+    const params = new URLSearchParams()
+    if (incidenteLat != null) params.set('lat', String(incidenteLat))
+    if (incidenteLng != null) params.set('lng', String(incidenteLng))
+    if (prioritarioPatrullaId) params.set('prioritarioPatrullaId', prioritarioPatrullaId)
+
+    const id = setInterval(() => {
+      fetch(`/api/despacho/unidades-cercanas?${params.toString()}`)
+        .then(res => res.json())
+        .then((data: UnidadParaDespacho[]) => {
+          setUnidadesActuales(data)
+        })
+        .catch(() => {})
+    }, 18_000)
+
+    return () => clearInterval(id)
+  }, [mostrarMapa, incidenteLat, incidenteLng, prioritarioPatrullaId])
+
+  const filtradas = unidadesActuales.filter(u =>
     u.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
     u.placas.toLowerCase().includes(busqueda.toLowerCase()),
   )
 
-  const masCercanaId = unidades.find(u => u.distanciaKm != null)?.id
+  const masCercanaId = unidadesActuales.find(u => u.distanciaKm != null)?.id
 
   const toggle = (u: UnidadParaDespacho) => {
     setSeleccionLocal(prev => prev.find(x => x.id === u.id) ? prev.filter(x => x.id !== u.id) : [...prev, u])
@@ -68,7 +95,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
       overscrollBehavior: 'contain', overflow: 'hidden',
     }}>
       <div style={{
-        background: '#fff', width: '100%', maxWidth: 640, maxHeight: '88vh',
+        background: '#fff', width: '100%', maxWidth: mostrarMapa ? 'min(1040px, 94vw)' : 640, maxHeight: '88vh',
         display: 'flex', flexDirection: 'column', borderRadius: 10, overflow: 'hidden',
         boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
       }}>
@@ -83,45 +110,90 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
           </button>
         </div>
 
-        {/* Search */}
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#f8fafc' }}>
-            <Search size={16} color="#94a3b8" />
-            <input
-              type="text"
-              placeholder="Buscar por número de unidad o placa..."
-              value={busqueda}
-              onChange={e => setBusqueda(e.target.value)}
-              autoFocus
-              style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a' }}
+        {mostrarMapa ? (
+          <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', flex: 1, minHeight: 0 }}>
+            <AsignacionMapa
+              unidades={unidadesActuales}
+              incidenteLat={incidenteLat}
+              incidenteLng={incidenteLng}
+              seleccionadas={seleccionLocal.map(u => u.id)}
+              onToggleUnidad={(id) => { const u = unidadesActuales.find(x => x.id === id); if (u) toggle(u) }}
             />
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8' }}>
-              {filtradas.length} de {unidades.length}
-            </span>
-          </div>
-        </div>
-
-        {/* Lista — único contenedor con scroll, sin anidar dentro de otro scroll.
-            overscrollBehavior:'contain' evita que, al llegar al principio/final de esta
-            lista, el gesto de scroll siga encadenándose hacia la página de fondo. */}
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', padding: '14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {filtradas.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 40, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#94a3b8' }}>
-              No se encontraron unidades
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+              <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#f8fafc' }}>
+                  <Search size={16} color="#94a3b8" />
+                  <input
+                    type="text"
+                    placeholder="Buscar por número de unidad o placa..."
+                    value={busqueda}
+                    onChange={e => setBusqueda(e.target.value)}
+                    autoFocus
+                    style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a' }}
+                  />
+                  <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8' }}>
+                    {filtradas.length} de {unidadesActuales.length}
+                  </span>
+                </div>
+              </div>
+              <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', padding: '14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {filtradas.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: 40, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#94a3b8' }}>
+                    No se encontraron unidades
+                  </div>
+                ) : (
+                  filtradas.map(u => (
+                    <UnidadCard
+                      key={u.id}
+                      unidad={u}
+                      seleccionada={!!seleccionLocal.find(x => x.id === u.id)}
+                      esMasCercana={u.id === masCercanaId}
+                      prioritarioNomina={prioritarioNomina}
+                      onToggle={() => toggle(u)}
+                    />
+                  ))
+                )}
+              </div>
             </div>
-          ) : (
-            filtradas.map(u => (
-              <UnidadCard
-                key={u.id}
-                unidad={u}
-                seleccionada={!!seleccionLocal.find(x => x.id === u.id)}
-                esMasCercana={u.id === masCercanaId}
-                prioritarioNomina={prioritarioNomina}
-                onToggle={() => toggle(u)}
-              />
-            ))
-          )}
-        </div>
+          </div>
+        ) : (
+          <>
+            <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#f8fafc' }}>
+                <Search size={16} color="#94a3b8" />
+                <input
+                  type="text"
+                  placeholder="Buscar por número de unidad o placa..."
+                  value={busqueda}
+                  onChange={e => setBusqueda(e.target.value)}
+                  autoFocus
+                  style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a' }}
+                />
+                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8' }}>
+                  {filtradas.length} de {unidadesActuales.length}
+                </span>
+              </div>
+            </div>
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', padding: '14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {filtradas.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: 40, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#94a3b8' }}>
+                  No se encontraron unidades
+                </div>
+              ) : (
+                filtradas.map(u => (
+                  <UnidadCard
+                    key={u.id}
+                    unidad={u}
+                    seleccionada={!!seleccionLocal.find(x => x.id === u.id)}
+                    esMasCercana={u.id === masCercanaId}
+                    prioritarioNomina={prioritarioNomina}
+                    onToggle={() => toggle(u)}
+                  />
+                ))
+              )}
+            </div>
+          </>
+        )}
 
         {/* Actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '16px 24px', borderTop: '1px solid #e2e8f0' }}>

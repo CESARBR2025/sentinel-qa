@@ -139,8 +139,7 @@ export async function listarUnidadesParaDespacho(
     // Sin ubicación (ningún oficial de la tripulación reportó posición) no hay forma de
     // saber si está cerca — se descarta en vez de mostrarla como "más cercana" al final.
     .filter((u): u is typeof u & { distanciaKm: number } => u.distanciaKm != null)
-    .sort((a, b) => a.distanciaKm - b.distanciaKm)
-    .slice(0, TOP_UNIDADES_CERCANAS);
+    .sort((a, b) => a.distanciaKm - b.distanciaKm);
 
   if (prioritaria && !cercanas.find((u) => u.id === prioritaria.id)) {
     return [prioritaria, ...cercanas];

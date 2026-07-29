@@ -9,9 +9,12 @@
 
 | Paquete | Versión |
 |---------|--------|
+| @base-ui/react | ^1.6.0 |
 | @react-google-maps/api | ^2.20.8 |
 | @sentropic/graphify | ^0.17.1 |
 | better-auth | ^1.6.7 |
+| class-variance-authority | ^0.7.1 |
+| clsx | ^2.1.1 |
 | date-fns | ^4.1.0 |
 | docx | ^9.7.1 |
 | drizzle-orm | ^0.45.2 |
@@ -31,7 +34,10 @@
 | react | 19.2.4 |
 | react-dom | 19.2.4 |
 | react-signature-canvas | ^1.1.0-alpha.2 |
+| shadcn | ^4.16.0 |
 | sonner | ^2.0.7 |
+| tailwind-merge | ^3.6.0 |
+| tw-animate-css | ^1.4.0 |
 | zustand | ^5.0.14 |
 
 ## Desarrollo
@@ -54,6 +60,9 @@
 | tsx | ^4.21.0 |
 | typescript | 5.9.3 |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

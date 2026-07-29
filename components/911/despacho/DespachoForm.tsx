@@ -190,6 +190,9 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
           unidades={unidadesDisponibles}
           seleccionadas={unidadesSeleccionadas}
           prioritarioNomina={prioritario?.nomina}
+          incidenteLat={incidenteLat}
+          incidenteLng={incidenteLng}
+          prioritarioPatrullaId={prioritarioPatrullaId}
           onConfirmar={sel => { setUnidadesSeleccionadas(sel); setModalAbierto(false) }}
           onClose={() => setModalAbierto(false)}
         />

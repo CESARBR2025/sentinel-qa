@@ -3,6 +3,9 @@ import SeccionLiberacion from '@/features/via/infracciones/components/SeccionLib
 import { Card } from '@/features/via/infracciones/components/ui/Card';
 import MapSectionCiudadano from '@/features/via/infracciones/components/MapSectionCiudadano';
 import PinBarrier from '@/features/via/infracciones/components/PinBarrier';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { InfraccionesService } from '@/features/via/infracciones/service';
 import { InfraccionesRepository } from '@/features/via/infracciones/repository';
 import { verificarCookieCiudadano } from '@/lib/via/auth-ciudadano';
@@ -157,39 +160,52 @@ export default async function InfraccionCiudadanoPage({
 
     return (
         <main className="min-h-dvh overflow-x-hidden bg-slate-100">
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap');
+                .jb-mono { font-family: "JetBrains Mono", monospace; }
+                .folio-kicker { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.6); display: inline-flex; align-items: center; gap: 8px; }
+                .folio-kicker::before { content: ""; width: 18px; height: 2px; background: rgba(255,255,255,0.4); display: inline-block; }
+                .folio-title { font-family: "Barlow Condensed", sans-serif; font-weight: 800; letter-spacing: 0.01em; }
+                .section-kicker { font-family: "JetBrains Mono", monospace; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #1f355a; font-weight: 600; }
+                .section-bar { width: 3px; height: 14px; background: #1f355a; border-radius: 2px; flex-shrink: 0; }
+                .mono-label { font-family: "JetBrains Mono", monospace; font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #94a3b8; }
+                .amount-display { font-family: "Barlow Condensed", sans-serif; font-weight: 800; letter-spacing: 0.01em; }
+            `}</style>
             <div className="bg-gradient-to-br from-primary-dark via-primary to-primary relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5" />
                 <div className="absolute top-20 -right-5 w-24 h-24 rounded-full bg-white/5" />
                 <div className="absolute -bottom-8 left-1/3 w-32 h-32 rounded-full bg-white/5" />
-                <div className="max-w-4xl mx-auto px-6 py-8 relative">
+                <div className="max-w-4xl mx-auto px-6 py-9 relative">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                                 <FileText size={20} className="text-white/70" strokeWidth={1.5} />
                             </div>
                             <div>
-                                <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-white/70">SSPM · San Juan del Río</p>
-                                <p className="text-xs text-white/50 -mt-0.5">Sistema Digital de Infracciones</p>
+                                <p className="folio-kicker">SSPM · San Juan del Río</p>
+                                <p className="text-xs text-white/50 mt-1">Sistema Digital de Infracciones</p>
                             </div>
                         </div>
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
+                        <Badge className={`h-auto rounded-full px-3 py-1.5 gap-1.5 border-transparent ${status.bg} ${status.text}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
                             {status.label}
-                        </div>
+                        </Badge>
                     </div>
-                    <div className="mt-5">
-                        <h1 className="text-[28px] font-medium text-white tracking-tight">Folio #{infraccion.folio}</h1>
-                        <p className="text-sm text-white/70 mt-1.5 flex items-center gap-2">
-                            <Clock size={13} strokeWidth={1.5} />
+                    <div className="mt-6">
+                        <h1 className="folio-title text-[44px] text-white uppercase leading-none">
+                            Folio <span className="text-white/55">#{infraccion.folio}</span>
+                        </h1>
+                        <p className="jb-mono text-[10.5px] text-white/55 mt-3 tracking-widest uppercase flex items-center gap-2">
+                            <Clock size={12} strokeWidth={2} />
                             {formatDate(infraccion.created_at || infraccion.fechaInfraccion)}
-                            <span className="text-white/30">&middot;</span>
+                            <span className="text-white/25">&middot;</span>
                             <span>{timeAgo(infraccion.created_at || infraccion.fechaInfraccion)}</span>
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-6 -mt-5 relative z-10 pb-10 space-y-5">
+            <div className="max-w-4xl mx-auto px-6 -mt-5 relative z-10 pb-10 space-y-6">
                 {isPagada ? (
                     <Card className="overflow-hidden p-0 shadow-[0_4px_12px_rgba(34,197,94,0.2)]">
                         <div className="bg-gradient-to-br from-green-700 to-green-900 px-6 pt-6 pb-5 relative overflow-hidden">
@@ -197,18 +213,18 @@ export default async function InfraccionCiudadanoPage({
                             <div className="absolute top-12 -right-3 w-16 h-16 rounded-full bg-white/5" />
                             <div className="relative">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/15 text-white text-[10px] font-medium tracking-wider uppercase">
-                                        <CheckCircle2 size={11} strokeWidth={1.5} className="mr-1" />
+                                    <Badge className="h-auto rounded-md bg-white/15 text-white text-[10px] tracking-wider uppercase border-transparent">
+                                        <CheckCircle2 size={11} strokeWidth={1.5} />
                                         Infracción Pagada
-                                    </span>
+                                    </Badge>
                                 </div>
                                 <div className="flex items-baseline gap-2 mt-2">
-                                    <span className="text-[36px] font-medium text-white leading-none tracking-tight">${infraccion.total_pesos}</span>
-                                    <span className="text-sm text-green-300/80 font-medium">MXN</span>
+                                    <span className="amount-display text-[42px] text-white leading-none">${infraccion.total_pesos}</span>
+                                    <span className="jb-mono text-[11px] tracking-widest uppercase text-green-300/80">MXN</span>
                                 </div>
-                                <div className="flex items-baseline gap-2 mt-1">
+                                <div className="flex items-baseline gap-2 mt-1.5">
                                     <span className="text-xl font-medium text-green-200/90 leading-none">{totalUmasPagar.toFixed(1)}</span>
-                                    <span className="text-xs text-green-300/70 font-medium">UMAs</span>
+                                    <span className="jb-mono text-[10px] tracking-widest uppercase text-green-300/70">UMAs</span>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +233,7 @@ export default async function InfraccionCiudadanoPage({
                             {Number(infraccion.descuento_aplicado) > 0 && (
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-slate-500">Descuento aplicado</span>
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-50 border border-green-200 text-green-700 text-xs font-medium">—{Number(infraccion.descuento_aplicado)}%</span>
+                                    <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">—{Number(infraccion.descuento_aplicado)}%</Badge>
                                 </div>
                             )}
                             <MontoRow label="Total pagado" value={`${totalUmasPagar.toFixed(1)} UMAs`} />
@@ -226,7 +242,7 @@ export default async function InfraccionCiudadanoPage({
                                     <Clock size={11} strokeWidth={1.5} /> Pagado el {formatDate(infraccion.created_at)}
                                 </p>
                             )}
-                            <div className="h-px bg-slate-200" />
+                            <Separator />
                             <MontoRow label="Estatus" value="Pagada" valueClass="text-green-600" />
                         </div>
                     </Card>
@@ -237,18 +253,18 @@ export default async function InfraccionCiudadanoPage({
                             <div className="absolute top-12 -right-3 w-16 h-16 rounded-full bg-white/5" />
                             <div className="relative">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/15 text-white text-[10px] font-medium tracking-wider uppercase">Monto a pagar</span>
+                                    <Badge className="h-auto rounded-md bg-white/15 text-white text-[10px] tracking-wider uppercase border-transparent">Monto a pagar</Badge>
                                     {descuentoValido && (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-500/20 text-green-300 text-[10px] font-medium tracking-wider uppercase border border-green-400/30">—{Number(infraccion.descuento_aplicado)}% desc</span>
+                                        <Badge variant="outline" className="h-auto rounded-md bg-green-500/20 text-green-300 text-[10px] tracking-wider uppercase border-green-400/30">—{Number(infraccion.descuento_aplicado)}% desc</Badge>
                                     )}
                                 </div>
                                 <div className="flex items-baseline gap-2 mt-2">
-                                    <span className="text-[36px] font-medium text-white leading-none tracking-tight">${infraccion.total_pesos}</span>
-                                    <span className="text-sm text-white/70 font-medium">MXN</span>
+                                    <span className="amount-display text-[42px] text-white leading-none">${infraccion.total_pesos}</span>
+                                    <span className="jb-mono text-[11px] tracking-widest uppercase text-white/70">MXN</span>
                                 </div>
-                                <div className="flex items-baseline gap-2 mt-1">
+                                <div className="flex items-baseline gap-2 mt-1.5">
                                     <span className="text-xl font-medium text-white/80 leading-none">{totalUmasPagar.toFixed(1)}</span>
-                                    <span className="text-xs text-white/60 font-medium">UMAs equivalentes</span>
+                                    <span className="jb-mono text-[10px] tracking-widest uppercase text-white/60">UMAs equivalentes</span>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +274,7 @@ export default async function InfraccionCiudadanoPage({
                                 <>
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-slate-500">Descuento aplicado</span>
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium">—{Number(infraccion.descuento_aplicado)}%</span>
+                                        <Badge variant="outline" className="bg-amber-50 border-amber-200 text-amber-700">—{Number(infraccion.descuento_aplicado)}%</Badge>
                                     </div>
                                     <MontoRow label="Total UMAs a pagar" value={`${totalUmasPagar.toFixed(1)} UMAs`} />
                                     <p className="text-[11px] text-amber-600 flex items-center gap-1"><Clock size={11} strokeWidth={1.5} /> Vence {formatDate(infraccion.fecha_limite_descuento)}</p>
@@ -266,7 +282,7 @@ export default async function InfraccionCiudadanoPage({
                             ) : (
                                 <p className="text-xs text-slate-400 italic">No aplica descuento</p>
                             )}
-                            <div className="h-px bg-slate-200" />
+                            <Separator />
                             <MontoRow label="Estatus" value="Por pagar" valueClass="text-red-500" />
                         </div>
                     </Card>
@@ -274,13 +290,12 @@ export default async function InfraccionCiudadanoPage({
 
                 {mostrarPago && (
                     <section className="bg-white rounded-xl border border-slate-200 shadow-card overflow-hidden">
-                        <div className="px-6 py-[18px] border-b border-slate-200 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
-                                <CreditCard size={18} className="text-green-500" strokeWidth={1.5} />
-                            </div>
+                        <div className="px-6 py-4 border-b border-slate-200 flex items-center gap-3 bg-gradient-to-b from-slate-50 to-white">
+                            <span className="section-bar" />
+                            <CreditCard size={15} className="text-primary" strokeWidth={2} />
                             <div>
-                                <h3 className="text-[15px] font-medium text-slate-900">Pago Digital</h3>
-                                <p className="text-xs text-slate-500">Plataforma segura</p>
+                                <h3 className="section-kicker">Pago Digital</h3>
+                                <p className="text-[11px] text-slate-400 mt-0.5">Plataforma segura</p>
                             </div>
                         </div>
                         <PagoInfraccion
@@ -297,17 +312,26 @@ export default async function InfraccionCiudadanoPage({
                 {(infraccion.articulo_numero || infraccion.fraccion_numero) && (
                     <Card>
                         <div>
-                            <div className="flex items-start justify-between gap-3 mb-3">
-                                <h3 className="text-sm font-medium text-slate-900 flex items-center gap-2">
-                                    <span className="w-6 h-6 rounded-md bg-slate-50 flex items-center justify-center">
-                                        <Gavel size={13} className="text-slate-700" strokeWidth={1.5} />
-                                    </span>
-                                    Fundamento Legal
+                            <div className="flex items-start justify-between gap-3 mb-4">
+                                <h3 className="flex items-center gap-2.5">
+                                    <span className="section-bar" />
+                                    <Gavel size={14} className="text-primary" strokeWidth={2} />
+                                    <span className="section-kicker">Fundamento Legal</span>
                                 </h3>
-                                <a href="https://drive.google.com/file/d/1nmrn69QltkjZlFvjJ4NeXuLnPNkBH0s-/view?pli=1" target="_blank" rel="noopener noreferrer"
-                                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-500 text-xs font-medium hover:bg-slate-50 hover:text-slate-700 active:scale-[0.99] transition-all">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="shrink-0 text-slate-500 hover:text-slate-700"
+                                    render={
+                                        <a
+                                            href="https://drive.google.com/file/d/1nmrn69QltkjZlFvjJ4NeXuLnPNkBH0s-/view?pli=1"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        />
+                                    }
+                                >
                                     <ExternalLink size={12} strokeWidth={1.5} /> Reglamento de Tránsito
-                                </a>
+                                </Button>
                             </div>
                             <div className="space-y-3">
                                 {infraccion.articulo_numero && (
@@ -316,7 +340,7 @@ export default async function InfraccionCiudadanoPage({
                                             <BookOpen size={18} className="text-primary" strokeWidth={1.5} />
                                         </div>
                                         <div className="min-w-0">
-                                            <span className="inline-block px-2 py-1 rounded-md bg-primary text-white text-[11px] font-medium font-mono leading-none mb-1.5">Art. {infraccion.articulo_numero}</span>
+                                            <Badge className="jb-mono mb-1.5">Art. {infraccion.articulo_numero}</Badge>
                                             {infraccion.articulo_descripcion && <p className="text-sm text-slate-700 leading-snug">{infraccion.articulo_descripcion}</p>}
                                         </div>
                                     </div>
@@ -327,7 +351,7 @@ export default async function InfraccionCiudadanoPage({
                                             <List size={18} className="text-slate-600" strokeWidth={1.5} />
                                         </div>
                                         <div className="min-w-0">
-                                            <span className="inline-block px-2 py-1 rounded-md bg-slate-600 text-white text-[11px] font-medium font-mono leading-none mb-1.5">Frac. {infraccion.fraccion_numero}</span>
+                                            <Badge variant="secondary" className="jb-mono mb-1.5">Frac. {infraccion.fraccion_numero}</Badge>
                                             {infraccion.fraccion_descripcion && <p className="text-sm text-slate-700 leading-snug">{infraccion.fraccion_descripcion}</p>}
                                         </div>
                                     </div>
@@ -354,15 +378,19 @@ export default async function InfraccionCiudadanoPage({
                         documentosLiberacion={infraccion.documentosLiberacion || {}}
                         esTitular={infraccion.esTitular}
                         urlOrdenSalida={infraccion.urlOrdenSalida}
+                        nombreGrua={infraccion.nombreGrua}
+                        gruaLatitud={infraccion.gruaLatitud}
+                        gruaLongitud={infraccion.gruaLongitud}
+                        gruaDireccion={infraccion.gruaDireccion}
                     />
                 )}
 
                 <Card>
-                    <Section icon={Car} iconBg="bg-primary-muted" iconColor="text-primary" title="Vehículo">
+                    <Section icon={Car} title="Vehículo">
                         {infraccion.placa && (
                             <div className="px-4 py-2.5 rounded-lg bg-primary-muted border border-primary/20 mb-4 inline-block">
-                                <p className="text-[10px] font-medium tracking-widest text-primary uppercase mb-0.5">Placa</p>
-                                <p className="text-lg font-medium text-primary tracking-[0.2em] font-mono">{infraccion.placa}</p>
+                                <p className="mono-label mb-0.5">Placa</p>
+                                <p className="jb-mono text-lg font-semibold text-primary tracking-[0.2em]">{infraccion.placa}</p>
                             </div>
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
@@ -376,7 +404,7 @@ export default async function InfraccionCiudadanoPage({
                 </Card>
 
                 <Card>
-                    <Section icon={MapPin} iconBg="bg-primary-muted" iconColor="text-primary" title="Ubicación">
+                    <Section icon={MapPin} title="Ubicación">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
                             <FieldWithIcon icon={MapPin} label="Calle" value={sanitize(infraccion.calle)} />
                             <FieldWithIcon icon={MapPin} label="Número" value={sanitize(infraccion.numero, 's/n')} />
@@ -396,16 +424,15 @@ export default async function InfraccionCiudadanoPage({
     );
 }
 
-function Section({ icon: Icon, title, iconBg, iconColor, children }: {
-    icon: React.ElementType; title: string; iconBg: string; iconColor: string; children: React.ReactNode;
+function Section({ icon: Icon, title, children }: {
+    icon: React.ElementType; title: string; children: React.ReactNode;
 }) {
     return (
         <div>
-            <h3 className="text-sm font-medium text-slate-900 mb-3 flex items-center gap-2">
-                <span className={`w-6 h-6 rounded-md ${iconBg} flex items-center justify-center`}>
-                    <Icon size={13} className={iconColor} strokeWidth={1.5} />
-                </span>
-                {title}
+            <h3 className="flex items-center gap-2.5 mb-4">
+                <span className="section-bar" />
+                <Icon size={14} className="text-primary" strokeWidth={2} />
+                <span className="section-kicker">{title}</span>
             </h3>
             <div>{children}</div>
         </div>
@@ -417,8 +444,8 @@ function FieldWithIcon({ icon: Icon, label, value }: {
 }) {
     return (
         <div>
-            <p className="text-xs font-medium text-slate-500">{label}</p>
-            <p className="text-sm text-slate-900 mt-0.5 leading-snug flex items-center gap-1.5">
+            <p className="mono-label">{label}</p>
+            <p className="text-sm text-slate-900 mt-1 leading-snug flex items-center gap-1.5">
                 <Icon size={13} className="text-slate-400 shrink-0" strokeWidth={1.5} />
                 {value}
             </p>
