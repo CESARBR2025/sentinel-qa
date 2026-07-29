@@ -78,7 +78,7 @@ async function notificarPagoForzado(infraccionId: string) {
   try {
     const result = await query(
       `SELECT correo_infractor, nombre_infractor, apellido_paterno_infractor,
-              apellido_materno_infractor, folio, placa, monto_final
+              apellido_materno_infractor, folio, placa, monto_final, pin_acceso
        FROM via.v2_infracciones WHERE id = $1`,
       [infraccionId],
     );
@@ -95,6 +95,7 @@ async function notificarPagoForzado(infraccionId: string) {
       folio: row.folio as string,
       placa: (row.placa as string) || "N/A",
       monto: Number(row.monto_final),
+      pinAcceso: row.pin_acceso as string | undefined,
     });
   } catch (err) {
     console.error("[EMAIL][PAGO-FORZADO]", err);

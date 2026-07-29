@@ -76,3 +76,16 @@ export async function listarUnidadesConTripulacionRaw(): Promise<Record<string, 
   )
   return result.rows
 }
+
+export async function listarIdsUnidadesOcupadas(incidenteIdActual: string | null): Promise<Set<string>> {
+  const result = await query<{ unidad_ext_id: string }>(
+    `SELECT DISTINCT idu.unidad_ext_id
+     FROM incidente_despacho_unidades idu
+     JOIN incidente_despacho id2 ON id2.id = idu.despacho_id
+     JOIN incidentes i ON i.id = id2.incidente_id
+     WHERE i.estatus IN ('en_despacho', 'en_sitio')
+       AND ($1::uuid IS NULL OR i.id != $1::uuid)`,
+    [incidenteIdActual],
+  )
+  return new Set(result.rows.map(r => r.unidad_ext_id))
+}

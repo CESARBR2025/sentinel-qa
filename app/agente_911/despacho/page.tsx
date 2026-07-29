@@ -1,9 +1,9 @@
-import { redirect }        from 'next/navigation'
-import { auth }            from '@/lib/auth'
-import { headers }         from 'next/headers'
+import { redirect } from 'next/navigation'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { TablonDespacho }  from '@/components/911/despacho/TablonDespacho'
+import { TablonDespacho } from '@/components/911/despacho/TablonDespacho'
 import { tieneAccesoSeccion, obtenerRolNombre } from '@/lib/911/permisos'
 
 export default async function DespachoPage() {
@@ -19,7 +19,8 @@ export default async function DespachoPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}} />

@@ -2,10 +2,13 @@ import { emailLayout, emailStyles, inlineStyles } from './layout'
 
 export interface EnviarCorreoOrdenLiberacionParams {
   correoTitular: string
+  correoInfractor?: string
   nombreTitular: string
   idInfraccion: string
   folio: string
   placa: string
+  pinAcceso?: string
+  pdfBuffer?: Buffer
 }
 
 export function templateOrdenLiberacion(
@@ -29,6 +32,7 @@ export function templateOrdenLiberacion(
     <div style="${inlineStyles(emailStyles.folioBox)}">
       <p style="margin:0 0 8px 0;"><b>Folio:</b> ${data.folio}</p>
       <p style="margin:0 0 8px 0;"><b>Placa:</b> ${data.placa}</p>
+      ${data.pinAcceso ? `<p style="margin:0 0 8px 0;"><b>Código de acceso:</b> <span style="font-family:monospace;font-size:16px;letter-spacing:0.2em;background:#f0f0f0;padding:2px 8px;border-radius:4px;">${data.pinAcceso}</span></p>` : ''}
       <p style="margin:0;"><b>Estatus:</b> LIBERADO</p>
     </div>
 
@@ -51,7 +55,7 @@ export function templateOrdenLiberacion(
 
   const text = `
 SECRETARÍA DE SEGURIDAD PÚBLICA MUNICIPAL
-SAN JUAN DEL RÍO
+Fiscalía de San Juan del Río
 
 Estimado(a) ${data.nombreTitular},
 
@@ -61,6 +65,7 @@ DATOS:
 ─────────────────────────────────────────
 Folio:                ${data.folio}
 Placa:                ${data.placa}
+${data.pinAcceso ? `Código de acceso:     ${data.pinAcceso}` : ''}
 Estatus:              LIBERADO
 
 Para descargar su orden de liberación, ingrese al siguiente enlace:
@@ -69,7 +74,7 @@ ${urlVistaCiudadano}
 Atentamente,
 
 Secretaría de Seguridad Pública Municipal
-San Juan del Río, Qro.
+Fiscalía de San Juan del Río, Qro.
 `
 
   return { html, text }

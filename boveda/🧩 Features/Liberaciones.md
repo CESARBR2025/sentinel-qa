@@ -28,23 +28,48 @@ flowchart TD
 | `lib/agente_liberaciones/repository.ts` | `obtenerLiberaciones`, `actualizarInfractor`, `obtenerConceptoPorFraccion`, `obtenerSolicitudPorInfraccion`, `obtenerDocumentosPorSolicitud`, `actualizarRevisionDocumento`, `actualizarInfraccionEstatus`, `insertarOrdenPago` |
 | `lib/agente_liberaciones/service.ts` | Orquestación de flujo de liberación |
 | `lib/agente_liberaciones/actions.ts` | Server actions: capturar infractor, revisar documento, finalizar revisión, generar orden de pago |
+| `app/api/via/descargar-orden/[infraccionId]/route.ts` | Endpoint ciudadano que sirve/genera la orden de salida PDF on-demand, la guarda en Expediente y envía correo con PIN + PDF adjunto |
+| `lib/ordenSalida/generarOrdenSalida.ts` | Genera el PDF de la orden de salida con jsPDF, marca de agua desde `public/marca_agua/plantilla-orden-salida.png`, opacidad vía GState |
 
 ## BD (schema `via`)
 
 | Tabla | Columnas clave | Uso |
 |-------|---------------|-----|
-| `via.v2_infracciones` | `id`, `folio`, `estatus`, `estatus_dependencia`, `placa`, `es_titular`, `nombre_infractor`, `correo_infractor`, `nombre_titular_liberacion`, `descuento_aplicado`, `fraccion_id`, `url_orden_salida_liberaciones` | Infracciones en proceso de liberación |
+| `via.v2_infracciones` | `id`, `folio`, `estatus`, `estatus_dependencia`, `placa`, `pin_acceso`, `es_titular`, `nombre_infractor`, `apellido_paterno_infractor`, `apellido_materno_infractor`, `correo_infractor`, `nombre_titular_liberacion`, `appaterno_titular_liberacion`, `apmaterno_titular_liberacion`, `descuento_aplicado`, `fraccion_id`, `url_orden_salida_liberaciones` | Infracciones en proceso de liberación. `es_titular` determina si el nombre para la orden sale del infractor o del titular |
 | `via.v2_solicitudes_liberacion` | `id`, `infraccion_id`, `tipo_liberacion`, `es_empresa`, `nombre_empresa`, `rfc_empresa`, `estatus` | Solicitudes de liberación |
 | `via.v2_documentos_liberacion` | `id`, `solicitud_id`, `tipo_documento`, `url_documento`, `estatus_revision`, `observaciones`, `fecha_revision` | Documentos para revisión |
 | `via.v2_ordenes_pago_sa7` | `id`, `infraccion_id`, `folio_infraccion`, `concepto_id`, `orden_pago_id`, `estatus`, `url_pago`, `total_pesos`, `total_umas`, `request_payload` | Órdenes de pago |
 | `via.v2_fracciones_ley` | `id`, `clasificacion` | Fracciones para mapeo de concepto SA7 |
 | `via.v2_catalogo_conceptos_sa7` | `id`, `concept_id`, `clasificacion_type` | Conceptos SA7 |
 
+## Dashboard de 5 tabs
+
+El dashboard del agente organiza las infracciones en 5 tabs según `estatus_dependencia`:
+
+| Tab | Clave UI | `estatus_dependencia` incluidos | `estatus` requerido |
+|---|---|---|---|
+| Captura de datos | `VEHICULO_EN_CORRALON` | `VEHICULO_EN_CORRALON` | `REGISTRADA` |
+| En espera de documentos | `MESA_DE_CONTROL_PENDIENTE_DOCS` | `MESA_DE_CONTROL_PENDIENTE_DOCS`, `MESA_DE_CONTROL_RECHAZADA` | `REGISTRADA` |
+| Revisión documentos | `MESA_DE_CONTROL_REVISION` | `MESA_DE_CONTROL_REVISION` | `REGISTRADA` |
+| Pendiente pago | `PENDIENTE_PAGO` | `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO`, `LIBERACION_PENDIENTE_DOCUMENTOS` | `PENDIENTE_PAGO` |
+| Liberadas | `LIBERADA_POR_INFRACCION` | estados finales (LIBERADA_*, FINALIZADA_*) | `CERRADA`, `FINALIZADA` |
+
+El mapa centralizado `TAB_ESTATUS` en `LiberacionesDashboard.tsx` es la fuente única de verdad para esta asignación.
+
 ## Reglas de negocio
 
-1. Las infracciones elegibles para liberación tienen `estatus_dependencia` en: `ESPERA_REVISION`, `EN_PROCESO_LIBERACIONES`, `MESA_DE_CONTROL_REVISION`, `MESA_DE_CONTROL_PENDIENTE_DOCS`
+1. Las infracciones elegibles para liberación tienen `estatus_dependencia` en: `VEHICULO_EN_CORRALON`, `MESA_DE_CONTROL_PENDIENTE_DOCS`, `MESA_DE_CONTROL_REVISION`, `MESA_DE_CONTROL_RECHAZADA`, `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO`, `LIBERACION_PENDIENTE_DOCUMENTOS`
 2. Los documentos se revisan individualmente: cada `tipo_documento` tiene su propio `estatus_revision` (ENVIADO → APROBADO/RECHAZADO)
 3. `finalizarRevisionAction` verifica que todos los documentos estén aprobados antes de continuar
 4. `actualizarInfractor` actualiza datos del infractor y cambia estatus a `MESA_DE_CONTROL_PENDIENTE_DOCS`
-5. La orden de pago se genera contra SA7 y almacena el payload completo
-6. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último
+5. La orden de pago solo se genera desde `RevisionDocumentosSection` tras aprobar todos los documentos. `generarOrdenPagoAction` tiene guard server-side que exige `PENDIENTE_PAGO_LIBERACION`.
+6. `confirmar-liberacion/route.ts` tiene guard server-side que exige `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO` o `LIBERACION_PENDIENTE_DOCUMENTOS` antes de mutar.
+7. El dashboard de agente (`obtenerLiberaciones`) filtra por `tipo_garantia = 'VEHICULO'`. Infracciones con otro tipo de garantía (PLACA, TARJETA, LICENCIA) no aparecen en las tabs de liberación — el flujo de liberación es exclusivo para vehículos.
+8. `capturarInfractorAction` valida `tipo_garantia = 'VEHICULO'` antes de cambiar el estatus. Si no es vehículo, devuelve error.
+9. La orden de salida (PDF) se genera en `confirmar-liberacion/route.ts` tras el pago. Si por alguna razón no se guardó (error de Expediente, flujo alternativo), el endpoint `GET /api/via/descargar-orden/[infraccionId]` la regenera on-demand y la guarda en Expediente. Está protegido con `verificarAccesoCiudadano`.
+10. En la vista pública (`SeccionLiberacion.tsx`), cuando `esLiberada === true` aparece una sección principal destacada con un botón para descargar la orden de salida — sin depender de `url_orden_salida_liberaciones`.
+11. El nombre del titular en la orden de salida se resuelve con esta regla: `esEmpresa` → nombre del resp. fiscal; `es_titular === true` → nombre del infractor; otherwise → nombre_titular_liberacion. Aplica también a apellidos (`tPaterno`/`tMaterno`).
+12. El correo de orden de liberación (`enviarCorreoOrdenLiberacion`) se envía al titular y al infractor, incluye el `pin_acceso` como código de acceso, y adjunta el PDF de la orden de salida como archivo.
+13. El correo de pago confirmado (`enviarCorreoPagoConfirmado`) también incluye `pin_acceso` como código de desbloqueo.
+14. La marca de agua en el PDF de la orden de salida se carga desde `public/marca_agua/plantilla-orden-salida.png` usando `fs.readFileSync` (no `fetch`), con opacidad 1.0 vía `GState`.
+15. Los documentos se obtienen con `DISTINCT ON (tipo_documento)` para traer solo el último

@@ -2,18 +2,24 @@ import { SA7Repository } from "./repository";
 import { GenerarOrdenPagoDTO, ResultadoSA7 } from "./types";
 import { mapRowToOrdenPago } from "./mapper";
 
-const SA7_URL = "https://sanjuandelrio.sytes.net:3044/api/sasiete/qas/generar-orden-completa";
+const SA7_URL =
+  "https://sanjuandelrio.sytes.net:3044/api/sasiete/qas/generar-orden-completa";
 const CONCEPTO_FIJO = "31378";
 
 export class SA7Service {
-  static async obtenerConceptoId(clasificacion: string): Promise<number | null> {
+  static async obtenerConceptoId(
+    clasificacion: string,
+  ): Promise<number | null> {
     return SA7Repository.obtenerConceptoIdPorClasificacion(clasificacion);
   }
 
-  static async generarOrdenPago(payload: GenerarOrdenPagoDTO): Promise<ResultadoSA7> {
-    const baseUrl = process.env.NODE_ENV === "production"
-      ? "https://via-v2.vercel.app"
-      : "http://localhost:3000";
+  static async generarOrdenPago(
+    payload: GenerarOrdenPagoDTO,
+  ): Promise<ResultadoSA7> {
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? "https://via-v2.vercel.app"
+        : "http://localhost:3000";
 
     const tokenRes = await fetch(`${baseUrl}/api/auth/token-guest`, {
       method: "POST",
@@ -33,6 +39,7 @@ export class SA7Service {
     if (!tokenGuest) {
       throw new Error("Token guest inválido");
     }
+    console.log(tokenGuest);
 
     let descuento = 1;
     if (payload.descuentoAplicado === 70) descuento = 0.3;
@@ -45,7 +52,12 @@ export class SA7Service {
       rfc: "",
       conceptosIds: [payload.conceptoId || CONCEPTO_FIJO],
       cantidades: { [payload.conceptoId || CONCEPTO_FIJO]: descuento },
-      referencias: { [payload.conceptoId || CONCEPTO_FIJO]: [`${payload.nombreUsuario} ${payload.apellidosUsuario}`, ""] },
+      referencias: {
+        [payload.conceptoId || CONCEPTO_FIJO]: [
+          `${payload.nombreUsuario} ${payload.apellidosUsuario}`,
+          "",
+        ],
+      },
       id_usuario_general: "17336",
       tipo_tramite: "via_v2_cobro_infracciones_online",
       folio: payload.folio,
@@ -78,7 +90,10 @@ export class SA7Service {
     };
 
     if (!result.ordenPagoId || !result.estatus) {
-      console.error("SA7 no devolvió orden_pago_id/estatus en headers:", result);
+      console.error(
+        "SA7 no devolvió orden_pago_id/estatus en headers:",
+        result,
+      );
       throw new Error("El servicio de pagos no devolvió los datos de la orden");
     }
 

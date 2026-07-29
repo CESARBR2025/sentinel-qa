@@ -11,7 +11,7 @@ const BTN: React.CSSProperties    = { display: 'inline-flex', alignItems: 'cente
 const ERR: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#dc2626', marginTop: 4 }
 const LBL: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 8 }
 
-export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = null, onDespachado, modo = 'despacho', prioritario, prioritarioPatrullaId = null }: {
+export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = null, onDespachado, modo = 'despacho', prioritario, prioritarioPatrullaId = null, incidentePrioridad = null }: {
   incidenteId: string
   incidenteLat?: number | null
   incidenteLng?: number | null
@@ -19,6 +19,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
   modo?: 'despacho' | 'refuerzo'
   prioritario?: { nombre: string; nomina: string } | null
   prioritarioPatrullaId?: string | null
+  incidentePrioridad?: string | null
 }) {
   const esRefuerzo = modo === 'refuerzo'
 
@@ -37,14 +38,16 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
     if (incidenteLat != null) params.set('lat', String(incidenteLat))
     if (incidenteLng != null) params.set('lng', String(incidenteLng))
     if (prioritarioPatrullaId) params.set('prioritarioPatrullaId', prioritarioPatrullaId)
+    params.set('incidenteId', incidenteId)
     fetch(`/api/despacho/unidades-cercanas?${params.toString()}`)
       .then(res => res.json())
       .then((data: UnidadParaDespacho[]) => {
-        // La unidad del oficial que levantó el rondín ya está en el lugar (es la prioritaria) —
-        // se saca de "cercanas" para no ofrecerla de nuevo, y se guarda aparte para mostrar
-        // su tripulación completa en "Personal prioritario".
-        setUnidadPrioritaria(prioritarioPatrullaId ? (data.find(u => u.id === prioritarioPatrullaId) ?? null) : null)
-        setUnidadesDisponibles(prioritarioPatrullaId ? data.filter(u => u.id !== prioritarioPatrullaId) : data)
+        const prioritaria = prioritarioPatrullaId ? (data.find(u => u.id === prioritarioPatrullaId) ?? null) : null
+        setUnidadPrioritaria(prioritaria)
+        setUnidadesDisponibles(data)
+        if (prioritaria) {
+          setUnidadesSeleccionadas([prioritaria])
+        }
       })
       .catch(() => setUnidadesDisponibles([]))
       .finally(() => setCargandoUnidades(false))
@@ -62,7 +65,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
     if (esRefuerzo) {
       if (unidadesSeleccionadas.length === 0) { setErrorForm('Agrega al menos una unidad de refuerzo'); return }
     } else {
-      if (unidadesSeleccionadas.length === 0) { setErrorForm('Selecciona al menos una unidad'); return }
+      if (unidadesSeleccionadas.length === 0 && !tienePrioritario) { setErrorForm('Selecciona al menos una unidad'); return }
       if (totalOficiales === 0 && !tienePrioritario) { setErrorForm('La unidad seleccionada no tiene oficiales'); return }
     }
     setErrorForm(null)
@@ -138,11 +141,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
           <label style={LBL}>Personal prioritario</label>
 
           {tienePrioritario && (
-            unidadPrioritaria ? (
-              <div style={{ marginBottom: 10 }}>
-                <UnidadResumenCard unidad={unidadPrioritaria} esPrioritaria />
-              </div>
-            ) : (
+            unidadPrioritaria ? null : (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, padding: '8px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8 }}>
                 <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#15803d', fontWeight: 600 }}>
                   {prioritario!.nombre}
@@ -160,7 +159,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
           {unidadesSeleccionadas.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
               {unidadesSeleccionadas.map(u => (
-                <UnidadResumenCard key={u.id} unidad={u} prioritarioNomina={prioritario?.nomina} onQuitar={() => quitarUnidad(u)} />
+                <UnidadResumenCard key={u.id} unidad={u} prioritarioNomina={prioritario?.nomina} esPrioritaria={u.id === prioritarioPatrullaId} onQuitar={() => quitarUnidad(u)} />
               ))}
             </div>
           ) : !tienePrioritario && (
@@ -190,6 +189,11 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
           unidades={unidadesDisponibles}
           seleccionadas={unidadesSeleccionadas}
           prioritarioNomina={prioritario?.nomina}
+          incidenteLat={incidenteLat}
+          incidenteLng={incidenteLng}
+          prioritarioPatrullaId={prioritarioPatrullaId}
+          incidenteId={incidenteId}
+          incidentePrioridad={incidentePrioridad}
           onConfirmar={sel => { setUnidadesSeleccionadas(sel); setModalAbierto(false) }}
           onClose={() => setModalAbierto(false)}
         />

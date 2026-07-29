@@ -14,11 +14,13 @@ export async function GET(req: NextRequest) {
   const lat = searchParams.get('lat')
   const lng = searchParams.get('lng')
   const prioritarioPatrullaId = searchParams.get('prioritarioPatrullaId')
+  const incidenteId = searchParams.get('incidenteId')
 
   const lista = await listarUnidadesParaDespacho(
     lat !== null ? Number(lat) : null,
     lng !== null ? Number(lng) : null,
     prioritarioPatrullaId,
+    incidenteId,
   )
 
   return NextResponse.json(lista)

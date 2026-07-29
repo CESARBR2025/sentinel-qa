@@ -99,6 +99,7 @@
 | `via/ciudadano/iniciar-solicitud` | POST | (Pendiente) |
 | `via/ciudadano/subir-archivo` | POST | (Pendiente) |
 | `via/curp` | POST | (Pendiente) |
+| `via/descargar-orden/[infraccionId]` | GET | (Pendiente) |
 | `via/exp-digital/guardar-docs` | POST | (Pendiente) |
 | `via/exp-digital/guardar-evidencias` | POST | (Pendiente) |
 | `via/infracciones/[id]` | GET | (Pendiente) |
@@ -119,6 +120,13 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
 
 
 

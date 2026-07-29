@@ -590,6 +590,23 @@ export async function createDespacho(formData: FormData) {
       const unidades: { extId: string; placa: string }[] = JSON.parse(formData.get('unidades') as string ?? '[]')
       const elementos: { extId: string; nomina: string; nombre: string }[] = JSON.parse(formData.get('elementos') as string ?? '[]')
 
+      if (unidades.length > 0) {
+        const ocupadas = await cliente.query<{ unidad_ext_id: string; folio: string }>(
+          `SELECT DISTINCT idu.unidad_ext_id, i.folio
+           FROM incidente_despacho_unidades idu
+           JOIN incidente_despacho id2 ON id2.id = idu.despacho_id
+           JOIN incidentes i ON i.id = id2.incidente_id
+           WHERE i.estatus IN ('en_despacho', 'en_sitio')
+             AND i.id != $1
+             AND idu.unidad_ext_id = ANY($2::text[])`,
+          [incidenteId, unidades.map(u => u.extId)],
+        )
+        if (ocupadas.rows.length > 0) {
+          const detalle = ocupadas.rows.map(r => `${r.unidad_ext_id} (folio ${r.folio})`).join(', ')
+          throw new ValidationError(`No se puede despachar: unidad(es) ya asignada(s) a otro incidente activo: ${detalle}`)
+        }
+      }
+
       await cliente.query('BEGIN')
 
       // Si ya existe un despacho (rondín con prioritario), reusarlo; si no, crear uno nuevo
@@ -604,6 +621,25 @@ export async function createDespacho(formData: FormData) {
           [incidenteId, session.user.id],
         )
         despachoId = despacho.rows[0].id
+      }
+
+      // Ajustar atiende_caso del elemento prioritario del rondín (si existe)
+      // según si su unidad sigue entre las seleccionadas ahora
+      const prioritario = await cliente.query<{ id: string; patrulla_id: string | null }>(
+        `SELECT ide.id, o.patrulla_id
+         FROM incidente_despacho_elementos ide
+         LEFT JOIN ofi_oficiales o ON o.no_nomina = ide.elemento_nomina AND o.ofi_estatus = 'activo'
+         WHERE ide.despacho_id = $1 AND ide.es_prioritario = true
+         LIMIT 1`,
+        [despachoId],
+      )
+      if (prioritario.rows[0]) {
+        const sigueSeleccionada = prioritario.rows[0].patrulla_id != null &&
+          unidades.some(u => u.extId === prioritario.rows[0].patrulla_id)
+        await cliente.query(
+          `UPDATE incidente_despacho_elementos SET atiende_caso = $2 WHERE id = $1`,
+          [prioritario.rows[0].id, sigueSeleccionada],
+        )
       }
 
       for (const u of unidades) {
@@ -670,6 +706,23 @@ export async function enviarRefuerzos(formData: FormData) {
 
       if (unidades.length === 0 && elementos.length === 0)
         throw new ValidationError('Agrega al menos una unidad o un elemento de refuerzo')
+
+      if (unidades.length > 0) {
+        const ocupadas = await cliente.query<{ unidad_ext_id: string; folio: string }>(
+          `SELECT DISTINCT idu.unidad_ext_id, i.folio
+           FROM incidente_despacho_unidades idu
+           JOIN incidente_despacho id2 ON id2.id = idu.despacho_id
+           JOIN incidentes i ON i.id = id2.incidente_id
+           WHERE i.estatus IN ('en_despacho', 'en_sitio')
+             AND i.id != $1
+             AND idu.unidad_ext_id = ANY($2::text[])`,
+          [incidenteId, unidades.map(u => u.extId)],
+        )
+        if (ocupadas.rows.length > 0) {
+          const detalle = ocupadas.rows.map(r => `${r.unidad_ext_id} (folio ${r.folio})`).join(', ')
+          throw new ValidationError(`No se puede enviar refuerzo: unidad(es) ya asignada(s) a otro incidente activo: ${detalle}`)
+        }
+      }
 
       await cliente.query('BEGIN')
 

@@ -28,6 +28,26 @@ export async function GET(
       return NextResponse.json({ pagado: false, error: "No autorizado" }, { status: 401 });
     }
 
+    // Solo se puede confirmar el pago de liberación si el agente ya aprobó los
+    // documentos (PENDIENTE_PAGO_LIBERACION), o si ya se está procesando/reintentando
+    // esta misma confirmación (LIBERACION_EN_PROCESO / LIBERACION_PENDIENTE_DOCUMENTOS,
+    // manejados por el lock de idempotencia y el fallback más abajo).
+    const infraccionRow = await query<{ estatus_dependencia: string }>(
+      `SELECT estatus_dependencia FROM via.v2_infracciones WHERE id = $1`,
+      [infraccionId],
+    );
+    const estatusPrevio = infraccionRow.rows[0]?.estatus_dependencia;
+    if (
+      estatusPrevio !== "PENDIENTE_PAGO_LIBERACION" &&
+      estatusPrevio !== "LIBERACION_EN_PROCESO" &&
+      estatusPrevio !== "LIBERACION_PENDIENTE_DOCUMENTOS"
+    ) {
+      return NextResponse.json(
+        { pagado: false, error: "La infracción no está en etapa de pago" },
+        { status: 400 },
+      );
+    }
+
     const orden = await SA7Repository.resolverOrdenVigente(infraccionId);
     if (!orden || !orden.ordenPagoId) {
       return NextResponse.json({ pagado: false, error: "Sin orden vigente" }, { status: 400 });
@@ -67,9 +87,22 @@ export async function GET(
       if (rawData) {
         const dbData = rawData as any;
         const esEmpresa = dbData.rfc_empresa || dbData.es_empresa;
-        const tNombre = !esEmpresa ? dbData.nombre_titular_liberacion : dbData.nombre_resp_fiscal;
-        const tPaterno = !esEmpresa ? dbData.appaterno_titular_liberacion : dbData.appaterno_resp_fiscal;
-        const tMaterno = !esEmpresa ? dbData.apmaterno_titular_liberacion : dbData.apmaterno_resp_fiscal;
+        const esTitular = dbData.es_titular === true;
+        const tNombre = esEmpresa
+          ? dbData.nombre_resp_fiscal
+          : esTitular
+            ? dbData.nombre_infractor
+            : dbData.nombre_titular_liberacion;
+        const tPaterno = esEmpresa
+          ? dbData.appaterno_resp_fiscal
+          : esTitular
+            ? dbData.apellido_paterno_infractor
+            : dbData.appaterno_titular_liberacion;
+        const tMaterno = esEmpresa
+          ? dbData.apmaterno_resp_fiscal
+          : esTitular
+            ? dbData.apellido_materno_infractor
+            : dbData.apmaterno_titular_liberacion;
         const nombreRecibe = `${tNombre || ''} ${tPaterno || ''} ${tMaterno || ''}`.trim().replace(/\s+/g, ' ');
 
         const dataParaPDF = {
@@ -96,8 +129,9 @@ export async function GET(
           curp_titular: dbData.curp_titular_liberacion,
         };
 
+        let pdfBuffer: Buffer | undefined;
         try {
-          const pdfBuffer = await generarOrdenSalidaVehiculo({ data: dataParaPDF });
+          pdfBuffer = await generarOrdenSalidaVehiculo({ data: dataParaPDF });
 
           // Subir a expediente v2
           const ref = await subir(
@@ -117,10 +151,13 @@ export async function GET(
           try {
             await enviarCorreoOrdenLiberacion({
               correoTitular,
+              correoInfractor: dbData.correo_infractor,
               nombreTitular,
               idInfraccion: infraccionId,
               folio: dbData.folio || '—',
               placa: dbData.placa || '—',
+              pinAcceso: dbData.pin_acceso || undefined,
+              pdfBuffer,
             });
           } catch (err) {
             console.error("[CONFIRMAR-LIBERACION] Error al enviar correo:", err);

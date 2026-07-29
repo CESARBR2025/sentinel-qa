@@ -54,6 +54,7 @@ export function agruparUnidadesConTripulacion(rows: Record<string, unknown>[]): 
         ultimaLat: null,
         ultimaLng: null,
         ultimaUbicacionEn: null,
+        ocupada: false,
       })
     }
     const unidad = porPatrulla.get(id)!

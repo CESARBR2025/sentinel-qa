@@ -1,5 +1,5 @@
 import QRCode from 'qrcode'
-import { sendMail } from './mailer'
+import { sendMail, type MailAttachment } from './mailer'
 import {
   templateAsignacionFiscalia,
   type EnviarCorreoAsignacionFiscaliaParams,
@@ -66,11 +66,25 @@ export async function enviarCorreoOrdenLiberacion(
     urlVistaCiudadano,
   })
 
+  const destinatarios = [data.correoTitular]
+  if (data.correoInfractor && data.correoInfractor !== data.correoTitular) {
+    destinatarios.push(data.correoInfractor)
+  }
+
+  const attachments: MailAttachment[] = []
+  if (data.pdfBuffer) {
+    attachments.push({
+      filename: `orden_salida_${data.folio.replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`,
+      content: data.pdfBuffer,
+    })
+  }
+
   await sendMail({
-    to: data.correoTitular,
+    to: destinatarios.join(', '),
     subject: `SSPM - Orden de Liberación #${data.folio}`,
     text,
     html,
+    attachments,
   })
 }
 

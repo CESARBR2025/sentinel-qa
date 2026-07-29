@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
+import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 import { MapPin, Clock, Phone, MessageSquare, Radio, Shield, CheckCircle2, AlertTriangle, FileText } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -34,12 +35,6 @@ interface CardData {
 }
 
 type TabKey = 'pendientes' | 'en_despacho' | 'atendidos'
-
-const PRIO_COLORS: Record<string, { bar: string; dot: string; text: string }> = {
-  ALTA:  { bar: '#dc2626', dot: '#dc2626', text: '#991b1b' },
-  MEDIA: { bar: '#d97706', dot: '#d97706', text: '#92400e' },
-  BAJA:  { bar: '#64748b', dot: '#64748b', text: '#475569' },
-}
 
 function tiempoRelativo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime()
@@ -252,8 +247,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
   card: CardData; abierto: boolean; tab: TabKey
   onToggle: () => void; onCambio: () => void
 }) {
-  const prio = card.prioridad?.toUpperCase() ?? 'SIN PRIORIDAD'
-  const pc = PRIO_COLORS[prio] ?? PRIO_COLORS.BAJA
+  const pc = colorPorPrioridad(card.prioridad)
   const urgente = slaPorcentaje(card.fechaHoraInicio, card.prioridad) >= 75
 
   return (
@@ -261,7 +255,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
       <div
         onClick={onToggle}
         style={{
-          borderLeft: `4px solid ${pc.bar}`,
+          borderLeft: `4px solid ${pc.principal}`,
           borderTop: '1px solid #e2e8f0', borderRight: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0',
           padding: '16px 20px', cursor: 'pointer',
           transition: 'background .1s',
@@ -271,6 +265,13 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }}>{card.folio}</span>
           <CanalBadge canal={card.canal} origenRondin={card.origenRondin} />
+          <span style={{
+            fontFamily: 'Inter', fontSize: 9, fontWeight: 700, padding: '1px 6px',
+            background: pc.fondo, color: pc.oscuro, border: `1px solid ${pc.principal}`,
+            borderRadius: 2, textTransform: 'uppercase', letterSpacing: '0.04em',
+          }}>
+            {card.prioridad?.toUpperCase() ?? 'SIN PRIORIDAD'}
+          </span>
           {urgente && tab === 'pendientes' && (
             <span style={{ fontFamily: 'Inter', fontSize: 8, fontWeight: 700, padding: '1px 6px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 2 }}>
               ⏱ SLA
@@ -380,6 +381,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
                   nomina: card.prioritarioNomina || card.elementos?.find(e => e.esPrioritario)?.nomina || '',
                 } : undefined}
                 prioritarioPatrullaId={card.prioritarioPatrullaId ?? null}
+                incidentePrioridad={card.prioridad}
               />
             </div>
           )}
@@ -390,7 +392,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
               <div style={{ fontFamily: 'Inter', fontSize: 11, fontWeight: 700, color: '#c2410c', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
                 Enviar refuerzos
               </div>
-              <DespachoForm incidenteId={card.id} incidenteLat={card.latitud ?? null} incidenteLng={card.longitud ?? null} modo="refuerzo" onDespachado={onCambio} />
+              <DespachoForm incidenteId={card.id} incidenteLat={card.latitud ?? null} incidenteLng={card.longitud ?? null} modo="refuerzo" onDespachado={onCambio} incidentePrioridad={card.prioridad} />
             </div>
           )}
 

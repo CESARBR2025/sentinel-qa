@@ -81,19 +81,22 @@ export default function RevisionDocumentosSection({
     const [finalizando, setFinalizando] = useState(false);
     const [finalizadoEstatus, setFinalizadoEstatus] = useState<string | null>(null);
     const [paso, setPaso] = useState<'save' | 'order' | null>(null);
+    const [ordenPagoError, setOrdenPagoError] = useState<string | null>(null);
 
     const handleFinalizar = async () => {
         if (stats.pendientes > 0) return;
         setFinalizando(true);
         setPaso('save');
+        setOrdenPagoError(null);
         try {
             const result = await finalizarRevisionAction(infraccionId);
             if (result.error) throw new Error(result.error);
             setFinalizadoEstatus(result.estatus ?? null);
 
+            let ordenFallida = false;
             if (result.estatus === 'PENDIENTE_PAGO' && result.folio && result.concepto_id) {
                 setPaso('order');
-                await generarOrdenPagoAction({
+                const ordenResult = await generarOrdenPagoAction({
                     infraccion_id: infraccionId,
                     nombre_usuario: result.nombre_usuario ?? '',
                     apellidos_usuario: result.apellidos_usuario ?? '',
@@ -102,8 +105,12 @@ export default function RevisionDocumentosSection({
                     correoInfractor: result.correo_infractor ?? '',
                     descuentoAplicado: String(result.descuento_aplicado || ''),
                 });
+                if (!ordenResult.ok) {
+                    setOrdenPagoError(ordenResult.message ?? 'Error desconocido al generar la orden de pago');
+                    ordenFallida = true;
+                }
             }
-            onValidated?.();
+            if (!ordenFallida) onValidated?.();
         } catch (err) {
             console.error('[FINALIZAR]', err);
         } finally {
@@ -485,6 +492,16 @@ export default function RevisionDocumentosSection({
                         <AlertTriangle size={16} style={{ color: '#d97706', flexShrink: 0 }} />
                         <span style={{ fontFamily: '"JetBrains Mono",monospace', fontSize: 11, fontWeight: 500, color: '#92400e' }}>
                             Se requiere corrección del ciudadano titular, espera a que los suba nuevamente
+                        </span>
+                    </div>
+                ) : finalizadoEstatus === 'PENDIENTE_PAGO' && ordenPagoError ? (
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: 12,
+                        padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca',
+                    }}>
+                        <AlertTriangle size={16} style={{ color: '#dc2626', flexShrink: 0 }} />
+                        <span style={{ fontFamily: '"JetBrains Mono",monospace', fontSize: 11, fontWeight: 500, color: '#991b1b' }}>
+                            Documentos aprobados, pero falló la generación de la orden de pago: {ordenPagoError}
                         </span>
                     </div>
                 ) : finalizadoEstatus === 'PENDIENTE_PAGO' ? (

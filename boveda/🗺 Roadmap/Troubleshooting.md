@@ -322,4 +322,112 @@ Un ciudadano anónimo nunca tiene esa sesión, así que ambos siempre regresaban
 - En `documentos/[infraccionId]/route.ts`: verificar contra el `infraccionId` de la ruta.
 - En `subir-archivo/route.ts`: el body solo trae `solicitudId`, así que primero se resuelve el `infraccionId` con la nueva función `obtenerInfraccionIdDeSolicitud(solicitudId)` (`lib/agente_infracciones/repository.ts`) y luego se valida la cookie contra ese id.
 
+---
+
+## Modal "Liberación por infracción" → Guardar y generar orden de pago: null value in column "orden_pago_id" (2026-07-28)
+
+**Síntoma**: al hacer clic en "Guardar y generar orden de pago" en el modal de liberación por infracción, la acción falla con:
+```
+el valor nulo en la columna «orden_pago_id» de la relación «v2_ordenes_pago_sa7» viola la restricción de no nulo
+```
+
+**Causa raíz (síntoma inmediato)**: `generarOrdenPagoAction` (`lib/agente_liberaciones/actions.ts`) llama al servicio externo SA7 (`https://sanjuandelrio.sytes.net:3044/api/sasiete/generar-orden-completa`) y lee el resultado de los headers de la respuesta (`x-orden-pago-id`, `x-estatus`, etc.), pero **nunca validaba `responseSA7.ok`**. Cuando SA7 responde con error, esos headers vienen vacíos y el código igual ejecutaba el `INSERT INTO via.v2_ordenes_pago_sa7` con `orden_pago_id = null`, que es `NOT NULL`.
+
+**Causa raíz real (por qué SA7 devolvía 500)**: en `generarOrdenPagoAction` el default de `descuento` era **0**:
+```ts
+let descuento = 0
+const descuentoNum = Number(descuentoAplicado)
+if (descuentoNum) {
+  if (descuentoNum === 70) descuento = 0.3
+  else if (descuentoNum === 50) descuento = 0.5
+  if (cantidad) descuento = cantidad
+}
+```
+Si el usuario no aplicaba 50%/70% de descuento (caso normal: pagar el 100%), `descuento` se quedaba en `0` y se mandaba `cantidades: {"31378": 0}` a SA7 — una cantidad de **cero** para generar la orden, que el servicio rechaza con un 500 genérico (`"No se puede mostrar la página. Error interno en el servidor."`, la página de error default de su servidor, no un JSON con detalle).
+
+La confirmación vino de comparar con `app/api/via/sa7/generar-orden-pago/route.ts:98`, el flujo de creación de infracción que sí funciona: ahí el default es `let descuento = 1` (100%, sin descuento) y solo baja a 0.3/0.5 si aplica.
+
+El mismo patrón (llamar SA7 y confiar en los headers sin chequear `.ok`) también existe en `lib/agente_infracciones/service.ts:69-96` (`procesarCapturaInfractor`), pero ahí está envuelto en un `try/catch` que traga el error silenciosamente y regresa `success: true` sin orden de pago — un bug relacionado, pendiente de revisar (`task_237f3d22`).
+
+**Fix** en `lib/agente_liberaciones/actions.ts`:
+1. Default de `descuento` corregido de `0` a `1`, igual que en `generar-orden-pago/route.ts`.
+2. Si `!responseSA7.ok`, leer el body (texto/JSON) y regresar `{ ok: false, message }` con el mensaje de SA7, sin tocar la BD (siguiendo el patrón de `obtenerTokenGuest` en `lib/shared/infracciones.ts:31`).
+3. Si `orden_pago_id` sigue viniendo nulo aun con `ok`, regresar error igual antes del `INSERT`.
+
+**Bug adicional en el modal (por qué "parecía" funcionar aunque SA7 siguiera fallando)**: `handleFinalizar` en `features/liberaciones/components/RevisionDocumentosSection.tsx` hace dos pasos independientes: (1) `finalizarRevisionAction` — cambia el estatus de la infracción en BD a `PENDIENTE_PAGO`, éxito real e independiente de SA7; (2) `generarOrdenPagoAction` — cuyo resultado **se descartaba sin revisar**. Como `onValidated?.()` se llamaba siempre (sin importar si la orden falló), y el padre (`LiberacionesDashboard.tsx:681`) hace `setRevisionModalId(null)` ahí mismo, el modal se cerraba de inmediato aunque la orden de pago nunca se hubiera generado — dando la impresión de éxito (el registro "desaparece" de la vista porque su estatus sí cambió), cuando en realidad no hay fila en `v2_ordenes_pago_sa7` para ese folio.
+
+**Fix**: capturar el resultado de `generarOrdenPagoAction`; si `!ok`, guardar el mensaje en un estado dedicado (`ordenPagoError`) y **no** llamar a `onValidated?.()` (el modal se queda abierto mostrando un banner rojo con el error en vez del banner verde de éxito).
+
+**Causa raíz definitiva del 500 de SA7 (2026-07-28, segunda vuelta)**: el 500 seguía apareciendo aun con `descuento=1` y con el chequeo de `.ok`. La diferencia real está en cómo se obtiene el `token guest`:
+- Los 3 flujos que **sí** funcionan (`app/api/via/sa7/generar-orden-pago/route.ts`, `app/api/via/infracciones/iniciar-proceso/route.ts`, `features/via/saSiete/service.ts`) piden el token a través de la ruta interna `app/api/auth/token-guest/route.ts`. Esa ruta, por un bug de nombres de campo, termina mandándole a SA7 `codigo_invitacion = INV-<año>-<fecha>` (código fijo del día) y `nombre_invitado = INV-<Date.now()>` (**único por request**, tomado del `codigo_invitacion` que mandó el caller).
+- Los 2 flujos rotos (`generarOrdenPagoAction` en `lib/agente_liberaciones/actions.ts` y `procesarCapturaInfractor` en `lib/agente_infracciones/service.ts`) usan `obtenerTokenGuest()` (`lib/shared/infracciones.ts`), que llama a SA7 **directo** mandando `codigo_invitacion` y `nombre_invitado` con el **mismo valor repetido** (`INV-<año>-<fecha>`, fijo para todo el día). Con múltiples requests el mismo día, SA7 recibe el mismo "invitado" repetido una y otra vez, lo cual dispara su 500 genérico (`"No se puede mostrar la página. Error interno en el servidor."`).
+
+**Fix** en `lib/shared/infracciones.ts` → `obtenerTokenGuest()`: generar `nombre_invitado` único por llamada (`INV-${Date.now()}`) en vez de reusar el código fijo del día, igual que hace el flujo que sí funciona.
+
 **Contexto**: encontrado auditando el flujo de `InfraccionCiudadanoPage` como Fase 0 de un plan más amplio para exponer esta misma lógica como API para una app Flutter — las fases siguientes reusan `verificarCookieCiudadano` extendido para aceptar también un header `Authorization: Bearer` (ya que Flutter no maneja cookies httpOnly de forma nativa).
+
+---
+
+## Dashboard de liberaciones pierde casos completos (corregido)
+
+**Síntoma**: Al agente rechazar un documento, o al fallar la generación del PDF/correo post-pago, el caso desaparecía del dashboard.
+
+**Causa raíz**: El switch de tabs en `LiberacionesDashboard.tsx` usaba `default: return false` con filtros restrictivos que no incluían:
+- `MESA_DE_CONTROL_RECHAZADA` en la tab "En espera de documentos"
+- `LIBERACION_EN_PROCESO` y `LIBERACION_PENDIENTE_DOCUMENTOS` en la tab "Pendiente pago"
+
+**Fix**: Se introdujo `TAB_ESTATUS` (mapa centralizado `Record<EstatusLiberaciones, string[]>`) que gobierna los 3 sitios donde se filtra por estatus (switch de `registrosFiltrados`, `useMemo` de `estadisticas`, `STATUS_BADGE`). Los nuevos badges:
+- `MESA_DE_CONTROL_RECHAZADA` → "Rechazado — reenviando" (rojo)
+- `LIBERACION_EN_PROCESO` → "Procesando pago" (ámbar)
+- `LIBERACION_PENDIENTE_DOCUMENTOS` → "Requiere atención" (ámbar)
+
+El botón "Revisar documentos" ahora también aparece para `MESA_DE_CONTROL_RECHAZADA`.
+
+---
+
+## Ciudadano no puede completar subida de documentos si se interrumpe (corregido)
+
+**Síntoma**: Si la subida se interrumpía después del documento 1 o 2 de N (red, tamaño de archivo, cierre accidental), el formulario de subida desaparecía para siempre.
+
+**Causa raíz**: `SeccionLiberacion.tsx` originalmente ocultaba el formulario con `!tieneDocs` (si ya existía al menos 1 documento). Al interrumpirse la subida a medias, `tieneDocs` pasaba a `true` y el formulario no se volvía a mostrar, aunque la infracción siguiera en `MESA_DE_CONTROL_PENDIENTE_DOCS`.
+
+**Fix**: El gate del formulario ahora usa `estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS'` sin importar si hay documentos parciales. El estatus lo controla el servidor (`finalizarRevisionAction` lo cambia a `MESA_DE_CONTROL_REVISION` solo cuando el agente aprueba todos).
+
+---
+
+## Ciudadano podía pagar antes de que existiera revisión de documentos (corregido)
+
+**Síntoma**: Se creaba una orden de pago SA7 real mientras el estatus seguía en `MESA_DE_CONTROL_PENDIENTE_DOCS`.
+
+**Causa raíz**: `CapturarInfractorSection.tsx` (tab 1) originalmente llamaba `generarOrdenPagoAction` inmediatamente tras guardar datos del infractor, sin esperar a que existieran documentos ni revisión.
+
+**Fix**: 
+- `CapturarInfractorSection.tsx` ya no llama `generarOrdenPagoAction` — solo guarda datos y pasa a tab 2.
+- `generarOrdenPagoAction` ahora tiene guard server-side que exige `estatus_dependencia === 'PENDIENTE_PAGO_LIBERACION'`.
+- `confirmar-liberacion/route.ts` ahora exige `PENDIENTE_PAGO_LIBERACION`, `LIBERACION_EN_PROCESO` o `LIBERACION_PENDIENTE_DOCUMENTOS` antes de consultar SA7.
+
+---
+
+## Dashboard muestra infracciones no vehiculares en tabs de liberación (corregido)
+
+**Síntoma**: Un ciudadano no podía subir documentos desde la vista pública, aunque el dashboard del agente mostraba la infracción en "En espera de documentos".
+
+**Causa raíz**: `obtenerLiberaciones` (`lib/agente_liberaciones/repository.ts`) no filtraba por `tipo_garantia`. Infracciones con `tipo_garantia = 'PLACA'` (o TARJETA/LICENCIA) cuyo `estatus_dependencia` coincidía con los valores de liberación aparecían en el dashboard, pero la vista pública solo renderiza `SeccionLiberacion` cuando `tipo_garantia === 'VEHICULO'` (`app/infracciones/[id]/page.tsx:340`). El ciudadano veía el estatus "pendiente de documentos" sin poder subir nada.
+
+Adicionalmente, `capturarInfractorAction` no validaba `tipo_garantia`, permitiendo que un agente procesara infracciones no vehiculares por el flujo de liberación.
+
+**Fix**:
+- `obtenerLiberaciones`: agregado `AND tipo_garantia = 'VEHICULO'` a la query del dashboard.
+- `capturarInfractorAction`: agregado SELECT previo que verifica `tipo_garantia` antes de mutar estatus; devuelve error si no es `'VEHICULO'`.
+
+---
+
+## Botón "Descargar orden de salida" no aparece aunque la infracción esté liberada (corregido)
+
+**Síntoma**: Un ciudadano veía "Vehículo liberado" en la página, pero no había botón para descargar la orden de salida.
+
+**Causa raíz**: El botón de descarga (línea 944 de `SeccionLiberacion.tsx`) estaba gated por `urlOrdenSalida && urlOrdenSalida !== 'NO_DATA'`. Si `confirmar-liberacion` no logró guardar el PDF en Expediente (error de subida, flujo alternativo que liberó sin pasar por `confirmar-liberacion`), `url_orden_salida_liberaciones` quedaba como `null` y el botón no se renderizaba.
+
+**Fix**:
+- Creado `GET /api/via/descargar-orden/[infraccionId]` que genera el PDF on-demand si no existe, lo guarda en Expediente y lo sirve como descarga. Reusa toda la infraestructura existente (`subir()`, `parsearRef()`, `generarOrdenSalidaVehiculo`, etc.).
+- `SeccionLiberacion.tsx` ahora muestra una sección principal destacada cuando `esLiberada === true`, con botón de descarga apuntando a la nueva ruta — sin depender de `url_orden_salida_liberaciones`.

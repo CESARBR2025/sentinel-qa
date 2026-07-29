@@ -124,6 +124,10 @@ export interface InfraccionDetalleDTO {
   total_umas: number | null;
   created_at: string | null;
   urlOrdenSalida: string | null;
+  nombreGrua: string | null;
+  gruaLatitud: number | null;
+  gruaLongitud: number | null;
+  gruaDireccion: string | null;
   clasificacion: string;
   id: string;
   folio: string;

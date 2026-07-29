@@ -28,17 +28,26 @@
 | `SMTP_PASS` | No | — |
 | `X_API_KEY` | No | CUS |
 | `NODE_ENV` | No | — |
-| `KEY_USER_VALIDATE_STATUS` | No | SA7 |
+| `NEXT_PUBLIC_WS_EXPEDIENTE` | No | SA7 |
+| `KEY_USER_VALIDATE_STATUS` | No | — |
 | `KEY_PD_VALIDATE_STATUS` | No | — |
 | `NEXT_PUBLIC_FLOTA_API_KEY` | No | FLOTA DE POLICIAS |
 | `GEO_LOCATION_KEY` | No | Búsqueda inteligente de motivo (paso 4 captura infracción) — LLM compatible OpenAI (ej. DeepSeek) |
 | `LLM_BASE_URL` | No | — |
 | `LLM_MODEL` | No | — |
-| `EXPEDIENTE_URL` | No | Nuevo expediente |
+| `EXPEDIENTE_URL` | No | Nuevo expediente digital |
 | `EXPEDIENTE_API_KEY` | No | — |
 | `EXPEDIENTE_GUEST_CODE` | No | — |
 | `EXPEDIENTE_FOLDER` | No | — |
+| `EXPEDIENTE_SSPM_INFRACCIONES` | Sí | — |
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
 
 
 

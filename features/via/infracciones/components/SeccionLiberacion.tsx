@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { abrirDocumento } from '@/lib/shared/abrirDocumento';
+import MapSectionCiudadano from './MapSectionCiudadano';
 import {
     Scale,
     FileText,
@@ -87,6 +88,10 @@ type Props = {
     documentosLiberacion: Record<string, { url: string; label: string }>;
     esTitular: boolean | null;
     urlOrdenSalida?: string | null;
+    nombreGrua?: string | null;
+    gruaLatitud?: number | null;
+    gruaLongitud?: number | null;
+    gruaDireccion?: string | null;
 };
 
 function getEstatusConfig(estatus: string) {
@@ -101,7 +106,7 @@ function getEstatusConfig(estatus: string) {
             label: 'Sube toda la información requerida a continuación',
         };
     }
-    if (s === 'espera_revision') {
+    if (s === 'mesa_de_control_revision') {
         return {
             icon: Clock,
             bgClass: 'bg-amber-50',
@@ -163,12 +168,15 @@ export default function SeccionLiberacion({
     documentosLiberacion,
     esTitular,
     urlOrdenSalida,
+    nombreGrua,
+    gruaLatitud,
+    gruaLongitud,
+    gruaDireccion,
 }: Props) {
 
     const [selectedType, setSelectedType] = useState<'empresa' | 'titular' | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<Record<string, File>>({});
     const [submitting, setSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [nombreEmpresa, setNombreEmpresa] = useState('');
     const [rfcEmpresa, setRfcEmpresa] = useState('');
@@ -427,7 +435,63 @@ export default function SeccionLiberacion({
 
             <div className="p-6 space-y-5">
 
+                {/* ─── ORDEN DE SALIDA (infracción liberada) ─── */}
+                {esLiberada && (
+                    <div className="rounded-xl border border-green-500/30 bg-gradient-to-br from-green-50 to-emerald-50 p-8 text-center space-y-6">
+                        <div className="w-20 h-20 rounded-full bg-green-100 border-2 border-green-300 flex items-center justify-center mx-auto shadow-sm">
+                            <CheckCircle2 size={40} className="text-green-600" strokeWidth={1.5} />
+                        </div>
+                        <div className="space-y-2">
+                            <h4 className="text-xl font-bold text-slate-900" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
+                                VEHÍCULO LIBERADO
+                            </h4>
+                            <p className="text-sm text-slate-500 max-w-md mx-auto">
+                                El proceso de liberación ha sido completado. Descarga la orden de salida para presentarla en el corralón y recoger tu vehículo.
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => window.open(`/api/via/descargar-orden/${infraccionId}`, '_blank')}
+                            className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-green-600 hover:bg-green-700 active:bg-green-800 active:scale-[0.99] text-white text-sm font-bold shadow-md hover:shadow-lg transition-all duration-150"
+                        >
+                            <FileText size={20} strokeWidth={2} />
+                            DESCARGAR ORDEN DE SALIDA
+                        </button>
+
+                        {/*nombreGrua && (
+                            <div className="border-t border-green-500/20 pt-6 space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                                        <span className="text-amber-700 text-lg font-bold" style={{ fontFamily: "'JetBrains Mono',monospace" }}>!</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-sm font-semibold text-slate-900">
+                                            Tu vehículo está alojado en:
+                                        </p>
+                                        <p className="text-base font-bold text-amber-700" style={{ fontFamily: "'Barlow Condensed',sans-serif" }}>
+                                            GRÚA {nombreGrua}
+                                        </p>
+                                        {gruaDireccion && (
+                                            <p className="text-xs text-slate-500 mt-0.5">
+                                                {gruaDireccion}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                {gruaLatitud && gruaLongitud && (
+                                    <div className="rounded-lg overflow-hidden border border-slate-200">
+                                        <MapSectionCiudadano lat={gruaLatitud} lng={gruaLongitud} />
+                                    </div>
+                                )}
+                                <p className="text-xs text-slate-400 text-left">
+                                    Acude al corralón con tu orden de salida para recoger tu vehículo.
+                                </p>
+                            </div>
+                        )*/}
+                    </div>
+                )}
+
                 {/* STATUS BADGE */}
+                {!esLiberada && (
                 <div className="flex flex-col gap-3">
                     <div
                         className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium w-full ${estatusConfig.bgClass} ${estatusConfig.borderClass} ${estatusConfig.textClass}`}
@@ -437,6 +501,7 @@ export default function SeccionLiberacion({
 
                     </div>
                 </div>
+                )}
 
                 {/* DATOS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -460,10 +525,10 @@ export default function SeccionLiberacion({
                 </div>
 
                 {/* SEPARADOR */}
-                {!tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && <div className="h-px bg-slate-200" />}
+                {estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS' && <div className="h-px bg-slate-200" />}
 
-                {/* FORMULARIO (solo si no hay docs) */}
-                {!esLiberada && !tieneDocs && !submitted && estatusDependencia !== 'ESPERA_REVISION' && (
+                {/* FORMULARIO (mientras la infracción siga en espera de documentos, sin importar si ya hay una subida parcial) */}
+                {!esLiberada && estatusDependencia === 'MESA_DE_CONTROL_PENDIENTE_DOCS' && (
                     <>
                         {/* SELECCIÓN TIPO */}
                         <div className="space-y-3">
@@ -493,7 +558,7 @@ export default function SeccionLiberacion({
                         </div>
 
                         {/* TIPO LIBERACIÓN (auto desde DB) */}
-                        {selectedType === 'titular' && (
+                        {selectedType === 'titular' && subtipoLabel && (
                             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 flex items-center gap-3">
                                 <div className="w-9 h-9 rounded-lg bg-primary-muted flex items-center justify-center shrink-0">
                                     <FileText size={16} className="text-primary" strokeWidth={1.5} />
@@ -501,9 +566,19 @@ export default function SeccionLiberacion({
                                 <div>
                                     <p className="text-xs text-slate-500">Tipo de liberación</p>
                                     <p className="text-sm font-medium text-slate-900">
-                                        {subtipoLabel || 'No determinado'}
+                                        {subtipoLabel}
                                     </p>
                                 </div>
+                            </div>
+                        )}
+
+                        {/* Motivo de retención no reconocido: no se puede determinar qué documentos pedir */}
+                        {selectedType === 'titular' && !subtipoLabel && (
+                            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 flex items-start gap-3">
+                                <AlertCircle size={16} className="text-red-600 shrink-0 mt-0.5" strokeWidth={1.5} />
+                                <p className="text-sm text-red-700">
+                                    No se pudo determinar el tipo de liberación para esta infracción. Contacta a la autoridad para que complete el motivo de retención antes de continuar.
+                                </p>
                             </div>
                         )}
 
@@ -718,24 +793,9 @@ export default function SeccionLiberacion({
                 )}
 
                 {/* DOCUMENTOS SUBIDOS */}
-                {!esLiberada && (tieneDocs || submitted || estatusDependencia === 'ESPERA_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
+                {!esLiberada && (estatusDependencia === 'MESA_DE_CONTROL_REVISION' || estatusDependencia === 'MESA_DE_CONTROL_RECHAZADA') && (
                     <div className="space-y-4">
-                        {(tieneDocs && estatusDependencia !== 'ESPERA_REVISION' && estatusDependencia !== 'MESA_DE_CONTROL_RECHAZADA') && (
-                            <div className="rounded-xl border border-primary/30 bg-primary-muted p-6 text-center space-y-3">
-                                <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
-                                    <FileText size={32} className="text-primary" strokeWidth={1.5} />
-                                </div>
-                                <div>
-                                    <h4 className="text-lg font-medium text-slate-900">
-                                        Recibimos tus documentos
-                                    </h4>
-                                    <p className="text-sm text-slate-500 mt-1">
-                                        Los documentos se recibieron correctamente. La autoridad los revisará y te notificaremos cuando estén listos.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                        {estatusDependencia === 'ESPERA_REVISION' && (
+                        {estatusDependencia === 'MESA_DE_CONTROL_REVISION' && (
                             <div className="rounded-xl border border-green-500/30 bg-green-50 p-6 text-center space-y-3">
                                 <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
                                     <CheckCircle2 size={32} className="text-green-600" strokeWidth={1.5} />
@@ -947,15 +1007,6 @@ export default function SeccionLiberacion({
                     </div>
                 )}
 
-                {urlOrdenSalida && urlOrdenSalida !== 'NO_DATA' && (
-                    <button
-                        onClick={() => abrirDocumento(urlOrdenSalida)}
-                        className="w-full h-12 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium flex items-center justify-center gap-2 transition active:scale-[0.99]"
-                    >
-                        <FileText size={16} strokeWidth={1.5} />
-                        DESCARGAR ORDEN DE LIBERACIÓN
-                    </button>
-                )}
             </div>
         </section>
     );
