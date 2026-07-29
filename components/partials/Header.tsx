@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { SignOutButton } from '@/app/dashboard/sign-out-button';
+import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones';
 
 interface DashboardHeaderProps {
   user: {
@@ -155,6 +156,11 @@ export function DashboardHeader({
         </div>
 
         <div style={{ width: 1, height: 48, background: '#e2e8f0' }} />
+
+        {/* Va dentro del header, no en `children`: así las 76 páginas que usan
+            este componente tienen campanita sin tener que editarlas una por una.
+            Se auto-abastece por API, no necesita props. */}
+        <CampanillaNotificaciones />
 
         {children}
 

@@ -1,6 +1,6 @@
 import { query } from '@/lib/db'
-import type { IncidenteFiltros, IncidenteListItem, IncidenteConDespacho, IncidentePendiente, IncidenteDetalleCompleto, PersonaAfectadaRow, DespachoRow, ReporteCampoRow, ExtorsionRow, AlarmaEscolarRow, DespachoUnidadRow, DespachoElementoRow, IncidenteBasico, DespachoCompleto, ReporteCampoDetalle } from './types'
-import { rowToIncidenteListItem, rowToIncidenteConDespachoBase, rowToIncidentePendiente, rowToIncidenteDetalleCompletoBase, rowToPersonaAfectada, rowToDespacho, rowToReporteCampo, rowToExtorsion, rowToAlarmaEscolar, rowToDespachoUnidad, rowToDespachoElemento, rowToIncidenteBasico, rowToReporteCampoDetalle } from './mapper'
+import type { IncidenteFiltros, IncidenteListItem, IncidenteConDespacho, IncidentePendiente, IncidenteGeoFiltros, IncidenteGeo, KpiIncidencias, IncidenteDetalleCompleto, PersonaAfectadaRow, DespachoRow, ReporteCampoRow, ExtorsionRow, AlarmaEscolarRow, DespachoUnidadRow, DespachoElementoRow, IncidenteBasico, DespachoCompleto, ReporteCampoDetalle } from './types'
+import { rowToIncidenteListItem, rowToIncidenteConDespachoBase, rowToIncidentePendiente, rowToIncidenteGeo, rowToIncidenteDetalleCompletoBase, rowToPersonaAfectada, rowToDespacho, rowToReporteCampo, rowToExtorsion, rowToAlarmaEscolar, rowToDespachoUnidad, rowToDespachoElemento, rowToIncidenteBasico, rowToReporteCampoDetalle } from './mapper'
 
 function toStr(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -25,6 +25,89 @@ export async function listarIncidentesConFiltros(filtros: IncidenteFiltros): Pro
     params.length ? params : undefined,
   )
   return result.rows.map(rowToIncidenteListItem)
+}
+
+// ─── KPI geolocalizado ──────────────────────────────────────────────────────
+// La coordenada del reporte de campo (ofi_reportes_campo) es la más exacta al
+// lugar del suceso, así que gana sobre la capturada al generar el incidente.
+const JOIN_GEO = `LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
+  LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
+  LEFT JOIN users u ON i.capturado_por = u.id
+  LEFT JOIN ofi_reportes_campo orc ON i.id = orc.incidente_id`
+
+const COORD_LAT = `COALESCE(orc.ofi_latitud, i.latitud)`
+const COORD_LNG = `COALESCE(orc.ofi_longitud, i.longitud)`
+const TIENE_COORD = `${COORD_LAT} IS NOT NULL AND ${COORD_LNG} IS NOT NULL`
+
+function construirWhereGeo(filtros: IncidenteGeoFiltros): { where: string; params: unknown[] } {
+  const conditions = ['i.fecha_hora_inicio >= $1', 'i.fecha_hora_inicio <= $2']
+  const params: unknown[] = [filtros.desde, filtros.hasta]
+  const { estatus, canal, prioridadId, tipoIncidenteId } = filtros
+  if (estatus) { conditions.push(`i.estatus = $${params.length + 1}`); params.push(estatus) }
+  if (canal) { conditions.push(`i.canal = $${params.length + 1}`); params.push(canal) }
+  if (prioridadId) { conditions.push(`i.prioridad_id = $${params.length + 1}`); params.push(prioridadId) }
+  if (tipoIncidenteId) { conditions.push(`i.tipo_incidente_id = $${params.length + 1}`); params.push(tipoIncidenteId) }
+  return { where: `WHERE ${conditions.join(' AND ')}`, params }
+}
+
+export async function listarIncidentesGeo(filtros: IncidenteGeoFiltros): Promise<IncidenteGeo[]> {
+  const { where, params } = construirWhereGeo(filtros)
+  const result = await query<Record<string, unknown>>(
+    `SELECT i.id, i.folio, i.canal, i.estatus, i.fecha_hora_inicio, i.calle, i.colonia, i.entre_calles,
+      i.referencia_ubicacion, i.descripcion, i.origen_rondin,
+      ${COORD_LAT} AS latitud,
+      ${COORD_LNG} AS longitud,
+      CASE
+        WHEN orc.ofi_latitud IS NOT NULL AND orc.ofi_longitud IS NOT NULL THEN 'reporte_campo'
+        WHEN i.latitud IS NOT NULL AND i.longitud IS NOT NULL THEN 'incidente'
+      END AS origen_coordenada,
+      cti.nombre AS tipo_incidente_nombre, cp.nombre AS prioridad_nombre, cp.orden AS prioridad_orden,
+      u.name AS capturado_por_nombre
+    FROM incidentes i
+    ${JOIN_GEO}
+    ${where}
+    ORDER BY i.fecha_hora_inicio DESC
+    LIMIT 1000`,
+    params,
+  )
+  return result.rows.map(rowToIncidenteGeo)
+}
+
+export async function obtenerKpiIncidencias(filtros: IncidenteGeoFiltros): Promise<KpiIncidencias> {
+  const { where, params } = construirWhereGeo(filtros)
+
+  const [totalesResult, estatusResult, prioridadResult] = await Promise.all([
+    query<Record<string, unknown>>(
+      `SELECT count(*) AS total,
+        count(*) FILTER (WHERE ${TIENE_COORD}) AS con_ubicacion,
+        count(*) FILTER (WHERE orc.ofi_latitud IS NOT NULL AND orc.ofi_longitud IS NOT NULL) AS con_ubicacion_reporte
+      FROM incidentes i ${JOIN_GEO} ${where}`,
+      params,
+    ),
+    query<Record<string, unknown>>(
+      `SELECT i.estatus, count(*) AS total FROM incidentes i ${JOIN_GEO} ${where} GROUP BY i.estatus ORDER BY total DESC`,
+      params,
+    ),
+    query<Record<string, unknown>>(
+      `SELECT COALESCE(cp.nombre, 'Sin prioridad') AS prioridad, cp.orden, count(*) AS total
+       FROM incidentes i ${JOIN_GEO} ${where}
+       GROUP BY cp.nombre, cp.orden ORDER BY cp.orden DESC NULLS LAST`,
+      params,
+    ),
+  ])
+
+  const totales = totalesResult.rows[0] ?? {}
+  return {
+    total: Number(totales.total ?? 0),
+    conUbicacion: Number(totales.con_ubicacion ?? 0),
+    conUbicacionReporteCampo: Number(totales.con_ubicacion_reporte ?? 0),
+    porEstatus: estatusResult.rows.map(r => ({ estatus: String(r.estatus ?? ''), total: Number(r.total ?? 0) })),
+    porPrioridad: prioridadResult.rows.map(r => ({
+      prioridad: String(r.prioridad ?? ''),
+      orden: r.orden === null || r.orden === undefined ? null : Number(r.orden),
+      total: Number(r.total ?? 0),
+    })),
+  }
 }
 
 export async function listarIncidentesAtendidos(): Promise<IncidenteConDespacho[]> {

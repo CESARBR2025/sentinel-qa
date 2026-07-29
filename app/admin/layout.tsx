@@ -23,8 +23,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <DashboardHeader user={user} roleLabel="Administración" backHref="/dashboard">
         <nav style={{ display: 'flex', gap: 32 }}>
           {[
-            { label: 'Usuarios', href: '/admin/usuarios' },
-            { label: 'Roles',    href: '/admin/roles'    },
+            { label: 'Usuarios',       href: '/admin/usuarios'       },
+            { label: 'Roles',          href: '/admin/roles'          },
+            { label: 'Notificaciones', href: '/admin/notificaciones' },
           ].map(({ label, href }) => (
             <Link
               key={label}

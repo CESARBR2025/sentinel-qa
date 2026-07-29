@@ -1,40 +1,35 @@
 'use server'
 
-import { auth }           from '@/lib/auth'
-import { headers }        from 'next/headers'
-import { revalidatePath } from 'next/cache'
-import { generarAlertasBusquedas } from './checker'
-import { marcarNotificacionLeida, marcarTodasNotificacionesLeidas, eliminarAlertasBusqueda } from './repository'
-import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
+import { auth }    from '@/lib/auth'
+import { headers } from 'next/headers'
+import { getUserWithRole } from '@/lib/auth/helpers'
+import { tryActionRaw } from '@/lib/error-handler'
+import { marcarLeidaParaUsuario, marcarTodasLeidasParaUsuario } from './repository'
+
+/**
+ * Usuario en sesión junto con su rol. El rol es la audiencia: una notificación
+ * dirigida a un rol la ven todos sus integrantes, cada uno con su propio
+ * estado de lectura.
+ */
+export async function sesionConRol(): Promise<{ userId: string; rolId: number | null } | null> {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) return null
+  const usuario = await getUserWithRole(session.user.id)
+  return { userId: session.user.id, rolId: usuario?.rolId ?? null }
+}
 
 export async function marcarLeida(notifId: string) {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) return
-
+  const ctx = await sesionConRol()
+  if (!ctx) return
   await tryActionRaw(async () => {
-    await marcarNotificacionLeida(notifId, session.user.id)
+    await marcarLeidaParaUsuario(notifId, ctx.userId, ctx.rolId)
   })
-
-  revalidatePath('/prevencion')
 }
 
 export async function marcarTodasLeidas() {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) return
-
+  const ctx = await sesionConRol()
+  if (!ctx) return
   await tryActionRaw(async () => {
-    await marcarTodasNotificacionesLeidas(session.user.id)
-  })
-
-  revalidatePath('/prevencion')
-}
-
-export async function generarAlertasDebug() {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) return
-
-  await tryActionRaw(async () => {
-    await eliminarAlertasBusqueda(session.user.id)
-    await generarAlertasBusquedas(session.user.id, true)
+    await marcarTodasLeidasParaUsuario(ctx.userId, ctx.rolId)
   })
 }

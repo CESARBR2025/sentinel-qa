@@ -21,6 +21,53 @@ export interface IncidenteListItem {
   capturadoPor: string | null
 }
 
+export interface IncidenteGeoFiltros {
+  desde: string
+  hasta: string
+  estatus?: string | null
+  canal?: string | null
+  prioridadId?: number | null
+  tipoIncidenteId?: number | null
+}
+
+export type OrigenCoordenada = 'reporte_campo' | 'incidente'
+
+export interface IncidenteGeo {
+  id: string
+  folio: string
+  canal: string
+  estatus: string
+  fechaHoraInicio: string
+  calle: string | null
+  colonia: string | null
+  entreCalles: string | null
+  referenciaUbicacion: string | null
+  descripcion: string | null
+  tipoIncidente: string | null
+  prioridad: string | null
+  prioridadOrden: number | null
+  capturadoPor: string | null
+  origenRondin: boolean
+  // Coordenada efectiva: la del reporte de campo cuando existe (es la más exacta
+  // al lugar del suceso), si no la capturada al generar el incidente.
+  latitud: number | null
+  longitud: number | null
+  origenCoordenada: OrigenCoordenada | null
+}
+
+export interface KpiIncidencias {
+  total: number
+  conUbicacion: number
+  conUbicacionReporteCampo: number
+  porEstatus: { estatus: string; total: number }[]
+  porPrioridad: { prioridad: string; orden: number | null; total: number }[]
+}
+
+export interface KpiGeoResponse {
+  incidentes: IncidenteGeo[]
+  kpi: KpiIncidencias
+}
+
 export interface IncidenteConDespacho {
   id: string
   folio: string

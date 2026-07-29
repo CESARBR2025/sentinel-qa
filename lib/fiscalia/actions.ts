@@ -10,6 +10,7 @@ import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
 import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesSinEvidencias, listarSolicitudesConEvidencias, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, listarAseguradosCompletados, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
+import { emitir } from '@/lib/notificaciones/emisor'
 import type { ViaInfraccionDetalle } from './types'
 import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow } from './types'
 
@@ -90,6 +91,15 @@ export async function accionPedirEvidencias(formData: FormData): Promise<{ succe
     if (typeof evidencias !== 'string' || !evidencias.trim()) return { success: false, error: 'Debe agregar al menos una ubicación' }
 
     await pedirEvidencias(id, evidencias)
+
+    // Fuera de la operación de negocio y después de que ésta se completó: el
+    // monitorista no se enteraba de que tenía trabajo nuevo.
+    await emitir('evidencia.solicitada', {
+      mensaje: `Fiscalía solicitó evidencias del expediente. Revisa la bandeja de solicitudes.`,
+      entidadTipo: 'solicitud_evidencia',
+      entidadId: id,
+      emitidaPor: session.user.id,
+    })
 
     revalidatePath('/fiscalia/solicitudes')
     return { success: true }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { SignOutButton } from '@/app/dashboard/sign-out-button'
 import { authClient } from '@/lib/auth-client'
+import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones'
 
 interface SubHeaderProps {
   backHref: string
@@ -45,15 +46,20 @@ export function SubHeader({
         </span>
       </div>
 
-      {operador && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span>
-            <span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#172844' }}>{operador.name}</span>
-          </div>
-          <SignOutButton />
-        </div>
-      )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {/* Fuera del bloque de `operador`: la sesión del cliente tarda un
+            instante en resolverse y la campanita no debe parpadear. */}
+        <CampanillaNotificaciones />
+        {operador && (
+          <>
+            <div>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#94a3b8', display: 'block', letterSpacing: '0.1em' }}>OPERADOR</span>
+              <span style={{ fontFamily: 'Inter', fontSize: 12, fontWeight: 600, color: '#172844' }}>{operador.name}</span>
+            </div>
+            <SignOutButton />
+          </>
+        )}
+      </div>
     </header>
   )
 }

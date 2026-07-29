@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import { marcarSolicitudAtendida } from '@/lib/monitorista/denuncia-service'
 import { insertHistorial } from '@/lib/monitorista/repository'
 import { tienePermiso } from '@/lib/monitorista/permisos'
+import { emitir } from '@/lib/notificaciones/emisor'
 
 export async function POST(
   req: NextRequest,
@@ -26,6 +27,16 @@ export async function POST(
   try {
     await marcarSolicitudAtendida(denunciaId, solicitudId)
     await insertHistorial(session.user.id, 'solicitud_completada', denunciaId)
+
+    // Contraparte del único flujo bidireccional del sistema: fiscalía y juzgado
+    // quedaban esperando las evidencias sin que nadie les avisara que ya estaban.
+    await emitir('evidencia.entregada', {
+      mensaje: 'El monitorista entregó las evidencias solicitadas del expediente.',
+      entidadTipo: 'denuncia',
+      entidadId: denunciaId,
+      emitidaPor: session.user.id,
+    })
+
     return NextResponse.json({ success: true })
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error interno'

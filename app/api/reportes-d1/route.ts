@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { verificarRolOficial } from "@/lib/oficial/service";
 import { verificarFolioDenunciaUnico, insertarReporteDenuncia } from "@/lib/d1/repository";
 import { query } from "@/lib/db";
+import { emitir } from "@/lib/notificaciones/emisor";
 
 function generarFolioDenuncia(): string {
   const hoy = new Date()
@@ -110,6 +111,15 @@ export async function POST(request: Request) {
         [body.incidenteId],
       )
     }
+
+    // El expediente nace en estado RECIBIDA y hasta ahora nadie en fiscalía
+    // se enteraba de que había uno nuevo esperando.
+    await emitir('d1.creada', {
+      mensaje: `Nueva denuncia ${body.folioDenuncia ?? ''} lista para asignación.`.trim(),
+      entidadTipo: 'denuncia',
+      entidadId: reporteId,
+      emitidaPor: session.user.id,
+    })
 
     return NextResponse.json(
       {
