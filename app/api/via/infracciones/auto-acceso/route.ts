@@ -4,7 +4,7 @@ import { SignJWT } from "jose";
 import { decryptPin } from "@/lib/via/crypto-ciudadano";
 
 const getSecret = () => new TextEncoder().encode(process.env.BETTER_AUTH_SECRET);
-const API_KEY_ENV = "X-INFRACCIONES-KEY";
+const API_KEY_ENV = "X_INFRACCIONES_KEY";
 
 export async function GET(req: NextRequest) {
   try {

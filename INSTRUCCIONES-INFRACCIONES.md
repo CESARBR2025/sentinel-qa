@@ -615,7 +615,7 @@ en este documento por ser un secreto real, no un dato de referencia.
 
 Este es el endpoint que la **app móvil** consume para mostrar el listado
 de infracciones de un ciudadano. La CURP viaja en el header, no en la URL;
-el `pin_acceso` se devuelve cifrado (AES-256-GCM) con `X-INFRACCIONES-KEY`
+el `pin_acceso` se devuelve cifrado (AES-256-GCM) con `X_INFRACCIONES_KEY`
 como llave de cifrado.
 
 ```
@@ -626,7 +626,7 @@ x-curp: BARC021102HQTRSSA9
 
 | Header | Obligatorio | Notas |
 |---|---|---|
-| `x-infracciones-key` | Sí | API Key configurada en `X-INFRACCIONES-KEY` del backend |
+| `x-infracciones-key` | Sí | API Key configurada en `X_INFRACCIONES_KEY` del backend |
 | `x-curp` | Sí | CURP del infractor, 18 caracteres alfanuméricos |
 
 Rate-limited por IP (30 req/min).
@@ -658,7 +658,7 @@ Rate-limited por IP (30 req/min).
 | `fechaInfraccion` | string (ISO) | |
 | `montoFinal` | number | Monto final en UMAs |
 | `totalPesos` | number\|null | Monto en pesos MXN (de la orden de pago SA7) |
-| `pin_acceso` | string (base64url) | **Cifrado con AES-256-GCM** usando `X-INFRACCIONES-KEY` como llave. La app no debe descifrarlo — se pasa directamente al endpoint de auto-acceso. |
+| `pin_acceso` | string (base64url) | **Cifrado con AES-256-GCM** usando `X_INFRACCIONES_KEY` como llave. La app no debe descifrarlo — se pasa directamente al endpoint de auto-acceso. |
 
 CURP inválida → 400. Sin infracciones → 200 con array vacío.
 
@@ -672,7 +672,7 @@ GET /api/via/infracciones/auto-acceso?infraccionId=<uuid>&p=<pin_acceso_cifrado>
 ```
 
 Usa el parámetro `p` (no `pin`) — el PIN viene cifrado desde el endpoint de
-consulta. El servidor lo descifra con `X-INFRACCIONES-KEY`, lo valida contra BD,
+consulta. El servidor lo descifra con `X_INFRACCIONES_KEY`, lo valida contra BD,
 y si es correcto emite la cookie y redirige a la página ciudadana.
 
 Si falla (PIN inválido, bloqueo, error de descifrado): redirige a
@@ -694,7 +694,7 @@ existente (`app/infracciones/[id]/page.tsx`) ya se encarga de todo.
 ### 11.2 Detalles de cifrado (solo referencia, no necesario para la app)
 
 El `pin_acceso` se cifra con AES-256-GCM:
-- **Key derivation**: SHA-256 del valor de `X-INFRACCIONES-KEY`
+- **Key derivation**: SHA-256 del valor de `X_INFRACCIONES_KEY`
 - **Nonce**: 12 bytes aleatorios por cada cifrado
 - **Output**: Base64 URL-safe = `nonce(12) + ciphertext + tag(16)`
 - Implementación backend: `lib/via/crypto-ciudadano.ts`
@@ -746,7 +746,7 @@ de liberación: tabs del dashboard, subida interrumpida, pago prematuro) y
 
 *Revisión 2026-07-30 (v2): refactor de seguridad de la sección 11. La CURP
 ahora viaja en el header `x-curp` (no en la URL); el `pin_acceso` se cifra
-con AES-256-GCM usando `X-INFRACCIONES-KEY` como llave; y el endpoint
+con AES-256-GCM usando `X_INFRACCIONES_KEY` como llave; y el endpoint
 `auto-acceso` acepta `?p=` (PIN cifrado) en lugar de `?pin=` (texto plano).
 Creado `lib/via/crypto-ciudadano.ts` con `encryptPin`/`decryptPin`.
 Ruta antigua `por-curp/[curp]` eliminada; reemplazada por `por-curp/`

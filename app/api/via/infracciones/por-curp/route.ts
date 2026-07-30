@@ -6,7 +6,7 @@ const CURP_REGEX = /^[A-Z0-9]{18}$/;
 
 const API_KEY_HEADER = "x-infracciones-key";
 const CURP_HEADER = "x-curp";
-const API_KEY_ENV = "X-INFRACCIONES-KEY";
+const API_KEY_ENV = "X_INFRACCIONES_KEY";
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT_MAX = 30;
