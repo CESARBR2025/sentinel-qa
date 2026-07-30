@@ -1,11 +1,11 @@
 {
-  "toolCallCount": 6355,
+  "toolCallCount": 6395,
   "lastTask": "por que las de prioridad critica sigue viendose gris en las tarjetas:en esta ruta? \nhttp://localhost:3000/agente_911/despacho\n\ncorrige eso",
   "lastCheckpointKey": "",
   "editsSinceLastCheck": 1,
   "editsSinceGraphifyUpdate": 2,
-  "grepCount": 8,
-  "graphifyQueryCount": 5,
+  "grepCount": 9,
+  "graphifyQueryCount": 0,
   "_graphifyCache": {
     "39797648": {
       "result": "NODE 863c575 Merge pull request #24 from presidenciaSJR/feature/testing [src=git loc= community=1]\nNODE page.tsx [src=app/prevencion/medidas/[id]/page.tsx loc=L1 community=6]\nNODE testing [src=git loc= community=10]\nNODE conexion [src=git loc= community=10]\nNODE feature/testing [src=git loc= community=10]\nNODE main [src=git loc= community=10]\nNODE 27dcb21 Merge branch 'feature/testing' into feature/reportes [src=git loc= community=1]\nNODE 0068216 Mejora de Dashboard, Login y transiciones de pantallas [src=git loc= community=46]\nNODE auth.ts [src=lib/auth.ts loc=L1 community=0]\nNODE auth [src=lib/auth.ts loc=L7 community=0]\nNODE 5618308 guardado e evidencias con ed [src=git loc= community=0]\nNODE fix/subir-fotografias [src=git loc= community=4]\n  ... (truncated)",

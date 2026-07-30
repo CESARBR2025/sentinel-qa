@@ -43,7 +43,7 @@ export interface UnidadParaDespacho extends UnidadConTripulacion { distanciaKm: 
 ## Decisiones ya tomadas (no reabrir estas discusiones)
 
 - **Layout**: split-view — mapa y lista conviven lado a lado dentro del modal (no un toggle que oculte uno u otro).
-- **Alcance**: solo lo descrito en las etapas 1-5 de este plan (mapa visual + polling ligero). Fuera de alcance: Distance Matrix/Directions API (se mantiene Haversine), WebSockets/SSE, cambios al heartbeat del oficial.
+<!-- - **Alcance**: solo lo descrito en las etapas 1-5 de este plan (mapa visual + polling ligero). Fuera de alcance: Distance Matrix/Directions API (se mantiene Haversine), WebSockets/SSE, cambios al heartbeat del oficial. -->
 - **Librería de mapas**: `@react-google-maps/api`, siguiendo el patrón de `GoogleMapPicker.tsx`. No introducir ninguna librería nueva (nada de `react-leaflet`, `mapbox-gl`, etc.).
 
 ## Convenciones del proyecto a respetar

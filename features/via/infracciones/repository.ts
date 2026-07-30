@@ -1,5 +1,5 @@
 import { query } from "@/lib/db";
-import { InfraccionDB } from "./types";
+import { InfraccionDB, InfraccionResumenDTO } from "./types";
 
 export class InfraccionesRepository {
   static async obtenerSiguienteSecuencia(): Promise<number> {
@@ -127,6 +127,26 @@ export class InfraccionesRepository {
       [id],
     );
     return result.rows[0] as any || null;
+  }
+
+  static async listarPorCurp(curp: string): Promise<InfraccionResumenDTO[]> {
+    const curpNormalized = curp.trim().toUpperCase();
+    const result = await query(
+      `SELECT id, folio, estatus, estatus_dependencia, fecha_infraccion, monto_final, pin_acceso
+       FROM via.v2_infracciones
+       WHERE curp_infractor = $1
+       ORDER BY created_at DESC`,
+      [curpNormalized],
+    );
+    return result.rows.map((row: any) => ({
+      id: row.id,
+      folio: row.folio,
+      estatusInfraccion: row.estatus,
+      estatusDependencia: row.estatus_dependencia,
+      fechaInfraccion: row.fecha_infraccion,
+      montoFinal: Number(row.monto_final),
+      pin_acceso: row.pin_acceso,
+    }));
   }
 
   static async obtenerDatosInfraccionCiudadanoRP(id: string) {

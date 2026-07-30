@@ -159,7 +159,7 @@ no lo normalices en tu capa de deserialización sin revisar esto.
 | `tipoGarantia` | string\|null | `'PLACA'`, `'TARJETA'`, `'LICENCIA'`, o `'VEHICULO'` — **`'VEHICULO'` es el único caso que activa el flujo de liberación (sección 7)** |
 | `garantiaEntregada` | boolean | |
 | `motivoRetencion` | string\|null | `'ACCIDENTE'` \| `'DELITO'` \| `'INFRACCION'` — solo relevante si `tipoGarantia === 'VEHICULO'` |
-| `urlOrdenSalida` | string\|null | Referencia opaca de almacenamiento (`exp2://...`), **no una URL descargable directamente** — ver advertencia en sección 9.5 antes de intentar mostrarla/descargarla en la app |
+| `urlOrdenSalida` | string\|null | Referencia opaca de almacenamiento (`exp2://...`), **no la uses directamente** — para descargar el PDF usa el endpoint dedicado de la sección 5.4, no intentes resolver esta referencia tú mismo (ver también 9.5) |
 | `latitud`, `longitud` | number\|null | |
 | `calle`, `numero`, `colonia`, `municipio`, `estado` | string\|null | dirección de la infracción |
 | `articuloId`, `articulo_numero`, `articulo_descripcion` | | fundamento legal (snake_case en los dos últimos) |
@@ -205,10 +205,23 @@ momento (ya pagado, o esperando otro paso).
 
 // error real (ej. sin orden de pago vigente)
 { "pagado": false, "error": "Sin orden vigente para esta infracción" }
+
+// 400 — llamaste al endpoint fuera de secuencia (solo confirmar-liberacion,
+// agregado 2026-07-29): el estatus_dependencia real ya no es
+// PENDIENTE_PAGO_LIBERACION / LIBERACION_EN_PROCESO / LIBERACION_PENDIENTE_DOCUMENTOS
+{ "pagado": false, "error": "La infracción no está en etapa de pago" }
 ```
 `pagado: false` con 200 es el estado normal mientras el ciudadano no ha
 pagado — no lo trates como error de red. Solo un `error` explícito en el body
 (o un status HTTP ≥ 400) es un fallo real. Sin token → 401.
+
+`confirmar-liberacion` ahora revalida `estatus_dependencia` en el servidor
+antes de proceder (no solo en el front): si sigues correctamente la tabla de
+arriba (solo la llamas cuando `estatusInfraccion === 'PENDIENTE_PAGO' &&
+estatusDependencia === 'PENDIENTE_PAGO_LIBERACION'`) nunca deberías ver este
+400, pero si lo ves significa que el detalle que tenías en caché quedó
+desactualizado — vuelve a consultar `GET /api/via/infracciones/<id>` antes de
+reintentar.
 
 Llama a este endpoint **después de que el ciudadano complete el pago** en la
 plataforma externa (polling manual con un botón "Ya pagué, verificar", igual
@@ -231,6 +244,32 @@ URL tal cual viene en el detalle.
 `GET /api/via/pagos/verificar-pago-pruebas/<id>` **no** son parte de este
 contrato — son atajos de QA que saltan la verificación real con la pasarela
 de pago. No los llames desde la app.
+
+### 5.4 Descargar la orden de salida (agregado 2026-07-29)
+
+Una vez que `estatusDependencia` es `LIBERADA_POR_{ACCIDENTE|DELITO|
+INFRACCION}` (sección 6.2), el vehículo ya está liberado y existe una orden
+de salida en PDF:
+
+```
+GET /api/via/descargar-orden/<infraccionId>
+```
+🔒 **Respuesta: el PDF binario directamente** (no JSON) —
+`Content-Type: application/pdf`, `Content-Disposition: attachment;
+filename="orden_salida_<folio>.pdf"`. En Flutter, descarga el body como
+bytes y guárdalo/ábrelo con el visor de PDF del sistema.
+
+Este endpoint reemplaza cualquier intento de resolver `urlOrdenSalida` por tu
+cuenta: si el PDF ya existe lo sirve directo desde el almacenamiento interno,
+y si no existe (p. ej. falló su generación durante `confirmar-liberacion`) lo
+genera on-demand en el momento, lo guarda, y de paso reenvía el correo de
+confirmación al titular. **No requiere sesión de staff** — usa el mismo JWT
+de ciudadano de este documento (`verificarAccesoCiudadano`), a diferencia de
+las rutas de `/api/expediente/*` (ver sección 9.5).
+
+Errores: `400` si falta `infraccionId`, `401` si el token no es válido para
+esa infracción, `404` si la infracción no existe, `500` si falla la
+generación del PDF.
 
 ## 6. Máquina de estados (`estatus` / `estatus_dependencia`)
 
@@ -291,15 +330,20 @@ form. de subida)     ciudadano paga (confirmar-liberacion)
                 FINALIZADA_{ACCIDENTE|DELITO|INFRACCION}
 ```
 
-**⚠️ Advertencia sobre 2 valores que vas a ver mencionados en el código web
-pero que NUNCA ocurren en la práctica** (confirmado revisando todo el
-repo — no hay ningún lugar que los escriba en la base de datos):
-- `ESPERA_REVISION` — el componente web (`SeccionLiberacion.tsx`) lo compara,
-  pero el backend real usa `MESA_DE_CONTROL_REVISION`. Es código muerto.
+**⚠️ Advertencia sobre 2 valores que NUNCA ocurren en la práctica**
+(confirmado revisando todo el repo — no hay ningún lugar que los escriba en
+la base de datos):
+- `ESPERA_REVISION` — el backend real usa `MESA_DE_CONTROL_REVISION` para
+  este caso. *(Corrección 2026-07-29: hasta el 2026-07-28 el componente web
+  `SeccionLiberacion.tsx` todavía comparaba contra este literal muerto —
+  ya se corrigió ahí también, el componente web ahora usa
+  `MESA_DE_CONTROL_REVISION` igual que el backend. No queda ninguna
+  referencia a `ESPERA_REVISION` en el código, ni de lectura ni de
+  escritura.)*
 - `EN_REVISION_MW` — aparece en dashboards de staff (Juzgado/Fiscalía), igual
   sin ningún escritor real.
 
-**No repliques la lógica que compara contra `'ESPERA_REVISION'`** — en tu app
+**No repliques ninguna lógica que compare contra `'ESPERA_REVISION'`** — en tu app
 Flutter, para saber "ya subí documentos, esperando revisión de staff", usa:
 `documentosLiberacion` tiene entradas **Y** `estatusDependencia` distinto de
 `MESA_DE_CONTROL_RECHAZADA` (eso cubre tanto `MESA_DE_CONTROL_REVISION` como
@@ -348,6 +392,36 @@ Content-Type: application/json
 }
 ```
 Respuesta: `{ "solicitudId": "<uuid>" }`. Guárdalo — lo necesitas en el paso 2.
+
+**⚠️ Importante — persiste `solicitudId` en el dispositivo, no lo pidas dos
+veces (agregado 2026-07-29):** este endpoint **crea una solicitud nueva en
+cada llamada**, sin revisar si ya existe una para esa `infraccionId` (no hay
+ningún control de unicidad, ni en la API ni en la base de datos). Si tu app
+llama `iniciar-solicitud` de nuevo después de una interrupción (el usuario
+cerró la app a medio subir documentos, se cayó la red, etc.) sin recordar el
+`solicitudId` que ya tenía, vas a crear una **segunda** solicitud para la
+misma infracción. Las lecturas (`GET /api/via/liberaciones/documentos/<id>`,
+sección 7.3, y la pantalla de revisión del agente) ya están corregidas para
+siempre tomar la solicitud más reciente (`ORDER BY created_at DESC LIMIT 1`,
+corregido 2026-07-29) — así que ya no hay riesgo de que el agente revise la
+solicitud vieja/incompleta por error — pero la creación en sí sigue sin ser
+idempotente: cada llamada de más deja una fila huérfana en
+`v2_solicitudes_liberacion`. Evítalo desde el diseño de la app en vez de
+depender de que el servidor lo tolere.
+
+**Diseña tu app así para evitar el problema por completo:**
+1. Al recibir `solicitudId` del paso 1, guárdalo localmente (asociado a esa
+   `infraccionId`) antes de subir el primer archivo.
+2. Si el usuario reabre la app y la infracción sigue en
+   `MESA_DE_CONTROL_PENDIENTE_DOCS` (sección 6.2), **no vuelvas a llamar
+   `iniciar-solicitud`** — reusa el `solicitudId` guardado y continúa
+   directo en el paso 2 con los documentos que falten.
+3. Solo llama `iniciar-solicitud` si de verdad no tienes ningún
+   `solicitudId` guardado para esa infracción (primer intento real).
+
+Esto es más seguro que lo que hace hoy la propia web ciudadana (que, al
+interrumpirse la subida, simplemente vuelve a llamar `iniciar-solicitud` y
+genera una solicitud nueva) — no repliques ese comportamiento en Flutter.
 
 **Paso 2 — subir cada documento** (una llamada `multipart/form-data` POR
 documento) 🔒
@@ -492,28 +566,34 @@ esquema global.
    staff sobre este punto (ver `Troubleshooting.md` de la bóveda si necesitas
    el detalle); para el lado ciudadano no cambia nada, pero no asumas que el
    string literal es `'PENDIENTE'`.
-5. **🚧 Bloqueante confirmado — ver/descargar documentos NO funciona para el
-   ciudadano todavía.** `urlOrdenSalida` y `documentosLiberacion[...].url` (y
-   `url_documento` en la sección 7.3) son referencias opacas de almacenamiento
-   (`exp2://{folderPath}#{uuid}`) que el backend genera con
-   `lib/expediente/v2/ref.ts` — **no son URLs que puedas abrir directamente**.
-   Para resolverlas a un archivo real hoy existen solo tres rutas:
-   `POST /api/expediente/token`, `GET /api/expediente/vista/[token]` y
-   `GET /api/expediente/proxy` (`app/api/expediente/*`) — **las tres exigen
-   una sesión de staff `better-auth`** (`auth.api.getSession`), no aceptan el
-   JWT de ciudadano de este documento. Esto **no es un problema nuevo de tu
-   integración**: el propio botón "ver documento" de la web ciudadana
-   (`SeccionLiberacion.tsx` → `lib/shared/abrirDocumento.ts`) llama exactamente
-   a esas mismas rutas y hoy le regresaría 401 a cualquier ciudadano real que
-   lo intente — confirmado revisando el código, no es una suposición.
-   **No intentes resolver esto del lado de Flutter** (ni construyendo la URL
-   a mano, ni intentando reusar el JWT de ciudadano contra esas rutas — no va
-   a funcionar). Es un hueco de backend: alguien tiene que extender esas tres
-   rutas para aceptar también `verificarAccesoCiudadano` (el mismo patrón dual
-   cookie/Bearer que ya usan `documentos/[infraccionId]` y `subir-archivo`,
-   ver `lib/via/auth-ciudadano.ts`). Repórtalo al equipo web antes de
-   comprometerte a una fecha de entrega que incluya "ver documentos ya
-   subidos" o "descargar la orden de salida" desde la app.
+5. **Estatus mixto (actualizado 2026-07-29): la orden de salida ya se puede
+   descargar, los documentos individuales subidos todavía NO.**
+   - ✅ **`urlOrdenSalida` — resuelto.** Ya no intentes interpretar esta
+     referencia opaca (`exp2://{folderPath}#{uuid}`, generada con
+     `lib/expediente/v2/ref.ts`) — usa el endpoint dedicado de la sección 5.4
+     (`GET /api/via/descargar-orden/<infraccionId>`), que sí acepta el JWT de
+     ciudadano y devuelve el PDF directamente.
+   - 🚧 **`documentosLiberacion[...].url` y `url_documento` (sección 7.3) —
+     sigue bloqueado.** Estas SÍ siguen siendo referencias opacas sin forma de
+     resolverlas desde el JWT de ciudadano. Para resolverlas a un archivo real
+     hoy existen solo tres rutas: `POST /api/expediente/token`,
+     `GET /api/expediente/vista/[token]` y `GET /api/expediente/proxy`
+     (`app/api/expediente/*`) — **las tres exigen una sesión de staff
+     `better-auth`** (`auth.api.getSession`), no aceptan el JWT de ciudadano.
+     Esto **no es un problema nuevo de tu integración**: el propio botón "ver
+     documento" de la web ciudadana (`SeccionLiberacion.tsx` →
+     `lib/shared/abrirDocumento.ts`) llama exactamente a esas mismas rutas y
+     hoy le regresaría 401 a cualquier ciudadano real que lo intente —
+     confirmado revisando el código, no es una suposición.
+     **No intentes resolver esto del lado de Flutter** (ni construyendo la
+     URL a mano, ni intentando reusar el JWT de ciudadano contra esas rutas —
+     no va a funcionar). Es un hueco de backend: alguien tiene que extender
+     esas tres rutas para aceptar también `verificarAccesoCiudadano` (el
+     mismo patrón dual cookie/Bearer que ya usan `documentos/[infraccionId]`,
+     `subir-archivo`, y el nuevo `descargar-orden` de la sección 5.4 — así
+     que el patrón ya está probado y funcionando, solo falta aplicarlo aquí
+     también). Repórtalo al equipo web antes de comprometerte a una fecha de
+     entrega que incluya "ver los documentos que ya subí".
 
 ## 10. Cómo conseguir datos de prueba
 
@@ -531,9 +611,81 @@ Pide acceso de lectura a esa base (credenciales en `.env` del proyecto,
 variable `DATABASE_URL`) a quien administre el ambiente de pruebas — no está
 en este documento por ser un secreto real, no un dato de referencia.
 
----
+## 11. Consulta por CURP (nuevo, 2026-07-30)
 
-*Generado a partir de una revisión completa del código fuente el 2026-07-28.
+Este es el endpoint que la **app móvil** debe consumir para mostrar el listado
+de infracciones de un ciudadano. El usuario ya no necesita un link + PIN —
+ingresa su CURP y ve todas sus infracciones en una tabla.
+
+```
+GET /api/via/infracciones/por-curp/<curp>
+```
+
+Sin autenticación. Rate-limited por IP (30 req/min). CURP debe ser 18 caracteres
+alfanuméricos en mayúsculas (el endpoint normaliza automáticamente).
+
+**Respuesta:**
+```json
+{
+  "infracciones": [
+    {
+      "id": "uuid",
+      "folio": "SSPM/INF/20260728/SPQC2A",
+      "estatusInfraccion": "PENDIENTE_PAGO",
+      "estatusDependencia": "PLACA_RETENIDA_EN_TRANSITO",
+      "fechaInfraccion": "2026-07-28T16:00:00.000Z",
+      "montoFinal": 50.0,
+      "pin_acceso": "123456"
+    }
+  ]
+}
+```
+
+| Campo | Tipo | Notas |
+|---|---|---|
+| `id` | string (uuid) | ID de la infracción |
+| `folio` | string | Folio completo para mostrar en la tabla |
+| `estatusInfraccion` | string | Ver sección 6.1 |
+| `estatusDependencia` | string\|null | Ver sección 6.2 |
+| `fechaInfraccion` | string (ISO) | |
+| `montoFinal` | number | Monto final en UMAs |
+| `pin_acceso` | string (6 dígitos) | **Código de acceso** — usado para la redirección automática (ver sección 11.1) |
+
+CURP inválida → 400. Sin infracciones → 200 con array vacío.
+
+### 11.1 Redirección automática (app → web)
+
+Cuando el ciudadano da clic en una fila de la tabla para pagar, la app debe
+abrir el navegador con esta URL (NO `/infracciones/<id>` directo):
+
+```
+GET /api/via/infracciones/auto-acceso?infraccionId=<uuid>&pin=123456
+```
+
+Este endpoint:
+1. Valida el PIN contra la base de datos (misma lógica que `verificar-pin`)
+2. Incrementa intentos / bloquea si es necesario
+3. Si el PIN es correcto: emite la cookie `infraccion_access` (JWT de 1h)
+4. Redirige (302) a `/infracciones/<id>` → el ciudadano ve la página completa
+   sin pasar por el PinBarrier
+
+Si el PIN falla o la infracción está bloqueada: redirige a
+`/infracciones/<id>?pin_error=1` → el PinBarrier se muestra y el ciudadano
+puede intentar teclear el PIN manualmente.
+
+**Flujo completo en la app móvil:**
+1. El ciudadano ingresa su CURP
+2. App llama `GET /api/via/infracciones/por-curp/<curp>`
+3. App renderiza tabla con folio, estatus, fecha, monto
+4. Ciudadano da clic en "Pagar" → app abre navegador con
+   `/api/via/infracciones/auto-acceso?infraccionId=<id>&pin=<pin_acceso>`
+5. Navegador valida, pone cookie, redirige a la página ciudadana
+6. El ciudadano completa pago/liberación en el navegador (web existente)
+
+**No hay que replicar la lógica de pago ni de liberación en la app** — la web
+existente (`app/infracciones/[id]/page.tsx`) ya se encarga de todo.
+
+---
 Endpoints verificados con `curl` contra datos reales de una infracción de
 prueba (`SSPM/INF/20260728/SPQC2A`). Ver también
 `boveda/🧩 Features/Infracciones.md` para el contexto del módulo completo
@@ -549,3 +701,38 @@ completo. De paso se auditaron los campos `urlOrdenSalida`/
 `documentosLiberacion`/`url_documento` contra el código real de las rutas de
 `/api/expediente/*` y se encontró el bloqueante de la sección 9.5 (ver ahí) —
 no existía antes de esta revisión en el documento.*
+
+*Revisión 2026-07-29: verificado el documento completo contra el código
+actual tras dos commits posteriores a la fecha de generación original
+(2026-07-28): `a26870c fix updaload files liberaciones agent` (fix del flujo
+de liberación: tabs del dashboard, subida interrumpida, pago prematuro) y
+`8444314 fix: orden de salida` (nuevo endpoint de descarga + filtro por
+`tipo_garantia`). Cambios en este documento:
+1. Agregada la fila del nuevo error 400 de `confirmar-liberacion` en la
+   sección 5.1 (guard server-side de `estatus_dependencia` agregado en
+   `a26870c`).
+2. Corregida la sección 6.2 — `SeccionLiberacion.tsx` ya no compara contra el
+   literal muerto `ESPERA_REVISION`, se actualizó a `MESA_DE_CONTROL_REVISION`
+   (fix en `a26870c`).
+3. Agregada la advertencia de la sección 7.1 sobre persistir `solicitudId`
+   para evitar solicitudes duplicadas — se encontró y corrigió de paso un bug
+   real (no solo de documentación): dos consultas de solicitud (`GET
+   /api/via/liberaciones/documentos/<id>` y la pantalla de revisión del
+   agente) usaban `LIMIT 1` sin `ORDER BY`, pudiendo devolver una solicitud
+   vieja/incompleta cuando existían dos para la misma infracción; corregidas
+   en esta misma revisión con `ORDER BY created_at DESC LIMIT 1`.
+4. **Agregada la sección 5.4** (`GET /api/via/descargar-orden/<infraccionId>`,
+   nuevo en `8444314`) y **actualizada la sección 9.5**: el bloqueante de
+   "ver/descargar documentos" ya no aplica a `urlOrdenSalida` (ahora
+   descargable con el JWT de ciudadano vía el nuevo endpoint) — sigue
+   aplicando sin cambios a los documentos individuales subidos
+   (`documentosLiberacion[...].url` / `url_documento`, sección 7.3).
+5. Confirmado sin cambios: secciones 1-4 (salvo la nota de `urlOrdenSalida`
+   del punto 4.1), 7.2, 9.1-9.4, 10.
+
+*Revisión 2026-07-30: agregada la sección 11 (consulta por CURP +
+auto-acceso). Nuevos endpoints: `GET /api/via/infracciones/por-curp/<curp>`
+(listado público de infracciones por CURP) y
+`GET /api/via/infracciones/auto-acceso` (puente app→web con validación de
+PIN + redirect). La columna `curp_infractor` ya existe en la tabla
+`via.v2_infracciones` — no se requirieron cambios de esquema.*

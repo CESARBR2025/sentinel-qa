@@ -18,6 +18,14 @@
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── admin/
+│   │   ├── notificaciones/
+│   │   │   ├── enviar/
+│   │   │   │   └── page.tsx
+│   │   │   ├── mantenimiento/
+│   │   │   │   └── page.tsx
+│   │   │   ├── matriz/
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
 │   │   ├── roles/
 │   │   │   ├── [id]/
 │   │   │   │   └── plantilla-permisos/
@@ -69,6 +77,8 @@
 │   ├── agente_bitacorista/
 │   │   └── page.tsx
 │   ├── agente_despacho/
+│   │   ├── kpi-incidencias/
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── agente_infracciones/
 │   │   ├── revision-documental/
@@ -144,6 +154,9 @@
 │   │   ├── corralon/
 │   │   │   └── subir-archivo/
 │   │   │       └── route.ts
+│   │   ├── cron/
+│   │   │   └── notificaciones/
+│   │   │       └── route.ts
 │   │   ├── d1/
 │   │   │   └── exportar/
 │   │   │       └── route.ts
@@ -184,6 +197,8 @@
 │   │   │   │   └── route.ts
 │   │   │   ├── en-despacho/
 │   │   │   │   └── route.ts
+│   │   │   ├── kpi-geo/
+│   │   │   │   └── route.ts
 │   │   │   ├── pendientes-despacho/
 │   │   │   │   └── route.ts
 │   │   │   └── route.ts
@@ -208,6 +223,10 @@
 │   │   │   └── generar/
 │   │   │       └── route.ts
 │   │   ├── notificaciones/
+│   │   │   ├── contador/
+│   │   │   │   └── route.ts
+│   │   │   ├── leer/
+│   │   │   │   └── route.ts
 │   │   │   └── route.ts
 │   │   ├── prevencion/
 │   │   │   ├── busquedas/
@@ -446,6 +465,8 @@
 │   │   └── page.tsx
 │   ├── nCoordinacion/
 │   │   └── page.tsx
+│   ├── notificaciones/
+│   │   └── page.tsx
 │   ├── oficial/
 │   │   ├── configuracion/
 │   │   │   ├── EditarTelefono.tsx
@@ -500,10 +521,20 @@
 ├── components/
 │   ├── 911/
 │   │   ├── despacho/
+│   │   │   ├── AsignacionMapa.tsx
 │   │   │   ├── DespachoForm.tsx
 │   │   │   ├── SeleccionarUnidadesModal.tsx
 │   │   │   ├── TablonDespacho.tsx
 │   │   │   └── UnidadCards.tsx
+│   │   ├── kpi/
+│   │   │   ├── FiltrosRangoKpi.tsx
+│   │   │   ├── formato.ts
+│   │   │   ├── KpiIncidenciasView.tsx
+│   │   │   ├── MapaCalorIncidencias.tsx
+│   │   │   ├── MapaPuntosIncidencias.tsx
+│   │   │   ├── ModalDetalleIncidencia.tsx
+│   │   │   ├── TablaIncidencias.tsx
+│   │   │   └── useMapaIncidencias.ts
 │   │   ├── radio/
 │   │   │   ├── FormRondinEscalado.tsx
 │   │   │   └── Input.tsx
@@ -600,7 +631,8 @@
 │   ├── nCoordinacion/
 │   │   └── ProfileDropdownCoordinacion.tsx
 │   ├── notificaciones/
-│   │   └── CampanillaNotificaciones.tsx
+│   │   ├── CampanillaNotificaciones.tsx
+│   │   └── ListaHistorial.tsx
 │   ├── oficial/
 │   │   ├── rondin/
 │   │   │   ├── RondinPageClient.tsx
@@ -699,6 +731,14 @@
 │   ├── FilaDetenidoRol.tsx
 │   ├── LoadingProvider.tsx
 │   └── PageTransition.tsx
+├── docs/
+│   └── notificaciones-oficial-despacho/
+│       ├── 00-contexto.md
+│       ├── 01-backend-despacho-asignado.md
+│       ├── 02-backend-despacho-refuerzos.md
+│       ├── 03-frontend-campanita-ui.md
+│       ├── 04-verificacion.md
+│       └── 05-fix-prioritario-oficial-ocupado.md
 ├── features/
 │   ├── compartido/
 │   │   └── components/
@@ -872,7 +912,9 @@
 │   │   │   ├── 0022_dependencia_sugerida_por_tipo.sql
 │   │   │   ├── 0023_despacho_unidades_horarios.sql
 │   │   │   ├── 0024_reportes_campo_catalogo_fk.sql
-│   │   │   └── 0025_ubicacion_oficiales.sql
+│   │   │   ├── 0025_ubicacion_oficiales.sql
+│   │   │   ├── 0026_incidente_despacho_elementos_atiende_caso.sql
+│   │   │   └── 0026_notificaciones_por_rol.sql
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
 │   │   ├── schema.ts
@@ -919,10 +961,12 @@
 │   │   ├── folio.ts
 │   │   ├── mapper.ts
 │   │   ├── permisos.ts
+│   │   ├── prioridad-colores.ts
 │   │   ├── repository.ts
 │   │   ├── service.ts
 │   │   └── types.ts
 │   ├── maps/
+│   │   ├── googleMapsConfig.ts
 │   │   └── loadGoogleMaps.ts
 │   ├── monitorista/
 │   │   ├── actions.ts
@@ -941,7 +985,10 @@
 │   │   └── repository.ts
 │   ├── notificaciones/
 │   │   ├── actions.ts
+│   │   ├── admin-actions.ts
+│   │   ├── catalogo.ts
 │   │   ├── checker.ts
+│   │   ├── emisor.ts
 │   │   ├── mapper.ts
 │   │   ├── repository.ts
 │   │   └── types.ts
@@ -1049,8 +1096,19 @@
 ├── plan-mapa-despacho/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
+│   ├── etapa-10.md
+│   ├── etapa-11.md
+│   ├── etapa-12.md
 │   ├── etapa-2.md
-│   └── README.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── etapa-7.md
+│   ├── etapa-8.md
+│   ├── etapa-9.md
+│   ├── README.md
+│   └── test-qa.md
 ├── public/
 │   ├── marca_agua/
 │   │   └── plantilla-orden-salida.png
@@ -1101,6 +1159,8 @@
 │   ├── useInfraccionStore.ts
 │   ├── useRondinFormStore.ts
 │   └── useToastStore.ts
+├── types/
+│   └── simpleheat.d.ts
 ├── AGENTS.md
 ├── AGENTS.md.bak
 ├── cesar.md
@@ -1121,6 +1181,7 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
 
 
 

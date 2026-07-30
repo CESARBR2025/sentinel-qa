@@ -431,3 +431,19 @@ Adicionalmente, `capturarInfractorAction` no validaba `tipo_garantia`, permitien
 **Fix**:
 - Creado `GET /api/via/descargar-orden/[infraccionId]` que genera el PDF on-demand si no existe, lo guarda en Expediente y lo sirve como descarga. Reusa toda la infraestructura existente (`subir()`, `parsearRef()`, `generarOrdenSalidaVehiculo`, etc.).
 - `SeccionLiberacion.tsx` ahora muestra una sección principal destacada cuando `esLiberada === true`, con botón de descarga apuntando a la nueva ruta — sin depender de `url_orden_salida_liberaciones`.
+
+---
+
+## Agente podía revisar la solicitud de liberación equivocada si el ciudadano reintentaba la subida (corregido)
+
+**Síntoma**: encontrado auditando `INSTRUCCIONES-INFRACCIONES.md` para confirmar que estuviera listo para el dev de Flutter (2026-07-29). No reportado aún por un agente real, pero reproducible: si un ciudadano interrumpe la subida de documentos (después del fix de "Ciudadano no puede completar subida..." de arriba, que permite reintentar) y vuelve a enviar el formulario, `POST /api/via/ciudadano/iniciar-solicitud` crea una **segunda** fila en `via.v2_solicitudes_liberacion` para la misma infracción — no hay ningún control de unicidad ni en la API ni en la tabla (`infraccion_id` no es único).
+
+**Causa raíz**: dos consultas que buscan "la solicitud de esta infracción" usaban `LIMIT 1` **sin `ORDER BY`**, por lo que con dos filas Postgres podía devolver cualquiera de las dos de forma no determinista:
+- `lib/agente_infracciones/repository.ts` → `obtenerSolicitudLiberacion` (usada por `GET /api/via/liberaciones/documentos/[infraccionId]`, el endpoint que consulta tanto la web ciudadana como la futura app Flutter para ver estatus de revisión).
+- `lib/agente_liberaciones/actions.ts` → consulta inline de `solicitud` dentro de `obtenerDocumentosLiberacion` (usada por `RevisionDocumentosSection.tsx`, la pantalla donde el agente de liberaciones revisa documentos).
+
+En cambio `finalizarRevisionAction` (mismo archivo) sí hacía bien `ORDER BY created_at DESC LIMIT 1`. La inconsistencia entre "qué documentos ve el agente para revisar" (la consulta sin orden, podía traer la solicitud vieja/incompleta) y "qué documentos finaliza" (la consulta con orden, siempre la más reciente) podía hacer que el agente aprobara/rechazara documentos de la solicitud equivocada mientras la solicitud real quedaba sin revisar.
+
+**Fix**: agregado `ORDER BY created_at DESC LIMIT 1` a ambas consultas, igual que ya hacía `finalizarRevisionAction`.
+
+**Pendiente (no corregido, decisión consciente de alcance)**: la causa raíz de fondo —`iniciar-solicitud` sigue sin ser idempotente, cada llamada crea una fila nueva sin revisar si ya existe una— no se corrigió en esta pasada. El fix de arriba hace que las lecturas sean siempre consistentes (ya no hay riesgo de revisar la solicitud equivocada), pero seguirán quedando filas huérfanas en `v2_solicitudes_liberacion` si un ciudadano reintenta la subida. Documentado en `INSTRUCCIONES-INFRACCIONES.md` sección 7.1 como advertencia para que la app Flutter persista `solicitudId` localmente y evite el problema desde el diseño, en vez de depender de que el servidor lo prevenga.

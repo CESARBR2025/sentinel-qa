@@ -175,6 +175,7 @@ export async function obtenerSolicitudLiberacion(infraccionId: string): Promise<
     `SELECT id, tipo_liberacion, es_empresa, nombre_empresa, rfc_empresa, estatus
      FROM via.v2_solicitudes_liberacion
      WHERE infraccion_id = $1
+     ORDER BY created_at DESC
      LIMIT 1`,
     [infraccionId],
   )

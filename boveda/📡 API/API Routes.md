@@ -19,6 +19,7 @@
 | `camara/exportar` | GET | (Pendiente) |
 | `complementos/gruas` | GET | (Pendiente) |
 | `corralon/subir-archivo` | POST | (Pendiente) |
+| `cron/notificaciones` | GET | (Pendiente) |
 | `d1/exportar` | GET | (Pendiente) |
 | `despacho/buscar-oficial` | GET | (Pendiente) |
 | `despacho/unidades-cercanas` | GET | (Pendiente) |
@@ -38,7 +39,7 @@
 | `incidentes/[id]/reporte` | GET | (Pendiente) |
 | `incidentes/atendidos` | GET | (Pendiente) |
 | `incidentes/en-despacho` | GET | (Pendiente) |
-| `incidentes/kpi-geo` | GET | Incidencias geolocalizadas + KPIs por rango de fecha/hora. Params: `desde`, `hasta`, `estatus?`, `canal?`, `prioridadId?`, `tipoIncidenteId?`. Coordenada del reporte de campo con prioridad sobre la del incidente. Ver [[KPI Incidencias]] |
+| `incidentes/kpi-geo` | GET | (Pendiente) |
 | `incidentes/pendientes-despacho` | GET | (Pendiente) |
 | `monitorista/denuncias/[id]/completar-solicitud` | POST | (Pendiente) |
 | `monitorista/denuncias/subir` | POST | (Pendiente) |
@@ -55,6 +56,8 @@
 | `monitorista/solicitudes/[id]/completar` | POST | (Pendiente) |
 | `nCoordinacion/generar` | GET | (Pendiente) |
 | `notificaciones` | GET | (Pendiente) |
+| `notificaciones/contador` | GET | (Pendiente) |
+| `notificaciones/leer` | POST | (Pendiente) |
 | `prevencion/busquedas` | GET, POST | (Pendiente) |
 | `prevencion/busquedas/[id]` | GET, PUT | (Pendiente) |
 | `prevencion/busquedas/[id]/cancelar` | POST | (Pendiente) |
@@ -120,6 +123,7 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
 
 
 

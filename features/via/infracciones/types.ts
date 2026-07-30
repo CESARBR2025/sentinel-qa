@@ -191,6 +191,16 @@ export interface ViewArticulosLista {
   fracciones?: ViewFraccionLista[];
 }
 
+export interface InfraccionResumenDTO {
+  id: string;
+  folio: string;
+  estatusInfraccion: string;
+  estatusDependencia: string | null;
+  fechaInfraccion: string;
+  montoFinal: number;
+  pin_acceso: string;
+}
+
 export interface ViewBuscarIDArticulo {
   id: number;
   descripcion: string;

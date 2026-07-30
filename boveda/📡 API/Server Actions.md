@@ -18,13 +18,15 @@
 | `lib/incidentes/actions.ts` | createIncidente, createIncidenteCliente, addPersonaAfectada, deletePersonaAfectada, createRondinEscalado, createDespacho, enviarRefuerzos, cerrarPorDetencion, createExtorsion, createAlarmaEscolar |
 | `lib/monitorista/actions.ts` | solicitarEvidencia, subirEvidencia, completarSolicitud, cancelarSolicitud |
 | `lib/n-coordinacion/actions.ts` | guardarDatosCoordinacion |
-| `lib/notificaciones/actions.ts` | marcarLeida, marcarTodasLeidas, generarAlertasDebug |
+| `lib/notificaciones/actions.ts` | sesionConRol, marcarLeida, marcarTodasLeidas |
+| `lib/notificaciones/admin-actions.ts` | guardarMatrizAction, enviarAvisoAction, guardarRetencionAction, purgarAction |
 | `lib/oficial/actions.ts` | crearReporteCampoOficial, marcarEnCaminoOficial, marcarEnSitioOficial, asignarPatrulla, reportarUbicacionOficial, actualizarTelefono |
 | `lib/permisos/core.ts` | obtenerPermisosUsuario, tienePermiso, listarPermisosPorUsuario, guardarPermiso, obtenerPlantillaRol, tienePlantillaRol, guardarPlantillaSeccion, aplicarPlantillaRol, guardarPermisosSeccionesAction, guardarPlantillaSeccionesAction |
 | `lib/prevencion/actions.ts` | createMedida, createVisita, addAutoridadMedida, createProrroga, createFicha, createSeguimiento, cancelarFicha, createSolicitud, createSolicitudC4, createContestacion, createMedidaApi, updateMedidaApi, updateMedidaStatusApi, createVisitaApi, createFichaApi, updateFichaApi, cancelarFichaApi, createSeguimientoApi, createSolicitudApi, updateSolicitudApi, createSolicitudC4Api, createContestacionApi |
 | `lib/rol-servicios/actions.ts` | createRol, updateEncabezadoRol, createAsignacion, deleteAsignacion, upsertEstadoFuerza, createObservacion, deleteObservacion, guardarFirmas |
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
+
 
 
 
