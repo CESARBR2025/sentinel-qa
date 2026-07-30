@@ -198,6 +198,7 @@ export interface InfraccionResumenDTO {
   estatusDependencia: string | null;
   fechaInfraccion: string;
   montoFinal: number;
+  totalPesos: number | null;
   pin_acceso: string;
 }
 

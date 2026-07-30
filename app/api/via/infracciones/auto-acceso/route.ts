@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { SignJWT } from "jose";
+import { decryptPin } from "@/lib/via/crypto-ciudadano";
 
 const getSecret = () => new TextEncoder().encode(process.env.BETTER_AUTH_SECRET);
+const API_KEY_ENV = "X-INFRACCIONES-KEY";
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const infraccionId = searchParams.get("infraccionId");
-    const pin = searchParams.get("pin");
+    const encrypted = searchParams.get("p");
 
-    if (!infraccionId || !pin) {
+    if (!infraccionId || !encrypted) {
       return NextResponse.redirect(
         new URL(`/infracciones/${infraccionId || ""}?pin_error=1`, req.url),
+      );
+    }
+
+    const secretKey = process.env[API_KEY_ENV] || "";
+    const pin = decryptPin(encrypted, secretKey);
+    if (!pin || pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+      return NextResponse.redirect(
+        new URL(`/infracciones/${infraccionId}?pin_error=1`, req.url),
       );
     }
 

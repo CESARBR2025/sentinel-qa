@@ -132,10 +132,14 @@ export class InfraccionesRepository {
   static async listarPorCurp(curp: string): Promise<InfraccionResumenDTO[]> {
     const curpNormalized = curp.trim().toUpperCase();
     const result = await query(
-      `SELECT id, folio, estatus, estatus_dependencia, fecha_infraccion, monto_final, pin_acceso
-       FROM via.v2_infracciones
-       WHERE curp_infractor = $1
-       ORDER BY created_at DESC`,
+      `SELECT
+         i.id, i.folio, i.estatus, i.estatus_dependencia,
+         i.created_at, i.monto_final, i.pin_acceso,
+         ops.total_pesos
+       FROM via.v2_infracciones i
+       LEFT JOIN via.v2_ordenes_pago_sa7 ops ON ops.infraccion_id = i.id
+       WHERE i.curp_infractor = $1
+       ORDER BY i.created_at DESC, ops.created_at DESC NULLS LAST`,
       [curpNormalized],
     );
     return result.rows.map((row: any) => ({
@@ -143,8 +147,9 @@ export class InfraccionesRepository {
       folio: row.folio,
       estatusInfraccion: row.estatus,
       estatusDependencia: row.estatus_dependencia,
-      fechaInfraccion: row.fecha_infraccion,
+      fechaInfraccion: row.created_at,
       montoFinal: Number(row.monto_final),
+      totalPesos: row.total_pesos ? Number(row.total_pesos) : null,
       pin_acceso: row.pin_acceso,
     }));
   }

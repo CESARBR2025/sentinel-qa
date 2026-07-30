@@ -611,18 +611,25 @@ Pide acceso de lectura a esa base (credenciales en `.env` del proyecto,
 variable `DATABASE_URL`) a quien administre el ambiente de pruebas — no está
 en este documento por ser un secreto real, no un dato de referencia.
 
-## 11. Consulta por CURP (nuevo, 2026-07-30)
+## 11. Consulta por CURP (app móvil)
 
-Este es el endpoint que la **app móvil** debe consumir para mostrar el listado
-de infracciones de un ciudadano. El usuario ya no necesita un link + PIN —
-ingresa su CURP y ve todas sus infracciones en una tabla.
+Este es el endpoint que la **app móvil** consume para mostrar el listado
+de infracciones de un ciudadano. La CURP viaja en el header, no en la URL;
+el `pin_acceso` se devuelve cifrado (AES-256-GCM) con `X-INFRACCIONES-KEY`
+como llave de cifrado.
 
 ```
-GET /api/via/infracciones/por-curp/<curp>
+GET /api/via/infracciones/por-curp
+x-infracciones-key: <api-key>
+x-curp: BARC021102HQTRSSA9
 ```
 
-Sin autenticación. Rate-limited por IP (30 req/min). CURP debe ser 18 caracteres
-alfanuméricos en mayúsculas (el endpoint normaliza automáticamente).
+| Header | Obligatorio | Notas |
+|---|---|---|
+| `x-infracciones-key` | Sí | API Key configurada en `X-INFRACCIONES-KEY` del backend |
+| `x-curp` | Sí | CURP del infractor, 18 caracteres alfanuméricos |
+
+Rate-limited por IP (30 req/min).
 
 **Respuesta:**
 ```json
@@ -635,7 +642,8 @@ alfanuméricos en mayúsculas (el endpoint normaliza automáticamente).
       "estatusDependencia": "PLACA_RETENIDA_EN_TRANSITO",
       "fechaInfraccion": "2026-07-28T16:00:00.000Z",
       "montoFinal": 50.0,
-      "pin_acceso": "123456"
+      "totalPesos": 868.0,
+      "pin_acceso": "<base64url-encrypted>"
     }
   ]
 }
@@ -649,41 +657,47 @@ alfanuméricos en mayúsculas (el endpoint normaliza automáticamente).
 | `estatusDependencia` | string\|null | Ver sección 6.2 |
 | `fechaInfraccion` | string (ISO) | |
 | `montoFinal` | number | Monto final en UMAs |
-| `pin_acceso` | string (6 dígitos) | **Código de acceso** — usado para la redirección automática (ver sección 11.1) |
+| `totalPesos` | number\|null | Monto en pesos MXN (de la orden de pago SA7) |
+| `pin_acceso` | string (base64url) | **Cifrado con AES-256-GCM** usando `X-INFRACCIONES-KEY` como llave. La app no debe descifrarlo — se pasa directamente al endpoint de auto-acceso. |
 
 CURP inválida → 400. Sin infracciones → 200 con array vacío.
 
 ### 11.1 Redirección automática (app → web)
 
 Cuando el ciudadano da clic en una fila de la tabla para pagar, la app debe
-abrir el navegador con esta URL (NO `/infracciones/<id>` directo):
+abrir el navegador con esta URL:
 
 ```
-GET /api/via/infracciones/auto-acceso?infraccionId=<uuid>&pin=123456
+GET /api/via/infracciones/auto-acceso?infraccionId=<uuid>&p=<pin_acceso_cifrado>
 ```
 
-Este endpoint:
-1. Valida el PIN contra la base de datos (misma lógica que `verificar-pin`)
-2. Incrementa intentos / bloquea si es necesario
-3. Si el PIN es correcto: emite la cookie `infraccion_access` (JWT de 1h)
-4. Redirige (302) a `/infracciones/<id>` → el ciudadano ve la página completa
-   sin pasar por el PinBarrier
+Usa el parámetro `p` (no `pin`) — el PIN viene cifrado desde el endpoint de
+consulta. El servidor lo descifra con `X-INFRACCIONES-KEY`, lo valida contra BD,
+y si es correcto emite la cookie y redirige a la página ciudadana.
 
-Si el PIN falla o la infracción está bloqueada: redirige a
+Si falla (PIN inválido, bloqueo, error de descifrado): redirige a
 `/infracciones/<id>?pin_error=1` → el PinBarrier se muestra y el ciudadano
-puede intentar teclear el PIN manualmente.
+puede teclear el PIN manualmente.
 
 **Flujo completo en la app móvil:**
 1. El ciudadano ingresa su CURP
-2. App llama `GET /api/via/infracciones/por-curp/<curp>`
+2. App llama `GET /api/via/infracciones/por-curp` con headers `x-curp` + `x-infracciones-key`
 3. App renderiza tabla con folio, estatus, fecha, monto
 4. Ciudadano da clic en "Pagar" → app abre navegador con
-   `/api/via/infracciones/auto-acceso?infraccionId=<id>&pin=<pin_acceso>`
+   `/api/via/infracciones/auto-acceso?infraccionId=<id>&p=<pin_cifrado>`
 5. Navegador valida, pone cookie, redirige a la página ciudadana
 6. El ciudadano completa pago/liberación en el navegador (web existente)
 
 **No hay que replicar la lógica de pago ni de liberación en la app** — la web
 existente (`app/infracciones/[id]/page.tsx`) ya se encarga de todo.
+
+### 11.2 Detalles de cifrado (solo referencia, no necesario para la app)
+
+El `pin_acceso` se cifra con AES-256-GCM:
+- **Key derivation**: SHA-256 del valor de `X-INFRACCIONES-KEY`
+- **Nonce**: 12 bytes aleatorios por cada cifrado
+- **Output**: Base64 URL-safe = `nonce(12) + ciphertext + tag(16)`
+- Implementación backend: `lib/via/crypto-ciudadano.ts`
 
 ---
 Endpoints verificados con `curl` contra datos reales de una infracción de
@@ -730,9 +744,10 @@ de liberación: tabs del dashboard, subida interrumpida, pago prematuro) y
 5. Confirmado sin cambios: secciones 1-4 (salvo la nota de `urlOrdenSalida`
    del punto 4.1), 7.2, 9.1-9.4, 10.
 
-*Revisión 2026-07-30: agregada la sección 11 (consulta por CURP +
-auto-acceso). Nuevos endpoints: `GET /api/via/infracciones/por-curp/<curp>`
-(listado público de infracciones por CURP) y
-`GET /api/via/infracciones/auto-acceso` (puente app→web con validación de
-PIN + redirect). La columna `curp_infractor` ya existe en la tabla
-`via.v2_infracciones` — no se requirieron cambios de esquema.*
+*Revisión 2026-07-30 (v2): refactor de seguridad de la sección 11. La CURP
+ahora viaja en el header `x-curp` (no en la URL); el `pin_acceso` se cifra
+con AES-256-GCM usando `X-INFRACCIONES-KEY` como llave; y el endpoint
+`auto-acceso` acepta `?p=` (PIN cifrado) en lugar de `?pin=` (texto plano).
+Creado `lib/via/crypto-ciudadano.ts` con `encryptPin`/`decryptPin`.
+Ruta antigua `por-curp/[curp]` eliminada; reemplazada por `por-curp/`
+sin parámetro de URL.*
