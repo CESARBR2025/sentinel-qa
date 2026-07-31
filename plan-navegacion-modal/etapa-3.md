@@ -1,3 +1,21 @@
+# Etapa 3 — Refactor de `NavegacionDespacho.tsx`
+
+> Lee primero [`00-contexto.md`](./00-contexto.md), que tiene el archivo completo actual. Puede ejecutarse en paralelo con las Etapas 1 y 2 (mismo archivo, sin dependencias cruzadas de código, solo de integración final en la Etapa 4).
+
+**Archivo a modificar:** `components/oficial/navegacion/NavegacionDespacho.tsx`
+
+## Objetivo
+
+1. Quitar la pantalla `fase === 'no_iniciado'` y su botón — esa pantalla se mudó a `AsignacionCard.tsx` (Etapa 1), fuera del modal. Este componente ahora asume que, en cuanto se monta, el oficial ya confirmó "iniciar" — dispara `marcarEnCaminoOficial` automáticamente al montar.
+2. **Modo navegación pasa a ser el default** (`modoNavegacion` inicia en `true`, no `false`) — arriba queda como vista secundaria.
+3. La llegada (geofence o botón manual) ya no llama al callback del padre de inmediato — muestra una pantalla de confirmación **"Has llegado a destino"** dentro del mismo componente, y solo el botón **"ATENDER"** de esa pantalla dispara el callback hacia el padre (renombrado de `onLlegada` a `onAtender`).
+4. El botón manual de respaldo se renombra de "✓ LLEGUÉ" a **"YA ESTOY AQUÍ"**.
+
+## Cambios a aplicar
+
+Reemplaza el archivo completo por esta versión (parte del `00-contexto.md` como base, con los cambios integrados):
+
+```tsx
 'use client'
 
 import { useEffect, useRef, useState, useTransition } from 'react'
@@ -103,6 +121,9 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
   const [rumbo, setRumbo] = useState(0)
   const posicionAnteriorRumboRef = useRef<{ lat: number; lng: number } | null>(null)
 
+  // Al montar, el oficial ya confirmó "iniciar navegación" en AsignacionCard —
+  // no hay una segunda confirmación aquí dentro. Dispara la acción de negocio
+  // una sola vez (StrictMode/remounts no la vuelven a llamar).
   useEffect(() => {
     if (inicioDisparadoRef.current) return
     inicioDisparadoRef.current = true
@@ -143,17 +164,6 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
           setRuta(result)
           setErrorRuta(null)
           ultimoRecalculoRef.current = Date.now()
-
-          // Rumbo inicial desde la ruta calculada (no north-up): así el modo
-          // navegación arranca ya orientado hacia el destino desde el primer
-          // frame, igual que DiDi/Google Maps — sin esto, la cámara apuntaba
-          // al norte hasta que el oficial se movía >8m y el rumbo se inferÍa
-          // por GPS, tardando varios segundos en "activarse" visualmente.
-          const primerPaso = result.routes[0]?.legs[0]?.steps[0]
-          if (primerPaso) {
-            const destinoPrimerPaso = { lat: primerPaso.end_location.lat(), lng: primerPaso.end_location.lng() }
-            setRumbo(calcularRumbo(origen, destinoPrimerPaso))
-          }
         } else {
           setErrorRuta('No se pudo calcular la ruta.')
         }
@@ -161,6 +171,9 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
     )
   }
 
+  // Transición visual inmediata a la pantalla de llegada — marcarEnSitioOficial
+  // corre en background (startTransition) para que hora_llegada quede precisa
+  // sin bloquear la confirmación visual al oficial.
   const dispararLlegada = () => {
     if (llegadaDisparadaRef.current) return
     llegadaDisparadaRef.current = true
@@ -376,3 +389,27 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
     </div>
   )
 }
+```
+
+## Resumen de los cambios respecto a la versión anterior
+
+- Props: `onLlegada` → `onAtender`.
+- `fase`: `'no_iniciado' | 'navegando'` → `'navegando' | 'llegada'`. Ya no hay gate interna.
+- Nuevo `useEffect` con `inicioDisparadoRef` que llama `marcarEnCaminoOficial(incidenteId)` una sola vez al montar (reemplaza al viejo `handleIniciar` + botón).
+- Se quitaron `pendienteInicio`/`startTransitionInicio`/`handleIniciar` — ya no hace falta un estado de "iniciando" separado, la pantalla de carga existente (`!isLoaded || !posicionActual`) ya cubre ese momento.
+- `modoNavegacion` inicia en `true` (antes `false`).
+- `dispararLlegada` ya no llama a ningún callback del padre — cambia `fase` a `'llegada'` de inmediato (optimista) y dispara `marcarEnSitioOficial` en background.
+- Nueva rama `fase === 'llegada'`: pantalla de confirmación con ícono animado, texto, folio y botón "ATENDER" que sí llama a `onAtender?.()`.
+- Botón manual renombrado de "✓ LLEGUÉ" a "YA ESTOY AQUÍ" (mismo `onClick={dispararLlegada}`, mismo estilo).
+- Import nuevo: `CheckCircle2` de `lucide-react` (confirmar que existe en `node_modules/lucide-react/dist/esm/icons/check-circle-2.mjs` antes de usarlo — si el nombre exacto difiere en la versión instalada, usar el que sí exista con el mismo significado visual).
+
+## Criterios de aceptación
+
+- [ ] `npx tsc --noEmit` sin errores nuevos.
+- [ ] Al montar el componente (ya no hay pantalla de "Iniciar navegación" interna), se dispara `marcarEnCaminoOficial` automáticamente — confirmar en BD que `hora_salida` se puebla sin ninguna interacción adicional del oficial dentro de este componente.
+- [ ] El mapa arranca directo en modo navegación (tilt inclinado, ícono 3D) sin que el oficial tenga que tocar el botón de alternancia.
+- [ ] "VISTA DE ARRIBA" sigue funcionando para volver al top-down, y desde ahí se puede regresar a "MODO NAVEGACIÓN".
+- [ ] Al simular llegada (geofence o botón "YA ESTOY AQUÍ"), el mapa desaparece de inmediato y aparece la pantalla "HAS LLEGADO A DESTINO" con animación del ícono — sin esperar a que `marcarEnSitioOficial` termine de responder.
+- [ ] Confirmar en BD que `incidentes.estatus` pasa a `en_sitio` y `hora_llegada` se puebla, incluso antes de que el oficial toque "ATENDER".
+- [ ] El botón "ATENDER" es el único elemento que dispara `onAtender?.()` — no debe dispararse solo.
+- [ ] No queda ningún código muerto referenciando `fase === 'no_iniciado'`, `handleIniciar`, `pendienteInicio` u `onLlegada`.

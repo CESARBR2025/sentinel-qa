@@ -1,10 +1,10 @@
 {
-  "toolCallCount": 6845,
+  "toolCallCount": 6880,
   "lastTask": "bien asi como corregiste asi tienes que armar de ahora en adelante; donde puedes apuntar esa regla? ",
   "lastCheckpointKey": "",
-  "editsSinceLastCheck": 2,
+  "editsSinceLastCheck": 1,
   "editsSinceGraphifyUpdate": 2,
-  "grepCount": 29,
+  "grepCount": 35,
   "graphifyQueryCount": 6,
   "_graphifyCache": {
     "39797648": {
@@ -431,5 +431,10 @@
       "result": "Graphify First-Hop Summary\nGraph: 4157 nodes, 13241 edges, 146 communities, density 0.0015, average degree 6.3705, undirected\n\nTop hubs:\n  1. auth (degree 155, community 0 Community 0, lib/auth.ts)\n  2. query() (degree 62, community 83 Community 83, lib/db.ts)\n  3. DashboardHeader() (degree 49, community 9 Community 9, components/partials/Header.tsx)\n  4. getUserWithRole() (degree 31, community 9 Community 9, lib/auth/helpers.ts)\n  5. tienePermiso() (degree 21, community 54 Community 54, lib/monitorista/permisos.ts)\n\nKey communities:\n  1. Community 0 - Community 0: 107 nodes, 334 internal edges, density 0.0589; top nodes: auth.ts, auth, 5618308 guardado e evidencias con ed\n  2. Community 1 - Community 1: 101 nodes, 155 internal edges, density 0.0307; top nodes: core.ts, 046f18c Merge pull request #19 from presidenciaSJR/conexion, ac9ad49 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing\n  3. Community 2 - Community 2: 100 nodes, 116 internal edges, density 0.0234; top nodes: page.tsx, InfraccionCiudadanoPage(), ProrrogaViewerModal.tsx\n  4. Community 3 - Community 3: 99 nodes, 275 internal edges, density 0.0567; top nodes: 06c55f5 Merge branch 'feature/testing' into feature/reportes, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia, 41ea169 Merge branch 'testing' into conexion\n  ... (truncated)",
       "ts": 1785510399281
     }
-  }
+  },
+  "ymSearchCount": 1,
+  "ymDocNudge": {
+    "911": 1785529405748
+  },
+  "ymEditCount": 2
 }

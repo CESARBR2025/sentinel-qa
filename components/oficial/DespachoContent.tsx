@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { FormularioRecorrido } from '@/components/oficial/FormularioRecorrido'
-import { NavegacionDespacho } from '@/components/oficial/navegacion/NavegacionDespacho'
+import { AsignacionCard } from '@/components/oficial/navegacion/AsignacionCard'
+import { NavegacionModal } from '@/components/oficial/navegacion/NavegacionModal'
 
 interface Asignacion {
   folio: string
@@ -28,6 +29,7 @@ interface Props {
 
 export function DespachoContent({ estatusInicial, incidenteId, asignacion, catalogos, user }: Props) {
   const [enSitio, setEnSitio] = useState(estatusInicial === 'en_sitio')
+  const [modalAbierto, setModalAbierto] = useState(false)
 
   if (enSitio) {
     return (
@@ -51,16 +53,30 @@ export function DespachoContent({ estatusInicial, incidenteId, asignacion, catal
     )
   }
 
+  const direccion = [asignacion.calle, asignacion.colonia].filter(Boolean).join(', ') || null
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-      <NavegacionDespacho
-        incidenteId={incidenteId}
-        destino={{ lat: asignacion.latitud as number, lng: asignacion.longitud as number }}
+      <AsignacionCard
         folio={asignacion.folio}
-        direccion={[asignacion.calle, asignacion.colonia].filter(Boolean).join(', ') || null}
+        direccion={direccion}
         prioridad={asignacion.prioridad}
-        onLlegada={() => setEnSitio(true)}
+        onIniciar={() => setModalAbierto(true)}
       />
+
+      {modalAbierto && (
+        <NavegacionModal
+          incidenteId={incidenteId}
+          destino={{ lat: asignacion.latitud as number, lng: asignacion.longitud as number }}
+          folio={asignacion.folio}
+          direccion={direccion}
+          prioridad={asignacion.prioridad}
+          onAtender={() => {
+            setModalAbierto(false)
+            setEnSitio(true)
+          }}
+        />
+      )}
     </div>
   )
 }
