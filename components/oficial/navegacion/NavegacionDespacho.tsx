@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer } from '@react-google-maps/api'
-import { Navigation2, Map as MapIcon, CheckCircle2 } from 'lucide-react'
+import { Navigation2, Map as MapIcon, CheckCircle2, Compass, Flag } from 'lucide-react'
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES, GOOGLE_MAPS_MAP_ID } from '@/lib/maps/googleMapsConfig'
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 import { marcarEnCaminoOficial, marcarEnSitioOficial } from '@/lib/oficial/actions'
@@ -101,6 +101,12 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
   const [modoNavegacion, setModoNavegacion] = useState(true)
   const [avisoMapId, setAvisoMapId] = useState(false)
   const [rumbo, setRumbo] = useState(0)
+  // Orientación dentro del modo navegación: heading-up (cámara rota con la
+  // ruta, default) vs north-up (norte siempre arriba, tilt se conserva).
+  // Distinto del toggle modoNavegacion, que alterna entre 3D inclinado y
+  // plano top-down — este botón de brújula solo cambia la rotación dentro
+  // del modo 3D, igual que el botón de brújula real de Google Maps.
+  const [headingUp, setHeadingUp] = useState(true)
   const posicionAnteriorRumboRef = useRef<{ lat: number; lng: number } | null>(null)
 
   useEffect(() => {
@@ -335,33 +341,72 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
             zoomControl: true,
             ...(GOOGLE_MAPS_MAP_ID ? { mapId: GOOGLE_MAPS_MAP_ID } : {}),
             tilt: modoNavegacion ? TILT_NAVEGACION : 0,
-            heading: modoNavegacion ? rumbo : 0,
+            heading: modoNavegacion && headingUp ? rumbo : 0,
           }}
         >
           {ruta && (
             <DirectionsRenderer
               directions={ruta}
-              options={{ suppressMarkers: true, polylineOptions: { strokeColor: '#1f355a', strokeWeight: 5 } }}
+              options={{ suppressMarkers: true, polylineOptions: { strokeColor: '#7c3aed', strokeWeight: 6 } }}
             />
           )}
           <MarkerF position={posicionActual} icon={modoNavegacion ? buildVehiculo3DIcon() : buildPatrullaSvgIcon()} />
           <MarkerF position={destino} icon={buildDestinoSvgIcon(color)} clickable={false} />
         </GoogleMap>
 
-        <button
-          onClick={toggleModoNavegacion}
-          style={{
-            position: 'absolute', top: 12, right: 12, zIndex: 10,
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '10px 14px', fontFamily: 'Barlow Condensed,sans-serif',
-            fontWeight: 700, fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase',
-            border: '1px solid #1f355a', borderRadius: 2, cursor: 'pointer',
-            background: '#ffffff', color: '#1c3051', boxShadow: '0 2px 8px rgba(0,0,0,.15)',
-          }}
-        >
-          {modoNavegacion ? <MapIcon size={15} /> : <Navigation2 size={15} />}
-          {modoNavegacion ? 'VISTA DE ARRIBA' : 'MODO NAVEGACIÓN'}
-        </button>
+        {/* Etiqueta flotante del destino — pill blanco estilo Google Maps/DiDi,
+            excepción deliberada al borderRadius:2 institucional del resto del
+            proyecto, porque el objetivo explícito de este HUD es replicar esa
+            estética de navegación. */}
+        <div style={{
+          position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
+          display: 'flex', alignItems: 'center', gap: 8, maxWidth: '78%',
+          padding: '10px 18px', borderRadius: 999, background: '#ffffff',
+          boxShadow: '0 2px 10px rgba(15,23,42,.22)',
+        }}>
+          <Flag size={14} color="#dc2626" style={{ flexShrink: 0 }} />
+          <span style={{
+            fontFamily: 'Inter,sans-serif', fontSize: 13, fontWeight: 600, color: '#0f172a',
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>
+            {direccion ?? 'Destino del incidente'}
+          </span>
+        </div>
+
+        <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {modoNavegacion && (
+            <button
+              onClick={() => setHeadingUp(h => !h)}
+              title={headingUp ? 'Fijar al norte' : 'Orientar a la ruta'}
+              style={{
+                width: 44, height: 44, borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '1px solid #e2e8f0', background: '#ffffff', cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+              }}
+            >
+              <Compass
+                size={20}
+                color={headingUp ? '#1f355a' : '#94a3b8'}
+                style={{ transform: `rotate(${headingUp ? -rumbo : 0}deg)`, transition: 'transform .2s' }}
+              />
+            </button>
+          )}
+
+          <button
+            onClick={toggleModoNavegacion}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '10px 14px', fontFamily: 'Barlow Condensed,sans-serif',
+              fontWeight: 700, fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase',
+              border: '1px solid #1f355a', borderRadius: 2, cursor: 'pointer',
+              background: '#ffffff', color: '#1c3051', boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+            }}
+          >
+            {modoNavegacion ? <MapIcon size={15} /> : <Navigation2 size={15} />}
+            {modoNavegacion ? 'VISTA DE ARRIBA' : 'MODO NAVEGACIÓN'}
+          </button>
+        </div>
 
         {avisoMapId && (
           <div style={{
