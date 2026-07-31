@@ -104,6 +104,8 @@ export function rowToDespachoAsignado(row: Record<string, unknown>): DespachoAsi
     colonia: (row.colonia as string) ?? null,
     entreCalles: (row.entre_calles as string) ?? null,
     referenciaUbicacion: (row.referencia_ubicacion as string) ?? null,
+    latitud: row.latitud != null ? Number(row.latitud) : null,
+    longitud: row.longitud != null ? Number(row.longitud) : null,
     tipoIncidente: (row.tipo_incidente_nombre as string) ?? null,
     prioridad: (row.prioridad_nombre as string) ?? null,
     tipoEmergenciaId: row.tipo_emergencia_id != null ? Number(row.tipo_emergencia_id) : null,

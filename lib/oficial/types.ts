@@ -159,6 +159,8 @@ export interface DespachoAsignado {
   colonia: string | null;
   entreCalles: string | null;
   referenciaUbicacion: string | null;
+  latitud: number | null;
+  longitud: number | null;
   tipoIncidente: string | null;
   prioridad: string | null;
   tipoEmergenciaId: number | null;

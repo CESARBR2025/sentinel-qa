@@ -106,8 +106,10 @@
 | `via/exp-digital/guardar-docs` | POST | (Pendiente) |
 | `via/exp-digital/guardar-evidencias` | POST | (Pendiente) |
 | `via/infracciones/[id]` | GET | (Pendiente) |
+| `via/infracciones/auto-acceso` | GET | (Pendiente) |
 | `via/infracciones/iniciar-proceso` | PATCH | (Pendiente) |
 | `via/infracciones/liberar-garantia` | PATCH | (Pendiente) |
+| `via/infracciones/por-curp` | GET | (Pendiente) |
 | `via/infracciones/registradas/[id]` | GET | (Pendiente) |
 | `via/infracciones/registrar` | POST | (Pendiente) |
 | `via/infracciones/retencion-placa` | PATCH | (Pendiente) |
@@ -123,6 +125,8 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

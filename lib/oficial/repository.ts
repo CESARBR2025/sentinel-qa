@@ -189,6 +189,16 @@ export async function insertarReporteCampo(
          WHERE du.despacho_id = d.id AND d.incidente_id = $1`,
         [data.incidenteId],
       );
+
+      // Backfill simétrico para hora_llegada: si nunca se disparó "en sitio" (geofence
+      // o botón manual "LLEGUÉ"), se usa el momento del cierre como mejor aproximación.
+      await cliente.query(
+        `UPDATE incidente_despacho_unidades du
+         SET hora_llegada = COALESCE(du.hora_llegada, NOW())
+         FROM incidente_despacho d
+         WHERE du.despacho_id = d.id AND d.incidente_id = $1`,
+        [data.incidenteId],
+      );
     }
 
     await cliente.query("COMMIT");
@@ -261,6 +271,7 @@ export async function obtenerDespachosAsignados(
     `SELECT
        i.id AS incidente_id, i.folio, i.canal, i.estatus, i.descripcion,
        i.calle, i.colonia, i.entre_calles, i.referencia_ubicacion,
+       i.latitud, i.longitud,
        i.fecha_hora_inicio,
        i.tipo_emergencia_id, i.tipo_incidente_id, i.prioridad_id,
        cti.nombre AS tipo_incidente_nombre,

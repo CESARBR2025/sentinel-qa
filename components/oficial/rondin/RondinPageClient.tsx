@@ -8,6 +8,7 @@ import React from 'react'
 import { RondinTabla } from './RondinTabla'
 import { useRondinFormStore } from '@/stores/useRondinFormStore'
 import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
+import GoogleMapPicker from '@/components/maps/GoogleMapPicker'
 import type { RondinOficialResumen } from '@/lib/oficial/types'
 import type { CatalogosJerarquicos } from '@/lib/911/types'
 
@@ -47,6 +48,7 @@ export function RondinPageClient({
 
   const calleRef = useRef<HTMLInputElement>(null)
   const coloniaRef = useRef<HTMLInputElement>(null)
+  const [posicion, setPosicion] = useState<{ lat: number; lng: number } | null>(null)
 
   const [selectedTipo, setSelectedTipo] = useState<string>(String(catalogos.emergencias[0]?.id ?? ''))
   const [selectedSubtipo, setSelectedSubtipo] = useState<string>('')
@@ -91,11 +93,7 @@ export function RondinPageClient({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords
-
-        const latInput = document.querySelector<HTMLInputElement>('input[name="latitud"]')
-        const lngInput = document.querySelector<HTMLInputElement>('input[name="longitud"]')
-        if (latInput) latInput.value = String(latitude)
-        if (lngInput) lngInput.value = String(longitude)
+        setPosicion({ lat: latitude, lng: longitude })
 
         if (mapsReady && window.google?.maps?.Geocoder) {
           const geocoder = new window.google.maps.Geocoder()
@@ -164,8 +162,8 @@ export function RondinPageClient({
         <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', padding: '0 48px 48px' }}>
           <form action={createRondinEscalado} style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
               <input type="hidden" name="anonimo" value={String(anonimo)} />
-              <input type="hidden" name="latitud" />
-              <input type="hidden" name="longitud" />
+              <input type="hidden" name="latitud" value={posicion?.lat ?? ''} readOnly />
+              <input type="hidden" name="longitud" value={posicion?.lng ?? ''} readOnly />
               <input type="hidden" name="folio" value={folio} />
               <input type="hidden" name="folioConsecutivo" value={folioConsecutivo} />
 
@@ -272,6 +270,19 @@ export function RondinPageClient({
                 <Campo label="Referencia">
                   <input name="referenciaUbicacion" placeholder="Ej. frente a la tienda…" style={inputStyle} />
                 </Campo>
+                <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    Toca el mapa para fijar el punto, o arrastra el marcador para ajustarlo
+                  </span>
+                  <GoogleMapPicker
+                    markerPosition={posicion}
+                    onLocationSelect={(loc) => {
+                      setPosicion({ lat: loc.lat, lng: loc.lng })
+                      if (loc.calle && calleRef.current) calleRef.current.value = loc.calle
+                      if (loc.colonia && coloniaRef.current) coloniaRef.current.value = loc.colonia
+                    }}
+                  />
+                </div>
                 <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <button type="button" onClick={obtenerUbicacion} disabled={obteniendoUbicacion}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 18px', background: obteniendoUbicacion ? '#e2e8f0' : '#f8fafc', color: obteniendoUbicacion ? '#94a3b8' : '#1f355a', border: `1px solid ${obteniendoUbicacion ? '#e2e8f0' : '#1f355a'}`, borderRadius: 2, cursor: obteniendoUbicacion ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'all .15s' }}>

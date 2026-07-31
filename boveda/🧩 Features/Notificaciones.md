@@ -862,6 +862,8 @@ módulo de origen de cada notificación.
 
 ## Cómo instrumentar un flujo de negocio nuevo (agregar `emitir()` a otras acciones)
 
+> **2026-07-31 — eventos que dejaron de ser configuración huérfana:** `despacho.en_camino` y `despacho.en_sitio` ya tienen emisor real. Antes estaban definidos en `catalogo.ts` (con `rolesPorDefecto: ['agente_despacho']` y `href: /agente_911/despacho`) pero ningún `emitir()` los usaba. Ahora `lib/oficial/actions.ts::marcarEnCaminoOficial`/`marcarEnSitioOficial` los emiten después de su `UPDATE` (disparo automático de la navegación en vivo del oficial — ver [[Reporte Campo]]), con audiencia por defecto del catálogo (rol, sin `usuarios`), `entidadTipo: 'incidente'` y `dedup: despacho.en_camino|en_sitio:{incidenteId}`. Si la acción lanza (ej. estatus ya no es `en_despacho`), corta antes del `emitir` — no se notifica nada.
+
 Instrumentar = hacer que una acción existente (crear, actualizar, cerrar algo)
 dispare una notificación. Son 3 pasos, siempre los mismos:
 
@@ -911,6 +913,23 @@ Nota los dos patrones de audiencia:
   audiencia sola (override de BD → `rolesPorDefecto` del catálogo).
 - **A una persona concreta** (ej. "se te asignó a ti"): pasa `usuarios: [id]` y
   `roles: []` para no avisarle también a todo el rol.
+
+**⚠ Una misma clave de evento puede tener varios call-sites con audiencias distintas.**
+En este repo, `'despacho.asignado'` se emite en **tres** puntos de
+`lib/incidentes/actions.ts` con destinatarios distintos:
+- `createIncidente` / `createIncidenteCliente` → notifican al **despachador
+  humano** (`usuarios: [despachadorId]`, `href: '/agente_911/despacho'`) — es
+  el ejemplo de arriba.
+- `createDespacho` / `enviarRefuerzos` → notifican al **oficial de campo**
+  asignado (`usuarios: [...]` resuelto por `no_nomina` → `ofi_oficiales.user_id`,
+  `href` default del catálogo `/oficial/despachos/{id}`). Ver [[911]] regla 18,
+  [[Reporte Campo]].
+
+El nombre del evento describe *qué pasó* ("se asignó un despacho"), no *a
+quién* — cada call-site decide la audiencia explícita con `usuarios`/`roles`.
+Si agregas un call-site nuevo a un evento existente, documenta la audiencia en
+el catálogo o en un comentario junto al `emitir()`, para que no se asuma que
+todos los usos comparten destinatario.
 
 **3. Si el flujo puede reintentarse** (retry de red, doble click, cron que
 corre cada N minutos), agrega `dedup` para no duplicar la notificación:

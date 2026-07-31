@@ -5,6 +5,7 @@ import { HistorialIncidente } from '@/components/incidentes/HistorialIncidente'
 import { MarcarEnCaminoButton } from '@/components/oficial/MarcarEnCaminoButton'
 import { MarcarEnSitioButton } from '@/components/oficial/MarcarEnSitioButton'
 import { FormularioRecorrido } from '@/components/oficial/FormularioRecorrido'
+import { NavegacionDespacho } from '@/components/oficial/navegacion/NavegacionDespacho'
 
 interface Asignacion {
   folio: string
@@ -16,6 +17,8 @@ interface Asignacion {
   tipoEmergenciaId?: number | null
   tipoIncidenteId?: number | null
   prioridadId?: number | null
+  latitud?: number | null
+  longitud?: number | null
 }
 
 interface Props {
@@ -47,39 +50,43 @@ export function DespachoContent({ historial, estatusInicial, incidenteId, asigna
           tipoEmergenciaId: asignacion.tipoEmergenciaId ?? undefined,
           tipoIncidenteId: asignacion.tipoIncidenteId ?? undefined,
           prioridadId: asignacion.prioridadId ?? undefined,
+          latitud: asignacion.latitud ?? undefined,
+          longitud: asignacion.longitud ?? undefined,
         }}
       />
     )
   }
 
+  const tieneCoordenadas = asignacion.latitud != null && asignacion.longitud != null
+
   return (
-    <div style={{ marginBottom: 24, marginTop: 24 }}>
+    <div style={{ marginBottom: 24, marginTop: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
       <HistorialIncidente historial={historial} />
 
-      <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
-        <span style={{
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
-          padding: '4px 12px', borderRadius: 2,
-          ...(estatusInicial === 'en_despacho'
-            ? { background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2' }
-            : { background: '#f8fafc', color: '#64748b', border: '1px solid #e2e8f0' }),
-        }}>
-          {estatusInicial === 'en_despacho' ? 'UNIDADES ASIGNADAS' : estatusInicial.toUpperCase()}
-        </span>
-
-        <MarcarEnCaminoButton
-          incidenteId={incidenteId}
-          estatusActual={estatusInicial}
-          yaSalio={yaSalio}
-          onMarcado={() => setYaSalio(true)}
-        />
-
-        <MarcarEnSitioButton
-          incidenteId={incidenteId}
-          estatusActual={estatusInicial}
-          onMarcado={() => setEnSitio(true)}
-        />
-      </div>
+      {tieneCoordenadas ? (
+        <div style={{ flex: 1, minHeight: 480, border: '1px solid #e2e8f0', borderRadius: 2, overflow: 'hidden' }}>
+          <NavegacionDespacho
+            incidenteId={incidenteId}
+            destino={{ lat: asignacion.latitud as number, lng: asignacion.longitud as number }}
+            folio={asignacion.folio}
+            direccion={[asignacion.calle, asignacion.colonia].filter(Boolean).join(', ') || null}
+            prioridad={asignacion.prioridad}
+            onLlegada={() => setEnSitio(true)}
+          />
+        </div>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span style={{
+            fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
+            padding: '4px 12px', borderRadius: 2,
+            background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2',
+          }}>
+            SIN COORDENADAS — REGISTRO MANUAL
+          </span>
+          <MarcarEnCaminoButton incidenteId={incidenteId} estatusActual={estatusInicial} yaSalio={yaSalio} onMarcado={() => setYaSalio(true)} />
+          <MarcarEnSitioButton incidenteId={incidenteId} estatusActual={estatusInicial} onMarcado={() => setEnSitio(true)} />
+        </div>
+      )}
     </div>
   )
 }

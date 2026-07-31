@@ -31,7 +31,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
   if (!historial || !incidenteBasico) notFound()
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       <DashboardHeader
@@ -40,7 +40,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
         backLabel="Mis despachos"
       />
 
-      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 48px 64px' }}>
+      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', padding: '40px 48px 64px', boxSizing: 'border-box' }}>
 
         <DespachoContent
           historial={historial}

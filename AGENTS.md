@@ -134,6 +134,7 @@ export async function obtenerAlgo(id: string) {
 - **Nunca** usar el ORM directamente en código de aplicación
 - **Siempre** pasar por una capa de repository/service
 - **Siempre** usar el helper de autenticación centralizado para role checks
+- **Armado de vistas**: patrón header+body con flex (ver `boveda/🛠 Stack/Convenciones.md` → Page Assembly Pattern). Sin max-width ni tamaños fijos; todo crece con flex
 
 # Checklist post-cambio
 

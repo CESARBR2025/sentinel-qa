@@ -9,6 +9,8 @@
 |---------|---------------------|
 | `lib/admin-transito/actions.ts` | crearOficial, obtenerOficialesLista, destituirOficial, reactivarOficialConDatos, obtenerOficialPorId, actualizarOficial, buscarUsuariosReincorporar |
 | `lib/admin/actions.ts` | createUser, updateUser |
+| `lib/admin/sistema-actions.ts` | resetearSistema |
+| `lib/admin/sistema-constants.ts` | (unknown) |
 | `lib/agente_infracciones/actions.ts` | obtenerDashboardInfracciones, obtenerInfracciones, obtenerDetalleInfraccionInfracciones, capturarInfractorInfraccionesAction, buscarInfraccionPorFolioAction, liberarGarantiaInfraccionesAction |
 | `lib/agente_juzgado/actions.ts` | obtenerDashboardJuzgado, obtenerSolicitudes, accionTomarCaso, accionPedirEvidencias, accionCerrarCaso, obtenerDatosAseguradoAction, guardarDetallesAseguradoAction, obtenerLiberacionesAction, obtenerDetalleInfraccionViaActionJuzgado, guardarOficioJuzgadoAction, obtenerAseguradosJuzgadoAction, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarDetallesAseguradosJuzgadoAction, guardarPuestaDisposicionJuzgadoAction |
 | `lib/agente_liberaciones/actions.ts` | obtenerDashboardLiberaciones, obtenerLiberaciones, capturarInfractorAction, obtenerDocumentosLiberacion, revisarDocumentoAction, finalizarRevisionAction, obtenerDetalleInfraccionLiberaciones, generarOrdenPagoAction |
@@ -26,6 +28,8 @@
 | `lib/rol-servicios/actions.ts` | createRol, updateEncabezadoRol, createAsignacion, deleteAsignacion, upsertEstadoFuerza, createObservacion, deleteObservacion, guardarFirmas |
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

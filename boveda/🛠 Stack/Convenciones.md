@@ -94,6 +94,17 @@ This replaces inline `query(...)` with `LEFT JOIN roles`.
 - All mappers accept `Record<string, unknown>` and return typed interfaces
 - Mapper functions are pure — no side effects, no async
 
+## Page Assembly Pattern (UI)
+
+Toda page/view se arma con el patrón de secciones, sin tamaños fijos:
+
+1. **Contenedor de página**: `display: flex; flexDirection: column; width: 100%; minHeight: 100vh`
+2. **Sección `<header>`**: `width: 100%`, flex column — navegación + título de la vista
+3. **Sección `<main>` (body)**: `flex: 1; width: 100%`, flex column — contenido
+4. **Interior**: subdividir con flex (`flex: 1`, `gap`) para layout dinámico
+5. **Prohibido**: `maxWidth`/anchos o altos fijos en contenedores de página; solo paddings internos de espaciado
+6. **Prohibido**: anidar componentes que rendericen su propio layout completo (minHeight 100vh + `<style>`) dentro de otra vista — el armado header+body se hace una sola vez en la página
+
 ## Key architectural decisions
 
 1. **No Drizzle in app code** — raw SQL only, keeps control over queries and avoids ORM complexity

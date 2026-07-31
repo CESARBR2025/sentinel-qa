@@ -40,8 +40,10 @@
 | `EXPEDIENTE_GUEST_CODE` | No | — |
 | `EXPEDIENTE_FOLDER` | No | — |
 | `EXPEDIENTE_SSPM_INFRACCIONES` | Sí | — |
-| `X_INFRACCIONES_KEY` | Sí | API Key para consulta de infracciones por CURP (app móvil) — va en header `x-infracciones-key` |
+| `X_INFRACCIONES_KEY` | No | API Key para consulta de infracciones por CURP (app móvil) |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

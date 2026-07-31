@@ -7,6 +7,7 @@ import { crearReporte }   from './service'
 import { revalidatePath } from 'next/cache'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 import { actualizarPatrullaOficial, actualizarTelefonoOficial, actualizarUbicacionOficial, telefonoExiste } from './repository'
+import { emitir } from '@/lib/notificaciones/emisor'
 
 export async function crearReporteCampoOficial(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -51,15 +52,18 @@ export async function marcarEnCaminoOficial(incidenteId: string) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
+  let folioNotificar = ''
+
   await tryActionRaw(async () => {
     const { query } = await import('@/lib/db')
-    const inc = await query<{ estatus: string }>(
-      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+    const inc = await query<{ estatus: string; folio: string }>(
+      `SELECT estatus, folio FROM incidentes WHERE id = $1 LIMIT 1`,
       [incidenteId],
     )
     if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
     if (inc.rows[0].estatus !== 'en_despacho')
       throw new ValidationError('El incidente debe estar en_despacho para marcar en camino')
+    folioNotificar = inc.rows[0].folio
 
     // Solo registra hora_salida — el estatus del incidente sigue en_despacho hasta "Marcar en Sitio"
     await query(
@@ -74,21 +78,32 @@ export async function marcarEnCaminoOficial(incidenteId: string) {
   revalidatePath('/oficial/despachos')
   revalidatePath(`/oficial/despachos/${incidenteId}`)
   revalidatePath('/incidentes')
+
+  await emitir('despacho.en_camino', {
+    mensaje: `La unidad va en camino al incidente ${folioNotificar}.`,
+    entidadTipo: 'incidente',
+    entidadId: incidenteId,
+    emitidaPor: session.user.id,
+    dedup: `despacho.en_camino:${incidenteId}`,
+  })
 }
 
 export async function marcarEnSitioOficial(incidenteId: string) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
+  let folioNotificar = ''
+
   await tryActionRaw(async () => {
     const { query } = await import('@/lib/db')
-    const inc = await query<{ estatus: string }>(
-      `SELECT estatus FROM incidentes WHERE id = $1 LIMIT 1`,
+    const inc = await query<{ estatus: string; folio: string }>(
+      `SELECT estatus, folio FROM incidentes WHERE id = $1 LIMIT 1`,
       [incidenteId],
     )
     if (!inc.rows[0]) throw new NotFoundError('Incidente no encontrado')
     if (inc.rows[0].estatus !== 'en_despacho')
       throw new ValidationError('El incidente debe estar en_despacho para marcar en sitio')
+    folioNotificar = inc.rows[0].folio
 
     await query(
       `UPDATE incidentes SET estatus = 'en_sitio', actualizado_en = NOW() WHERE id = $1`,
@@ -110,6 +125,14 @@ export async function marcarEnSitioOficial(incidenteId: string) {
   revalidatePath('/oficial/despachos')
   revalidatePath(`/oficial/despachos/${incidenteId}`)
   revalidatePath('/incidentes')
+
+  await emitir('despacho.en_sitio', {
+    mensaje: `La unidad llegó al incidente ${folioNotificar}.`,
+    entidadTipo: 'incidente',
+    entidadId: incidenteId,
+    emitidaPor: session.user.id,
+    dedup: `despacho.en_sitio:${incidenteId}`,
+  })
 }
 
 export async function asignarPatrulla(formData: FormData) {

@@ -307,8 +307,10 @@
 │   │       │   └── guardar-evidencias/
 │   │       ├── infracciones/
 │   │       │   ├── [id]/
+│   │       │   ├── auto-acceso/
 │   │       │   ├── iniciar-proceso/
 │   │       │   ├── liberar-garantia/
+│   │       │   ├── por-curp/
 │   │       │   ├── registradas/
 │   │       │   ├── registrar/
 │   │       │   ├── retencion-placa/
@@ -545,8 +547,9 @@
 │   │   ├── ModuleCard.tsx
 │   │   └── Pagination.tsx
 │   ├── admin/
-│   │   └── roles/
-│   │       └── FormularioRol.tsx
+│   │   ├── roles/
+│   │   │   └── FormularioRol.tsx
+│   │   └── ResetSistemaForm.tsx
 │   ├── admin-transito/
 │   │   ├── ModalDestituirOficial.tsx
 │   │   ├── ModalReactivarOficial.tsx
@@ -634,6 +637,8 @@
 │   │   ├── CampanillaNotificaciones.tsx
 │   │   └── ListaHistorial.tsx
 │   ├── oficial/
+│   │   ├── navegacion/
+│   │   │   └── NavegacionDespacho.tsx
 │   │   ├── rondin/
 │   │   │   ├── RondinPageClient.tsx
 │   │   │   └── RondinTabla.tsx
@@ -824,6 +829,8 @@
 │   │   ├── actions.ts
 │   │   ├── mapper.ts
 │   │   ├── repository.ts
+│   │   ├── sistema-actions.ts
+│   │   ├── sistema-constants.ts
 │   │   └── types.ts
 │   ├── admin-transito/
 │   │   ├── actions.ts
@@ -1063,6 +1070,7 @@
 │   │   └── generatePPT.ts
 │   ├── via/
 │   │   ├── auth-ciudadano.ts
+│   │   ├── crypto-ciudadano.ts
 │   │   ├── online.ts
 │   │   ├── pagos.ts
 │   │   └── sa7.ts
@@ -1107,6 +1115,17 @@
 │   ├── etapa-7.md
 │   ├── etapa-8.md
 │   ├── etapa-9.md
+│   ├── README.md
+│   └── test-qa.md
+├── plan-navegacion-oficial/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── etapa-7.md
 │   ├── README.md
 │   └── test-qa.md
 ├── public/
@@ -1181,6 +1200,8 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

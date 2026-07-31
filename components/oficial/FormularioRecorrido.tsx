@@ -60,6 +60,8 @@ interface PrefillDespacho {
   tipoEmergenciaId?: number
   tipoIncidenteId?: number
   prioridadId?: number
+  latitud?: number
+  longitud?: number
 }
 
 export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, embedded = false }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho, embedded?: boolean }) {
@@ -159,6 +161,8 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
     if (prefill?.folioCad) store.setField('folioCad', prefill.folioCad)
     if (prefill?.calle) store.setField('calle', prefill.calle)
     if (prefill?.colonia) store.setField('colonia', prefill.colonia)
+    if (prefill?.latitud != null) store.setField('latitud', String(prefill.latitud))
+    if (prefill?.longitud != null) store.setField('longitud', String(prefill.longitud))
 
     const onPageShow = (e: PageTransitionEvent) => {
       if (e.persisted) {
