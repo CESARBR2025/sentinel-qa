@@ -32,6 +32,8 @@
 │   │   │   ├── agregar/
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
+│   │   ├── sistema/
+│   │   │   └── page.tsx
 │   │   ├── usuarios/
 │   │   │   ├── [id]/
 │   │   │   │   └── page.tsx
@@ -646,8 +648,6 @@
 │   │   ├── FormularioRecorrido.tsx
 │   │   ├── MapaPinFijo.tsx
 │   │   ├── MapaUbicacion.tsx
-│   │   ├── MarcarEnCaminoButton.tsx
-│   │   ├── MarcarEnSitioButton.tsx
 │   │   ├── MiUbicacionSection.tsx
 │   │   ├── ModalSeleccionarUnidad.tsx
 │   │   ├── OficialUbicacionTracker.tsx
@@ -1200,6 +1200,7 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
 
 
 

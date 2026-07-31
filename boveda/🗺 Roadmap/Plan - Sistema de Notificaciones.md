@@ -41,7 +41,7 @@ Contra la intuición, el polling actual **es más caro que el que propongo**, y 
 
 - **Hoy**: `app/api/notificaciones/route.ts` llama a `generarAlertasBusquedas()` **en cada GET**, y el cliente pollea cada 2 min. Es decir, cada usuario conectado dispara un escaneo de `fichas_busqueda` más INSERTs, cada 2 minutos, aunque no haya pasado nada. Es un job de mantenimiento disfrazado de lectura.
 - **Propuesto**: el polling pega a un endpoint de **contador** que hace una sola query indexada de sólo lectura, se pausa cuando la pestaña no está visible (`document.visibilityState`), y sólo pide la lista completa cuando el contador cambia o el usuario abre el dropdown. La generación de alertas se mueve a un cron.
-- **SSE** mantendría una función serverless abierta por usuario conectado — en Vercel eso es tiempo de cómputo activo continuo, muy por encima de una query de conteo cada 45 s.
+- **SSE** mantendría una función serverless abierta por usuario conectado — en Vercel eso es tiempo de cómputo activo continuo, muy por encima de una query de conteo cada 30 s.
 
 Neto: **menos escrituras, cero escaneos de tabla en la ruta caliente, y menos tiempo de cómputo** que hoy.
 
@@ -253,7 +253,7 @@ Ambos son ya client components, así que la campanita se auto-abastece por API y
 Se conserva la lógica de toast + sonido; se corrige lo demás:
 
 - **Tema claro** (`#f8fafc`/`#1f355a`) — hoy es oscuro (`#0b1220`) sobre un header claro, desalineado con el sistema.
-- Polling del **contador** cada 45 s vía `hooks/usePolling.ts` (ya existe), **pausado con `document.visibilityState`**.
+- Polling del **contador** cada 30 s vía `hooks/usePolling.ts` (ya existe), **pausado con `document.visibilityState`**.
 - Lista completa sólo al abrir el dropdown o cuando el contador sube.
 - Dropdown con **exactamente 5** notificaciones + enlace "Ver todas".
 - Click → `marcarLeida` + `router.push(href)`.

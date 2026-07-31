@@ -20,6 +20,7 @@
 | `NOMINA_API_URL` | No | — |
 | `SECRET_NOMINA` | No | — |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | — |
+| `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` | No | Map ID vectorial (Google Cloud Console → Map Management, estilo "Vector") — habilita tilt/heading/edificios 3D en el modo navegación del oficial (`NavegacionDespacho.tsx`). Sin ella, el modo navegación avisa que falta configurarla en vez de fallar en silencio |
 | `DB_NAME_VIA` | No | — |
 | `SMTP_HOST` | No | SMTP Server (Gmail ejemplo) |
 | `SMTP_PORT` | No | — |
@@ -42,6 +43,7 @@
 | `EXPEDIENTE_SSPM_INFRACCIONES` | Sí | — |
 | `X_INFRACCIONES_KEY` | No | API Key para consulta de infracciones por CURP (app móvil) |
 <!-- AUTO-GENERATED END -->
+
 
 
 

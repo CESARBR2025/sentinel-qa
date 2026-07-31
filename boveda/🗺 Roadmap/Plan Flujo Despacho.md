@@ -19,7 +19,7 @@
 - Repositorio con `listarIncidentesPendientesDespacho`, `listarIncidentesEnDespacho`, `listarIncidentesAtendidos`, `obtenerUnidadesDeDespacho`, `obtenerElementosDeDespacho`, `listarIncidentesConFiltros` (canal, estatus, desde, hasta, folio).
 
 ### Despacho UI (`app/agente_despacho/`, `components/911/despacho/TablonDespacho.tsx`)
-- Tablón con 3 tabs: **Pendientes / En Despacho / Atendidos**, con polling en pendientes.
+- Tablón con 3 tabs: **Pendientes / En Despacho / Atendidos**, con polling en las 3 tabs.
 
 ### 911 (`app/agente_911/`, `lib/911/`)
 - Canales ciudadano, whatsapp y rondín, cada uno con listado y detalle de incidentes.

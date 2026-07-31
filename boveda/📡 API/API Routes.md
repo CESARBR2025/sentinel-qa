@@ -58,6 +58,7 @@
 | `notificaciones` | GET | (Pendiente) |
 | `notificaciones/contador` | GET | (Pendiente) |
 | `notificaciones/leer` | POST | (Pendiente) |
+| `oficial/contador` | GET | Conteo de despachos asignados activos del oficial en sesión. Auth + `verificarRolOficial` (403 si no). Usado por `ContadorAsignaciones.tsx` (polling 30s). |
 | `prevencion/busquedas` | GET, POST | (Pendiente) |
 | `prevencion/busquedas/[id]` | GET, PUT | (Pendiente) |
 | `prevencion/busquedas/[id]/cancelar` | POST | (Pendiente) |
@@ -125,6 +126,7 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
 
 
 

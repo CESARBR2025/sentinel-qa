@@ -3,7 +3,6 @@ import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import { verificarRolOficial, listarDespachosAsignados } from '@/lib/oficial/service'
 import { getCatalogos } from '@/lib/911/service'
-import { obtenerHistorialCompleto } from '@/lib/incidentes/service'
 import { obtenerIncidenteBasico } from '@/lib/incidentes/repository'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DespachoContent } from '@/components/oficial/DespachoContent'
@@ -23,12 +22,11 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
   const asignacion = asignados.find(d => d.incidenteId === id)
   if (!asignacion) notFound()
 
-  const [historial, catalogos, incidenteBasico] = await Promise.all([
-    obtenerHistorialCompleto(id),
+  const [catalogos, incidenteBasico] = await Promise.all([
     getCatalogos(),
     obtenerIncidenteBasico(id),
   ])
-  if (!historial || !incidenteBasico) notFound()
+  if (!incidenteBasico) notFound()
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
@@ -40,10 +38,8 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
         backLabel="Mis despachos"
       />
 
-      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', padding: '40px 48px 64px', boxSizing: 'border-box' }}>
-
+      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
         <DespachoContent
-          historial={historial}
           estatusInicial={incidenteBasico.estatus}
           incidenteId={id}
           asignacion={asignacion}
@@ -51,7 +47,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
           user={session.user}
         />
 
-        <footer style={{ padding: '24px 0 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', marginTop: 40 }}>
+        <footer style={{ padding: '24px 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center' }}>
           SSPM · SAN JUAN DEL RÍO · CENTINELA {APP_VERSION} · OFICIAL
         </footer>
       </main>

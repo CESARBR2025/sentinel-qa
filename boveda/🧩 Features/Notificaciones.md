@@ -28,13 +28,13 @@ Dos tablas separan **el evento** de **quién lo leyó**:
 ## Por qué polling y no SSE/WebSockets
 
 Contador vía polling **pausado cuando la pestaña no está visible**
-(`document.visibilityState`), cada 45s, contra una única query indexada de sólo
+(`document.visibilityState`), cada 30s, contra una única query indexada de sólo
 lectura. La lista completa (para el dropdown/historial) sólo se pide al abrir el
 dropdown o cuando el contador sube. Nada de escritura en la ruta caliente.
 
 SSE mantendría una función serverless abierta por usuario conectado — carísimo en
 plataformas serverless (Vercel, etc). Este modelo es más barato que polling ingenuo
-y mucho más barato que SSE, sin perder "casi tiempo real" (45s).
+y mucho más barato que SSE, sin perder "casi tiempo real" (30s).
 
 ---
 
@@ -789,7 +789,7 @@ curl -s -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/n
 ```
 
 Luego dispara un evento real (`emitir('tu.evento', {...})` desde algún flujo) y
-confirma que aparece en la campanita sin recargar (espera al siguiente poll, 45s,
+confirma que aparece en la campanita sin recargar (espera al siguiente poll, 30s,
 o abre el dropdown para forzar el fetch).
 
 ---

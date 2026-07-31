@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer } from '@react-google-maps/api'
-import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
+import { Navigation2, Map as MapIcon } from 'lucide-react'
+import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES, GOOGLE_MAPS_MAP_ID } from '@/lib/maps/googleMapsConfig'
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 import { marcarEnCaminoOficial, marcarEnSitioOficial } from '@/lib/oficial/actions'
 import { distanciaHaversineKm } from '@/lib/shared/geo'
@@ -16,6 +17,25 @@ const containerStyle: React.CSSProperties = {
 const DESVIACION_RECALCULO_METROS = 150
 const RECALCULO_MIN_INTERVALO_MS = 60_000
 const LLEGADA_GEOFENCE_KM = 0.08 // 80 metros
+const UMBRAL_RUMBO_METROS = 8 // no recalcular rumbo con jitter de GPS casi estático
+const TILT_NAVEGACION = 60
+const ZOOM_NAVEGACION = 18
+const ZOOM_ARRIBA = 15
+
+// Rumbo inicial (0-360°, 0=norte) entre dos puntos — fórmula estándar de
+// navegación (great-circle initial bearing). Con el heading del mapa fijado
+// a este valor, el mapa rota para que la dirección de avance siempre "suba"
+// en pantalla — el mismo criterio que usa Google/Uber/DiDi en modo navegación.
+function calcularRumbo(desde: { lat: number; lng: number }, hacia: { lat: number; lng: number }): number {
+  const toRad = (deg: number) => (deg * Math.PI) / 180
+  const φ1 = toRad(desde.lat)
+  const φ2 = toRad(hacia.lat)
+  const Δλ = toRad(hacia.lng - desde.lng)
+  const y = Math.sin(Δλ) * Math.cos(φ2)
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ)
+  const θ = Math.atan2(y, x)
+  return ((θ * 180) / Math.PI + 360) % 360
+}
 
 function buildDestinoSvgIcon(color: string): { url: string } {
   // Mismo patrón que components/911/despacho/AsignacionMapa.tsx::buildIncidenteSvgIcon
@@ -35,6 +55,28 @@ function buildPatrullaSvgIcon(): { url: string } {
   <text x="17" y="19" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="10" font-weight="bold">P</text>
 </svg>`
   return { url: `data:image/svg+xml,${encodeURIComponent(svg)}` }
+}
+
+// Ícono "estilo 3D" (perspectiva/sombra falsas, no geometría 3D real — la API
+// web de Maps no ofrece un asset volumétrico como el SDK nativo de navegación
+// de Google) para el modo navegación. Se dibuja apuntando siempre "hacia
+// arriba": el heading del propio mapa rota la escena para que esa dirección
+// coincida con el avance real, así no hace falta rotar el ícono aparte.
+function buildVehiculo3DIcon(): { url: string; scaledSize: google.maps.Size; anchor: google.maps.Point } {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="52" viewBox="0 0 40 52">
+  <ellipse cx="20" cy="46" rx="13" ry="5" fill="#000" opacity="0.28"/>
+  <rect x="7" y="6" width="26" height="36" rx="9" fill="#1f355a" stroke="#ffffff" stroke-width="2.5"/>
+  <rect x="11" y="11" width="18" height="12" rx="4" fill="#bfdbfe"/>
+  <rect x="10" y="24" width="10" height="4" rx="1.5" fill="#dc2626"/>
+  <rect x="20" y="24" width="10" height="4" rx="1.5" fill="#2563eb"/>
+  <circle cx="14" cy="8" r="1.6" fill="#fde68a"/>
+  <circle cx="26" cy="8" r="1.6" fill="#fde68a"/>
+</svg>`
+  return {
+    url: `data:image/svg+xml,${encodeURIComponent(svg)}`,
+    scaledSize: new google.maps.Size(40, 52),
+    anchor: new google.maps.Point(20, 26),
+  }
 }
 
 interface NavegacionDespachoProps {
@@ -65,6 +107,36 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
   const [pendienteInicio, startTransitionInicio] = useTransition()
   const [pendienteLlegada, startTransitionLlegada] = useTransition()
   const llegadaDisparadaRef = useRef(false)
+
+  const [modoNavegacion, setModoNavegacion] = useState(false)
+  const [avisoMapId, setAvisoMapId] = useState(false)
+  const [rumbo, setRumbo] = useState(0)
+  const posicionAnteriorRumboRef = useRef<{ lat: number; lng: number } | null>(null)
+
+  // Recalcula el rumbo solo cuando el oficial se movió lo suficiente — un GPS
+  // casi estático produce bearings erráticos entre lecturas casi idénticas.
+  useEffect(() => {
+    if (!posicionActual) return
+    const anterior = posicionAnteriorRumboRef.current
+    if (!anterior) {
+      posicionAnteriorRumboRef.current = posicionActual
+      return
+    }
+    const distanciaMetros = distanciaHaversineKm(anterior.lat, anterior.lng, posicionActual.lat, posicionActual.lng) * 1000
+    if (distanciaMetros > UMBRAL_RUMBO_METROS) {
+      setRumbo(calcularRumbo(anterior, posicionActual))
+      posicionAnteriorRumboRef.current = posicionActual
+    }
+  }, [posicionActual])
+
+  const toggleModoNavegacion = () => {
+    if (!modoNavegacion && !GOOGLE_MAPS_MAP_ID) {
+      setAvisoMapId(true)
+      return
+    }
+    setAvisoMapId(false)
+    setModoNavegacion(m => !m)
+  }
 
   const calcularRuta = (origen: { lat: number; lng: number }) => {
     if (!directionsServiceRef.current) {
@@ -263,8 +335,14 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={posicionActual}
-          zoom={15}
-          options={{ disableDefaultUI: true, zoomControl: true }}
+          zoom={modoNavegacion ? ZOOM_NAVEGACION : ZOOM_ARRIBA}
+          options={{
+            disableDefaultUI: true,
+            zoomControl: true,
+            ...(GOOGLE_MAPS_MAP_ID ? { mapId: GOOGLE_MAPS_MAP_ID } : {}),
+            tilt: modoNavegacion ? TILT_NAVEGACION : 0,
+            heading: modoNavegacion ? rumbo : 0,
+          }}
         >
           {ruta && (
             <DirectionsRenderer
@@ -272,9 +350,34 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
               options={{ suppressMarkers: true, polylineOptions: { strokeColor: '#1f355a', strokeWeight: 5 } }}
             />
           )}
-          <MarkerF position={posicionActual} icon={buildPatrullaSvgIcon()} />
+          <MarkerF position={posicionActual} icon={modoNavegacion ? buildVehiculo3DIcon() : buildPatrullaSvgIcon()} />
           <MarkerF position={destino} icon={buildDestinoSvgIcon(color)} clickable={false} />
         </GoogleMap>
+
+        <button
+          onClick={toggleModoNavegacion}
+          style={{
+            position: 'absolute', top: 12, right: 12, zIndex: 10,
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '10px 14px', fontFamily: 'Barlow Condensed,sans-serif',
+            fontWeight: 700, fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase',
+            border: '1px solid #1f355a', borderRadius: 2, cursor: 'pointer',
+            background: '#ffffff', color: '#1c3051', boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+          }}
+        >
+          {modoNavegacion ? <MapIcon size={15} /> : <Navigation2 size={15} />}
+          {modoNavegacion ? 'VISTA DE ARRIBA' : 'MODO NAVEGACIÓN'}
+        </button>
+
+        {avisoMapId && (
+          <div style={{
+            position: 'absolute', bottom: 12, left: 12, right: 12, zIndex: 10,
+            padding: '10px 14px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2,
+            fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#92400e',
+          }}>
+            El modo navegación necesita un Map ID vectorial configurado (<code>NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID</code>). Pídele a tu administrador que lo configure en Google Cloud Console.
+          </div>
+        )}
       </div>
     </div>
   )

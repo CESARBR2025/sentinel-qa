@@ -15,7 +15,7 @@ Rediseñar visualmente el dropdown de notificaciones del header:
    (**ya está instalado** en `package.json` — no agregar dependencias).
 2. El botón de campana cambia de icono/estado cuando hay no-leídas.
 3. Estado vacío con icono.
-4. Mantener **intacta** toda la lógica de datos: polling cada 45s, pausa en
+4. Mantener **intacta** toda la lógica de datos: polling cada 30s, pausa en
    pestaña oculta, portal a `document.body`, marcar leída/todas, sonido de
    alerta, navegación al hacer click. Este es un cambio de JSX/estilos, no de
    lógica.
@@ -43,7 +43,7 @@ import { usePolling } from '@/hooks/usePolling'
 
 // Cuántas notificaciones se muestran en el dropdown. El resto vive en /notificaciones.
 const MAX_DROPDOWN = 5
-const INTERVALO_MS = 45_000
+const INTERVALO_MS = 30_000
 const ANCHO_DROPDOWN = 360
 
 interface Notificacion {

@@ -10,3 +10,10 @@ export const GOOGLE_MAPS_LOADER_ID = 'google-map-script'
 export const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''
 
 export const GOOGLE_MAPS_LIBRARIES: Libraries = ['places', 'visualization', 'geometry']
+
+// Map ID vectorial (Google Cloud Console → Map Management → Create Map ID,
+// estilo "Vector"). Habilita tilt/heading/edificios 3D en el modo navegación
+// de NavegacionDespacho.tsx. Sin esta variable, tilt/heading se ignoran en
+// silencio (comportamiento normal de un mapa raster) — el componente avisa
+// al usuario si intenta activar el modo navegación sin Map ID configurado.
+export const GOOGLE_MAPS_MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID ?? ''

@@ -111,7 +111,7 @@ Vive en `lib/notificaciones/`:
   (la "campanita"), montado dentro de `components/partials/Header.tsx`
   (`DashboardHeader()`) y `components/partials/SubHeader.tsx` — aparece
   automáticamente en todas las páginas del sistema, incluida
-  `/oficial/despachos/[id]`, sin tocar nada ahí. Usa polling cada 45s contra
+  `/oficial/despachos/[id]`, sin tocar nada ahí. Usa polling cada 30s contra
   `/api/notificaciones/contador` (solo el conteo) y carga la lista completa
   (`/api/notificaciones?limite=5`) al abrir el dropdown.
 

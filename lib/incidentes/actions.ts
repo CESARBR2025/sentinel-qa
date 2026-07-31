@@ -712,13 +712,14 @@ export async function createDespacho(formData: FormData) {
         [incidenteId],
       )
 
-      const resultado = elementos.length > 0
-        ? await cliente.query<{ user_id: string }>(
-            `SELECT DISTINCT o.user_id FROM ofi_oficiales o
-             WHERE o.no_nomina = ANY($1::text[]) AND o.ofi_estatus = 'activo' AND o.user_id IS NOT NULL`,
-            [elementos.map(e => e.nomina)],
-          )
-        : { rows: [] as { user_id: string }[] }
+      const resultado = await cliente.query<{ user_id: string }>(
+        `SELECT DISTINCT o.user_id FROM ofi_oficiales o
+          WHERE o.ofi_estatus = 'activo' AND o.user_id IS NOT NULL
+            AND (o.no_nomina = ANY($1::text[])
+                 OR o.id = (SELECT ide.oficial_id FROM incidente_despacho_elementos ide
+                            WHERE ide.despacho_id = $2 AND ide.es_prioritario = true LIMIT 1))`,
+        [elementos.map(e => e.nomina), despachoId],
+      )
       usuariosNotificar = resultado.rows
 
       await cliente.query('COMMIT')

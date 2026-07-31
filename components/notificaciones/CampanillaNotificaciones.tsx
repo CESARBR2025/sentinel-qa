@@ -15,7 +15,7 @@ import { definicionEvento } from '@/lib/notificaciones/catalogo'
 
 // Cuántas notificaciones se muestran en el dropdown. El resto vive en /notificaciones.
 const MAX_DROPDOWN = 5
-const INTERVALO_MS = 45_000
+const INTERVALO_MS = 30_000
 const ANCHO_DROPDOWN = 360
 
 interface Notificacion {

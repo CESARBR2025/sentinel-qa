@@ -2,9 +2,10 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { AlertTriangle, FileBadge2, Settings, Shield, Radio } from 'lucide-react'
+import { FileBadge2, Settings, Shield, Radio } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
-import { verificarRolOficial, contarDespachosAsignadosOficial } from '@/lib/oficial/service'
+import { ContadorAsignaciones } from '@/components/oficial/ContadorAsignaciones'
+import { verificarRolOficial } from '@/lib/oficial/service'
 import { DashboardHeader } from '@/components/partials/Header'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
@@ -21,8 +22,6 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
   const backHref = hub === '/oficial' ? undefined : (hub ?? '/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
-
-  const despachosAsignados = await contarDespachosAsignadosOficial(session.user.id)
 
   const params = await searchParams
 
@@ -72,14 +71,7 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
                 Atiende tus despachos activos, revisa reportes cerrados y gestiona denuncias desde un solo lugar
               </p>
             </div>
-            {despachosAsignados > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
-                  <AlertTriangle size={11} />
-                  {despachosAsignados} ASIGNACIÓN{despachosAsignados !== 1 ? 'ES' : ''} ACTIVA{despachosAsignados !== 1 ? 'S' : ''}
-                </span>
-              </div>
-            )}
+            <ContadorAsignaciones />
           </Link>
 
           {/* Card: Rondín */}

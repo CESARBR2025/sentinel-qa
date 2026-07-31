@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 import { MapPin, Clock, Phone, MessageSquare, Radio, Shield, CheckCircle2, AlertTriangle, FileText } from 'lucide-react'
@@ -90,8 +90,7 @@ export function TablonDespacho() {
   const [error,      setError]      = useState<string | null>(null)
   const [tab,        setTab]        = useState<TabKey>('pendientes')
   const [expandido,  setExpandido]  = useState<string | null>(null)
-  const [segundosRestantes, setSegundosRestantes] = useState(INTERVALO_MS / 1000)
-  const [refrescando, setRefrescando] = useState(false)
+  const refrescandoRef = useRef(false)
 
   const cargarLista = useCallback(async (url: string): Promise<CardData[]> => {
     const res = await fetch(url)
@@ -99,8 +98,9 @@ export function TablonDespacho() {
     return res.json()
   }, [])
 
-  const cargarTodo = useCallback(async () => {
-    setCargando(true); setError(null)
+  const cargarTodo = useCallback(async (silencioso = false) => {
+    if (!silencioso) setCargando(true)
+    if (!silencioso) setError(null)
     try {
       const [p, e, a] = await Promise.all([
         cargarLista('/api/incidentes/pendientes-despacho'),
@@ -111,37 +111,22 @@ export function TablonDespacho() {
       setEnDespacho(e as unknown as CardData[])
       setAtendidos(a as unknown as CardData[])
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error desconocido')
+      if (!silencioso) setError(e instanceof Error ? e.message : 'Error desconocido')
     } finally {
-      setCargando(false)
+      if (!silencioso) setCargando(false)
     }
-  }, [cargarLista])
-
-  const cargarSoloPendientes = useCallback(async () => {
-    try {
-      const p = await cargarLista('/api/incidentes/pendientes-despacho')
-      setPendientes(p as unknown as CardData[])
-    } catch { /* silent */ }
   }, [cargarLista])
 
   useEffect(() => { cargarTodo() }, [cargarTodo])
 
   useEffect(() => {
     const id = setInterval(() => {
-      setSegundosRestantes(s => s === 0 ? s : s - 1)
-    }, 1000)
+      if (refrescandoRef.current) return
+      refrescandoRef.current = true
+      cargarTodo(true).finally(() => { refrescandoRef.current = false })
+    }, INTERVALO_MS)
     return () => clearInterval(id)
-  }, [])
-
-  useEffect(() => {
-    if (segundosRestantes === 0 && !refrescando) {
-      setRefrescando(true)
-      cargarSoloPendientes().finally(() => {
-        setSegundosRestantes(INTERVALO_MS / 1000)
-        setRefrescando(false)
-      })
-    }
-  }, [segundosRestantes, cargarSoloPendientes, refrescando])
+  }, [cargarTodo])
 
   const listaActual = tab === 'pendientes' ? pendientes : tab === 'en_despacho' ? enDespacho : atendidos
 
@@ -155,27 +140,12 @@ export function TablonDespacho() {
           <span style={{ fontFamily: 'Inter', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>CENTRO DE MANDO Y COMUNICACIONES</span>
           <h1 style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 36, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' }}>MÓDULO DE <span style={{ color: '#1f355a' }}>DESPACHO</span></h1>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {refrescando ? (
-            <span style={{ fontFamily: 'Inter', fontSize: 10, color: '#1f355a', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1f355a', animation: 'refrescarPulso .8s ease-in-out infinite' }} />
-              REFRESCANDO…
-            </span>
-          ) : (
-            <>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: segundosRestantes <= 5 ? '#fef2f2' : '#f1f5f9', border: `2px solid ${segundosRestantes <= 5 ? '#dc2626' : '#cbd5e1'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .3s' }}>
-                <span style={{ fontFamily: 'Inter', fontSize: 10, fontWeight: 700, color: segundosRestantes <= 5 ? '#dc2626' : '#64748b', transition: 'color .3s' }}>{segundosRestantes}</span>
-              </div>
-              <span style={{ fontFamily: 'Inter', fontSize: 9, color: '#94a3b8' }}>PRÓXIMA ACTUALIZACIÓN</span>
-            </>
-          )}
-        </div>
       </div>
 
       {error && (
         <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, fontFamily: 'Inter', fontSize: 11, color: '#dc2626', marginBottom: 16 }}>
           Error: {error}
-          <button onClick={cargarTodo} style={{ marginLeft: 16, fontFamily: 'Inter', fontSize: 10, background: 'none', border: '1px solid #fecaca', borderRadius: 2, padding: '2px 10px', color: '#dc2626', cursor: 'pointer' }}>
+          <button onClick={() => cargarTodo()} style={{ marginLeft: 16, fontFamily: 'Inter', fontSize: 10, background: 'none', border: '1px solid #fecaca', borderRadius: 2, padding: '2px 10px', color: '#dc2626', cursor: 'pointer' }}>
             Reintentar
           </button>
         </div>
@@ -228,14 +198,13 @@ export function TablonDespacho() {
             abierto={expandido === card.id}
             tab={tab}
             onToggle={() => setExpandido(expandido === card.id ? null : card.id)}
-            onCambio={() => { cargarSoloPendientes(); cargarTodo() }}
+            onCambio={() => { cargarTodo() }}
           />
         ))}
       </div>
 
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes refrescarPulso { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
       `}</style>
     </div>
   )
