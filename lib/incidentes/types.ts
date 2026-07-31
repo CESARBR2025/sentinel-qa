@@ -89,8 +89,8 @@ export interface IncidenteConDespacho {
   origenRondin: boolean
   latitud: number | null
   longitud: number | null
-  unidades: { id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null }[]
-  elementos: { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]
+  unidades: { id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null; patrullaId: string | null; ultimaLat: number | null; ultimaLng: number | null; ultimaUbicacionEn: string | null }[]
+  elementos: { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean; oficialId: string | null; ultimaLat: number | null; ultimaLng: number | null; ultimaUbicacionEn: string | null }[]
 }
 
 export interface IncidentePendiente {

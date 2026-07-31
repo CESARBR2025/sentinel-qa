@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
+import MapaSeguimientoOficial from '@/components/911/despacho/MapaSeguimientoOficial'
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 import { MapPin, Clock, Phone, MessageSquare, Radio, Shield, CheckCircle2, AlertTriangle, FileText } from 'lucide-react'
 import Link from 'next/link'
@@ -13,10 +14,12 @@ const SLA_MINUTOS: Record<string, number> = { ALTA: 10, MEDIA: 20, BAJA: 40 }
 interface UnidadRow {
   id?: string; placa: string | null; esRefuerzo?: boolean
   horaSalida?: string | null; horaLlegada?: string | null
+  patrullaId?: string | null; ultimaLat?: number | null; ultimaLng?: number | null; ultimaUbicacionEn?: string | null
 }
 interface ElementoRow {
   nombre: string | null; nomina: string | null
   esPrioritario?: boolean; esRefuerzo?: boolean
+  oficialId?: string | null; ultimaLat?: number | null; ultimaLng?: number | null; ultimaUbicacionEn?: string | null
 }
 
 interface CardData {
@@ -331,6 +334,40 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* ─── UBICACIÓN EN VIVO DEL OFICIAL (solo en_despacho) ─── */}
+          {tab === 'en_despacho' && card.latitud != null && card.longitud != null && (
+            <div>
+              <div style={{ fontFamily: 'Inter', fontSize: 9, fontWeight: 700, color: '#64748b', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
+                Ubicación en vivo del oficial
+              </div>
+              <MapaSeguimientoOficial
+                incidenteLat={card.latitud}
+                incidenteLng={card.longitud}
+                prioridad={card.prioridad}
+                puntos={[
+                  ...card.unidades.map(u => ({
+                    id: u.id ?? `u-${u.placa ?? ''}`,
+                    etiqueta: u.placa || 'Unidad',
+                    esRefuerzo: !!u.esRefuerzo,
+                    esPrioritario: false,
+                    ultimaLat: u.ultimaLat ?? null,
+                    ultimaLng: u.ultimaLng ?? null,
+                    ultimaUbicacionEn: u.ultimaUbicacionEn ?? null,
+                  })),
+                  ...card.elementos.map((e, i) => ({
+                    id: e.oficialId ?? `e-${i}`,
+                    etiqueta: e.nombre || 'Elemento',
+                    esRefuerzo: !!e.esRefuerzo,
+                    esPrioritario: !!e.esPrioritario,
+                    ultimaLat: e.ultimaLat ?? null,
+                    ultimaLng: e.ultimaLng ?? null,
+                    ultimaUbicacionEn: e.ultimaUbicacionEn ?? null,
+                  })),
+                ]}
+              />
             </div>
           )}
 

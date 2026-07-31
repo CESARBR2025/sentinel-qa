@@ -7,6 +7,12 @@ function toStr(val: unknown): string | null {
   return String(val)
 }
 
+function toNum(val: unknown): number | null {
+  if (val === null || val === undefined) return null
+  const n = Number(val)
+  return Number.isFinite(n) ? n : null
+}
+
 export async function listarIncidentesConFiltros(filtros: IncidenteFiltros): Promise<IncidenteListItem[]> {
   const conditions: string[] = []
   const params: unknown[] = []
@@ -151,10 +157,25 @@ export async function listarIncidentesEnDespacho(): Promise<IncidenteConDespacho
   }))
 }
 
-async function obtenerUnidadesElementos(despachoId: string): Promise<[{ id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null }[], { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean }[]]> {
+async function obtenerUnidadesElementos(despachoId: string): Promise<[{ id: string; placa: string; esRefuerzo: boolean; horaSalida: string | null; horaLlegada: string | null; patrullaId: string | null; ultimaLat: number | null; ultimaLng: number | null; ultimaUbicacionEn: string | null }[], { nombre: string; nomina: string; esPrioritario: boolean; esRefuerzo: boolean; oficialId: string | null; ultimaLat: number | null; ultimaLng: number | null; ultimaUbicacionEn: string | null }[]]> {
   const [unidadesResult, elementosResult] = await Promise.all([
-    query<Record<string, unknown>>(`SELECT id, unidad_placa, es_refuerzo, hora_salida, hora_llegada FROM incidente_despacho_unidades WHERE despacho_id = $1 ORDER BY es_refuerzo, creado_en`, [despachoId]),
-    query<Record<string, unknown>>(`SELECT elemento_nombre, elemento_nomina, es_prioritario, es_refuerzo FROM incidente_despacho_elementos WHERE despacho_id = $1 ORDER BY es_prioritario DESC, es_refuerzo, creado_en`, [despachoId]),
+    query<Record<string, unknown>>(`SELECT idu.id, idu.unidad_placa, idu.es_refuerzo, idu.hora_salida, idu.hora_llegada, p.id AS patrulla_id, o.ultima_lat, o.ultima_lng, o.ultima_ubicacion_en
+       FROM incidente_despacho_unidades idu
+       LEFT JOIN via.v2_patrullas p ON p.id::text = idu.unidad_ext_id
+       LEFT JOIN LATERAL (
+         SELECT o2.ultima_lat, o2.ultima_lng, o2.ultima_ubicacion_en
+         FROM ofi_oficiales o2
+         WHERE o2.patrulla_id = p.id AND o2.ofi_estatus = 'activo' AND o2.ultima_lat IS NOT NULL
+         ORDER BY o2.ultima_ubicacion_en DESC NULLS LAST
+         LIMIT 1
+       ) o ON true
+       WHERE idu.despacho_id = $1
+       ORDER BY idu.es_refuerzo, idu.creado_en`, [despachoId]),
+    query<Record<string, unknown>>(`SELECT de.id, de.elemento_nombre, de.elemento_nomina, de.es_prioritario, de.es_refuerzo, de.oficial_id, o.ultima_lat, o.ultima_lng, o.ultima_ubicacion_en
+       FROM incidente_despacho_elementos de
+       LEFT JOIN ofi_oficiales o ON o.id = de.oficial_id
+       WHERE de.despacho_id = $1
+       ORDER BY de.es_prioritario DESC, de.es_refuerzo, de.creado_en`, [despachoId]),
   ])
   return [
     unidadesResult.rows.map(r => ({
@@ -163,8 +184,21 @@ async function obtenerUnidadesElementos(despachoId: string): Promise<[{ id: stri
       esRefuerzo: Boolean(r.es_refuerzo),
       horaSalida: r.hora_salida ? new Date(r.hora_salida as string).toISOString() : null,
       horaLlegada: r.hora_llegada ? new Date(r.hora_llegada as string).toISOString() : null,
+      patrullaId: toStr(r.patrulla_id),
+      ultimaLat: toNum(r.ultima_lat),
+      ultimaLng: toNum(r.ultima_lng),
+      ultimaUbicacionEn: r.ultima_ubicacion_en ? new Date(r.ultima_ubicacion_en as string).toISOString() : null,
     })),
-    elementosResult.rows.map(r => ({ nombre: toStr(r.elemento_nombre) ?? '', nomina: toStr(r.elemento_nomina) ?? '', esPrioritario: Boolean(r.es_prioritario), esRefuerzo: Boolean(r.es_refuerzo) })),
+    elementosResult.rows.map(r => ({
+      nombre: toStr(r.elemento_nombre) ?? '',
+      nomina: toStr(r.elemento_nomina) ?? '',
+      esPrioritario: Boolean(r.es_prioritario),
+      esRefuerzo: Boolean(r.es_refuerzo),
+      oficialId: toStr(r.oficial_id),
+      ultimaLat: toNum(r.ultima_lat),
+      ultimaLng: toNum(r.ultima_lng),
+      ultimaUbicacionEn: r.ultima_ubicacion_en ? new Date(r.ultima_ubicacion_en as string).toISOString() : null,
+    })),
   ]
 }
 
