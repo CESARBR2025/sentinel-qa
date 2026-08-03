@@ -82,7 +82,7 @@ export async function listarOficiales(): Promise<OficialLista[]> {
       u.apellido AS user_apellido,
       u.email AS user_email,
       d.nombre AS departamento_nombre,
-      p.numero_unidad AS patrulla_unidad
+      p.placa AS patrulla_unidad
     FROM ofi_oficiales o
     LEFT JOIN users u ON u.id = o.user_id
     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
@@ -124,7 +124,7 @@ export async function obtenerOficialPorId(id: string): Promise<OficialLista | nu
       u.apellido AS user_apellido,
       u.email AS user_email,
       d.nombre AS departamento_nombre,
-      p.numero_unidad AS patrulla_unidad
+      p.placa AS patrulla_unidad
     FROM ofi_oficiales o
     LEFT JOIN users u ON u.id = o.user_id
     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id

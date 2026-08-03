@@ -25,8 +25,7 @@ export function ModalSeleccionarUnidad({
 
   const filtradas = patrullas.filter(
     (p) =>
-      p.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.descripcion.toLowerCase().includes(busqueda.toLowerCase()),
+      p.etiqueta.toLowerCase().includes(busqueda.toLowerCase()),
   );
 
   useEffect(() => {
@@ -237,7 +236,7 @@ export function ModalSeleccionarUnidad({
                         marginBottom: 2,
                       }}
                     >
-                      {p.numeroUnidad}
+                      {p.etiqueta}
                     </div>
                     <div
                       style={{
@@ -249,7 +248,7 @@ export function ModalSeleccionarUnidad({
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {p.descripcion}
+                      {p.detalle}
                     </div>
                   </div>
                   {esSeleccionada && (

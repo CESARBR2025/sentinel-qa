@@ -80,8 +80,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
   }, [mostrarMapa, incidenteLat, incidenteLng, prioritarioPatrullaId, incidenteId])
 
   const filtradas = unidadesActuales.filter(u =>
-    u.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
-    u.placas.toLowerCase().includes(busqueda.toLowerCase()),
+    u.etiqueta.toLowerCase().includes(busqueda.toLowerCase()),
   )
 
   const masCercanaId = unidadesActuales.find(u => u.distanciaKm != null)?.id

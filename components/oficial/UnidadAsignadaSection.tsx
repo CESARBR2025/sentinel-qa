@@ -52,12 +52,12 @@ export function UnidadAsignadaSection({
               <span>QRO</span>
             </div>
             <div className="up-placa-numero">
-              {patrullaActual.numeroUnidad}
+              {patrullaActual.etiqueta}
             </div>
             <div className="up-placa-footer">SAN JUAN DEL RÍO</div>
           </div>
 
-          <div className="up-modelo">{patrullaActual.descripcion}</div>
+          <div className="up-modelo">{patrullaActual.detalle}</div>
 
           <div style={{ marginTop: 10, display: "flex", justifyContent: "center" }}>
             <span className="up-badge up-badge-asignada">

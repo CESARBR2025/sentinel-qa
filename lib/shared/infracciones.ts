@@ -291,7 +291,7 @@ export async function obtenerDetalleInfraccionVia(
         u.name as oficial_nombres,
         u.apellido as oficial_apellido_p,
         '' as oficial_apellido_m,
-         pat.numero_unidad as patrulla_nombre,
+         pat.placa as patrulla_nombre,
          CASE WHEN off.ofi_estatus = 'activo' THEN true ELSE false END as oficial_activo,
         g.nombre as grua_nombre
       FROM via.v2_infracciones i

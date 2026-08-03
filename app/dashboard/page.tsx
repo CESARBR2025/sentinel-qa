@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Enable2FA } from './enable-2fa'
 import { ModuleCards } from './module-cards'
+import { SspmGeneral } from './sspm-general'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { APP_VERSION } from "@/lib/constants"
@@ -102,6 +103,9 @@ export default async function DashboardPage() {
 
       {/* Main Content Container */}
       <div style={{ position: 'relative', zIndex: 1, padding: '40px 64px', maxWidth: 1600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
+
+        {/* Sección SSPM General (solo admin) — inicio de la segmentación por secciones */}
+        {userWithRole?.esAdmin && <SspmGeneral />}
 
         {/* Dashboard Content Grid */}
         <div className="dashboard-grid" style={{ flex: 1 }}>

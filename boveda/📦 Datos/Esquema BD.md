@@ -1,6 +1,6 @@
 # Esquema de Base de Datos — Sentinel SSPM
 
-> Documentación generada desde `information_schema` el 2026-07-24.
+> Documentación generada desde `information_schema` el 2026-08-03.
 > Fuente de verdad del schema real en PostgreSQL.
 
 ---
@@ -476,6 +476,7 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 7 | `oficial_id` | `uuid` | SÍ | — |
 | 8 | `es_prioritario` | `boolean` | NO | `false` |
 | 9 | `es_refuerzo` | `boolean` | NO | `false` |
+| 10 | `atiende_caso` | `boolean` | NO | `true` |
 
 ### \`incidente_despacho_unidades\`
 
@@ -810,6 +811,50 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 8 | `ficha_id` | `uuid` | SÍ | — |
 | 9 | `hito` | `text` | SÍ | — |
 | 10 | `creado_en` | `timestamp` | NO | `now()` |
+
+### \`notificaciones_config\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `clave` | `text` | NO | — |
+| 2 | `valor` | `text` | NO | — |
+
+### \`notificaciones_eventos\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `rol_id` | `integer` | SÍ | — |
+| 3 | `user_id` | `text` | SÍ | — |
+| 4 | `evento` | `text` | NO | — |
+| 5 | `titulo` | `text` | NO | — |
+| 6 | `mensaje` | `text` | NO | — |
+| 7 | `href` | `text` | SÍ | — |
+| 8 | `severidad` | `text` | NO | `'info'::text` |
+| 9 | `entidad_tipo` | `text` | SÍ | — |
+| 10 | `entidad_id` | `text` | SÍ | — |
+| 11 | `emitida_por` | `text` | SÍ | — |
+| 12 | `grupo_id` | `uuid` | SÍ | — |
+| 13 | `clave_dedup` | `text` | SÍ | — |
+| 14 | `creado_en` | `timestamp` | NO | `now()` |
+
+### \`notificaciones_lecturas\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `notificacion_id` | `uuid` | NO | — |
+| 2 | `user_id` | `text` | NO | — |
+| 3 | `leida_en` | `timestamp` | NO | `now()` |
+
+### \`notificaciones_suscripciones\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `evento` | `text` | NO | — |
+| 3 | `rol_id` | `integer` | NO | — |
+| 4 | `activo` | `boolean` | NO | `true` |
+| 5 | `actualizado_en` | `timestamp` | NO | `now()` |
 
 ### \`novedades_captura\`
 
@@ -1399,6 +1444,9 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 1 | `id` | `uuid` | NO | — |
 | 2 | `nombre` | `text` | NO | — |
 | 3 | `activo` | `boolean` | NO | `true` |
+| 4 | `latitud` | `numeric` | SÍ | — |
+| 5 | `longitud` | `numeric` | SÍ | — |
+| 6 | `direccion` | `text` | SÍ | — |
 
 ### \`v2_infracciones\`
 
@@ -1499,11 +1547,17 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | # | Columna | Tipo | Nulable | Default |
 |---|---------|------|---------|--------|
 | 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
-| 2 | `numero_unidad` | `text` | NO | — |
-| 3 | `placas` | `text` | NO | — |
-| 4 | `descripcion` | `text` | SÍ | — |
-| 5 | `activo` | `boolean` | NO | `true` |
-| 6 | `sincronizado_en` | `timestamp` | SÍ | — |
+| 2 | `placa` | `text` | SÍ | — |
+| 3 | `activo` | `boolean` | NO | `true` |
+| 4 | `sincronizado_en` | `timestamp` | SÍ | — |
+| 5 | `num_serie` | `text` | NO | — |
+| 6 | `departamento` | `text` | SÍ | — |
+| 7 | `caracteristicas` | `text` | SÍ | — |
+| 8 | `marca` | `text` | SÍ | — |
+| 9 | `modelo` | `text` | SÍ | — |
+| 10 | `gps` | `text` | SÍ | — |
+| 11 | `radio` | `text` | SÍ | — |
+| 12 | `camaras` | `text` | SÍ | — |
 
 ### \`v2_permisos\`
 

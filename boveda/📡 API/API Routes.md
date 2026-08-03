@@ -96,7 +96,6 @@
 | `reportes/formato-n-rnd` | GET, POST | (Pendiente) |
 | `reportes/formato-n-rnd/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-rnd/fuente` | GET | (Pendiente) |
-| `rol-servicios/externos/flota` | GET | (Pendiente) |
 | `rol-servicios/externos/rh` | GET | (Pendiente) |
 | `uploads/[...path]` | GET | (Pendiente) |
 | `via/ciudadano/completar-solicitud` | POST | (Pendiente) |

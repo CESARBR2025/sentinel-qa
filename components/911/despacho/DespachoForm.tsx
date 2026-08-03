@@ -76,7 +76,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
           .map(o => ({ extId: o.noNomina ?? o.id, nomina: o.noNomina ?? '', nombre: o.nombre })))
         const fd = new FormData()
         fd.set('incidenteId', incidenteId)
-        fd.set('unidades',  JSON.stringify(unidadesSeleccionadas.map(u => ({ extId: u.id, placa: u.placas }))))
+        fd.set('unidades',  JSON.stringify(unidadesSeleccionadas.map(u => ({ extId: u.id, placa: u.placa }))))
         fd.set('elementos', JSON.stringify(elementos))
         if (esRefuerzo) await enviarRefuerzos(fd)
         else            await createDespacho(fd)

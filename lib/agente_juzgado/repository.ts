@@ -172,7 +172,7 @@ export async function obtenerDetalleAsegurado(
        rd.fecha_reporte,
        rd.hora_reporte,
        rc.ofi_detenidos,
-       p.numero_unidad AS ofi_placa_unidad_asignada,
+       p.placa AS ofi_placa_unidad_asignada,
        ou.name AS ofi_nombre,
        ou.apellido AS ofi_ap_paterno,
        o.no_nomina,
@@ -356,7 +356,7 @@ export async function obtenerDetalleInfraccionViaJuzgado(
         u.name as oficial_nombres,
         u.apellido as oficial_apellido_p,
         '' as oficial_apellido_m,
-        pat.numero_unidad as patrulla_nombre,
+        pat.placa as patrulla_nombre,
         CASE WHEN off.ofi_estatus = 'activo' THEN true ELSE false END as oficial_activo
       FROM via.v2_infracciones i
       LEFT JOIN via.v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
@@ -456,7 +456,7 @@ export async function listarAseguradosJuzgado(): Promise<AseguradoRow[]> {
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
        CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
-       p.numero_unidad AS ofi_placa_unidad_asignada
+       p.placa AS ofi_placa_unidad_asignada
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id

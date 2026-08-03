@@ -17,13 +17,14 @@
 | [Index](🧩%20Features/Index.md) | Catálogo completo de features |
 | [911](🧩%20Features/911.md) | Atención de emergencias (Ciudadano, WhatsApp, Rondín, Despacho) |
 | [Admin](🧩%20Features/Admin.md) | Gestión de usuarios y roles |
+| [Catalogos](🧩%20Features/Catalogos.md) | CRUD de Oficiales y Patrullas (SSPM General) |
 | [Prevencion](🧩%20Features/Prevencion.md) | Medidas de protección, búsquedas, jurídico |
 | [Monitorista](🧩%20Features/Monitorista.md) | Solicitudes de evidencia, detenidos, incidentes cámara |
 | [Infracciones](🧩%20Features/Infracciones.md) | Captura, liberación garantía, corralón |
 | [Fiscalia](🧩%20Features/Fiscalia.md) | Asegurados, solicitudes, puesta disposición |
 | [Juzgado](🧩%20Features/Juzgado.md) | Procesos judiciales, liberaciones |
 | [Liberaciones](🧩%20Features/Liberaciones.md) | Revisión documental, órdenes pago |
-| [Flota](🧩%20Features/Flota.md) | Sincronización patrullas desde API externa |
+| [Flota](🧩%20Features/Flota.md) | Parque vehicular (Excel + BD local, sin API externa) |
 | [Formato N](🧩%20Features/Formato%20N.md) | Envío de formatos a coordinación |
 | [Reporte Campo](🧩%20Features/Reporte%20Campo.md) | Reportes de oficiales en campo |
 | [Rol Servicios](🧩%20Features/Rol%20Servicios.md) | Servicios y estado de fuerza |

@@ -96,7 +96,7 @@ export async function obtenerDetalleAsegurado(
         rc.ofi_hay_hidrocarburo,
         rc.ofi_hidrocarburos,
         rc.ofi_objetos_recuperados,
-         p.numero_unidad AS ofi_placa_unidad_asignada,
+         p.placa AS ofi_placa_unidad_asignada,
         CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
         o.no_nomina,
         rc.ofi_calle,
@@ -316,7 +316,7 @@ export async function obtenerDetalleInfraccionVia(
         u.name as oficial_nombres,
         u.apellido as oficial_apellido_p,
         '' as oficial_apellido_m,
-        pat.numero_unidad as patrulla_nombre,
+        pat.placa as patrulla_nombre,
         CASE WHEN off.ofi_estatus = 'activo' THEN true ELSE false END as oficial_activo
       FROM via.v2_infracciones i
       LEFT JOIN via.v2_ordenes_pago_sa7 o ON o.infraccion_id = i.id
@@ -349,7 +349,7 @@ export async function listarAsegurados(soloPendientes: boolean, autoridad: strin
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
         CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
-        p.numero_unidad AS ofi_placa_unidad_asignada
+        p.placa AS ofi_placa_unidad_asignada
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id
       LEFT JOIN ofi_oficiales o ON rc.ofi_oficial_id = o.id
@@ -382,7 +382,7 @@ export async function obtenerDetalleAseguradoCompleto(reporteCampoId: string): P
         rd.folio_remision,
         rd.marco_legal,
         rd.registro_tableta,
-        p.numero_unidad AS ofi_placa_unidad_asignada,
+        p.placa AS ofi_placa_unidad_asignada,
         o.no_nomina,
         u.name AS capturado_por_nombre
       FROM ofi_reportes_campo rc
@@ -528,7 +528,7 @@ export async function listarAseguradosConDisposicion(autoridad: string = 'FISCAL
        rc.ofi_detenidos,
        rc.folio_reporte_asegurados,
         CONCAT(ou.name, ' ', ou.apellido) AS ofi_oficial_nombre,
-        p.numero_unidad AS ofi_placa_unidad_asignada,
+        p.placa AS ofi_placa_unidad_asignada,
         pd.id AS puesta_disposicion_id
       FROM ofi_reportes_campo rc
       JOIN ofi_reporte_denuncia rd ON rd.reporte_campo_id = rc.id

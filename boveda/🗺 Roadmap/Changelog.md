@@ -4,6 +4,23 @@
 
 ---
 
+## 2026 — Agosto
+
+### — Dashboard segmentado: sección "SSPM General" → Catálogos (Oficiales / Patrullas) (2026-08-03)
+`/dashboard` ahora arranca la segmentación por secciones: se agrega **"SSPM General"** (solo `esAdmin`) con una card **"Catalogos"** → `/dashboard/catalogos` (vista con 2 cards: **OFICIALES** y **PATRULLAS**).
+- **CRUD de patrullas** (nuevo, `lib/catalogos/`): tabla con placa/serie/departamento/características/marca/modelo/GPS/radio/cámaras/estatus + crear/editar/eliminar (eliminación **bloqueada si tiene oficiales asignados**) + botón **"Importar desde Excel"**.
+- **CRUD de oficiales** (nuevas vistas bajo `/dashboard/catalogos/oficiales`): reutiliza la lógica de `lib/admin-transito` pero con **server actions gateadas a `esAdmin`** (las de admin-transito exigen rol `admin_transito`); `/admin-transito/oficiales` queda intacto.
+- Núcleo del importador extraído a `lib/catalogos/importar-parque.ts` (compartido por la acción y el CLI); el script pasa a `scripts/importar-parque-vehicular.ts` (npx tsx).
+- Acceso: `app/dashboard/catalogos/layout.tsx` valida `esAdmin`.
+
+### — v2_patrullas: simplificación de identidad + bicicletas corregidas (2026-08-03)
+Migration `0028_v2_patrullas_placa.sql`: se eliminan `numero_unidad` y `descripcion`, y `placas` se renombra a `placa` (`num_serie` sigue siendo la llave UNIQUE; `id uuid` PK interna intacta). El mapper calcula `etiqueta` (placa → si no hay, `caracteristicas — marca — modelo` sin repetir → `num_serie`) y `detalle` descriptivo; los selectores de unidad (`UnidadCards`, `SeleccionarUnidadesModal`, `ModalSeleccionarUnidad`, `PatrullaSelector`, `ModalReactivarOficial`, `UnidadAsignadaSection`) ahora leen `etiqueta`/`placa` (renombres, sin eliminar UI). Los `SELECT` que usaban `p.numero_unidad` (`oficial/service`, `admin-transito`, `fiscalia`, `agente_juzgado`, `shared/infracciones`) pasan a `p.placa`. El importador se actualizó y re-importó el catálogo (110 vehículos): en `BICICLETA` ahora `marca='TREK'`, `modelo='MARILN 4 GEN 3'`, `num_serie` = serial `WTU…`.
+
+### — Migración del parque vehicular: se retira la API externa de flota (2026-08-03)
+Se elimina la integración con `proyecto-flota.vercel.app`: `lib/flota/service.ts` ya no hace fetch/cache/sync, se borraron `app/api/rol-servicios/externos/flota/route.ts` y `hooks/useFlota.ts`, y las env vars `FLOTA_API_SECRET_KEY` / `NEXT_PUBLIC_FLOTA_API_KEY`. El catálogo `via.v2_patrullas` ahora se carga desde el Excel del parque vehicular (`public/files-xlsx/flota-vehicular-nuevo.xlsx`) vía `scripts/importar-parque-vehicular.ts`.
+- **BD** (migration `0027_patrullas_parque_vehicular.sql`): `num_serie` (VIN) es la nueva **llave de negocio UNIQUE** (la PK interna `id uuid` se conserva intacta); `numero_unidad`/`placas` pasan a nullable; se agregan `departamento`, `caracteristicas`, `marca`, `modelo`, `gps`, `radio`, `camaras`. Catálogo vaciado y reimportado: **110 vehículos**, 98 con placa, 12 sin placa real (10 bicicletas TREK con serial `WTU…`, remolques `S/P`).
+- **UI**: los selectores de unidad hacen fallback a `descripción` cuando no hay placa (`etiquetaUnidad` en `lib/flota/mapper.ts`).
+
 ## 2026 — Julio
 
 ### — Mapa en vivo del oficial en la card expandida de "En Despacho" (2026-07-31)

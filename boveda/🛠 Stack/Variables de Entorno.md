@@ -16,7 +16,6 @@
 | `BETTER_AUTH_SECRET` | No | better-auth — firma de sesiones (obligatorio) |
 | `NEXT_PUBLIC_APP_URL` | No | — |
 | `BETTER_AUTH_URL` | No | — |
-| `FLOTA_API_SECRET_KEY` | No | — |
 | `NOMINA_API_URL` | No | — |
 | `SECRET_NOMINA` | No | — |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | — |
@@ -32,7 +31,6 @@
 | `NEXT_PUBLIC_WS_EXPEDIENTE` | No | SA7 |
 | `KEY_USER_VALIDATE_STATUS` | No | — |
 | `KEY_PD_VALIDATE_STATUS` | No | — |
-| `NEXT_PUBLIC_FLOTA_API_KEY` | No | FLOTA DE POLICIAS |
 | `GEO_LOCATION_KEY` | No | Búsqueda inteligente de motivo (paso 4 captura infracción) — LLM compatible OpenAI (ej. DeepSeek) |
 | `LLM_BASE_URL` | No | — |
 | `LLM_MODEL` | No | — |

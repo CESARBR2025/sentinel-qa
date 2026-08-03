@@ -70,7 +70,7 @@ async function generarFolioUnico(): Promise<string> {
 
 export async function obtenerPlacaPatrulla(oficialId: string): Promise<string> {
   const result = await query<{ placa: string }>(
-    `SELECT COALESCE(p.numero_unidad, '') AS placa
+    `SELECT COALESCE(p.placa, '') AS placa
      FROM ofi_oficiales o
      LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
      WHERE o.id = $1 LIMIT 1`,

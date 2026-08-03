@@ -146,32 +146,19 @@ console.log('row mapped:', rowToAlgo(row))
 
 ---
 
-## Flota: null `placaVehiculo` viola NOT NULL en `numero_unidad`
+## Flota: sincronización externa retirada (obsoleto)
 
-**Síntoma**: `el valor nulo en la columna «numero_unidad» de la relación «v2_patrullas» viola la restricción de no nulo`
+La API externa `proyecto-flota.vercel.app` fue retirada (2026-08-03); el catálogo de `via.v2_patrullas` ahora se carga desde el Excel del parque vehicular vía `scripts/importar-parque-vehicular.ts`. La entrada anterior sobre `apiRowToFlotaVehiculo` / `upsertPatrullas` (snake_case → NULL) ya no aplica.
 
-**Causa raíz**: La API externa de flota devuelve campos en snake_case (`placa_vehiculo`), pero `upsertPatrullas` accede a `v.placaVehiculo` (camelCase) obteniendo `undefined`. Ese `undefined` se pasa como NULL al INSERT, violando `NOT NULL` en `numero_unidad`.
+---
 
-**Fix**:
-1. Agregar mapper `apiRowToFlotaVehiculo` en `lib/flota/service.ts` que convierta snake_case → camelCase y filtre vehículos sin placa
-2. Filtrar vehículos sin `placaVehiculo` en `upsertPatrullas` (`lib/flota/repository.ts`)
+## Flota: modal "Unidades cercanas al hecho" sin oficiales
 
-```ts
-function apiRowToFlotaVehiculo(raw: Record<string, unknown>): FlotaVehiculoRaw | null {
-  const placaVehiculo = String(raw.placa_vehiculo ?? raw.placaVehiculo ?? '').trim()
-  if (!placaVehiculo) return null
-  return {
-    placaVehiculo,
-    numSerie: String(raw.num_serie ?? raw.numSerie ?? ''),
-    marca: String(raw.marca ?? ''),
-    modelo: String(raw.modelo ?? ''),
-    color: String(raw.color ?? ''),
-    tipoVehiculo: String(raw.tipo_vehiculo ?? raw.tipoVehiculo ?? ''),
-    secretaria: String(raw.secretaria ?? ''),
-    idVehiculo: Number(raw.id_vehiculo ?? raw.idVehiculo ?? 0),
-  }
-}
-```
+**Síntoma**: las cards de unidad aparecen con "Sin tripulación asignada" (o el modal queda vacío).
+
+**Causa raíz**: al migrar el parque vehicular (migration `0027`), `ofi_oficiales.patrulla_id` se limpió a NULL y el re-import generó **ids uuid nuevos** en `v2_patrullas`; ningún oficial quedó vinculado a una patrulla. Sin `patrulla_id`, el `LEFT JOIN` de `listarUnidadesConTripulacionRaw` no enlaza oficiales (`oficiales: []`) y, sin oficial asignado con `ultima_lat`/`ultima_lng`, las unidades no pasan el filtro de distancia de `listarUnidadesParaDespacho`.
+
+**Fix**: re-asignar `ofi_oficiales.patrulla_id` a los ids vigentes de `via.v2_patrullas` (ej. migration `0029_asignar_oficiales_patrulla.sql` para datos de prueba). Tras reimportar el parque vehicular siempre hay que re-asignar la tripulación.
 
 ---
 

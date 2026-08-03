@@ -14,17 +14,20 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
   const [selectedLabel, setSelectedLabel] = useState(() => {
     if (!defaultValue) return ''
     const found = patrullas.find((p) => p.id === defaultValue)
-    return found ? `${found.numeroUnidad} — ${found.descripcion}` : ''
+    return found ? found.etiqueta : ''
   })
   const [modalOpen, setModalOpen] = useState(false)
   const [busqueda, setBusqueda] = useState('')
   const [tempId, setTempId] = useState(selectedId)
   const overlayRef = useRef<HTMLDivElement>(null)
 
-  const filtradas = patrullas.filter(
-    (p) =>
-      p.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.descripcion.toLowerCase().includes(busqueda.toLowerCase()),
+  const q = busqueda.toLowerCase()
+  const filtradas = patrullas.filter((p) =>
+    [p.etiqueta, p.placa, p.marca, p.modelo, p.numSerie, p.detalle]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+      .includes(q),
   )
 
   useEffect(() => {
@@ -55,7 +58,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
     if (!tempId) return
     const found = patrullas.find((p) => p.id === tempId)
     setSelectedId(tempId)
-    setSelectedLabel(found ? `${found.numeroUnidad} — ${found.descripcion}` : '')
+    setSelectedLabel(found ? found.etiqueta : '')
     setModalOpen(false)
   }
 
@@ -179,7 +182,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                   type="text"
                   placeholder="Buscar por placa, marca o modelo..."
                   value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
+                  onChange={(e) => setBusqueda(e.target.value.toUpperCase())}
                   autoFocus
                   style={{
                     border: 'none',
@@ -277,7 +280,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                             marginBottom: 2,
                           }}
                         >
-                          {p.numeroUnidad}
+                          Modelo: {p.marca ?? '—'}
                         </div>
                         <div
                           style={{
@@ -289,7 +292,7 @@ export default function PatrullaSelector({ patrullas, defaultValue }: Props) {
                             whiteSpace: 'nowrap',
                           }}
                         >
-                          {p.descripcion}
+                          Datos: {p.placa ?? '—'} - {p.numSerie || '—'}
                         </div>
                       </div>
                       {esSeleccionada && (

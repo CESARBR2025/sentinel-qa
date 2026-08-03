@@ -22,6 +22,7 @@
 | auth | (Pendiente) | ✨ Detectado |
 | auxiliar | (Pendiente) | ✨ Detectado |
 | camara | (Pendiente) | ✨ Detectado |
+| catalogos | CRUD Oficiales y Patrullas (SSPM General) | ✨ Detectado |
 | complementos | (Pendiente) | ✨ Detectado |
 | corralon | (Pendiente) | ✨ Detectado |
 | d1 | (Pendiente) | ✨ Detectado |
@@ -35,7 +36,7 @@
 | estadisticos | (Pendiente) | ✨ Detectado |
 | expediente | (Pendiente) | ✨ Detectado |
 | fiscalia | (Pendiente) | ✨ Detectado |
-| flota | (Pendiente) | ✨ Detectado |
+| flota | Catálogo del parque vehicular (Excel + BD local) | ✨ Detectado |
 | formato-n-armas-aseguradas | (Pendiente) | ✨ Detectado |
 | formato-n-atencion-victimas | (Pendiente) | ✨ Detectado |
 | formato-n-eventos | (Pendiente) | ✨ Detectado |

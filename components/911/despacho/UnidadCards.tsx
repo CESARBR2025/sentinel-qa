@@ -153,9 +153,9 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
           </div>
           <div>
             <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 18, fontWeight: 800, color: '#0f172a', letterSpacing: '0.03em', lineHeight: 1.1 }}>
-              {unidad.numeroUnidad}
+              {unidad.etiqueta}
             </div>
-            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, color: '#94a3b8', fontWeight: 500 }}>{unidad.placas || 'Sin placas'}</div>
+            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, color: '#94a3b8', fontWeight: 500 }}>{unidad.placa || 'Sin placas'}</div>
           </div>
         </div>
 
@@ -208,10 +208,10 @@ export function UnidadResumenCard({ unidad, prioritarioNomina, esPrioritaria = f
           </div>
           <div>
             <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 15, fontWeight: 800, color: '#0f172a', letterSpacing: '0.02em' }}>
-              {unidad.numeroUnidad}
+              {unidad.etiqueta}
             </span>
-            {unidad.placas && (
-              <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 9.5, color: '#94a3b8', marginLeft: 6 }}>{unidad.placas}</span>
+            {unidad.placa && (
+              <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 9.5, color: '#94a3b8', marginLeft: 6 }}>{unidad.placa}</span>
             )}
           </div>
         </div>

@@ -58,10 +58,13 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
   const [busqueda, setBusqueda] = useState('')
   const overlayRef = useRef<HTMLDivElement>(null)
 
-  const filtradas = patrullas.filter(
-    (p) =>
-      p.numeroUnidad.toLowerCase().includes(busqueda.toLowerCase()) ||
-      p.descripcion.toLowerCase().includes(busqueda.toLowerCase()),
+  const q = busqueda.toLowerCase()
+  const filtradas = patrullas.filter((p) =>
+    [p.etiqueta, p.placa, p.marca, p.modelo, p.numSerie, p.detalle]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+      .includes(q),
   )
 
   const selected = patrullas.find((p) => p.id === tempId)
@@ -103,7 +106,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
           transition: 'all 0.15s ease',
         }}
       >
-        <span>{selected ? `${selected.numeroUnidad} — ${selected.descripcion}` : '— Sin asignar —'}</span>
+        <span>{selected ? selected.etiqueta : '— Sin asignar —'}</span>
         <Car size={14} color={tempId ? '#1f355a' : '#94a3b8'} />
       </button>
 
@@ -183,7 +186,7 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
                   type="text"
                   placeholder="Buscar por placa, marca o modelo..."
                   value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
+                  onChange={(e) => setBusqueda(e.target.value.toUpperCase())}
                   autoFocus
                   style={{
                     border: 'none',
@@ -241,10 +244,10 @@ function PatrullaSelect({ patrullas, defaultValue }: { patrullas: PatrullaAsigna
                       />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, fontWeight: 600, color: '#0f172a', marginBottom: 2 }}>
-                          {p.numeroUnidad}
+                          Modelo: {p.marca ?? '—'}
                         </div>
                         <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {p.descripcion}
+                          Datos: {p.placa ?? '—'} - {p.numSerie || '—'}
                         </div>
                       </div>
                     </button>
