@@ -4,6 +4,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Search, X } from 'lucide-react'
 import React from 'react'
+import { labelEstatus } from '@/lib/911/estatus-c4'
 
 interface CatalogoItem { id: number; nombre: string }
 
@@ -19,11 +20,11 @@ const CANALES = [
 ]
 
 const ESTATUS = [
-  { value: 'sin_despachar', label: 'Sin despachar' },
-  { value: 'en_despacho', label: 'En despacho' },
-  { value: 'en_sitio', label: 'En sitio' },
-  { value: 'atendido', label: 'Atendido' },
-  { value: 'cerrado_detencion', label: 'Cerrado por detención' },
+  { value: 'sin_despachar', label: labelEstatus('sin_despachar', false) },
+  { value: 'en_despacho', label: labelEstatus('en_despacho', false) },
+  { value: 'en_sitio', label: labelEstatus('en_sitio', false) },
+  { value: 'atendido', label: labelEstatus('atendido', false) },
+  { value: 'cerrado_detencion', label: labelEstatus('cerrado_detencion', false) },
 ]
 
 export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {

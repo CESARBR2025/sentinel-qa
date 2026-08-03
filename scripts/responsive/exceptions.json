@@ -6,7 +6,6 @@
     "app/admin/usuarios/[id]/page.tsx",
     "app/admin/usuarios/nuevo/page.tsx",
     "app/agente_911/ciudadano/incidentes/[id]/page.tsx",
-    "app/agente_911/ciudadano/revisar/RevisarFormulario.tsx",
     "app/agente_911/rondin/incidentes/[id]/page.tsx",
     "app/agente_911/whatsapp/incidentes/[id]/page.tsx",
     "app/agente_juzgado/asegurados/[id]/page.tsx",

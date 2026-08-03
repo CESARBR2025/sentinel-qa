@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
+import { PageHeader, PageHeaderLink } from "@/components/partials/PageHeader";
 import { DashboardFooter } from "@/components/partials/Footer";
 import RevisarFormulario from "./RevisarFormulario";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
@@ -24,6 +25,8 @@ export default async function RevisarPage() {
         minHeight: "100vh",
         background: "#f8fafc",
         color: "#1e293b",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <style dangerouslySetInnerHTML={{ __html: `
@@ -33,28 +36,25 @@ export default async function RevisarPage() {
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
         roleLabel="Revisar Reporte"
-        backHref="/agente_911/ciudadano"
-        backLabel="Formulario"
       />
 
       <div
+        className="pad-pagina"
         style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          padding: "40px 32px",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: "32px",
         }}
       >
-        <div
-          style={{
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "4px",
-            padding: "40px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-          }}
-        >
-          <RevisarFormulario />
-        </div>
+        <PageHeader
+          title="Revisar"
+          accent="Reporte"
+          subtitle="Confirmación de datos antes de publicar"
+          actions={<PageHeaderLink href="/agente_911/ciudadano" variant="secondary">← Formulario</PageHeaderLink>}
+        />
+
+        <RevisarFormulario />
 
         <DashboardFooter />
       </div>

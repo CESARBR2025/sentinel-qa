@@ -12,6 +12,7 @@ import Link from "next/link";
 import React from "react";
 import { obtenerRolNombre } from "@/lib/911/permisos";
 import { tienePermiso } from "@/lib/permisos/core";
+import { labelEstatus } from "@/lib/911/estatus-c4";
 
 export default async function DetalleRondinCompletoPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -44,7 +45,7 @@ export default async function DetalleRondinCompletoPage({ params }: { params: Pr
                         <h1 style={titleStyle}>{inc.folio}</h1>
                         <div style={{fontFamily: 'JetBrains Mono', fontSize: '12px', color: '#64748b'}}>CAD: {inc.folio_cad || 'N/A'}</div>
                     </div>
-                    <div style={getStatusBadgeStyle(inc.estatus)}>{inc.estatus?.toUpperCase()}</div>
+                    <div style={getStatusBadgeStyle(inc.estatus)}>{labelEstatus(inc.estatus)}</div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>

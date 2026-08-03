@@ -7,6 +7,7 @@ import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-m
 import { toast } from "sonner"
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from "@/lib/maps/googleMapsConfig"
 import { StepIndicator } from "@/components/partials/StepIndicator";
+import { labelEstatus } from "@/lib/911/estatus-c4";
 
 const COORDS_DEFAULT = { lat: 20.3889, lng: -99.9961 }
 
@@ -639,7 +640,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                             </div>
                             <div>
                                 <label>Estatus Inicial</label>
-                                <input value="SIN DESPACHAR" className="readonly-input" readOnly />
+                                <input value={labelEstatus('sin_despachar')} className="readonly-input" readOnly />
                             </div>
                             <div>
                                 <label>Dependencia Responsable</label>

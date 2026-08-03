@@ -6,6 +6,49 @@
 
 ## 2026 — Agosto
 
+### — Bitácora 911: polling en vivo (patrón de despacho) + segment TODOS/EN RUTA/CERRADO (2026-08-03)
+La tabla de `/agente_911/ciudadano/incidentes` pasa a **refresco automático cada 20s** replicando la lógica de `TablonDespacho`:
+- **Nueva API** `app/api/incidentes/bitacora-911/route.ts`: devuelve listado paginado + conteos por estatus (misma auth que los endpoints de despacho).
+- **Nuevo componente cliente** `components/911/Bitacora911.tsx`: recibe los datos SSR de la página, hace refresh silencioso cada `INTERVALO_MS=20s` con guard `refrescandoRef` (sin sobreponer requests) y se re-monta con `key={estatus}-{page}` en cada navegación (sin efecto de sync).
+- **Segment** de 3 opciones al estilo del tablón de despacho: **TODOS / EN RUTA (`en_despacho`) / CERRADO** (grupo `atendido`+`cerrado_detencion`). Se retira "EN SITIO" del filtro.
+- La página servidor queda como SSR inicial + shell (PageHeader, DashboardFooter) y delega la tabla al cliente.
+- Typecheck, lint (0 errores) y build OK; `npm run check:responsive` ✅ 0 nuevas (182).
+
+### — Bitácora 911: segment de estatus al estilo tablón de despacho (2026-08-03)
+Los tabs de `/agente_911/ciudadano/incidentes` se reducen a **3 opciones** (TODOS / EN SITIO / CERRADO) y adoptan el estilo del segment del tablón de despacho (`/agente_911/despacho`):
+- Botones con borde, fuente Barlow Condensed, icono por tab, **activo con fondo accent + count badge**; navegación por `estatus` con `<Link>` (server-safe, resetea a página 1 porque el href no lleva `page`).
+- "CERRADO" agrupa `atendido` + `cerrado_detencion`: el repositorio `listarIncidentes` ahora interpreta `estatus='cerrado'` como `i.estatus = ANY(['atendido','cerrado_detencion'])` y el conteo del tab suma ambos.
+- Se retira el uso de `SegmentControl` en esta vista (sigue disponible con `paramName` para otros casos).
+- Typecheck, lint (0 errores) y build OK; `npm run check:responsive` ✅ 0 nuevas (182).
+
+### — Bitácora 911: tabs por estatus → SegmentControl (2026-08-03)
+Los tabs tipo pill con colores (TODOS/NUEVO/EN RUTA/EN SITIO/CERRADO/CERRADO·DETENCIÓN) de `/agente_911/ciudadano/incidentes` se convierten al **`SegmentControl`** compartido (track gris, tab activo blanco + count badge):
+- `SegmentControl` ahora acepta prop `paramName` (default `tab`) → la bitácora navega con `estatus`; además hace `flexWrap` (6 tabs, ya no desborda en móvil) y resetea `page` al cambiar de pestaña.
+- Se elimina el campo `color` de los TABS (el segment control es monocromo; los colores de significado viven en los badges de estatus de cada fila).
+- Typecheck, lint (0 errores) y build OK; `npm run check:responsive` ✅ 0 nuevas (182).
+
+### — Bitácora 911: footer y Page Assembly alineados (2026-08-03)
+`/agente_911/ciudadano/incidentes` ya tenía `PageHeader`, `.pad-pagina` y tabla responsive; se completa la alineación:
+- Contenedor de página ahora es flex column y `<main>` lleva `flex: 1` → el footer queda anclado al fondo (Page Assembly Pattern).
+- El footer custom ("SISTEMA CENTINELA · ATENCIÓN CIUDADANA 911") se reemplaza por el componente compartido `DashboardFooter` (consistente con el resto de la app). Se elimina la constante `footerStyle`.
+- Typecheck, lint (0 errores) y build OK; `npm run check:responsive` ✅ 0 nuevas (182).
+
+### — Revisar reporte (`/agente_911/ciudadano/revisar`) alineado a REGLA Responsive/PageHeader + StepIndicator (2026-08-03)
+La vista de confirmación previa a publicar se alinea:
+- **PageHeader regla**: se agrega `<PageHeader title="Revisar" accent="Reporte" />` con action `← Formulario` (secondary); se quita `backHref`/`backLabel` del `DashboardHeader`.
+- **Responsive / Page Assembly**: contenedor `maxWidth: 800px` + `padding: '40px 32px'` inline → `.pad-pagina`; `main` flex column con footer anclado.
+- **StepIndicator**: se elimina el stepper inline de círculos 1/2/3 con conectores (`RevisarFormulario`) y se usa `<StepIndicator paso total nombre>` (pasos dinámicos: 2 si no canaliza, 3 si requiere despacho).
+- Grids de revisión `1fr 1fr` inline → `.grid-2` (colapsa a 1 columna en móvil); footer de botones con `flexWrap`.
+- El allowlist baja de 183 a 182 (sale `RevisarFormulario.tsx` de `gridMulticol`); `npm run check:responsive` ✅ 0 nuevas. Typecheck, lint y build OK.
+
+### — Vocabulario de estados estandarizado al C4/CNI (2026-08-03)
+Se estandarizan las etiquetas de estado del incidente al vocabulario de la bóveda canónica (flu-001 / form-001 / form-003), **sin tocar los valores internos de BD**:
+- **Nuevo archivo `lib/911/estatus-c4.ts`**: mapa central `ESTATUS_C4` + helpers `labelEstatus()` / `tooltipEstatus()` (null-safe). Mapeo: `sin_despachar`→**Nuevo**, `en_despacho`→**En Ruta**, `en_sitio`→**En Sitio**, `atendido`→**Cerrado**, `cerrado_detencion`→**Cerrado · Detención**.
+- Se reemplazan las etiquetas hardcodeadas (SIN DESPACHAR / EN DESPACHO / ATENDIDO / CERRADO DET / C/DETENCIÓN) y los `estatus.replace('_',' ').toUpperCase()` por `labelEstatus()` en: bitácora 911 (tabs, tooltips, badges), listados y detalle WhatsApp/Rondín, `app/incidentes`, `TablonDespacho`, `FiltrosIncidentes`, `RondinTabla`, `oficial/despachos` y el "Estatus Inicial" del `Formulario911`.
+- Regla documentada en `Convenciones.md` → "Vocabulario de estados del incidente (C4/CNI)": prohibido hardcodear etiquetas; usar siempre `labelEstatus()`.
+- Bonus: se limpiaron casts `as any` de `session.user` en los listados WhatsApp/Rondín (quedan lint-limpios).
+- Typecheck, lint (0 errores) y build OK; `npm run check:responsive` ✅ 0 nuevas.
+
 ### — Registro 911 (`/agente_911/ciudadano`) alineado a REGLA Responsive/PageHeader + wizard con StepIndicator (2026-08-03)
 La página de nuevo registro de incidentes 911 se alinea y se convierte en formulario multi-paso:
 - **PageHeader regla**: se agrega `<PageHeader title="Nuevo" accent="Registro" />` con action `← Bitácora` (secondary). Se quitan `backHref`/`backLabel` del `DashboardHeader` y el bloque de "ENCABEZADO" inline (descripción movida al `subtitle` del `PageHeader`).

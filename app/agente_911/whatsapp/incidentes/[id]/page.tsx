@@ -12,6 +12,7 @@ import Link from "next/link";
 import React from "react";
 import { obtenerRolNombre } from "@/lib/911/permisos";
 import { tienePermiso } from "@/lib/permisos/core";
+import { labelEstatus } from "@/lib/911/estatus-c4";
 
 export default async function DetalleWhatsAppPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -48,7 +49,7 @@ export default async function DetalleWhatsAppPage({ params }: { params: Promise<
                         <h1 style={titleStyle}>{inc.folio}</h1>
                     </div>
                     <div style={getStatusBadgeStyle(inc.estatus)}>
-                        {inc.estatus?.replace('_', ' ').toUpperCase()}
+                        {labelEstatus(inc.estatus)}
                     </div>
                 </div>
 

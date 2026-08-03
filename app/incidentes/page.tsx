@@ -9,6 +9,7 @@ import { tienePermiso } from "@/lib/incidentes/permisos";
 import { MapPin, Clock, Eye, Radio, MessageSquare, Phone } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { labelEstatus } from "@/lib/911/estatus-c4";
 
 interface SearchParams {
     canal?: string;
@@ -142,7 +143,7 @@ export default async function BitacoraIncidentesPage({
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={getStatusBadgeStyle(item.estatus || '')}>
-                                                {item.estatus?.replace('_', ' ').toUpperCase()}
+                                                {labelEstatus(item.estatus)}
                                             </div>
                                         </td>
                                         <td style={{ ...tdStyle, textAlign: 'center' }}>

@@ -7,6 +7,7 @@ import { verificarRolOficial, listarDespachosAsignados, listarDespachosAtendidos
 import type { DespachoAsignado, DespachoAtendido } from '@/lib/oficial/types'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { labelEstatus } from '@/lib/911/estatus-c4'
 import { SegmentControl } from '@/components/oficial/SegmentControl'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import React from 'react'
@@ -28,7 +29,7 @@ function ResolucionBadge({ estatus }: { estatus: string }) {
         border: `1px solid ${isDetencion ? '#fecaca' : '#ccfbf1'}`,
       }}
     >
-      {isDetencion ? 'C/DETENCIÓN' : 'ATENDIDO'}
+      {isDetencion ? labelEstatus('cerrado_detencion') : labelEstatus('atendido')}
     </span>
   )
 }
@@ -129,7 +130,7 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
                   <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{d.folio}</span>
                   {d.estatus === 'en_sitio' && (
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#f0fdfa', color: '#0f766e', border: '1px solid #ccfbf1', borderRadius: 2 }}>
-                      EN SITIO
+                      {labelEstatus('en_sitio')}
                     </span>
                   )}
                   {d.prioridad && (

@@ -171,6 +171,25 @@ Toda vista multi-paso usa el componente `components/partials/StepIndicator.tsx` 
 - Referencias conformes: `components/oficial/FormularioRecorrido.tsx` (STEPS de 7), `components/analisis/formAnalisis.tsx` (STEPS de 6, migrado desde `RegistroDetenidoStepper`).
 - El componente `StepIndicator` de `components/partials/` es el único permitido; no crear variantes locales con el mismo nombre.
 
+## Vocabulario de estados del incidente (C4/CNI)
+
+Las etiquetas de estado mostradas en la UI usan el vocabulario de la **bóveda canónica C4/CNI** (flu-001, form-001, form-003), NO los valores internos de la BD. Los valores internos de `incidentes.estatus` **no cambian**; solo se estandariza su presentación.
+
+**Fuente única:** `lib/911/estatus-c4.ts` (`ESTATUS_C4`, `labelEstatus()`, `tooltipEstatus()`). Prohibido hardcodear etiquetas de estado en la UI (ej. `SIN DESPACHAR`, `EN DESPACHO`, `ATENDIDO`, `C/DETENCIÓN`) o renderizar `estatus.replace('_',' ').toUpperCase()` — usar siempre `labelEstatus(estatus)`.
+
+| Interno (BD) | Etiqueta C4 | Tooltip |
+|---|---|---|
+| `sin_despachar` | **Nuevo** | Esperando a que una unidad tome el caso |
+| `en_despacho` | **En Ruta** | Una unidad fue asignada y se dirige al lugar |
+| `en_sitio` | **En Sitio** | La unidad llegó y está atendiendo la emergencia |
+| `atendido` | **Cerrado** | Incidente resuelto y servicio concluido |
+| `cerrado_detencion` | **Cerrado · Detención** | Caso cerrado con una detención realizada |
+
+**Reglas:**
+- `labelEstatus(estatus, uppercase=true)` devuelve la etiqueta C4 (por defecto en mayúsculas para badges; `uppercase=false` para textos/filtros).
+- Los colores de badges y el agrupamiento de tabs (Pendientes/En Ruta/Cerrados) son decisión de cada vista; el texto siempre viene del mapa central.
+- Para agregar un estado nuevo: actualizar `ESTATUS_C4` y este mapeo (no inventar etiquetas sueltas).
+
 ## Responsive (REGLA)
 
 Toda vista debe funcionar en **móvil ≤720px, tablet 721–1200px y desktop >1200px** (breakpoints alineados con `.fk-grid` y `.dashboard-grid`).

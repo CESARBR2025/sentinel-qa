@@ -7,6 +7,7 @@ import { Eye, Plus, Calendar, MapPin, Hash, Shield, Car } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion, obtenerRolNombre } from "@/lib/911/permisos";
+import { labelEstatus } from "@/lib/911/estatus-c4";
 
 export default async function ListadoRondinPage({
     searchParams,
@@ -34,7 +35,7 @@ export default async function ListadoRondinPage({
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-            <DashboardHeader user={session.user as any} backHref={backHref} backLabel={backLabel} />
+            <DashboardHeader user={{ name: session.user.name, apellido: session.user.apellido ?? undefined, email: session.user.email }} backHref={backHref} backLabel={backLabel} />
 
             <main style={{ maxWidth: '1240px', margin: '0 auto', padding: '40px 48px' }}>
                 
@@ -106,7 +107,7 @@ export default async function ListadoRondinPage({
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={getStatusBadgeStyle(item.estatus)}>
-                                                {item.estatus.replace('_', ' ').toUpperCase()}
+                                                {labelEstatus(item.estatus)}
                                             </div>
                                         </td>
                                         <td style={{ ...tdStyle, textAlign: 'right' }}>

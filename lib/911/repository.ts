@@ -78,8 +78,14 @@ export async function listarIncidentes(
   }
   if (estatus) {
     idx++
-    conditions.push(`i.estatus = $${idx}`)
-    params.push(estatus)
+    // Grupo "cerrado": agrupa atendido + cerrado_detencion (vocabulario C4).
+    if (estatus === 'cerrado') {
+      conditions.push(`i.estatus = ANY($${idx}::text[])`)
+      params.push(['atendido', 'cerrado_detencion'])
+    } else {
+      conditions.push(`i.estatus = $${idx}`)
+      params.push(estatus)
+    }
   }
 
   const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : ''

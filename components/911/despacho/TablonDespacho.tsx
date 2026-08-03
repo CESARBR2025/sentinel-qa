@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
 import MapaSeguimientoOficial from '@/components/911/despacho/MapaSeguimientoOficial'
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
+import { labelEstatus } from '@/lib/911/estatus-c4'
 import { MapPin, Clock, Phone, MessageSquare, Radio, Shield, CheckCircle2, AlertTriangle, FileText } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -79,7 +80,7 @@ function CanalBadge({ canal, origenRondin }: { canal: string; origenRondin?: boo
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode; accent: string }[] = [
   { key: 'pendientes',  label: 'Pendientes',  icon: <AlertTriangle size={13} />, accent: '#b45309' },
-  { key: 'en_despacho', label: 'En despacho', icon: <Shield size={13} />,        accent: '#1c3051' },
+  { key: 'en_despacho', label: labelEstatus('en_despacho'), icon: <Shield size={13} />, accent: '#1c3051' },
   { key: 'atendidos',   label: 'Atendidos',   icon: <CheckCircle2 size={13} />,  accent: '#15803d' },
 ]
 
@@ -402,7 +403,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
               {card.estatus === 'atendido' && !card.hayDetencion && (
                 <span style={{ fontFamily: 'Inter', fontSize: 9, fontWeight: 700, padding: '2px 8px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
-                  CERRADO / ATENDIDO
+                  {labelEstatus('atendido')}
                 </span>
               )}
               {card.hayDetencion && (

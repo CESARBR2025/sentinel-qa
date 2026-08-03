@@ -9,7 +9,7 @@ interface Tab {
   count?: number
 }
 
-export function SegmentControl({ tabs, activeTab }: { tabs: Tab[]; activeTab: string }) {
+export function SegmentControl({ tabs, activeTab, paramName = 'tab' }: { tabs: Tab[]; activeTab: string; paramName?: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -17,20 +17,23 @@ export function SegmentControl({ tabs, activeTab }: { tabs: Tab[]; activeTab: st
     (tabId: string) => {
       const params = new URLSearchParams(searchParams.toString())
       if (tabId === tabs[0]?.id) {
-        params.delete('tab')
+        params.delete(paramName)
       } else {
-        params.set('tab', tabId)
+        params.set(paramName, tabId)
       }
+      // Al cambiar de pestaña se regresa a la página 1 (evita páginas vacías).
+      params.delete('page')
       const qs = params.toString()
       router.push(qs ? `?${qs}` : window.location.pathname)
     },
-    [router, searchParams, tabs],
+    [router, searchParams, tabs, paramName],
   )
 
   return (
     <div
       style={{
-        display: 'inline-flex',
+        display: 'flex',
+        flexWrap: 'wrap',
         background: '#f1f5f9',
         borderRadius: 4,
         padding: 3,

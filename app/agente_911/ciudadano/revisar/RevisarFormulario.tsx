@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/set-state-in-effect */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createIncidenteCliente } from "@/lib/incidentes/actions";
 import { toast } from "sonner"
+import { StepIndicator } from "@/components/partials/StepIndicator";
 
 export default function RevisarFormulario() {
     const router = useRouter()
@@ -168,61 +169,30 @@ export default function RevisarFormulario() {
 
     return (
         <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#334155' }}>
-            {/* Title + Step indicator */}
-            <div style={{ marginBottom: 28 }}>
-                <h2 style={{
-                    fontFamily: 'Barlow Condensed, sans-serif', fontSize: 22, fontWeight: 800,
-                    color: '#0f172a', textTransform: 'uppercase', margin: '0 0 20px 0',
-                }}>
-                    {stepLabel(step)}
-                </h2>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-                    {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s, idx) => (
-                        <div key={s} style={{ display: 'flex', alignItems: 'center', flex: idx < totalSteps - 1 ? 1 : undefined }}>
-                            <div style={{
-                                width: 28, height: 28, borderRadius: '50%',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 700,
-                                background: step === s ? '#1c3051' : step > s ? '#16a34a' : '#e2e8f0',
-                                color: step >= s ? '#ffffff' : '#94a3b8',
-                                transition: 'all 0.2s',
-                                flexShrink: 0,
-                            }}>
-                                {step > s ? '✓' : s}
-                            </div>
-                            {idx < totalSteps - 1 && (
-                                <div style={{
-                                    flex: 1, height: 2,
-                                    background: step > s ? '#16a34a' : '#e2e8f0',
-                                    transition: 'all 0.2s',
-                                }} />
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
+            {/* Indicador de paso */}
+            <StepIndicator paso={step} total={totalSteps} nombre={stepLabel(step)} />
 
             {/* Step 1: Review data */}
             {step === 1 && (
                 <>
                     {section('📋', 'Datos del Reportante')}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', marginBottom: 20 }}>
+                    <div className="grid-2" style={{ gap: '8px 20px', marginBottom: 20 }}>
                         {items.filter(i => ['Canal', 'Nombre del Reportante', 'Teléfono (ANI)', 'Sexo', 'Edad', 'Anónimo'].includes(i.label)).map(i => field(i.label, i.value))}
                     </div>
 
                     {section('🏷️', 'Clasificación Técnica')}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', marginBottom: 20 }}>
+                    <div className="grid-2" style={{ gap: '8px 20px', marginBottom: 20 }}>
                         {items.filter(i => ['Tipo de Emergencia', 'Subtipo', 'Incidente', 'Código', 'Prioridad Catálogo', 'Prioridad (ajuste)'].includes(i.label)).map(i => field(i.label, i.value))}
                     </div>
 
                     {section('📍', 'Ubicación')}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', marginBottom: 20 }}>
+                    <div className="grid-2" style={{ gap: '8px 20px', marginBottom: 20 }}>
                         {items.filter(i => ['Calle', 'Colonia', 'Municipio', 'Referencia'].includes(i.label)).map(i => field(i.label, i.value))}
                         {items.filter(i => i.label === 'No. Exterior' || i.label === 'No. Interior').map(i => field(i.label, i.value))}
                     </div>
 
                     {section('🔗', 'Canalización')}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px' }}>
+                    <div className="grid-2" style={{ gap: '8px 20px' }}>
                         {items.filter(i => ['Requiere Despacho', 'Dependencia', 'Notificar SVV'].includes(i.label)).map(i => field(i.label, i.value))}
                     </div>
                 </>
@@ -320,7 +290,7 @@ export default function RevisarFormulario() {
             {step === totalSteps && (
                 <>
                     {section('✅', 'Resumen Final')}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px', marginBottom: 20 }}>
+                    <div className="grid-2" style={{ gap: '8px 20px', marginBottom: 20 }}>
                         {items.map(i => field(i.label, i.value))}
                     </div>
                     {requiere && (
@@ -347,7 +317,7 @@ export default function RevisarFormulario() {
             {/* Footer */}
             <div style={{
                 marginTop: 32, paddingTop: 24, borderTop: '1px solid #e2e8f0',
-                display: 'flex', justifyContent: 'space-between', gap: 12,
+                display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap',
             }}>
                 <div>
                     {step > 1 && (

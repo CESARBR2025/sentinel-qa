@@ -8,6 +8,7 @@ import { MapPin, User, Clock, AlertTriangle, ArrowLeft, Phone, School, Info } fr
 import Link from "next/link";
 import React from "react";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
+import { labelEstatus } from "@/lib/911/estatus-c4";
 
 export default async function DetalleCiudadanoCompletoPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -40,7 +41,7 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
                                 </span>
                             )}
                         </div>
-                    <div style={getStatusBadgeStyle(inc.estatus)}>{inc.estatus?.toUpperCase()}</div>
+                    <div style={getStatusBadgeStyle(inc.estatus)}>{labelEstatus(inc.estatus)}</div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
