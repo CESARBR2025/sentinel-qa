@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, useTransition } from 'react'
 import { MapPinOff, X } from 'lucide-react'
 import { reportarUbicacionOficial } from '@/lib/oficial/actions'
 
@@ -37,19 +37,34 @@ export function useUbicacionOficial() {
 export function OficialUbicacionProvider({ children }: { children: React.ReactNode }) {
   const ultimaPosicionRef = useRef<{ lat: number; lng: number } | null>(null)
   const primerEnvioRef = useRef(false)
-  const soportado = typeof navigator !== 'undefined' && !!navigator.geolocation
+  // Contador para el próximo heartbeat. Se lleva en un ref porque el envío
+  // ocurre en el cuerpo del intervalo (no en un functional updater): llamar
+  // startTransition dentro de un updater de setState lanza "Cannot call
+  // startTransition while rendering" (React ejecuta updaters en fase de render).
+  const segundosRef = useRef(HEARTBEAT_SEGUNDOS)
+  // SSR-safe: arranca en true (mismo valor en servidor y cliente) y se ajusta
+  // tras el hidratado. Evaluar `typeof navigator` en el render inicial rompe
+  // la hidratación: en SSR sale false ("No disponible") y en cliente true.
+  const [soportado, setSoportado] = useState(true)
 
   const [posicionActual, setPosicionActual] = useState<{ lat: number; lng: number } | null>(null)
   const [ultimoEnvio, setUltimoEnvio] = useState<UbicacionEnvio | null>(null)
   const [segundosParaProximoEnvio, setSegundosParaProximoEnvio] = useState(HEARTBEAT_SEGUNDOS)
   const [permisoDenegado, setPermisoDenegado] = useState(false)
   const [oculto, setOculto] = useState(false)
+  const [, startTransition] = useTransition()
+
+  useEffect(() => {
+    const t = setTimeout(() => setSoportado(typeof navigator !== 'undefined' && !!navigator.geolocation), 0)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     if (!soportado) return
 
     const enviarUbicacion = (lat: number, lng: number) => {
-      reportarUbicacionOficial(lat, lng)
+      startTransition(() => { void reportarUbicacionOficial(lat, lng) })
+      segundosRef.current = HEARTBEAT_SEGUNDOS
       setUltimoEnvio({ lat, lng, en: new Date() })
       setSegundosParaProximoEnvio(HEARTBEAT_SEGUNDOS)
     }
@@ -71,13 +86,13 @@ export function OficialUbicacionProvider({ children }: { children: React.ReactNo
 
     const tick = setInterval(() => {
       setPosicionActual(ultimaPosicionRef.current)
-      setSegundosParaProximoEnvio(s => {
-        if (s > 1) return s - 1
-
-        const pos = ultimaPosicionRef.current
-        if (pos) enviarUbicacion(pos.lat, pos.lng)
-        return HEARTBEAT_SEGUNDOS
-      })
+      if (segundosRef.current > 1) {
+        segundosRef.current -= 1
+        setSegundosParaProximoEnvio(segundosRef.current)
+        return
+      }
+      const pos = ultimaPosicionRef.current
+      if (pos) enviarUbicacion(pos.lat, pos.lng)
     }, 1000)
 
     return () => {
