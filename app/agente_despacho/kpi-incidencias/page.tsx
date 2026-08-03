@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import { auth }     from '@/lib/auth'
 import { headers }  from 'next/headers'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { DashboardFooter } from '@/components/partials/Footer'
 import { KpiIncidenciasView } from '@/components/911/kpi/KpiIncidenciasView'
 import { tieneAccesoSeccion } from '@/lib/911/permisos'
@@ -20,14 +21,14 @@ export default async function KpiIncidenciasPage() {
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
       `}} />
-      <SubHeader
-        backHref="/agente_despacho"
-        backLabel="Panel Despacho"
-        title="KPI"
-        accent="Incidencias"
-        user={user}
-      />
-      <main style={{ maxWidth: 1600, margin: '0 auto', padding: '32px 48px' }}>
+      <DashboardHeader user={user} />
+      <main className="pad-pagina" style={{ width: '100%' }}>
+        <PageHeader
+          title="KPI"
+          accent="Incidencias"
+          subtitle="Mapa de ubicación y mapa de calor por rango de fecha y hora"
+          actions={<PageHeaderLink href="/agente_despacho" variant="secondary">← Panel Despacho</PageHeaderLink>}
+        />
         <KpiIncidenciasView
           tiposIncidente={catalogos.incidentes.map(t => ({ id: t.id, nombre: t.nombre }))}
           prioridades={catalogos.prioridades.map(p => ({ id: p.id, nombre: p.nombre }))}

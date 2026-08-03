@@ -1,0 +1,26 @@
+{
+  "name": "CENTINELA SSPM San Juan del Río",
+  "short_name": "CENTINELA",
+  "description": "Sistema de Gestión de Seguridad Pública — SSPM San Juan del Río",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#1f355a",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/logo_sentinel.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo_sentinel.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

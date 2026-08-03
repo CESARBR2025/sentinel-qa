@@ -6,6 +6,22 @@
 
 ## 2026 — Agosto
 
+### — Páginas propias ante caída de señal / crash (PWA Offline) (2026-08-03)
+Se agrega un service worker manual (`public/sw.js`, sin dependencias) que sustituye la página genérica del navegador cuando se va la señal, cae el servidor o devuelve 5xx: **network-first** en navegaciones con fallback a `/offline` precacheado en `install`; **cache-first** para `/_next/static` (la página offline sale con estilos); `stale-while-revalidate` para el resto; `activate` limpia cachés viejas + `clients.claim()`.
+- **`app/offline/page.tsx`**: página "CONEXIÓN PERDIDA" clara estilo login (grid + esquinas doradas + escudo SVG inline), **autocontenida** (estilos inline, sin red), distingue "sin conexión a internet" vs "el servicio no responde" vía `navigator.onLine`, botón **Reintentar** + auto-recarga al volver la señal.
+- **`components/sw-register.tsx`** registra `/sw.js` solo en producción (montado en `app/layout.tsx`).
+- **`public/manifest.json`** + metadata (`manifest`, `themeColor`, `appleWebApp`) → tratable como app nativa/instalable.
+- **`app/error.tsx` / `app/global-error.tsx`**: páginas de error propias (500/runtime) en vez de la genérica de Next; usan `unstable_retry` (Next 16.2+); `global-error` con su propio `<html>/<body>`.
+- **`proxy.ts`**: `/offline` en `PUBLIC_PATHS`; el matcher ahora excluye `.json` (manifiesto no pasa por auth).
+- Verificado: `npx tsc --noEmit` 0 errores, `npm run build` exitoso (`/offline` prerendered estático), `/offline` 200 sin sesión, `sw.js`/`manifest.json` 200, `npm run check:responsive` 0 violaciones nuevas. Lógica del SW validada con test de mocks (install/navigate-fallback/5xx/cache-first/POST). Limitación documentada: el primer acceso ya offline no se puede interceptar (SW aún no instalado).
+
+### — Flujo Agente Despacho alineado a la REGLA Responsive (2026-08-03)
+Se alinean `/agente_despacho` y las vistas destino de sus cards (`/agente_despacho/kpi-incidencias`, `/agente_911/despacho`) con el Page Assembly Pattern y la "Responsive (REGLA)" de `Convenciones.md`:
+- Se eliminan los `maxWidth` fijos de los contenedores de página (`1400/1600/1400px`) — prohibidos por el patrón — y el padding inline se reemplaza por las utilidades `.pad-dashboard` (hub) y `.pad-pagina` (vistas destino), que colapsan en tablet/móvil (desktop 48/64 · tablet 32/48 · móvil 20/16).
+- `TablonDespacho`: la fila de tabs (Pendientes/En despacho/Atendidos) ahora hace `flexWrap: 'wrap'` para no desbordarse en móvil. La fila 1 de cada card de reporte también hace `flexWrap: 'wrap'` (folio + badges + tiempo ya no se cortan por el `overflow: hidden` del contenedor). Se elimina el bloque de cabecera duplicado "CENTRO DE MANDO Y COMUNICACIONES / MÓDULO DE DESPACHO" (el `PageHeader` de la página lo sustituye).
+- Sección desplegable de la card (`DespachoForm`): el grid fijo `1fr 1fr` pasa a `.grid-2` (colapsa a 1 columna en móvil). El modal de selección de unidades (`SeleccionarUnidadesModal`) deja el grid `55% 45%` por flex: en móvil apila el mapa (altura 220px) sobre la lista; la fila de acciones hace `flexWrap: 'wrap'`. `AsignacionMapa` recibe prop `altura` (antes 500px fijos).
+- El allowlist (`exceptions.json`) se reduce a 187 (salen además `DespachoForm` y `SeleccionarUnidadesModal` de `gridMulticol`); `npm run check:responsive` sigue ✅ con 0 violaciones nuevas. Typecheck y build OK.
+
 ### — Filtros de búsqueda en /dashboard/catalogos/patrullas (2026-08-03)
 Nuevo componente `PatrullasTablaConFiltros` (cliente, patrón de `OficialesTablaConFiltros`): Card con búsqueda por texto (placa, serie/VIN, características, marca, modelo, GPS, radio, cámaras) + selects de **Departamento**, **Marca** y **Estatus** (Activa/Inactiva), botón **Limpiar** y contador de resultados. Departamentos y marcas se derivan de los valores únicos del catálogo. `PatrullasTable` acepta `mensajeVacio` para el estado "sin resultados". El server page solo carga la lista y la pasa al componente.
 

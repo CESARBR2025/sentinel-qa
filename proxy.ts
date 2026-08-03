@@ -6,6 +6,9 @@ import type { NextRequest } from 'next/server'
 const PUBLIC_PATHS = [
   '/login',
   '/api/auth',
+  // Página de caída de conexión: la sirve el service worker desde caché,
+  // sin sesión (se muestra sin red).
+  '/offline',
   // Flujo público de ciudadano (infracciones): protegido por su propio PIN/JWT
   // (verificarCookieCiudadano / verificarAccesoCiudadano), no por sesión de staff.
   '/infracciones/',
@@ -49,5 +52,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Excluye: archivos Next internos, imágenes optimizadas, archivos estáticos con extensión
-  matcher: ['/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|otf|css|js|map)$).*)'],
+  matcher: ['/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp|json|woff2?|ttf|otf|css|js|map)$).*)'],
 }

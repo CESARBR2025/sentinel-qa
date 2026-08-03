@@ -120,7 +120,10 @@ export function TablonDespacho() {
     }
   }, [cargarLista])
 
-  useEffect(() => { cargarTodo() }, [cargarTodo])
+  useEffect(() => {
+    const timer = setTimeout(() => { cargarTodo() }, 0)
+    return () => clearTimeout(timer)
+  }, [cargarTodo])
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -137,14 +140,6 @@ export function TablonDespacho() {
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #e2e8f0', paddingBottom: 24 }}>
-        <div>
-          <span style={{ fontFamily: 'Inter', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>CENTRO DE MANDO Y COMUNICACIONES</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: 36, margin: '4px 0 0 0', color: '#0f172a', textTransform: 'uppercase' }}>MÓDULO DE <span style={{ color: '#1f355a' }}>DESPACHO</span></h1>
-        </div>
-      </div>
-
       {error && (
         <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, fontFamily: 'Inter', fontSize: 11, color: '#dc2626', marginBottom: 16 }}>
           Error: {error}
@@ -155,7 +150,7 @@ export function TablonDespacho() {
       )}
 
       {/* Segment control */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 24 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 0, marginBottom: 24 }}>
         {TABS.map(t => {
           const activo = tab === t.key
           const conteo = t.key === 'pendientes' ? pendientes.length : t.key === 'en_despacho' ? enDespacho.length : atendidos.length
@@ -234,7 +229,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
           background: abierto ? '#f8fafc' : '#ffffff',
         }}>
         {/* Línea 1: folio + badges + tiempo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, marginBottom: 8 }}>
           <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }}>{card.folio}</span>
           <CanalBadge canal={card.canal} origenRondin={card.origenRondin} />
           <span style={{

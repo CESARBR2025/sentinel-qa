@@ -6,12 +6,15 @@ import { formatAntiguedad } from './UnidadCards';
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores';
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig';
 
-const containerStyle: React.CSSProperties = {
+const containerBaseStyle: React.CSSProperties = {
   width: '100%',
-  height: '500px',
   borderRadius: '2px',
   border: '1px solid #e2e8f0',
 };
+
+function makeContainerStyle(altura: number): React.CSSProperties {
+  return { ...containerBaseStyle, height: altura };
+}
 
 function buildIncidenteSvgIcon(color: string): { url: string } {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
@@ -26,7 +29,8 @@ function buildIncidenteSvgIcon(color: string): { url: string } {
 const MAX_UNIDADES_CERCANAS = 10;
 
 const LOADING_STYLE: React.CSSProperties = {
-  ...containerStyle,
+  ...containerBaseStyle,
+  height: 500,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -37,7 +41,8 @@ const LOADING_STYLE: React.CSSProperties = {
 };
 
 const ERROR_STYLE: React.CSSProperties = {
-  ...containerStyle,
+  ...containerBaseStyle,
+  height: 500,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -70,7 +75,8 @@ export default function AsignacionMapa({
   onToggleUnidad,
   prioritarioPatrullaId,
   prioridad,
-}: AsignacionMapaProps) {
+  altura = 500,
+}: AsignacionMapaProps & { altura?: number }) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: GOOGLE_MAPS_LOADER_ID,
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -188,6 +194,7 @@ ${prioritario ? `  <circle cx="7" cy="3" r="5" fill="#7c3aed" stroke="#fff" stro
   }
 
   const center = { lat: incidenteLat, lng: incidenteLng };
+  const containerStyle = makeContainerStyle(altura);
 
   return (
     <GoogleMap

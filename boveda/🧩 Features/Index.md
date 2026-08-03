@@ -70,6 +70,7 @@
 | sin_robos | (Pendiente) | ✨ Detectado |
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
+| PWA Offline | SW manual + página /offline + error.tsx/global-error.tsx ante caída de señal o crash | ✅ Implementado |
 <!-- AUTO-GENERATED END -->
 
 

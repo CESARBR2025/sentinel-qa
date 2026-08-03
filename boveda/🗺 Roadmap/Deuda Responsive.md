@@ -19,15 +19,14 @@
 
 ## Baseline (2026-08-03)
 
-Total: **192 violaciones permitidas** · 0 nuevas.
+Total: **187 violaciones permitidas** · 0 nuevas.
 
 | Módulo | Grid inline | overflow tablas | padding página | Total |
 |--------|----:|----:|----:|----:|
 | app/admin | 4 | 0 | 1 | 5 |
 | app/admin-transito | 1 | 1 | 1 | 3 |
-| app/agente_911 | 4 | 0 | 8 | 12 |
+| app/agente_911 | 4 | 0 | 7 | 11 |
 | app/agente_bitacorista | 0 | 0 | 1 | 1 |
-| app/agente_despacho | 0 | 0 | 2 | 2 |
 | app/agente_infracciones | 0 | 0 | 2 | 2 |
 | app/agente_juzgado | 2 | 0 | 10 | 12 |
 | app/agente_liberaciones | 0 | 0 | 3 | 3 |
@@ -51,7 +50,7 @@ Total: **192 violaciones permitidas** · 0 nuevas.
 | app/prevencion | 5 | 3 | 1 | 9 |
 | app/reportes | 1 | 0 | 1 | 2 |
 | app/rol_servicios | 1 | 0 | 1 | 2 |
-| components/911 | 6 | 1 | 3 | 10 |
+| components/911 | 4 | 1 | 3 | 8 |
 | components/admin | 1 | 0 | 0 | 1 |
 | components/admin-transito | 2 | 0 | 0 | 2 |
 | components/agente_juzgado | 3 | 1 | 0 | 4 |
@@ -63,7 +62,7 @@ Total: **192 violaciones permitidas** · 0 nuevas.
 | components/reportes | 5 | 0 | 0 | 5 |
 | components/rol_servicios | 1 | 1 | 0 | 2 |
 | components/shared | 1 | 0 | 0 | 1 |
-| **TOTAL** | **86** | **14** | **101** | **201** |
+| **TOTAL** | **82** | **13** | **92** | **187** |
 
 ## Cómo pagar la deuda
 

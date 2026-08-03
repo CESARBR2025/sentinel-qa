@@ -51,7 +51,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
       })
       .catch(() => setUnidadesDisponibles([]))
       .finally(() => setCargandoUnidades(false))
-  }, [incidenteLat, incidenteLng, prioritarioPatrullaId])
+  }, [incidenteLat, incidenteLng, prioritarioPatrullaId, incidenteId])
 
   const quitarUnidad = (u: UnidadParaDespacho) => {
     setUnidadesSeleccionadas(prev => prev.filter(x => x.id !== u.id))
@@ -101,7 +101,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <div className="grid-2" style={{ gap: 24 }}>
 
         {/* UNIDADES: el picker vive en un modal (SeleccionarUnidadesModal) — con
             listas reales de 100+ patrullas, un scroll anidado dentro del acordeón del

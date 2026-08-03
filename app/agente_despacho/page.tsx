@@ -6,6 +6,7 @@ import { Shield, MapPin } from 'lucide-react'
 import { verificarRolAgenteDespacho } from '@/lib/agente_despacho/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
 
@@ -42,25 +43,33 @@ export default async function AgenteDespachoDashboardPage() {
         .card-911:hover .co-top { width: 100%; }
         .card-911:hover .co-left { height: 100%; }
         .card-911:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+        .stat-bloque + .stat-bloque { border-left: 1px solid #f1f5f9; }
       `}</style>
 
       <DashboardHeader user={user} roleLabel="Agente Despacho" backHref={backHref} />
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 48 }}>
 
-        {/* Stats Bar */}
-        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px' }}>
-            <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Incidentes Hoy</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{stats.hoy}</span>
+        <PageHeader
+          title="Panel"
+          accent="Despacho"
+          subtitle={`${user.name} ${user.apellido ?? ''} · centro de mando y comunicaciones`}
+        />
+
+        {/* KPI único: resumen del día */}
+        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', padding: '14px 24px', borderBottom: '1px solid #e2e8f0' }}>
+            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#1f355a', fontWeight: 600 }}>
+              Resumen del día
+            </span>
+            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8' }}>
+              {hoy.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px' }}>
-            <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Pendientes Despacho</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{stats.sinDespachar}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px' }}>
-            <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>En Campo</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{stats.enDespacho}</span>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <StatBloque etiqueta="Incidentes Hoy" valor={stats.hoy} />
+            <StatBloque etiqueta="Pendientes Despacho" valor={stats.sinDespachar} />
+            <StatBloque etiqueta="En Campo" valor={stats.enDespacho} />
           </div>
         </div>
 
@@ -144,6 +153,19 @@ export default async function AgenteDespachoDashboardPage() {
           </div>
         </div>
 
+      </div>
+    </div>
+  )
+}
+
+function StatBloque({ etiqueta, valor }: { etiqueta: string; valor: number }) {
+  return (
+    <div className="stat-bloque" style={{ flex: '1 1 180px', minWidth: 0, padding: '20px 24px' }}>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#64748b', marginBottom: 6 }}>
+        {etiqueta}
+      </div>
+      <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 36, fontWeight: 800, lineHeight: 1, color: '#0f172a' }}>
+        {valor}
       </div>
     </div>
   )

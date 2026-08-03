@@ -6,6 +6,7 @@ import { X, Search, ShieldCheck } from 'lucide-react'
 import type { UnidadParaDespacho } from '@/lib/flota/types'
 import { UnidadCard, UnidadCardsStyles } from './UnidadCards'
 import AsignacionMapa from './AsignacionMapa'
+import { useResponsive } from '@/hooks/useResponsive'
 
 // Modal de selección de unidades cercanas. Se monta vía createPortal directo en
 // document.body (buena práctica general para modales: lo saca del árbol del acordeón
@@ -28,6 +29,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
   const overlayRef = useRef<HTMLDivElement>(null)
 
   const mostrarMapa = incidenteLat != null && incidenteLng != null
+  const { esMovil } = useResponsive()
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -118,17 +120,20 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
         </div>
 
         {mostrarMapa ? (
-          <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', flex: 1, minHeight: 0 }}>
-            <AsignacionMapa
-              unidades={unidadesActuales}
-              incidenteLat={incidenteLat}
-              incidenteLng={incidenteLng}
-              seleccionadas={seleccionLocal.map(u => u.id)}
-              onToggleUnidad={(id) => { const u = unidadesActuales.find(x => x.id === id); if (u) toggle(u) }}
-              prioritarioPatrullaId={prioritarioPatrullaId}
-              prioridad={incidentePrioridad}
-            />
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <div style={{ display: 'flex', flexDirection: esMovil ? 'column' : 'row', flex: 1, minHeight: 0 }}>
+            <div style={esMovil ? { flexShrink: 0 } : { flex: '0 0 55%', minWidth: 0 }}>
+              <AsignacionMapa
+                unidades={unidadesActuales}
+                incidenteLat={incidenteLat}
+                incidenteLng={incidenteLng}
+                seleccionadas={seleccionLocal.map(u => u.id)}
+                onToggleUnidad={(id) => { const u = unidadesActuales.find(x => x.id === id); if (u) toggle(u) }}
+                prioritarioPatrullaId={prioritarioPatrullaId}
+                prioridad={incidentePrioridad}
+                altura={esMovil ? 220 : 500}
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, flex: 1 }}>
               <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#f8fafc' }}>
                   <Search size={16} color="#94a3b8" />
@@ -206,7 +211,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
         )}
 
         {/* Actions */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '16px 24px', borderTop: '1px solid #e2e8f0' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '16px 24px', borderTop: '1px solid #e2e8f0' }}>
           <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b' }}>
             {seleccionLocal.length} unidad{seleccionLocal.length !== 1 ? 'es' : ''} seleccionada{seleccionLocal.length !== 1 ? 's' : ''}
           </span>

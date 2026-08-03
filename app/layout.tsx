@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import PageTransition from "@/components/PageTransition";
+import SwRegister from "@/components/sw-register";
 import { Toaster } from "sonner";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,13 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 export const metadata: Metadata = {
   title: "SSPM San Juan del Río - CENTINELA",
   description: "Sistema de Gestión Seguridad Pública",
+  manifest: "/manifest.json",
+  themeColor: "#1f355a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "CENTINELA",
+  },
 };
 
 export default function RootLayout({
@@ -22,6 +30,7 @@ export default function RootLayout({
       <body style={{ margin: 0, background: '#070b16' }} suppressHydrationWarning>
         <PageTransition />
         {children}
+        <SwRegister />
         <Toaster
           position="top-right"
           richColors
