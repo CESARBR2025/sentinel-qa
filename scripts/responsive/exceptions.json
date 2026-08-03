@@ -69,7 +69,6 @@
     "components/fiscalia/ExpedienteView.tsx",
     "components/fiscalia/FormularioAsegurado.tsx",
     "components/fiscalia/FormularioPuestaDisposicion.tsx",
-    "components/oficial/FormularioRecorrido.tsx",
     "components/prevencion/AgregarAutoridadForm.tsx",
     "components/prevencion/ContestacionForm.tsx",
     "components/prevencion/ProrrogaModal.tsx",
@@ -190,8 +189,7 @@
     "app/rol_servicios/page.tsx",
     "components/911/despacho/TablonDespacho.tsx",
     "components/911/radio/FormRondinEscalado.tsx",
-    "components/911/whatsapp/RegistroIncidenteForm.tsx",
-    "components/oficial/FormularioRecorrido.tsx"
+    "components/911/whatsapp/RegistroIncidenteForm.tsx"
   ],
   "headerPad": [],
   "stickyOffset": []

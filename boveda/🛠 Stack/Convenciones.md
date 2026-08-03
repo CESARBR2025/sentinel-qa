@@ -142,6 +142,35 @@ Toda vista usa el componente `components/partials/PageHeader.tsx` (`PageHeader` 
 - `title` no debe llevar espacio final (el componente añade el espacio antes del acento).
 - El contenedor y el bloque de `actions` hacen `flexWrap: wrap` de forma fija → **no se pasa prop `wrap`** (fue removida; ya no existe).
 
+## Indicador de Pasos (StepIndicator) — REGLA DE DISEÑO
+
+Toda vista multi-paso usa el componente `components/partials/StepIndicator.tsx` (`StepIndicator`). **Prohibido reimplementar el patrón inline.**
+
+**Prohibido usar steppers**: círculos numerados con conectores, dots de progreso con etiquetas (`step-dot`), barras segmentadas por paso o cualquier indicador que liste todos los pasos en fila. En móvil estos desbordan y no escalan. La referencia es el indicador que reemplazó al stepper de `FormularioRecorrido`.
+
+**Estructura:**
+
+```tsx
+<StepIndicator paso={step + 1} total={STEPS.length} nombre={STEPS[step]} />
+```
+
+`paso` es 1-based (para un array `STEPS` indexado en 0, `paso={step + 1}`; para `step` ya 1-based, `paso={step}`).
+
+**Tokens (no variar):**
+
+| Elemento | Estilo |
+|----------|--------|
+| "Paso N de M" | `Barlow Condensed, 800, 28px, letterSpacing 0.04em, uppercase, #1f355a` |
+| Nombre del paso | `JetBrains Mono, 600, 11px, letterSpacing 0.18em, uppercase, #94a3b8` |
+| Contenedor fila | `flex; alignItems: baseline; gap: 12; flexWrap: wrap` |
+| Barra de progreso | `height 2px, borderRadius 1, track #e2e8f0, fill #1f355a, width = (paso/total)*100%, transition width .25s` |
+| Contenedor total | `marginBottom: 32` |
+
+**Reglas:**
+- Sin hooks (SSR-safe): el indicador solo renderiza las props.
+- Referencias conformes: `components/oficial/FormularioRecorrido.tsx` (STEPS de 7), `components/analisis/formAnalisis.tsx` (STEPS de 6, migrado desde `RegistroDetenidoStepper`).
+- El componente `StepIndicator` de `components/partials/` es el único permitido; no crear variantes locales con el mismo nombre.
+
 ## Responsive (REGLA)
 
 Toda vista debe funcionar en **móvil ≤720px, tablet 721–1200px y desktop >1200px** (breakpoints alineados con `.fk-grid` y `.dashboard-grid`).

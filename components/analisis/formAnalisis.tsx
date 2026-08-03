@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Navigation, Activity, User, MapPin, Calendar, Hash, ChevronRight, Fingerprint, Gavel, FileText, Shield, LocateFixed, ChevronLeft, Save, MessageSquare, Hand, Zap, AlertOctagon, Clock, AlertTriangle, Search, Car, Phone, Home } from 'lucide-react';
 import { useDetenidoForm } from '@/hooks/useAnalistaForm';
@@ -8,6 +8,16 @@ import { analistaService } from '@/services/analistaService';
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
 import { analisisService } from '@/services/analisisService';
 import { useRouter } from "next/navigation";
+import { StepIndicator } from '@/components/partials/StepIndicator';
+
+const STEPS = [
+    'Datos Personales',
+    'Registro Biométrico',
+    'Uso de Fuerza',
+    'Integridad',
+    'Tiempos y Folios',
+    'Afectados y Cierre Judicial',
+];
 
 
 
@@ -238,42 +248,10 @@ console.log("RESPUESTA API:", d);
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px' }}>
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap');
-        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; transition: all 0.3s; }
-        .step-dot.active { background: #3e5171; box-shadow: 0 0 10px rgba(62, 81, 113, 0.5); }
       `}</style>
 
-            {/* INDICADOR DE PASOS TÁCTICO */}
-            <div style={{ marginBottom: '48px', display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className={`step-dot ${step >= 1 ? 'active' : ''}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 1 ? '#0f172a' : '#94a3b8' }}>01. DATOS PERSONALES</span>
-                </div>
-                <div style={{ height: '1px', flexGrow: 1, background: '#e2e8f0' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className={`step-dot ${step >= 2 ? 'active' : ''}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 2 ? '#0f172a' : '#94a3b8' }}>02. REGISTRO BIOMÉTRICO</span>
-                </div>
-                <div style={{ height: '1px', flexGrow: 1, background: '#e2e8f0' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className={`step-dot ${step >= 3}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 3 ? '#0f172a' : '#94a3b8' }}>03. USO DE FUERZA</span>
-                </div>
-                <div style={{ height: '1px', flexGrow: 1, background: '#e2e8f0' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className={`step-dot ${step >= 4}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 4 ? '#0f172a' : '#94a3b8' }}>04. INTEGRIDAD</span>
-                </div>
-                <div style={{ height: '1px', flexGrow: 1, background: '#e2e8f0' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className={`step-dot ${step >= 5}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 5 ? '#0f172a' : '#94a3b8' }}>05. PASO 5</span>
-                </div>
-                <div style={{ height: '1px', flexGrow: 1, background: '#e2e8f0' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className={`step-dot ${step >= 6}`} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: step === 6 ? '#0f172a' : '#94a3b8' }}>06. AFECTADOS Y CIERRE JUDICIAL</span>
-                </div>
-            </div>
+            {/* INDICADOR DE PASOS */}
+            <StepIndicator paso={step} total={STEPS.length} nombre={STEPS[step - 1]} />
 
             {/* CONTENIDO DEL PASO 1 */}
             {step === 1 && (
@@ -775,26 +753,10 @@ console.log("RESPUESTA API:", d);
 }
 
 
-
-const StepIndicator = ({ label, active }: any) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <div style={{
-            width: '8px', height: '8px', borderRadius: '50%',
-            background: active ? '#3e5171' : '#e2e8f0',
-            boxShadow: active ? '0 0 10px rgba(62, 81, 113, 0.5)' : 'none'
-        }} />
-        <span style={{
-            fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700,
-            color: active ? '#0f172a' : '#94a3b8', whiteSpace: 'nowrap'
-        }}>{label}</span>
-    </div>
-);
-
 // --- ESTILOS ---
 const cardStyle = { background: '#ffffff', border: '1px solid #e2e8f0', padding: '40px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' };
 const titleStyle = { fontFamily: 'Barlow Condensed', fontSize: '28px', fontWeight: 800, textTransform: 'uppercase' as const, margin: '0 0 8px 0', color: '#0f172a', letterSpacing: '0.02em' };
 const labelStyle = { fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.1em' };
-const lineStyle = { height: '1px', flexGrow: 1, background: '#e2e8f0' };
 
 const btnNextStyle = {
     background: '#0f172a', color: '#ffffff', border: 'none', padding: '14px 32px',

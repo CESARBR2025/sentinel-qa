@@ -451,3 +451,17 @@ En cambio `finalizarRevisionAction` (mismo archivo) sí hacía bien `ORDER BY cr
 5. Clases `.pad-pagina` (40px 48px) y `.pad-dashboard` (40px 64px) en `globals.css`, colapsando a `20px 16px` en `@media (max-width:720px)`; aplicadas a `app/dashboard/page.tsx` y a los `<main>` de `app/admin/layout.tsx`, `app/dashboard/catalogos/layout.tsx`, `app/prevencion/layout.tsx`.
 
 **Nota**: sigue siendo una app pensada para desktop; el modo móvil es funcional pero degradado (nav de /admin oculta en el header, tablas pueden requerir scroll horizontal).
+
+---
+
+## Área negra en el footer (desbordamiento horizontal)
+
+**Síntoma**: en una vista con fondo claro aparece una franja/área negra, típicamente en la zona del footer o en el borde derecho de la pantalla.
+
+**Causa raíz**: `<html>` y `<body>` tienen `background: '#070b16'` (casi negro, `app/layout.tsx`). El contenedor de la página usa `background: #f8fafc` + `min-height: 100vh`, pero **no cubre el contenido que se desborda horizontalmente**: los elementos que sobrepasan el ancho del viewport dejan ver el fondo negro del `body` a la derecha. En la zona del footer (texto corto centrado) la franja es más evidente. El `<footer>` en sí no tiene el problema.
+
+**Caso concreto corregido (2026-08-03)**: `/oficial/despachos/[id]` con incidente `en_sitio` renderizaba `FormularioRecorrido`, cuyos grids `repeat(3,1fr)` y filas flex fijas desbordaban en ≤720px. Ver `Changelog.md` (entrada "Despacho oficial / reporte de recorrido"). Al corregir el desbordamiento el área negra desaparece.
+
+**Cómo detectarlo**: en modo responsive (≤720px), buscar `document.documentElement.scrollWidth > clientWidth` o un elemento que sobresalga del viewport; el fondo negro del `body` es la señal visual de overflow.
+
+**Prevención**: (1) usar `.grid-2`/`.grid-3` y `flexWrap: 'wrap'` (regla Responsive); (2) como red de seguridad, `overflowX: 'clip'` en el `<main>` de la página (no rompe el `position: sticky` del header, a diferencia de `overflow: hidden`). No usar `overflow: hidden` en contenedores con tablas.

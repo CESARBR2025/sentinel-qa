@@ -39,7 +39,7 @@ const DESTINOS = [
 
 export function SelectorDestinoLegal({ value, onChange }: Props) {
   return (
-    <div style={{ gridColumn: 'span 3' }}>
+    <div style={{ gridColumn: '1 / -1' }}>
       <label style={{
         fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600,
         color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.1em',

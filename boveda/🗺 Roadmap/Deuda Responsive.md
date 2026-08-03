@@ -19,7 +19,9 @@
 
 ## Baseline (2026-08-03)
 
-Total: **187 violaciones permitidas** · 0 nuevas.
+Total: **185 violaciones permitidas** · 0 nuevas.
+
+*(actualizado tras alinear `FormularioRecorrido`/despacho oficial — salió de `gridMulticol` y `paddingPagina`, ver Changelog)*
 
 | Módulo | Grid inline | overflow tablas | padding página | Total |
 |--------|----:|----:|----:|----:|
@@ -57,12 +59,12 @@ Total: **187 violaciones permitidas** · 0 nuevas.
 | components/analisis | 2 | 2 | 0 | 4 |
 | components/denuncias | 1 | 0 | 0 | 1 |
 | components/fiscalia | 5 | 1 | 0 | 6 |
-| components/oficial | 1 | 0 | 1 | 2 |
+| components/oficial | 0 | 0 | 0 | 0 |
 | components/prevencion | 5 | 0 | 0 | 5 |
 | components/reportes | 5 | 0 | 0 | 5 |
 | components/rol_servicios | 1 | 1 | 0 | 2 |
 | components/shared | 1 | 0 | 0 | 1 |
-| **TOTAL** | **82** | **13** | **92** | **187** |
+| **TOTAL** | **81** | **13** | **91** | **185** |
 
 ## Cómo pagar la deuda
 

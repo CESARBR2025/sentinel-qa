@@ -6,6 +6,24 @@
 
 ## 2026 — Agosto
 
+### — Regla de diseño: Indicador de Pasos (StepIndicator) — prohibidos los steppers (2026-08-03)
+Se crea la regla de diseño "Indicador de Pasos (StepIndicator)" en `Convenciones.md`: **prohibido usar steppers** (círculos numerados con conectores, dots de progreso, barras segmentadas); toda vista multi-paso usa `components/partials/StepIndicator.tsx` ("**Paso N de M**" + nombre del paso + barra de progreso).
+- **Nuevo componente `components/partials/StepIndicator.tsx`**: props `paso` (1-based), `total`, `nombre`. Sin hooks (SSR-safe), `flexWrap` responsive. Tokens: "Paso N de M" en Barlow Condensed 800/28px `#1f355a`; nombre en JetBrains Mono 600/11px `#94a3b8`; barra 2px (ancho = paso/total).
+- `FormularioRecorrido` ahora usa `<StepIndicator>` (extraído del bloque inline).
+- **Migrado `components/analisis/formAnalisis.tsx`** (`RegistroDetenidoStepper`): el stepper de dots + conectores + etiquetas "01-06" se reemplaza por `<StepIndicator>` con STEPS de 6 pasos (paso 5 "Tiempos y Folios"); se eliminan el componente local `StepIndicator` (dot+label), la clase `.step-dot` y la constante `lineStyle` huérfana. De paso se elimina el desbordamiento móvil de la fila de dots.
+- Verificado: `npx tsc --noEmit` 0 errores, `npm run build` OK, lint sin errores nuevos, `npm run check:responsive` ✅ 0 nuevas, `graphify update` OK.
+
+### — Despacho oficial / reporte de recorrido alineado a la REGLA Responsive (2026-08-03)
+`FormularioRecorrido` (`components/oficial/FormularioRecorrido.tsx`, renderizado por `/oficial/despachos/[id]` cuando el incidente está `en_sitio`) salía del allowlist de deuda responsive:
+- Todos los grids inline `repeat(3,1fr)`/`repeat(2,1fr)` pasan a las clases `.grid-3`/`.grid-2` (colapsan a 1 columna en ≤720px), conservando el `gap` original. Los `gridColumn: 'span 3'/'span 2'` → `'1 / -1'` para no desbordar en la columna única móvil (incluye `SelectorDestinoLegal`).
+- `flexWrap: 'wrap'` en el stepper de 7 pasos, fila reportante/teléfono, filas de detenidos y vehículos, items de apoyos, botones de denuncia y navegación anterior/siguiente.
+- `.of-resumen-grid` (resumen) ahora hace `@media (max-width:720px){ grid-template-columns:1fr }`.
+- El padding inline `40px 48px` del wrapper standalone se reemplaza por `.pad-pagina`.
+- **Área negra del footer**: el `<html>/<body>` es `#070b16` (casi negro, `app/layout.tsx`); el desbordamiento horizontal del formulario dejaba ver el fondo negro a la derecha, más visible en la zona del footer. Se corrige con los puntos anteriores + `overflowX: 'clip'` en `<main>` de la página (red de seguridad, no rompe el sticky del header) + `borderTop` en el footer.
+- El allowlist (`exceptions.json`) baja de 187 a 185 (sale `FormularioRecorrido` de `gridMulticol` y `paddingPagina`); `npm run check:responsive` ✅ 0 nuevas. Typecheck, lint y build OK.
+- El stepper inline de 7 pasos (círculos + conectores) se reemplaza por un indicador compacto "**Paso N de 7**" + nombre del paso en Barlow Condensed y barra de progreso (ancho = paso/7), que hace `flexWrap` y no desborda en móvil.
+- **Ubicación precargada en el paso 3**: `MapaUbicacion` acepta `initialLocation` opcional. En el despacho (`embedded`), el paso Ubicación ya llega con el marker y la dirección del incidente colocados (lat/lng + calle/colonia del store, precargados del prefill), sin esperar al GPS ni sobreescribir la ubicación del incidente. El flujo standalone y el mapa de cateo siguen usando GPS.
+
 ### — Páginas propias ante caída de señal / crash (PWA Offline) (2026-08-03)
 Se agrega un service worker manual (`public/sw.js`, sin dependencias) que sustituye la página genérica del navegador cuando se va la señal, cae el servidor o devuelve 5xx: **network-first** en navegaciones con fallback a `/offline` precacheado en `install`; **cache-first** para `/_next/static` (la página offline sale con estilos); `stale-while-revalidate` para el resto; `activate` limpia cachés viejas + `clients.claim()`.
 - **`app/offline/page.tsx`**: página "CONEXIÓN PERDIDA" clara estilo login (grid + esquinas doradas + escudo SVG inline), **autocontenida** (estilos inline, sin red), distingue "sin conexión a internet" vs "el servicio no responde" vía `navigator.onLine`, botón **Reintentar** + auto-recarga al volver la señal.

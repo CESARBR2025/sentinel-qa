@@ -37,7 +37,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
         user={session.user as { name: string; apellido?: string; email: string }}
       />
 
-      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
+      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box', overflowX: 'clip' }}>
         <div className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <PageHeader
             title="Atender"
@@ -55,7 +55,7 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
           />
         </div>
 
-        <footer style={{ padding: '24px 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center' }}>
+        <footer style={{ padding: '24px 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
           SSPM · SAN JUAN DEL RÍO · CENTINELA {APP_VERSION} · OFICIAL
         </footer>
       </main>

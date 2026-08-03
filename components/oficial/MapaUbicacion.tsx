@@ -12,12 +12,23 @@ export type LocationData = {
   lng: number
 }
 
+export type InitialLocation = {
+  lat: number
+  lng: number
+  calle?: string
+  colonia?: string
+  numero?: string
+  referenciaUbicacion?: string
+}
+
 export function MapaUbicacion({
   onLocationSelect,
   namePrefix = 'ofi',
+  initialLocation,
 }: {
   onLocationSelect: (loc: LocationData) => void
   namePrefix?: string
+  initialLocation?: InitialLocation
 }) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<google.maps.Map | null>(null)
@@ -40,6 +51,9 @@ export function MapaUbicacion({
 
     marker.addListener('dragend', () => {
       const pos = marker.getPosition()!
+      // Auto-referencia segura: se ejecuta en el evento dragend (después de la
+      // inicialización), no durante la definición del callback.
+      // eslint-disable-next-line react-hooks/immutability
       geocodeAndSelect(pos.lat(), pos.lng())
     })
 
@@ -71,6 +85,38 @@ export function MapaUbicacion({
     })
   }, [onLocationSelect])
 
+  // Si llega una ubicación ya conocida (p. ej. la del despacho precargado),
+  // sembrarla directo en el mapa sin esperar GPS ni geocodificar de nuevo.
+  const selectPreloaded = useCallback((initial: InitialLocation) => {
+    const map = mapInstanceRef.current
+    if (!map) return
+
+    if (markerRef.current) markerRef.current.setMap(null)
+    const marker = new google.maps.Marker({
+      position: { lat: initial.lat, lng: initial.lng },
+      map,
+      draggable: true,
+      animation: google.maps.Animation.DROP,
+    })
+    markerRef.current = marker
+
+    marker.addListener('dragend', () => {
+      const pos = marker.getPosition()!
+      geocodeAndSelect(pos.lat(), pos.lng())
+    })
+
+    const loc: LocationData = {
+      calle: initial.calle ?? '',
+      colonia: initial.colonia ?? '',
+      numero: initial.numero ?? '',
+      referenciaUbicacion: initial.referenciaUbicacion ?? [initial.calle, initial.colonia].filter(Boolean).join(', '),
+      lat: initial.lat,
+      lng: initial.lng,
+    }
+    setCurrentLoc(loc)
+    onLocationSelect(loc)
+  }, [geocodeAndSelect, onLocationSelect])
+
   const goToMyLocation = useCallback(() => {
     if (!navigator.geolocation) {
       geocodeAndSelect(20.3892, -99.9968)
@@ -88,8 +134,8 @@ export function MapaUbicacion({
   }, [geocodeAndSelect])
 
   useEffect(() => {
-    // Si ya cargó, listo
-    if (window.google?.maps) { setLoaded(true); return }
+    // Si ya cargó, el initial state de `loaded` lo contempla; aquí solo se
+    // espera/inyecta el script de Google Maps cuando todavía no está listo.
 
     // Si ya hay un script de Google Maps en el DOM (cargando), esperar
     const existing = document.querySelector(
@@ -131,6 +177,13 @@ export function MapaUbicacion({
       geocodeAndSelect(latLng.lat(), latLng.lng())
     })
 
+    if (initialLocation) {
+      map.setCenter({ lat: initialLocation.lat, lng: initialLocation.lng })
+      map.setZoom(17)
+      selectPreloaded(initialLocation)
+      return
+    }
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords
@@ -142,7 +195,7 @@ export function MapaUbicacion({
         geocodeAndSelect(20.3892, -99.9968)
       }
     )
-  }, [loaded, geocodeAndSelect])
+  }, [loaded, geocodeAndSelect, selectPreloaded, initialLocation])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
