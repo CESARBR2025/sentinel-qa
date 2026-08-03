@@ -39,7 +39,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </nav>
       </DashboardHeader>
 
-      <main style={{ padding: '40px 48px' }}>
+      <main className="pad-pagina">
         {children}
       </main>
 

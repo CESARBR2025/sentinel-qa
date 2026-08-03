@@ -148,9 +148,10 @@ Al completar cualquier cambio (nueva feature, bugfix, refactor):
    - Bug fix → agregar entrada en `boveda/🗺 Roadmap/Troubleshooting.md`
    - Cambio en BD → actualizar `boveda/📦 Datos/Esquema BD.md`
    - Decisión técnica → ADR en `boveda/🏗 Arquitectura/Decisiones.md`
-5. **Verificar nomenclatura**: consistencia con el resto del proyecto
-6. **Graphify**: `npx graphify update` para mantener el grafo sincronizado
-7. **Si hay cambios en BD**: `npm run db:schema` para refrescar esquema
+5. **Responsive (REGLA)**: si tocaste vistas, `npm run check:responsive` (debe salir ✅ con 0 violaciones nuevas). Si se corrige deuda o se aprueba una excepción, actualizar `scripts/responsive/exceptions.json` con `npm run check:responsive -- --init` y revisar el diff
+6. **Verificar nomenclatura**: consistencia con el resto del proyecto
+7. **Graphify**: `npx graphify update` para mantener el grafo sincronizado
+8. **Si hay cambios en BD**: `npm run db:schema` para refrescar esquema
 
 ## graphify
 

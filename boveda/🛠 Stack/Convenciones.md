@@ -105,6 +105,66 @@ Toda page/view se arma con el patrón de secciones, sin tamaños fijos:
 5. **Prohibido**: `maxWidth`/anchos o altos fijos en contenedores de página; solo paddings internos de espaciado
 6. **Prohibido**: anidar componentes que rendericen su propio layout completo (minHeight 100vh + `<style>`) dentro de otra vista — el armado header+body se hace una sola vez en la página
 
+## Encabezado de Página (PageHeader) — REGLA DE DISEÑO
+
+Toda vista usa el componente `components/partials/PageHeader.tsx` (`PageHeader` + `PageHeaderLink`). **Prohibido reimplementar el patrón inline** (título/subtítulo/botones).
+
+**Estructura:** título + subtítulo a la izquierda; botones de acción a la derecha.
+
+```tsx
+<PageHeader
+  title="Gestión de"
+  accent="Oficiales"                 // palabra resaltada en accentColor
+  accentColor="#1f355a"              // default; catálogos/patrullas usa #c0223a
+  subtitle="8 oficiales registrados" // texto opcional en mono
+  actions={<>
+    <PageHeaderLink href="/dashboard/catalogos" variant="secondary">← Catálogos</PageHeaderLink>
+    <PageHeaderLink href="/dashboard/catalogos/oficiales/nuevo">+ Registrar Oficial</PageHeaderLink>
+  </>}
+/>
+```
+
+**Tokens (no variar):**
+
+| Elemento | Estilo |
+|----------|--------|
+| Contenedor | `flex; justifyContent: space-between; alignItems: flex-end; marginBottom: 32; flexWrap: wrap; gap: 16` (el wrap es **siempre**, no depende de prop) |
+| Título `<h2>` | `Barlow Condensed, 800, 32px, letterSpacing 0.06em, uppercase, #0f172a`; acento en `accentColor` |
+| Subtítulo `<p>` | `JetBrains Mono, 10px, letterSpacing 0.15em, uppercase, #64748b` |
+| Botón primario | `Barlow Condensed, 700, 13px, 0.15em, uppercase; padding 10px 24px; bg #0f172a; color #fff; sin borde` |
+| Botón secundario | mismo texto; `padding 10px 20px; bg #f1f5f9; color #475569; border 1px solid #e2e8f0` |
+
+**Reglas:**
+- Los botones de navegación del header usan `PageHeaderLink` (variant `primary`/`secondary`).
+- Los botones de **submit/cancelar de formularios** NO son `PageHeaderLink` (siguen usando `btnPrimario`/`btnSecundario` de `app/admin/admin-styles.ts`).
+- `actions` acepta cualquier nodo (p. ej. `ImportarParqueButton`).
+- `title` no debe llevar espacio final (el componente añade el espacio antes del acento).
+- El contenedor y el bloque de `actions` hacen `flexWrap: wrap` de forma fija → **no se pasa prop `wrap`** (fue removida; ya no existe).
+
+## Responsive (REGLA)
+
+Toda vista debe funcionar en **móvil ≤720px, tablet 721–1200px y desktop >1200px** (breakpoints alineados con `.fk-grid` y `.dashboard-grid`).
+
+**Hooks:**
+- Componentes cliente: usar `useResponsive()` de `hooks/useResponsive.ts` → `{ esMovil, esTablet, esDesktop }` (SSR-safe). `useMediaQuery(query)` para casos puntuales.
+- Componentes servidor: no hay hooks → usar las clases CSS de abajo.
+
+**Utilitarios CSS (en `app/globals.css`) — usar en vez de estilos inline:**
+| Clase | Uso |
+|-------|-----|
+| `.pad-pagina` / `.pad-dashboard` | Padding del contenedor de página por nivel (desktop 48/64 · tablet 32/48 · móvil 20/16) |
+| `.panel-lateral` | Panel sticky del dashboard (offset según header; estático en móvil) |
+| `.grid-2` / `.grid-3` | Grids de formularios: 2/3 columnas → 1 en móvil |
+| `.cat-cards-grid` | Grid de tarjetas de índice → 1 col en móvil |
+| `.tabla-wrap` | Envolver tablas → `overflow-x: auto` (scroll horizontal en móvil) |
+
+**Reglas:**
+1. **Tablas**: envolver siempre en contenedor con `overflow-x: auto` (`.tabla-wrap` o tailwind `overflow-x-auto`). Nunca `overflow: hidden` en el contenedor de una tabla (recorta columnas en móvil). Dar `minWidth` a la `<table>` para que el scroll sea horizontal y no se comprima.
+2. **Formularios**: usar `.grid-2`/`.grid-3` (nunca `gridTemplateColumns: '1fr 1fr'` inline) y `flexWrap: 'wrap'` en las filas de botones de acción.
+3. **Encabezados/headers**: `PageHeader` ya hace wrap; `DashboardHeader`/`SubHeader`/`SignOutButton` ya son responsivos por nivel (no reimplementar).
+4. **Modales**: mantener `maxWidth: 90vw/100%` + `maxHeight: 90vh` + `overflow: auto`; botones con `flexWrap: 'wrap'`.
+5. **Prohibido** contenedores con ancho fijo que no quepan en 375px sin opción de scroll (ver regla de Page Assembly).
+
 ## Key architectural decisions
 
 1. **No Drizzle in app code** — raw SQL only, keeps control over queries and avoids ORM complexity

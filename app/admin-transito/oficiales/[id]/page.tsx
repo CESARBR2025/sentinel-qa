@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
 import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialPorId, actualizarOficial } from '@/lib/admin-transito/actions'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import PatrullaSelector from '@/components/admin-transito/PatrullaSelector'
 
 const labelStyle: React.CSSProperties = {
@@ -80,42 +81,11 @@ export default async function EditarOficialPage({
 
   return (
     <div>
-      <div
-        style={{
-          marginBottom: 32,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: 'Barlow Condensed,sans-serif',
-            fontWeight: 800,
-            fontSize: 32,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            color: '#0f172a',
-            margin: 0,
-          }}
-        >
-          Editar{' '}
-          <span style={{ color: '#1f355a' }}>Oficial</span>
-        </h2>
-          <Link
-            href="/admin-transito/oficiales"
-            style={{
-              fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 10,
-              color: '#64748b',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-            }}
-          >
-            ← Volver
-          </Link>
-      </div>
+      <PageHeader
+        title="Editar"
+        accent="Oficial"
+        actions={<PageHeaderLink href="/admin-transito/oficiales" variant="secondary">← Volver</PageHeaderLink>}
+      />
 
       {error === 'datos_invalidos' && (
         <div

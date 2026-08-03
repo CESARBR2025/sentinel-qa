@@ -28,7 +28,7 @@ export default async function PrevencionLayout({ children }: { children: React.R
       <PrevencionNav />
 
       {/* Contenido */}
-      <main style={{ padding: '40px 48px' }}>
+      <main className="pad-pagina">
         {children}
       </main>
 

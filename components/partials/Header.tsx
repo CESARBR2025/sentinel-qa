@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { SignOutButton } from '@/app/dashboard/sign-out-button';
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones';
+import { useResponsive } from '@/hooks/useResponsive';
 
 interface DashboardHeaderProps {
   user: {
@@ -32,6 +33,7 @@ export function DashboardHeader({
   backLabel = 'Dashboard',
   roleLabel = 'Operador Identificado',
 }: DashboardHeaderProps) {
+  const { esMovil, esTablet } = useResponsive()
   return (
     <div
       className="app-header-reveal"
@@ -42,24 +44,26 @@ export function DashboardHeader({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 104,
-        padding: '0 64px',
+        height: esMovil ? 72 : esTablet ? 88 : 104,
+        padding: esMovil ? '0 16px' : esTablet ? '0 32px' : '0 64px',
         borderBottom: '1px solid #e2e8f0',
-        background: 'rgba(248,250,252,0.85)',
-        backdropFilter: 'blur(10px)',
+        background: esMovil ? '#f8fafc' : 'rgba(248,250,252,0.85)',
+        // En móvil se quita el blur: el backdrop-filter sobre un sticky con
+        // contenido que desborda es el origen del "cuadro negro" en Safari/Chrome.
+        backdropFilter: esMovil ? 'none' : 'blur(10px)',
       }}
     >
       {/* Corner Decorator */}
       <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#1f355a' }} />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 12 : esTablet ? 16 : 24, minWidth: 0 }}>
         <img
           src="/chaleco.png"
           alt="S"
-          style={{ height: 64, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
+          style={{ height: esMovil ? 32 : esTablet ? 48 : 64, flexShrink: 0, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
         />
 
-        <div>
+        <div style={{ minWidth: 0 }}>
           <div
             style={{
               fontFamily: 'JetBrains Mono,monospace',
@@ -68,7 +72,7 @@ export function DashboardHeader({
               color: '#3e5171',
               textTransform: 'uppercase',
               marginBottom: 4,
-              display: 'flex',
+              display: esMovil ? 'none' : 'flex',
               alignItems: 'center',
               gap: 8,
             }}
@@ -81,12 +85,13 @@ export function DashboardHeader({
             style={{
               fontFamily: 'Barlow Condensed,sans-serif',
               fontWeight: 800,
-              fontSize: 56,
+              fontSize: esMovil ? 24 : esTablet ? 40 : 56,
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
               margin: 0,
               color: '#0f172a',
               lineHeight: 1,
+              whiteSpace: 'nowrap',
             }}
           >
             CENTINELA
@@ -96,7 +101,7 @@ export function DashboardHeader({
         {/* BOTÓN REGRESAR — solo si la página pasó un destino real */}
         {backHref && (
           <>
-            <div style={{ width: 1, height: 40, background: '#e2e8f0' }} />
+            <div style={{ width: 1, height: esMovil ? 28 : esTablet ? 32 : 40, background: '#e2e8f0', flexShrink: 0 }} />
             <Link
               href={backHref}
               style={{
@@ -109,15 +114,17 @@ export function DashboardHeader({
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
+                whiteSpace: 'nowrap',
               }}
             >
-              <ArrowLeft size={14} /> {backLabel}
+              <ArrowLeft size={14} /> {esMovil ? null : backLabel}
             </Link>
           </>
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 32 }}>
+        {esMovil || esTablet ? null : (
         <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 4 }}>
           <div
             style={{
@@ -154,15 +161,18 @@ export function DashboardHeader({
             {user.email.toLowerCase()}
           </div>
         </div>
+        )}
 
-        <div style={{ width: 1, height: 48, background: '#e2e8f0' }} />
+        <div style={{ width: 1, height: esMovil || esTablet ? 0 : 48, background: '#e2e8f0', flexShrink: 0 }} />
 
         {/* Va dentro del header, no en `children`: así las 76 páginas que usan
             este componente tienen campanita sin tener que editarlas una por una.
             Se auto-abastece por API, no necesita props. */}
         <CampanillaNotificaciones />
 
-        {children}
+        {/* La navegación pasada como children (ej. nav de /admin) no cabe en
+            móvil/tablet: se oculta y la página mantiene su propio contenido. */}
+        <div style={{ display: esMovil || esTablet ? 'none' : 'contents' }}>{children}</div>
 
         <SignOutButton />
       </div>

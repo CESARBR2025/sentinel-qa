@@ -79,13 +79,7 @@ export default function NuevoOficialForm({ deptos, patrullas }: Props) {
           Datos de Acceso
         </h3>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 16,
-          }}
-        >
+        <div className="grid-2">
           <div>
             <label style={labelStyle}>Correo electrónico *</label>
             <input
@@ -109,10 +103,8 @@ export default function NuevoOficialForm({ deptos, patrullas }: Props) {
         </div>
 
         <div
+          className="grid-2"
           style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 16,
             marginTop: 16,
           }}
         >
@@ -160,13 +152,7 @@ export default function NuevoOficialForm({ deptos, patrullas }: Props) {
           Datos del Oficial
         </h3>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 16,
-          }}
-        >
+        <div className="grid-2">
           <div>
             <label style={labelStyle}>No. Nómina</label>
             <input name="noNomina" style={uppercaseStyle} onChange={onUpper} placeholder="123-123" />
@@ -204,13 +190,7 @@ export default function NuevoOficialForm({ deptos, patrullas }: Props) {
           Asignación
         </h3>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 16,
-          }}
-        >
+        <div className="grid-2">
           <div>
             <label style={labelStyle}>Departamento</label>
             <select name="departamentoId" style={selectStyle}>
@@ -229,7 +209,7 @@ export default function NuevoOficialForm({ deptos, patrullas }: Props) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 8 }}>
         <button
           type="submit"
           style={{

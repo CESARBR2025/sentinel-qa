@@ -1,6 +1,6 @@
 # Flota — Parque Vehicular
 
-**Propósito**: Catálogo del parque vehicular de la corporación, cargado desde el Excel del parque vehicular. Ya **no** hay sincronización con la API externa `proyecto-flota.vercel.app` (servicio retirado); el catálogo se repuebla con `scripts/importar-parque-vehicular.ts`.
+**Propósito**: Catálogo del parque vehicular de la corporación. Ya **no** hay sincronización con la API externa `proyecto-flota.vercel.app` (servicio retirado); el catálogo se mantiene con el CRUD de `/dashboard/catalogos/patrullas` (el importador Excel fue retirado).
 
 ---
 
@@ -8,11 +8,8 @@
 
 ```mermaid
 flowchart TD
-    A[Importar parque vehicular] --> B[Excel: PARQUE VEHICULAR]
-    B --> C[scripts/importar-parque-vehicular.ts]
-    C --> D[upsert por num_serie en via.v2_patrullas]
-    D --> E[Leer catálogo activo desde BD local]
-    E --> F[Asignar patrulla a oficial / despacho]
+    A[CRUD manual de patrullas] --> D[Leer catálogo activo desde BD local]
+    D --> E[Asignar patrulla a oficial / despacho]
 ```
 
 ## Componentes involucrados
@@ -23,7 +20,6 @@ flowchart TD
 | `lib/flota/mapper.ts` | `rowToPatrulla`, `agruparUnidadesConTripulacion` + etiqueta/detalle calculados |
 | `lib/flota/repository.ts` | `listarActivas`, `obtenerPorId`, `listarUnidadesConTripulacionRaw`, `listarIdsUnidadesOcupadas` |
 | `lib/flota/service.ts` | `listarPatrullasParaAsignacion`, `listarUnidadesParaDespacho`, `obtenerPatrullaPorId` (solo lectura local) |
-| `scripts/importar-parque-vehicular.ts` | CLI del importador (wrapper de `lib/catalogos/importar-parque.ts`) → `via.v2_patrullas` (upsert por `num_serie`) |
 
 ## BD
 

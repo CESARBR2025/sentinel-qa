@@ -363,10 +363,8 @@ export default function ModalReactivarOficial({
           </p>
 
           <div
+            className="grid-2"
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 16,
               marginBottom: 16,
             }}
           >
@@ -389,10 +387,8 @@ export default function ModalReactivarOficial({
           </div>
 
           <div
+            className="grid-2"
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 16,
               marginBottom: 24,
             }}
           >
@@ -420,7 +416,7 @@ export default function ModalReactivarOficial({
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'flex-end' }}>
             <button
               type="button"
               onClick={onClose}

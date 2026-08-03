@@ -131,7 +131,7 @@ export default function ModalDestituirOficial({
             Esta acción no se puede deshacer.
           </p>
 
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'flex-end' }}>
             <button
               onClick={onClose}
               style={{

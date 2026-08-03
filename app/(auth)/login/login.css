@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Login / CENTINELA — responsive en 3 niveles (convención del proyecto):
+   · móvil   ≤720px   → solo formulario, cabecera compacta
+   · tablet  721–1200 → columna única, cabecera compacta + sesión
+   · desktop >1200px  → split 2 columnas (hero + formulario)
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.login-scope {
+  --ink: #f8fafc;
+  --ink-2: #ffffff;
+  --ink-3: #111a2e;
+  --line: #e2e8f0;
+  --line-2: #cbd5e1;
+  --text: #0f172a;
+  --text-dim: #64748b;
+  --text-mute: #4a5878;
+  --navy: #1f355a;
+  --red: #1f355a;
+  --red-hi: #447df9;
+  --gold: #1f355a;
+  --gold-hi: #f0be4c;
+  --ok: #1f355a;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--text);
+  background: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Stage ────────────────────────────────────────────────────────────────── */
+.login-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--ink);
+}
+@media (max-width: 1200px) {
+  .login-stage { grid-template-columns: 1fr; height: auto; }
+}
+@media (min-width: 1201px) {
+  .login-stage { height: 100vh; height: 100dvh; overflow: hidden; }
+}
+
+.login-stage-bg {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(31,53,90,.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(31,53,90,.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+}
+
+/* ── Esquinas doradas ─────────────────────────────────────────────────────── */
+.login-corner { position: absolute; width: 22px; height: 22px; border: 0 solid var(--gold); opacity: .6; }
+.login-corner.tl { top: 18px; left: 18px; border-top-width: 1px; border-left-width: 1px; }
+.login-corner.tr { top: 18px; right: 18px; border-top-width: 1px; border-right-width: 1px; }
+.login-corner.bl { bottom: 18px; left: 18px; border-bottom-width: 1px; border-left-width: 1px; }
+.login-corner.br { bottom: 18px; right: 18px; border-bottom-width: 1px; border-right-width: 1px; }
+@media (max-width: 1200px) { .login-corner { display: none; } }
+
+/* ── Panel izquierdo (hero) ── solo desktop ───────────────────────────────── */
+.login-panel-left {
+  position: relative;
+  padding: clamp(20px, 4vh, 52px) clamp(28px, 6vw, 60px);
+  border-right: 1px solid var(--line);
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(14px, 2.6vh, 26px);
+  overflow: hidden;
+}
+@media (max-width: 1200px) { .login-panel-left { display: none; } }
+
+.login-brand-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 20px);
+  padding-bottom: clamp(10px, 2vh, 20px);
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.login-brand-logo-wrap {
+  position: relative;
+  width: clamp(76px, 13vh, 112px);
+  height: clamp(76px, 13vh, 112px);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.login-brand-glow {
+  position: absolute; inset: -6px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0%, rgba(212,164,58,.10) 35%, rgba(212,164,58,0) 72%);
+  filter: blur(6px);
+}
+.login-brand-logo {
+  position: relative; z-index: 1;
+  width: clamp(68px, 11.4vh, 96px); height: clamp(68px, 11.4vh, 96px);
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.5));
+}
+.login-brand-divider {
+  width: 1px; height: clamp(36px, 6.4vh, 52px);
+  background: linear-gradient(180deg, transparent, var(--gold), transparent);
+  flex-shrink: 0; opacity: .55;
+}
+.login-brand-divider-soft { width: 1px; height: clamp(36px, 6.4vh, 52px); background: var(--line-2); flex-shrink: 0; }
+.login-brand-img { height: clamp(32px, 5.6vh, 44px); max-width: 100%; object-fit: contain; object-position: left center; opacity: .95; }
+.login-brand-img-tall { height: clamp(48px, 8.4vh, 76px); max-width: 32%; object-fit: contain; object-position: left center; }
+
+.login-hero-section { flex-shrink: 0; }
+.login-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--red); letter-spacing: .3em; text-transform: uppercase;
+  margin-bottom: clamp(10px, 1.8vh, 20px);
+  display: flex; align-items: center; gap: 10px;
+}
+.login-kicker::before { content: ''; width: 26px; height: 1px; background: var(--red); display: inline-block; }
+.login-hero-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: clamp(10px, 2.2vh, 24px); }
+.login-hero { height: clamp(130px, 28vh, 320px); object-fit: contain; filter: drop-shadow(0 8px 24px rgba(31,53,90,.55)); }
+.login-h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: clamp(64px, 16vh, 176px); line-height: .9;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--text);
+  margin: 0; text-shadow: 0 0 40px rgba(31,53,90,.1); text-align: center;
+}
+.login-mono-line {
+  display: flex; gap: 10px; align-items: center; margin-top: clamp(8px, 1.6vh, 16px);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .32em;
+  color: var(--text-dim); text-transform: uppercase;
+}
+
+/* ── Panel derecho (formulario) ───────────────────────────────────────────── */
+.login-panel-right { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--ink); }
+
+/* Cabecera compacta — tablet y móvil (oculta en desktop) */
+.login-compact-head {
+  display: none;
+  align-items: center; gap: 12px;
+  padding: 14px 20px; border-bottom: 1px solid var(--line);
+  background: #ffffff; flex-shrink: 0;
+}
+@media (max-width: 1200px) { .login-compact-head { display: flex; } }
+.login-compact-logo { height: 38px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(31,53,90,.5)); }
+.login-compact-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 30px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); line-height: 1;
+}
+.login-compact-divider { width: 1px; height: 24px; background: var(--line-2); flex-shrink: 0; }
+.login-compact-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .18em;
+  color: var(--text-dim); text-transform: uppercase; white-space: nowrap;
+}
+.login-compact-session {
+  margin-left: auto; display: flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .18em;
+  color: var(--gold); text-transform: uppercase; white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .login-compact-sub, .login-compact-divider, .login-compact-session { display: none; }
+}
+
+/* Topbar — solo desktop */
+.login-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 28px; border-bottom: 1px solid var(--line);
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);
+  letter-spacing: .2em; text-transform: uppercase; background: rgba(255,255,255,.8); flex-shrink: 0;
+}
+@media (max-width: 1200px) { .login-topbar { display: none; } }
+.login-topbar-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 10px var(--gold); display: inline-block; animation: pulse 2.2s ease-in-out infinite;
+}
+
+/* Contenedor principal del formulario */
+.login-main { flex: 1; min-height: 0; padding: 40px 56px; display: flex; flex-direction: column; }
+@media (min-width: 1201px) { .login-main { overflow: auto; } }
+@media (max-width: 1200px) { .login-main { padding: 40px 32px; } }
+@media (max-width: 720px)  { .login-main { padding: 28px 16px; } }
+
+.login-form { margin: auto; width: 100%; max-width: 480px; }
+
+/* Encabezado del formulario */
+.login-form-head { margin-bottom: 38px; }
+.login-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .24em;
+  color: var(--gold); text-transform: uppercase;
+  border: 1px solid var(--gold); padding: 6px 12px; margin-bottom: 18px;
+}
+.login-form-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 44px; letter-spacing: .02em; text-transform: uppercase; margin: 0; color: var(--text);
+}
+.login-form-sub { color: var(--text-dim); font-size: 14.5px; margin-top: 10px; }
+@media (max-width: 720px) {
+  .login-form-title { font-size: 32px; }
+  .login-form-sub { font-size: 13px; }
+}
+
+/* Stepper de fases */
+.login-stepper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 36px; }
+.login-step {
+  border-top: 3px solid var(--line-2); padding-top: 12px; min-width: 0;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em;
+  color: var(--text-mute); text-transform: uppercase;
+}
+.login-step.is-active { border-top-color: var(--gold); color: var(--gold); }
+.login-step.is-done { border-top-color: var(--ok); color: var(--ok); }
+.login-step-num { margin-right: 8px; }
+@media (max-width: 720px) {
+  .login-stepper { gap: 6px; }
+  .login-step { font-size: 9px; letter-spacing: .08em; }
+  .login-step-num { margin-right: 4px; }
+}
+
+/* ── OTP ──────────────────────────────────────────────────────────────────── */
+.otp-input-wrapper { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 8px; }
+@media (max-width: 720px) { .otp-input-wrapper { gap: 4px; } }
+.otp-input-field { font-size: 26px; }
+@media (max-width: 720px) { .otp-input-field { font-size: 20px; } }
+
+/* ── Terminal de logs (oculto por ahora, se conserva el estilo) ───────────── */
+.terminal-panel {
+  border-top: 1px solid var(--line); background: #f1f5f9;
+  display: grid; grid-template-rows: auto 1fr; height: 240px; flex-shrink: 0;
+}
+@media (max-width: 1200px) { .terminal-panel { height: 180px; } }
+@media (max-width: 720px)  { .terminal-panel { height: 140px; } }
+.terminal-head {
+  display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--line);
+  background: var(--ink-2); font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: .16em; color: var(--text-dim); text-transform: uppercase;
+}
+.terminal-dot { width: 8px; height: 8px; display: inline-block; border-radius: 0; }
+.terminal-body {
+  padding: 10px 16px 14px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+  line-height: 1.65; color: var(--text-dim); overflow: hidden; position: relative;
+}
+
+/* ── Overlay de éxito ─────────────────────────────────────────────────────── */
+.cyber-success-wrap {
+  position: absolute; inset: 0; z-index: 999;
+  background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  animation: fadein .5s ease forwards;
+}
+.cyber-success-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(74,158,106,.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(74,158,106,.08) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events: none;
+}
+.cyber-success-line {
+  position: absolute; top: 50%; left: 0; right: 0; height: 1px;
+  background: rgba(31,53,90,.4); box-shadow: 0 0 15px rgba(31,53,90,.6);
+}
+.cyber-success-icon {
+  width: clamp(92px, 16vw, 120px); height: clamp(92px, 16vw, 120px);
+  background: var(--ink); border-radius: 4px; border: 1px solid var(--ok);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 40px rgba(74,158,106,.35), inset 0 0 20px rgba(74,158,106,.2);
+  margin-bottom: 36px; position: relative; z-index: 2;
+  animation: cyber-reveal-success 1.2s cubic-bezier(0.1,0.9,0.2,1) forwards;
+}
+.cyber-success-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 46px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px;
+  color: var(--text); text-shadow: 0 0 20px rgba(31,53,90,.2);
+}
+@media (max-width: 720px) {
+  .cyber-success-icon { margin-bottom: 24px; }
+  .cyber-success-title { font-size: 32px; }
+}
+
+/* ── Animaciones ──────────────────────────────────────────────────────────── */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes cyber-reveal-success {
+  0% { opacity: 0; transform: scale(.95); clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%); }
+  50% { opacity: 1; transform: scale(1.02); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); filter: drop-shadow(0 0 10px rgba(74,158,106,.8)); }
+  100% { transform: scale(1); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+@keyframes text-glitch {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.cyber-success-text { animation: text-glitch .6s ease .6s both; }
+.field-input-shake { animation: shake .35s ease; }

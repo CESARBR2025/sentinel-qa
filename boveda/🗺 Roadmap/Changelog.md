@@ -6,6 +6,29 @@
 
 ## 2026 — Agosto
 
+### — Filtros de búsqueda en /dashboard/catalogos/patrullas (2026-08-03)
+Nuevo componente `PatrullasTablaConFiltros` (cliente, patrón de `OficialesTablaConFiltros`): Card con búsqueda por texto (placa, serie/VIN, características, marca, modelo, GPS, radio, cámaras) + selects de **Departamento**, **Marca** y **Estatus** (Activa/Inactiva), botón **Limpiar** y contador de resultados. Departamentos y marcas se derivan de los valores únicos del catálogo. `PatrullasTable` acepta `mensajeVacio` para el estado "sin resultados". El server page solo carga la lista y la pasa al componente.
+
+### — Cumplimiento automático de la REGLA Responsive (lint + auditoría + pre-commit) (2026-08-03)
+Se convierte la "Responsive (REGLA)" de convención en un gate automático que revisa cada vista contra los breakpoints del proyecto (**móvil ≤720px · tablet 721–1200px · desktop >1200px**):
+- **Regla ESLint `responsive/no-inline-multicol-grid`** (`eslint.config.mjs`): error al escribir `style={{ gridTemplateColumns: '1fr 1fr' }}` inline (multi-columna); permite single-columna (`'1fr'`) y el flag `esMulticolumna`. El allowlist se carga desde `scripts/responsive/exceptions.json` (clave `gridMulticol`), que lista la deuda permitida.
+- **Auditoría `scripts/audit-responsive.mjs`** (`npm run check:responsive`): escáner sobre `app/` + `components/` con 6 detectores (grid inline multi-columna, `overflow:'hidden'` en archivos con tabla, `minWidth ≥ 800px` sin `.tabla-wrap`, padding de página inline ≥ 24/32px, padding de header `'0 Npx' ≥ 48px`, `position:sticky` con offset ≥ 100px). Exit 1 ante violaciones nuevas; `--init` regenera el allowlist; `--json` para CI.
+- **Baseline de deuda** (`scripts/responsive/exceptions.json`): 201 violaciones permitidas (86 grid inline, 14 overflow en tablas, 101 padding de página), inventariadas por módulo en `boveda/🗺 Roadmap/Deuda Responsive.md`.
+- **Pre-commit de husky** (`.husky/pre-commit`): `lint-staged` (eslint solo en archivos staged, para no bloquear commits con deuda preexistente del repo) + `npm run check:responsive`.
+- `login-desing/**` (mockups, no vistas de la app) se excluye del lint vía `globalIgnores`.
+- Checklist post-cambio de AGENTS.md: paso 5 ahora exige `npm run check:responsive` al tocar vistas.
+
+### — Retirado el importador Excel del parque vehicular (2026-08-03)
+Se elimina por completo el flujo de "Importar desde Excel" del catálogo de patrullas: se borran `components/catalogos/ImportarParqueButton.tsx`, la server action `importarParqueVehicularAction` (`lib/catalogos/actions.ts`), el núcleo compartido `lib/catalogos/importar-parque.ts` y el CLI `scripts/importar-parque-vehicular.ts` (junto con el tipo `ImportarResultado`). El catálogo `via.v2_patrullas` ahora se mantiene solo con el CRUD manual de `/dashboard/catalogos/patrullas`. Bóveda actualizada (Catalogos.md, Flota.md, Troubleshooting.md).
+
+### — Login CENTINELA responsive en 3 niveles (móvil/tablet/desktop) (2026-08-03)
+Se refactorizó `/login` (`app/(auth)/login/page.tsx`) para alinear breakpoints con la convención del proyecto (**móvil ≤720px · tablet 721–1200px · desktop >1200px**; antes usaba 480px/960px sueltos):
+- El `<style>` embebido se extrajo a `app/(auth)/login/login.css` (variables scoped a `.login-scope`, clases semánticas `login-*`, breakpoints documentados).
+- **Desktop >1200px**: split 2 columnas intacto (hero + formulario), stage con `height:100dvh` y scroll interno del formulario (se eliminó el abuso de `overflow:hidden` global en `body`).
+- **Tablet 721–1200px**: columna única; el panel izquierdo con el hero gigante se oculta y se muestra una cabecera compacta (`login-compact-head`) con escudo + CENTINELA + SSPM·SJR·QRO + sesión.
+- **Móvil ≤720px**: cabecera mínima (se ocultan divisores y datos de sesión), paddings y tipografía reducidos, stepper y OTP escalados.
+- Errores de lint `react-hooks/set-state-in-effect` corregidos: `sessionId` con inicializador lazy; el contador TOTP se deriva de `Date.now()` en render con un tick de 1s (sin `setState` síncrono en efectos).
+
 ### — Dashboard segmentado: sección "SSPM General" → Catálogos (Oficiales / Patrullas) (2026-08-03)
 `/dashboard` ahora arranca la segmentación por secciones: se agrega **"SSPM General"** (solo `esAdmin`) con una card **"Catalogos"** → `/dashboard/catalogos` (vista con 2 cards: **OFICIALES** y **PATRULLAS**).
 - **CRUD de patrullas** (nuevo, `lib/catalogos/`): tabla con placa/serie/departamento/características/marca/modelo/GPS/radio/cámaras/estatus + crear/editar/eliminar (eliminación **bloqueada si tiene oficiales asignados**) + botón **"Importar desde Excel"**.
@@ -120,3 +143,16 @@ Ciclo operativo completo unificado sobre `ofi_reportes_campo` como única tabla 
 - Eliminación de directorios duplicados (rol_servicios → rol-servicios)
 - Creación de bóveda de conocimiento como única fuente de documentación
 - 0 errores TypeScript, build exitoso
+
+## 2026-08-03 — Responsive móvil / tablet / desktop
+- Nuevo hook `hooks/useResponsive.ts` con 3 niveles alineados a los breakpoints de la app: móvil ≤720px, tablet 721–1200px, desktop >1200px.
+- `DashboardHeader` y `SubHeader` ahora se adaptan en 3 niveles (altura, padding, logo, título, bloque de usuario y nav `children` solo en desktop; blur solo en desktop/tablet).
+- Clases `.pad-pagina` / `.pad-dashboard` con 3 niveles de padding; nueva clase `.panel-lateral` (sticky del dashboard) que ajusta su offset al alto real del header y deja de ser sticky en móvil.
+
+## 2026-08-03 — Catálogos responsive + regla de negocio
+- Vistas de `/dashboard/catalogos` (índice, oficiales, patrullas, formularios nuevo/editar, modales) ahora son responsive móvil/tablet/desktop.
+- `PageHeader` ahora hace `flexWrap: wrap` siempre (prop `wrap` eliminada) — beneficia a todas las vistas del sistema.
+- Nuevos utilitarios responsive en `globals.css`: `.grid-2`, `.grid-3`, `.cat-cards-grid`, `.tabla-wrap` (patrón scroll horizontal para tablas).
+- Formularios de catálogos migrados de `gridTemplateColumns` inline a `.grid-2`/`.grid-3`; filas de botones con `flexWrap`.
+- Tabla de oficiales: wrapper `overflow-hidden` → `overflow-x-auto`; tabla de patrullas: `minWidth` 1080 → 900.
+- **Regla de negocio**: nueva sección "Responsive (REGLA)" en `boveda/🛠 Stack/Convenciones.md` (breakpoints 720/1200, hook `useResponsive`, utilitarios CSS, patrón de tablas).

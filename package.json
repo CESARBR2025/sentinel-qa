@@ -7,9 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "check:responsive": "node scripts/audit-responsive.mjs",
+    "prepare": "husky",
     "db:seed": "tsx lib/db/seed.ts",
     "db:create-admin": "tsx lib/db/create-admin.ts",
     "db:schema": "tsx scripts/exportar-schema.ts"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts,tsx,jsx}": "eslint --fix"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -58,6 +63,8 @@
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "5.9.3"

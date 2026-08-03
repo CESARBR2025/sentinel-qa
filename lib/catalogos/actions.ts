@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import pool, { query } from '@/lib/db'
+import { query } from '@/lib/db'
 import { getUserWithRole } from '@/lib/auth/helpers'
 import {
   obtenerRolOficialCampo, actualizarUserInfo, actualizarOficialRecord, eliminarSesion,
@@ -12,12 +12,9 @@ import {
 import {
   obtenerPatrullaPorId, crearPatrulla, actualizarPatrulla, eliminarPatrulla, contarOficialesPorPatrulla,
 } from './repository'
-import { importarParqueVehicular } from './importar-parque'
-import type { ImportarResultado } from './types'
 
 const BASE_OFICIALES = '/dashboard/catalogos/oficiales'
 const BASE_PATRULLAS = '/dashboard/catalogos/patrullas'
-const RUTA_EXCEL = 'public/files-xlsx/flota-vehicular-nuevo.xlsx'
 
 async function requireEsAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -236,13 +233,4 @@ export async function eliminarPatrullaAction(formData: FormData) {
 
   revalidatePath(BASE_PATRULLAS)
   redirect(`${BASE_PATRULLAS}?exito=eliminada`)
-}
-
-export async function importarParqueVehicularAction(): Promise<ImportarResultado> {
-  await requireEsAdmin()
-
-  const resultado = await importarParqueVehicular(RUTA_EXCEL, pool)
-  revalidatePath(BASE_PATRULLAS)
-  revalidatePath('/dashboard')
-  return resultado
 }

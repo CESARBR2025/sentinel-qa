@@ -175,6 +175,54 @@ select.fk-input { cursor: pointer; appearance: none;
 }
 .app-header-reveal { animation: appHeaderReveal 0.6s cubic-bezier(0.1, 0.9, 0.2, 1) both; }
 
+/* ───────────────────────── Contenedores de página responsive ───────────────────────── */
+/* 3 niveles: móvil ≤720px · tablet 721–1200px · desktop >1200px */
+.pad-pagina { padding: 40px 48px; }
+.pad-dashboard { padding: 40px 64px; }
+@media (max-width: 1200px) {
+  .pad-pagina { padding: 32px 32px; }
+  .pad-dashboard { padding: 32px 48px; }
+}
+@media (max-width: 720px) {
+  .pad-pagina { padding: 20px 16px; }
+  .pad-dashboard { padding: 20px 16px; }
+}
+
+/* Panel lateral sticky del dashboard — sigue el alto real del header en
+   cada nivel (144px desktop, 128px tablet) y deja de ser sticky en móvil. */
+.panel-lateral {
+  position: sticky;
+  top: 144px;
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+@media (max-width: 1200px) {
+  .panel-lateral { top: 128px; max-height: calc(100vh - 152px); }
+}
+@media (max-width: 720px) {
+  .panel-lateral { position: static; top: auto; max-height: none; }
+}
+
+/* ───────────────────────── Grids de formularios responsive ───────────────────────── */
+/* Mismo patrón que .fk-grid: 2/3 columnas en desktop y tablet, 1 en móvil.
+   Usar estas clases en vez de gridTemplateColumns inline en formularios. */
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 720px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ───────────────────────── Tarjetas de índice de catálogos ───────────────────────── */
+.cat-cards-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 720px) {
+  .cat-cards-grid { grid-template-columns: 1fr; }
+}
+
+/* ───────────────────────── Tablas responsive ───────────────────────── */
+/* REGLA: toda tabla con varias columnas se envuelve en un contenedor con
+   overflow-x:auto para permitir scroll horizontal en móvil (ver Convenciones). */
+.tabla-wrap { overflow-x: auto; }
+
 /* ───────────────────────── Animaciones de voz ───────────────────────── */
 @keyframes wave {
   0%, 100% { transform: scaleY(0.4); }

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
 import { listarDepartamentosActivos, obtenerOficialPorId } from '@/lib/admin-transito/repository'
 import { actualizarOficial } from '@/lib/catalogos/actions'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import PatrullaSelector from '@/components/admin-transito/PatrullaSelector'
 
 const labelStyle: React.CSSProperties = {
@@ -79,42 +80,11 @@ export default async function CatalogosEditarOficialPage({
 
   return (
     <div>
-      <div
-        style={{
-          marginBottom: 32,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-        }}
-      >
-        <h2
-          style={{
-            fontFamily: 'Barlow Condensed,sans-serif',
-            fontWeight: 800,
-            fontSize: 32,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            color: '#0f172a',
-            margin: 0,
-          }}
-        >
-          Editar{' '}
-          <span style={{ color: '#1f355a' }}>Oficial</span>
-        </h2>
-        <Link
-          href="/dashboard/catalogos/oficiales"
-          style={{
-            fontFamily: 'JetBrains Mono,monospace',
-            fontSize: 10,
-            color: '#64748b',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            textDecoration: 'none',
-          }}
-        >
-          ← Volver
-        </Link>
-      </div>
+      <PageHeader
+        title="Editar"
+        accent="Oficial"
+        actions={<PageHeaderLink href="/dashboard/catalogos/oficiales" variant="secondary">← Volver</PageHeaderLink>}
+      />
 
       {error === 'datos_invalidos' && (
         <div
@@ -141,7 +111,7 @@ export default async function CatalogosEditarOficialPage({
           <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 20px 0', letterSpacing: '0.04em' }}>
             Datos del Usuario
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="grid-2">
             <div>
               <label style={labelStyle}>Nombre *</label>
               <input name="userName" required defaultValue={oficial.userName} style={{ ...inputStyle, textTransform: 'uppercase' }} />
@@ -161,7 +131,7 @@ export default async function CatalogosEditarOficialPage({
           <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 20px 0', letterSpacing: '0.04em' }}>
             Datos del Oficial
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="grid-2">
             <div>
               <label style={labelStyle}>No. Nómina</label>
               <input name="noNomina" defaultValue={oficial.noNomina ?? ''} style={{ ...inputStyle, textTransform: 'uppercase' }} />
@@ -181,7 +151,7 @@ export default async function CatalogosEditarOficialPage({
           <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 20px 0', letterSpacing: '0.04em' }}>
             Asignación
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="grid-2">
             <div>
               <label style={labelStyle}>Departamento</label>
               <select name="departamentoId" style={selectStyle} defaultValue={oficial.departamentoId ?? ''}>
@@ -200,7 +170,7 @@ export default async function CatalogosEditarOficialPage({
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 8 }}>
           <button type="submit" style={btnPrimario}>Guardar Cambios</button>
           <Link href="/dashboard/catalogos/oficiales" style={btnSecundario}>Cancelar</Link>
         </div>

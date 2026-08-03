@@ -102,7 +102,7 @@ export default async function DashboardPage() {
       <DashboardHeader user={user} />
 
       {/* Main Content Container */}
-      <div style={{ position: 'relative', zIndex: 1, padding: '40px 64px', maxWidth: 1600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ position: 'relative', zIndex: 1, maxWidth: 1600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
 
         {/* Sección SSPM General (solo admin) — inicio de la segmentación por secciones */}
         {userWithRole?.esAdmin && <SspmGeneral />}
@@ -122,10 +122,9 @@ export default async function DashboardPage() {
             <ModuleCards />
           </div>
 
-          {/* Lateral (Status / Auth) — fijo al hacer scroll */}
-          <div className="cyber-reveal delay-3" style={{
+          {/* Lateral (Status / Auth) — fijo al hacer scroll (solo desktop) */}
+          <div className="cyber-reveal delay-3 panel-lateral" style={{
             display: 'flex', flexDirection: 'column', gap: 24,
-            position: 'sticky', top: 104 + 40, maxHeight: 'calc(100vh - 104px - 64px)', overflowY: 'auto',
           }}>
 
             {/* Security Panel */}

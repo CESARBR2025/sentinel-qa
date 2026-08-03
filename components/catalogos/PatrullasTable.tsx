@@ -6,7 +6,10 @@ import { eliminarPatrullaAction } from '@/lib/catalogos/actions'
 
 import type { PatrullaCatalogo } from '@/lib/catalogos/types'
 
-export default function PatrullasTable({ patrullas }: { patrullas: PatrullaCatalogo[] }) {
+export default function PatrullasTable({ patrullas, mensajeVacio = '› Sin patrullas en el catálogo' }: {
+  patrullas: PatrullaCatalogo[]
+  mensajeVacio?: string
+}) {
   if (patrullas.length === 0) {
     return (
       <tr>
@@ -22,7 +25,7 @@ export default function PatrullasTable({ patrullas }: { patrullas: PatrullaCatal
             textTransform: 'uppercase',
           }}
         >
-          › Sin patrullas en el catálogo
+          {mensajeVacio}
         </td>
       </tr>
     )

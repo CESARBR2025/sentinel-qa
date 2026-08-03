@@ -20,7 +20,7 @@ export default async function CatalogosLayout({ children }: { children: React.Re
 
       <DashboardHeader user={user} roleLabel="Catálogos" backHref="/dashboard" />
 
-      <main style={{ padding: '40px 48px' }}>
+      <main className="pad-pagina">
         {children}
       </main>
 

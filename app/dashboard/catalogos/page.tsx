@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { query } from '@/lib/db'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 type CatalogoCard = {
   id: string
@@ -45,36 +46,14 @@ export default async function CatalogosIndexPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: 32 }}>
-        <h2
-          style={{
-            fontFamily: 'Barlow Condensed,sans-serif',
-            fontWeight: 800,
-            fontSize: 32,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            color: '#0f172a',
-            margin: '0 0 4px',
-          }}
-        >
-          Catálogos{' '}
-          <span style={{ color: '#1f355a' }}>SSPM</span>
-        </h2>
-        <p
-          style={{
-            fontFamily: 'JetBrains Mono,monospace',
-            fontSize: 10,
-            color: '#64748b',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            margin: 0,
-          }}
-        >
-          Selecciona un catálogo para administrarlo
-        </p>
-      </div>
+      <PageHeader
+        title="Catálogos"
+        accent="SSPM"
+        subtitle="Selecciona un catálogo para administrarlo"
+        actions={<PageHeaderLink href="/dashboard" variant="secondary">← Dashboard</PageHeaderLink>}
+      />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+      <div className="cat-cards-grid">
         {cards.map((c) => (
           <Link
             key={c.id}

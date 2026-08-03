@@ -148,7 +148,7 @@ console.log('row mapped:', rowToAlgo(row))
 
 ## Flota: sincronización externa retirada (obsoleto)
 
-La API externa `proyecto-flota.vercel.app` fue retirada (2026-08-03); el catálogo de `via.v2_patrullas` ahora se carga desde el Excel del parque vehicular vía `scripts/importar-parque-vehicular.ts`. La entrada anterior sobre `apiRowToFlotaVehiculo` / `upsertPatrullas` (snake_case → NULL) ya no aplica.
+La API externa `proyecto-flota.vercel.app` fue retirada (2026-08-03). El catálogo de `via.v2_patrullas` se mantiene con el CRUD de `/dashboard/catalogos/patrullas`; el importador Excel (botón + acción + CLI) fue retirado el 2026-08-03. La entrada anterior sobre `apiRowToFlotaVehiculo` / `upsertPatrullas` (snake_case → NULL) ya no aplica.
 
 ---
 
@@ -434,3 +434,20 @@ En cambio `finalizarRevisionAction` (mismo archivo) sí hacía bien `ORDER BY cr
 **Fix**: agregado `ORDER BY created_at DESC LIMIT 1` a ambas consultas, igual que ya hacía `finalizarRevisionAction`.
 
 **Pendiente (no corregido, decisión consciente de alcance)**: la causa raíz de fondo —`iniciar-solicitud` sigue sin ser idempotente, cada llamada crea una fila nueva sin revisar si ya existe una— no se corrigió en esta pasada. El fix de arriba hace que las lecturas sean siempre consistentes (ya no hay riesgo de revisar la solicitud equivocada), pero seguirán quedando filas huérfanas en `v2_solicitudes_liberacion` si un ciudadano reintenta la subida. Documentado en `INSTRUCCIONES-INFRACCIONES.md` sección 7.1 como advertencia para que la app Flutter persista `solicitudId` localmente y evite el problema desde el diseño, en vez de depender de que el servidor lo prevenga.
+
+---
+
+## Vista responsive: contenido descuadrado + "cuadro negro" en el header
+
+**Síntoma**: en pantallas angostas (móvil/tablet) la vista "se rompe": el header se descuadra, hay scroll horizontal y aparece un cuadro negro alrededor del header con el botón de "Cerrar sesión".
+
+**Causa raíz**: la app era desktop-only (una sola `@media` en `globals.css`, la de `.fk-grid`; sin `useMediaQuery`). `DashboardHeader` (`components/partials/Header.tsx`) era sticky con `padding: 0 64px`, logo 64px, título 56px, bloque de usuario y `backdropFilter: blur(10px)` y **desbordaba** el viewport en móvil. El blur sobre un sticky con contenido que se desborda es un artefacto conocido de pintado: el navegador (Safari/Chrome móvil) pinta un **rectángulo negro**. Mismo problema aplicaba a `SubHeader` (padding 0 48px) y a los contenedores de página (`padding: 40px 48px/64px`).
+
+**Fix** (2026-08-03):
+1. Nuevo hook `hooks/useMediaQuery.ts` (SSR-safe, arranca desktop y se ajusta tras hidratar). Breakpoint de la app: `(max-width: 720px)`.
+2. `DashboardHeader` responsive: padding `0 16px`, logo 32, título 24, se ocultan "Sistema Táctico", bloque de usuario y la navegación `children`; botón volver solo con flecha; **`backdropFilter: none` en móvil** (elimina el cuadro negro).
+3. `SignOutButton` compacto en móvil ("Salir →") — afecta también a `SubHeader`.
+4. `SubHeader` responsive: padding `0 12px`, título 16, oculta módulo/operador en móvil.
+5. Clases `.pad-pagina` (40px 48px) y `.pad-dashboard` (40px 64px) en `globals.css`, colapsando a `20px 16px` en `@media (max-width:720px)`; aplicadas a `app/dashboard/page.tsx` y a los `<main>` de `app/admin/layout.tsx`, `app/dashboard/catalogos/layout.tsx`, `app/prevencion/layout.tsx`.
+
+**Nota**: sigue siendo una app pensada para desktop; el modo móvil es funcional pero degradado (nav de /admin oculta en el header, tablas pueden requerir scroll horizontal).

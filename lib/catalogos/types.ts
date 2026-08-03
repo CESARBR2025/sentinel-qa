@@ -24,10 +24,3 @@ export interface PatrullaCatalogoInput {
   radio: string | null
   camaras: string | null
 }
-
-export interface ImportarResultado {
-  importadas: number
-  omitidas: number
-  motivos: Record<string, number>
-  sinPlaca: number
-}

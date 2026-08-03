@@ -45,7 +45,7 @@ export default function PatrullaForm({ patrulla }: { patrulla?: PatrullaCatalogo
         <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 20px 0', letterSpacing: '0.04em' }}>
           Identificación del vehículo
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid-2">
           <div>
             <label style={labelStyle}>Placa</label>
             <input name="placa" defaultValue={patrulla?.placa ?? ''} style={inputStyle} placeholder="ER-000-A1" />
@@ -61,7 +61,7 @@ export default function PatrullaForm({ patrulla }: { patrulla?: PatrullaCatalogo
         <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 20px 0', letterSpacing: '0.04em' }}>
           Características
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid-2">
           <div>
             <label style={labelStyle}>Departamento</label>
             <input name="departamento" defaultValue={patrulla?.departamento ?? ''} style={inputStyle} placeholder="SSPM" />
@@ -85,7 +85,7 @@ export default function PatrullaForm({ patrulla }: { patrulla?: PatrullaCatalogo
         <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 20px 0', letterSpacing: '0.04em' }}>
           Equipamiento
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           {(['gps', 'radio', 'camaras'] as const).map((campo) => {
             const etiqueta = campo === 'gps' ? 'GPS' : campo === 'radio' ? 'Radio' : 'Cámaras'
             return (
@@ -102,7 +102,7 @@ export default function PatrullaForm({ patrulla }: { patrulla?: PatrullaCatalogo
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 8 }}>
         <button
           type="submit"
           style={{

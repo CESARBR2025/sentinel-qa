@@ -8,55 +8,60 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import OficialesTable from './OficialesTable'
-import type { Departamento, OficialLista } from '@/lib/admin-transito/types'
-import type { PatrullaAsignacion } from '@/lib/flota/types'
+import PatrullasTable from './PatrullasTable'
+import type { PatrullaCatalogo } from '@/lib/catalogos/types'
 
 const TODOS = '__all__'
 
 const labelCls = 'mb-1.5 block text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground'
 
-// Tabla de oficiales con filtros funcionales (cliente). Recibe la lista completa
-// que ya carga el server component y filtra en memoria: texto (nombre, nómina,
-// empleado, correo, teléfono), departamento, estatus y patrulla.
-export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas }: {
-  oficiales: OficialLista[]
-  deptos: Departamento[]
-  patrullas: PatrullaAsignacion[]
-}) {
+// Tabla de patrullas con filtros funcionales (cliente). Recibe la lista completa
+// que ya carga el server component y filtra en memoria: texto (placa, serie,
+// características, marca, modelo, GPS, radio, cámaras), departamento, marca y
+// estatus (activa/inactiva).
+export default function PatrullasTablaConFiltros({ patrullas }: { patrullas: PatrullaCatalogo[] }) {
   const [busqueda, setBusqueda] = useState('')
-  const [departamentoId, setDepartamentoId] = useState('')
+  const [departamento, setDepartamento] = useState('')
+  const [marca, setMarca] = useState('')
   const [estatus, setEstatus] = useState('')
-  const [patrullaId, setPatrullaId] = useState('')
+
+  // Departamentos y marcas únicos derivados del catálogo actual
+  const deptos = useMemo(() => {
+    const s = new Set<string>()
+    patrullas.forEach((p) => { if (p.departamento) s.add(p.departamento) })
+    return [...s].sort((a, b) => a.localeCompare(b, 'es'))
+  }, [patrullas])
+
+  const marcas = useMemo(() => {
+    const s = new Set<string>()
+    patrullas.forEach((p) => { if (p.marca) s.add(p.marca) })
+    return [...s].sort((a, b) => a.localeCompare(b, 'es'))
+  }, [patrullas])
 
   const filtrados = useMemo(() => {
     const q = busqueda.trim().toLowerCase()
-    return oficiales.filter((o) => {
-      const texto = [o.userName, o.userApellido, o.noNomina, o.numeroEmpleado, o.userEmail, o.telefono]
+    return patrullas.filter((p) => {
+      const texto = [p.placa, p.numSerie, p.departamento, p.caracteristicas, p.marca, p.modelo, p.gps, p.radio, p.camaras]
         .filter(Boolean)
         .join(' ')
         .toLowerCase()
 
       const okTexto = !q || texto.includes(q)
-      const okDepto = !departamentoId || o.departamentoId === departamentoId
-      const okEstatus = !estatus
-        ? true
-        : estatus === 'inactivo'
-          ? !['activo', 'destituido'].includes(o.ofiEstatus)
-          : o.ofiEstatus === estatus
-      const okPatrulla = !patrullaId || o.patrullaId === patrullaId
+      const okDepto = !departamento || p.departamento === departamento
+      const okMarca = !marca || p.marca === marca
+      const okEstatus = !estatus ? true : estatus === 'activa' ? p.activo : !p.activo
 
-      return okTexto && okDepto && okEstatus && okPatrulla
+      return okTexto && okDepto && okMarca && okEstatus
     })
-  }, [oficiales, busqueda, departamentoId, estatus, patrullaId])
+  }, [patrullas, busqueda, departamento, marca, estatus])
 
-  const hayFiltros = Boolean(busqueda || departamentoId || estatus || patrullaId)
+  const hayFiltros = Boolean(busqueda || departamento || marca || estatus)
 
   const limpiar = () => {
     setBusqueda('')
-    setDepartamentoId('')
+    setDepartamento('')
+    setMarca('')
     setEstatus('')
-    setPatrullaId('')
   }
 
   return (
@@ -65,13 +70,13 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
         <CardContent className="flex flex-wrap items-end gap-3">
           {/* Búsqueda */}
           <div className="min-w-[260px] flex-1">
-            <Label htmlFor="buscar-oficial" className={labelCls}>Buscar</Label>
+            <Label htmlFor="buscar-patrulla" className={labelCls}>Buscar</Label>
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                id="buscar-oficial"
+                id="buscar-patrulla"
                 type="text"
-                placeholder="Nombre, nómina, empleado, correo o teléfono..."
+                placeholder="Placa, serie, características, marca, modelo..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value.toUpperCase())}
                 className="pl-8 uppercase"
@@ -83,11 +88,11 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
           <div className="min-w-[190px]">
             <Label className={labelCls}>Departamento</Label>
             <Select
-              value={departamentoId || TODOS}
-              onValueChange={(v) => setDepartamentoId(v && v !== TODOS ? v : '')}
+              value={departamento || TODOS}
+              onValueChange={(v) => setDepartamento(v && v !== TODOS ? v : '')}
               items={[
                 { value: TODOS, label: 'Todos' },
-                ...deptos.map((d) => ({ value: d.id, label: d.nombre })),
+                ...deptos.map((d) => ({ value: d, label: d })),
               ]}
             >
               <SelectTrigger className="w-full">
@@ -96,7 +101,30 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
               <SelectContent>
                 <SelectItem value={TODOS}>Todos</SelectItem>
                 {deptos.map((d) => (
-                  <SelectItem key={d.id} value={d.id}>{d.nombre}</SelectItem>
+                  <SelectItem key={d} value={d}>{d}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Marca */}
+          <div className="min-w-[190px]">
+            <Label className={labelCls}>Marca</Label>
+            <Select
+              value={marca || TODOS}
+              onValueChange={(v) => setMarca(v && v !== TODOS ? v : '')}
+              items={[
+                { value: TODOS, label: 'Todas' },
+                ...marcas.map((m) => ({ value: m, label: m })),
+              ]}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Todas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={TODOS}>Todas</SelectItem>
+                {marcas.map((m) => (
+                  <SelectItem key={m} value={m}>{m}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -110,9 +138,8 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
               onValueChange={(v) => setEstatus(v && v !== TODOS ? v : '')}
               items={[
                 { value: TODOS, label: 'Todos' },
-                { value: 'activo', label: 'Activo' },
-                { value: 'destituido', label: 'Destituido' },
-                { value: 'inactivo', label: 'Inactivo' },
+                { value: 'activa', label: 'Activa' },
+                { value: 'inactiva', label: 'Inactiva' },
               ]}
             >
               <SelectTrigger className="w-full">
@@ -120,32 +147,8 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={TODOS}>Todos</SelectItem>
-                <SelectItem value="activo">Activo</SelectItem>
-                <SelectItem value="destituido">Destituido</SelectItem>
-                <SelectItem value="inactivo">Inactivo</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Patrulla */}
-          <div className="min-w-[190px]">
-            <Label className={labelCls}>Patrulla</Label>
-            <Select
-              value={patrullaId || TODOS}
-              onValueChange={(v) => setPatrullaId(v && v !== TODOS ? v : '')}
-              items={[
-                { value: TODOS, label: 'Todas' },
-                ...patrullas.map((p) => ({ value: p.id, label: p.etiqueta })),
-              ]}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Todas" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={TODOS}>Todas</SelectItem>
-                {patrullas.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>{p.etiqueta}</SelectItem>
-                ))}
+                <SelectItem value="activa">Activa</SelectItem>
+                <SelectItem value="inactiva">Inactiva</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -163,15 +166,15 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
       <div className="mb-3 flex items-center gap-2">
         <Badge variant="secondary" className="font-mono">{filtrados.length}</Badge>
         <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-          de {oficiales.length} oficiales
+          de {patrullas.length} vehículos
         </span>
       </div>
 
       <div className="overflow-x-auto rounded-lg border bg-surface">
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Inter,sans-serif', fontSize: 13 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Inter,sans-serif', fontSize: 13, minWidth: 900 }}>
           <thead>
             <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-              {['Nombre', 'Nómina / Empleado', 'Departamento', 'Patrulla', 'Estatus', ''].map((h) => (
+              {['Placa', 'Serie', 'Departamento', 'Características', 'Marca', 'Modelo', 'GPS', 'Radio', 'Cámaras', 'Estatus', ''].map((h) => (
                 <th
                   key={h}
                   style={{
@@ -191,7 +194,10 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
             </tr>
           </thead>
           <tbody>
-            <OficialesTable oficiales={filtrados} deptos={deptos} patrullas={patrullas} />
+            <PatrullasTable
+              patrullas={filtrados}
+              mensajeVacio={hayFiltros ? '› Sin resultados para los filtros aplicados' : undefined}
+            />
           </tbody>
         </table>
       </div>
