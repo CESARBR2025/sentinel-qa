@@ -6,6 +6,29 @@
 
 ## 2026 — Agosto
 
+### — Registro 911 (`/agente_911/ciudadano`) alineado a REGLA Responsive/PageHeader + wizard con StepIndicator (2026-08-03)
+La página de nuevo registro de incidentes 911 se alinea y se convierte en formulario multi-paso:
+- **PageHeader regla**: se agrega `<PageHeader title="Nuevo" accent="Registro" />` con action `← Bitácora` (secondary). Se quitan `backHref`/`backLabel` del `DashboardHeader` y el bloque de "ENCABEZADO" inline (descripción movida al `subtitle` del `PageHeader`).
+- **Responsive / Page Assembly**: contenedor `maxWidth: 1200px` + `padding: '40px 32px'` inline → `.pad-pagina`; `main` ahora es flex column y el footer (`DashboardFooter`) queda anclado abajo con `flex: 1`.
+- **Wizard con StepIndicator**: `Formulario911` (una sola página larga de 7 paneles) se convierte en wizard de **7 pasos** controlado por `<StepIndicator paso total nombre>` (paso 1 Incidente → 7 Observaciones). Los pasos se ocultan con `display: none` (no se desmontan) para que `FormData` del submit conserve todos los campos. Navegación ← ANTERIOR / SIGUIENTE → / PUBLICAR REPORTE con `flexWrap`.
+- Se elimina la **card blanca** que envolvía al formulario (los `.panel` de `Formulario911` ya traen su propio fondo/borde/padding, así el formulario se integra directo a la sección).
+- `.titulo-con-boton` (Personas Afectadas) gana `flexWrap` + `gap` para móvil.
+- Typecheck, lint (sin errores nuevos) y build OK; `npm run check:responsive` ✅ 0 nuevas (183).
+
+### — Bitácora 911 (`/agente_911/ciudadano/incidentes`) alineada a REGLA Responsive y PageHeader (2026-08-03)
+La vista de listado de incidentes 911 (destino de la card "Ciudadano") se alinea con `Convenciones.md`:
+- **PageHeader regla**: se agrega `<PageHeader title="Bitácora" accent="911" />` con actions = `← Panel 911` (secondary) + `+ Nuevo Registro` (primary). Se quitan `backHref`/`backLabel` del `DashboardHeader` (el regreso vive en `PageHeaderLink` secondary) y el botón "NUEVO REGISTRO" que iba como `children` del header — ese `children` **se ocultaba en móvil/tablet** (Header.tsx), así que en pantallas angostas no había forma de crear un registro; ahora vive en las actions del `PageHeader` que hacen wrap.
+- **Responsive / Page Assembly**: `<main>` con `padding: '40px 48px'` inline + `maxWidth: 1240px` → `.pad-pagina` (colapsa a `20px 16px` en móvil) sin maxWidth. La tabla ya estaba bien (`.overflow-x:auto` + `minWidth`).
+- Limpieza de casts `as any` innecesarios (`item.folioCad/codigoCatalogo/svvNotificado` ya tipados en `IncidenteDetalle`; `session.user.apellido` en additionalFields).
+- El allowlist baja de 184 a 183 (sale `app/agente_911/ciudadano/incidentes/page.tsx` de `paddingPagina`); `npm run check:responsive` ✅ 0 nuevas. Typecheck, lint y build OK.
+
+### — Hub Agente 911 alineado a REGLA Responsive y PageHeader (2026-08-03)
+`/agente_911` (hub del rol Agente 911) se alinea con `Convenciones.md`:
+- **PageHeader regla**: se agrega `<PageHeader title="Panel" accent="911" subtitle="… · central de atención y despacho" />` (antes la vista no usaba el componente; referencia conforme: hub `/oficial`). Como es hub, no lleva botón de regreso.
+- **Responsive / Page Assembly**: el padding inline `40px 64px` se reemplaza por la clase `.pad-dashboard` (colapsa a `20px 16px` en móvil) y se elimina el `maxWidth: 1400` del contenedor de página (prohibido por el patrón). Footer con `flexWrap: 'wrap'` + `gap` para no apretarse en pantallas angostas.
+- **KPI único**: las dos tarjetas sueltas "Incidentes Hoy" y "911 Hoy" se unifican en una sola tarjeta KPI — "Incidentes Hoy" (`stats.hoy`) como métrica principal + "Vía 911" (`hoy911`) como desglose secundario separado por divisor.
+- El allowlist baja de 185 a 184 (sale `app/agente_911/page.tsx` de `paddingPagina`); `npm run check:responsive` ✅ 0 nuevas. Typecheck, lint y build OK.
+
 ### — Regla de diseño: Indicador de Pasos (StepIndicator) — prohibidos los steppers (2026-08-03)
 Se crea la regla de diseño "Indicador de Pasos (StepIndicator)" en `Convenciones.md`: **prohibido usar steppers** (círculos numerados con conectores, dots de progreso, barras segmentadas); toda vista multi-paso usa `components/partials/StepIndicator.tsx` ("**Paso N de M**" + nombre del paso + barra de progreso).
 - **Nuevo componente `components/partials/StepIndicator.tsx`**: props `paso` (1-based), `total`, `nombre`. Sin hooks (SSR-safe), `flexWrap` responsive. Tokens: "Paso N de M" en Barlow Condensed 800/28px `#1f355a`; nombre en JetBrains Mono 600/11px `#94a3b8`; barra 2px (ancho = paso/total).

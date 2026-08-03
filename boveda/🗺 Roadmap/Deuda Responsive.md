@@ -19,15 +19,15 @@
 
 ## Baseline (2026-08-03)
 
-Total: **185 violaciones permitidas** · 0 nuevas.
+Total: **183 violaciones permitidas** · 0 nuevas.
 
-*(actualizado tras alinear `FormularioRecorrido`/despacho oficial — salió de `gridMulticol` y `paddingPagina`, ver Changelog)*
+*(actualizado tras alinear `FormularioRecorrido`/despacho oficial, el hub `/agente_911` y la bitácora `/agente_911/ciudadano/incidentes` — ver Changelog)*
 
 | Módulo | Grid inline | overflow tablas | padding página | Total |
 |--------|----:|----:|----:|----:|
 | app/admin | 4 | 0 | 1 | 5 |
 | app/admin-transito | 1 | 1 | 1 | 3 |
-| app/agente_911 | 4 | 0 | 7 | 11 |
+| app/agente_911 | 4 | 0 | 5 | 9 |
 | app/agente_bitacorista | 0 | 0 | 1 | 1 |
 | app/agente_infracciones | 0 | 0 | 2 | 2 |
 | app/agente_juzgado | 2 | 0 | 10 | 12 |
@@ -64,7 +64,7 @@ Total: **185 violaciones permitidas** · 0 nuevas.
 | components/reportes | 5 | 0 | 0 | 5 |
 | components/rol_servicios | 1 | 1 | 0 | 2 |
 | components/shared | 1 | 0 | 0 | 1 |
-| **TOTAL** | **81** | **13** | **91** | **185** |
+| **TOTAL** | **81** | **13** | **89** | **183** |
 
 ## Cómo pagar la deuda
 

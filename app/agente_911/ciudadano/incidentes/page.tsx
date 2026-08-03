@@ -3,9 +3,10 @@ import { auth } from "@/lib/auth";
 import { getIncidentesPaginados, getConteoEstatus } from "@/lib/911/service";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Eye, Plus, MapPin, Hash, AlertTriangle, Clock } from "lucide-react";
+import { Eye, MapPin, Hash, AlertTriangle, Clock } from "lucide-react";
 import Link from "next/link";
 import { DashboardHeader } from "@/components/partials/Header";
+import { PageHeader, PageHeaderLink } from "@/components/partials/PageHeader";
 import { Pagination } from "@/components/911/Pagination";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
 import ToastOnLoad from "./ToastOnLoad";
@@ -62,23 +63,21 @@ export default async function Listado911Page({
             `}</style>
 
             <DashboardHeader
-                user={{ name: session.user.name, apellido: (session.user as any).apellido, email: session.user.email }}
+                user={{ name: session.user.name, apellido: session.user.apellido ?? undefined, email: session.user.email }}
                 roleLabel="Bitácora Central 911"
-                backHref="/agente_911"
-                backLabel="Panel 911"
-            >
-                <Link href="/agente_911/ciudadano" style={{
-                    background: '#0f172a', color: '#ffffff', padding: '12px 24px', borderRadius: '2px',
-                    fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 600,
-                    display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none',
-                    letterSpacing: '0.1em',
-                }}>
-                    <Plus size={14} />
-                    <span>NUEVO REGISTRO</span>
-                </Link>
-            </DashboardHeader>
+            />
 
-            <main style={{ maxWidth: '1240px', margin: '0 auto', padding: '40px 48px' }}>
+            <main className="pad-pagina" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+
+                <PageHeader
+                    title="Bitácora"
+                    accent="911"
+                    subtitle="Llamadas entrantes y estatus de atención"
+                    actions={<>
+                        <PageHeaderLink href="/agente_911" variant="secondary">← Panel 911</PageHeaderLink>
+                        <PageHeaderLink href="/agente_911/ciudadano">+ Nuevo Registro</PageHeaderLink>
+                    </>}
+                />
 
                 {/* TABLA DE INCIDENTES 911 */}
                 <div style={cardStyle}>
@@ -170,7 +169,7 @@ export default async function Listado911Page({
                                                     verticalAlign: 'middle',
                                                 }}>NUEVO</span>
                                             )}
-                                            {(item as any).svvNotificado && (
+                                            {item.svvNotificado && (
                                                 <span style={{
                                                     marginLeft: 6, padding: '2px 6px', borderRadius: 2, fontSize: 8,
                                                     fontWeight: 700, background: '#eff1f3', color: '#1c3051',
@@ -181,10 +180,10 @@ export default async function Listado911Page({
                                             )}
                                         </td>
                                         <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8' }}>
-                                            {(item as any).folioCad || '—'}
+                                            {item.folioCad || '—'}
                                         </td>
                                         <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8', letterSpacing: '0.02em' }}>
-                                            {(item as any).codigoCatalogo || '—'}
+                                            {item.codigoCatalogo || '—'}
                                         </td>
                                         <td style={tdStyle}>
                                             <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{fechaStr}</span>

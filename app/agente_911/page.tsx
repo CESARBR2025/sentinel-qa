@@ -6,6 +6,7 @@ import { Users } from 'lucide-react'
 import { verificarRolAgente911 } from '@/lib/agente_911/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
 
@@ -49,17 +50,26 @@ export default async function Agente911DashboardPage() {
 
       <DashboardHeader user={user} roleLabel="Agente 911" backHref={backHref} />
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
 
-        {/* Stats Bar */}
-        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px' }}>
-            <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Incidentes Hoy</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{stats.hoy}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 16px' }}>
-            <span style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>911 Hoy</span>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#1f355a' }}>{hoy911}</span>
+        <PageHeader
+          title="Panel"
+          accent="911"
+          subtitle={`${user.name} ${user.apellido ?? ''} · central de atención y despacho`}
+        />
+
+        {/* KPI */}
+        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', fontFamily: 'JetBrains Mono,monospace' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20, background: '#ffffff', border: '1px solid #e2e8f0', padding: '16px 24px' }}>
+            <div>
+              <div style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: 11, marginBottom: 4 }}>Incidentes Hoy</div>
+              <div style={{ fontWeight: 700, fontSize: 28, color: '#1f355a', lineHeight: 1 }}>{stats.hoy}</div>
+            </div>
+            <div style={{ width: 1, height: 36, background: '#e2e8f0' }} />
+            <div>
+              <div style={{ color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: 10, marginBottom: 4 }}>Vía 911</div>
+              <div style={{ fontWeight: 700, fontSize: 20, color: '#0f172a', lineHeight: 1 }}>{hoy911}</div>
+            </div>
           </div>
         </div>
 
@@ -102,7 +112,7 @@ export default async function Agente911DashboardPage() {
         </div>
 
         {/* Footer */}
-        <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span>CENTINELA {APP_VERSION} · 911</span>

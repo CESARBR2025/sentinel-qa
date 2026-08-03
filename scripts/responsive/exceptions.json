@@ -102,8 +102,6 @@
     "app/admin-transito/layout.tsx",
     "app/admin/layout.tsx",
     "app/agente_911/ciudadano/incidentes/[id]/page.tsx",
-    "app/agente_911/ciudadano/incidentes/page.tsx",
-    "app/agente_911/page.tsx",
     "app/agente_911/rondin/incidentes/[id]/page.tsx",
     "app/agente_911/rondin/incidentes/page.tsx",
     "app/agente_911/whatsapp/incidentes/[id]/page.tsx",

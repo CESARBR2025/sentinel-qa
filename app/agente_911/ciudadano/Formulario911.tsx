@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -6,8 +6,19 @@ import { useRouter } from "next/navigation";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { toast } from "sonner"
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from "@/lib/maps/googleMapsConfig"
+import { StepIndicator } from "@/components/partials/StepIndicator";
 
 const COORDS_DEFAULT = { lat: 20.3889, lng: -99.9961 }
+
+const STEPS = [
+    'Incidente',
+    'Reportante',
+    'Personas',
+    'Ubicación',
+    'Clasificación',
+    'Canalización',
+    'Observaciones',
+]
 
 export default function Formulario911({ user, catalogos, despachadores }: {
     user: { name: string; apellido?: string }
@@ -22,6 +33,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
     despachadores: { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }[]
 }) {
     const router = useRouter()
+    const [step, setStep] = useState(1);
     const [anonimo, setAnonimo] = useState(false);
     const [tipoReporte, setTipoReporte] = useState("normal");
 
@@ -168,7 +180,11 @@ export default function Formulario911({ user, catalogos, despachadores }: {
     return (
         <><form ref={formRef} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
             <input type="hidden" name="canal" value="911" />
-            {/* SECCIÓN 01 */}
+
+            <StepIndicator paso={step} total={STEPS.length} nombre={STEPS[step - 1]} />
+
+            {/* STEP 1 — SECCIÓN 01 */}
+            <div style={{ display: step === 1 ? 'block' : 'none' }}>
             <div className="panel">
                 <h2 className="sentinel-title">Datos del Incidente</h2>
                 <div className="grid">
@@ -196,8 +212,10 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     </div>
                 </div>
             </div>
+            </div>
 
-            {/* SECCIÓN 02 */}
+            {/* STEP 2 — SECCIÓN 02 */}
+            <div style={{ display: step === 2 ? 'block' : 'none' }}>
             <div className="panel">
                 <h2 className="sentinel-title">Datos del Reportante</h2>
                 <div className="grid">
@@ -268,8 +286,10 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     </div>
                 </div>
             </div>
+            </div>
 
-            {/* SECCIÓN 03 - Actualizada */}
+            {/* STEP 3 — SECCIÓN 03 */}
+            <div style={{ display: step === 3 ? 'block' : 'none' }}>
             <div className="panel">
                 <div className="titulo-con-boton">
                     <h2 className="sentinel-title">Personas Afectadas</h2>
@@ -304,8 +324,10 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     </div>
                 ))}
             </div>
+            </div>
 
-            {/* SECCIÓN 04 */}
+            {/* STEP 4 — SECCIÓN 04 */}
+            <div style={{ display: step === 4 ? 'block' : 'none' }}>
             <div className="panel">
                 <h2 className="sentinel-title">Ubicación</h2>
 
@@ -414,6 +436,10 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     />
                 </div>
             </div>
+            </div>
+
+            {/* STEP 5 — Clasificación (extorsión/alarma + clasificación técnica) */}
+            <div style={{ display: step === 5 ? 'block' : 'none' }}>
 
             {tipoReporte === "extorsion" && (
                 <div className="panel" style={{ borderLeftColor: "#e11d48" }}>
@@ -588,10 +614,16 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                             </div>
                         </div>
                     </div>
+                </>
+            )}
+            </div>
+            {/* cierra STEP 5 (Clasificación) */}
 
-                    {/* SECCIÓN 06 */}
-                    <div className="panel">
-                        <h2>Canalización</h2>
+            {/* STEP 6 — SECCIÓN 06 Canalización */}
+            {tipoReporte !== "extorsion" && (
+                <div style={{ display: step === 6 ? 'block' : 'none' }}>
+                <div className="panel">
+                    <h2>Canalización</h2>
                         <div className="grid">
                             <div>
                                 <label>¿Requiere Despacho?</label>
@@ -635,21 +667,41 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                             <label>Observaciones del Operador</label>
                             <textarea name="observaciones" rows={3} defaultValue="Reporte de prueba para verificar flujo de creación" placeholder="Notas internas..." />
                         </div>
-                    </div>
-                </>
-            )}
+                </div>
+                </div>
+                )}
+                {/* cierra STEP 6 (Canalización) */}
 
-
-
-            {/* OBSERVACIONES FINAL */}
+            {/* STEP 7 — OBSERVACIONES FINAL */}
+            <div style={{ display: step === 7 ? 'block' : 'none' }}>
             <div className="panel">
                 <h2 className="sentinel-title">Observaciones</h2>
                 <textarea rows={4} defaultValue="Sin novedades adicionales" placeholder="Notas adicionales del operador..." />
-                <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
+            </div>
+            </div>
+
+            {/* NAVEGACIÓN */}
+            <div style={{ marginTop: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                <button type="button" onClick={() => setStep(Math.max(1, step - 1))}
+                    disabled={step === 1}
+                    className="btn-secundario" style={{ padding: '12px 32px' }}>
+                    ← ANTERIOR
+                </button>
+
+                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8' }}>
+                    {step} / {STEPS.length}
+                </span>
+
+                {step < STEPS.length ? (
+                    <button type="button" onClick={() => setStep(Math.min(STEPS.length, step + 1))}
+                        className="btn-principal" style={{ padding: '12px 32px' }}>
+                        SIGUIENTE →
+                    </button>
+                ) : (
                     <button type="button" onClick={handleSubmit} className="btn-principal">
                         PUBLICAR REPORTE EN BITÁCORA
                     </button>
-                </div>
+                )}
             </div>
 
             <style jsx>{`
@@ -765,6 +817,8 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    flex-wrap: wrap;
+                    gap: 12px;
                     margin-bottom: 24px;
                 }
 

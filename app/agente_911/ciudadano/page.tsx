@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { getCatalogos } from "@/lib/911/service";
 import { getDespachadores } from "@/lib/911/service";
 import { DashboardHeader } from "@/components/partials/Header";
+import { PageHeader, PageHeaderLink } from "@/components/partials/PageHeader";
 import { DashboardFooter } from "@/components/partials/Footer";
 import Formulario911 from "./Formulario911";
 import { tieneAccesoSeccion } from "@/lib/911/permisos";
@@ -40,6 +41,8 @@ export default async function Ciudadano911Page() {
         minHeight: "100vh",
         background: "#f8fafc",
         color: "#1e293b",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       {/* INYECCIÓN DE ESTILOS COMPATIBLE CON SERVER COMPONENTS */}
@@ -66,48 +69,29 @@ export default async function Ciudadano911Page() {
       <DashboardHeader
         user={user}
         roleLabel="Reporte de Llamada al 911"
-        backHref="/agente_911/ciudadano/incidentes"
-        backLabel="Bitácora"
       />
 
       <div
-        className="sentinel-label-fix"
+        className="sentinel-label-fix pad-pagina"
         style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "40px 32px",
+          flex: 1,
           display: "flex",
           flexDirection: "column",
           gap: "32px",
         }}
       >
-        <div
-          style={{
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "4px",
-            padding: "40px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.02)",
-          }}
-        >
-          {/* ENCABEZADO */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 32 }}>
-                <div style={{ width: '4px', height: '16px', background: '#1f355a' }} />
-                <p style={{
-                    margin: 0, fontFamily: "'Inter', sans-serif",
-                    color: "#64748b", fontSize: "14px", fontWeight: 500
-                }}>
-                    Registro inicial de incidentes reportados por la ciudadanía.
-                </p>
-            </div>
+        <PageHeader
+          title="Nuevo"
+          accent="Registro"
+          subtitle="Registro inicial de incidentes reportados por la ciudadanía"
+          actions={<PageHeaderLink href="/agente_911/ciudadano/incidentes" variant="secondary">← Bitácora</PageHeaderLink>}
+        />
 
-          {/* AQUÍ VA EL FORMULARIO DE TU AMIGO */}
-          <Formulario911 
-            user={user} 
-            catalogos={catalogos}
-            despachadores={despachadores}
-          />
-        </div>
+        <Formulario911
+          user={user}
+          catalogos={catalogos}
+          despachadores={despachadores}
+        />
 
         <DashboardFooter />
       </div>
