@@ -7,6 +7,7 @@ import { SubirFotoDetenido } from '@/components/monitorista/SubirFotoDetenido'
 import Link from 'next/link'
 import { Camera } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function FotosDetenidoPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -35,26 +36,16 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
 
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/oficial"
-        backLabel="Regresar"
       />
 
-      <div style={{ maxWidth: 700, margin: '0 auto', padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 32, minHeight: '100vh' }}>
+      <div className="pad-pagina" style={{ maxWidth: 700, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 32, minHeight: '100vh' }}>
 
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-          paddingBottom: 20, borderBottom: '1px solid #e2e8f0', position: 'relative'
-        }}>
-          <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 3, background: '#1f355a' }}></div>
-          <div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', marginBottom: 4, fontWeight: 600 }}>
-              Oficial de Campo
-            </div>
-            <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 32, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-              Fotos del Detenido
-            </h1>
-          </div>
-        </div>
+        <PageHeader
+          title="Fotos del"
+          accent="Detenido"
+          subtitle={nombre}
+          actions={<PageHeaderLink href="/oficial" variant="secondary">← Panel</PageHeaderLink>}
+        />
 
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
           <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 18, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>

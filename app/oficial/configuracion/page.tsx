@@ -8,6 +8,7 @@ import { UnidadAsignadaSection } from '@/components/oficial/UnidadAsignadaSectio
 import { MiUbicacionSection } from '@/components/oficial/MiUbicacionSection'
 import { listarPatrullasParaAsignacion, obtenerPatrullaPorId } from '@/lib/flota/service'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { APP_VERSION } from "@/lib/constants"
 import { EditarTelefono } from './EditarTelefono'
 
@@ -95,9 +96,16 @@ export default async function ConfiguracionPerfilPage() {
         .up-btn-secondary:hover { border-color: #1f355a; color: #1f355a; }
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Configuración" backHref="/oficial" />
+      <DashboardHeader user={user} roleLabel="Configuración" />
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
+
+        <PageHeader
+          title="Configuración"
+          accent="de mi Perfil"
+          subtitle="Datos personales, unidad asignada y ubicación"
+          actions={<PageHeaderLink href="/oficial" variant="secondary">← Panel</PageHeaderLink>}
+        />
 
         {error ? (
           <div style={{ textAlign: 'center', padding: 64, background: '#fff', border: '1px solid #e2e8f0' }}>

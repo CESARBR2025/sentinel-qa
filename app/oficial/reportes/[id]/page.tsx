@@ -2,16 +2,16 @@ import { auth }    from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import { verificarRolOficial, verReporteDetalle } from '@/lib/oficial/service'
-import { AlertTriangle, CheckCircle2, MapPin, Clock, User, Shield, Car, Home } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, MapPin, User, Shield, Car, Home } from 'lucide-react'
 import Link from 'next/link'
 import { MapaPinFijo } from '@/components/oficial/MapaPinFijo'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 const LBL: React.CSSProperties = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }
 const VAL: React.CSSProperties = { fontFamily: 'Inter,sans-serif', fontSize: 14, color: '#1e293b' }
 const CARD: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, padding: '24px 28px' }
 const SEC: React.CSSProperties  = { fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 18, textTransform: 'uppercase', color: '#0f172a', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }
-const G3: React.CSSProperties   = { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }
 
 export default async function ReporteDetallePage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -33,38 +33,31 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
 
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/oficial/despachos"
-        backLabel="Mis Despachos"
       />
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="pad-pagina" style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
         {/* Encabezado */}
-        <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>REPORTE DE CAMPO</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 36, margin: '4px 0 0', color: '#0f172a', textTransform: 'uppercase' }}>
-            <span style={{ color: '#1f355a' }}>{r.folioReporteCampo || r.ofiFolioCad || 'S/C'}</span>
-          </h1>
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', marginTop: 4 }}>
-            Folio CAD: {r.ofiFolioCad || 'S/C'}
-          </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Clock size={11} />
-              {new Date(r.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-            </span>
-            {tieneDenuncia && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
-                <CheckCircle2 size={11} /> CON DENUNCIA D1
-              </span>
-            )}
-            {pendienteDenu && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
-                <AlertTriangle size={11} /> DENUNCIA PENDIENTE
-              </span>
-            )}
-          </div>
-        </div>
+        <PageHeader
+          title={r.folioReporteCampo || r.ofiFolioCad || 'S/C'}
+          accent="Reporte de Campo"
+          subtitle={`Folio CAD: ${r.ofiFolioCad || 'S/C'} · ${new Date(r.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}
+          actions={
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <PageHeaderLink href="/oficial/despachos" variant="secondary">← Mis Despachos</PageHeaderLink>
+              {tieneDenuncia && (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+                  <CheckCircle2 size={11} /> CON DENUNCIA D1
+                </span>
+              )}
+              {pendienteDenu && (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
+                  <AlertTriangle size={11} /> DENUNCIA PENDIENTE
+                </span>
+              )}
+            </div>
+          }
+        />
 
         {/* Sin denuncia — opción de generarla (visible siempre que no haya D1) */}
         {!tieneDenuncia && !pendienteDenu && (
@@ -88,7 +81,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
         {/* Origen */}
         <div style={CARD}>
           <div style={SEC}><User size={16} /> Origen e Identificación</div>
-          <div style={G3}>
+          <div className="grid-3">
             <div><span style={LBL}>Canal</span><span style={VAL}>Radio / Recorrido</span></div>
             <div><span style={LBL}>Folio CAD</span><span style={VAL}>{r.ofiFolioCad || '—'}</span></div>
             <div><span style={LBL}>Oficial</span><span style={VAL}>{r.ofiOficialNombre || '—'}</span></div>
@@ -100,7 +93,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
         {/* Incidente */}
         <div style={CARD}>
           <div style={SEC}><AlertTriangle size={16} /> Incidente</div>
-          <div style={G3}>
+          <div className="grid-3">
             <div><span style={LBL}>Tipo de Incidente</span><span style={VAL}>{r.ofiTipoIncidente || '—'}</span></div>
             <div><span style={LBL}>Tipo de Emergencia</span><span style={VAL}>{r.ofiTipoEmergencia || '—'}</span></div>
             <div><span style={LBL}>Prioridad</span><span style={VAL}>{r.ofiPrioridad || '—'}</span></div>
@@ -112,7 +105,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
         {/* Ubicación con mapa */}
         <div style={CARD}>
           <div style={SEC}><MapPin size={16} /> Ubicación del Incidente</div>
-          <div style={G3}>
+          <div className="grid-3">
             <div><span style={LBL}>Calle</span><span style={VAL}>{r.ofiCalle || '—'}</span></div>
             <div><span style={LBL}>Colonia</span><span style={VAL}>{r.ofiColonia || '—'}</span></div>
             <div><span style={LBL}>Datos Positivos/Negativos</span><span style={VAL}>{r.ofiDatosPn || '—'}</span></div>
@@ -127,7 +120,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
         {/* Intervención */}
         <div style={CARD}>
           <div style={SEC}><Shield size={16} /> Intervención</div>
-          <div style={G3}>
+          <div className="grid-3">
             <div style={{ gridColumn: '1/-1' }}><span style={LBL}>Acciones Realizadas</span><span style={VAL}>{r.ofiAcciones || '—'}</span></div>
             <div><span style={LBL}>¿Hubo Detención?</span><span style={VAL}>{r.ofiHayDetencion ? 'SÍ' : 'NO'}</span></div>
             {r.ofiHayDetencion && (
@@ -175,7 +168,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
               {r.ofiHayCateo && r.ofiCateo && (
                 <div>
                   <div style={SEC}><Home size={16} /> Cateo</div>
-                  <div style={G3}>
+                  <div className="grid-3">
                     <div><span style={LBL}>Calle</span><span style={VAL}>{r.ofiCateo.calle || '—'}</span></div>
                     <div><span style={LBL}>Colonia</span><span style={VAL}>{r.ofiCateo.colonia || '—'}</span></div>
                     <div><span style={LBL}>Número</span><span style={VAL}>{r.ofiCateo.numero || '—'}</span></div>
@@ -196,7 +189,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
         {tieneDenuncia && r.d1 && (
           <div style={{ ...CARD, borderLeft: '4px solid #16a34a' }}>
             <div style={{ ...SEC, color: '#15803d' }}><CheckCircle2 size={16} /> Denuncia D1 Vinculada</div>
-            <div style={G3}>
+            <div className="grid-3">
               <div><span style={LBL}>Folio Denuncia</span><span style={{ ...VAL, fontWeight: 700 }}>{r.d1.folioDenuncia}</span></div>
               <div><span style={LBL}>IPH</span><span style={VAL}>{r.d1.iph || '—'}</span></div>
               <div><span style={LBL}>Folio CU</span><span style={VAL}>{r.d1.folioCu || '—'}</span></div>

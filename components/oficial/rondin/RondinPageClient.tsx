@@ -3,12 +3,13 @@
 import { useRef, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { createRondinEscalado } from '@/lib/incidentes/actions'
-import { ArrowLeft, Plus, Radio, FileText, MapPin, Crosshair, Loader2 } from 'lucide-react'
+import { ArrowLeft, Plus, FileText, MapPin, Crosshair, Loader2 } from 'lucide-react'
 import React from 'react'
 import { RondinTabla } from './RondinTabla'
 import { useRondinFormStore } from '@/stores/useRondinFormStore'
 import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import type { RondinOficialResumen } from '@/lib/oficial/types'
 import type { CatalogosJerarquicos } from '@/lib/911/types'
 
@@ -127,7 +128,8 @@ export function RondinPageClient({
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-        <header style={{ width: '100%', display: 'flex', flexDirection: 'column', padding: '32px 48px 0' }}>
+        <div className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <header style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
           <button
             onClick={() => setView('list')}
             style={{
@@ -141,25 +143,14 @@ export function RondinPageClient({
             <ArrowLeft size={13} /> VOLVER A REPORTES
           </button>
 
-          <div style={{ marginBottom: 32, borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
-            <span style={{
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
-              color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em',
-              textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              <Radio size={14} /> NUEVO REPORTE
-            </span>
-            <h1 style={{
-              fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800,
-              fontSize: 36, margin: '4px 0 0', color: '#0f172a',
-              textTransform: 'uppercase',
-            }}>
-              Reporte de <span style={{ color: '#1f355a' }}>Rondín</span>
-            </h1>
-          </div>
+          <PageHeader
+            title="Reporte de"
+            accent="Rondín"
+            subtitle="Nuevo avistamiento en rondín — escala a despacho"
+          />
         </header>
 
-        <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', padding: '0 48px 48px' }}>
+        <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
           <form action={createRondinEscalado} style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
               <input type="hidden" name="anonimo" value={String(anonimo)} />
               <input type="hidden" name="latitud" value={posicion?.lat ?? ''} readOnly />
@@ -298,6 +289,7 @@ export function RondinPageClient({
               <SubmitButton />
             </form>
         </main>
+        </div>
       </div>
     )
   }
@@ -306,37 +298,17 @@ export function RondinPageClient({
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <header style={{ width: '100%', display: 'flex', flexDirection: 'column', padding: '32px 48px 0' }}>
-        {/* Back link */}
-        <a href="/oficial" style={{
-          alignSelf: 'flex-start',
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          color: '#64748b', fontFamily: 'JetBrains Mono,monospace',
-          fontSize: 11, textDecoration: 'none', marginBottom: 24,
-        }}>
-          <ArrowLeft size={13} /> VOLVER AL PANEL
-        </a>
-
-        {/* Header */}
-        <div style={{ marginBottom: 32, borderBottom: '1px solid #e2e8f0', paddingBottom: 20 }}>
-          <span style={{
-            fontFamily: 'JetBrains Mono,monospace', fontSize: 10,
-            color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em',
-            textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 8,
-          }}>
-            <Radio size={14} /> RONDÍN
-          </span>
-          <h1 style={{
-            fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800,
-            fontSize: 36, margin: '4px 0 0', color: '#0f172a',
-            textTransform: 'uppercase',
-          }}>
-            Reportes de <span style={{ color: '#1f355a' }}>Rondín</span>
-          </h1>
-        </div>
+      <div className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <header style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+        <PageHeader
+          title="Reportes de"
+          accent="Rondín"
+          subtitle="Avistamientos escalados a despacho"
+          actions={<PageHeaderLink href="/oficial" variant="secondary">← Volver al panel</PageHeaderLink>}
+        />
       </header>
 
-      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', padding: '0 48px 48px', gap: 24 }}>
+      <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
         {/* Segmented control + action button */}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -387,11 +359,12 @@ export function RondinPageClient({
         <div style={{
           flex: 1,
           background: '#ffffff', border: '1px solid #e2e8f0',
-          borderRadius: 2, overflow: 'hidden',
+          borderRadius: 2,
         }}>
           <RondinTabla rondines={rondines} folioNuevo={folioNuevo} />
         </div>
       </main>
+      </div>
     </div>
   )
 }
@@ -412,7 +385,7 @@ function Seccion({ titulo, children }: { titulo: string; children: React.ReactNo
       <h2 style={{ fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 17, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#0f172a', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
         <MapPin size={14} color="#1f355a" /> {titulo}
       </h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+      <div className="grid-2" style={{ gap: 14 }}>
         {children}
       </div>
     </div>

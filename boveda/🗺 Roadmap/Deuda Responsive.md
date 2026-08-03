@@ -19,7 +19,7 @@
 
 ## Baseline (2026-08-03)
 
-Total: **201 violaciones permitidas** · 0 nuevas.
+Total: **192 violaciones permitidas** · 0 nuevas.
 
 | Módulo | Grid inline | overflow tablas | padding página | Total |
 |--------|----:|----:|----:|----:|
@@ -35,7 +35,6 @@ Total: **201 violaciones permitidas** · 0 nuevas.
 | app/auxiliar | 1 | 0 | 4 | 5 |
 | app/corralon | 0 | 0 | 2 | 2 |
 | app/dashboard | 2 | 1 | 1 | 4 |
-| app/denuncia | 0 | 0 | 1 | 1 |
 | app/envio-de-formatos | 2 | 0 | 2 | 4 |
 | app/fiscalia | 2 | 1 | 11 | 14 |
 | app/formato-n-armas-aseguradas | 2 | 0 | 3 | 5 |
@@ -49,7 +48,6 @@ Total: **201 violaciones permitidas** · 0 nuevas.
 | app/monitorista | 10 | 0 | 11 | 21 |
 | app/nCoordinacion | 1 | 0 | 1 | 2 |
 | app/notificaciones | 0 | 0 | 1 | 1 |
-| app/oficial | 1 | 0 | 5 | 6 |
 | app/prevencion | 5 | 3 | 1 | 9 |
 | app/reportes | 1 | 0 | 1 | 2 |
 | app/rol_servicios | 1 | 0 | 1 | 2 |
@@ -60,7 +58,7 @@ Total: **201 violaciones permitidas** · 0 nuevas.
 | components/analisis | 2 | 2 | 0 | 4 |
 | components/denuncias | 1 | 0 | 0 | 1 |
 | components/fiscalia | 5 | 1 | 0 | 6 |
-| components/oficial | 2 | 1 | 1 | 4 |
+| components/oficial | 1 | 0 | 1 | 2 |
 | components/prevencion | 5 | 0 | 0 | 5 |
 | components/reportes | 5 | 0 | 0 | 5 |
 | components/rol_servicios | 1 | 1 | 0 | 2 |

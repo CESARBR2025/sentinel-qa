@@ -5,6 +5,7 @@ import { verificarRolOficial, listarDespachosAsignados } from '@/lib/oficial/ser
 import { getCatalogos } from '@/lib/911/service'
 import { obtenerIncidenteBasico } from '@/lib/incidentes/repository'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { DespachoContent } from '@/components/oficial/DespachoContent'
 import { APP_VERSION } from "@/lib/constants"
 
@@ -34,18 +35,25 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
 
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/oficial/despachos"
-        backLabel="Mis despachos"
       />
 
       <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
-        <DespachoContent
-          estatusInicial={incidenteBasico.estatus}
-          incidenteId={id}
-          asignacion={asignacion}
-          catalogos={catalogos}
-          user={session.user}
-        />
+        <div className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <PageHeader
+            title="Atender"
+            accent="Despacho"
+            subtitle={`${asignacion.folio} · ${asignacion.tipoIncidente || 'incidente'}`}
+            actions={<PageHeaderLink href="/oficial/despachos" variant="secondary">← Mis despachos</PageHeaderLink>}
+          />
+
+          <DespachoContent
+            estatusInicial={incidenteBasico.estatus}
+            incidenteId={id}
+            asignacion={asignacion}
+            catalogos={catalogos}
+            user={session.user}
+          />
+        </div>
 
         <footer style={{ padding: '24px 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center' }}>
           SSPM · SAN JUAN DEL RÍO · CENTINELA {APP_VERSION} · OFICIAL

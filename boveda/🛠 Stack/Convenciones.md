@@ -136,6 +136,7 @@ Toda vista usa el componente `components/partials/PageHeader.tsx` (`PageHeader` 
 
 **Reglas:**
 - Los botones de navegación del header usan `PageHeaderLink` (variant `primary`/`secondary`).
+- **Páginas destino (regla de regreso).** Toda vista a la que se llega por clic en una tarjeta o por redirección desde otra vista (ej. `/oficial` → `/oficial/despachos`) debe incluir en `actions` un botón de regreso `variant="secondary"` (ej. `← Panel`) que apunte a la vista anterior. Este botón **reemplaza** la flecha `backHref`/`backLabel` del `DashboardHeader` (no usar ambos). Solo se agrega un botón `primary` si la vista tiene una acción especial (ej. `+ Registrar Nuevo`); si no existe tal acción, **no** se agrega primario. Referencia conforme: `app/dashboard/catalogos/oficiales/page.tsx` (usa `← Catálogos` secondary + `+ Registrar Oficial` primary). El hub por rol (ej. `/oficial`) no lleva botón de regreso.
 - Los botones de **submit/cancelar de formularios** NO son `PageHeaderLink` (siguen usando `btnPrimario`/`btnSecundario` de `app/admin/admin-styles.ts`).
 - `actions` acepta cualquier nodo (p. ej. `ImportarParqueButton`).
 - `title` no debe llevar espacio final (el componente añade el espacio antes del acento).

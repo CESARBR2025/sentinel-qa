@@ -7,6 +7,7 @@ import { ToastExito } from '@/components/oficial/ToastExito'
 import { ContadorAsignaciones } from '@/components/oficial/ContadorAsignaciones'
 import { verificarRolOficial } from '@/lib/oficial/service'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
 
@@ -45,7 +46,13 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
 
       <DashboardHeader user={user} roleLabel="Oficial en Campo" backHref={backHref} />
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 64px', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
+
+        <PageHeader
+          title="Panel"
+          accent="Oficial"
+          subtitle={`${user.name} ${user.apellido ?? ''} · operación en campo`}
+        />
 
         {/* Cards */}
         <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 40 }}>

@@ -4,7 +4,9 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { MapPin, Clock, Shield, ChevronRight, FileText, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { verificarRolOficial, listarDespachosAsignados, listarDespachosAtendidos, contarDespachosAsignadosOficial, contarDespachosAtendidosOficial } from '@/lib/oficial/service'
+import type { DespachoAsignado, DespachoAtendido } from '@/lib/oficial/types'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { SegmentControl } from '@/components/oficial/SegmentControl'
 import { ToastExito } from '@/components/oficial/ToastExito'
 import React from 'react'
@@ -31,7 +33,7 @@ function ResolucionBadge({ estatus }: { estatus: string }) {
   )
 }
 
-function D1Badge({ d }: { d: any }) {
+function D1Badge({ d }: { d: DespachoAtendido }) {
   if (d.d1Id) {
     return (
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
@@ -70,8 +72,8 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
   const id = session.user.id
 
   const [despachosActivos, despachosAtendidos, countPendientes, countAtendidos] = await Promise.all([
-    tab === 'pendientes' ? listarDespachosAsignados(id) : Promise.resolve([]),
-    tab === 'atendidos' ? listarDespachosAtendidos(id) : Promise.resolve([]),
+    tab === 'pendientes' ? listarDespachosAsignados(id) : Promise.resolve([] as DespachoAsignado[]),
+    tab === 'atendidos' ? listarDespachosAtendidos(id) : Promise.resolve([] as DespachoAtendido[]),
     contarDespachosAsignadosOficial(id),
     contarDespachosAtendidosOficial(id),
   ])
@@ -85,20 +87,16 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
 
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/oficial"
-        backLabel="Panel"
       />
 
-      <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '40px 48px' }}>
+      <main className="pad-pagina" style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
 
-        <div style={{ marginBottom: 24 }}>
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600, display: 'block' }}>
-            Oficial en Campo
-          </span>
-          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 32, textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a' }}>
-            <span style={{ color: '#1f355a' }}>DESPACHOS</span> Y REPORTES
-          </h1>
-        </div>
+        <PageHeader
+          title="Despachos"
+          accent="y Reportes"
+          subtitle="Asignaciones activas y atendidas"
+          actions={<PageHeaderLink href="/oficial" variant="secondary">← Panel</PageHeaderLink>}
+        />
 
         <div style={{ marginBottom: 24 }}>
           <SegmentControl
@@ -111,7 +109,7 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
         </div>
 
         {list.length === 0 && (
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '64px 32px', textAlign: 'center' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '64px 24px', textAlign: 'center' }}>
             <Shield size={32} color="#cbd5e1" style={{ marginBottom: 12 }} />
             <div style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: 8 }}>
               {tab === 'atendidos' ? 'Sin despachos atendidos' : 'Sin asignaciones activas'}
@@ -123,7 +121,7 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
         )}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {tab === 'pendientes' && (despachosActivos as any[]).map(d => (
+          {tab === 'pendientes' && despachosActivos.map(d => (
             <Link key={d.incidenteId} href={`/oficial/despachos/${d.incidenteId}`}
               style={{ ...cardStyle, flexDirection: 'row', alignItems: 'center', textDecoration: 'none' } as React.CSSProperties}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
@@ -167,7 +165,7 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
             </Link>
           ))}
 
-          {tab === 'atendidos' && (despachosAtendidos as any[]).map(d => {
+          {tab === 'atendidos' && despachosAtendidos.map(d => {
             const necesitaDenuncia = d.quiereDenuncia && !d.d1Id
             return (
               <div key={d.incidenteId} style={cardStyle}>
