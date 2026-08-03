@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { usePolling } from '@/hooks/usePolling'
+import { useResponsive } from '@/hooks/useResponsive'
 import {
   Bell, BellRing, BellOff, CheckCheck,
   Siren, Shield, Gavel, Scale, Video, Search, KeyRound, Ticket, Truck,
@@ -103,6 +104,7 @@ export function CampanillaNotificaciones() {
   const [sacudir, setSacudir] = useState(false)
   const previoRef = useRef(0)
   const router = useRouter()
+  const { esMovil } = useResponsive()
 
   // Sólo el conteo: una query indexada, sin traer la lista completa. Es lo
   // único que corre en cada intervalo del polling.
@@ -137,7 +139,10 @@ export function CampanillaNotificaciones() {
     }
   }, [])
 
-  useEffect(() => { void refrescarContador() }, [refrescarContador])
+  useEffect(() => {
+    const t = setTimeout(() => void refrescarContador(), 0)
+    return () => clearTimeout(t)
+  }, [refrescarContador])
 
   // El polling se detiene con la pestaña oculta: no tiene sentido consultar
   // mientras nadie mira, y evita acumular peticiones en pestañas de fondo.
@@ -251,8 +256,10 @@ export function CampanillaNotificaciones() {
         <div
           ref={dropdownRef}
           style={{
-            position: 'fixed', top: posicion.top, right: posicion.right,
-            width: ANCHO_DROPDOWN, zIndex: 999999,
+            position: 'fixed', top: posicion.top,
+            left: esMovil ? 12 : undefined, right: esMovil ? 12 : posicion.right,
+            width: esMovil ? 'auto' : ANCHO_DROPDOWN, zIndex: 999999,
+            maxWidth: 'calc(100vw - 24px)',
             background: '#fff', border: '1px solid #e2e8f0',
             boxShadow: '0 16px 40px -12px rgba(15,23,42,0.35)',
           }}
