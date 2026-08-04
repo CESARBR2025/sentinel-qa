@@ -6,7 +6,8 @@ import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 const PERIODOS = [
   { value: 'diario', label: 'Diario' },
@@ -77,11 +78,17 @@ export default function EditarFormatoNMediosAlternativosPage() {
   }
 
   return (
-    <div style={pageWrap}>
+    <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <SubHeader backHref="/formato-n-medios-alternativos" backLabel="Medios Alternativos" title="Editar Reporte" />
+            <DashboardHeader roleLabel="Editar Reporte" />
+      <PageHeader
+        title="Editar"
+        accent="Reporte"
+        subtitle="Formato N a Coordinación"
+        actions={<PageHeaderLink href="/formato-n-medios-alternativos" variant="secondary">← Medios Alternativos</PageHeaderLink>}
+      />
 
-      <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         {error && (
           <div style={{ marginBottom: 24, padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626' }}>
             ⚠ {error}
@@ -94,7 +101,7 @@ export default function EditarFormatoNMediosAlternativosPage() {
               <div style={sectionTitleStyle}>Medios Alternativos de Solución de Conflictos</div>
             </div>
             <div style={sectionBody}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="grid-2">
                 <div>
                   <Label>Fecha</Label>
                   <input type="date" required style={inputStyle} value={formData.fecha || ''} onChange={e => setFormData(f => ({ ...f, fecha: e.target.value }))} />
@@ -106,7 +113,7 @@ export default function EditarFormatoNMediosAlternativosPage() {
                   </select>
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid-2">
                 <div><Label>Asuntos Canalizados por Fiscalía</Label><input type="number" min={0} style={inputStyle} value={formData.asuntos_canalizados_por_fiscalia ?? '0'} onChange={e => setFormData(f => ({ ...f, asuntos_canalizados_por_fiscalia: e.target.value }))} /></div>
                 <div><Label>Acuerdos</Label><input type="number" min={0} style={inputStyle} value={formData.acuerdos ?? '0'} onChange={e => setFormData(f => ({ ...f, acuerdos: e.target.value }))} /></div>
                 <div><Label>Monto Reparación de Daños</Label><input type="number" min={0} step="0.01" style={inputStyle} value={formData.monto_reparacion_danos ?? '0'} onChange={e => setFormData(f => ({ ...f, monto_reparacion_danos: e.target.value }))} /></div>

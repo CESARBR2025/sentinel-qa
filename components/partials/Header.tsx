@@ -5,9 +5,10 @@ import { ArrowLeft } from 'lucide-react';
 import { SignOutButton } from '@/app/dashboard/sign-out-button';
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones';
 import { useResponsive } from '@/hooks/useResponsive';
+import { authClient } from '@/lib/auth-client';
 
 interface DashboardHeaderProps {
-  user: {
+  user?: {
     name: string;
     apellido?: string;
     email: string;
@@ -34,6 +35,11 @@ export function DashboardHeader({
   roleLabel = 'Operador Identificado',
 }: DashboardHeaderProps) {
   const { esMovil, esTablet } = useResponsive()
+  // user es opcional: las páginas cliente (formularios) no resuelven la sesión
+  // en el servidor, así que el header cae a la sesión del cliente (authClient),
+  // igual que SubHeader. Las páginas servidor siguen pasando user explícito.
+  const { data: session } = authClient.useSession()
+  const currentUser = (user ?? session?.user) as { name: string; apellido?: string; email: string } | undefined
   return (
     <div
       className="app-header-reveal"
@@ -124,7 +130,7 @@ export function DashboardHeader({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 32 }}>
-        {esMovil || esTablet ? null : (
+        {esMovil || esTablet || !currentUser ? null : (
         <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 4 }}>
           <div
             style={{
@@ -147,7 +153,7 @@ export function DashboardHeader({
               fontWeight: 600,
             }}
           >
-            {user.name} {user.apellido ?? ''}
+            {currentUser.name} {currentUser.apellido ?? ''}
           </div>
 
           <div
@@ -158,7 +164,7 @@ export function DashboardHeader({
               letterSpacing: '0.08em',
             }}
           >
-            {user.email.toLowerCase()}
+            {currentUser.email.toLowerCase()}
           </div>
         </div>
         )}

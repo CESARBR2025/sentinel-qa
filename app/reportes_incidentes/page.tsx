@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { FiltrosIncidencias } from '@/components/reportes/incidentes/FiltrosIncidencias'
 import { IncidenteStat } from '@/components/reportes/incidentes/StatIncidencia'
 import { TablaIncidentes } from '@/components/reportes/incidentes/TablaIncidentes'
@@ -37,24 +38,24 @@ export default async function ReportesIncidentesPage({
   )
 
   return (
-    <div style={styles.container}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#ffffff', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Reporte de Incidentes" backHref="/reportes" backLabel="Reportes" />
-      <main style={styles.main}>
-        <div style={styles.headerContainer}>
-          <div>
-            <span style={styles.tag}>SSPM · REPORTES DE INCIDENTES</span>
-            <h1 style={styles.title}>
-              REPORTE <span style={{ color: '#1f355a' }}>{tipo.toUpperCase()}</span>
-            </h1>
-          </div>
-          <a
-            href={`/api/reportes-incidentes/exportar?from=${sp.from ?? ''}&to=${sp.to ?? ''}&tipo=${tipo}`}
-            style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#16a34a' }}
-          >
-            EXCEL
-          </a>
-        </div>
+      <DashboardHeader user={user} roleLabel="Reporte de Incidentes" />
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Reporte de"
+          accent="Incidentes"
+          subtitle={`${tipo.toUpperCase()} · SSPM Reportes de Incidentes`}
+          actions={<>
+            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
+            <a
+              href={`/api/reportes-incidentes/exportar?from=${sp.from ?? ''}&to=${sp.to ?? ''}&tipo=${tipo}`}
+              style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#16a34a' }}
+            >
+              EXCEL
+            </a>
+          </>}
+        />
 
         <FiltrosIncidencias />
 

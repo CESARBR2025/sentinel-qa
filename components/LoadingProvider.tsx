@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 
-const MAIN_ROUTES = ['/dashboard', '/prevencion', '/incidentes', '/reportes', '/catalogos', '/admin']
+const MAIN_ROUTES = ['/dashboard', '/prevencion', '/incidentes', '/agente_reportes', '/catalogos', '/admin']
 
 function getBasePath(path: string): string {
   if (MAIN_ROUTES.includes(path)) return path

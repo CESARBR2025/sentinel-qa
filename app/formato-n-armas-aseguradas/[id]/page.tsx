@@ -6,7 +6,8 @@ import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default function EditarFormatoNArmaAseguradaPage() {
   const router = useRouter()
@@ -73,11 +74,17 @@ export default function EditarFormatoNArmaAseguradaPage() {
   }
 
   return (
-    <div style={pageWrap}>
+    <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <SubHeader backHref="/formato-n-armas-aseguradas" backLabel="Armas Aseguradas" title="Editar Arma" />
+            <DashboardHeader roleLabel="Editar Arma" />
+      <PageHeader
+        title="Editar"
+        accent="Arma"
+        subtitle="Formato N a Coordinación"
+        actions={<PageHeaderLink href="/formato-n-armas-aseguradas" variant="secondary">← Armas Aseguradas</PageHeaderLink>}
+      />
 
-      <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         {error && (
           <div style={{ marginBottom: 24, padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626' }}>
             ⚠ {error}
@@ -90,7 +97,7 @@ export default function EditarFormatoNArmaAseguradaPage() {
               <div style={sectionTitleStyle}>Armas de Fuego Aseguradas</div>
             </div>
             <div style={sectionBody}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="grid-2">
                 <div>
                   <Label>Fecha</Label>
                   <input type="date" required style={inputStyle} value={formData.fecha || ''} onChange={e => setFormData(f => ({ ...f, fecha: e.target.value }))} />

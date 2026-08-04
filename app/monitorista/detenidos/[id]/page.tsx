@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
 import { obtenerReportePorId, getDestinos } from '@/lib/monitorista/service'
 import { crearSolicitudFotos } from '@/lib/monitorista/repository'
+import { resolverToken } from '@/lib/recursos/token-recurso'
 import { User, Camera, Clock, Shield } from 'lucide-react'
 import React from 'react'
 import { CardEnvioFoto } from '@/components/monitorista/CardEnvioFoto'
@@ -13,6 +14,7 @@ import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarEvidenciasDetenido } from '@/lib/monitorista/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function DetenidoDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ exito?: string }> }) {
   const { id } = await params
@@ -21,16 +23,20 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
   if (!session) redirect('/login')
   if (!(await tienePermiso(session.user.id, 'detenidos', 'ver'))) redirect('/monitorista')
 
-  const reporte = await obtenerReportePorId(id)
+  // El segmento de la URL es un token opaco persistente, no el id interno.
+  const idReal = await resolverToken('detenido', id)
+  if (!idReal) notFound()
+
+  const reporte = await obtenerReportePorId(idReal)
   if (!reporte) notFound()
 
   const [fotos, destinos] = await Promise.all([
-    listarEvidenciasDetenido(id),
+    listarEvidenciasDetenido(idReal),
     getDestinos(),
   ])
 
   if (reporte.fotos.length === 0) {
-    await crearSolicitudFotos(id)
+    await crearSolicitudFotos(idReal)
     return redirect(`/monitorista/detenidos/${id}${exito ? `?exito=${exito}` : ''}`)
   }
 
@@ -47,29 +53,27 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
       <ToastAuto show={exito === '1'} mensaje="Reporte creado exitosamente" />
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/monitorista/detenidos"
-        backLabel="Detenidos"
+        roleLabel="Monitorista"
       />
-      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
-          <div>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 8 }}>Reporte de Detenido</div>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: 0 }}>{reporte.nombreDetenido}</h1>
-          </div>
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title={reporte.nombreDetenido}
+          subtitle="Reporte de detenido · solicitud y envío de fotos"
+          actions={<PageHeaderLink href="/monitorista/detenidos" variant="secondary">← Detenidos</PageHeaderLink>}
+        />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+          <div style={{ flex: '1 1 480px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 24 }}>
             <section style={card}>
               <h2 style={sectionTitle}><User size={18} /> DATOS PRINCIPALES</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="grid-2">
                 <Campo label="Nombre" value={reporte.nombreDetenido} />
                 <Campo label="Folio" value={reporte.folioDetenido} />
                 <Campo label="Evento o Incidente" value={reporte.tipoIncidente} />
-                <EditarCampoDetenido reporteId={id} campo="delito" label="Delito" valor={reporte.delitoDenuncia} />
-                <EditarCampoDetenido reporteId={id} campo="falta_administrativa" label="Falta Administrativa" valor={reporte.faltaAdministrativa} />
-                <EditarCampoDetenido reporteId={id} campo="marco_legal" label="Marco Legal" valor={reporte.marcoLegal} />
-                <EditarCampoDetenido reporteId={id} campo="modus_operandi" label="Modus Operandi" valor={reporte.modusOperandi} />
+                <EditarCampoDetenido reporteId={idReal} campo="delito" label="Delito" valor={reporte.delitoDenuncia} />
+                <EditarCampoDetenido reporteId={idReal} campo="falta_administrativa" label="Falta Administrativa" valor={reporte.faltaAdministrativa} />
+                <EditarCampoDetenido reporteId={idReal} campo="marco_legal" label="Marco Legal" valor={reporte.marcoLegal} />
+                <EditarCampoDetenido reporteId={idReal} campo="modus_operandi" label="Modus Operandi" valor={reporte.modusOperandi} />
               </div>
             </section>
 
@@ -94,7 +98,7 @@ export default async function DetenidoDetailPage({ params, searchParams }: { par
             </section>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div style={{ flex: '1 1 300px', maxWidth: 400, display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div style={card}>
               <h2 style={sectionTitle}><Clock size={18} /> FECHA</h2>
               <Campo label="Reporte" value={new Date(reporte.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />

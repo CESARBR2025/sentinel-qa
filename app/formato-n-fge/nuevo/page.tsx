@@ -6,7 +6,8 @@ import { ArrowLeft, Save, Calculator } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, btnTiny, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 const PERIODOS = [
   { value: 'diario', label: 'Diario' },
@@ -90,11 +91,17 @@ export default function NuevoFormatoNFgePage() {
   }
 
   return (
-    <div style={pageWrap}>
+    <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <SubHeader backHref="/formato-n-fge" backLabel="Eventos FGE" title="Nuevo Reporte" />
+            <DashboardHeader roleLabel="Nuevo Reporte" />
+      <PageHeader
+        title="Nuevo"
+        accent="Reporte FGE"
+        subtitle="Formato N a Coordinación"
+        actions={<PageHeaderLink href="/formato-n-fge" variant="secondary">← Eventos FGE</PageHeaderLink>}
+      />
 
-      <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         {error && (
           <div style={{ marginBottom: 24, padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'Inter', fontSize: 12, color: '#dc2626', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div>⚠ {error.msg}</div>
@@ -112,7 +119,7 @@ export default function NuevoFormatoNFgePage() {
               <div style={sectionTitleStyle}>Eventos Informados por la Fiscalía General del Estado (FGE)</div>
             </div>
             <div style={sectionBody}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="grid-2">
                 <div>
                   <Label>Fecha</Label>
                   <input type="date" required style={inputStyle} value={formData.fecha} onChange={e => setFormData(f => ({ ...f, fecha: e.target.value }))} />
@@ -134,7 +141,7 @@ export default function NuevoFormatoNFgePage() {
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid-2">
                 {CAMPOS_CALCULABLES.map(c => (
                   <div key={c.name}>
                     <Label>{c.label}</Label>
@@ -149,7 +156,7 @@ export default function NuevoFormatoNFgePage() {
                 <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>
                   Sin fuente automática — captura manual (etapas de juzgado, no registradas en el sistema)
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div className="grid-2">
                   {CAMPOS_MANUALES.map(c => (
                     <div key={c.name}>
                       <Label>{c.label}</Label>

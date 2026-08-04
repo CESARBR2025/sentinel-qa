@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { tienePermiso } from '@/lib/prevencion/permisos'
 
 const MIME: Record<string, string> = {
   '.pdf':  'application/pdf',
@@ -11,6 +12,15 @@ const MIME: Record<string, string> = {
   '.png':  'image/png',
   '.doc':  'application/msword',
   '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+}
+
+// Primer segmento de la ruta bajo uploads/ -> sección requerida para verla.
+// Deny-by-default: cualquier carpeta no listada aquí se rechaza con 403, no
+// se asume acceso libre. Si un módulo nuevo empieza a escribir en uploads/,
+// agregar su entrada aquí.
+const SECCION_POR_CARPETA: Record<string, 'busquedas' | 'medidas'> = {
+  busquedas:          'busquedas',
+  medidas_proteccion: 'medidas',
 }
 
 export async function GET(
@@ -23,6 +33,13 @@ export async function GET(
   const { path: segments } = await params
   // Prevent path traversal
   const safe = segments.map(s => s.replace(/\.\./g, '')).filter(Boolean)
+
+  const carpeta = safe[0]
+  const seccion = carpeta ? SECCION_POR_CARPETA[carpeta] : undefined
+  if (!seccion || !(await tienePermiso(session.user.id, seccion, 'ver'))) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+  }
+
   const filePath = path.join(process.cwd(), 'uploads', ...safe)
 
   try {

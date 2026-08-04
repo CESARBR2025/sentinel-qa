@@ -8,10 +8,12 @@ import React from 'react'
 import { SubirEvidenciaModal } from './SubirEvidenciaModal'
 import { Toast } from '@/components/ui/Toast'
 
-interface SolicitudRow {
+export interface SolicitudRow {
   id: string
   origen: 'denuncia' | 'general'
   entidadId: string
+  denunciaToken?: string
+  token?: string
   solicitudId: number | null
   folio: string
   solicitadoNombre: string | null
@@ -99,11 +101,11 @@ export function BandejaSolicitudes({
                   </>
                 )}
                 {s.origen === 'denuncia' ? (
-                  <Link href={`/monitorista/denuncias/${s.entidadId}`} style={btnDetalle}>
+                  <Link href={`/monitorista/denuncias/${s.denunciaToken ?? s.entidadId}`} style={btnDetalle}>
                     <Eye size={14} /> VER DENUNCIA
                   </Link>
                 ) : (
-                  <Link href={`/monitorista/solicitudes/${s.id}`} style={btnDetalle}>
+                  <Link href={`/monitorista/solicitudes/${s.token ?? s.id}`} style={btnDetalle}>
                     <Eye size={14} /> VER
                   </Link>
                 )}

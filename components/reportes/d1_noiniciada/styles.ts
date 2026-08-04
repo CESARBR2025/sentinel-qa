@@ -1,18 +1,4 @@
 export const styles = {
-    container: { minHeight: '100vh', background: '#F1F5F9', color: '#0F172A', fontFamily: 'Inter, sans-serif' },
-    main: { maxWidth: '1600px', margin: '0 auto', padding: '40px 48px' },
-    headerContainer: {
-        display: 'flex', justifyContent: 'space-between' as const, alignItems: 'flex-end' as const,
-        marginBottom: '40px', borderLeft: '4px solid #1f355a', paddingLeft: '20px'
-    },
-    title: { 
-        fontFamily: 'Barlow Condensed', fontSize: '56px', fontWeight: 800, 
-        margin: 0, lineHeight: 1, textTransform: 'uppercase' as const 
-    },
-    tag: { 
-        fontFamily: 'JetBrains Mono', fontSize: '11px', letterSpacing: '0.4em', 
-        color: '#64748B', fontWeight: 700 
-    },
     filterCard: { 
         background: 'white', padding: '24px', borderRadius: '4px', 
         border: '1px solid #E2E8F0', marginBottom: '24px' 
@@ -24,7 +10,7 @@ export const styles = {
     // AGREGADO PARA QUE NO MARQUE ERROR
     tableSection: { marginBottom: '48px' }, 
     tableContainer: { 
-        background: 'white', borderRadius: '4px', border: '1px solid #E2E8F0', overflow: 'hidden' 
+        background: 'white', borderRadius: '4px', border: '1px solid #E2E8F0', overflowX: 'auto' as const 
     },
     tableHeader: { padding: '20px 24px', borderBottom: '1px solid #E2E8F0' },
     table: { width: '100%', borderCollapse: 'collapse' as const },

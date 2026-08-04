@@ -17,11 +17,11 @@
 | `headerPad` | padding de header `'0 Npx'` ≥48px | `DashboardHeader` / `SubHeader` |
 | `stickyOffset` | `position: sticky` con offset ≥100px | `.panel-lateral` |
 
-## Baseline (2026-08-03)
+## Baseline (2026-08-04)
 
-Total: **182 violaciones permitidas** · 0 nuevas.
+Total: **120 violaciones permitidas** · 0 nuevas.
 
-*(actualizado tras alinear `FormularioRecorrido`/despacho oficial, hub `/agente_911`, bitácora, registro, revisar y vocabulario de estados — ver Changelog)*
+*(actualizado tras alinear el módulo Monitorista a Centinela/PageHeader/responsive: las 11 páginas de `app/monitorista` (hub + solicitudes + detenidos + incidentes-cámara + historial) reemplazan `SubHeader` por `DashboardHeader`, el header inline por `PageHeader` con botón de regreso secondary en `actions`, `main` por `.pad-pagina`/`.pad-dashboard`, grids por `.grid-2`/`.grid-3`/`.cat-cards-grid`, tablas por `.tabla-wrap` y `solicitudes/[id]` migra del tema oscuro al shell Centinela estándar. Se eliminaron las 21 violaciones del módulo — ver Changelog)*
 
 | Módulo | Grid inline | overflow tablas | padding página | Total |
 |--------|----:|----:|----:|----:|
@@ -36,21 +36,12 @@ Total: **182 violaciones permitidas** · 0 nuevas.
 | app/auxiliar | 1 | 0 | 4 | 5 |
 | app/corralon | 0 | 0 | 2 | 2 |
 | app/dashboard | 2 | 1 | 1 | 4 |
-| app/envio-de-formatos | 2 | 0 | 2 | 4 |
+| app/envio-de-formatos | 2 | 0 | 0 | 2 |
 | app/fiscalia | 2 | 1 | 11 | 14 |
-| app/formato-n-armas-aseguradas | 2 | 0 | 3 | 5 |
-| app/formato-n-atencion-victimas | 2 | 0 | 3 | 5 |
-| app/formato-n-eventos | 2 | 0 | 3 | 5 |
-| app/formato-n-fge | 2 | 0 | 3 | 5 |
-| app/formato-n-fgr | 2 | 0 | 3 | 5 |
-| app/formato-n-medios-alternativos | 2 | 0 | 3 | 5 |
-| app/formato-n-rnd | 2 | 0 | 3 | 5 |
 | app/incidentes | 0 | 1 | 1 | 2 |
-| app/monitorista | 10 | 0 | 11 | 21 |
-| app/nCoordinacion | 1 | 0 | 1 | 2 |
+| app/monitorista | 0 | 0 | 0 | 0 |
 | app/notificaciones | 0 | 0 | 1 | 1 |
 | app/prevencion | 5 | 3 | 1 | 9 |
-| app/reportes | 1 | 0 | 1 | 2 |
 | app/rol_servicios | 1 | 0 | 1 | 2 |
 | components/911 | 4 | 1 | 3 | 8 |
 | components/admin | 1 | 0 | 0 | 1 |
@@ -64,11 +55,11 @@ Total: **182 violaciones permitidas** · 0 nuevas.
 | components/reportes | 5 | 0 | 0 | 5 |
 | components/rol_servicios | 1 | 1 | 0 | 2 |
 | components/shared | 1 | 0 | 0 | 1 |
-| **TOTAL** | **80** | **13** | **89** | **182** |
+| **TOTAL** | **54** | **13** | **53** | **120** |
 
 ## Cómo pagar la deuda
 
-1. Tomar un módulo de la tabla (empezar por los más grandes: `app/monitorista` 21, `app/fiscalia` 14, `app/agente_911` 12, `app/agente_juzgado` 12).
+1. Tomar un módulo de la tabla (empezar por los más grandes: `app/fiscalia` 14, `app/agente_911` 12, `app/agente_juzgado` 12).
 2. Migrar cada archivo a las utilidades de `globals.css` (`.grid-2`/`.grid-3`/`.tabla-wrap`/`.pad-pagina`) o a media queries de la convención.
 3. Re-generar el baseline SOLO después: `npm run check:responsive -- --init` y revisar el diff de `exceptions.json` (debe reducirse).
 4. Actualizar esta tabla con los nuevos totales.

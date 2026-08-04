@@ -1,5 +1,4 @@
 import { OptionSquare } from '@/components/reportes/menuOption'
-import { SentinelHero } from '@/components/reportes/welcomeBanner'
 import {
   Activity, Building2, Landmark, Fingerprint, Handshake, HeartPulse, Crosshair, FileText,
 } from 'lucide-react'
@@ -7,13 +6,14 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { DashboardFooter } from '@/components/partials/Footer'
 import { getFormatoNStats } from '@/lib/reportes/repository'
-import { tieneAccesoFormatoN, tienePermiso } from '@/lib/reportes/permisos'
+import { tienePermiso } from '@/lib/reportes/permisos'
 
 export default async function EnvioDeFormatosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-  if (!(await tieneAccesoFormatoN(session.user.id))) redirect('/dashboard')
   if (!(await tienePermiso(session.user.id, 'formato_n_coordinacion', 'ver'))) redirect('/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
@@ -79,16 +79,19 @@ export default async function EnvioDeFormatosPage() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <DashboardHeader user={user} roleLabel="Envío de Formatos" backHref="/reportes" backLabel="Reportes" />
+      <DashboardHeader user={user} roleLabel="Envío de Formatos" />
 
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 48px' }}>
-        <SentinelHero
-          tag="Formato N · Coordinación"
-          principal="Envío de"
-          secundario="Formatos"
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Envío de"
+          accent="Formatos"
+          subtitle="Formato N · Coordinación"
+          actions={
+            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
+          }
         />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
@@ -105,9 +108,7 @@ export default async function EnvioDeFormatosPage() {
         </div>
       </main>
 
-      <footer style={{ padding: '48px', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#94a3b8', letterSpacing: '0.2em', borderTop: '1px solid #e2e8f0', marginTop: '80px', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · ADMIN CORE v1.2
-      </footer>
+      <DashboardFooter />
     </div>
   )
 }

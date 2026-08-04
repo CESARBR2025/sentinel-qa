@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Download, Users, Car, ShieldAlert, Flame } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { ReportStat }      from '@/components/reportes/deteccion_camara/ReportStat'
 import { ReportFilters }   from '@/components/reportes/deteccion_camara/ReportFilters'
 import { ReportTable }     from '@/components/reportes/deteccion_camara/ReportTables'
@@ -29,20 +30,22 @@ export default async function ReportesDeteccionCamaraPage({
   if (sp.to)   excelParams.set('to',   sp.to)
 
   return (
-    <div style={styles.container}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Incidentes en Cámara" backHref="/reportes" backLabel="Reportes" />
-      <main style={styles.main}>
-        <div style={styles.headerContainer}>
-          <div>
-            <span style={styles.tag}>SSPM · DETECCIÓN POR CÁMARA</span>
-            <h1 style={styles.title}>REGISTROS <span style={{ color: '#1f355a' }}>POR TURNO</span></h1>
-          </div>
-          <a href={`/api/camara/exportar?${excelParams}`}
-            style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <Download size={16} /> EXCEL
-          </a>
-        </div>
+      <DashboardHeader user={user} roleLabel="Incidentes en Cámara" />
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Registros por"
+          accent="Turno"
+          subtitle="SSPM · Detección por Cámara"
+          actions={<>
+            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
+            <a href={`/api/camara/exportar?${excelParams}`}
+              style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <Download size={16} /> EXCEL
+            </a>
+          </>}
+        />
 
         <ReportFilters />
 

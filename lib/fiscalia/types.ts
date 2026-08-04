@@ -233,6 +233,7 @@ export interface ExpedienteCompleto {
 
 export interface SolicitudEvidencia {
   id: string;
+  token?: string;
   folioDenuncia: string | null;
   folioSija: string | null;
   iph: string | null;

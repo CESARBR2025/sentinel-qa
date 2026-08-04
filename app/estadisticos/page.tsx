@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation'
 import { FileDown, Download } from 'lucide-react'
 
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { ReportFilters } from '@/components/reportes/estadisticos/ReportFilters'
-import { styles } from '@/components/reportes/modulo_incidentes/styles'
 import { PhoneStatsCards } from '@/components/reportes/estadisticos/PhoneStatsCards'
 import { PhoneReportsTable } from '@/components/reportes/estadisticos/PhoneReportsTable'
 import { obtenerDatosTelefonicos } from '@/lib/reportes-operativos/service'
@@ -26,16 +26,18 @@ export default async function ReportesTelefonicosPage({
   const data = await obtenerDatosTelefonicos(sp.from, sp.to)
 
   return (
-    <div style={styles.container}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Análisis Estadístico" backHref="/reportes" backLabel="Reportes" />
-      <main style={styles.main}>
-        <div style={styles.headerContainer}>
-          <div>
-            <span style={styles.tag}>SSPM · INTELIGENCIA DE COMUNICACIONES</span>
-            <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>TELEFÓNICOS</span></h1>
-          </div>
-        </div>
+      <DashboardHeader user={user} roleLabel="Análisis Estadístico" />
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Reportes"
+          accent="Telefónicos"
+          subtitle="SSPM · Inteligencia de Comunicaciones"
+          actions={
+            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
+          }
+        />
         <ReportFilters />
         <PhoneStatsCards total={data.length} />
         <PhoneReportsTable data={data} />

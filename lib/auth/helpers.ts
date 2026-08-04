@@ -53,13 +53,13 @@ const HUB_POR_ROL: Record<string, string> = {
   Monitorista: '/monitorista',
   Auxiliar: '/auxiliar',
   'Auxiliar de Novedades': '/auxiliar',
-  Reportante: '/reportes',
+  Reportante: '/agente_reportes',
   agente_911: '/agente_911',
   agente_despacho: '/agente_despacho',
   agente_bitacorista: '/agente_bitacorista',
   corralon_mw: '/corralon',
   corralon_mejia: '/corralon',
-  agente_reportes: '/nCoordinacion',
+  agente_reportes: '/agente_reportes',
 }
 
 export function obtenerHubRol(rolNombre: string | null | undefined): string | null {

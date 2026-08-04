@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { FileDown } from 'lucide-react';
 
 import { DashboardHeader } from '@/components/partials/Header';
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader';
 import { styles } from '@/components/reportes/d1_noiniciada/styles';
 import { DescargaFilters } from '@/components/reportes/d1_noiniciada/DescargaFilters';
 import { DescargaTable } from '@/components/reportes/d1_noiniciada/DescargaTable';
@@ -26,16 +27,18 @@ export default async function DescargasPage({
   const data = await listarSinD1(sp.from || undefined, sp.to || undefined, sp.nombre || undefined)
 
   return (
-    <div style={styles.container}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="D1 No Iniciada" backHref="/reportes" backLabel="Reportes" />
-      <main style={styles.main}>
-        <div style={styles.headerContainer}>
-          <div>
-            <span style={styles.tag}>SSPM · MÓDULO DE TRÁMITE INICIAL</span>
-            <h1 style={styles.title}>REPORTES <span style={{ color: '#1f355a' }}>SIN D1 INICIADA</span></h1>
-          </div>
-        </div>
+      <DashboardHeader user={user} roleLabel="D1 No Iniciada" />
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Reportes"
+          accent="Sin D1 Iniciada"
+          subtitle="SSPM · Módulo de Trámite Inicial"
+          actions={
+            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
+          }
+        />
         <DescargaFilters />
         <DescargaTable data={data} />
       </main>

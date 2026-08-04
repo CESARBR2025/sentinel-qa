@@ -53,7 +53,7 @@ const MODULES: Module[] = [
     label: 'Reportes',
     sub: 'Diario y estadístico · Formato N',
     icon: <ChartIcon />,
-    href: '/reportes',
+    href: '/agente_reportes',
     status: 'active'
   },
   { 

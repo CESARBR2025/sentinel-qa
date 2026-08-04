@@ -1,5 +1,6 @@
 import { betterFetch } from '@better-fetch/fetch'
 import type { Session } from '@/lib/auth'
+import { seccionesRequeridasPara } from '@/lib/permisos/mapa-secciones'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -45,6 +46,20 @@ export async function proxy(request: NextRequest) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('error', 'cuenta_inactiva')
     return NextResponse.redirect(loginUrl)
+  }
+
+  // Check grueso de sección: ¿esta ruta requiere alguna sección específica?
+  const requeridas = seccionesRequeridasPara(pathname)
+  if (requeridas) {
+    const { data } = await betterFetch<{ secciones: string[] }>('/api/auth/secciones-permitidas', {
+      baseURL: origin,
+      headers: { cookie: request.headers.get('cookie') ?? '' },
+    })
+    const permitidas = data?.secciones ?? []
+    const tieneAcceso = requeridas.some(s => permitidas.includes(s))
+    if (!tieneAcceso) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return NextResponse.next()

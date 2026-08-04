@@ -4,11 +4,12 @@ import { redirect } from 'next/navigation'
 import { listarRegistros, TURNOS } from '@/lib/monitorista/incidentes-camara-service'
 import Link from 'next/link'
 import React from 'react'
-import { Plus, Camera, BarChart3, Filter } from 'lucide-react'
+import { Camera, BarChart3, Filter } from 'lucide-react'
 import { FilaIncidenteCamara } from '@/components/monitorista/FilaIncidenteCamara'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { ToastAuto } from '@/components/ui/ToastAuto'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function IncidentesCamaraPage({
   searchParams,
@@ -25,32 +26,33 @@ export default async function IncidentesCamaraPage({
     : undefined
 
   const registros = await listarRegistros(turnoValido)
-  const user = session.user as { name: string }
 
   const totalPersonas = registros.reduce((s, r) => s + r.totalPersonasRevisadas, 0)
   const totalVehiculos = registros.reduce((s, r) => s + r.vehiculosRevisar, 0)
   const totalMotos = registros.reduce((s, r) => s + r.motosRevisadas, 0)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
       <ToastAuto show={exito === 'creado'} mensaje="Registro creado exitosamente" />
       <ToastAuto show={exito === 'actualizado'} mensaje="Registro actualizado exitosamente" />
-      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Incidentes por" accent="Cámara" accentColor="#1f355a" user={user} />
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        roleLabel="Monitorista"
+      />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 }}>
-          <div>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Cámaras de Vigilancia</span>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Incidentes por Cámara</h1>
-            <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
-          </div>
-          <Link href="/monitorista/incidentes-camara/nuevo" style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em', background: '#0f172a', color: '#ffffff', padding: '12px 24px', textDecoration: 'none', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Plus size={14} /> NUEVO REGISTRO
-          </Link>
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title="Incidentes por"
+          accent="Cámara"
+          subtitle="Cámaras de vigilancia · registro de novedades por turno"
+          actions={<>
+            <PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>
+            <PageHeaderLink href="/monitorista/incidentes-camara/nuevo">+ Nuevo Registro</PageHeaderLink>
+          </>}
+        />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 40 }}>
+        <div className="grid-2">
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <BarChart3 size={20} color="#1f355a" />
@@ -77,10 +79,10 @@ export default async function IncidentesCamaraPage({
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center', flexWrap: 'wrap' }}>
           <Filter size={14} color="#64748b" />
           <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>Filtrar por turno:</span>
-          <div style={{ display: 'flex', gap: 4 }}>
+          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             <Link href="/monitorista/incidentes-camara" style={filtroBtn(!turnoFilter)}>TODOS</Link>
             <Link href="/monitorista/incidentes-camara?turno=MATUTINO" style={filtroBtn(turnoFilter === 'MATUTINO')}>07-15 HRS</Link>
             <Link href="/monitorista/incidentes-camara?turno=VESPERTINO" style={filtroBtn(turnoFilter === 'VESPERTINO')}>15-22 HRS</Link>
@@ -88,8 +90,8 @@ export default async function IncidentesCamaraPage({
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, overflow: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div className="tabla-wrap" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
                 <Th>Fecha</Th>

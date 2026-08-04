@@ -2,11 +2,12 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
-import { Camera, ClipboardList, Clock, History, Shield, User, Video } from 'lucide-react'
+import { Camera, History, User, Video } from 'lucide-react'
 import { obtenerPermisosUsuario } from '@/lib/monitorista/permisos'
 import { getMonitoristaStats } from '@/lib/monitorista/repository'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import Link from 'next/link'
 
@@ -29,18 +30,18 @@ export default async function MonitoristaHubPage() {
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
       <DashboardHeader user={user as { name: string; apellido?: string; email: string }} roleLabel="Monitorista" backHref={backHref} />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ marginBottom: 40 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Centro de Monitoreo</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Monitorista</h1>
-          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
-        </div>
+      <main className="pad-dashboard" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 40 }}>
+        <PageHeader
+          title="Panel"
+          accent="Monitorista"
+          subtitle={`${user.name} ${user.apellido ?? ''} · centro de monitoreo: solicitudes de evidencia, detenidos e incidentes de cámara`}
+        />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
+        <div className="cat-cards-grid">
           {permisos.solicitudes.puede_ver && <Link href="/monitorista/solicitudes" style={{ textDecoration: 'none' }}>
             <div style={cardStyle}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
@@ -79,8 +80,8 @@ export default async function MonitoristaHubPage() {
                 <Video size={28} color="#7c3aed" />
                 <span style={onlineStyle}>ONLINE</span>
               </div>
-              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Incidentes por Cámara</div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Registro de novedades por turno</div>
+              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Reporte Incidente en Cámara</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Registro de incidentes captados en camara en turno</div>
               <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
                 <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{stats.icStats?.personas ?? 0}</div></div>
                 <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{stats.icStats?.vehiculos ?? 0}</div></div>
@@ -101,9 +102,9 @@ export default async function MonitoristaHubPage() {
             </div>
           </Link>}
         </div>
-      </main>
 
-      <div style={{ padding: '0 48px 32px' }}><DashboardFooter /></div>
+        <DashboardFooter />
+      </main>
     </div>
   )
 }

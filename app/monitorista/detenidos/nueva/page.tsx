@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Save } from 'lucide-react'
+import { Save } from 'lucide-react'
 import Link from 'next/link'
 import { BuscadorEvento } from '@/components/monitorista/BuscadorEvento'
 import React from 'react'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default function NuevaDetenidoPage() {
   const router = useRouter()
@@ -40,21 +41,22 @@ export default function NuevaDetenidoPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <SubHeader backHref="/monitorista/detenidos" backLabel="Detenidos" title="Nueva Solicitud" />
+      <DashboardHeader roleLabel="Nueva Solicitud" />
 
-      <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Captura de Datos</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Nuevo Reporte de Detenido</h1>
-          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title="Nuevo"
+          accent="Reporte de Detenido"
+          subtitle="Captura de datos"
+          actions={<PageHeaderLink href="/monitorista/detenidos" variant="secondary">← Detenidos</PageHeaderLink>}
+        />
 
         <form onSubmit={handleSubmit} style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}>
           {error && <div style={{ padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626' }}>⚠ {error}</div>}
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <div className="grid-2">
             <Field label="Nombre del Detenido *" name="nombre_detenido" required />
             <Field label="Folio *" name="folio" required />
           </div>
@@ -65,7 +67,7 @@ export default function NuevaDetenidoPage() {
           <Field label="Falta Administrativa" name="falta_admin" as="textarea" />
           <Field label="Modus Operandi" name="modus_operandi" as="textarea" />
 
-          <div style={{ marginTop: 16, display: 'flex', gap: 16, justifyContent: 'flex-end' }}>
+          <div style={{ marginTop: 16, display: 'flex', gap: 16, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
             <Link href="/monitorista/detenidos" style={btnSecundario}>Cancelar</Link>
             <button type="submit" disabled={pending} style={btnPrimario(pending)}>
               <Save size={14} /> {pending ? 'GUARDANDO...' : 'CREAR SOLICITUD'}

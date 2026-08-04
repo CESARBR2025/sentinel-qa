@@ -1,42 +1,6 @@
 // components/reportes/d1/styles.ts
 
 export const styles = {
-    // Layout Principal
-    container: { 
-        minHeight: '100vh', 
-        background: '#F1F5F9', 
-        color: '#0F172A', 
-        fontFamily: 'Inter, sans-serif' 
-    },
-    main: { 
-        maxWidth: '1800px', 
-        margin: '0 auto', 
-        padding: '40px 48px' 
-    },
-    headerContainer: {
-        display: 'flex', 
-        justifyContent: 'space-between' as const, 
-        alignItems: 'flex-end' as const,
-        marginBottom: '40px', 
-        borderLeft: '4px solid #1f355a', 
-        paddingLeft: '20px'
-    },
-    title: {
-        fontFamily: 'Barlow Condensed', 
-        fontSize: '56px', 
-        fontWeight: 800,
-        margin: 0, 
-        lineHeight: 1, 
-        textTransform: 'uppercase' as const
-    },
-    tag: {
-        fontFamily: 'JetBrains Mono', 
-        fontSize: '11px', 
-        letterSpacing: '0.4em',
-        color: '#64748B', 
-        fontWeight: 700
-    },
-
     // Barra de Filtros
     filterBar: {
         background: 'white',

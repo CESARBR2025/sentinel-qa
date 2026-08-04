@@ -4,8 +4,10 @@ import { notFound, redirect } from 'next/navigation'
 import { Camera, MapPin, Clock, User, Shield, FileText, ExternalLink } from 'lucide-react'
 import React from 'react'
 import { obtenerDenunciaPorId, obtenerEvidenciasDenuncia } from '@/lib/monitorista/denuncia-service'
+import { resolverToken } from '@/lib/recursos/token-recurso'
 import { BotonSubirDenuncia } from '@/components/monitorista/BotonSubirDenuncia'
 import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import { abrirDocumento } from '@/lib/shared/abrirDocumento'
 
 export default async function DetalleDenunciaPage({ params }: { params: Promise<{ id: string }> }) {
@@ -13,9 +15,13 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
+  // El segmento de la URL es un token opaco persistente, no el id interno.
+  const idReal = await resolverToken('denuncia', id)
+  if (!idReal) notFound()
+
   const [denuncia, evidencias] = await Promise.all([
-    obtenerDenunciaPorId(id),
-    obtenerEvidenciasDenuncia(id),
+    obtenerDenunciaPorId(idReal),
+    obtenerEvidenciasDenuncia(idReal),
   ])
 
   if (!denuncia) notFound()
@@ -32,28 +38,24 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
-        backHref="/monitorista/solicitudes"
-        backLabel="Bandeja"
+        roleLabel="Monitorista"
       />
-      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 64px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32, paddingBottom: 24, borderBottom: '2px solid #e2e8f0' }}>
-          <div>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 8, fontWeight: 600 }}>
-              Denuncia D1 — Solicitud de Evidencias
-            </div>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: 0 }}>
-              {denuncia.folioDenuncia}
-            </h1>
-          </div>
-          <span style={statusBadge(denuncia.estadoEvidencia)}>{denuncia.estadoEvidencia.replace('_', ' ')}</span>
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title={denuncia.folioDenuncia}
+          subtitle="Denuncia D1 · solicitud de evidencias"
+          actions={<>
+            <PageHeaderLink href="/monitorista/solicitudes" variant="secondary">← Bandeja</PageHeaderLink>
+            <span style={statusBadge(denuncia.estadoEvidencia)}>{denuncia.estadoEvidencia.replace('_', ' ')}</span>
+          </>}
+        />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 32 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+            <div className="grid-2">
               <section style={card}>
                 <h2 style={sectionTitle}><FileText size={18} /> DATOS DE LA DENUNCIA</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                <div className="grid-2">
                   <Campo label="Delito" value={denuncia.delito} />
                   <Campo label="IPH" value={denuncia.iph} />
                   <Campo label="Tipo de Evento" value={
@@ -68,7 +70,7 @@ export default async function DetalleDenunciaPage({ params }: { params: Promise<
 
               <section style={card}>
                 <h2 style={sectionTitle}><MapPin size={18} /> UBICACIÓN DEL HECHO</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                <div className="grid-2">
                   <Campo label="Lugar" value={denuncia.lugarHecho} />
                   <Campo label="Colonia" value={denuncia.coloniaHecho} />
                   <Campo label="Reporte" value={denuncia.fechaReporte ? `${denuncia.fechaReporte} ${denuncia.horaReporte ?? ''}` : null} />
@@ -180,7 +182,7 @@ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a',
             )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24 }}>
+          <div className="grid-3">
             <div style={card}>
               <h2 style={sectionTitle}><Clock size={18} /> FECHAS</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

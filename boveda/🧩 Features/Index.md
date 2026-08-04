@@ -71,6 +71,7 @@
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
 | PWA Offline | SW manual + página /offline + error.tsx/global-error.tsx ante caída de señal o crash | ✅ Implementado |
+| Auditoría URLs y autorización | Cierre de Broken Access Control/IDOR: gate grueso de sección en el proxy + tokens opacos persistentes en URLs de recursos (plan-auditoria-url) | ✅ Implementado |
 <!-- AUTO-GENERATED END -->
 
 

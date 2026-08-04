@@ -8,7 +8,8 @@ import pool from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
-import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesSinEvidencias, listarSolicitudesConEvidencias, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, listarAseguradosCompletados, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
+import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesSinEvidencias, listarSolicitudesConEvidencias, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
+import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import { emitir } from '@/lib/notificaciones/emisor'
 import type { ViaInfraccionDetalle } from './types'
@@ -51,7 +52,17 @@ export async function obtenerSolicitudes(): Promise<SolicitudesData> {
     listarSolicitudesFinalizadas(),
   ])
 
-  return { pendientes, sinEvidencias, conEvidencias, finalizadas }
+  // Enriquece cada solicitud con su token opaco persistente para la URL de
+  // expediente (/fiscalia/expedientes/[token]) — el id interno nunca viaja en la URL.
+  const conToken = async (filas: SolicitudEvidencia[]): Promise<SolicitudEvidencia[]> =>
+    Promise.all(filas.map(async f => ({ ...f, token: await obtenerOCrearToken('expediente', f.id) })))
+
+  return {
+    pendientes:     await conToken(pendientes),
+    sinEvidencias:  await conToken(sinEvidencias),
+    conEvidencias:  await conToken(conEvidencias),
+    finalizadas:    await conToken(finalizadas),
+  }
 }
 
 export async function accionTomarCaso(formData: FormData): Promise<{ success: boolean; error?: string }> {
@@ -220,7 +231,7 @@ export async function guardarDetallesAseguradosAction(
     if (!detenidos.length) return { success: false, error: 'Debe capturar al menos un detenido' }
 
     const folio = folioAsegurados ?? await generarFolioAsegurados()
-    const folioFinal = await guardarDetallesAseguradosService(reporteCampoId, detenidos, folio)
+    await guardarDetallesAseguradosService(reporteCampoId, detenidos, folio)
 
     revalidatePath('/fiscalia/asegurados')
     return { success: true, folio }

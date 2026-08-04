@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import { ArrowLeft, Save, Loader2 } from 'lucide-react'
+import { Save, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 const TURNOS = [
   { value: 'MATUTINO', label: 'Primer Turno (07:00 - 15:00 HRS)' },
@@ -86,16 +87,17 @@ export default function EditarIncidenteCamaraPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }`}</style>
-      <SubHeader backHref="/monitorista/incidentes-camara" backLabel="Incidentes" title="Editar Registro" />
+      <DashboardHeader roleLabel="Editar Registro" />
 
-      <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Modificar Datos</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Incidentes por Cámara</h1>
-          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title="Editar"
+          accent="Registro de Cámara"
+          subtitle="Modificar datos"
+          actions={<PageHeaderLink href="/monitorista/incidentes-camara" variant="secondary">← Incidentes</PageHeaderLink>}
+        />
 
         <form onSubmit={handleSubmit}>
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, marginBottom: 24 }}>
@@ -112,7 +114,7 @@ export default function EditarIncidenteCamaraPage() {
             )}
 
             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="grid-2">
                 <div>
                   <Label>Fecha</Label>
                   <input name="fecha" type="date" required style={inputStyle} value={formData.fecha || ''} onChange={e => setFormData(f => ({ ...f, fecha: e.target.value }))} />
@@ -127,7 +129,7 @@ export default function EditarIncidenteCamaraPage() {
 
               <div style={{ height: 1, background: '#e2e8f0' }} />
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid-2">
                 {CAMPOS.map(c => (
                   <div key={c.name}>
                     <Label>{c.label}</Label>
@@ -138,7 +140,7 @@ export default function EditarIncidenteCamaraPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
             <Link href="/monitorista/incidentes-camara" style={btnSecundario}>Cancelar</Link>
             <button type="submit" disabled={pending} style={btnPrimario(pending)}>
               <Save size={14} /> {pending ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}

@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import { verificarRolFiscalia } from '@/lib/fiscalia/service'
+import { resolverToken } from '@/lib/recursos/token-recurso'
 import { obtenerExpedienteCompleto, obtenerDetenidosGuardados, obtenerFotosDetenidos, obtenerEvidenciasMonitorista } from '@/lib/fiscalia/repository'
 import { ExpedienteView } from '@/components/fiscalia/ExpedienteView'
 import { PrintButton } from '@/components/fiscalia/PrintButton'
@@ -17,17 +18,21 @@ export default async function ExpedientePage({ params }: { params: Promise<{ sol
   const esValido = await verificarRolFiscalia(session.user.id)
   if (!esValido) redirect('/dashboard')
 
-  const raw = await obtenerExpedienteCompleto(solicitudId)
+  // El segmento de la URL es un token opaco persistente, no el id interno.
+  const idReal = await resolverToken('expediente', solicitudId)
+  if (!idReal) notFound()
+
+  const raw = await obtenerExpedienteCompleto(idReal)
   if (!raw) notFound()
 
   const rcId = raw.rc_id ? String(raw.rc_id) : null
   const [detenidosDireccionesRaw, fotosRaw, evidenciasRaw] = await Promise.all([
     rcId ? obtenerDetenidosGuardados(rcId) : Promise.resolve([]),
     rcId ? obtenerFotosDetenidos(rcId) : Promise.resolve([]),
-    obtenerEvidenciasMonitorista(solicitudId),
+    obtenerEvidenciasMonitorista(idReal),
   ])
 
-  const detenidosDirecciones = detenidosDireccionesRaw.map((d: any) => ({
+  const detenidosDirecciones = detenidosDireccionesRaw.map((d) => ({
     id: String(d.id ?? ''),
     nombreDetenido: d.nombreDetenido ?? null,
     apPaterno: d.apPaterno ?? null,
@@ -40,8 +45,8 @@ export default async function ExpedientePage({ params }: { params: Promise<{ sol
     longitud: d.longitud ?? null,
   }))
 
-  const fotos = fotosRaw.map((f: any) => ({ id: f.id, url: f.url_archivo, tipoFoto: f.tipo_foto, detenidoIndex: null }))
-  const evidencias = evidenciasRaw.map((e: any) => ({ id: e.id, urlArchivo: e.urlArchivo, nombreArchivo: e.nombreArchivo }))
+  const fotos = fotosRaw.map((f) => ({ id: Number(f.id), url: f.url_archivo, tipoFoto: f.tipo_foto, detenidoIndex: null }))
+  const evidencias = evidenciasRaw.map((e) => ({ id: e.id, urlArchivo: e.urlArchivo, nombreArchivo: e.nombreArchivo }))
 
   const data = { raw, detenidosDirecciones, fotos, evidencias }
 

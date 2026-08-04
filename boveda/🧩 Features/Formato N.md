@@ -8,8 +8,9 @@
 
 ```mermaid
 flowchart TD
-    A[Dashboard /reportes] --> B[Tile "Envío de Formatos"]
-    B --> C[Hub /envio-de-formatos con 7 tiles]
+    A[Hub /agente_reportes] --> B[Tile "Envío de Formatos"]
+    B --> C[Hub /envio-de-formatos con 8 tiles]
+    C --> C0[Consolidado]
     C --> D1[Eventos Informados]
     C --> D2[FGE]
     C --> D3[FGR]

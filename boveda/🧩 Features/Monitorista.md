@@ -65,6 +65,24 @@ flowchart TD
 | `permisos` | `usuario_id`, `seccion`, `puede_ver`, `puede_crear`, `puede_editar` | Control de acceso fino |
 | `permisos_plantillas` | `rol_id`, `seccion`, `puede_ver`, `puede_crear`, `puede_editar` | Plantillas por rol |
 
+## Vistas (UI)
+
+| Ruta | Vista | Patrón |
+|------|-------|-------|
+| `/monitorista` | Hub | `DashboardHeader` + `PageHeader` (sin botón de regreso) + `.pad-dashboard` + `.cat-cards-grid` |
+| `/monitorista/solicitudes` | Bandeja | `DashboardHeader` + `PageHeader` (`← Panel`) + `.pad-pagina` + `.grid-3` |
+| `/monitorista/solicitudes/[id]` | Detalle solicitud | `DashboardHeader` + `PageHeader` (`← Bandeja`) + `.pad-pagina` |
+| `/monitorista/denuncias/[id]` | Detalle denuncia D1 | `DashboardHeader` + `PageHeader` (`← Bandeja`) + `.pad-pagina` + `.grid-2`/`.grid-3` |
+| `/monitorista/detenidos` | Reporte de detenidos | `DashboardHeader` + `PageHeader` (`← Panel` + `GENERAR PPT`) + `.pad-pagina` + `.grid-3` |
+| `/monitorista/detenidos/nueva` | Alta detenido | `DashboardHeader` + `PageHeader` (`← Detenidos`) + `.pad-pagina` + `.grid-2` |
+| `/monitorista/detenidos/[id]` | Detalle detenido | `DashboardHeader` + `PageHeader` (`← Detenidos`) + `.pad-pagina` + `.grid-2` |
+| `/monitorista/incidentes-camara` | Registros por turno | `DashboardHeader` + `PageHeader` (`← Panel` + `+ Nuevo Registro`) + `.pad-pagina` + `.grid-2` + `.tabla-wrap` |
+| `/monitorista/incidentes-camara/nuevo` | Nuevo registro | `DashboardHeader` + `PageHeader` (`← Incidentes`) + `.pad-pagina` + `.grid-2` |
+| `/monitorista/incidentes-camara/[id]` | Editar registro | `DashboardHeader` + `PageHeader` (`← Incidentes`) + `.pad-pagina` + `.grid-2` |
+| `/monitorista/historial` | Bitácora | `DashboardHeader` + `PageHeader` (`← Panel`) + `.pad-pagina` + `.tabla-wrap` |
+
+Todas las vistas cumplen la REGLA de diseño: **Header Centinela** (`DashboardHeader`, sin `backHref` cuando el regreso vive en el `PageHeader`), **PageHeader** con botón de regreso `variant="secondary"` en `actions` (regla de regreso) y **responsive** (`.pad-pagina`/`.pad-dashboard`, `.grid-2`/`.grid-3`/`.cat-cards-grid`, tablas con `.tabla-wrap` + `minWidth`). Los formularios usan `DashboardHeader` sin `user` explícito (fallback a sesión de cliente) y botones `btnPrimario`/`btnSecundario` (no `PageHeaderLink`) para submit/cancelar.
+
 ## Reglas de negocio
 
 1. El layout de monitorista exige rol `Monitorista` o `Administrador`

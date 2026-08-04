@@ -1,33 +1,4 @@
 export const styles = {
-  container: {
-    minHeight: '100vh',
-    backgroundColor: '#ffffff', // Fondo blanco limpio como el original
-    fontFamily: 'Inter, sans-serif',
-  },
-  main: {
-    padding: '32px 40px',
-  },
-  headerContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '32px',
-  },
-  tag: {
-    fontFamily: 'JetBrains Mono, monospace',
-    fontSize: '11px',
-    fontWeight: 700,
-    color: '#64748B',
-    letterSpacing: '0.1em',
-  },
-  title: {
-    fontFamily: 'Barlow Condensed, sans-serif',
-    fontSize: '42px',
-    fontWeight: 800,
-    color: '#0F172A',
-    margin: 0,
-    textTransform: 'uppercase' as const,
-  },
   filterCard: {
     background: '#f8fafc',
     padding: '20px',
@@ -75,6 +46,7 @@ export const styles = {
     marginTop: '32px',
     border: '1px solid #e2e8f0',
     background: 'white',
+    overflowX: 'auto' as const,
   },
   table: {
     width: '100%',

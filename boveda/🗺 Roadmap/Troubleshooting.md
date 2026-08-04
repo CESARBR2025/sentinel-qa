@@ -236,7 +236,7 @@ setTimeout(() => el.remove(), 5000)
 
 ---
 
-## `app/reportes_incidentes/page.tsx` solo exigía sesión, sin permiso de sección (2026-07-15)
+## `app/reportes_incidentes/page.tsx` solo exigía sesión, sin permiso de sección (2026-07-15) — CERRADO
 
 **Síntoma**: cualquier usuario autenticado (de cualquier rol) podía entrar a `/reportes_incidentes`
 directamente por URL, aunque no tuviera el permiso `reportes_ciudadano` que sí protege a sus
@@ -245,10 +245,18 @@ páginas hermanas (`d1`, `estadisticos`, `sin_robos`, etc., todas hijas de `/rep
 **Causa raíz**: la página nunca tuvo el `tienePermiso(...)` que sus hermanas sí tienen — se coló
 al crearla por copiarla de una plantilla incompleta, no una regresión de este refactor.
 
-**Fix**: agregado `if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver')))
+**Fix (2026-07-15)**: agregado `if (!(await tienePermiso(session.user.id, 'reportes_ciudadano', 'ver')))
 redirect('/dashboard')` en `app/reportes_incidentes/page.tsx`, igual que sus hermanas. Se encontró
 auditando las rutas API sin permiso (`app/api/reportes-incidentes/exportar/route.ts` tenía el
 mismo hueco) — al revisar la página que consume esa API se vio que tampoco estaba protegida.
+
+**Cierre definitivo con defensa en profundidad (2026-08-04, plan auditoría-URL)**: además del fix
+puntual, el check grueso de sección ahora vive en `proxy.ts` vía el mapa
+`lib/permisos/mapa-secciones.ts` + el endpoint `/api/auth/secciones-permitidas`. Cualquier ruta
+bajo un prefijo del mapa (incluido `/reportes_incidentes` → `reportes_ciudadano`) se bloquea desde
+el proxy con `redirect('/dashboard')` si el rol del usuario no tiene `puede_ver` en la sección,
+aunque la página no tenga su propio `tienePermiso`. Esto cierra la clase de bug completa (páginas
+que solo dependen de "hay sesión"), no solo el caso puntual.
 
 **Archivo**: `app/agente_911/ciudadano/incidentes/ToastOnLoad.tsx`
 

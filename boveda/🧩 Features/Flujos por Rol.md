@@ -167,9 +167,19 @@ flowchart LR
 - Alinear el nombre de la operación “Gestión de asegurados” con los criterios de entrada y estados para evitar que Fiscalía y Juzgado procesen el mismo caso.
 - Añadir una lista de requisitos de liberación y notificación al solicitante cuando falte evidencia/documentación.
 
-## 9. Reportante / Reportes (`Reportante`)
+## 9. Reportante / Agente de Reportes (`Reportante` / `agente_reportes`)
 
 **Objetivo**: concentrar reportes operativos, estadísticos y de coordinación.
+
+**Hub único**: los roles `Reportante` y `agente_reportes` aterrizan en `/agente_reportes` (la vista `/reportes` fue consolidada y eliminada en la migración de cards). El hub organiza las 9 cards por área funcional y cada card usa el **mismo título que su vista destino**:
+
+- **Incidentes**: Registros por Turno, Reporte de Incidentes, Reportes Operativos.
+- **Carpetas y Cosmos**: Registro de Reportes D1, Reportes Sin D1 Iniciada.
+- **Validación**: Reportes Sin Novedad.
+- **Estadísticas**: Reportes Telefónicos.
+- **Coordinación (Formato N)**: Grupo de Coordinación, Envío de Formatos.
+
+Cada card se filtra por permiso de su sección (`reportes_ciudadano`, `incidentes_camaras`, `modulo_incidentes`, `formato_n_coordinacion`); `Reportante` no ve Coordinación porque no tiene `formato_n_coordinacion`. Las páginas destino usan `PageHeader` con botón `← Panel de Reportes` (regla de regreso) en vez del `backHref` del header.
 
 **Flujo actual**
 

@@ -56,14 +56,13 @@ Alexandria/
 .cursor/mcp.json
 opencode.json
 .gemini/settings.json
+.freebuff/
+.youmindag/plugin-heartbeat.log
+/.youmindag
+.youmindag/plugin-state.json
+.youmindag/token-usage.jsonl
 
 # YouMindAG — generated knowledge graph
 .graphify/
 graphify-visual/
 .youmindag/
-.freebuff/
-.youmindag/
-.youmindag/plugin-heartbeat.log
-/.youmindag
-.youmindag/plugin-state.json
-.youmindag/token-usage.jsonl

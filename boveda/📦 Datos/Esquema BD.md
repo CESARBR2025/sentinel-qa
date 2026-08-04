@@ -1,6 +1,6 @@
 # Esquema de Base de Datos — Sentinel SSPM
 
-> Documentación generada desde `information_schema` el 2026-08-03.
+> Documentación generada desde `information_schema` el 2026-08-04.
 > Fuente de verdad del schema real en PostgreSQL.
 
 ---
@@ -1275,6 +1275,15 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 12 | `creado_por` | `text` | SÍ | — |
 | 13 | `creado_en` | `timestamp` | NO | `now()` |
 | 14 | `actualizado_en` | `timestamp` | NO | `now()` |
+
+### \`tokens_recurso\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `token` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `tipo` | `text` | NO | — |
+| 3 | `recurso_id` | `text` | NO | — |
+| 4 | `creado_en` | `timestamp` | NO | `now()` |
 
 ### \`two_factors\`
 

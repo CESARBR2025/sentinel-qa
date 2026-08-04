@@ -137,7 +137,7 @@ export function TabSolicitudes({ pendientes, sinEvidencias, conEvidencias, final
                       {tab === 'pendientes' ? (
                         <TomarCasoBoton solicitudId={s.id} />
                       ) : tab === 'finalizadas' ? (
-                        <Link href={`/fiscalia/expedientes/${s.id}`} style={{
+                        <Link href={`/fiscalia/expedientes/${s.token ?? s.id}`} style={{
                           display: 'inline-flex', alignItems: 'center', gap: 6,
                           fontFamily: 'JetBrains Mono,monospace', fontSize: 9,
                           letterSpacing: '0.08em', textTransform: 'uppercase',

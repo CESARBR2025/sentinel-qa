@@ -80,7 +80,7 @@ Si al leer `boveda/` encuentras archivos con "Pendiente de documentar" o conteni
 Para cada sección pendiente:
 
 1. **`🏗 Arquitectura/Estructura.md`** — ✅ Ya poblado durante install con el árbol de directorios.
-2. **`🏗 Arquitectura/Middleware y Auth.md`** — ⚠️ Parcialmente poblado (archivo + librerías detectadas). Completar con análisis del flujo de autenticación, rutas protegidas, roles.
+2. **`🏗 Arquitectura/Proxy y Auth.md`** — ✅ Poblado (este proyecto corre Next.js 16: el gate de auth es `proxy.ts`, no `middleware.ts` — ver el archivo para la explicación del rename).
 3. **`🏗 Arquitectura/Decisiones.md`** — Crear ADRs iniciales para decisiones obvias del stack detectado (ej: "Por qué framework X", "Por qué BD Y", etc.). Si no hay decisiones claras, dejarlo como template.
 4. **`🧩 Features/Index.md`** — ✅ Ya poblado durante install con módulos detectados. Completar la descripción de cada módulo analizando su estructura y propósito.
 5. **`🧩 Features/[nombre].md`** — Para cada módulo/feature detectado, crear su archivo de documentación individual usando `Feature Example.md` como template. Usar `graphify summary` para identificar módulos.
@@ -134,6 +134,7 @@ export async function obtenerAlgo(id: string) {
 - **Nunca** usar el ORM directamente en código de aplicación
 - **Siempre** pasar por una capa de repository/service
 - **Siempre** usar el helper de autenticación centralizado para role checks
+- **Armado de vistas**: patrón header+body con flex (ver `boveda/🛠 Stack/Convenciones.md` → Page Assembly Pattern). Sin max-width ni tamaños fijos; todo crece con flex
 
 # Checklist post-cambio
 
@@ -147,9 +148,10 @@ Al completar cualquier cambio (nueva feature, bugfix, refactor):
    - Bug fix → agregar entrada en `boveda/🗺 Roadmap/Troubleshooting.md`
    - Cambio en BD → actualizar `boveda/📦 Datos/Esquema BD.md`
    - Decisión técnica → ADR en `boveda/🏗 Arquitectura/Decisiones.md`
-5. **Verificar nomenclatura**: consistencia con el resto del proyecto
-6. **Graphify**: `npx graphify update` para mantener el grafo sincronizado
-7. **Si hay cambios en BD**: `npm run db:schema` para refrescar esquema
+5. **Responsive (REGLA)**: si tocaste vistas, `npm run check:responsive` (debe salir ✅ con 0 violaciones nuevas). Si se corrige deuda o se aprueba una excepción, actualizar `scripts/responsive/exceptions.json` con `npm run check:responsive -- --init` y revisar el diff
+6. **Verificar nomenclatura**: consistencia con el resto del proyecto
+7. **Graphify**: `npx graphify update` para mantener el grafo sincronizado
+8. **Si hay cambios en BD**: `npm run db:schema` para refrescar esquema
 
 ## graphify
 

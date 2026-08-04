@@ -6,7 +6,8 @@ import { ArrowLeft, Save, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { inputStyle, btnSecundario, btnPrimario, Label, sectionCard, sectionHeader, sectionTitleStyle, sectionBody, pageWrap, fontsImport } from '@/components/reportes/form-styles'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 const PERIODOS = [
   { value: 'diario', label: 'Diario' },
@@ -81,11 +82,17 @@ export default function EditarFormatoNAtencionVictimasPage() {
   }
 
   return (
-    <div style={pageWrap}>
+    <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <SubHeader backHref="/formato-n-atencion-victimas" backLabel="Atención a Víctimas" title="Editar Reporte" />
+            <DashboardHeader roleLabel="Editar Reporte" />
+      <PageHeader
+        title="Editar"
+        accent="Reporte"
+        subtitle="Formato N a Coordinación"
+        actions={<PageHeaderLink href="/formato-n-atencion-victimas" variant="secondary">← Atención a Víctimas</PageHeaderLink>}
+      />
 
-      <main style={{ maxWidth: 780, margin: '0 auto', padding: '40px 48px' }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         {error && (
           <div style={{ marginBottom: 24, padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 2, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#dc2626' }}>
             ⚠ {error}
@@ -98,7 +105,7 @@ export default function EditarFormatoNAtencionVictimasPage() {
               <div style={sectionTitleStyle}>Atención a Víctimas</div>
             </div>
             <div style={sectionBody}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="grid-2">
                 <div>
                   <Label>Fecha</Label>
                   <input type="date" required style={inputStyle} value={formData.fecha || ''} onChange={e => setFormData(f => ({ ...f, fecha: e.target.value }))} />
@@ -110,7 +117,7 @@ export default function EditarFormatoNAtencionVictimasPage() {
                   </select>
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid-2">
                 <div><Label>Número de Atenciones</Label><input type="number" min={0} style={inputStyle} value={formData.numero_atenciones ?? '0'} onChange={e => setFormData(f => ({ ...f, numero_atenciones: e.target.value }))} /></div>
                 <div><Label>Atenciones Médicas</Label><input type="number" min={0} style={inputStyle} value={formData.atenciones_medicas ?? '0'} onChange={e => setFormData(f => ({ ...f, atenciones_medicas: e.target.value }))} /></div>
                 <div><Label>Atenciones Psicológicas</Label><input type="number" min={0} style={inputStyle} value={formData.atenciones_psicologicas ?? '0'} onChange={e => setFormData(f => ({ ...f, atenciones_psicologicas: e.target.value }))} /></div>

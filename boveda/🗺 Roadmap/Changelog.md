@@ -6,6 +6,38 @@
 
 ## 2026 — Agosto
 
+### — Módulo Monitorista alineado a Centinela + PageHeader + Responsive (2026-08-04)
+Las 11 páginas de `app/monitorista` (hub + solicitudes + detenidos + incidentes-cámara + historial) se alinean a la REGLA de diseño:
+- **Header Centinela**: se reemplaza `SubHeader` por `DashboardHeader` en las 6 páginas que lo usaban (solicitudes, detenidos, detenidos/nueva, incidentes-camara, incidentes-camara/nuevo, incidentes-camara/[id], historial). En las páginas destino se retira el `backHref`/`backLabel` del header porque el regreso vive en el `PageHeader`.
+- **PageHeader**: se elimina el header inline (tag + h1 + barra accent) y se reemplaza por `PageHeader`. Regla de regreso (botón `variant="secondary"` en `actions`): hub no lleva regreso; bandejas → `← Panel`; detalle → `← Bandeja`/`← Detenidos`; forms → `← Detenidos`/`← Incidentes`. `BotonGenerarPpt` pasa a las `actions` del `PageHeader` (detenidos); el botón "NUEVO REGISTRO" pasa a `PageHeaderLink` primary (incidentes-camara).
+- **Responsive**: `main` → `.pad-pagina` (hub → `.pad-dashboard`), se eliminan `maxWidth` fijos; grids inline (`1fr 1fr`, `repeat(3|4, 1fr)`) → `.grid-2`/`.grid-3`/`.cat-cards-grid`; tablas con `.tabla-wrap` + `minWidth` (historial e incidentes-camara); layouts `1fr 300px`/`1fr 400px` → flex con `flexWrap: wrap`; filas de botones con `flexWrap: wrap`; footer inline → `DashboardFooter`.
+- **`solicitudes/[id]`**: migra del tema oscuro aislado (`#050810` + card blur) al shell Centinela estándar (light, `DashboardHeader` + `PageHeader` + `.pad-pagina`); se elimina el `// @ts-nocheck` y el `as any` (mapeo tipado a `EvidenciaRow`).
+- **Lint**: se exporta `SolicitudRow` de `BandejaSolicitudes` y se tipan los arreglos de la bandeja (elimina 2 `as any`); imports muertos eliminados (hub, `Plus`, `user` sin uso).
+- La deuda responsive del módulo baja de **21 → 0** (baseline 141 → 120). Typecheck, lint y build OK.
+
+### — Cierre de autorización por sección + tokens opacos en URLs de recursos (2026-08-04)
+Plan auditoría-URL (respuesta al pedido "ocultar/encriptar las URLs", que era seguridad por oscuridad — el riesgo real era Broken Access Control/IDOR):
+- **Etapa 0 — Auditoría**: `scripts/auditoria-permisos.mjs` recorre las 148 `page.tsx` + `route.ts` de `app/api/**` y genera `scripts/reportes/auditoria-permisos.csv` (qué rutas tienen check de permiso y cuál sección).
+- **Etapa 1 — Gate grueso de sección en `proxy.ts`**: nuevo mapa `lib/permisos/mapa-secciones.ts` (prefijo de ruta → secciones, alimentado por el CSV) + endpoint Node `app/api/auth/secciones-permitidas` + check en el proxy entre `activo` y el `next()` (redirige a `/dashboard` si el rol no tiene `puede_ver` en ninguna sección requerida). El proxy sigue edge-compatible (dos `betterFetch` HTTP). No se tocó `lib/permisos/core.ts`.
+- **Etapa 2 — IDOR hardening**: tabla `tokens_recurso` (migración `0030`) + helper `lib/recursos/token-recurso.ts` (`obtenerOCrearToken`/`resolverToken`, persistente por lookup, no consumeViewToken). URLs de expedientes/detenidos/denuncias usan token opaco en vez del id interno; token inventado → 404.
+- Cierra el incidente de 2026-07-15 (`reportes_incidentes`) con defensa en profundidad a nivel proxy, no solo el fix puntual.
+- Typecheck y build OK; prueba end-to-end con sesiones reales de prueba (rol con y sin la sección). Etapa 3 (cosmética, headers de seguridad) NO implementada — opcional, pendiente de confirmación del cliente.
+
+### — Módulo Formato N alineado a Centinela + PageHeader + Responsive (2026-08-04)
+Toda la familia `formato-n-*` + `/envio-de-formatos/consolidar` (22 páginas) se alinea a la REGLA de diseño:
+- **Header Centinela**: se reemplaza `SubHeader` por `DashboardHeader` en las 22 páginas. `DashboardHeader` ahora acepta `user` opcional y cae a la sesión de cliente (`authClient.useSession()`) cuando la página es client component sin sesión server (mismo patrón que `SubHeader`).
+- **PageHeader**: se elimina el header inline (tag + h1 + barra accent) y el `SubHeader` se reemplaza por `PageHeader` con botón de regreso `secondary` en `actions` (regla de regreso): lista → `← Envío de Formatos`, form → `← <Lista>`. Los botones "NUEVO" pasan a `PageHeaderLink` primary.
+- **Responsive**: `main` → `.pad-pagina` (se quita `maxWidth: 1200/780` inline); grids `1fr 1fr` de formularios → clase `.grid-2`; tablas del consolidado con `overflow-x: auto` (vía `cardStyle`).
+- Typecheck y build OK; `npm run check:responsive` ✅ **0 nuevas (141)** — baseline regenerado: desaparece la deuda de los 7 módulos `app/formato-n-*` y `envio-de-formatos` baja a 2 (solo grid).
+
+### — Migración de reportes a hub único `/agente_reportes` (2026-08-04)
+Consolidación del módulo de reportes para los roles `agente_reportes` y `Reportante`:
+- **Hub `/agente_reportes` reconstruido**: las 9 cards (8 de la antigua `/reportes` + Reporte de Coordinación) organizadas por **sección funcional** (Incidentes · Carpetas y Cosmos · Validación · Estadísticas · Coordinación Formato N), con `OptionSquare` + `.cat-cards-grid`. Cada card se **filtra por permiso** de su sección (`obtenerPermisosUsuario`); `Reportante` no ve Coordinación (no tiene `formato_n_coordinacion`). Gate del hub → `reportes_ciudadano:ver` (antes `tieneAccesoFormatoN`).
+- **Eliminada la vista `/reportes`** y sus referencias: hub de `Reportante` en `lib/auth/helpers.ts` → `/agente_reportes`; card del dashboard (`module-cards.tsx`), catálogo de notificaciones (`formato_n.capturado`) y `LoadingProvider` apuntan a `/agente_reportes`.
+- **8 páginas destino alineadas a la REGLA PageHeader + Responsive**: `incidentes_camaras`, `reportes_incidentes`, `modulo_incidentes`, `estadisticos`, `d1`, `d1_noiniciada`, `sin_robos`, `envio-de-formatos` y `nCoordinacion`. Se reemplaza el header inline (`styles.headerContainer`/`tag`/`title`) por `PageHeader` con botón de regreso `← Panel de Reportes` (secondary) en `actions`, que **reemplaza** el `backHref` del `DashboardHeader`; `main` → `.pad-pagina`; tablas con `overflow-x: auto`; se eliminan estilos muertos de los `styles.ts` de `components/reportes`.
+- `envio-de-formatos`: `SentinelHero` + `maxWidth:1200px` + footer inline → `PageHeader` + `.pad-pagina` + `DashboardFooter`.
+- Typecheck y build OK; `npm run check:responsive` ✅ **0 nuevas (177)** — baseline regenerado (se paga deuda: `app/reportes` eliminado, `nCoordinacion` limpio, `envio-de-formatos` -1 padding).
+
 ### — Bitácora 911: polling en vivo (patrón de despacho) + segment TODOS/EN RUTA/CERRADO (2026-08-03)
 La tabla de `/agente_911/ciudadano/incidentes` pasa a **refresco automático cada 20s** replicando la lógica de `TablonDespacho`:
 - **Nueva API** `app/api/incidentes/bitacora-911/route.ts`: devuelve listado paginado + conteos por estatus (misma auth que los endpoints de despacho).

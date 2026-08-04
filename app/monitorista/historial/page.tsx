@@ -6,7 +6,8 @@ import React from 'react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarHistorial } from '@/lib/monitorista/repository'
 import type { HistorialEntry } from '@/lib/monitorista/types'
-import { SubHeader } from '@/components/partials/SubHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function HistorialPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -14,8 +15,6 @@ export default async function HistorialPage() {
   if (!(await tienePermiso(session.user.id, 'historial', 'ver'))) redirect('/monitorista')
 
   const registros = await listarHistorial()
-
-  const user = session.user as { name: string; apellido?: string }
 
   const accionLabel: Record<string, { label: string; icon: React.ReactNode }> = {
     evidencia_subida: { label: 'Evidencia subida', icon: <Camera size={14} color="#1f355a" /> },
@@ -36,21 +35,24 @@ export default async function HistorialPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Historial" user={user} />
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        roleLabel="Monitorista"
+      />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ marginBottom: 32 }}>
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Registro de Actividad</span>
-          <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Historial</h1>
-          <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title="Historial"
+          subtitle="Registro de actividad"
+          actions={<PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>}
+        />
 
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
+        <div className="tabla-wrap" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
           {registros.length === 0 && <div style={{ padding: 48, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>Sin actividad registrada</div>}
           {registros.length > 0 && (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 720 }}>
               <thead><tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
                 <th style={thStyle}>ACCIÓN</th><th style={thStyle}>DETALLE</th><th style={thStyle}>MONITORISTA</th><th style={thStyle}>FECHA</th>
               </tr></thead>

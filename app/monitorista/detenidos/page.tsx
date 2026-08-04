@@ -2,13 +2,15 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { listarReportesConDetenidos } from '@/lib/monitorista/detenido-service'
+import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import Link from 'next/link'
 import React from 'react'
 import { BotonGenerarPpt } from '@/components/monitorista/BotonGenerarPpt'
 import { Clock, CheckCircle2, Eye, Camera } from 'lucide-react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
-import { SubHeader } from '@/components/partials/SubHeader'
-import { APP_VERSION } from "@/lib/constants"
+import { DashboardHeader } from '@/components/partials/Header'
+import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function DetenidosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -16,27 +18,36 @@ export default async function DetenidosPage() {
   if (!(await tienePermiso(session.user.id, 'detenidos', 'ver'))) redirect('/monitorista')
 
   const reportes = await listarReportesConDetenidos()
-  const user = session.user as { name: string }
+  // Token opaco persistente por reporte para la URL de detalle — el id interno nunca viaja en la URL.
+  const tokens = new Map<string, string>()
+  for (const r of reportes) {
+    tokens.set(r.id, await obtenerOCrearToken('detenido', r.id))
+  }
   const pendientes = reportes.filter(r => r.fotos.some(f => f.estado === 'pendiente' || f.estado === 'enviado' || f.estado === 'rechazado'))
   const completadas = reportes.filter(r => r.fotos.length > 0 && r.fotos.every(f => f.estado === 'completado'))
   const sinFotos = reportes.filter(r => r.fotos.length === 0)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <SubHeader backHref="/monitorista" backLabel="Monitorista" title="Reporte de" accent="Detenidos" accentColor="#059669" user={user} />
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        roleLabel="Monitorista"
+      />
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32 }}>
-          <div>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 700 }}>Reportes de Campo con Detenidos</span>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 36, fontWeight: 800, color: '#0f172a', margin: '4px 0 0 0', textTransform: 'uppercase' }}>Detenidos</h1>
-            <div style={{ width: 64, height: 3, background: '#1f355a', marginTop: 12 }} />
-          </div>
-          <BotonGenerarPpt pendientes={pendientes.length} completados={completadas.length} />
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title="Reporte de"
+          accent="Detenidos"
+          accentColor="#059669"
+          subtitle="Reportes de campo con detenidos · solicitud y envío de fotos"
+          actions={<>
+            <PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>
+            <BotonGenerarPpt pendientes={pendientes.length} completados={completadas.length} />
+          </>}
+        />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 40 }}>
+        <div className="grid-3">
           <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <Clock size={20} color="#b45309" />
@@ -94,18 +105,16 @@ export default async function DetenidosPage() {
                     {new Date(r.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit' })}
                   </div>
                 </div>
-                <Link href={`/monitorista/detenidos/${r.id}`} style={btnDetalle}>
+                <Link href={`/monitorista/detenidos/${tokens.get(r.id) ?? r.id}`} style={btnDetalle}>
                   <Eye size={14} /> VER
                 </Link>
               </div>
             </div>
           ))}
         </div>
-      </main>
 
-      <footer style={{ padding: '32px 48px', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0', background: '#ffffff' }}>
-        SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA {APP_VERSION}
-      </footer>
+        <DashboardFooter />
+      </main>
     </div>
   )
 }

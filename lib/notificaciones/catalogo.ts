@@ -244,7 +244,7 @@ export const EVENTOS = {
   'formato_n.capturado': {
     label: 'Formato N capturado', modulo: 'Reportes', severidad: 'info',
     rolesPorDefecto: ['agente_reportes'],
-    href: () => `/reportes`,
+    href: () => `/agente_reportes`,
   },
 
   // ── Avisos manuales del administrador ──────────────────────────────────────
