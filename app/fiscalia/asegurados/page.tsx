@@ -1,41 +1,33 @@
 import { TabAsegurados } from '@/components/fiscalia/TabAsegurados'
 import { obtenerDashboardFiscalia, obtenerAseguradosAction } from '@/lib/fiscalia/actions'
 import { DashboardHeader } from '@/components/partials/Header'
-import { APP_VERSION } from "@/lib/constants"
+import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function AseguradosPage() {
   const user = await obtenerDashboardFiscalia()
   const { pendientes, completados } = await obtenerAseguradosAction()
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Asegurados" backHref="/fiscalia" backLabel="Panel" />
+      <DashboardHeader user={user} roleLabel="Asegurados" />
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title="Gestión de"
+          accent="Asegurados"
+          subtitle="Detenidos asegurados, captura de direcciones y puesta a disposición"
+          actions={<PageHeaderLink href="/fiscalia" variant="secondary">← Panel</PageHeaderLink>}
+        />
 
-        {/* Tabs + Table */}
         <TabAsegurados pendientes={pendientes} completados={completados} />
 
-        {/* Footer */}
-        <div style={{
-          marginTop: 'auto', paddingTop: 20,
-          borderTop: '1px solid #e2e8f0',
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8',
-          letterSpacing: '0.18em', textTransform: 'uppercase',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · FISCALÍA · ASEGURADOS</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
-          </div>
-        </div>
-
-      </div>
+        <DashboardFooter />
+      </main>
     </div>
   )
 }

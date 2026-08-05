@@ -1,5 +1,8 @@
 import pool from '../lib/db'
 import { writeFileSync } from 'fs'
+import { loadEnvConfig } from '@next/env'
+
+loadEnvConfig(process.cwd())
 
 const SCHEMAS = ['public', 'via']
 
@@ -8,6 +11,18 @@ interface ColumnInfo {
   data_type: string
   is_nullable: string
   column_default: string | null
+}
+
+interface IndexInfo {
+  indexname: string
+  indexdef: string
+}
+
+interface ForeignKeyInfo {
+  constraint_name: string
+  column_name: string
+  foreign_table: string
+  foreign_column: string
 }
 
 async function getTables(schema: string): Promise<string[]> {
@@ -48,6 +63,29 @@ async function getEnums(schema: string): Promise<Record<string, string[]>> {
     enums[r.enum_name].push(r.enum_value)
   }
   return enums
+}
+
+async function getIndexes(schema: string, table: string): Promise<IndexInfo[]> {
+  const result = await pool.query<IndexInfo>(
+    `SELECT indexname, indexdef FROM pg_indexes
+     WHERE tablename = $1 AND schemaname = $2
+     ORDER BY indexname`,
+    [table, schema],
+  )
+  return result.rows
+}
+
+async function getForeignKeys(schema: string, table: string): Promise<ForeignKeyInfo[]> {
+  const result = await pool.query<ForeignKeyInfo>(
+    `SELECT tc.constraint_name, kcu.column_name, ccu.table_name AS foreign_table, ccu.column_name AS foreign_column
+     FROM information_schema.table_constraints tc
+     JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
+     JOIN information_schema.constraint_column_usage ccu ON tc.constraint_name = ccu.constraint_name AND tc.table_schema = ccu.table_schema
+     WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name = $1 AND tc.table_schema = $2
+     ORDER BY tc.constraint_name`,
+    [table, schema],
+  )
+  return result.rows
 }
 
 function typeToReadable(t: string): string {
@@ -104,6 +142,25 @@ La aplicación **no debe modificarlas directamente**. Las columnas \`rol_id\` y 
         md += `| ${i + 1} | \`${c.column_name}\` | \`${typeToReadable(c.data_type)}\` | ${c.is_nullable === 'YES' ? 'SÍ' : 'NO'} | ${c.column_default ? `\`${c.column_default.replace(/\|/g, '\\|')}\`` : '—'} |\n`
       })
       md += '\n'
+
+      const fks = await getForeignKeys(schema, table)
+      if (fks.length > 0) {
+        md += `**Foreign Keys**\n\n`
+        for (const fk of fks) {
+          md += `- \`${fk.constraint_name}\`: \`${fk.column_name}\` → \`${fk.foreign_table}(${fk.foreign_column})\`\n`
+        }
+        md += '\n'
+      }
+
+      const indexes = await getIndexes(schema, table)
+      const nonPkIndexes = indexes.filter(i => !i.indexname.endsWith('_pkey'))
+      if (nonPkIndexes.length > 0) {
+        md += `**Índices**\n\n`
+        for (const idx of nonPkIndexes) {
+          md += `- \`${idx.indexname}\`: \`${idx.indexdef.replace(/\|/g, '\\|')}\`\n`
+        }
+        md += '\n'
+      }
     }
   }
 

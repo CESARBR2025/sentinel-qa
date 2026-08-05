@@ -11,10 +11,15 @@
 | `build` | `next build` |
 | `start` | `next start` |
 | `lint` | `eslint` |
+| `check:responsive` | `node scripts/audit-responsive.mjs` |
+| `prepare` | `husky` |
 | `db:seed` | `tsx lib/db/seed.ts` |
 | `db:create-admin` | `tsx lib/db/create-admin.ts` |
 | `db:schema` | `tsx scripts/exportar-schema.ts` |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

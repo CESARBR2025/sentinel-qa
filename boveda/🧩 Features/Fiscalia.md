@@ -55,3 +55,7 @@ flowchart TD
 5. Las actas de puesta a disposición siguen un checklist de 8 elementos
 6. `guardarDetenidosDirecciones` usa transacción: DELETE + INSERT + UPDATE folio
 7. `guardarPuestaDisposicion` usa UPSERT (`ON CONFLICT reporte_campo_id`)
+
+## REGLA de diseño
+
+Todas las vistas cumplen la REGLA de diseño: **Header Centinela** (`DashboardHeader`, sin `backHref` cuando el regreso vive en el `PageHeader`), **PageHeader** con botón de regreso `variant="secondary"` en `actions` (regla de regreso) y **responsive** (`.pad-pagina`/`.pad-dashboard`, `.grid-2`/`.grid-3`/`.cat-cards-grid`, tablas con `.tabla-wrap` + `minWidth`). Los formularios compartidos (`FormularioAsegurado`, `FormularioPuestaDisposicion`, `CapturarDetallesForm`, `DetallesAseguradoView`) aceptan `ocultarEncabezado` para no duplicar el título cuando la página ya usa `PageHeader` (juzgado los usa sin la prop, conservando su encabezado inline).

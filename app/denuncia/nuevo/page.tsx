@@ -5,13 +5,13 @@ import { redirect }       from 'next/navigation'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import FormularioD1        from '@/components/denuncias/FormularioD1'
-import { verificarRolOficial, obtenerPlacaPatrulla, obtenerDatosParaD1, obtenerSectorOficialSvc } from '@/lib/oficial/service'
+import { verificarRolOficial, obtenerPlacaPatrulla, obtenerDatosParaD1, obtenerSectorOficialSvc, obtenerDetenidosParaD1, obtenerMiPerfil } from '@/lib/oficial/service'
 import { listarGruposAdscripcion } from '@/lib/d1/service'
 
 export default async function NuevaDenunciaD1Page({
   searchParams,
 }: {
-  searchParams: Promise<{ incidenteId?: string;reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; oficialId?: string; destino?: string }>
+  searchParams: Promise<{ incidenteId?: string;reporteCampoId?: string; calle?: string; colonia?: string; lat?: string; lng?: string; destino?: string }>
 }) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
@@ -20,16 +20,18 @@ export default async function NuevaDenunciaD1Page({
   const user = session.user as { name: string; apellido?: string; email: string }
   const sp = await searchParams
 
-  // Datos pre-llenados desde el reporte de recorrido
-  let placaPatrulla = ''
-  if (sp.oficialId) {
-    placaPatrulla = await obtenerPlacaPatrulla(sp.oficialId)
-  }
+  // El oficial que llena el D1 es siempre el de la sesión activa — nunca por query param
+  const miPerfil = await obtenerMiPerfil(session.user.id)
 
-  // Consultar BD para datos adicionales
+  const [placaPatrulla, sector] = await Promise.all([
+    miPerfil ? obtenerPlacaPatrulla(miPerfil.id) : Promise.resolve(''),
+    miPerfil ? obtenerSectorOficialSvc(miPerfil.id) : Promise.resolve(null),
+  ])
+
+  // Datos adicionales del reporte de campo (ubicación, delito, etc.) — NO identidad del oficial
   const reporteData = sp.reporteCampoId ? await obtenerDatosParaD1(sp.reporteCampoId) : null
-  const sector = sp.oficialId ? await obtenerSectorOficialSvc(sp.oficialId) : null
   const gruposAdscripcion = await listarGruposAdscripcion(sp.destino ?? undefined)
+  const detenidos = sp.reporteCampoId ? await obtenerDetenidosParaD1(sp.reporteCampoId) : []
 
   const prefill = {
     incidenteId:      sp.incidenteId ?? null,
@@ -38,18 +40,24 @@ export default async function NuevaDenunciaD1Page({
     coloniaHecho:     sp.colonia        ?? reporteData?.colonia ?? '',
     lat:              sp.lat            ? Number(sp.lat) : reporteData?.latitud ?? null,
     lng:              sp.lng            ? Number(sp.lng) : reporteData?.longitud ?? null,
-    oficialId:        sp.oficialId      ?? null,
+    oficialId:        miPerfil?.id      ?? null,
     destino:          sp.destino        ?? reporteData?.autoridadRecibe ?? null,
     crp:              placaPatrulla,
     tipoIncidente:    reporteData?.tipoIncidente ?? null,
     descripcion:      reporteData?.descripcion ?? null,
     folioReporteCampo: reporteData?.folioReporteCampo ?? null,
     sector:           sector,
-    nombreOficial:    reporteData?.oficialNombre ?? null,
-    nominaOficial:    reporteData?.oficialNomina ?? null,
+    nombreOficial:    miPerfil ? `${miPerfil.ofiNombre} ${miPerfil.ofiApPaterno}`.trim() : null,
+    nominaOficial:    miPerfil?.noNomina ?? null,
     fechaHoraInicioIncidente: reporteData?.fechaHoraInicioIncidente ?? null,
     fechaHoraDespacho:         reporteData?.fechaHoraDespacho ?? null,
     fechaReporteCampo:         reporteData?.created_at ?? null,
+    delito:           reporteData?.delito ?? null,
+    modusOperandi:    reporteData?.modusOperandi ?? null,
+    hayDetencion:     reporteData?.hayDetencion ?? false,
+    nombreReportante: reporteData?.nombreReportante ?? null,
+    telefonoReportante: reporteData?.telefonoReportante ?? null,
+    detenidos,
   }
 
   return (

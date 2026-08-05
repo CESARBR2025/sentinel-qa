@@ -18,7 +18,6 @@ export async function obtenerEventosDia(fecha: string) {
 
 export async function obtenerConteosDetenidos(fecha: string, autoridad: string) {
   const campoFge = autoridad === 'FISCALIA' ? 'ofi_apoyo_cateos_fge' : 'ofi_apoyo_cateos_fgr'
-  const campoIncFge = autoridad === 'FISCALIA' ? 'apoyo_cateos_fge' : 'apoyo_cateos_fgr'
 
   const ofi = await query<Record<string, unknown>>(`
     SELECT
@@ -27,15 +26,6 @@ export async function obtenerConteosDetenidos(fecha: string, autoridad: string) 
       COUNT(*) FILTER (WHERE ${campoFge} = true) AS numero_cateos
     FROM ofi_reportes_campo
     WHERE created_at::date = $1
-  `, [fecha, autoridad])
-
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      COUNT(*) FILTER (WHERE hay_detencion AND autoridad_recibe = $2) AS personas_aseguradas,
-      COALESCE(SUM(jsonb_array_length(vehiculos)) FILTER (WHERE autoridad_recibe = $2), 0) AS vehiculos_asegurados,
-      COUNT(*) FILTER (WHERE ${campoIncFge} = true) AS numero_cateos
-    FROM incidente_reporte_campo
-    WHERE creado_en::date = $1
   `, [fecha, autoridad])
 
   const carpetas = await query<Record<string, unknown>>(`
@@ -49,9 +39,9 @@ export async function obtenerConteosDetenidos(fecha: string, autoridad: string) 
 
   return {
     carpetas_iniciadas:  Number(carpetas.rows[0]?.carpetas_iniciadas ?? 0),
-    numero_cateos:       Number(ofi.rows[0]?.numero_cateos ?? 0) + Number(inc.rows[0]?.numero_cateos ?? 0),
-    vehiculos_asegurados: Number(ofi.rows[0]?.vehiculos_asegurados ?? 0) + Number(inc.rows[0]?.vehiculos_asegurados ?? 0),
-    personas_aseguradas: Number(ofi.rows[0]?.personas_aseguradas ?? 0) + Number(inc.rows[0]?.personas_aseguradas ?? 0),
+    numero_cateos:       Number(ofi.rows[0]?.numero_cateos ?? 0),
+    vehiculos_asegurados: Number(ofi.rows[0]?.vehiculos_asegurados ?? 0),
+    personas_aseguradas: Number(ofi.rows[0]?.personas_aseguradas ?? 0),
   }
 }
 
@@ -79,16 +69,7 @@ export async function obtenerArmasDia(fecha: string) {
     WHERE created_at::date = $1 AND ofi_hay_arma_fuego = true
   `, [fecha])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      i.folio AS carpeta,
-      jsonb_array_elements(rc.armas_fuego) AS arma
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.creado_en::date = $1 AND rc.hay_arma_fuego = true
-  `, [fecha])
-
-  return [...ofi.rows, ...inc.rows]
+  return ofi.rows
 }
 
 export async function obtenerDatosCapturados(fecha: string) {

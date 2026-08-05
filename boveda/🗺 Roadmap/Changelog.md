@@ -6,6 +6,14 @@
 
 ## 2026 — Agosto
 
+### — Módulo Fiscalía alineado a Centinela + PageHeader + Responsive (2026-08-05)
+Las 11 páginas de `app/fiscalia` (hub + solicitudes + asegurados + liberaciones + detenidos + expedientes y sus 5 vistas destino `[id]`) se alinean a la REGLA de diseño:
+- **Header Centinela**: se retira el `backHref`/`backLabel` del `DashboardHeader` en las 10 páginas destino porque el regreso vive en el `PageHeader` (regla de regreso). El hub `/fiscalia` conserva su `backHref` dinámico (solo cuando el rol no es Fiscalía).
+- **PageHeader**: se elimina el header inline del hub (tag + h1 + barra accent), el `<h1>` suelto de detenidos/expediente/detalle y el título inline "GESTIÓN DE LIBERACIONES" de `FiscaliaDashboard`. Todos se reemplazan por `PageHeader` con botón de regreso `variant="secondary"` en `actions`: listas → `← Panel`; detalles → `← Solicitudes`/`← Liberaciones`/`← Asegurados`/`← Detenidos`. `PrintButton` pasa a las `actions` del expediente. En los formularios compartidos (`FormularioAsegurado`, `FormularioPuestaDisposicion`, `CapturarDetallesForm`, `DetallesAseguradoView`) se agrega prop opcional `ocultarEncabezado` para no duplicar el título (juzgado sigue usándolos con su encabezado propio).
+- **Responsive**: `main` → `.pad-pagina` (hub → `.pad-dashboard`), se eliminan los `maxWidth` fijos; tabla de detenidos con `overflow: 'hidden'` → `.tabla-wrap` + `minWidth`; grids inline (`2fr 1fr`, `1fr 1fr`, `repeat(2|3, 1fr)`, `auto-fill`) → `.grid-2`/`.grid-3`/`.cat-cards-grid`; layouts `1fr 300px` → flex con `flexWrap: wrap`; filas de paginación y botones con `flexWrap`; footer inline → `DashboardFooter`.
+- **Limpieza**: se elimina `console.log(liberaciones)` en `liberaciones/page.tsx`.
+- La deuda responsive del módulo baja de **20 → 0** (14 en `app/fiscalia` + 6 en `components/fiscalia`; baseline 120 → 100). Typecheck, lint (0 nuevos) y build OK.
+
 ### — Módulo Monitorista alineado a Centinela + PageHeader + Responsive (2026-08-04)
 Las 11 páginas de `app/monitorista` (hub + solicitudes + detenidos + incidentes-cámara + historial) se alinean a la REGLA de diseño:
 - **Header Centinela**: se reemplaza `SubHeader` por `DashboardHeader` en las 6 páginas que lo usaban (solicitudes, detenidos, detenidos/nueva, incidentes-camara, incidentes-camara/nuevo, incidentes-camara/[id], historial). En las páginas destino se retira el `backHref`/`backLabel` del header porque el regreso vive en el `PageHeader`.

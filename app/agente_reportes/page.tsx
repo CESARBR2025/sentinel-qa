@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import {
   Camera, Zap, ShieldAlert, BarChart3, Globe, FolderClock, PackageX,
-  Send, FileText,
+  Send, FileText, User,
 } from 'lucide-react'
 import { OptionSquare } from '@/components/reportes/menuOption'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -33,7 +33,7 @@ export default async function AgenteReportesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const permisos = await obtenerPermisosUsuario(session.user.id, ['reportes_ciudadano', 'incidentes_camaras', 'modulo_incidentes', 'formato_n_coordinacion'] as const)
+  const permisos = await obtenerPermisosUsuario(session.user.id, ['reportes_ciudadano', 'incidentes_camaras', 'modulo_incidentes', 'formato_n_coordinacion', 'reporte_detenidos'] as const)
   if (!permisos.reportes_ciudadano.puede_ver) redirect('/dashboard')
 
   const userWithRole = await getUserWithRole(session.user.id)
@@ -124,6 +124,14 @@ export default async function AgenteReportesPage() {
           enlace: '/estadisticos',
           seccion: 'reportes_ciudadano',
           estadisticas: [{ label: 'Corte', value: 'Semanal' }, { label: 'Eficiencia', value: '92%' }],
+        },
+        {
+          titulo: 'Reporte de Detenidos',
+          subtitulo: 'Presentación con fotografías, evento, delitos, falta administrativa y modus operandi — diario, semanal y mensual.',
+          icono: <User size={28} />,
+          enlace: '/reporte-detenidos',
+          seccion: 'reporte_detenidos',
+          estadisticas: [],
         },
       ],
     },

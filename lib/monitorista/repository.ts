@@ -274,7 +274,7 @@ export async function obtenerPrellenadoCompleto(id: string): Promise<PrellenadoC
       '' AS "antecedentes",
       rc.falta_administrativa AS "faltasAdmin"
     FROM iph_detenidos iph
-    LEFT JOIN ofi_reporte_denuncia rd ON rd.folio_denuncia = iph.folio_911
+    LEFT JOIN ofi_reporte_denuncia rd ON rd.id = iph.reporte_denuncia_id
     LEFT JOIN ofi_reportes_campo rc ON rc.id = rd.reporte_campo_id
     LEFT JOIN ofi_detalles_asegurados da ON da.reporte_campo_id = rc.id
     WHERE iph.id = $1
@@ -531,7 +531,7 @@ export async function actualizarSolicitudFotoEstado(fotoId: string) {
 }
 
 export async function registrarIphDetenido(data: Record<string, unknown>) {
-  const result = await query<any>(
+  const result = await query<{ id: unknown; folio: unknown }>(
     `INSERT INTO iph_detenidos(
       fecha_nacimiento, edad, genero, alias, ciudad_origen,
       calle_detenido, numero_detenido, colonia_detenido,

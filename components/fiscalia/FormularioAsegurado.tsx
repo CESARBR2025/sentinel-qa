@@ -15,6 +15,7 @@ interface Props {
   data: DetalleAseguradoCompleto
   onGuardar?: (reporteCampoId: string, detenidos: DetenidoDireccionInput[], folio?: string) => Promise<{ success: boolean; folio?: string; error?: string }>
   redirectPath?: string
+  ocultarEncabezado?: boolean
 }
 
 const labelSx: React.CSSProperties = {
@@ -60,7 +61,7 @@ function displayVal(val: string | null | undefined): string {
   return val ?? '—'
 }
 
-export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectPath }: Props) {
+export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectPath, ocultarEncabezado = false }: Props) {
   const router = useRouter()
 
   const [placesLoaded, setPlacesLoaded] = useState(false)
@@ -76,7 +77,18 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
   const streetViewInstances = useRef<(google.maps.StreetViewPanorama | null)[]>([])
 
   const biasCenters = useRef<({ lat: number; lng: number } | null)[]>([])
-  const [callePreds, setCallePreds] = useState<{ placeId: string; desc: string }[][]>([])
+  const readOnly = data.detenidosDirecciones.some(d => !!d.calle || d.latitud != null)
+  const [callePreds, setCallePreds] = useState<{ placeId: string; desc: string }[][]>(() =>
+    data.detenidos.map((_, i) => {
+      const guardado = data.detenidosDirecciones[i]
+      return guardado?.latitud ? [{ placeId: '', desc: guardado.calle ?? '' }] : []
+    })
+  )
+  const [buscandoMapa, setBuscandoMapa] = useState<boolean[]>(() => data.detenidos.map(() => false))
+  const [ubicacionConfirmada, setUbicacionConfirmada] = useState<boolean[]>(() =>
+    data.detenidos.map((_, i) => !!data.detenidosDirecciones[i]?.latitud)
+  )
+  const [vistaMapa, setVistaMapa] = useState<('map' | 'street')[]>(() => data.detenidos.map(() => 'map'))
 
   useEffect(() => {
     const check = () => {
@@ -89,23 +101,6 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
     return () => clearInterval(interval)
   }, [placesLoaded])
 
-  useEffect(() => {
-    if (!placesLoaded || readOnly) return
-    data.detenidos.forEach((_, i) => {
-      initAutocomplete(i)
-    })
-    setCallePreds(data.detenidos.map((_, i) => {
-      const guardado = data.detenidosDirecciones[i]
-      return guardado?.latitud ? [{ placeId: '', desc: guardado.calle ?? '' }] : []
-    }))
-    setBuscandoMapa(data.detenidos.map(() => false))
-    setUbicacionConfirmada(data.detenidos.map((_, i) => {
-      const guardado = data.detenidosDirecciones[i]
-      return !!guardado?.latitud
-    }))
-    setVistaMapa(data.detenidos.map(() => 'map'))
-  }, [placesLoaded, data.detenidos.length])
-
   function initAutocomplete(i: number) {
     if (!window.google?.maps?.places?.Autocomplete) return
 
@@ -113,7 +108,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
       const mInput = municipioRefs.current[i]
       if (mInput) {
         const mac = new google.maps.places.Autocomplete(mInput, {
-          componentRestrictions: { country: 'mx' } as any,
+          componentRestrictions: { country: 'mx' },
           fields: ['address_components', 'geometry', 'formatted_address', 'name'],
           types: ['(cities)'],
         })
@@ -139,7 +134,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
       const cInput = coloniaRefs.current[i]
       if (cInput) {
         const cac = new google.maps.places.Autocomplete(cInput, {
-          componentRestrictions: { country: 'mx' } as any,
+          componentRestrictions: { country: 'mx' },
           fields: ['address_components', 'geometry', 'formatted_address', 'name'],
           types: ['sublocality', 'neighborhood'],
         })
@@ -165,10 +160,17 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
     if (!calleAc.current[i]) {
       const clInput = calleRefs.current[i]
       if (clInput) {
-        calleAc.current[i] = {} as any // mark as initialized
+        calleAc.current[i] = {} as unknown as google.maps.places.Autocomplete // mark as initialized
       }
     }
   }
+
+  useEffect(() => {
+    if (!placesLoaded || readOnly) return
+    data.detenidos.forEach((_, i) => {
+      initAutocomplete(i)
+    })
+  }, [placesLoaded, readOnly, data.detenidos.length])
 
   const debounceTimers = useRef<(ReturnType<typeof setTimeout> | null)[]>([])
 
@@ -182,7 +184,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
       const service = new google.maps.places.AutocompleteService()
       const opts: google.maps.places.AutocompletionRequest = {
         input: query,
-        componentRestrictions: { country: 'mx' } as any,
+        componentRestrictions: { country: 'mx' },
         types: ['route'],
       }
       const bias = biasCenters.current[i]
@@ -249,10 +251,6 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
     setUbicacionConfirmada(prev => { const n = [...prev]; n[i] = true; return n })
   }
 
-  const [buscandoMapa, setBuscandoMapa] = useState<boolean[]>([])
-  const [ubicacionConfirmada, setUbicacionConfirmada] = useState<boolean[]>([])
-  const [vistaMapa, setVistaMapa] = useState<('map' | 'street')[]>([])
-
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState<string | null>(null)
@@ -274,8 +272,6 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
   })
 
   const [detenidosDir, setDetenidosDir] = useState<typeof nombresIniciales>(nombresIniciales)
-
-  const readOnly = data.detenidosDirecciones.some(d => !!d.calle || d.latitud != null)
 
   useEffect(() => {
     if (!placesLoaded || !readOnly) return
@@ -342,6 +338,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
 
   return (
     <>
+      {!ocultarEncabezado && (
       <div style={{ marginBottom: 24 }}>
         <div style={{
           fontFamily: 'JetBrains Mono,monospace',
@@ -374,6 +371,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
           Capture las direcciones de los detenidos para el reporte <strong>#{data.folioReporteCampo}</strong>
         </p>
       </div>
+      )}
 
       {/* SECCIÓN 1: Datos generales prellenados */}
       <div style={{
@@ -408,7 +406,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           <div>
             <label style={labelSx}><Hash size={10} /> Folio del Incidente</label>
             <div style={disabledSx}>{data.folioReporteAsegurados}</div>
@@ -457,7 +455,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
             <label style={labelSx}><Map size={10} /> Registro Tableta</label>
             <div style={disabledSx}>{displayVal(data.registroTableta)}</div>
           </div>
-          <div style={{ gridColumn: 'span 2' }}>
+          <div style={{ gridColumn: '1 / -1' }}>
             <label style={labelSx}><MapPin size={10} /> Lugar de la Detención</label>
             <div style={disabledSx}>
               {[data.lugarDetencionCalle, data.lugarDetencionColonia].filter(Boolean).join(', ') || '—'}
@@ -493,7 +491,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
             Detenido #{i + 1}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
+          <div className="grid-3" style={{ marginBottom: 16 }}>
             <div>
               <label style={labelSx}>Nombre <span style={{ color: '#dc2626' }}>*</span></label>
               <input
@@ -539,7 +537,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
           </div>
 
           {readOnly ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 16 }}>
+            <div className="grid-3" style={{ marginBottom: 16 }}>
               <div>
                 <label style={labelSx}>Colonia</label>
                 <div style={disabledSx}>{detenidosDir[i].colonia || '—'}</div>

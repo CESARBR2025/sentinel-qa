@@ -7,7 +7,8 @@ import { CapturarDetallesForm } from '@/components/fiscalia/CapturarDetallesForm
 import { DetallesAseguradoView } from '@/components/fiscalia/DetallesAseguradoView'
 import { FotosExpedienteSection } from '@/components/fiscalia/FotosExpedienteSection'
 import { DashboardHeader } from '@/components/partials/Header'
-import { APP_VERSION } from "@/lib/constants"
+import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function AseguradosFiscaliaPage({ params }: { params: Promise<{ solicitudId: string }> }) {
   const { solicitudId } = await params
@@ -26,7 +27,7 @@ export default async function AseguradosFiscaliaPage({ params }: { params: Promi
   const user = session.user as { name: string; apellido?: string; email?: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
       `}</style>
@@ -34,16 +35,21 @@ export default async function AseguradosFiscaliaPage({ params }: { params: Promi
       <DashboardHeader
         user={{ name: user.name, apellido: user.apellido, email: user.email || '' }}
         roleLabel={datosCapturados ? 'Detalles del Expediente' : 'Capturar Detalles'}
-        backHref="/fiscalia/solicitudes"
-        backLabel="Solicitudes"
       />
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title={datosCapturados ? 'Detalles del' : 'Capturar'}
+          accent={datosCapturados ? 'Expediente' : 'Detalles'}
+          accentColor="#7c3aed"
+          subtitle={`Expediente de la solicitud #${solicitudId}`}
+          actions={<PageHeaderLink href="/fiscalia/solicitudes" variant="secondary">← Solicitudes</PageHeaderLink>}
+        />
 
         {datosCapturados ? (
-          <DetallesAseguradoView solicitudId={solicitudId} data={data} evidencias={evidencias} />
+          <DetallesAseguradoView solicitudId={solicitudId} data={data} evidencias={evidencias} ocultarEncabezado />
         ) : <>
-          <CapturarDetallesForm solicitudId={solicitudId} data={data} />
+          <CapturarDetallesForm solicitudId={solicitudId} data={data} ocultarEncabezado />
           {data.reporteCampoId && (
             <FotosExpedienteSection
               detenidos={data.detenidosLista || []}
@@ -58,21 +64,8 @@ export default async function AseguradosFiscaliaPage({ params }: { params: Promi
           )}
         </>}
 
-        <div style={{
-          marginTop: 'auto', paddingTop: 20,
-          borderTop: '1px solid #e2e8f0',
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8',
-          letterSpacing: '0.18em', textTransform: 'uppercase',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · FISCALÍA · ASEGURADOS</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
-          </div>
-        </div>
-
-      </div>
+        <DashboardFooter />
+      </main>
     </div>
   )
 }

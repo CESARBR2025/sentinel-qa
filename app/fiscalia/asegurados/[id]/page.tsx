@@ -4,7 +4,8 @@ import { obtenerDashboardFiscalia, obtenerDetalleAseguradoCompletoAction, obtene
 import { ACTAS_CHECKLIST } from '@/lib/fiscalia/types'
 import { Clock, Building2, CheckCircle } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
-import { APP_VERSION } from "@/lib/constants"
+import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -42,17 +43,24 @@ export default async function AseguradoDetallePage({ params }: Props) {
   const { data: pad } = await obtenerPuestaDisposicionAction(reporteCampoId)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Detalle de Asegurados" backHref="/fiscalia/asegurados" backLabel="Asegurados" />
+      <DashboardHeader user={user} roleLabel="Detalle de Asegurados" />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Detalle de"
+          accent="Asegurados"
+          accentColor="#7c3aed"
+          subtitle={`Direcciones de detenidos del reporte #${reporteCampoId}`}
+          actions={<PageHeaderLink href="/fiscalia/asegurados" variant="secondary">← Asegurados</PageHeaderLink>}
+        />
 
         {/* Formulario */}
-        <FormularioAsegurado reporteCampoId={reporteCampoId} data={data} />
+        <FormularioAsegurado reporteCampoId={reporteCampoId} data={data} ocultarEncabezado />
 
         {/* Puesta a Disposición */}
         {pad && (
@@ -92,7 +100,7 @@ export default async function AseguradoDetallePage({ params }: Props) {
             {/* Actas */}
             <div style={{ marginBottom: 16 }}>
               <label style={{ ...labelSx, color: '#d97706' }}>Actos de Investigación</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
+              <div className="grid-2">
                 {ACTAS_CHECKLIST.map(a => (
                   <div key={a.key} style={{
                     display: 'flex', alignItems: 'center', gap: 6,
@@ -117,7 +125,7 @@ export default async function AseguradoDetallePage({ params }: Props) {
             {/* Tiempos */}
             <div>
               <label style={{ ...labelSx, color: '#d97706' }}>Tiempos de Traslado</label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+              <div className="grid-2">
                 <div>
                   <label style={labelSx}>Inicio de traslado</label>
                   <div style={disabledSx}>{pad.horaInicioTraslado}</div>
@@ -141,22 +149,8 @@ export default async function AseguradoDetallePage({ params }: Props) {
           </div>
         )}
 
-        {/* Footer */}
-        <div style={{
-          marginTop: 'auto', paddingTop: 20,
-          borderTop: '1px solid #e2e8f0',
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8',
-          letterSpacing: '0.18em', textTransform: 'uppercase',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · FISCALÍA · ASEGURADOS</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }}></span>
-          </div>
-        </div>
-
-      </div>
+        <DashboardFooter />
+      </main>
     </div>
   )
 }

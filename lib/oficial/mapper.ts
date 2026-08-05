@@ -158,6 +158,11 @@ export function rowToReporteCampoParaD1(row: Record<string, unknown>): ReporteCa
     fechaHoraInicioIncidente: toStr(row.incidente_fecha_hora_inicio),
     fechaHoraDespacho: toStr(row.despacho_fecha_hora_despacho),
     created_at: toStr(row.created_at),
+    delito: (row.delito as string) ?? null,
+    modusOperandi: (row.modus_operandi as string) ?? null,
+    hayDetencion: Boolean(row.ofi_hay_detencion),
+    nombreReportante: (row.ofi_nombre_reportante as string) ?? null,
+    telefonoReportante: (row.ofi_telefono_reportante as string) ?? null,
   }
 }
 

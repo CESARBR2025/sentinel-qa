@@ -634,7 +634,7 @@ export async function obtenerExpedienteCompleto(solicitudId: string): Promise<Re
        pd.completado_en                  AS pd_completado_en
      FROM ofi_reporte_denuncia rd
      LEFT JOIN ofi_reportes_campo rc ON rc.id = rd.reporte_campo_id
-     LEFT JOIN incidentes i ON i.id = COALESCE(rd.incidente_id, rc.incidente_id)
+     LEFT JOIN incidentes i ON i.id = rd.incidente_id
      LEFT JOIN cat_tipos_incidente cti ON cti.id = i.tipo_incidente_id
      LEFT JOIN cat_prioridades cp ON cp.id = i.prioridad_id
      LEFT JOIN ofi_puesta_disposicion pd ON pd.reporte_campo_id = rc.id

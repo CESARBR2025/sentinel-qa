@@ -10,6 +10,22 @@ export async function verificarFolioDenunciaUnico(folio: string): Promise<boolea
   return Number(result.rows[0]?.count ?? 1) === 0
 }
 
+export async function verificarIphUnico(iph: string): Promise<boolean> {
+  const result = await query<{ count: number }>(
+    `SELECT COUNT(*)::int AS count FROM ofi_reporte_denuncia WHERE iph = $1`,
+    [iph],
+  )
+  return Number(result.rows[0]?.count ?? 1) === 0
+}
+
+export async function verificarFolioCuUnico(folioCu: string): Promise<boolean> {
+  const result = await query<{ count: number }>(
+    `SELECT COUNT(*)::int AS count FROM ofi_reporte_denuncia WHERE folio_cu = $1`,
+    [folioCu],
+  )
+  return Number(result.rows[0]?.count ?? 1) === 0
+}
+
 export async function obtenerGruposAdscripcion(autoridad?: string): Promise<GrupoAdscripcion[]> {
   if (autoridad) {
     const result = await query<GrupoAdscripcion>(

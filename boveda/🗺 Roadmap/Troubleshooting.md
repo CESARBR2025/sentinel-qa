@@ -473,3 +473,53 @@ En cambio `finalizarRevisionAction` (mismo archivo) sí hacía bien `ORDER BY cr
 **Cómo detectarlo**: en modo responsive (≤720px), buscar `document.documentElement.scrollWidth > clientWidth` o un elemento que sobresalga del viewport; el fondo negro del `body` es la señal visual de overflow.
 
 **Prevención**: (1) usar `.grid-2`/`.grid-3` y `flexWrap: 'wrap'` (regla Responsive); (2) como red de seguridad, `overflowX: 'clip'` en el `<main>` de la página (no rompe el `position: sticky` del header, a diferencia de `overflow: hidden`). No usar `overflow: hidden` en contenedores con tablas.
+
+---
+
+## Botón de submit "no hace nada" — `required` nativo dentro de `display:none` bloquea el submit en silencio
+
+**Síntoma**: el usuario pulsa el botón de envío (submit) de un formulario stepper y "no pasa nada": no se dispara `onSubmit`, no hay mensaje de error visible. Solo hay un warning en consola tipo `An invalid form control with name='X' is not focusable`.
+
+**Causa raíz**: formularios stepper implementados como **un solo `<form>`** con los pasos superpuestos vía `display: step === N ? ... : 'none'` (todos los inputs quedan montados en el DOM siempre, solo se ocultan visualmente). Si un campo con `required` nativo vive en un paso distinto al activo y queda inválido, al hacer submit el navegador ejecuta la validación HTML5 nativa sobre todo el formulario; el campo oculto (`display:none`) no es "focusable" para mostrar el mensaje de validación nativo, así que el navegador **bloquea el submit sin disparar `onSubmit` y sin mostrar error**. Desde la UI se percibe exactamente como "el botón no hace nada".
+
+**Encontrado en**: `components/denuncias/FormularioD1.tsx` — el campo `delito` tenía `required` nativo y vivía en el bloque del paso 3 (`display: none` cuando el step activo es 4), bloqueando el botón "FINALIZAR REPORTE D1" del paso 4 siempre que `delito` quedara vacío.
+
+**Fix (2026-08-04)**:
+1. No usar `required` nativo en campos que puedan quedar ocultos entre pasos. Si se quiere conservar la señal visual de obligatorio, separar la responsabilidad: en `SentinelField` se agregó la prop `requiredVisual` (solo dibuja el asterisco rojo) distinta de `required` (el atributo HTML nativo).
+2. Validar manualmente antes de avanzar de paso: al pulsar SIGUIENTE/FINALIZAR en el paso donde vive el campo obligatorio, leer su valor (el campo es no controlado, se lee vía `e.currentTarget.form` + `FormData` o `form.elements.namedItem(...)`) y, si está vacío, no avanzar y mostrar un mensaje de error visible en el paso donde el campo sí es visible.
+
+**Revisar si otros formularios stepper del proyecto** (`FormularioRecorrido.tsx`, etc.) tienen el mismo patrón de `required` nativo en pasos ocultos.
+
+---
+
+## `fetch` a una API regresa HTML en vez de JSON — el proxy bloquea la ruta por sección
+
+**Síntoma**: el formulario hace `fetch('/api/...')` y `res.json()` lanza `SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON`. La petición del formulario "no guarda" pero el handler nunca se ejecuta (no hay error server-side en la API).
+
+**Causa raíz**: `proxy.ts` hace un check grueso de sección (`seccionesRequeridasPara` + `/api/auth/secciones-permitidas`). Si la ruta API está mapeada en `lib/permisos/mapa-secciones.ts` a una sección que el rol del usuario NO tiene, redirige a `/dashboard` (un 307). El `fetch` del navegador sigue el redirect, recibe la página HTML de `/dashboard`, y `res.json()` truena al intentar parsear HTML.
+
+**Caso real (2026-08-04)**: el rol "Oficial de Campo" tiene `oficial_campo` pero NO `reportes_ciudadano`. La página `/denuncia/nuevo` está mapeada a `oficial_campo` (el oficial sí entra), pero `POST /api/reportes-d1` estaba mapeado solo a `reportes_ciudadano` → el proxy redirigía a `/dashboard` y el botón "FINALIZAR REPORTE D1" "no guardaba" con el error de JSON de arriba (enmascarado tras el fix del `required` de la etapa 1). **Fix**: `'/api/reportes-d1': ['reportes_ciudadano', 'oficial_campo']`.
+
+**Regla**: al agregar un endpoint API que consume un formulario, revisar que las secciones mapeadas en `mapa-secciones.ts` incluyan el rol que usa ese formulario — no solo el módulo de consulta/reportes. Un redirect del proxy se percibe como "el botón no hace nada / no guarda" sin error claro.
+
+---
+
+## Error TS2322 "Type 'unknown' is not assignable to type 'ReactNode'" — pero la línea que señala TS no es la causa real
+
+**Síntoma**: `npm run build` falla en la fase "Running TypeScript" con `Type 'unknown' is not assignable to type 'ReactNode'` apuntando a un `{variable && (...)}` que, leído directamente, es un `boolean && JSX.Element` perfectamente válido (`ReactNode` sí incluye `boolean`, verificado en `node_modules/@types/react/index.d.ts`).
+
+**Causa raíz**: en algún punto **más abajo, dentro del mismo bloque de `return` JSX**, hay otra condición del tipo `{expr && (...)}` donde `expr` es realmente `unknown` (típicamente `(objeto as Record<string, unknown>).campo` sin envolver, cuando `objeto` viene tipado como `Record<string, unknown>` — patrón común en vistas que leen `raw: Record<string, unknown>` de una query SQL cruda). TypeScript reporta el error de tipo en la posición del **primer** `{cond && (...)}` del bloque de children en vez de en la línea real del `unknown` — no confiar en la línea exacta que da `tsc`/`next build` cuando el código de esa línea se ve correcto a simple vista.
+
+**Caso real (2026-08-05)**: `components/fiscalia/ExpedienteView.tsx`. `tsc` señalaba la línea 157 (`{tieneDatosCapturados && (...)}`, `tieneDatosCapturados` es un `!!(...)` genuino, boolean confirmado). La causa real estaba en la línea 237, ~80 líneas más abajo en el mismo `return`: `{(r as Record<string, unknown>).pd_id && (...)}` — sin envolver en `Boolean(...)`. El mismo archivo ya tenía el patrón correcto 26 líneas después (línea 263): `{Boolean((r as Record<string, unknown>).pd_id) && (...)}` — la pista para encontrar el fix fue comparar los dos usos del mismo campo `pd_id`.
+
+**Cómo diagnosticar** (en vez de adivinar por la línea reportada):
+1. `grep -n "as Record<string, unknown>).*&&\|unknown.*&&" archivo.tsx` — buscar condiciones `&&` sobre valores casteados a `unknown`/`Record<string, unknown>` sin `Boolean(...)`/`!!` envolviendo.
+2. Si hay dudas sobre si una variable específica es el problema, aislarla temporalmente con `const _debug: boolean = variable` justo después de su definición y volver a correr `tsc --noEmit` — si no hay error ahí, la variable no es la causa, hay que seguir buscando en el resto del bloque `return`. Revertir el debug antes de cerrar.
+
+**Fix**: envolver la condición en `Boolean(...)`:
+```diff
+- {(r as Record<string, unknown>).pd_id && (
++ {Boolean((r as Record<string, unknown>).pd_id) && (
+```
+
+**Prevención**: al leer un campo de un objeto tipado `Record<string, unknown>` (común en vistas que consumen `raw` de `ExpedienteExp` u objetos similares de queries SQL crudas) para usarlo como condición de renderizado JSX, envolver siempre en `Boolean(...)` — nunca dejar el valor `unknown` crudo antes del `&&`.

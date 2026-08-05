@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User, Shield, BadgeCheck, UserCheck, ScrollText, Gavel, MapPin, Map } from 'lucide-react'
 import { DireccionGoogleMaps } from '@/components/shared/DireccionGoogleMaps'
@@ -45,18 +45,18 @@ const disabledSx: React.CSSProperties = {
 interface Props {
   solicitudId: string
   data: DetalleAsegurado
+  ocultarEncabezado?: boolean
 }
 
-export function CapturarDetallesForm({ solicitudId, data }: Props) {
+export function CapturarDetallesForm({ solicitudId, data, ocultarEncabezado = false }: Props) {
   const router = useRouter()
-  const r = useMemo(() => Math.random().toString(36).slice(2, 6), [])
-  const [folioSija, setFolioSija] = useState(`SIJA-${r}`)
-  const [calle, setCalle] = useState(`Calle ${Math.random().toString(36).slice(2, 6)}`)
-  const [numero, setNumero] = useState(`${Math.floor(Math.random() * 999)}`)
+  const [folioSija, setFolioSija] = useState(() => `SIJA-${Math.random().toString(36).slice(2, 6)}`)
+  const [calle, setCalle] = useState(() => `Calle ${Math.random().toString(36).slice(2, 6)}`)
+  const [numero, setNumero] = useState(() => `${Math.floor(Math.random() * 999)}`)
   const [colonia, setColonia] = useState('Centro')
   const [municipio, setMunicipio] = useState('San Juan del Río')
   const dir: Direccion = { calle, numero, colonia, municipio }
-  const [folioRemision, setFolioRemision] = useState(`REM-${Math.random().toString(36).slice(2, 8).toUpperCase()}`)
+  const [folioRemision, setFolioRemision] = useState(() => `REM-${Math.random().toString(36).slice(2, 8).toUpperCase()}`)
   const [marcoLegal, setMarcoLegal] = useState('Arts. 25, 26 y 27 Fracc. II Ley de Justicia Cívica')
   const [registroTableta] = useState('true')
   const [guardando, setGuardando] = useState(false)
@@ -99,6 +99,7 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
 
   return (
     <div>
+      {!ocultarEncabezado && (
       <div style={{ marginBottom: 24 }}>
         <div style={{
           fontFamily: 'JetBrains Mono,monospace',
@@ -131,6 +132,7 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
           Captura los datos del asegurado para la solicitud <strong>#{solicitudId}</strong>
         </p>
       </div>
+      )}
 
       {/* SECCIÓN 1: Datos existentes (readonly) */}
       <div style={{
@@ -164,7 +166,7 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
             (AUTO-CARGADOS)
           </span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           <div>
             <label style={labelSx}><Hash size={10} style={{ marginRight: 4 }} /> Folio del Incidente</label>
             <div style={disabledSx}>{displayVal(data.folioDenuncia)}</div>
@@ -201,7 +203,7 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
             <label style={labelSx}><UserCheck size={10} style={{ marginRight: 4 }} /> Nómina del Policía</label>
             <div style={disabledSx}>{displayVal(data.nominaPolicia)}</div>
           </div>
-          <div style={{ gridColumn: 'span 2' }}>
+          <div style={{ gridColumn: '1 / -1' }}>
             <label style={labelSx}><MapPin size={10} style={{ marginRight: 4 }} /> Lugar de la Detención</label>
             <div style={disabledSx}>{displayVal(data.lugarDetencion)}</div>
           </div>
@@ -218,12 +220,12 @@ export function CapturarDetallesForm({ solicitudId, data }: Props) {
           <BookOpen size={16} color="#dc2626" /> Datos por Capturar
           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, color: '#dc2626', letterSpacing: '0.1em', fontWeight: 400, marginLeft: 8 }}>(REQUERIDOS)</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           <div>
             <label style={labelSx}><BookOpen size={10} style={{ marginRight: 4 }} /> Folio SIJA <span style={{ color: '#dc2626' }}>*</span></label>
             <input value={folioSija} onChange={e => setFolioSija(e.target.value)} required placeholder="Capturar folio SIJA..." style={inputSx} />
           </div>
-          <div style={{ gridColumn: 'span 2' }}>
+          <div style={{ gridColumn: '1 / -1' }}>
             <label style={labelSx}><MapPin size={10} style={{ marginRight: 4 }} /> Domicilio del Detenido <span style={{ color: '#dc2626' }}>*</span></label>
             <DireccionGoogleMaps value={dir} onChange={handleDireccionChange} />
           </div>

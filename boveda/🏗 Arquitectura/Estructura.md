@@ -15,6 +15,7 @@
 │   │   │   │   └── page.tsx
 │   │   │   ├── setup-2fa/
 │   │   │   │   └── page.tsx
+│   │   │   ├── login.css
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── admin/
@@ -113,6 +114,8 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   └── page.tsx
+│   ├── agente_reportes/
+│   │   └── page.tsx
 │   ├── analisis/
 │   │   ├── formulario-ingreso/
 │   │   │   └── page.tsx
@@ -141,6 +144,8 @@
 │   │   │       └── route.ts
 │   │   ├── auth/
 │   │   │   ├── [...all]/
+│   │   │   │   └── route.ts
+│   │   │   ├── secciones-permitidas/
 │   │   │   │   └── route.ts
 │   │   │   └── token-guest/
 │   │   │       └── route.ts
@@ -197,6 +202,8 @@
 │   │   │   │   └── route.ts
 │   │   │   ├── atendidos/
 │   │   │   │   └── route.ts
+│   │   │   ├── bitacora-911/
+│   │   │   │   └── route.ts
 │   │   │   ├── en-despacho/
 │   │   │   │   └── route.ts
 │   │   │   ├── kpi-geo/
@@ -209,8 +216,7 @@
 │   │   │   │   ├── [id]/
 │   │   │   │   └── subir/
 │   │   │   ├── detenidos/
-│   │   │   │   ├── [id]/
-│   │   │   │   └── generar-ppt/
+│   │   │   │   └── [id]/
 │   │   │   ├── evidencias/
 │   │   │   │   └── subir/
 │   │   │   ├── historial/
@@ -230,6 +236,9 @@
 │   │   │   ├── leer/
 │   │   │   │   └── route.ts
 │   │   │   └── route.ts
+│   │   ├── oficial/
+│   │   │   └── contador/
+│   │   │       └── route.ts
 │   │   ├── prevencion/
 │   │   │   ├── busquedas/
 │   │   │   │   ├── [id]/
@@ -243,6 +252,9 @@
 │   │   │       └── route.ts
 │   │   ├── registro-detenidos/
 │   │   │   └── registrar/
+│   │   │       └── route.ts
+│   │   ├── reporte-detenidos/
+│   │   │   └── generar-ppt/
 │   │   │       └── route.ts
 │   │   ├── reportes/
 │   │   │   ├── formato-n-armas-aseguradas/
@@ -353,10 +365,22 @@
 │   ├── d1_noiniciada/
 │   │   └── page.tsx
 │   ├── dashboard/
+│   │   ├── catalogos/
+│   │   │   ├── oficiales/
+│   │   │   │   ├── [id]/
+│   │   │   │   ├── nuevo/
+│   │   │   │   └── page.tsx
+│   │   │   ├── patrullas/
+│   │   │   │   ├── [id]/
+│   │   │   │   ├── nuevo/
+│   │   │   │   └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
 │   │   ├── enable-2fa.tsx
 │   │   ├── module-cards.tsx
 │   │   ├── page.tsx
-│   │   └── sign-out-button.tsx
+│   │   ├── sign-out-button.tsx
+│   │   └── sspm-general.tsx
 │   ├── denuncia/
 │   │   └── nuevo/
 │   │       └── page.tsx
@@ -471,6 +495,8 @@
 │   │   └── page.tsx
 │   ├── notificaciones/
 │   │   └── page.tsx
+│   ├── offline/
+│   │   └── page.tsx
 │   ├── oficial/
 │   │   ├── configuracion/
 │   │   │   ├── EditarTelefono.tsx
@@ -508,7 +534,7 @@
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   └── PrevencionNav.tsx
-│   ├── reportes/
+│   ├── reporte-detenidos/
 │   │   └── page.tsx
 │   ├── reportes_incidentes/
 │   │   └── page.tsx
@@ -517,7 +543,9 @@
 │   │   └── page.tsx
 │   ├── sin_robos/
 │   │   └── page.tsx
+│   ├── error.tsx
 │   ├── favicon.ico
+│   ├── global-error.tsx
 │   ├── globals.css
 │   ├── layout.tsx
 │   ├── not-found.tsx
@@ -527,6 +555,7 @@
 │   │   ├── despacho/
 │   │   │   ├── AsignacionMapa.tsx
 │   │   │   ├── DespachoForm.tsx
+│   │   │   ├── MapaSeguimientoOficial.tsx
 │   │   │   ├── SeleccionarUnidadesModal.tsx
 │   │   │   ├── TablonDespacho.tsx
 │   │   │   └── UnidadCards.tsx
@@ -545,6 +574,7 @@
 │   │   ├── whatsapp/
 │   │   │   ├── FormSection.tsx
 │   │   │   └── RegistroIncidenteForm.tsx
+│   │   ├── Bitacora911.tsx
 │   │   ├── FiltrosIncidentes.tsx
 │   │   ├── ModuleCard.tsx
 │   │   └── Pagination.tsx
@@ -591,6 +621,15 @@
 │   │   └── TablonAnalisis.tsx
 │   ├── auxiliar/
 │   │   └── ProfileDropdownAuxiliar.tsx
+│   ├── catalogos/
+│   │   ├── ModalDestituirOficial.tsx
+│   │   ├── ModalReactivarOficial.tsx
+│   │   ├── NuevoOficialForm.tsx
+│   │   ├── OficialesTablaConFiltros.tsx
+│   │   ├── OficialesTable.tsx
+│   │   ├── PatrullaForm.tsx
+│   │   ├── PatrullasTablaConFiltros.tsx
+│   │   └── PatrullasTable.tsx
 │   ├── denuncias/
 │   │   └── FormularioD1.tsx
 │   ├── fiscalia/
@@ -623,7 +662,6 @@
 │   │   ├── AccionesDetenido.tsx
 │   │   ├── BandejaSolicitudes.tsx
 │   │   ├── BatchEnvioFotos.tsx
-│   │   ├── BotonGenerarPpt.tsx
 │   │   ├── BotonSubirDenuncia.tsx
 │   │   ├── BuscadorEvento.tsx
 │   │   ├── CardEnvioFoto.tsx
@@ -640,10 +678,13 @@
 │   │   └── ListaHistorial.tsx
 │   ├── oficial/
 │   │   ├── navegacion/
-│   │   │   └── NavegacionDespacho.tsx
+│   │   │   ├── AsignacionCard.tsx
+│   │   │   ├── NavegacionDespacho.tsx
+│   │   │   └── NavegacionModal.tsx
 │   │   ├── rondin/
 │   │   │   ├── RondinPageClient.tsx
 │   │   │   └── RondinTabla.tsx
+│   │   ├── ContadorAsignaciones.tsx
 │   │   ├── DespachoContent.tsx
 │   │   ├── FormularioRecorrido.tsx
 │   │   ├── MapaPinFijo.tsx
@@ -659,6 +700,8 @@
 │   ├── partials/
 │   │   ├── Footer.tsx
 │   │   ├── Header.tsx
+│   │   ├── PageHeader.tsx
+│   │   ├── StepIndicator.tsx
 │   │   └── SubHeader.tsx
 │   ├── prevencion/
 │   │   ├── AgregarAutoridadForm.tsx
@@ -677,6 +720,8 @@
 │   │   ├── SemaforoVigencia.tsx
 │   │   ├── SolicitudC4Form.tsx
 │   │   └── VisitaModal.tsx
+│   ├── reporte-detenidos/
+│   │   └── BotonGenerarPpt.tsx
 │   ├── reportes/
 │   │   ├── d1/
 │   │   │   ├── D1Filters.tsx
@@ -730,12 +775,17 @@
 │   ├── ui/
 │   │   ├── badge.tsx
 │   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── select.tsx
 │   │   ├── separator.tsx
 │   │   ├── Toast.tsx
 │   │   └── ToastAuto.tsx
 │   ├── FilaDetenidoRol.tsx
 │   ├── LoadingProvider.tsx
-│   └── PageTransition.tsx
+│   ├── PageTransition.tsx
+│   └── sw-register.tsx
 ├── docs/
 │   └── notificaciones-oficial-despacho/
 │       ├── 00-contexto.md
@@ -743,7 +793,8 @@
 │       ├── 02-backend-despacho-refuerzos.md
 │       ├── 03-frontend-campanita-ui.md
 │       ├── 04-verificacion.md
-│       └── 05-fix-prioritario-oficial-ocupado.md
+│       ├── 05-fix-prioritario-oficial-ocupado.md
+│       └── 06-fix-prioritario-notificado-al-despachar.md
 ├── features/
 │   ├── compartido/
 │   │   └── components/
@@ -812,14 +863,16 @@
 │   ├── useAnalistaForm.ts
 │   ├── useDespacho.ts
 │   ├── useEmpleado.ts
-│   ├── useFlota.ts
 │   ├── useIncidente.ts
 │   ├── useIncidentes.ts
+│   ├── useMediaQuery.ts
 │   ├── usePolling.ts
 │   ├── useRegistroDetenido.ts
-│   └── useReporteCampo.ts
+│   ├── useReporteCampo.ts
+│   └── useResponsive.ts
 ├── lib/
 │   ├── 911/
+│   │   ├── estatus-c4.ts
 │   │   ├── mapper.ts
 │   │   ├── permisos.ts
 │   │   ├── repository.ts
@@ -884,6 +937,11 @@
 │   │   ├── repository.ts
 │   │   ├── service.ts
 │   │   └── types.ts
+│   ├── catalogos/
+│   │   ├── actions.ts
+│   │   ├── mapper.ts
+│   │   ├── repository.ts
+│   │   └── types.ts
 │   ├── complementos/
 │   │   └── repository.ts
 │   ├── corralon/
@@ -921,7 +979,11 @@
 │   │   │   ├── 0024_reportes_campo_catalogo_fk.sql
 │   │   │   ├── 0025_ubicacion_oficiales.sql
 │   │   │   ├── 0026_incidente_despacho_elementos_atiende_caso.sql
-│   │   │   └── 0026_notificaciones_por_rol.sql
+│   │   │   ├── 0026_notificaciones_por_rol.sql
+│   │   │   ├── 0027_patrullas_parque_vehicular.sql
+│   │   │   ├── 0028_v2_patrullas_placa.sql
+│   │   │   ├── 0029_asignar_oficiales_patrulla.sql
+│   │   │   └── 0030_tokens_recurso.sql
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
 │   │   ├── schema.ts
@@ -983,7 +1045,6 @@
 │   │   ├── incidentes-camara-service.ts
 │   │   ├── mapper.ts
 │   │   ├── permisos.ts
-│   │   ├── ppt-service.ts
 │   │   ├── repository.ts
 │   │   ├── service.ts
 │   │   └── types.ts
@@ -1011,6 +1072,7 @@
 │   │   └── generarOrdenSalida.ts
 │   ├── permisos/
 │   │   ├── core.ts
+│   │   ├── mapa-secciones.ts
 │   │   └── registro.ts
 │   ├── prevencion/
 │   │   ├── actions.ts
@@ -1020,6 +1082,13 @@
 │   │   ├── repository.ts
 │   │   ├── semaforo.ts
 │   │   ├── timeline.ts
+│   │   └── types.ts
+│   ├── recursos/
+│   │   └── token-recurso.ts
+│   ├── reporte-detenidos/
+│   │   ├── permisos.ts
+│   │   ├── ppt-service.ts
+│   │   ├── repository.ts
 │   │   └── types.ts
 │   ├── reportes/
 │   │   ├── formato-n-armas-aseguradas-service.ts
@@ -1101,6 +1170,31 @@
 │   ├── Login Hi-Fi.html
 │   ├── Login Wireframes.html
 │   └── login-app.jsx
+├── plan-auditoria-url/
+│   ├── 00-contexto.md
+│   ├── etapa-0-auditoria.md
+│   ├── etapa-1-cierre-autorizacion.md
+│   ├── etapa-2-idor-hardening.md
+│   ├── etapa-3-cosmetica-opcional.md
+│   ├── README.md
+│   └── test-qa.md
+├── plan-cierre-idor-pendientes/
+│   ├── 00-contexto.md
+│   ├── etapa-1-token-solicitudes-generales.md
+│   ├── etapa-2-autorizacion-uploads.md
+│   ├── README.md
+│   └── test-qa.md
+├── plan-formulario-d1/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── etapa-7.md
+│   ├── etapa-8.md
+│   └── README.md
 ├── plan-mapa-despacho/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1117,6 +1211,14 @@
 │   ├── etapa-9.md
 │   ├── README.md
 │   └── test-qa.md
+├── plan-navegacion-modal/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── README.md
+│   └── test-qa.md
 ├── plan-navegacion-oficial/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1128,7 +1230,30 @@
 │   ├── etapa-7.md
 │   ├── README.md
 │   └── test-qa.md
+├── plan-reporte-detenidos/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── etapa-7.md
+│   ├── etapa-8.md
+│   └── README.md
+├── plan-saneamiento-bd-d1/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── etapa-7.md
+│   └── etapa-8.md
 ├── public/
+│   ├── files-xlsx/
+│   │   └── flota-vehicular-nuevo.xlsx
 │   ├── marca_agua/
 │   │   └── plantilla-orden-salida.png
 │   ├── uploads/
@@ -1147,12 +1272,20 @@
 │   ├── logo-sspm.png
 │   ├── logo-text-dark.png
 │   ├── logo-text-light.png
+│   ├── manifest.json
 │   ├── next.svg
 │   ├── sjr.png
+│   ├── sw.js
 │   ├── vercel.svg
 │   └── window.svg
 ├── scripts/
+│   ├── reportes/
+│   │   └── auditoria-permisos.csv
+│   ├── responsive/
+│   │   └── exceptions.json
 │   ├── ab-test.mjs
+│   ├── audit-responsive.mjs
+│   ├── auditoria-permisos.mjs
 │   ├── benchmark.mjs
 │   ├── export-schema.mjs
 │   ├── exportar-schema.ts
@@ -1200,6 +1333,9 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

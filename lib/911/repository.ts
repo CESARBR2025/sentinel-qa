@@ -133,14 +133,28 @@ export async function obtenerIncidenteConExtras(id: string): Promise<Record<stri
   const result = await query<Record<string, unknown>>(
     `SELECT row_to_json(i.*) AS inc, cti.nombre AS tipo_nombre, cp.nombre AS prioridad_nombre,
             cte.nombre AS emergencia_nombre, row_to_json(ie.*) AS ext, row_to_json(iae.*) AS ala,
-            row_to_json(irc.*) AS rep
+            json_build_object(
+              'id', orc.id,
+              'incidente_id', orc.incidente_id,
+              'contenido_reporte', orc.ofi_contenido_reporte,
+              'datos_positivos_negativos', orc.ofi_datos_pn,
+              'acciones_realizadas', orc.ofi_acciones,
+              'hay_detencion', orc.ofi_hay_detencion,
+              'nombre_detenidos', COALESCE((SELECT string_agg(d->>'nombre', ', ') FROM jsonb_array_elements(orc.ofi_detenidos) d), ''),
+              'autoridad_recibe', orc.ofi_autoridad_recibe,
+              'expediente_ci', orc.expediente_ci,
+              'objetos_recuperados', orc.ofi_objetos_recuperados,
+              'vehiculos_recuperados', COALESCE((SELECT string_agg(TRIM(CONCAT_WS(' ', v->>'tipo', v->>'placas', v->>'color')), ' | ') FROM jsonb_array_elements(orc.ofi_vehiculos) v), ''),
+              'tipo_vehiculo', (orc.ofi_vehiculos->0->>'tipo'),
+              'destino_vehiculo', (orc.ofi_vehiculos->0->>'destino')
+            ) AS rep
      FROM incidentes i
      LEFT JOIN cat_tipos_incidente cti ON i.tipo_incidente_id = cti.id
      LEFT JOIN cat_prioridades cp ON i.prioridad_id = cp.id
      LEFT JOIN cat_tipos_emergencia cte ON i.tipo_emergencia_id = cte.id
      LEFT JOIN incidente_extorsion ie ON i.id = ie.incidente_id
      LEFT JOIN incidente_alarma_escolar iae ON i.id = iae.incidente_id
-     LEFT JOIN incidente_reporte_campo irc ON i.id = irc.incidente_id
+     LEFT JOIN ofi_reportes_campo orc ON i.id = orc.incidente_id
      WHERE i.id = $1
      LIMIT 1`,
     [id],

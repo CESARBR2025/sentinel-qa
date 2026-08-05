@@ -62,7 +62,7 @@ export async function obtenerHistorialCompleto(incidenteId: string): Promise<His
       ])
     : [[], []]
 
-  // Cierre vigente (ofi_reportes_campo); fallback a legacy incidente_reporte_campo
+  // Cierre vigente: ofi_reportes_campo (vía lib/oficial)
   const cierreOfi = await obtenerCierrePorIncidente(incidenteId)
   const cierreLegacy = cierreOfi ? null : await obtenerReporteCampoDeIncidente(incidenteId)
 

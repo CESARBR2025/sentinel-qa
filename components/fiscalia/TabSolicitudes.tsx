@@ -113,7 +113,7 @@ export function TabSolicitudes({ pendientes, sinEvidencias, conEvidencias, final
                     <td>{s.iph ?? '—'}</td>
                     <td>{s.folioCu ?? '—'}</td>
                     <td>{s.corporacion ?? '—'}</td>
-                    <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.delito ?? '—'}</td>
+                    <td>{s.delito ?? '—'}</td>
                     <td style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>{s.fechaReporte ?? '—'}</td>
                     <td>
                       <span className="badge-estado" style={{

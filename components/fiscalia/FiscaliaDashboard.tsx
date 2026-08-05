@@ -34,9 +34,25 @@ function hashColor(str: string, palette: typeof AVATAR_COLORS) {
     return palette[Math.abs(hash) % palette.length]
 }
 
+interface FilaFiscalia {
+    id: string
+    estatus?: string
+    estatus_dependencia?: string
+    folio?: unknown
+    nombre_infractor?: unknown
+    placa?: unknown
+    created_at?: unknown
+    [key: string]: unknown
+}
+
+interface ColumnaFiscalia {
+    key: string
+    label: string
+}
+
 interface Props {
-    data: any[]
-    visibleColumns: any[]
+    data: FilaFiscalia[]
+    visibleColumns: ColumnaFiscalia[]
     loading?: boolean
 }
 
@@ -105,13 +121,13 @@ export default function FiscaliaDashboard({
         const pendientes = data.filter(
             x =>
                 x.estatus === 'REGISTRADA' &&
-                ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO'].includes(x.estatus_dependencia)
+                ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO'].includes(x.estatus_dependencia ?? '')
         ).length
 
         const liberadas = data.filter(
             x =>
                 x.estatus === 'REGISTRADA' &&
-                ['MESA_DE_CONTROL_PENDIENTE_DOCS'].includes(x.estatus_dependencia)
+                ['MESA_DE_CONTROL_PENDIENTE_DOCS'].includes(x.estatus_dependencia ?? '')
         ).length
 
         return { pendientes, liberadas }
@@ -126,12 +142,12 @@ export default function FiscaliaDashboard({
                 return data.filter(
                     x =>
                         x.estatus === 'REGISTRADA' &&
-                        ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO'].includes(x.estatus_dependencia))
+                        ['RETENIDO_POR_ACCIDENTE_PENDIENTE_OFICIO', 'RETENIDO_POR_DELITO_PENDIENTE_OFICIO'].includes(x.estatus_dependencia ?? ''))
             case 'LIBERADO_POR_FISCALIA':
                 return data.filter(
                     x =>
                         x.estatus === 'REGISTRADA' &&
-                        ['MESA_DE_CONTROL_PENDIENTE_DOCS', 'LIBERADA_POR_ACCIDENTE'].includes(x.estatus_dependencia))
+                        ['MESA_DE_CONTROL_PENDIENTE_DOCS', 'LIBERADA_POR_ACCIDENTE'].includes(x.estatus_dependencia ?? ''))
             default:
                 return []
         }
@@ -148,7 +164,7 @@ export default function FiscaliaDashboard({
     const registrosFiltradosFecha = useMemo(() => {
         if (!fechaInicio && !fechaFin) return registrosVisibles
         return registrosVisibles.filter(row => {
-            const fecha = new Date(row.created_at)
+            const fecha = new Date(String(row.created_at ?? ''))
             if (fechaInicio && fecha < new Date(fechaInicio)) return false
             if (fechaFin) {
                 const endDate = new Date(fechaFin)
@@ -188,7 +204,7 @@ export default function FiscaliaDashboard({
         const rows = registrosOrdenados.map(row => {
             return visibleColumns.filter(c => c.key !== 'acciones').map(c => {
                 if (c.key === 'estatus') {
-                    return getBadge(row.estatus_dependencia ?? row.estatus).label
+                    return getBadge(row.estatus_dependencia ?? row.estatus ?? '').label
                 }
                 return row[c.key] ?? ''
             })
@@ -287,19 +303,6 @@ export default function FiscaliaDashboard({
                 </div>
             ) : (
                 <>
-
-                    {/* ═══ TITLE ═══ */}
-                    <div style={{ borderLeft: '4px solid #1f355a', paddingLeft: '20px' }}>
-                        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '0.4em', color: '#64748B', fontWeight: 700 }}>
-                            SSPM · FISCALÍA
-                        </span>
-                        <h1 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '48px', fontWeight: 800, margin: '8px 0 0', lineHeight: 1, textTransform: 'uppercase' }}>
-                            GESTIÓN DE <span style={{ color: '#1f355a' }}>LIBERACIONES</span>
-                        </h1>
-                        <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', color: '#64748B', marginTop: '12px', letterSpacing: '0.05em' }}>
-                            Administra las liberaciones de vehículos remitidas por la Policía Vial.
-                        </p>
-                    </div>
 
                     {/* ─── TABLA (with segment control) ─── */}
                     <div className="rounded-lg border overflow-hidden bg-white border-slate-200 shadow-card">
@@ -483,7 +486,7 @@ export default function FiscaliaDashboard({
                                                     }
 
                                                     if (column.key === 'estatus') {
-                                                        const badge = getBadge(row.estatus_dependencia ?? row.estatus)
+                                                        const badge = getBadge(row.estatus_dependencia ?? row.estatus ?? '')
                                                         return (
                                                             <td key={column.key} className="px-4 py-2.5">
                                                                 <span
@@ -498,7 +501,7 @@ export default function FiscaliaDashboard({
                                                     }
 
                                                     if (column.key === 'nombre_infractor') {
-                                                        const name = row['nombre_infractor'] ?? ''
+                                                        const name = String(row['nombre_infractor'] ?? '')
                                                         const initials = getInitials(name)
                                                         const color = hashColor(name, AVATAR_COLORS)
                                                         return (
@@ -520,7 +523,7 @@ export default function FiscaliaDashboard({
 
                                                     return (
                                                         <td key={column.key} className="px-4 py-2.5 font-medium text-slate-700">
-                                                            {row[column.key] ?? '—'}
+                                                            {row[column.key] !== null && row[column.key] !== undefined ? String(row[column.key]) : '—'}
                                                         </td>
                                                     )
                                                 })}

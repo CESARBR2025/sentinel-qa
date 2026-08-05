@@ -17,12 +17,13 @@
 | agente_infracciones | (Pendiente) | ✨ Detectado |
 | agente_juzgado | (Pendiente) | ✨ Detectado |
 | agente_liberaciones | (Pendiente) | ✨ Detectado |
+| agente_reportes | (Pendiente) | ✨ Detectado |
 | ai | (Pendiente) | ✨ Detectado |
 | analisis | (Pendiente) | ✨ Detectado |
 | auth | (Pendiente) | ✨ Detectado |
 | auxiliar | (Pendiente) | ✨ Detectado |
 | camara | (Pendiente) | ✨ Detectado |
-| catalogos | CRUD Oficiales y Patrullas (SSPM General) | ✨ Detectado |
+| catalogos | (Pendiente) | ✨ Detectado |
 | complementos | (Pendiente) | ✨ Detectado |
 | corralon | (Pendiente) | ✨ Detectado |
 | d1 | (Pendiente) | ✨ Detectado |
@@ -36,7 +37,7 @@
 | estadisticos | (Pendiente) | ✨ Detectado |
 | expediente | (Pendiente) | ✨ Detectado |
 | fiscalia | (Pendiente) | ✨ Detectado |
-| flota | Catálogo del parque vehicular (Excel + BD local) | ✨ Detectado |
+| flota | (Pendiente) | ✨ Detectado |
 | formato-n-armas-aseguradas | (Pendiente) | ✨ Detectado |
 | formato-n-atencion-victimas | (Pendiente) | ✨ Detectado |
 | formato-n-eventos | (Pendiente) | ✨ Detectado |
@@ -54,10 +55,13 @@
 | n-coordinacion | (Pendiente) | ✨ Detectado |
 | nCoordinacion | (Pendiente) | ✨ Detectado |
 | notificaciones | (Pendiente) | ✨ Detectado |
+| offline | (Pendiente) | ✨ Detectado |
 | oficial | (Pendiente) | ✨ Detectado |
 | ordenSalida | (Pendiente) | ✨ Detectado |
 | permisos | (Pendiente) | ✨ Detectado |
 | prevencion | (Pendiente) | ✨ Detectado |
+| recursos | (Pendiente) | ✨ Detectado |
+| reporte-detenidos | (Pendiente) | ✨ Detectado |
 | reportes | (Pendiente) | ✨ Detectado |
 | reportes-incidentes | (Pendiente) | ✨ Detectado |
 | reportes-operativos | (Pendiente) | ✨ Detectado |
@@ -70,9 +74,10 @@
 | sin_robos | (Pendiente) | ✨ Detectado |
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
-| PWA Offline | SW manual + página /offline + error.tsx/global-error.tsx ante caída de señal o crash | ✅ Implementado |
-| Auditoría URLs y autorización | Cierre de Broken Access Control/IDOR: gate grueso de sección en el proxy + tokens opacos persistentes en URLs de recursos (plan-auditoria-url) | ✅ Implementado |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

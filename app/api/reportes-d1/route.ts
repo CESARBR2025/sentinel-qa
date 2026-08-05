@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { verificarRolOficial } from "@/lib/oficial/service";
-import { verificarFolioDenunciaUnico, insertarReporteDenuncia } from "@/lib/d1/repository";
+import { verificarFolioDenunciaUnico, verificarIphUnico, verificarFolioCuUnico, insertarReporteDenuncia } from "@/lib/d1/repository";
 import { query } from "@/lib/db";
 import { emitir } from "@/lib/notificaciones/emisor";
 
@@ -30,6 +30,34 @@ async function generarFolioDenunciaUnico(): Promise<string> {
   throw new Error('No se pudo generar un folio único después de 10 intentos')
 }
 
+function generarIph(): string {
+  const y = new Date().getFullYear()
+  const rand = String(Math.floor(Math.random() * 90000) + 10000)
+  return `IPH-${y}-${rand}`
+}
+
+async function generarIphUnico(): Promise<string> {
+  for (let i = 0; i < 10; i++) {
+    const iph = generarIph()
+    if (await verificarIphUnico(iph)) return iph
+  }
+  throw new Error('No se pudo generar un IPH único después de 10 intentos')
+}
+
+function generarFolioCu(): string {
+  const y = new Date().getFullYear()
+  const rand = String(Math.floor(Math.random() * 90000) + 10000)
+  return `CU-${y}-${rand}`
+}
+
+async function generarFolioCuUnico(): Promise<string> {
+  for (let i = 0; i < 10; i++) {
+    const folioCu = generarFolioCu()
+    if (await verificarFolioCuUnico(folioCu)) return folioCu
+  }
+  throw new Error('No se pudo generar un Folio CU único después de 10 intentos')
+}
+
 export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
@@ -43,6 +71,8 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     body.folioDenuncia = await generarFolioDenunciaUnico()
+    body.iph = await generarIphUnico()
+    body.folioCu = await generarFolioCuUnico()
 
     const clean = (val: any) => (val === "" || val === undefined ? null : val);
 

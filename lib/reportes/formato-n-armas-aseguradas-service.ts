@@ -8,7 +8,7 @@ export interface ArmaFuente {
   observaciones: string | null
 }
 
-// Jala armas de fuego ya capturadas en reportes de campo (ofi_reportes_campo / incidente_reporte_campo)
+// Jala armas de fuego ya capturadas en reportes de campo (ofi_reportes_campo)
 // El jsonb armas_fuego trae { datos, cartuchos, observaciones, ... } por cada arma.
 export async function obtenerArmasParaFormatoN(fecha: string): Promise<ArmaFuente[]> {
   const rows = await obtenerArmas(fecha, fecha)

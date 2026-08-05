@@ -5,7 +5,6 @@ import { listarReportesConDetenidos } from '@/lib/monitorista/detenido-service'
 import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import Link from 'next/link'
 import React from 'react'
-import { BotonGenerarPpt } from '@/components/monitorista/BotonGenerarPpt'
 import { Clock, CheckCircle2, Eye, Camera } from 'lucide-react'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -41,10 +40,7 @@ export default async function DetenidosPage() {
           accent="Detenidos"
           accentColor="#059669"
           subtitle="Reportes de campo con detenidos · solicitud y envío de fotos"
-          actions={<>
-            <PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>
-            <BotonGenerarPpt pendientes={pendientes.length} completados={completadas.length} />
-          </>}
+          actions={<PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>}
         />
 
         <div className="grid-3">

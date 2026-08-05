@@ -15,6 +15,7 @@
 | `lib/agente_juzgado/actions.ts` | obtenerDashboardJuzgado, obtenerSolicitudes, accionTomarCaso, accionPedirEvidencias, accionCerrarCaso, obtenerDatosAseguradoAction, guardarDetallesAseguradoAction, obtenerLiberacionesAction, obtenerDetalleInfraccionViaActionJuzgado, guardarOficioJuzgadoAction, obtenerAseguradosJuzgadoAction, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarDetallesAseguradosJuzgadoAction, guardarPuestaDisposicionJuzgadoAction |
 | `lib/agente_liberaciones/actions.ts` | obtenerDashboardLiberaciones, obtenerLiberaciones, capturarInfractorAction, obtenerDocumentosLiberacion, revisarDocumentoAction, finalizarRevisionAction, obtenerDetalleInfraccionLiberaciones, generarOrdenPagoAction |
 | `lib/auxiliar/actions.ts` | upsertChecklistAction |
+| `lib/catalogos/actions.ts` | crearOficial, actualizarOficial, destituirOficial, reactivarOficial, buscarUsuariosReincorporar, crearPatrullaAction, actualizarPatrullaAction, eliminarPatrullaAction |
 | `lib/corralon/actions.ts` | obtenerDashboardCorralon, obtenerSolicitudes |
 | `lib/fiscalia/actions.ts` | obtenerDashboardFiscalia, obtenerSolicitudes, accionTomarCaso, accionPedirEvidencias, obtenerDatosAseguradoAction, guardarDetallesAseguradoAction, obtenerLiberacionesAction, obtenerAseguradosAction, obtenerDetalleAseguradoCompletoAction, guardarDetallesAseguradosAction, obtenerPuestaDisposicionAction, guardarPuestaDisposicionAction, obtenerDetalleInfraccionViaAction, guardarOficioAction, obtenerDashboardJuzgado, obtenerAseguradosJuzgadoAction, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarPuestaDisposicionJuzgadoAction |
 | `lib/incidentes/actions.ts` | createIncidente, createIncidenteCliente, addPersonaAfectada, deletePersonaAfectada, createRondinEscalado, createDespacho, enviarRefuerzos, cerrarPorDetencion, createExtorsion, createAlarmaEscolar |
@@ -28,6 +29,9 @@
 | `lib/rol-servicios/actions.ts` | createRol, updateEncabezadoRol, createAsignacion, deleteAsignacion, upsertEstadoFuerza, createObservacion, deleteObservacion, guardarFirmas |
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

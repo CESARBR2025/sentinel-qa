@@ -44,8 +44,9 @@ flowchart TD
 | `lib/monitorista/detenido-service.ts` | Lógica de detenidos y fotos |
 | `lib/monitorista/incidentes-camara-service.ts` | Lógica de incidentes de cámara |
 | `lib/monitorista/denuncia-service.ts` | Lógica de denuncias D1 pendientes/atendidas |
-| `lib/monitorista/ppt-service.ts` | Generación de PPT para detenidos |
 | `lib/monitorista/expediente.ts` | Integración con expediente digital |
+
+> **Nota**: La generación del PPT de detenidos ya no vive en este módulo — se trasladó a `lib/reporte-detenidos/` (módulo de solo lectura del rol Reportante, ver `Reporte de Detenidos.md`). Monitorista conserva solo la solicitud/revisión/aprobación de fotos y la edición de campos.
 
 ## BD
 
@@ -73,7 +74,7 @@ flowchart TD
 | `/monitorista/solicitudes` | Bandeja | `DashboardHeader` + `PageHeader` (`← Panel`) + `.pad-pagina` + `.grid-3` |
 | `/monitorista/solicitudes/[id]` | Detalle solicitud | `DashboardHeader` + `PageHeader` (`← Bandeja`) + `.pad-pagina` |
 | `/monitorista/denuncias/[id]` | Detalle denuncia D1 | `DashboardHeader` + `PageHeader` (`← Bandeja`) + `.pad-pagina` + `.grid-2`/`.grid-3` |
-| `/monitorista/detenidos` | Reporte de detenidos | `DashboardHeader` + `PageHeader` (`← Panel` + `GENERAR PPT`) + `.pad-pagina` + `.grid-3` |
+| `/monitorista/detenidos` | Revisión de fotos de detenidos | `DashboardHeader` + `PageHeader` (`← Panel`) + `.pad-pagina` + `.grid-3` |
 | `/monitorista/detenidos/nueva` | Alta detenido | `DashboardHeader` + `PageHeader` (`← Detenidos`) + `.pad-pagina` + `.grid-2` |
 | `/monitorista/detenidos/[id]` | Detalle detenido | `DashboardHeader` + `PageHeader` (`← Detenidos`) + `.pad-pagina` + `.grid-2` |
 | `/monitorista/incidentes-camara` | Registros por turno | `DashboardHeader` + `PageHeader` (`← Panel` + `+ Nuevo Registro`) + `.pad-pagina` + `.grid-2` + `.tabla-wrap` |

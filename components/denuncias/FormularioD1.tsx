@@ -1,7 +1,7 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import {
   FileText, Clock, Shield, MapPin, User,
@@ -11,17 +11,26 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { useOficialFormStore } from '@/lib/oficial/store'
 import { useD1FormStore } from '@/lib/denuncias/storeD1'
+import { StepIndicator } from '@/components/partials/StepIndicator'
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
+
+const STEPS = [
+  'Identificación y Cronometría',
+  'Georreferenciación',
+  'Detalles del Evento',
+  'Personal y Cierre',
+]
 
 const mapContainerStyle = { width: '100%', height: '350px', borderRadius: '4px' };
 const center = { lat: 20.3889, lng: -99.9961 };
 
-const SentinelField = ({ label, icon: Icon, name, type = "text", required = false, ...props }: any) => (
+const SentinelField = ({ label, icon: Icon, name, type = "text", required = false, requiredVisual = false, ...props }: any) => (
   <div style={fieldContainerStyle}>
     <label style={labelStyle}>
-      {label} {required && <span style={{ color: '#ef4444' }}>*</span>}
+      {label} {(required || requiredVisual) && <span style={{ color: '#ef4444' }}>*</span>}
     </label>
     <div style={{ position: 'relative' }}>
       {Icon && <Icon size={14} style={iconStyle} />}
@@ -55,6 +64,12 @@ interface Prefill {
   fechaHoraInicioIncidente: string | null
   fechaHoraDespacho: string | null
   fechaReporteCampo: string | null
+  delito: string | null
+  modusOperandi: string | null
+  hayDetencion: boolean
+  nombreReportante: string | null
+  telefonoReportante: string | null
+  detenidos: { nombre: string | null; apellidoPaterno: string | null; apellidoMaterno: string | null }[]
 }
 
 function generarFolioDenuncia(): string {
@@ -81,11 +96,11 @@ interface GrupoAdscripcionOption {
 export default function FormularioD1({ user, prefill, gruposAdscripcion }: { user: any; prefill?: Prefill; gruposAdscripcion?: GrupoAdscripcionOption[] }) {
   const folioDenunciaAuto = useMemo(() => generarFolioDenuncia(), [])
 
-  const consecutivoAnio = useMemo(() => {
+  const [consecutivoAnio] = useState(() => {
     const y = new Date().getFullYear()
     const rand = String(Math.floor(Math.random() * 90000) + 10000)
     return { y, rand }
-  }, [])
+  })
 
   const iphDefault = `IPH-${consecutivoAnio.y}-${consecutivoAnio.rand}`
   const cuDefault = `CU-${consecutivoAnio.y}-${consecutivoAnio.rand}`
@@ -94,6 +109,8 @@ export default function FormularioD1({ user, prefill, gruposAdscripcion }: { use
   const incidenteId = prefill?.incidenteId ?? ''
 
   const store = useD1FormStore()
+
+  const [errorDelito, setErrorDelito] = useState(false)
 
   // Pre-fill avistamiento con misma fecha/hora de reporte
   const fechaAvistamientoDefault = prefill?.fechaReporteCampo
@@ -189,6 +206,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   const formData = new FormData(e.currentTarget);
   const data = Object.fromEntries(formData.entries());
 
+  const delitoValue = String(data['delito'] ?? '').trim();
+  if (!delitoValue) {
+    setErrorDelito(true);
+    toast.error('Debes indicar el delito antes de continuar.');
+    return;
+  }
+
   // --- CONSTRUCCIÓN DEL CUERPO ---
   const body = {
     ...data,
@@ -200,22 +224,27 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   console.log("VALORES QUE SE VAN A LA DB:", body); 
 
-  const res = await fetch('/api/reportes-d1', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  try {
+    const res = await fetch('/api/reportes-d1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
 
-  const result = await res.json();
-  if (!res.ok) {
-    alert("ERROR: " + result.error);
-    return;
+    const result = await res.json();
+    if (!res.ok) {
+      toast.error(result.error || 'Error al guardar el reporte D1');
+      return;
+    }
+
+    // Limpiar store y redirigir
+    resetStore();
+    const folioEnc = encodeURIComponent(result.folioDenuncia || folioDenunciaAuto)
+    router.push(`/oficial/despachos?exito=1&folio=${folioEnc}`);
+  } catch (err) {
+    console.error("Error al guardar reporte D1:", err);
+    toast.error('Error de conexión. No se pudo guardar el reporte.');
   }
-
-  // Limpiar store y redirigir
-  resetStore();
-  const folioEnc = encodeURIComponent(result.folioDenuncia || folioDenunciaAuto)
-  router.push(`/oficial/despachos?exito=1&folio=${folioEnc}`);
 };
 
 
@@ -228,7 +257,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       <input type="hidden" name="longitudApoyo" value={coordsApoyo.lng} />
       <input type="hidden" name="oficialId" value={oficialId} />
       <input type="hidden" name="incidenteId" value={incidenteId} />
-      
+
+      {/* Indicador de paso (StepIndicator) */}
+      <StepIndicator paso={step} total={STEPS.length} nombre={STEPS[step - 1]} />
 
       {/* 1. IDENTIFICACIÓN LEGAL Y CORPORATIVA */}
       <div style={{ display: step === 1 ? 'flex' : 'none', flexDirection: 'column', gap: '32px' }}>
@@ -367,13 +398,18 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <div style={grid3Style}>
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>Tipo de Evento</label>
-            <select name="tipoEvento" style={inputStyle}>
+            <select name="tipoEvento" style={inputStyle} defaultValue={prefill?.hayDetencion ? "2" : "1"}>
               <option value="1">1.- D1</option>
               <option value="2">2.- DETENIDO (FLAGRANCIA)</option>
               <option value="3">3.- DETENIDO CON DIVERSOS ELEMENTOS</option>
             </select>
           </div>
-          <SentinelField label="Delito" name="delito" required defaultValue={prefill?.tipoIncidente ?? ''} />
+          <SentinelField label="Delito" name="delito" requiredVisual defaultValue={prefill?.delito ?? prefill?.tipoIncidente ?? ''} onChange={() => setErrorDelito(false)} />
+          {errorDelito && (
+            <div style={{ color: '#ef4444', fontFamily: 'JetBrains Mono', fontSize: '12px', fontWeight: 700 }}>
+              Debes indicar el delito antes de continuar.
+            </div>
+          )}
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Hubo Violencia?</label>
             <select name="violencia" style={inputStyle}>
@@ -383,10 +419,25 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </div>
         </div>
       </section>
+
+      {(prefill?.nombreReportante || prefill?.telefonoReportante || (prefill?.detenidos?.length ?? 0) > 0) && (
+        <section className="sentinel-panel" style={{ borderLeftColor: '#64748b' }}>
+          <h2 style={sectionTitleStyle}><Users size={18} /> REPORTANTE Y DETENIDOS (DEL REPORTE DE CAMPO)</h2>
+          {(prefill?.nombreReportante || prefill?.telefonoReportante) && (
+            <div style={{ fontFamily: 'Inter', fontSize: '13px', color: '#334155', marginBottom: 12 }}>
+              Reportante: {prefill?.nombreReportante ?? 'N/D'} {prefill?.telefonoReportante ? `— Tel. ${prefill.telefonoReportante}` : ''}
+            </div>
+          )}
+          {(prefill?.detenidos?.length ?? 0) > 0 && (
+            <ul style={{ fontFamily: 'Inter', fontSize: '13px', color: '#334155', margin: 0, paddingLeft: 18 }}>
+              {prefill!.detenidos.map((d, i) => (
+                <li key={i}>{[d.nombre, d.apellidoPaterno, d.apellidoMaterno].filter(Boolean).join(' ')}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
       </div>
-
-
-      {/* 5. PERSONAL, EQUIPO Y D1 */}
       <div style={{ display: step === 4 ? 'flex' : 'none', flexDirection: 'column', gap: '32px' }}>
       <section className="sentinel-panel">
         <h2 style={sectionTitleStyle}><Shield size={18} /> PERSONAL Y EQUIPAMIENTO</h2>
@@ -409,12 +460,14 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             <label style={labelStyle}>¿Se requirió Tablet?</label>
             <select name="requirioTablet" style={inputStyle} defaultValue="true">
               <option value="true">SÍ</option>
+              <option value="false">NO</option>
             </select>
           </div>
           <div style={fieldContainerStyle}>
             <label style={labelStyle}>¿Funcionaba Tablet?</label>
             <select name="funcionabaTablet" style={inputStyle} defaultValue="true">
               <option value="true">SÍ</option>
+              <option value="false">NO</option>
             </select>
           </div>
         </div>
@@ -458,7 +511,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         </div>
         <div style={{ marginTop: '20px' }}>
           <label style={labelStyle}>Observaciones</label>
-          <textarea name="observaciones" style={{ ...inputStyle, minHeight: '100px', paddingTop: '12px' }} placeholder="Escriba aquí..." defaultValue={prefill?.descripcion ?? ''} />
+          <textarea name="observaciones" style={{ ...inputStyle, minHeight: '100px', paddingTop: '12px' }} placeholder="Escriba aquí..." defaultValue={[prefill?.descripcion, prefill?.modusOperandi ? `Modus operandi: ${prefill.modusOperandi}` : null].filter(Boolean).join('\n\n')} />
         </div>
       </section>
       </div>
@@ -477,6 +530,16 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   onClick={(e) => {
     if (step < 4) {
       e.preventDefault();
+      if (step === 3) {
+        const form = e.currentTarget.form;
+        const delitoInput = form?.elements.namedItem('delito') as HTMLInputElement | null;
+        if (!delitoInput?.value || !delitoInput.value.trim()) {
+          setErrorDelito(true);
+          toast.error('Debes indicar el delito antes de continuar.');
+          return;
+        }
+        setErrorDelito(false);
+      }
       store.setStep(step + 1);
     }
   }}

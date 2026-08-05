@@ -75,10 +75,12 @@ export interface FuenteDetencion {
 
 export async function buscarDetencionesPorRango(fechaInicio: string, fechaFin: string): Promise<FuenteDetencion[]> {
   const r = await query<Record<string, unknown>>(
-    `SELECT rc.id, i.fecha_hora_inicio, rc.delito_falta, rc.policia_a_cargo, i.folio
-     FROM incidente_reporte_campo rc
+    `SELECT rc.id, i.fecha_hora_inicio, rc.delito AS delito_falta, TRIM(CONCAT(u.name, ' ', COALESCE(u.apellido, ''))) AS policia_a_cargo, i.folio
+     FROM ofi_reportes_campo rc
      INNER JOIN incidentes i ON i.id = rc.incidente_id
-     WHERE rc.hay_detencion = true AND i.fecha_hora_inicio::date BETWEEN $1 AND $2
+     LEFT JOIN ofi_oficiales o ON o.id = rc.ofi_oficial_id
+     LEFT JOIN users u ON u.id = o.user_id
+     WHERE rc.ofi_hay_detencion = true AND i.fecha_hora_inicio::date BETWEEN $1 AND $2
      ORDER BY i.fecha_hora_inicio DESC`,
     [fechaInicio, fechaFin],
   )

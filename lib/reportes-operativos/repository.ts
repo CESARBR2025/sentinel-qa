@@ -5,7 +5,7 @@ import type {
   ExtorsionRow,
 } from './types'
 import {
-  rowToVehiculo, rowToCateo, rowToDetencionOfi, rowToDetencionInc,
+  rowToVehiculo, rowToCateo, rowToDetencionOfi,
   rowToOrdenAprehension, rowToHidrocarburo, rowToArma, rowToDroga,
   rowToExtorsion,
 } from './mapper'
@@ -25,20 +25,7 @@ export async function obtenerVehiculos(desde: string, hasta: string): Promise<Ve
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date     AS fecha,
-      i.folio                AS folio,
-      rc.policia_a_cargo     AS seguimiento,
-      jsonb_array_elements(rc.vehiculos) AS vehiculo
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_vehiculo = true
-      AND jsonb_array_length(rc.vehiculos) > 0
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
-  return [...ofi.rows.map(rowToVehiculo), ...inc.rows.map(rowToVehiculo)]
+  return ofi.rows.map(rowToVehiculo)
 }
 
 export async function obtenerCateos(desde: string, hasta: string): Promise<CateoRow[]> {
@@ -56,20 +43,7 @@ export async function obtenerCateos(desde: string, hasta: string): Promise<Cateo
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date  AS fecha,
-      i.folio             AS folio,
-      rc.cateo_calle      AS ubicacion,
-      'SSPM'              AS dependencia,
-      rc.policia_a_cargo  AS seguimiento
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_cateo = true
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
-  return [...ofi.rows.map(rowToCateo), ...inc.rows.map(rowToCateo)]
+  return ofi.rows.map(rowToCateo)
 }
 
 export async function obtenerDetenidos(desde: string, hasta: string): Promise<DetencionResult> {
@@ -87,22 +61,9 @@ export async function obtenerDetenidos(desde: string, hasta: string): Promise<De
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date   AS fecha,
-      i.folio              AS folio,
-      rc.nombre_detenidos  AS nombre,
-      rc.autoridad_recibe  AS fiscalia,
-      rc.policia_a_cargo   AS seguimiento
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_detencion = true
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
   return {
     ofi: ofi.rows.map(rowToDetencionOfi),
-    inc: inc.rows.map(rowToDetencionInc),
+    inc: [],
   }
 }
 
@@ -120,19 +81,7 @@ export async function obtenerOrdenesAprehension(desde: string, hasta: string): P
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date       AS fecha,
-      i.folio                  AS folio,
-      rc.ordenes_aprehension   AS ordenes,
-      rc.policia_a_cargo       AS seguimiento_reporte
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_orden_aprehension = true
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
-  return [...ofi.rows.map(rowToOrdenAprehension), ...inc.rows.map(rowToOrdenAprehension)]
+  return ofi.rows.map(rowToOrdenAprehension)
 }
 
 export async function obtenerHidrocarburos(desde: string, hasta: string): Promise<HidrocarburoRow[]> {
@@ -149,19 +98,7 @@ export async function obtenerHidrocarburos(desde: string, hasta: string): Promis
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date  AS fecha,
-      i.folio             AS folio,
-      rc.hidrocarburos    AS hidrocarburos,
-      rc.policia_a_cargo  AS seguimiento_reporte
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_hidrocarburo = true
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
-  return [...ofi.rows.map(rowToHidrocarburo), ...inc.rows.map(rowToHidrocarburo)]
+  return ofi.rows.map(rowToHidrocarburo)
 }
 
 export async function obtenerArmas(desde: string, hasta: string): Promise<ArmaRow[]> {
@@ -178,19 +115,7 @@ export async function obtenerArmas(desde: string, hasta: string): Promise<ArmaRo
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date  AS fecha,
-      i.folio             AS folio,
-      rc.armas_fuego      AS armas,
-      rc.policia_a_cargo  AS seguimiento_reporte
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_arma_fuego = true
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
-  return [...ofi.rows.map(rowToArma), ...inc.rows.map(rowToArma)]
+  return ofi.rows.map(rowToArma)
 }
 
 export async function obtenerDrogas(desde: string, hasta: string): Promise<DrogaRow[]> {
@@ -207,19 +132,7 @@ export async function obtenerDrogas(desde: string, hasta: string): Promise<Droga
       AND ofi_reportes_campo.created_at::date BETWEEN $1 AND $2
   `, [desde, hasta])
 
-  const inc = await query<Record<string, unknown>>(`
-    SELECT
-      rc.creado_en::date  AS fecha,
-      i.folio             AS folio,
-      rc.drogas           AS drogas,
-      rc.policia_a_cargo  AS seguimiento_reporte
-    FROM incidente_reporte_campo rc
-    JOIN incidentes i ON i.id = rc.incidente_id
-    WHERE rc.hay_droga = true
-      AND rc.creado_en::date BETWEEN $1 AND $2
-  `, [desde, hasta])
-
-  return [...ofi.rows.map(rowToDroga), ...inc.rows.map(rowToDroga)]
+  return ofi.rows.map(rowToDroga)
 }
 
 export async function obtenerExtorsiones(desde: string, hasta: string): Promise<ExtorsionRow[]> {

@@ -16,6 +16,7 @@ import {
   contarDespachosAtendidos,
   obtenerRondinesOficial,
   obtenerReporteCampoParaD1,
+  obtenerDetenidosPorReporteCampo,
   obtenerSectorOficial,
 } from './repository'
 import { query } from '@/lib/db'
@@ -31,6 +32,7 @@ import type {
   DespachoAtendido,
   RondinOficialResumen,
   ReporteCampoParaD1,
+  DetenidoReporteCampo,
 } from './types'
 
 function str(fd: FormData, key: string): string | null {
@@ -220,6 +222,10 @@ export async function listarDespachosAsignados(userId: string): Promise<Despacho
 
 export async function obtenerDatosParaD1(reporteCampoId: string): Promise<ReporteCampoParaD1 | null> {
   return obtenerReporteCampoParaD1(reporteCampoId)
+}
+
+export async function obtenerDetenidosParaD1(reporteCampoId: string): Promise<DetenidoReporteCampo[]> {
+  return obtenerDetenidosPorReporteCampo(reporteCampoId)
 }
 
 export async function obtenerSectorOficialSvc(oficialId: string): Promise<string | null> {

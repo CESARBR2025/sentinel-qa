@@ -17,7 +17,7 @@ export const TABLAS_RESET_SISTEMA = [
   // Incidentes y despacho
   'incidentes', 'incidente_despacho', 'incidente_despacho_elementos', 'incidente_despacho_unidades',
   'incidente_extorsion', 'incidente_alarma_escolar', 'incidente_personas_afectadas',
-  'incidente_reporte_campo', 'incidentes_camara',
+  'incidentes_camara',
   // Reporte de campo / D1 / oficial
   'ofi_reportes_campo', 'ofi_reporte_denuncia', 'ofi_detalles_asegurados',
   'ofi_fichas_inteligencia', 'ofi_puesta_disposicion', 'solicitud_fotos',

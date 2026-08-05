@@ -33,17 +33,19 @@ interface Props {
   solicitudId: string
   data: DetalleAsegurado
   evidencias?: EvidenciaMonitorista[]
+  ocultarEncabezado?: boolean
 }
 
 function esImagen(url: string): boolean {
   return /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(url)
 }
 
-export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) {
+export function DetallesAseguradoView({ solicitudId, data, evidencias, ocultarEncabezado = false }: Props) {
   const displayVal = (val: string | null | undefined): string => val ?? '—'
 
   return (
     <>
+      {!ocultarEncabezado && (
       <div style={{ marginBottom: 24 }}>
         <div style={{
           fontFamily: 'JetBrains Mono,monospace',
@@ -76,6 +78,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
           Expediente completo de la solicitud <strong>#{solicitudId}</strong>
         </p>
       </div>
+      )}
 
       {/* SECCIÓN 1: Datos de la Solicitud (readonly) */}
       <div style={{
@@ -99,7 +102,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
           <FileText size={16} color="#7c3aed" />
           Datos de la Solicitud
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           <div>
             <label style={labelSx}><Hash size={10} style={{ marginRight: 4 }} /> Folio del Incidente</label>
             <div style={disabledSx}>{displayVal(data.folioDenuncia)}</div>
@@ -136,7 +139,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
             <label style={labelSx}><UserCheck size={10} style={{ marginRight: 4 }} /> Nómina del Policía</label>
             <div style={disabledSx}>{displayVal(data.nominaPolicia)}</div>
           </div>
-          <div style={{ gridColumn: 'span 2' }}>
+          <div style={{ gridColumn: '1 / -1' }}>
             <label style={labelSx}><MapPin size={10} style={{ marginRight: 4 }} /> Lugar de la Detención</label>
             <div style={disabledSx}>{displayVal(data.lugarDetencion)}</div>
           </div>
@@ -169,7 +172,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
           <BookOpen size={16} color="#059669" />
           Datos Capturados
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           <div>
             <label style={labelSx}><BookOpen size={10} style={{ marginRight: 4 }} /> Folio SIJA</label>
             <div style={disabledSx}>{displayVal(data.folioSija)}</div>
@@ -239,7 +242,7 @@ export function DetallesAseguradoView({ solicitudId, data, evidencias }: Props) 
             <Image size={16} color="#0891b2" />
             Evidencias Fotográficas ({evidencias.length})
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
+          <div className="grid-2">
             {evidencias.map(ev => (
               <div
                 key={ev.id}

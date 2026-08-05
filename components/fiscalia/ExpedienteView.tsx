@@ -53,7 +53,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
   const r = raw
 
   const detenidos = parseDetenidos(r.rc_detenidos)
-  const tieneDatosCapturados = !!(r as any).d1_folio_sija || !!(r as any).d1_folio_remision || !!(r as any).d1_marco_legal
+  const tieneDatosCapturados = !!(r.d1_folio_sija as string | null) || !!(r.d1_folio_remision as string | null) || !!(r.d1_marco_legal as string | null)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -93,14 +93,14 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
       {/* 1. Incidente */}
       <div style={sectionSx}>
         <h3 style={sectionTitleSx}><AlertTriangle size={16} /> Datos del Incidente</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div className="grid-3">
           <div><label style={labelSx}>Folio</label><div style={valueSx}>{dsp(r.inc_folio)}</div></div>
           <div><label style={labelSx}>Canal</label><div style={valueSx}>{dsp(r.inc_canal)}</div></div>
           <div><label style={labelSx}>Estatus</label><div style={valueSx}>{dsp(r.inc_estatus)}</div></div>
           <div><label style={labelSx}>Fecha/Hora Inicio</label><div style={valueSx}>{fmtFecha(r.inc_fecha_hora_inicio as string)}</div></div>
           <div><label style={labelSx}>Tipo</label><div style={valueSx}>{dsp(r.inc_tipo)}</div></div>
           <div><label style={labelSx}>Prioridad</label><div style={valueSx}>{dsp(r.inc_prioridad)}</div></div>
-          <div style={{ gridColumn: 'span 2' }}><label style={labelSx}>Descripción</label><div style={valueSx}>{dsp(r.inc_descripcion)}</div></div>
+          <div style={{ gridColumn: '1 / -1' }}><label style={labelSx}>Descripción</label><div style={valueSx}>{dsp(r.inc_descripcion)}</div></div>
           <div><label style={labelSx}>Origen Rondín</label><div style={valueSx}>{r.inc_origen_rondin ? 'SÍ' : 'NO'}</div></div>
           <div><label style={labelSx}>Calle</label><div style={valueSx}>{dsp(r.inc_calle)}</div></div>
           <div><label style={labelSx}>Colonia</label><div style={valueSx}>{dsp(r.inc_colonia)}</div></div>
@@ -111,11 +111,11 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
       {/* 2. Reporte Campo */}
       <div style={{ ...sectionSx, borderLeftColor: '#7c3aed' }}>
         <h3 style={{ ...sectionTitleSx, color: '#7c3aed' }}><FileText size={16} /> Reporte de Campo</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div className="grid-3">
           <div><label style={labelSx}>Folio Reporte</label><div style={valueSx}>{dsp(r.rc_folio)}</div></div>
           <div><label style={labelSx}>Autoridad Recibe</label><div style={valueSx}>{dsp(r.rc_autoridad_recibe)}</div></div>
           <div><label style={labelSx}>Folio Asegurados</label><div style={valueSx}>{dsp(r.rc_folio_asegurados)}</div></div>
-          <div style={{ gridColumn: 'span 3' }}><label style={labelSx}>Descripción</label><div style={valueSx}>{dsp(r.rc_descripcion)}</div></div>
+          <div style={{ gridColumn: '1 / -1' }}><label style={labelSx}>Descripción</label><div style={valueSx}>{dsp(r.rc_descripcion)}</div></div>
         </div>
         {detenidos.length > 0 && (
           <div style={{ marginTop: 16 }}>
@@ -137,7 +137,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
       {/* 3. D1 */}
       <div style={{ ...sectionSx, borderLeftColor: '#059669' }}>
         <h3 style={{ ...sectionTitleSx, color: '#059669' }}><FileText size={16} /> Denuncia D1</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div className="grid-3">
           <div><label style={labelSx}>Folio Denuncia</label><div style={valueSx}>{dsp(r.d1_folio_denuncia)}</div></div>
           <div><label style={labelSx}>IPH</label><div style={valueSx}>{dsp(r.d1_iph)}</div></div>
           <div><label style={labelSx}>Folio CU</label><div style={valueSx}>{dsp(r.d1_folio_cu)}</div></div>
@@ -150,7 +150,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
           <div><label style={labelSx}>Violencia</label><div style={valueSx}>{r.d1_violencia ? 'SÍ' : 'NO'}</div></div>
           <div><label style={labelSx}>Lugar Hecho</label><div style={valueSx}>{dsp(r.d1_lugar_hecho)}</div></div>
           <div><label style={labelSx}>Colonia Hecho</label><div style={valueSx}>{dsp(r.d1_colonia_hecho)}</div></div>
-          <div style={{ gridColumn: 'span 3' }}><label style={labelSx}>Observaciones</label><div style={valueSx}>{dsp(r.d1_observaciones)}</div></div>
+          <div style={{ gridColumn: '1 / -1' }}><label style={labelSx}>Observaciones</label><div style={valueSx}>{dsp(r.d1_observaciones)}</div></div>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
 
         <div style={{ ...sectionSx, borderLeftColor: '#0891b2' }}>
           <h3 style={{ ...sectionTitleSx, color: '#0891b2' }}><BookOpen size={16} /> Datos Capturados</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div className="grid-3">
             <div><label style={labelSx}>Folio SIJA</label><div style={valueSx}>{dsp(r.d1_folio_sija)}</div></div>
             <div><label style={labelSx}>Folio Remisión</label><div style={valueSx}>{dsp(r.d1_folio_remision)}</div></div>
             <div><label style={labelSx}>Marco Legal</label><div style={valueSx}>{dsp(r.d1_marco_legal)}</div></div>
@@ -190,7 +190,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
       {fotos.length > 0 && (
         <div style={{ ...sectionSx, borderLeftColor: '#dc2626' }}>
           <h3 style={{ ...sectionTitleSx, color: '#dc2626' }}><Camera size={16} /> Fotos de Detenidos ({fotos.length})</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+          <div className="grid-2">
             {fotos.map(f => (
               <div key={f.id} style={{ border: '1px solid #e2e8f0', overflow: 'hidden', background: '#f8fafc' }}>
                 <div style={{ height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', overflow: 'hidden' }}>
@@ -209,7 +209,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
       {evidencias.length > 0 && (
         <div style={{ ...sectionSx, borderLeftColor: '#0891b2' }}>
           <h3 style={{ ...sectionTitleSx, color: '#0891b2' }}><Image size={16} /> Evidencias ({evidencias.length})</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+          <div className="grid-2">
             {evidencias.map(ev => {
               const esImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(ev.urlArchivo)
               return (
@@ -233,10 +233,10 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
       )}
 
       {/* 8. Puesta a Disposición / Traslado */}
-      {(r as any).pd_id && (
+      {Boolean((r as Record<string, unknown>).pd_id) && (
         <div style={{ ...sectionSx, borderLeftColor: '#d97706' }}>
           <h3 style={{ ...sectionTitleSx, color: '#d97706' }}><Gavel size={16} /> Puesta a Disposición / Traslado</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div className="grid-3">
             <div><label style={labelSx}>Gestión Interna</label><div style={valueSx}>{r.pd_gestion_interna ? 'SÍ' : 'NO'}</div></div>
             <div><label style={labelSx}>Dependencia Externa (Destino)</label><div style={valueSx}>{dsp(r.pd_dependencia_externa)}</div></div>
             <div><label style={labelSx}>Hora Inicio Traslado</label><div style={valueSx}>{dsp(r.pd_hora_inicio_traslado)}</div></div>
@@ -244,7 +244,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
             <div><label style={labelSx}>Hora Puesta Disposición</label><div style={valueSx}>{dsp(r.pd_hora_puesta_disposicion)}</div></div>
             <div><label style={labelSx}>Tiempo Traslado Total</label><div style={valueSx}>{dsp(r.pd_tiempo_traslado_total)} min</div></div>
             <div><label style={labelSx}>Otros Actos</label><div style={valueSx}>{dsp(r.pd_otros_actos)}</div></div>
-            <div style={{ gridColumn: 'span 2' }}><label style={labelSx}>Actas</label><div style={valueSx}>{dsp(r.pd_actas)}</div></div>
+            <div style={{ gridColumn: '1 / -1' }}><label style={labelSx}>Actas</label><div style={valueSx}>{dsp(r.pd_actas)}</div></div>
           </div>
         </div>
       )}
@@ -259,7 +259,7 @@ export function ExpedienteView({ data }: { data: ExpedienteExp }) {
           Estado de trámite: <strong>{dsp(r.d1_estado_tramite)}</strong>
           {' · '}
           Evidencia: <strong>{dsp(r.d1_estado_evidencia)}</strong>
-          {(r as any).pd_id && (
+      {Boolean((r as Record<string, unknown>).pd_id) && (
             <span> · <strong>Traslado registrado</strong> a {dsp(r.pd_dependencia_externa)}</span>
           )}
         </div>

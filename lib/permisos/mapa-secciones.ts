@@ -57,7 +57,7 @@ export const MAPA_SECCIONES: Record<string, string[]> = {
   '/nCoordinacion': ['formato_n_coordinacion'],
   '/api/d1': ['reportes_ciudadano'],
   '/api/reportes-incidentes': ['reportes_ciudadano'],
-  '/api/reportes-d1': ['reportes_ciudadano'],
+  '/api/reportes-d1': ['reportes_ciudadano', 'oficial_campo'],
   '/api/reportes-sin-d1': ['reportes_ciudadano'],
   '/api/reportes-sin-novedad': ['reportes_ciudadano'],
   '/api/reportes-telefonicos': ['reportes_ciudadano'],
@@ -65,6 +65,8 @@ export const MAPA_SECCIONES: Record<string, string[]> = {
   '/api/camara': ['incidentes_camaras'],
   '/api/reportes': ['formato_n_coordinacion'],
   '/api/nCoordinacion': ['formato_n_coordinacion'],
+  '/reporte-detenidos': ['reporte_detenidos'],
+  '/api/reporte-detenidos': ['reporte_detenidos'],
 
   // ── Monitorista / cámaras ───────────────────────────────────────────────
   '/monitorista/detenidos': ['detenidos'],

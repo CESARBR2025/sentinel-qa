@@ -14,6 +14,7 @@
 | `analisis/prellenado/[id]` | GET | (Pendiente) |
 | `analisis/reportes-campo` | GET | (Pendiente) |
 | `auth/[...all]` | GET | (Pendiente) |
+| `auth/secciones-permitidas` | GET | (Pendiente) |
 | `auth/token-guest` | POST | (Pendiente) |
 | `auxiliar/exportar-robo` | GET | (Pendiente) |
 | `camara/exportar` | GET | (Pendiente) |
@@ -38,6 +39,7 @@
 | `incidentes/[id]/despacho` | GET | (Pendiente) |
 | `incidentes/[id]/reporte` | GET | (Pendiente) |
 | `incidentes/atendidos` | GET | (Pendiente) |
+| `incidentes/bitacora-911` | GET | (Pendiente) |
 | `incidentes/en-despacho` | GET | (Pendiente) |
 | `incidentes/kpi-geo` | GET | (Pendiente) |
 | `incidentes/pendientes-despacho` | GET | (Pendiente) |
@@ -46,7 +48,6 @@
 | `monitorista/detenidos/[id]/editar-campo` | POST | (Pendiente) |
 | `monitorista/detenidos/[id]/enviar-foto` | POST | (Pendiente) |
 | `monitorista/detenidos/[id]/subir-foto` | POST | (Pendiente) |
-| `monitorista/detenidos/generar-ppt` | POST | (Pendiente) |
 | `monitorista/evidencias/subir` | POST | (Pendiente) |
 | `monitorista/historial` | GET | (Pendiente) |
 | `monitorista/incidentes-camara` | GET, POST | (Pendiente) |
@@ -58,7 +59,7 @@
 | `notificaciones` | GET | (Pendiente) |
 | `notificaciones/contador` | GET | (Pendiente) |
 | `notificaciones/leer` | POST | (Pendiente) |
-| `oficial/contador` | GET | Conteo de despachos asignados activos del oficial en sesión. Auth + `verificarRolOficial` (403 si no). Usado por `ContadorAsignaciones.tsx` (polling 30s). |
+| `oficial/contador` | GET | (Pendiente) |
 | `prevencion/busquedas` | GET, POST | (Pendiente) |
 | `prevencion/busquedas/[id]` | GET, PUT | (Pendiente) |
 | `prevencion/busquedas/[id]/cancelar` | POST | (Pendiente) |
@@ -72,6 +73,7 @@
 | `prevencion/solicitudes/[id]/c4` | POST | (Pendiente) |
 | `prevencion/solicitudes/[id]/contestacion` | POST | (Pendiente) |
 | `registro-detenidos/registrar` | POST | (Pendiente) |
+| `reporte-detenidos/generar-ppt` | POST | (Pendiente) |
 | `reportes-d1` | POST | (Pendiente) |
 | `reportes-incidentes/exportar` | GET | (Pendiente) |
 | `reportes-operativos/exportar-excel` | GET | (Pendiente) |
@@ -125,6 +127,9 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

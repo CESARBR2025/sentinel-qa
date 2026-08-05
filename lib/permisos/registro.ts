@@ -47,12 +47,25 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
   },
   Reportante: {
     labelModulo: 'Reportes',
-    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano'] as const,
+    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano', 'reporte_detenidos'] as const,
     seccionLabels: {
       incidentes: 'Incidentes (bitácora y despacho)',
       incidentes_camaras: 'Incidentes por Cámara (reporte)',
       modulo_incidentes: 'Módulo de Resumen de Incidentes',
       reportes_ciudadano: 'Reportes y Estadísticas',
+      reporte_detenidos: 'Reporte de Detenidos',
+    },
+  },
+  agente_reportes: {
+    labelModulo: 'Agente Reportes',
+    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano', 'reporte_detenidos', 'formato_n_coordinacion'] as const,
+    seccionLabels: {
+      incidentes: 'Incidentes (bitácora y despacho)',
+      incidentes_camaras: 'Incidentes por Cámara (reporte)',
+      modulo_incidentes: 'Módulo de Resumen de Incidentes',
+      reportes_ciudadano: 'Reportes y Estadísticas',
+      reporte_detenidos: 'Reporte de Detenidos',
+      formato_n_coordinacion: 'Envío de Formatos N (7 reportes)',
     },
   },
   'Operador Víctimas': {

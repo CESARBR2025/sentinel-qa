@@ -19,6 +19,7 @@ import type {
   DespachoAtendido,
   RondinOficialResumen,
   ReporteCampoParaD1,
+  DetenidoReporteCampo,
 } from "./types";
 
 export async function obtenerOficialPorUserId(
@@ -574,12 +575,17 @@ export async function obtenerReporteCampoParaD1(reporteCampoId: string): Promise
        rc.folio_reporte_campo,
        rc.ofi_tipo_incidente,
        rc.ofi_descripcion,
-       rc.ofi_calle,
-       rc.ofi_colonia,
+       rc.ofi_calle AS calle,
+       rc.ofi_colonia AS colonia,
        rc.ofi_latitud AS latitud,
        rc.ofi_longitud AS longitud,
        rc.ofi_autoridad_recibe,
        rc.created_at,
+       rc.delito,
+       rc.modus_operandi,
+       rc.ofi_hay_detencion,
+       rc.ofi_nombre_reportante,
+       rc.ofi_telefono_reportante,
        CONCAT(u.name, ' ', COALESCE(u.apellido, '')) AS oficial_nombre,
        o.no_nomina AS oficial_nomina,
        i.fecha_hora_inicio AS incidente_fecha_hora_inicio,
@@ -594,6 +600,21 @@ export async function obtenerReporteCampoParaD1(reporteCampoId: string): Promise
     [reporteCampoId],
   )
   return result.rows.length ? rowToReporteCampoParaD1(result.rows[0]) : null
+}
+
+export async function obtenerDetenidosPorReporteCampo(reporteCampoId: string): Promise<DetenidoReporteCampo[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT nombre_detenido, ap_paterno_detenido, ap_materno_detenido
+     FROM ofi_detalles_asegurados
+     WHERE reporte_campo_id = $1
+     ORDER BY id`,
+    [reporteCampoId],
+  )
+  return result.rows.map(row => ({
+    nombre: (row.nombre_detenido as string) ?? null,
+    apellidoPaterno: (row.ap_paterno_detenido as string) ?? null,
+    apellidoMaterno: (row.ap_materno_detenido as string) ?? null,
+  }))
 }
 
 export async function obtenerSectorOficial(oficialId: string): Promise<string | null> {

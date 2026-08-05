@@ -12,6 +12,7 @@ interface Props {
   data: DetalleAseguradoCompleto
   puestaDisposicion: PuestaDisposicionRow | null
   onGuardar?: (reporteCampoId: string, datos: PuestaDisposicionInput) => Promise<{ success: boolean; error?: string }>
+  ocultarEncabezado?: boolean
 }
 
 const labelSx: React.CSSProperties = {
@@ -42,7 +43,7 @@ const disabledSx: React.CSSProperties = {
   color: '#64748b',
 }
 
-export function FormularioPuestaDisposicion({ reporteCampoId, data, puestaDisposicion, onGuardar }: Props) {
+export function FormularioPuestaDisposicion({ reporteCampoId, data, puestaDisposicion, onGuardar, ocultarEncabezado = false }: Props) {
   const router = useRouter()
   const readOnly = !!puestaDisposicion
 
@@ -117,6 +118,7 @@ export function FormularioPuestaDisposicion({ reporteCampoId, data, puestaDispos
 
   return (
     <>
+      {!ocultarEncabezado && (
       <div style={{
         padding: '16px 20px',
         border: '1px solid #e2e8f0',
@@ -149,6 +151,7 @@ export function FormularioPuestaDisposicion({ reporteCampoId, data, puestaDispos
           </span>
         </div>
       </div>
+      )}
 
       {/* Gestión */}
       <div style={{ marginBottom: 24, border: '1px solid #e2e8f0', padding: 16, borderLeft: '3px solid #7c3aed' }}>
@@ -183,7 +186,7 @@ export function FormularioPuestaDisposicion({ reporteCampoId, data, puestaDispos
       {/* Actas de investigación */}
       <div style={{ marginBottom: 24, border: '1px solid #e2e8f0', padding: 16, borderLeft: '3px solid #7c3aed' }}>
         <label style={{ ...labelSx, color: '#7c3aed', marginBottom: 12, fontSize: 11 }}>Actos de Investigación</label>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
+        <div className="grid-2">
           {ACTAS_CHECKLIST.map(a => (
             <label key={a.key} style={{
               fontFamily: 'Inter,sans-serif', fontSize: 12,
@@ -219,7 +222,7 @@ export function FormularioPuestaDisposicion({ reporteCampoId, data, puestaDispos
         <label style={{ ...labelSx, color: '#7c3aed', marginBottom: 12, fontSize: 11 }}>
           <Clock size={12} style={{ marginRight: 4 }} /> Tiempos de Traslado
         </label>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3">
           <div>
             <label style={labelSx}>Hora de inicio de traslado</label>
             <input

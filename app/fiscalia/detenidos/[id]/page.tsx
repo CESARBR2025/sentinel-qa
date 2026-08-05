@@ -6,7 +6,8 @@ import { obtenerDetenidoParaRol } from '@/lib/detenidos-compartido'
 import { SubirFotoDetenido } from '@/components/fiscalia/SubirFotoDetenido'
 import { User, Camera, Clock, Shield } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
-import { APP_VERSION } from "@/lib/constants"
+import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function DetenidoFiscaliaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -25,7 +26,7 @@ export default async function DetenidoFiscaliaDetailPage({ params }: { params: P
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
       `}</style>
@@ -33,22 +34,20 @@ export default async function DetenidoFiscaliaDetailPage({ params }: { params: P
       <DashboardHeader
         user={{ name: user.name, apellido: user.apellido, email: user.email || '' }}
         roleLabel="Detenido · Fiscalía"
-        backHref="/fiscalia/detenidos"
-        backLabel="Detenidos"
       />
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 48px', display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <PageHeader
+          title={detenido.nombre_detenido}
+          accentColor="#7c3aed"
+          subtitle="Reporte de detenido · fotos solicitadas por Monitorista"
+          actions={<PageHeaderLink href="/fiscalia/detenidos" variant="secondary">← Detenidos</PageHeaderLink>}
+        />
 
-        <h1 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0, color: '#0f172a', lineHeight: 1 }}>
-          {detenido.nombre_detenido}
-        </h1>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 18, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>
-                <Camera size={18} /> FOTOS SOLICITADAS
-              </div>
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+          <div style={{ flex: '1 1 480px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={card}>
+              <div style={sectionTitle}><Camera size={18} /> FOTOS SOLICITADAS</div>
               <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b', marginBottom: 16, lineHeight: 1.5 }}>
                 El Monitorista solicitó estas fotos. Toma las fotografías y súbelas aquí.
               </div>
@@ -68,11 +67,9 @@ export default async function DetenidoFiscaliaDetailPage({ params }: { params: P
               </div>
             </div>
 
-            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 18, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>
-                <User size={18} /> DATOS DEL DETENIDO
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div style={card}>
+              <div style={sectionTitle}><User size={18} /> DATOS DEL DETENIDO</div>
+              <div className="grid-2">
                 {detenido.tipo_incidente && <Campo label="Evento/Incidente" value={detenido.tipo_incidente} />}
                 {detenido.delito && <Campo label="Delito" value={detenido.delito} />}
                 {detenido.marco_legal && <Campo label="Marco Legal" value={detenido.marco_legal} />}
@@ -82,17 +79,13 @@ export default async function DetenidoFiscaliaDetailPage({ params }: { params: P
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>
-                <Clock size={18} /> FECHA
-              </div>
+          <div style={{ flex: '1 1 300px', maxWidth: 400, display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={card}>
+              <div style={sectionTitle}><Clock size={18} /> FECHA</div>
               <Campo label="Reporte" value={new Date(detenido.created_at).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })} />
             </div>
-            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>
-                <Shield size={18} /> MARCAS
-              </div>
+            <div style={card}>
+              <div style={sectionTitle}><Shield size={18} /> MARCAS</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {detenido.hay_detencion && <span style={marcaStyle}>✅ Detención</span>}
                 {detenido.hay_vehiculo && <span style={marcaStyle}>✅ Vehículo Involucrado</span>}
@@ -105,14 +98,8 @@ export default async function DetenidoFiscaliaDetailPage({ params }: { params: P
           </div>
         </div>
 
-        <div style={{ marginTop: 'auto', paddingTop: 20, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · FISCALÍA · DETENIDO</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed' }} />
-          </div>
-        </div>
-      </div>
+        <DashboardFooter />
+      </main>
     </div>
   )
 }
@@ -126,4 +113,6 @@ function Campo({ label, value }: { label: string; value: string }) {
   )
 }
 
+const card: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }
+const sectionTitle: React.CSSProperties = { fontFamily: 'Barlow Condensed,sans-serif', fontSize: 16, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }
 const marcaStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, padding: '4px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2, display: 'inline-block' }

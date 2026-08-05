@@ -224,6 +224,17 @@ export interface ReporteCampoParaD1 {
   fechaHoraInicioIncidente: string | null
   fechaHoraDespacho: string | null
   created_at: string | null
+  delito: string | null
+  modusOperandi: string | null
+  hayDetencion: boolean
+  nombreReportante: string | null
+  telefonoReportante: string | null
+}
+
+export interface DetenidoReporteCampo {
+  nombre: string | null
+  apellidoPaterno: string | null
+  apellidoMaterno: string | null
 }
 
 export interface RondinOficialResumen {
