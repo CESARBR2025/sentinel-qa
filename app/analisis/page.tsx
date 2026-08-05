@@ -1,187 +1,152 @@
-import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { FileText, ClipboardList, LayoutGrid, FileSpreadsheet } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { LayoutGrid, FileText, ClipboardList, ChevronRight, ShieldCheck, Activity } from 'lucide-react'
-import Link from 'next/link'
+import { PageHeader } from '@/components/partials/PageHeader'
+import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { tieneAccesoAnalisis } from '@/lib/analisis/permisos'
 
-export default async function MenuAnalisisPage() {
+export default async function AnalisisHubPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
-
   if (!(await tieneAccesoAnalisis(session.user.id))) redirect('/dashboard')
+
+  const userWithRole = await getUserWithRole(session.user.id)
+  const hub = userWithRole?.esAdmin ? null : obtenerHubRol(userWithRole?.rolNombre)
+  const backHref = hub === '/analisis' ? undefined : (hub ?? '/dashboard')
 
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-      <style dangerouslySetInnerHTML={{ __html: `
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-        
-        .menu-card {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          cursor: pointer;
-          text-decoration: none;
-          position: relative;
-          overflow: hidden;
+        .card-o {
+          background: #ffffff; border: 1px solid #e2e8f0; padding: 32px;
+          text-decoration: none; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+          display: flex; flex-direction: column; min-height: 280px;
+          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); cursor: pointer;
+          position: relative; overflow: hidden; width: 100%; max-width: 520px;
         }
+        .card-o:hover { border-color: #1f355a; transform: translateY(-5px); box-shadow: 0 20px 40px -12px rgba(31, 53, 90,0.15); }
+        .card-o:hover .co-top { width: 100%; }
+        .card-o:hover .co-left { height: 100%; }
+        .card-o:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+      `}</style>
 
-        .menu-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          border-color: #1f355a !important;
-        }
+      <DashboardHeader user={user} roleLabel="Análisis" backHref={backHref} />
 
-        .menu-card:hover .icon-container {
-          background: #1f355a !important;
-          color: white !important;
-        }
+      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
 
-        .menu-card:hover .arrow-icon {
-          transform: translateX(5px);
-          color: #1f355a;
-        }
+        <PageHeader
+          title="Panel"
+          accent="Análisis"
+          subtitle={`${user.name} ${user.apellido ?? ''} · análisis, registros IPH y georreferenciación`}
+        />
 
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateX(-20px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
+        {/* Cards */}
+        <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 40 }}>
 
-        .animate-in {
-          animation: slideIn 0.4s ease-out forwards;
-        }
-      `}} />
-
-      <DashboardHeader user={user} roleLabel="Análisis" backHref="/dashboard" />
-
-      <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '60px 40px' }}>
-        
-        {/* ENCABEZADO TÁCTICO */}
-        <div style={{ marginBottom: '48px' }} className="animate-in">
-          <span style={topLabelStyle}>ÁREA DE INTELIGENCIA OPERATIVA</span>
-          <h1 style={titleStyle}>CENTRO DE <span style={{ color: '#1f355a' }}>ANÁLISIS Y REGISTRO</span></h1>
-          <p style={{ margin: '12px 0 0 0', fontFamily: 'Inter', color: '#64748b', fontSize: '16px', maxWidth: '600px' }}>
-            Seleccione el módulo de trabajo para la gestión de reportes de campo o la generación de informes policiales homologados.
-          </p>
-        </div>
-
-        {/* REJILLA DE OPCIONES */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
-          
-          {/* OPCIÓN 1: PENDIENTES DE ANÁLISIS */}
-          <Link href="/analisis/pendiente-analisis" className="menu-card" style={cardStyle}>
-            <div style={cardContentStyle}>
-              <div className="icon-container" style={iconBoxStyle}>
-                <ClipboardList size={32} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <h2 style={cardTitleStyle}>Pendientes de Análisis</h2>
-                <p style={cardDescStyle}>
-                  Visualice la matriz de reportes de campo (Rondín) que requieren validación y prellenado de datos.
-                </p>
-                <div style={actionTextStyle}>
-                  ACCEDER A BITÁCORA <ChevronRight size={14} className="arrow-icon" style={{ transition: 'transform 0.2s' }} />
-                </div>
-              </div>
-            </div>
-            <div style={{ ...decoratorLine, background: '#1f355a' }} />
-          </Link>
-
-          {/* OPCIÓN 2: GENERAR REPORTE IPH */}
-          <Link href="/analisis/iph" className="menu-card" style={cardStyle}>
-            <div style={cardContentStyle}>
-              <div className="icon-container" style={{ ...iconBoxStyle, color: '#059669' }}>
+          {/* Card: Reporte IPH */}
+          <Link href="/analisis/formulario-ingreso" className="card-o" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
                 <FileText size={32} />
               </div>
-              <div style={{ flex: 1 }}>
-                <h2 style={cardTitleStyle}>Generar Reporte IPH</h2>
-                <p style={cardDescStyle}>
-                  Registro directo de Informe Policial Homologado, uso de la fuerza y datos nacionales de detención.
-                </p>
-                <div style={{ ...actionTextStyle, color: '#059669' }}>
-                  INICIAR REGISTRO NUEVO <ChevronRight size={14} className="arrow-icon" style={{ transition: 'transform 0.2s' }} />
-                </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
+                IPH · RND
               </div>
             </div>
-            <div style={{ ...decoratorLine, background: '#059669' }} />
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Reporte IPH
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Registro del Informe Policial Homologado: datos del detenido, uso de la fuerza y datos nacionales de detención
+              </p>
+            </div>
+          </Link>
+
+          {/* Card: Pendientes de Análisis */}
+          <Link href="/analisis/pendiente-analisis" className="card-o" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <ClipboardList size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
+                MATRIZ
+              </div>
+            </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Pendientes de Análisis
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Matriz de reportes de campo que requieren validación y prellenado de datos
+              </p>
+            </div>
+          </Link>
+
+          {/* Card: Bitácora IPH */}
+          <Link href="/analisis/iph" className="card-o" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <LayoutGrid size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
+                BITÁCORA
+              </div>
+            </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Bitácora IPH
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Registro Nacional de Detenciones — consulta de los IPH registrados y generación de presentaciones
+              </p>
+            </div>
+          </Link>
+
+          {/* Card: Formatos UDAI */}
+          <Link href="/formatos-udai" className="card-o" style={{ textDecoration: 'none' }}>
+            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
+            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
+                <FileSpreadsheet size={32} />
+              </div>
+              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
+                UDAI
+              </div>
+            </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Formatos UDAI
+              </h3>
+              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Formatos oficiales UDAI generados a partir de los registros IPH capturados en el sistema
+              </p>
+            </div>
           </Link>
 
         </div>
 
-        {/* ESTADO DEL SISTEMA (FOOTER INTERNO) */}
-        <div style={systemStatusStyle} className="animate-in">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Activity size={14} color="#059669" />
-                <span>NÚCLEO DE DATOS CONECTADO</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShieldCheck size={14} color="#1f355a" />
-                <span>SESIÓN CIFRADA: {user.email}</span>
-            </div>
-        </div>
-
-        <div style={{ marginTop: 80 }}>
-          <DashboardFooter />
-        </div>
-      </main>
+        {/* Footer */}
+        <DashboardFooter />
+      </div>
     </div>
   )
 }
-
-// --- ESTILOS TÁCTICOS ---
-
-const topLabelStyle = { fontFamily: 'JetBrains Mono', fontSize: 11, color: '#1f355a', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase' as const };
-const titleStyle = { fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '48px', margin: 0, color: '#0f172a', textTransform: 'uppercase' as const, lineHeight: 1 };
-
-const cardStyle: React.CSSProperties = {
-  background: 'white',
-  border: '1px solid #e2e8f0',
-  borderRadius: '4px',
-  padding: '40px',
-  display: 'block',
-  position: 'relative'
-};
-
-const cardContentStyle = { display: 'flex', gap: '32px', alignItems: 'flex-start' };
-
-const iconBoxStyle: React.CSSProperties = {
-  width: '80px',
-  height: '80px',
-  background: '#f8fafc',
-  borderRadius: '4px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: '#1f355a',
-  transition: 'all 0.3s'
-};
-
-const cardTitleStyle = { fontFamily: 'Barlow Condensed', fontSize: '24px', fontWeight: 700, color: '#0f172a', margin: '0 0 12px 0', textTransform: 'uppercase' as const };
-const cardDescStyle = { fontFamily: 'Inter', fontSize: '14px', color: '#64748b', lineHeight: '1.6', margin: '0 0 24px 0' };
-
-const actionTextStyle: React.CSSProperties = {
-  fontFamily: 'JetBrains Mono',
-  fontSize: '11px',
-  fontWeight: 700,
-  color: '#1f355a',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  letterSpacing: '0.05em'
-};
-
-const decoratorLine = { position: 'absolute' as const, bottom: 0, left: 0, width: '100%', height: '4px' };
-
-const systemStatusStyle: React.CSSProperties = {
-    marginTop: '48px',
-    padding: '20px',
-    borderTop: '1px solid #e2e8f0',
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontFamily: 'JetBrains Mono',
-    fontSize: '10px',
-    color: '#94a3b8',
-    fontWeight: 600
-};

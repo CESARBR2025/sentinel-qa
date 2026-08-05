@@ -67,6 +67,8 @@ export const MAPA_SECCIONES: Record<string, string[]> = {
   '/api/nCoordinacion': ['formato_n_coordinacion'],
   '/reporte-detenidos': ['reporte_detenidos'],
   '/api/reporte-detenidos': ['reporte_detenidos'],
+  '/formatos-udai': ['formatos_udai'],
+  '/api/formatos-udai': ['formatos_udai'],
 
   // ── Monitorista / cámaras ───────────────────────────────────────────────
   '/monitorista/detenidos': ['detenidos'],

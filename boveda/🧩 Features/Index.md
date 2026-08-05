@@ -45,6 +45,7 @@
 | formato-n-fgr | (Pendiente) | ✨ Detectado |
 | formato-n-medios-alternativos | (Pendiente) | ✨ Detectado |
 | formato-n-rnd | (Pendiente) | ✨ Detectado |
+| formatos-udai | (Pendiente) | ✨ Detectado |
 | health | (Pendiente) | ✨ Detectado |
 | incidentes | (Pendiente) | ✨ Detectado |
 | incidentes_camaras | (Pendiente) | ✨ Detectado |
@@ -75,6 +76,7 @@
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
 <!-- AUTO-GENERATED END -->
+
 
 
 

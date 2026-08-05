@@ -33,7 +33,7 @@ export default async function AgenteReportesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const permisos = await obtenerPermisosUsuario(session.user.id, ['reportes_ciudadano', 'incidentes_camaras', 'modulo_incidentes', 'formato_n_coordinacion', 'reporte_detenidos'] as const)
+  const permisos = await obtenerPermisosUsuario(session.user.id, ['reportes_ciudadano', 'incidentes_camaras', 'modulo_incidentes', 'formato_n_coordinacion', 'reporte_detenidos', 'formatos_udai'] as const)
   if (!permisos.reportes_ciudadano.puede_ver) redirect('/dashboard')
 
   const userWithRole = await getUserWithRole(session.user.id)
@@ -153,6 +153,19 @@ export default async function AgenteReportesPage() {
           enlace: '/envio-de-formatos',
           seccion: 'formato_n_coordinacion',
           estadisticas: [{ label: 'Registros', value: String(envioFormatosCount) }],
+        },
+      ],
+    },
+    {
+      titulo: 'Formatos UDAI',
+      cards: [
+        {
+          titulo: 'Formatos UDAI',
+          subtitulo: 'Formatos oficiales UDAI generados a partir de los registros IPH capturados en el sistema.',
+          icono: <FolderClock size={28} />,
+          enlace: '/formatos-udai',
+          seccion: 'formatos_udai',
+          estadisticas: [],
         },
       ],
     },

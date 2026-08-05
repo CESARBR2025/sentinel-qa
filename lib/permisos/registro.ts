@@ -3,7 +3,6 @@ import { SECCIONES as SECCIONES_INCIDENTES } from '@/lib/incidentes/permisos'
 import { SECCIONES as SECCIONES_AUXILIAR } from '@/lib/auxiliar/permisos'
 import { SECCIONES as SECCIONES_911 } from '@/lib/911/permisos'
 import { SECCIONES as SECCIONES_ANALISIS } from '@/lib/analisis/permisos'
-import { SECCIONES as SECCIONES_REPORTES } from '@/lib/reportes/permisos'
 import { SECCIONES as SECCIONES_CORRALON } from '@/lib/corralon/permisos'
 import type { Seccion as SeccionPrevencion } from '@/lib/prevencion/permisos'
 
@@ -47,18 +46,19 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
   },
   Reportante: {
     labelModulo: 'Reportes',
-    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano', 'reporte_detenidos'] as const,
+    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano', 'reporte_detenidos', 'formatos_udai'] as const,
     seccionLabels: {
       incidentes: 'Incidentes (bitácora y despacho)',
       incidentes_camaras: 'Incidentes por Cámara (reporte)',
       modulo_incidentes: 'Módulo de Resumen de Incidentes',
       reportes_ciudadano: 'Reportes y Estadísticas',
       reporte_detenidos: 'Reporte de Detenidos',
+      formatos_udai: 'Formatos UDAI',
     },
   },
   agente_reportes: {
     labelModulo: 'Agente Reportes',
-    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano', 'reporte_detenidos', 'formato_n_coordinacion'] as const,
+    secciones: [...SECCIONES_INCIDENTES, 'reportes_ciudadano', 'reporte_detenidos', 'formato_n_coordinacion', 'formatos_udai'] as const,
     seccionLabels: {
       incidentes: 'Incidentes (bitácora y despacho)',
       incidentes_camaras: 'Incidentes por Cámara (reporte)',
@@ -66,6 +66,7 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
       reportes_ciudadano: 'Reportes y Estadísticas',
       reporte_detenidos: 'Reporte de Detenidos',
       formato_n_coordinacion: 'Envío de Formatos N (7 reportes)',
+      formatos_udai: 'Formatos UDAI',
     },
   },
   'Operador Víctimas': {
@@ -122,18 +123,12 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
       modulo_incidentes: 'Módulo de Resumen de Incidentes',
     },
   },
-  Investigador: {
+  Analisis: {
     labelModulo: 'Análisis',
-    secciones: SECCIONES_ANALISIS,
+    secciones: [...SECCIONES_ANALISIS, 'formatos_udai'] as const,
     seccionLabels: {
       analisis: 'Análisis, Fichas y Georreferenciación',
-    },
-  },
-  Analisis: {
-    labelModulo: 'Formato N a Coordinación',
-    secciones: SECCIONES_REPORTES,
-    seccionLabels: {
-      formato_n_coordinacion: 'Envío de Formatos N (7 reportes)',
+      formatos_udai: 'Formatos UDAI',
     },
   },
   corralon_mw: {

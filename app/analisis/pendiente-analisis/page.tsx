@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import TablonAnalisis from '@/components/analisis/TablonAnalisis'
 import { tieneAccesoAnalisis, tienePermiso } from '@/lib/analisis/permisos'
 
@@ -21,18 +22,15 @@ export default async function AnalisisPage() {
         .analisis-row:hover { background-color: #f1f5f9 !important; }
       `}} />
       
-      <DashboardHeader user={user} backHref="/analisis" backLabel="Análisis" />
+      <DashboardHeader user={user} roleLabel="Análisis" />
       
-      <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ marginBottom: 32 }}>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em' }}>
-                INTELIGENCIA Y ESTADÍSTICA
-            </span>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 42, fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-                BITÁCORA DE <span style={{ color: '#3e5171' }}>RESULTADOS OPERATIVOS</span>
-            </h1>
-            <div style={{ width: 40, height: 4, background: '#3e5171' }}></div>
-        </div>
+      <main className="pad-dashboard" style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
+        <PageHeader
+          title="Bitácora de"
+          accent="Resultados Operativos"
+          subtitle="Inteligencia y estadística · matriz de reportes de campo"
+          actions={<PageHeaderLink href="/analisis" variant="secondary">← Análisis</PageHeaderLink>}
+        />
 
         <TablonAnalisis />
         

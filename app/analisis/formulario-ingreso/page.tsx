@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import RegistroDetenidoStepper from '@/components/analisis/formAnalisis'
 import { tieneAccesoAnalisis, tienePermiso } from '@/lib/analisis/permisos'
 
@@ -29,18 +30,15 @@ export default async function DespachoPage({
         .animate-tactical { animation: fadeIn 0.4s ease-out forwards; }
       `}} />
 
-      <DashboardHeader user={user} backHref="/analisis" backLabel="Análisis" />
+      <DashboardHeader user={user} roleLabel="Análisis" />
 
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 48px' }}>
-        <div style={{ marginBottom: '32px' }}>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#1f355a', fontWeight: 700, letterSpacing: '0.2em' }}>
-                MÓDULO DE INTELIGENCIA Y ANÁLISIS
-            </span>
-            <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: '42px', fontWeight: 800, color: '#0f172a', margin: '4px 0' }}>
-                REGISTRO NACIONAL DE <span style={{ color: '#3e5171' }}>DETENIDOS (IPH)</span>
-            </h1>
-            <div style={{ width: '40px', height: '4px', background: '#3e5171' }}></div>
-        </div>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <PageHeader
+          title="Registro Nacional de"
+          accent="Detenidos (IPH)"
+          subtitle="Módulo de inteligencia y análisis · registro del Informe Policial Homologado"
+          actions={<PageHeaderLink href="/analisis" variant="secondary">← Análisis</PageHeaderLink>}
+        />
 
         <div className="animate-tactical">
             <RegistroDetenidoStepper />

@@ -27,7 +27,7 @@ export default function BitacoraIPH() {
 console.log(registros);
   return (
     <div style={containerStyle}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
         <thead>
           <tr style={headerRowStyle}>
             <th style={thStyle}>FOLIO IPH</th>
@@ -82,7 +82,7 @@ console.log(registros);
 }
 
 // --- ESTILOS ---
-const containerStyle = { background: 'white', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden' };
+const containerStyle = { overflowX: 'auto' as const };
 const headerRowStyle = { background: '#f8fafc', borderBottom: '2px solid #e2e8f0' };
 const thStyle: React.CSSProperties = { padding: '16px 24px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', fontWeight: 700, textTransform: 'uppercase' };
 const tdStyle: React.CSSProperties = { padding: '16px 24px', borderBottom: '1px solid #f1f5f9', fontSize: 13 };

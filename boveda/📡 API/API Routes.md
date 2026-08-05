@@ -27,12 +27,14 @@
 | `detenidos/detalle/[id]` | GET | (Pendiente) |
 | `detenidos/listar` | GET | (Pendiente) |
 | `detenidos/registrar` | POST | (Pendiente) |
+| `dev/cambiar-sesion` | POST | (Pendiente) |
 | `expediente/proxy` | GET | (Pendiente) |
 | `expediente/subir` | POST | (Pendiente) |
 | `expediente/subir-foto-detenido` | POST | (Pendiente) |
 | `expediente/token` | POST | (Pendiente) |
 | `expediente/vista/[token]` | GET | (Pendiente) |
 | `fiscalia/expediente/subir-foto` | POST | (Pendiente) |
+| `formatos-udai/faltas-administrativas/exportar` | GET | (Pendiente) |
 | `health` | GET | (Pendiente) |
 | `incidentes` | GET | (Pendiente) |
 | `incidentes/[id]` | GET | (Pendiente) |
@@ -127,6 +129,7 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
 
 
 

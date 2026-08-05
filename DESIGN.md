@@ -186,6 +186,7 @@ Toda página se arma por secciones, **sin tamaños fijos**:
 4. **Interior**: subdividir con flex (`flex: 1`, `gap`) para layout dinámico
 5. **Prohibido**: `maxWidth`/anchos o altos fijos en contenedores de página; solo paddings internos
 6. **Prohibido**: anidar componentes que rendericen su propio layout completo (minHeight 100vh + `<style>`) dentro de otra vista
+7. **Contenido alineado al header (REGLA)**: tablas, formularios y steppers ocupan el mismo ancho que el `PageHeader` y la sección. Prohibido envolver el contenido en un contenedor con `maxWidth` menor que el de la sección (p. ej. un wrapper de 900px dentro de un main de 1200px) o con padding extra que lo desalinee respecto al `PageHeader`.
 
 ### Paddings de página (responsive)
 
@@ -228,11 +229,13 @@ Radios: `--radius-sm: 6px`, `md: 8px`, `lg: 12px`, `xl: 16px`, `full: 9999px`. C
 - Badges de estado con la pareja `bg`+color semántico (success/warning/danger).
 - Acento por módulo (fiscalía `#7c3aed`, catálogos `#c0223a`, default `#1f355a`).
 - `grid-2`/`grid-3`/`.fk-grid` para formularios; `.tabla-wrap` para tablas; `.pad-pagina`/`.pad-dashboard` para contenedores.
+- Tablas, formularios y steppers al mismo ancho del `PageHeader` y la sección (sin `maxWidth` anidados que los angosten).
 - Estados de incidente vía `labelEstatus()` de `lib/911/estatus-c4.ts` (vocabulario C4: Nuevo / En Ruta / En Sitio / Cerrado / Cerrado · Detención). Ver `boveda/🛠 Stack/Convenciones.md`.
 
 **Don'ts:**
 - No steppers (círculos numerados, dots con etiquetas, barras segmentadas) — usar `StepIndicator`.
 - No `maxWidth`/altos fijos en contenedores de página.
+- No envolver el contenido (tablas/formularios/steppers) en contenedores con `maxWidth` menor que la sección — desalinea respecto al `PageHeader`.
 - No `gridTemplateColumns: '1fr 1fr'` inline — usar `.grid-2`.
 - No `overflow: hidden` en contenedores de tablas.
 - No anidar layouts completos (minHeight 100vh + `<style>`) dentro de otra vista.

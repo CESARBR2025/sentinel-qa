@@ -9,6 +9,7 @@ import GoogleMapPicker from '@/components/maps/GoogleMapPicker';
 import { analisisService } from '@/services/analisisService';
 import { useRouter } from "next/navigation";
 import { StepIndicator } from '@/components/partials/StepIndicator';
+import { useResponsive } from '@/hooks/useResponsive';
 
 const STEPS = [
     'Datos Personales',
@@ -96,6 +97,11 @@ export default function RegistroDetenidoStepper() {
     const searchParams = useSearchParams();
     const incidenteId = searchParams.get('id');
     const router = useRouter();
+
+    const { esMovil } = useResponsive()
+    const gcol = (cols: string): string => (esMovil ? '1fr' : cols)
+    const gspan = (n: number): string | undefined => (esMovil ? undefined : `span ${n}`)
+    const cardStyleR = { ...cardStyle, padding: esMovil ? '20px 16px' : '40px' }
 
     useEffect(() => {
     if (incidenteId) {
@@ -245,7 +251,7 @@ console.log("RESPUESTA API:", d);
 
     return (
 
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px' }}>
+        <div style={{ width: '100%' }}>
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap');
       `}</style>
@@ -255,13 +261,13 @@ console.log("RESPUESTA API:", d);
 
             {/* CONTENIDO DEL PASO 1 */}
             {step === 1 && (
-                <section className="sentinel-card" style={cardStyle}>
+                <section className="sentinel-card" style={cardStyleR}>
                     <div style={{ marginBottom: '32px' }}>
                         <h2 style={titleStyle}>IDENTIFICACIÓN DEL <span style={{ color: '#3e5171' }}>DETENIDO</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>Paso 1: Información básica y domicilio de origen.</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: gcol('repeat(3, 1fr)'), gap: '24px' }}>
                         {/* FILA 1 */}
                         <SentinelField label="Fecha de Nacimiento*" required name="fechaNacimiento" icon={Calendar} type="date" value={formData.fechaNacimiento} onChange={handleChange} />
                         <SentinelField label="Edad" required name="edad" icon={Hash} type="number" placeholder="00" value={formData.edad} onChange={handleChange} />
@@ -273,20 +279,20 @@ console.log("RESPUESTA API:", d);
                         </SentinelField>
 
                         {/* FILA 2 */}
-                        <div style={{ gridColumn: 'span 2' }}>
+                        <div style={{ gridColumn: gspan(2) }}>
                             <SentinelField label="Alias / Apodo" name="alias" icon={Fingerprint} placeholder="Ej: 'El Chori'..." value={formData.alias} onChange={handleChange} />
                         </div>
                         <SentinelField label="Ciudad de Origen" name="ciudadOrigen" icon={MapPin} placeholder="Municipio/Estado" value={formData.ciudadOrigen} onChange={handleChange} />
 
                         {/* SECCIÓN DOMICILIO */}
-                        <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
+                        <div style={{ gridColumn: gspan(3), marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <label style={{ ...labelStyle, marginBottom: '10px', display: 'block' }}>
                                 <MapPin size={12} style={{ marginRight: 5 }} /> Ubicación en Mapa (Clic para fijar domicilio)
                             </label>
                             <GoogleMapPicker onLocationSelect={handleLocationFromMap} />
 
                             <h3 style={{ ...labelStyle, color: '#0f172a', marginBottom: '16px' }}>Domicilio del Detenido</h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: gcol('2fr 1fr 2fr'), gap: '24px' }}>
                                 <SentinelField label="Calle" name="calleDetenido" icon={MapPin} placeholder="Av. Principal..." value={formData.calleDetenido} onChange={handleChange} />
                                 <SentinelField label="Número" name="numeroDetenido" placeholder="Ext/Int" value={formData.numeroDetenido} onChange={handleChange} />
                                 <SentinelField label="Colonia" name="coloniaDetenido" placeholder="Fraccionamiento..." value={formData.coloniaDetenido} onChange={handleChange} />
@@ -308,21 +314,21 @@ console.log("RESPUESTA API:", d);
             )}
 
             {step === 2 && (
-                <section className="sentinel-card" style={cardStyle}>
+                <section className="sentinel-card" style={cardStyleR}>
                     <div style={{ marginBottom: '32px' }}>
                         <h2 style={titleStyle}>DATOS JURÍDICOS Y <span style={{ color: '#3e5171' }}>LUGAR DE ARRESTO</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>Paso 2: Clasificación de la falta y geolocalización.</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: gcol('repeat(3, 1fr)'), gap: '24px' }}>
 
                         {/* SECCIÓN LEGAL */}
                         <SentinelField label="Artículo" name="articulo" icon={Gavel} placeholder="Ej: Art. 25..." value={formData.articulo} onChange={handleChange} />
-                        <div style={{ gridColumn: 'span 2' }}>
+                        <div style={{ gridColumn: gspan(2) }}>
                             <SentinelField label="Tipo de Falta Administrativa" name="tipoFalta" icon={FileText} placeholder="Descripción de la infracción..." value={formData.tipoFalta} onChange={handleChange} />
                         </div>
-                        <div style={{ ...subCard, marginBottom: '20px', borderLeft: '4px solid #d4a43a', gridColumn: 'span 3' }}>
-                            <div style={grid3}>
+                        <div style={{ ...subCard, marginBottom: '20px', borderLeft: '4px solid #d4a43a', gridColumn: gspan(3) }}>
+                            <div style={{ ...grid3, gridTemplateColumns: gcol('repeat(3, 1fr)') }}>
                                 <SentinelField
                                     label="¿Cuenta con Registro Nacional (RND)?"
                                     name="esRND"
@@ -336,7 +342,7 @@ console.log("RESPUESTA API:", d);
 
                                 {/* Esta es la parte que controla si se ve o no el folio */}
                                 {String(formData.esRND) === "true" && (
-                                    <div style={{ gridColumn: 'span 2' }} className="animate-tactical">
+                                    <div style={{ gridColumn: gspan(2) }} className="animate-tactical">
                                         <SentinelField
                                             label="Folio RND Oficial"
                                             name="rnd"
@@ -351,7 +357,7 @@ console.log("RESPUESTA API:", d);
                         </div>
 
                         {/* SECCIÓN UBICACIÓN DEL ARRESTO */}
-                        <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
+                        <div style={{ gridColumn: gspan(3), marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
                                 <MapPin size={16} color="#3e5171" />
                                 <h3 style={{ ...labelStyle, color: '#0f172a', margin: 0 }}>Ubicación del Arresto (Mapa Táctico)</h3>
@@ -362,7 +368,7 @@ console.log("RESPUESTA API:", d);
                                 <GoogleMapPicker onLocationSelect={handleArrestoMapSelect} />
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: gcol('2fr 2fr'), gap: '24px' }}>
                                 <SentinelField
                                     label="Lugar de Arresto (Calle/Av)"
                                     name="calleArresto"
@@ -389,7 +395,7 @@ console.log("RESPUESTA API:", d);
                             <option value="SUR">SUR</option>
                         </SentinelField>
 
-                        <div style={{ gridColumn: 'span 2' }}>
+                        <div style={{ gridColumn: gspan(2) }}>
                             <SentinelField
                                 label="Agrupamiento"
                                 name="agrupamientoArresto"
@@ -446,7 +452,7 @@ console.log("RESPUESTA API:", d);
             )}
 
             {step === 3 && (
-                <section className="sentinel-card" style={cardStyle}>
+                <section className="sentinel-card" style={cardStyleR}>
                     <div style={{ marginBottom: '32px' }}>
                         <h2 style={titleStyle}>NIVELES DEL <span style={{ color: '#3e5171' }}>USO DE LA FUERZA</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>
@@ -522,7 +528,7 @@ console.log("RESPUESTA API:", d);
             )}
 
             {step === 4 && (
-                <section className="sentinel-card" style={cardStyle}>
+                <section className="sentinel-card" style={cardStyleR}>
                     <div style={{ marginBottom: '32px' }}>
                         <h2 style={titleStyle}>TIEMPOS Y <span style={{ color: '#3e5171' }}>FOLIOS OFICIALES</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>
@@ -530,7 +536,7 @@ console.log("RESPUESTA API:", d);
                         </p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: gcol('repeat(3, 1fr)'), gap: '24px' }}>
                          <SentinelField 
                 label="ID Técnico Denuncia (Vínculo DB)" 
                 name="reporteDenunciaId" 
@@ -574,18 +580,18 @@ console.log("RESPUESTA API:", d);
                         </SentinelField>
 
                         {/* SECCIÓN FECHAS */}
-                        <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
+                        <div style={{ gridColumn: gspan(3), marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <h3 style={{ ...labelStyle, color: '#0f172a', marginBottom: '16px' }}>Cronología de Fechas</h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: gcol('1fr 1fr'), gap: '24px' }}>
                                 <SentinelField label="Fecha del Evento" name="fechaEvento" icon={Calendar} type="date" value={formData.fechaEvento} onChange={handleChange} />
                                 <SentinelField label="Fecha de Reporte (Admin)" name="fechaReporte" icon={Calendar} type="date" value={formData.fechaReporte} onChange={handleChange} />
                             </div>
                         </div>
 
                         {/* SECCIÓN HORAS */}
-                        <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
+                        <div style={{ gridColumn: gspan(3), marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <h3 style={{ ...labelStyle, color: '#0f172a', marginBottom: '16px' }}>Registro de Horarios</h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: gcol('repeat(4, 1fr)'), gap: '20px' }}>
                                 <SentinelField label="Hora Reporte" name="horaReporte" icon={Clock} type="time" value={formData.horaReporte} onChange={handleChange} />
                                 <SentinelField label="Inicio Evento" name="horaInicioEvento" icon={Clock} type="time" value={formData.horaInicioEvento} onChange={handleChange} />
                                 <SentinelField label="Final Evento" name="horaFinalEvento" icon={Clock} type="time" value={formData.horaFinalEvento} onChange={handleChange} />
@@ -608,7 +614,7 @@ console.log("RESPUESTA API:", d);
             )}
 
             {step === 5 && (
-                <section className="sentinel-card" style={cardStyle}>
+                <section className="sentinel-card" style={cardStyleR}>
                     <div style={{ marginBottom: '32px' }}>
                         <h2 style={titleStyle}>DETALLES DE LA <span style={{ color: '#3e5171' }}>INTERVENCIÓN</span></h2>
                         <p style={{ fontFamily: 'Inter', fontSize: '13px', color: '#64748b', margin: 0 }}>
@@ -616,21 +622,21 @@ console.log("RESPUESTA API:", d);
                         </p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: gcol('repeat(3, 1fr)'), gap: '24px' }}>
 
                         {/* SECCIÓN DELITO */}
-                        <div style={{ gridColumn: 'span 2' }}>
+                        <div style={{ gridColumn: gspan(2) }}>
                             <SentinelField label="Delito" name="delito" icon={AlertTriangle} placeholder="Nombre del delito imputado..." value={formData.delito} onChange={handleChange} />
                         </div>
                         <SentinelField label="Modus Operandi" name="modusOperandi" icon={Search} placeholder="Ej: Asalto con violencia..." value={formData.modusOperandi} onChange={handleChange} />
 
-                        <div style={{ gridColumn: 'span 3' }}>
+                        <div style={{ gridColumn: gspan(3) }}>
                             <SentinelField label="Artículos u Objetos Asegurados" name="articulosObjetos" as="textarea" placeholder="Describa armas, pertenencias o bienes recuperados..." value={formData.articulosObjetos} onChange={handleChange} style={{ minHeight: '80px' }} />
                         </div>
 
                         {/* SECCIÓN UBICACIÓN DEL HECHO */}
                         {/* SECCIÓN UBICACIÓN DEL HECHO */}
-                        <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
+                        <div style={{ gridColumn: gspan(3), marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <MapPin size={16} color="#3e5171" />
@@ -653,7 +659,7 @@ console.log("RESPUESTA API:", d);
                                 <GoogleMapPicker onLocationSelect={handleHechoMapSelect} />
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: gcol('1fr 1fr 1fr'), gap: '24px' }}>
                                 <SentinelField
                                     label="Calle"
                                     name="calleHecho"
@@ -680,9 +686,9 @@ console.log("RESPUESTA API:", d);
                         </div>
 
                         {/* SECCIÓN RESPONSABLES */}
-                        <div style={{ gridColumn: 'span 3', marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
+                        <div style={{ gridColumn: gspan(3), marginTop: '12px', paddingTop: '24px', borderTop: '1px dashed #e2e8f0' }}>
                             <h3 style={{ ...labelStyle, color: '#0f172a', marginBottom: '16px' }}>Unidad y Mando Responsable</h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '20px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: gcol('1fr 1fr 1fr 1fr'), gap: '20px' }}>
                                 <SentinelField label="Sector" name="sectorHecho" icon={Shield} as="select" value={formData.sectorHecho} onChange={handleChange}>
                                     <option value="">SELECCIONAR</option>
                                     <option value="CENTRO">CENTRO</option>
@@ -716,17 +722,17 @@ console.log("RESPUESTA API:", d);
             )}
 
             {step === 6 && (
-                <section style={cardStyle}>
+                <section style={cardStyleR}>
                     <h2 style={titleStyle}>06. AFECTADOS Y CIERRE <span style={{ color: '#3e5171' }}>JUDICIAL</span></h2>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px', padding: '15px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: gcol('2fr 1fr 1fr'), gap: '15px', padding: '15px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
                             <SentinelField label="Nombre del Afectado" name="nombreAfectado" icon={User} value={formData.nombreAfectado} onChange={handleChange} />
                             <SentinelField label="Teléfono de Afectado" name="telefonoAfectado" icon={Phone} value={formData.telefonoAfectado} onChange={handleChange} />
                             <SentinelField label="Calle del Afectado" name="calleAfectado" icon={Home} value={formData.calleAfectado} onChange={handleChange} />
                             <SentinelField label="Numero de domicilio" name="numeroAfectado" icon={Home} value={formData.numeroAfectado} onChange={handleChange} />
                             <SentinelField label="Colonia del afectado" name="coloniaAfectado" icon={Home} value={formData.coloniaAfectado} onChange={handleChange} />
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', padding: '15px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: gcol('repeat(4, 1fr)'), gap: '12px', padding: '15px', border: '1px solid #e2e8f0' }}>
                             <SentinelField label="Marca" name="marcaVehiculo" icon={Car} value={formData.marcaVehiculo} onChange={handleChange} />
                             <SentinelField label="Submarca" name="submarcaVehiculo" value={formData.submarcaVehiculo} onChange={handleChange} />
                             <SentinelField label="Tipo de Vehiculo" name="tipoVehiculo" value={formData.tipoVehiculo} onChange={handleChange} />
@@ -737,7 +743,7 @@ console.log("RESPUESTA API:", d);
                             <SentinelField label="Motor del Vehiculo" name="motorVehiculo" value={formData.motorVehiculo} onChange={handleChange} />
                             <SentinelField label="Modelo" name="modeloVehiculo" value={formData.modeloVehiculo} onChange={handleChange} />
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: gcol('2fr 1fr 1fr'), gap: '15px' }}>
                             <SentinelField label="AP / NUC" name="apNuc" icon={FileText} value={formData.apNuc} onChange={handleChange} />
                             <SentinelField label="Fuero" name="fuero" as="select" value={formData.fuero} onChange={handleChange}>
                                 <option value="">SELECCIONAR</option><option value="COMUN">COMÚN</option><option value="FEDERAL">FEDERAL</option>
@@ -782,7 +788,6 @@ const btnFinishStyle = {
 const footerActions = { marginTop: '32px', display: 'flex', justifyContent: 'space-between', gap: '15px' };
 const grid3 = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '24px'
 };
 

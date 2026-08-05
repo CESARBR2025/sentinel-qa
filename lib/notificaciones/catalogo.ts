@@ -134,7 +134,7 @@ export const EVENTOS = {
   },
   'iph.registrado': {
     label: 'IPH de detenido registrado', modulo: 'Análisis', severidad: 'info',
-    rolesPorDefecto: ['Investigador', 'Analisis'],
+    rolesPorDefecto: ['Analisis'],
     href: () => `/analisis/iph`,
   },
 
@@ -193,7 +193,7 @@ export const EVENTOS = {
   },
   'ficha.creada': {
     label: 'Ficha de búsqueda creada', modulo: 'Prevención', severidad: 'critico',
-    rolesPorDefecto: ['Operador Víctimas', 'Investigador'],
+    rolesPorDefecto: ['Operador Víctimas', 'Analisis'],
     href: id => `/prevencion/busquedas/${id}`,
   },
   'ficha.cancelada': {

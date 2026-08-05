@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { SignOutButton } from '@/app/dashboard/sign-out-button';
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones';
+import { CambiarSesionDev } from '@/components/dev/CambiarSesionDev';
 import { useResponsive } from '@/hooks/useResponsive';
 import { authClient } from '@/lib/auth-client';
 
@@ -130,43 +131,10 @@ export function DashboardHeader({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 32 }}>
-        {esMovil || esTablet || !currentUser ? null : (
-        <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <div
-            style={{
-              fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 10,
-              color: '#64748b',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-            }}
-          >
-            {roleLabel}
-          </div>
-
-          <div
-            style={{
-              fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 13,
-              color: '#1f355a',
-              letterSpacing: '0.12em',
-              fontWeight: 600,
-            }}
-          >
-            {currentUser.name} {currentUser.apellido ?? ''}
-          </div>
-
-          <div
-            style={{
-              fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 10,
-              color: '#94a3b8',
-              letterSpacing: '0.08em',
-            }}
-          >
-            {currentUser.email.toLowerCase()}
-          </div>
-        </div>
+        {/* Temporal (dev): cambiar de usuario sin login. Desktop muestra el
+            bloque de usuario; móvil/tablet un ícono compacto. */}
+        {!currentUser ? null : (
+          <CambiarSesionDev currentUser={currentUser} roleLabel={roleLabel} />
         )}
 
         <div style={{ width: 1, height: esMovil || esTablet ? 0 : 48, background: '#e2e8f0', flexShrink: 0 }} />

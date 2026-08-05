@@ -7,6 +7,8 @@ import type { NextRequest } from 'next/server'
 const PUBLIC_PATHS = [
   '/login',
   '/api/auth',
+  // Temporal (dev): switcher de sesión — el endpoint crea la sesión él mismo.
+  '/api/dev',
   // Página de caída de conexión: la sirve el service worker desde caché,
   // sin sesión (se muestra sin red).
   '/offline',

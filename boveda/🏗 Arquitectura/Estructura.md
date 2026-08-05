@@ -179,6 +179,9 @@
 │   │   │   │   └── route.ts
 │   │   │   └── registrar/
 │   │   │       └── route.ts
+│   │   ├── dev/
+│   │   │   └── cambiar-sesion/
+│   │   │       └── route.ts
 │   │   ├── expediente/
 │   │   │   ├── proxy/
 │   │   │   │   └── route.ts
@@ -193,6 +196,9 @@
 │   │   ├── fiscalia/
 │   │   │   └── expediente/
 │   │   │       └── subir-foto/
+│   │   ├── formatos-udai/
+│   │   │   └── faltas-administrativas/
+│   │   │       └── exportar/
 │   │   ├── health/
 │   │   │   └── route.ts
 │   │   ├── incidentes/
@@ -456,6 +462,10 @@
 │   │   ├── nuevo/
 │   │   │   └── page.tsx
 │   │   └── page.tsx
+│   ├── formatos-udai/
+│   │   ├── faltas-administrativas/
+│   │   │   └── page.tsx
+│   │   └── page.tsx
 │   ├── incidentes/
 │   │   └── page.tsx
 │   ├── incidentes_camaras/
@@ -632,7 +642,10 @@
 │   │   └── PatrullasTable.tsx
 │   ├── denuncias/
 │   │   └── FormularioD1.tsx
+│   ├── dev/
+│   │   └── CambiarSesionDev.tsx
 │   ├── fiscalia/
+│   │   ├── AntecedentesExternos.tsx
 │   │   ├── ButtonVerDetalles.tsx
 │   │   ├── CapturarDetallesForm.tsx
 │   │   ├── CargarOficioSection.tsx
@@ -652,6 +665,9 @@
 │   │   ├── TabSolicitudes.tsx
 │   │   ├── ToastExito.tsx
 │   │   └── TomarCasoModal.tsx
+│   ├── formatos-udai/
+│   │   ├── BotonExportarExcel.tsx
+│   │   └── DetalleFaltaAdministrativaModal.tsx
 │   ├── forms/
 │   │   └── FormKit.tsx
 │   ├── incidentes/
@@ -701,6 +717,7 @@
 │   │   ├── Footer.tsx
 │   │   ├── Header.tsx
 │   │   ├── PageHeader.tsx
+│   │   ├── SegmentPage.tsx
 │   │   ├── StepIndicator.tsx
 │   │   └── SubHeader.tsx
 │   ├── prevencion/
@@ -924,6 +941,8 @@
 │   ├── analisis/
 │   │   └── permisos.ts
 │   ├── auth/
+│   │   ├── actions.ts
+│   │   ├── dev-sesiones.ts
 │   │   └── helpers.ts
 │   ├── auxiliar/
 │   │   ├── actions.ts
@@ -978,12 +997,20 @@
 │   │   │   ├── 0023_despacho_unidades_horarios.sql
 │   │   │   ├── 0024_reportes_campo_catalogo_fk.sql
 │   │   │   ├── 0025_ubicacion_oficiales.sql
-│   │   │   ├── 0026_incidente_despacho_elementos_atiende_caso.sql
 │   │   │   ├── 0026_notificaciones_por_rol.sql
 │   │   │   ├── 0027_patrullas_parque_vehicular.sql
 │   │   │   ├── 0028_v2_patrullas_placa.sql
 │   │   │   ├── 0029_asignar_oficiales_patrulla.sql
-│   │   │   └── 0030_tokens_recurso.sql
+│   │   │   ├── 0030_tokens_recurso.sql
+│   │   │   ├── 0031_incidente_despacho_elementos_atiende_caso.sql
+│   │   │   ├── 0032_reportes_campo_integridad.sql
+│   │   │   ├── 0033_detenidos_asegurados_idx.sql
+│   │   │   ├── 0034_iph_romper_circular.sql
+│   │   │   ├── 0035_d1_integridad.sql
+│   │   │   ├── 0036_fks_faltantes_e_indices.sql
+│   │   │   ├── 0037_datos_biograficos_detenido.sql
+│   │   │   ├── 0038_antecedentes_externos_detenido.sql
+│   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
 │   │   ├── schema.ts
@@ -1021,6 +1048,10 @@
 │   │   ├── mapper.ts
 │   │   ├── repository.ts
 │   │   ├── service.ts
+│   │   └── types.ts
+│   ├── formatos-udai/
+│   │   ├── permisos.ts
+│   │   ├── repository.ts
 │   │   └── types.ts
 │   ├── health/
 │   │   └── repository.ts
@@ -1184,6 +1215,23 @@
 │   ├── etapa-2-autorizacion-uploads.md
 │   ├── README.md
 │   └── test-qa.md
+├── plan-formato-faltasadministrativas/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
+├── plan-formato-incidencias/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   └── etapa-5.md
 ├── plan-formulario-d1/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1241,6 +1289,24 @@
 │   ├── etapa-7.md
 │   ├── etapa-8.md
 │   └── README.md
+├── plan-reporte-detenidos-bueno/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── etapa-7.md
+│   ├── etapa-8.md
+│   └── README.md
+├── plan-reporte-ppt/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   └── README.md
 ├── plan-saneamiento-bd-d1/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1250,7 +1316,9 @@
 │   ├── etapa-5.md
 │   ├── etapa-6.md
 │   ├── etapa-7.md
-│   └── etapa-8.md
+│   ├── etapa-8.md
+│   ├── etapa-9.md
+│   └── README.md
 ├── public/
 │   ├── files-xlsx/
 │   │   └── flota-vehicular-nuevo.xlsx
@@ -1265,6 +1333,7 @@
 │   ├── file.svg
 │   ├── globe.svg
 │   ├── logo_centinel.png
+│   ├── logo_ficha_udai.png
 │   ├── logo_gobierno_mx.png
 │   ├── logo_queretaro.jpeg
 │   ├── logo_sentinel.png
@@ -1298,6 +1367,7 @@
 │   ├── trace-components.mjs
 │   ├── trace-server.mjs
 │   ├── trace-utils.mjs
+│   ├── verify-browser-sim.ts
 │   ├── ym-dev.mjs
 │   ├── ym-hook-guard.mjs
 │   ├── ym-hook-posttool.mjs
@@ -1319,6 +1389,7 @@
 ├── CLAUDE.md
 ├── components.json
 ├── CREACION_BOVEDA.md
+├── DESIGN.md
 ├── eslint.config.mjs
 ├── INSTRUCCIONES-INFRACCIONES.md
 ├── next-env.d.ts
@@ -1333,6 +1404,7 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
 
 
 

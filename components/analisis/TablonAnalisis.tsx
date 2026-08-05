@@ -39,7 +39,7 @@ export default function TablonAnalisis() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={containerStyle}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
                     <thead>
                         <tr style={headerRowStyle}>
                             <th style={thStyle}>IDENTIFICADOR / UNIDAD</th>
@@ -150,7 +150,7 @@ const ResultBadge = ({ active, label, icon: Icon, color, bg }: any) => (
 );
 
 // --- ESTILOS ---
-const containerStyle = { background: 'white', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' };
+const containerStyle = { overflowX: 'auto' as const };
 const headerRowStyle = { background: '#f8fafc', borderBottom: '2px solid #e2e8f0' };
 const thStyle: React.CSSProperties = { padding: '16px 24px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' };
 const tdStyle: React.CSSProperties = { padding: '20px 24px', borderBottom: '1px solid #f1f5f9' };
