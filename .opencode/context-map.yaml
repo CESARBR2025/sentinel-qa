@@ -2,6 +2,15 @@
 # Mapea cada dominio a su contexto mínimo.
 # El agente debe cargar estos archivos + ejecutar graphify query al iniciar una tarea.
 
+# Dominio transversal de diseño/UI — cargar SIEMPRE antes de tocar cualquier UI.
+ui:
+  label: "Sistema de Diseño / UI — fuente única de verdad visual"
+  docs:
+    - "DESIGN.md"
+    - "boveda/🛠 Stack/Convenciones.md"
+  lib: []
+  graph_query: "describe components/partials"
+
 # Ejemplo de dominio:
 # mi-modulo:
 #   label: "Mi Módulo — Descripción breve"

@@ -44,6 +44,28 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 - `accounts_user_id_users_id_fk`: `user_id` → `users(id)`
 
+### \`antecedentes_externos_detenido\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `reporte_campo_id` | `uuid` | NO | — |
+| 3 | `tipo` | `text` | NO | — |
+| 4 | `descripcion` | `text` | NO | — |
+| 5 | `fecha` | `date` | SÍ | — |
+| 6 | `lugar` | `text` | SÍ | — |
+| 7 | `capturado_por` | `text` | SÍ | — |
+| 8 | `created_at` | `timestamp` | NO | `now()` |
+
+**Foreign Keys**
+
+- `antecedentes_externos_detenido_capturado_por_fkey`: `capturado_por` → `users(id)`
+- `antecedentes_externos_detenido_reporte_campo_id_fkey`: `reporte_campo_id` → `ofi_reportes_campo(id)`
+
+**Índices**
+
+- `idx_antecedentes_externos_reporte`: `CREATE INDEX idx_antecedentes_externos_reporte ON public.antecedentes_externos_detenido USING btree (reporte_campo_id)`
+
 ### \`audit_log\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -1119,6 +1141,15 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 11 | `longitud` | `numeric` | SÍ | — |
 | 12 | `created_at` | `timestamp` | SÍ | `now()` |
 | 13 | `updated_at` | `timestamp` | SÍ | `now()` |
+| 14 | `apodo` | `text` | SÍ | — |
+| 15 | `curp` | `text` | SÍ | — |
+| 16 | `fecha_nacimiento` | `date` | SÍ | — |
+| 17 | `genero` | `text` | SÍ | — |
+| 18 | `originario` | `text` | SÍ | — |
+| 19 | `estado_civil` | `text` | SÍ | — |
+| 20 | `escolaridad` | `text` | SÍ | — |
+| 21 | `ocupacion` | `text` | SÍ | — |
+| 22 | `rasgos_particulares` | `text` | SÍ | — |
 
 **Foreign Keys**
 
@@ -1126,6 +1157,7 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 **Índices**
 
+- `idx_detalles_asegurados_curp`: `CREATE INDEX idx_detalles_asegurados_curp ON public.ofi_detalles_asegurados USING btree (curp) WHERE (curp IS NOT NULL)`
 - `idx_ofi_da_reporte`: `CREATE INDEX idx_ofi_da_reporte ON public.ofi_detalles_asegurados USING btree (reporte_campo_id)`
 
 ### \`ofi_fichas_inteligencia\`

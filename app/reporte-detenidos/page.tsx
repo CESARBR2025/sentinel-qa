@@ -37,19 +37,20 @@ export default async function ReporteDetenidosPage() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Inter', fontSize: 13 }}>
             <thead>
               <tr style={{ background: '#f1f5f9', textAlign: 'left' }}>
-                {['Nombre', 'Folio', 'Evento', 'Delitos', 'Falta Administrativa', 'Modus Operandi', 'Fecha'].map(h => (
+                {['Nombre', 'Folio D1', 'IPH', 'Evento', 'Delitos', 'Falta Administrativa', 'Modus Operandi', 'Fecha'].map(h => (
                   <th key={h} style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 10, textTransform: 'uppercase', color: '#64748b', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {detenidos.length === 0 && (
-                <tr><td colSpan={7} style={{ padding: 32, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>No hay detenidos con las 3 fotos completadas</td></tr>
+                <tr><td colSpan={8} style={{ padding: 32, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>No hay detenidos con las 3 fotos completadas</td></tr>
               )}
               {detenidos.map(d => (
                 <tr key={d.id} style={{ borderTop: '1px solid #e2e8f0' }}>
                   <td style={{ padding: '10px 16px' }}>{d.nombre}</td>
-                  <td style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 11 }}>{d.folio || '—'}</td>
+                  <td style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 11 }}>{d.folioDenuncia || '—'}</td>
+                  <td style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 11 }}>{d.iph || '—'}</td>
                   <td style={{ padding: '10px 16px' }}>{d.evento}</td>
                   <td style={{ padding: '10px 16px' }}>{d.delito}</td>
                   <td style={{ padding: '10px 16px' }}>{d.faltaAdministrativa}</td>

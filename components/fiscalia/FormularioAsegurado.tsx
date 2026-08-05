@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker'
 import { guardarDetallesAseguradosAction } from '@/lib/fiscalia/actions'
+import { AntecedentesExternos } from '@/components/fiscalia/AntecedentesExternos'
 import type { DetalleAseguradoCompleto, DetenidoDireccionInput } from '@/lib/fiscalia/types'
 
 interface Props {
@@ -268,6 +269,15 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
       codPostal: guardado?.codPostal ?? '',
       latitud: guardado?.latitud ?? null,
       longitud: guardado?.longitud ?? null,
+      apodo: guardado?.apodo ?? '',
+      curp: guardado?.curp ?? '',
+      fechaNacimiento: guardado?.fechaNacimiento ?? null,
+      genero: guardado?.genero ?? '',
+      originario: guardado?.originario ?? '',
+      estadoCivil: guardado?.estadoCivil ?? '',
+      escolaridad: guardado?.escolaridad ?? '',
+      ocupacion: guardado?.ocupacion ?? '',
+      rasgosParticulares: guardado?.rasgosParticulares ?? '',
     }
   })
 
@@ -316,6 +326,15 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
       codPostal: d.codPostal,
       latitud: d.latitud,
       longitud: d.longitud,
+      apodo: d.apodo,
+      curp: d.curp,
+      fechaNacimiento: d.fechaNacimiento ?? null,
+      genero: d.genero,
+      originario: d.originario,
+      estadoCivil: d.estadoCivil,
+      escolaridad: d.escolaridad,
+      ocupacion: d.ocupacion,
+      rasgosParticulares: d.rasgosParticulares,
     }))
 
     const save = onGuardar ?? guardarDetallesAseguradosAction
@@ -521,6 +540,143 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
                 placeholder="Apellido materno"
                 readOnly={readOnly}
               />
+            </div>
+          </div>
+
+          <div className="grid-3" style={{ marginBottom: 16 }}>
+            <div>
+              <label style={labelSx}>Apodo</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].apodo || '—'}</div>
+              ) : (
+                <input
+                  value={detenidosDir[i].apodo}
+                  onChange={e => updateDetenido(i, 'apodo', e.target.value)}
+                  style={inputSx}
+                  placeholder="Apodo o alias"
+                />
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>CURP</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].curp || '—'}</div>
+              ) : (
+                <input
+                  value={detenidosDir[i].curp}
+                  onChange={e => updateDetenido(i, 'curp', e.target.value)}
+                  style={{ ...inputSx, textTransform: 'uppercase' }}
+                  placeholder="CURP"
+                  maxLength={18}
+                />
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Fecha de Nacimiento</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].fechaNacimiento || '—'}</div>
+              ) : (
+                <input
+                  type="date"
+                  value={detenidosDir[i].fechaNacimiento ?? ''}
+                  onChange={e => updateDetenido(i, 'fechaNacimiento', e.target.value || null)}
+                  style={inputSx}
+                />
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Género</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].genero || '—'}</div>
+              ) : (
+                <select
+                  value={detenidosDir[i].genero}
+                  onChange={e => updateDetenido(i, 'genero', e.target.value)}
+                  style={inputSx}
+                >
+                  <option value="">Selecciona</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Originario</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].originario || '—'}</div>
+              ) : (
+                <input
+                  value={detenidosDir[i].originario}
+                  onChange={e => updateDetenido(i, 'originario', e.target.value)}
+                  style={inputSx}
+                  placeholder="Ej. Querétaro"
+                />
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Estado Civil</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].estadoCivil || '—'}</div>
+              ) : (
+                <select
+                  value={detenidosDir[i].estadoCivil}
+                  onChange={e => updateDetenido(i, 'estadoCivil', e.target.value)}
+                  style={inputSx}
+                >
+                  <option value="">Selecciona</option>
+                  <option value="Soltero">Soltero</option>
+                  <option value="Casado">Casado</option>
+                  <option value="Unión Libre">Unión Libre</option>
+                  <option value="Divorciado">Divorciado</option>
+                  <option value="Viudo">Viudo</option>
+                </select>
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Escolaridad</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].escolaridad || '—'}</div>
+              ) : (
+                <select
+                  value={detenidosDir[i].escolaridad}
+                  onChange={e => updateDetenido(i, 'escolaridad', e.target.value)}
+                  style={inputSx}
+                >
+                  <option value="">Selecciona</option>
+                  <option value="Ninguna">Ninguna</option>
+                  <option value="Primaria">Primaria</option>
+                  <option value="Secundaria">Secundaria</option>
+                  <option value="Preparatoria">Preparatoria</option>
+                  <option value="Universidad">Universidad</option>
+                </select>
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Ocupación</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].ocupacion || '—'}</div>
+              ) : (
+                <input
+                  value={detenidosDir[i].ocupacion}
+                  onChange={e => updateDetenido(i, 'ocupacion', e.target.value)}
+                  style={inputSx}
+                  placeholder="Ocupación"
+                />
+              )}
+            </div>
+            <div>
+              <label style={labelSx}>Rasgos Particulares</label>
+              {readOnly ? (
+                <div style={disabledSx}>{detenidosDir[i].rasgosParticulares || '—'}</div>
+              ) : (
+                <input
+                  value={detenidosDir[i].rasgosParticulares}
+                  onChange={e => updateDetenido(i, 'rasgosParticulares', e.target.value)}
+                  style={inputSx}
+                  placeholder="Ej. Tatuaje en el brazo derecho"
+                />
+              )}
             </div>
           </div>
 
@@ -780,6 +936,8 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
 
         </div>
       ))}
+
+      <AntecedentesExternos reporteCampoId={reporteCampoId} readOnly={readOnly} />
 
       {errorMaps && (
         <div style={{

@@ -6,8 +6,8 @@ import type {
   LiberacionRow,
   DetenidoDireccionInput,
 } from "./types";
-import { rowToAsegurado, rowToDetalleDetenidoGuardado, rowToPuestaDisposicion } from "./mapper";
-import type { AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, PuestaDisposicionInput } from "./types";
+import { rowToAsegurado, rowToDetalleDetenidoGuardado, rowToPuestaDisposicion, rowToAntecedenteExterno } from "./mapper";
+import type { AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, PuestaDisposicionInput, AntecedenteExterno } from "./types";
 
 export async function obtenerSolicitudesPendientes() {
   const result = await query<Record<string, unknown>>(
@@ -401,8 +401,9 @@ export async function guardarDetenidosDirecciones(
       await client.query(
         `INSERT INTO ofi_detalles_asegurados
          (reporte_campo_id, nombre_detenido, ap_paterno_detenido, ap_materno_detenido,
-          calle, colonia, numero, cod_postal, latitud, longitud)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+          calle, colonia, numero, cod_postal, latitud, longitud,
+          apodo, curp, fecha_nacimiento, genero, originario, estado_civil, escolaridad, ocupacion, rasgos_particulares)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`,
         [
           reporteCampoId,
           d.nombreDetenido,
@@ -414,6 +415,15 @@ export async function guardarDetenidosDirecciones(
           d.codPostal || null,
           d.latitud,
           d.longitud,
+          d.apodo || null,
+          d.curp || null,
+          d.fechaNacimiento || null,
+          d.genero || null,
+          d.originario || null,
+          d.estadoCivil || null,
+          d.escolaridad || null,
+          d.ocupacion || null,
+          d.rasgosParticulares || null,
         ],
       );
     }
@@ -653,4 +663,33 @@ export async function guardarPuestaDisposicion(
       creadoPor,
     ],
   );
+}
+
+export async function listarAntecedentesExternos(reporteCampoId: string): Promise<AntecedenteExterno[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT ae.id, ae.tipo, ae.descripcion, ae.fecha, ae.lugar, ae.created_at,
+            CONCAT(u.name, ' ', COALESCE(u.apellido, '')) AS capturado_por_nombre
+     FROM antecedentes_externos_detenido ae
+     LEFT JOIN users u ON u.id = ae.capturado_por
+     WHERE ae.reporte_campo_id = $1
+     ORDER BY ae.fecha DESC NULLS LAST, ae.created_at DESC`,
+    [reporteCampoId],
+  )
+  return result.rows.map(rowToAntecedenteExterno)
+}
+
+export async function insertarAntecedenteExterno(
+  reporteCampoId: string,
+  input: { tipo: string; descripcion: string; fecha: string | null; lugar: string | null },
+  capturadoPor: string,
+): Promise<void> {
+  await query(
+    `INSERT INTO antecedentes_externos_detenido (reporte_campo_id, tipo, descripcion, fecha, lugar, capturado_por)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [reporteCampoId, input.tipo, input.descripcion, input.fecha, input.lugar, capturadoPor],
+  )
+}
+
+export async function eliminarAntecedenteExterno(id: string): Promise<void> {
+  await query(`DELETE FROM antecedentes_externos_detenido WHERE id = $1`, [id])
 }

@@ -8,12 +8,12 @@ import pool from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
-import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
+import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService, listarAntecedentesExternosService, agregarAntecedenteExternoService, eliminarAntecedenteExternoService } from './service'
 import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import { emitir } from '@/lib/notificaciones/emisor'
 import type { ViaInfraccionDetalle } from './types'
-import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow } from './types'
+import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow, AntecedenteExterno, AntecedenteExternoInput } from './types'
 
 export async function obtenerDashboardFiscalia(): Promise<UserInfo> {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -535,6 +535,68 @@ export async function guardarPuestaDisposicionJuzgadoAction(
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error inesperado al guardar'
     console.error('[guardarPuestaDisposicionJuzgadoAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function listarAntecedentesExternosAction(
+  reporteCampoId: string,
+): Promise<{ data: AntecedenteExterno[] | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await listarAntecedentesExternosService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error desconocido'
+    console.error('[listarAntecedentesExternosAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function agregarAntecedenteExternoAction(
+  reporteCampoId: string,
+  input: AntecedenteExternoInput,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await agregarAntecedenteExternoService(reporteCampoId, input, session.user.id)
+
+    revalidatePath('/fiscalia/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error desconocido'
+    console.error('[agregarAntecedenteExternoAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function eliminarAntecedenteExternoAction(
+  id: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await eliminarAntecedenteExternoService(id)
+
+    revalidatePath('/fiscalia/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error desconocido'
+    console.error('[eliminarAntecedenteExternoAction]', msg)
     return { success: false, error: msg }
   }
 }

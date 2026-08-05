@@ -54,3 +54,16 @@
 7. Migraciones manuales idempotentes `0031`–`0036` en `lib/db/manual-migrations/`, y el exportador de esquema (`npm run db:schema`) ahora incluye Índices y Foreign Keys.
 
 **Consecuencias**: Este saneamiento es prerrequisito de `plan-formulario-d1` (carpeta hermana), que corre después sobre este modelo. Los dashboards disponen de los índices que antes faltaban. No se cambiaron contratos de `app/api/**` ni nombres de columnas expuestas.
+
+## ADR-007: Ficha de Detenidos alineada al formato oficial UDAI (2026-08-05)
+
+**Contexto**: se comparó el PPT generado por el sistema contra el formato oficial real usado por UDAI (`FORMATO FICHA DE DETENIDOS.pptx`) y se encontraron 10 campos faltantes (biográficos del detenido, lugar de detención, zona de operación, antecedentes).
+
+**Decisión**:
+- Los campos biográficos (apodo, CURP, fecha nacimiento, género, originario, estado civil, escolaridad, ocupación, rasgos particulares) se agregan a `ofi_detalles_asegurados`, capturados por Fiscalía (mismo paso donde ya captura domicilio).
+- Lugar de detención y zona de operación **no requirieron campos nuevos** — ya existían (`ofi_reportes_campo.ofi_calle/ofi_colonia` y `ofi_reporte_denuncia.sector` respectivamente), solo se expusieron en la ficha.
+- Nexos delictivos queda sin implementar, se muestra vacío (igual que en el ejemplo real del formato oficial).
+- Antecedentes: dos fuentes combinadas — búsqueda automática local (CURP con fallback a nombre completo, contra `ofi_reporte_denuncia`/`ofi_reportes_campo` propios, excluyendo el reporte actual) y captura manual en Fiscalía para antecedentes de otras entidades (tabla `antecedentes_externos_detenido`), ya que el sistema no tiene integración con fuentes estatales/nacionales externas.
+- El PPT pasa de una página horizontal con tabla simple a una página vertical (7.5×10in) que replica la estructura de secciones del formato oficial.
+
+**Consecuencia**: el módulo deja de ser un simple "listado + tabla" y pasa a depender de datos capturados en un paso adicional de Fiscalía (datos biográficos + antecedentes externos) — un detenido sin esos datos biográficos capturados igual aparece en `/reporte-detenidos` (el criterio de completitud sigue siendo las 3 fotos en `evidencias_detenido`), pero su ficha en el PPT mostrará esos campos vacíos.

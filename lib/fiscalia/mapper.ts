@@ -1,4 +1,4 @@
-import type { SolicitudEvidencia, ViaInfraccionDetalle, AseguradoRow, DetalleAseguradoCompleto, DetalleDetenidoGuardado, PuestaDisposicionRow } from './types'
+import type { SolicitudEvidencia, ViaInfraccionDetalle, AseguradoRow, DetalleAseguradoCompleto, DetalleDetenidoGuardado, PuestaDisposicionRow, AntecedenteExterno } from './types'
 
 function str(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -16,6 +16,19 @@ function num(val: unknown): number | null {
   if (val === null || val === undefined) return null
   const n = Number(val)
   return Number.isNaN(n) ? null : n
+}
+
+function fmtFecha(val: unknown): string | null {
+  if (val === null || val === undefined) return null
+  if (val instanceof Date) {
+    if (Number.isNaN(val.getTime())) return null
+    const y = val.getFullYear()
+    const m = String(val.getMonth() + 1).padStart(2, '0')
+    const d = String(val.getDate()).padStart(2, '0')
+    return `${y}-${m}-${d}`
+  }
+  const s = String(val).slice(0, 10)
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null
 }
 
 export function rowToSolicitud(row: Record<string, unknown>): SolicitudEvidencia {
@@ -195,6 +208,28 @@ export function rowToDetalleDetenidoGuardado(row: Record<string, unknown>): Deta
     codPostal: str(row.cod_postal),
     latitud: row.latitud != null ? Number(row.latitud) : null,
     longitud: row.longitud != null ? Number(row.longitud) : null,
+    apodo: str(row.apodo),
+    curp: str(row.curp),
+    fechaNacimiento: fmtFecha(row.fecha_nacimiento),
+    genero: str(row.genero),
+    originario: str(row.originario),
+    estadoCivil: str(row.estado_civil),
+    escolaridad: str(row.escolaridad),
+    ocupacion: str(row.ocupacion),
+    rasgosParticulares: str(row.rasgos_particulares),
+  }
+}
+
+export function rowToAntecedenteExterno(row: Record<string, unknown>): AntecedenteExterno {
+  return {
+    id: str(row.id) ?? '',
+    reporteCampoId: str(row.reporte_campo_id) ?? '',
+    tipo: (row.tipo === 'DELITO' || row.tipo === 'FALTA_ADMINISTRATIVA' ? row.tipo : 'DELITO'),
+    descripcion: str(row.descripcion) ?? '',
+    fecha: fmtFecha(row.fecha),
+    lugar: str(row.lugar),
+    capturadoPorNombre: str(row.capturado_por_nombre),
+    createdAt: str(row.created_at) ?? '',
   }
 }
 

@@ -50,6 +50,15 @@ export interface DetenidoDireccionInput {
   codPostal: string
   latitud: number | null
   longitud: number | null
+  apodo: string
+  curp: string
+  fechaNacimiento: string | null   // 'YYYY-MM-DD' o null
+  genero: string
+  originario: string
+  estadoCivil: string
+  escolaridad: string
+  ocupacion: string
+  rasgosParticulares: string
 }
 
 export interface DetalleAseguradoCompleto {
@@ -89,6 +98,15 @@ export interface DetalleDetenidoGuardado {
   codPostal: string | null
   latitud: number | null
   longitud: number | null
+  apodo: string | null
+  curp: string | null
+  fechaNacimiento: string | null
+  genero: string | null
+  originario: string | null
+  estadoCivil: string | null
+  escolaridad: string | null
+  ocupacion: string | null
+  rasgosParticulares: string | null
 }
 
 export interface PuestaDisposicionRow {
@@ -126,6 +144,24 @@ export interface DetenidoNombre {
   nombre?: string
   apellidoPaterno?: string
   apellidoMaterno?: string
+}
+
+export interface AntecedenteExterno {
+  id: string
+  reporteCampoId: string
+  tipo: 'DELITO' | 'FALTA_ADMINISTRATIVA'
+  descripcion: string
+  fecha: string | null
+  lugar: string | null
+  capturadoPorNombre: string | null
+  createdAt: string
+}
+
+export interface AntecedenteExternoInput {
+  tipo: 'DELITO' | 'FALTA_ADMINISTRATIVA'
+  descripcion: string
+  fecha: string | null
+  lugar: string | null
 }
 
 export interface DetalleAsegurado {

@@ -44,6 +44,15 @@ export default async function ExpedientePage({ params }: { params: Promise<{ sol
     codPostal: d.codPostal ?? null,
     latitud: d.latitud ?? null,
     longitud: d.longitud ?? null,
+    apodo: d.apodo ?? null,
+    curp: d.curp ?? null,
+    fechaNacimiento: d.fechaNacimiento ?? null,
+    genero: d.genero ?? null,
+    originario: d.originario ?? null,
+    estadoCivil: d.estadoCivil ?? null,
+    escolaridad: d.escolaridad ?? null,
+    ocupacion: d.ocupacion ?? null,
+    rasgosParticulares: d.rasgosParticulares ?? null,
   }))
 
   const fotos = fotosRaw.map((f) => ({ id: Number(f.id), url: f.url_archivo, tipoFoto: f.tipo_foto, detenidoIndex: null }))

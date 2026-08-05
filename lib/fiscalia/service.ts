@@ -15,11 +15,14 @@ import {
   listarAseguradosConDisposicion,
   obtenerPuestaDisposicionPorReporte,
   guardarPuestaDisposicion,
+  listarAntecedentesExternos,
+  insertarAntecedenteExterno,
+  eliminarAntecedenteExterno,
 } from './repository'
 import { rowToSolicitud } from './mapper'
 import { tienePermiso as tienePermisoFiscalia } from './permisos'
 import { tienePermiso as tienePermisoJuzgado } from '@/lib/agente_juzgado/permisos'
-import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow } from './types'
+import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow, AntecedenteExterno, AntecedenteExternoInput } from './types'
 
 export async function verificarRolFiscalia(userId: string): Promise<boolean> {
   return tienePermisoFiscalia(userId, 'fiscalia', 'ver')
@@ -149,4 +152,20 @@ export async function guardarPuestaDisposicionService(
   creadoPor: string,
 ): Promise<void> {
   await guardarPuestaDisposicion(reporteCampoId, datos, creadoPor)
+}
+
+export async function listarAntecedentesExternosService(reporteCampoId: string): Promise<AntecedenteExterno[]> {
+  return listarAntecedentesExternos(reporteCampoId)
+}
+
+export async function agregarAntecedenteExternoService(
+  reporteCampoId: string,
+  input: AntecedenteExternoInput,
+  capturadoPor: string,
+): Promise<void> {
+  await insertarAntecedenteExterno(reporteCampoId, input, capturadoPor)
+}
+
+export async function eliminarAntecedenteExternoService(id: string): Promise<void> {
+  await eliminarAntecedenteExterno(id)
 }

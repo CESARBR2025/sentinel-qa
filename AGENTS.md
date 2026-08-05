@@ -112,6 +112,12 @@ Usar `graphify query` y `graphify summary --graph .graphify/graph.json` para ent
 
 Después de poblar la bóveda, ejecutar el checklist post-cambio (sección siguiente).
 
+# Design System — fuente única en `DESIGN.md`
+
+**Toda la UI de este proyecto se rige por `DESIGN.md` (raíz del proyecto):** tokens de color, tipografía (Barlow Condensed / JetBrains Mono / Inter), componentes (`PageHeader`, `SegmentPage`, `StepIndicator`, `.card-o`, `.fk-*`), layout, responsive y do's/don'ts. Es la **fuente de verdad visual única**.
+
+**Regla:** antes de crear o modificar cualquier vista/componente de UI, **leer `DESIGN.md` completo**. Prohibido duplicar tokens o reimplementar los patrones de diseño documentados ahí. `boveda/🛠 Stack/Convenciones.md` solo conserva convenciones de código y vocabulario de dominio.
+
 # Architecture — Layered Domain Pattern (si aplica)
 
 Every domain module follows a strict layered architecture in `lib/<module>/`:
