@@ -1,7 +1,5 @@
 import {
   obtenerSolicitudesPendientes,
-  obtenerSolicitudesSinEvidencias,
-  obtenerSolicitudesConEvidencias,
   obtenerSolicitudesFinalizadas,
   actualizarEstadoSolicitud,
   actualizarSolicitudConEvidencias,
@@ -36,18 +34,8 @@ export async function listarSolicitudesPendientes(): Promise<SolicitudEvidencia[
   return rows.map(rowToSolicitud)
 }
 
-export async function listarSolicitudesSinEvidencias(): Promise<SolicitudEvidencia[]> {
-  const rows = await obtenerSolicitudesSinEvidencias()
-  return rows.map(rowToSolicitud)
-}
-
 export async function listarSolicitudesFinalizadas(): Promise<SolicitudEvidencia[]> {
   const rows = await obtenerSolicitudesFinalizadas()
-  return rows.map(rowToSolicitud)
-}
-
-export async function listarSolicitudesConEvidencias(): Promise<SolicitudEvidencia[]> {
-  const rows = await obtenerSolicitudesConEvidencias()
   return rows.map(rowToSolicitud)
 }
 

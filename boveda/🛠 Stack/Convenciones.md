@@ -142,6 +142,44 @@ Toda vista usa el componente `components/partials/PageHeader.tsx` (`PageHeader` 
 - `title` no debe llevar espacio final (el componente añade el espacio antes del acento).
 - El contenedor y el bloque de `actions` hacen `flexWrap: wrap` de forma fija → **no se pasa prop `wrap`** (fue removida; ya no existe).
 
+## Segmento de Página (SegmentPage) — REGLA DE DISEÑO
+
+Toda vista con navegación por segmentos/tabs de estado (bandeja por estatus, filtros de estado de trámite, tabs de listado) usa el componente `components/partials/SegmentPage.tsx` (`SegmentPage`). **Prohibido reimplementar el patrón inline** (botones con borde + accent, barra de tabs con border-bottom, pills con track gris).
+
+El estilo es el del **tablón de despacho** (`/agente_911/despacho`, `TablonDespacho`): cada segmento es un botón con borde `1px solid #e2e8f0`, que en activo se rellena con su `accent` (color semántico por estado) y en inactivo queda blanco con texto `#64748b`.
+
+**Estructura:**
+
+```tsx
+<SegmentPage
+  tabs={[
+    { key: 'pendientes', label: 'Pendientes', icon: <AlertTriangle size={13} />, count: 4, accent: '#b45309' },
+    { key: 'en_despacho', label: 'En Ruta', icon: <Shield size={13} />, count: 2, accent: '#1c3051' },
+    { key: 'atendidos', label: 'Atendidos', icon: <CheckCircle2 size={13} />, count: 9, accent: '#15803d' },
+  ]}
+  activeKey={tab}
+  onChange={setTab}
+/>
+```
+
+**Tokens (no variar):**
+
+| Elemento | Estilo |
+|----------|--------|
+| Contenedor | `flex; flexWrap: wrap; gap: 0; marginBottom: 24` (el wrap es **siempre**) |
+| Botón | `Barlow Condensed, 700, 14px, letterSpacing 0.06em, uppercase; padding 10px 24px; border 1px solid #e2e8f0; borderBottom 2px accent cuando activo` |
+| Botón activo | `background: accent; color: #fff` |
+| Botón inactivo | `background: #fff; color: #64748b` |
+| Icono | `size 13`, opcional, dentro del botón con `gap: 8` |
+| Badge de conteo | `Inter, 700, 10px; padding 0 7px; borderRadius 8; lineHeight 18px; activo: rgba(255,255,255,.2)/#fff; inactivo: #f1f5f9/#64748b` |
+
+**Reglas:**
+- `onChange(key)` para estado local (componente cliente); alternativa `href` por tab → se renderiza `<Link>` (server-safe, navegación por query param).
+- El `accent` de cada tab es su color semántico (estado/flujo); si no se define usa el default `#1f355a`.
+- `count` opcional: si se omite no se dibuja el badge.
+- `activeKey` es la key del segmento activo; el primer tab no es especial (a diferencia del `SegmentControl` de `/oficial`, aquí no hay track gris).
+- Referencias conformes: `TablonDespacho.tsx` (origen del estilo), `Bitacora911.tsx`, `TabSolicitudes.tsx` (migrado a `SegmentPage`).
+
 ## Indicador de Pasos (StepIndicator) — REGLA DE DISEÑO
 
 Toda vista multi-paso usa el componente `components/partials/StepIndicator.tsx` (`StepIndicator`). **Prohibido reimplementar el patrón inline.**

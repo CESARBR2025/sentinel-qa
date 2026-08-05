@@ -27,7 +27,7 @@ flowchart TD
 |---------|-----|
 | `lib/fiscalia/types.ts` | Interfaces `AseguradoRow`, `DetalleAsegurado`, `SolicitudEvidencia`, `PuestaDisposicionRow`, `ViaInfraccionDetalle`, ACTAS_CHECKLIST |
 | `lib/fiscalia/mapper.ts` | `rowToAsegurado`, `rowToDetalleDetenidoGuardado`, `rowToPuestaDisposicion` |
-| `lib/fiscalia/repository.ts` | `obtenerSolicitudesPendientes`, `obtenerDetalleAsegurado`, `actualizarDetallesAsegurado`, `guardarDetenidosDirecciones`, `generarFolioAsegurados`, `guardarPuestaDisposicion`, `obtenerPuestaDisposicionPorReporte`, `listarLiberaciones`, `obtenerDetalleInfraccionVia` |
+| `lib/fiscalia/repository.ts` | `obtenerSolicitudesPendientes`, `obtenerSolicitudesFinalizadas`, `obtenerDetalleAsegurado`, `actualizarDetallesAsegurado`, `guardarDetenidosDirecciones`, `generarFolioAsegurados`, `guardarPuestaDisposicion`, `obtenerPuestaDisposicionPorReporte`, `listarLiberaciones`, `obtenerDetalleInfraccionVia` |
 | `lib/fiscalia/service.ts` | Orquestación de procesos de fiscalía |
 | `lib/fiscalia/actions.ts` | Server actions para captura, solicitud, puesta a disposición |
 | `lib/fiscalia/expediente.ts` | Integración con expediente digital |

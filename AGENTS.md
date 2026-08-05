@@ -39,6 +39,8 @@ Si un T1 crece a 3+ archivos o toca algo compartido a mitad de tarea, trátalo c
 - Si el scope de la tarea crece más de lo previsto, **pausar y consultar al usuario** antes de seguir — esto también es la señal de subir de T1 a T2.
 - El grafo se sincroniza solo cada 10 ediciones vía hook — no lo dupliques a mano; usa `npx graphify update` solo si necesitas el grafo al día de inmediato.
 - Registrar decisiones técnicas importantes: `node scripts/session-checkpoint.mjs --decision "..."`
+- **Bugs/typecheck roto**: antes de proponer un fix a un error de `tsc`/`next build`/lint, revisar si existe una skill en `.opencode/skills/` que aplique (p. ej. `tsc-error-diagnosis` para TS2322 con línea reportada engañosa). **No confiar en la línea que reporta el compilador si el código ahí se ve válido** — buscar la causa real en el resto del bloque/archivo antes de descartar el error (ver `boveda/🗺 Roadmap/Troubleshooting.md`).
+- **Tras un fix de lint que reemplaza `as any` por `as Record<string, unknown>` o similar**, correr `npx tsc --noEmit` — el cambio `any`→`unknown` puede romper asignaciones/condiciones que antes compilaban aunque eslint pase.
 
 ---
 

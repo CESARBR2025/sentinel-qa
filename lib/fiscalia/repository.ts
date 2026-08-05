@@ -22,19 +22,6 @@ export async function obtenerSolicitudesPendientes() {
   return result.rows;
 }
 
-export async function obtenerSolicitudesSinEvidencias() {
-  const result = await query<Record<string, unknown>>(
-    `SELECT rd.*
-     FROM ofi_reporte_denuncia rd
-     JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
-     WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
-       AND rd.estado_tramite = 'EN_ANALISIS'
-       AND rd.estado_evidencia = 'SIN_EVIDENCIA_REQUERIDA'
-     ORDER BY rd.updated_at DESC`,
-  );
-  return result.rows;
-}
-
 export async function obtenerSolicitudesFinalizadas() {
   const result = await query<Record<string, unknown>>(
     `SELECT rd.*
@@ -42,19 +29,6 @@ export async function obtenerSolicitudesFinalizadas() {
      JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
      WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
        AND rd.folio_sija IS NOT NULL
-     ORDER BY rd.updated_at DESC`,
-  );
-  return result.rows;
-}
-
-export async function obtenerSolicitudesConEvidencias() {
-  const result = await query<Record<string, unknown>>(
-    `SELECT rd.*
-     FROM ofi_reporte_denuncia rd
-     JOIN ofi_reportes_campo rc ON rd.reporte_campo_id = rc.id
-     WHERE rc.ofi_autoridad_recibe = 'FISCALIA'
-       AND rd.estado_tramite = 'EN_ANALISIS'
-       AND (rd.estado_evidencia = 'PENDIENTE_MONITORISTA' OR rd.estado_evidencia = 'EVIDENCIA_ENVIADA')
      ORDER BY rd.updated_at DESC`,
   );
   return result.rows;

@@ -6,7 +6,7 @@ import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 
 export default async function SolicitudesPage() {
   const user = await obtenerDashboardFiscalia()
-  const { pendientes, sinEvidencias, conEvidencias, finalizadas } = await obtenerSolicitudes()
+  const { pendientes, finalizadas } = await obtenerSolicitudes()
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
@@ -29,7 +29,7 @@ export default async function SolicitudesPage() {
           actions={<PageHeaderLink href="/fiscalia" variant="secondary">← Panel</PageHeaderLink>}
         />
 
-        <TabSolicitudes pendientes={pendientes} sinEvidencias={sinEvidencias} conEvidencias={conEvidencias} finalizadas={finalizadas} />
+        <TabSolicitudes pendientes={pendientes} finalizadas={finalizadas} />
 
         <DashboardFooter />
       </main>

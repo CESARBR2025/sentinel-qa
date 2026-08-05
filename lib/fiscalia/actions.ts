@@ -8,7 +8,7 @@ import pool from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
-import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesSinEvidencias, listarSolicitudesConEvidencias, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
+import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService } from './service'
 import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import { emitir } from '@/lib/notificaciones/emisor'
@@ -33,8 +33,6 @@ export async function obtenerDashboardFiscalia(): Promise<UserInfo> {
 
 export interface SolicitudesData {
   pendientes: SolicitudEvidencia[]
-  sinEvidencias: SolicitudEvidencia[]
-  conEvidencias: SolicitudEvidencia[]
   finalizadas: SolicitudEvidencia[]
 }
 
@@ -45,10 +43,8 @@ export async function obtenerSolicitudes(): Promise<SolicitudesData> {
   const esValido = await verificarRolFiscalia(session.user.id)
   if (!esValido) redirect('/dashboard')
 
-  const [pendientes, sinEvidencias, conEvidencias, finalizadas] = await Promise.all([
+  const [pendientes, finalizadas] = await Promise.all([
     listarSolicitudesPendientes(),
-    listarSolicitudesSinEvidencias(),
-    listarSolicitudesConEvidencias(),
     listarSolicitudesFinalizadas(),
   ])
 
@@ -58,10 +54,8 @@ export async function obtenerSolicitudes(): Promise<SolicitudesData> {
     Promise.all(filas.map(async f => ({ ...f, token: await obtenerOCrearToken('expediente', f.id) })))
 
   return {
-    pendientes:     await conToken(pendientes),
-    sinEvidencias:  await conToken(sinEvidencias),
-    conEvidencias:  await conToken(conEvidencias),
-    finalizadas:    await conToken(finalizadas),
+    pendientes: await conToken(pendientes),
+    finalizadas: await conToken(finalizadas),
   }
 }
 

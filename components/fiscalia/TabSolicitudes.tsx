@@ -3,76 +3,34 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { TomarCasoBoton } from './TomarCasoModal'
-import { PedirEvidenciasBoton } from './PedirEvidenciasModal'
+import { SegmentPage } from '@/components/partials/SegmentPage'
 import type { SolicitudEvidencia } from '@/lib/fiscalia/types'
-import { Eye } from 'lucide-react'
+import { Eye, AlertTriangle, CheckCircle2 } from 'lucide-react'
 
 interface Props {
   pendientes: SolicitudEvidencia[]
-  sinEvidencias: SolicitudEvidencia[]
-  conEvidencias: SolicitudEvidencia[]
   finalizadas: SolicitudEvidencia[]
 }
 
-type Tab = 'pendientes' | 'sin_evidencias' | 'con_evidencias' | 'finalizadas'
+type Tab = 'pendientes' | 'finalizadas'
 
-const tabs: { key: Tab; label: string; color: string }[] = [
-  { key: 'pendientes',     label: 'Pendientes',      color: '#d97706' },
-  { key: 'sin_evidencias', label: 'Sin Evidencias',  color: '#16a34a' },
-  { key: 'con_evidencias', label: 'Con Evidencias',  color: '#0891b2' },
-  { key: 'finalizadas',    label: 'Finalizadas',     color: '#475569' },
-]
-
-export function TabSolicitudes({ pendientes, sinEvidencias, conEvidencias, finalizadas }: Props) {
+export function TabSolicitudes({ pendientes, finalizadas }: Props) {
   const [tab, setTab] = useState<Tab>('pendientes')
 
-  const map: Record<Tab, SolicitudEvidencia[]> = { pendientes, sin_evidencias: sinEvidencias, con_evidencias: conEvidencias, finalizadas }
+  const map: Record<Tab, SolicitudEvidencia[]> = { pendientes, finalizadas }
   const data = map[tab]
 
   return (
     <>
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid #e2e8f0' }}>
-        {tabs.map(t => {
-          const active = tab === t.key
-          return (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              style={{
-                fontFamily: 'JetBrains Mono,monospace',
-                fontSize: 11,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                padding: '12px 28px',
-                border: 'none',
-                borderBottom: active ? `2px solid ${t.color}` : '2px solid transparent',
-                background: active ? '#ffffff' : 'transparent',
-                color: active ? t.color : '#94a3b8',
-                cursor: 'pointer',
-                fontWeight: 600,
-                transition: 'all 0.15s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-              }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: t.color, display: 'inline-block' }}></span>
-              {t.label}
-              <span style={{
-                fontFamily: 'Inter,sans-serif',
-                fontSize: 10,
-                background: active ? '#f1f5f9' : '#f8fafc',
-                color: active ? t.color : '#94a3b8',
-                padding: '1px 8px',
-                borderRadius: 10,
-              }}>
-                {map[t.key].length}
-              </span>
-            </button>
-          )
-        })}
-      </div>
+      {/* Segmento de estatus */}
+      <SegmentPage
+        tabs={[
+          { key: 'pendientes', label: 'Pendientes', icon: <AlertTriangle size={13} />, count: pendientes.length, accent: '#b45309' },
+          { key: 'finalizadas', label: 'Finalizadas', icon: <CheckCircle2 size={13} />, count: finalizadas.length, accent: '#475569' },
+        ]}
+        activeKey={tab}
+        onChange={k => setTab(k as Tab)}
+      />
 
       {/* Table */}
       {data.length === 0 ? (
@@ -86,7 +44,7 @@ export function TabSolicitudes({ pendientes, sinEvidencias, conEvidencias, final
             <line x1="12" y1="18" x2="12" y2="12" />
             <line x1="9" y1="15" x2="15" y2="15" />
           </svg>
-          <span>No hay solicitudes {tab === 'pendientes' ? 'pendientes' : tab === 'sin_evidencias' ? 'sin evidencias' : tab === 'con_evidencias' ? 'con evidencias' : 'finalizadas'}</span>
+          <span>No hay solicitudes {tab === 'pendientes' ? 'pendientes' : 'finalizadas'}</span>
         </div>
       ) : (
         <div style={{ overflowX: 'auto', background: '#ffffff', border: '1px solid #e2e8f0' }}>
@@ -105,93 +63,54 @@ export function TabSolicitudes({ pendientes, sinEvidencias, conEvidencias, final
               </tr>
             </thead>
             <tbody>
-              {data.map(s => {
-                const puedePedirEvidencias = tab === 'sin_evidencias'
-                return (
-                  <tr key={s.id} className="st-r">
-                    <td style={{ fontFamily: 'JetBrains Mono,monospace', fontWeight: 600, color: '#0f172a' }}>{s.folioDenuncia ?? '—'}</td>
-                    <td>{s.iph ?? '—'}</td>
-                    <td>{s.folioCu ?? '—'}</td>
-                    <td>{s.corporacion ?? '—'}</td>
-                    <td>{s.delito ?? '—'}</td>
-                    <td style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>{s.fechaReporte ?? '—'}</td>
-                    <td>
-                      <span className="badge-estado" style={{
-                        background: s.estadoTramite === 'RECIBIDA' ? '#fef3c7' : '#e0e7ff',
-                        color: s.estadoTramite === 'RECIBIDA' ? '#92400e' : '#3730a3',
-                      }}>{s.estadoTramite ?? '—'}</span>
-                    </td>
-                    <td>
-                      <span className="badge-estado" style={{
-                        background: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#cffafe' :
-                                     s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
-                                     s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#d1fae5' :
-                                     '#f1f5f9',
-                        color: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#155e75' :
-                               s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
-                               s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#065f46' :
-                               '#475569',
-                      }}>{s.estadoEvidencia ?? '—'}</span>
-                    </td>
-                    <td style={{ textAlign: 'center' }}>
-                      {tab === 'pendientes' ? (
-                        <TomarCasoBoton solicitudId={s.id} />
-                      ) : tab === 'finalizadas' ? (
-                        <Link href={`/fiscalia/expedientes/${s.token ?? s.id}`} style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 6,
-                          fontFamily: 'JetBrains Mono,monospace', fontSize: 9,
-                          letterSpacing: '0.08em', textTransform: 'uppercase',
-                          padding: '5px 14px', border: '1px solid #475569',
-                          background: '#ffffff', color: '#475569',
-                          cursor: 'pointer', textDecoration: 'none',
-                          transition: 'all 0.15s ease',
-                        }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#475569'; e.currentTarget.style.color = '#ffffff'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#475569'; }}
-                        >
-                          <Eye size={12} /> Ver Expediente
-                        </Link>
-                      ) : (
-                        <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
-                          <Link href={`/fiscalia/solicitudes/${s.id}`} style={{
-                            fontFamily: 'JetBrains Mono,monospace',
-                            fontSize: 9,
-                            letterSpacing: '0.08em',
-                            textTransform: 'uppercase',
-                            padding: '5px 14px',
-                            border: '1px solid #7c3aed',
-                            background: '#ffffff',
-                            color: '#7c3aed',
-                            cursor: 'pointer',
-                            textDecoration: 'none',
-                            transition: 'all 0.15s ease',
-                          }}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#7c3aed'; e.currentTarget.style.color = '#ffffff'; }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#7c3aed'; }}
-                          >
-                            Detalles
-                          </Link>
-                          {puedePedirEvidencias && (
-                            <PedirEvidenciasBoton
-                              solicitudId={s.id}
-                              existingEvidencias={(() => {
-                                try {
-                                  const raw = s.monitoristaFechasRequeridas
-                                  if (!raw) return []
-                                  const parsed = JSON.parse(raw)
-                                  return Array.isArray(parsed) ? parsed : []
-                                } catch {
-                                  return []
-                                }
-                              })()}
-                            />
-                          )}
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
+              {data.map(s => (
+                <tr key={s.id} className="st-r">
+                  <td style={{ fontFamily: 'JetBrains Mono,monospace', fontWeight: 600, color: '#0f172a' }}>{s.folioDenuncia ?? '—'}</td>
+                  <td>{s.iph ?? '—'}</td>
+                  <td>{s.folioCu ?? '—'}</td>
+                  <td>{s.corporacion ?? '—'}</td>
+                  <td>{s.delito ?? '—'}</td>
+                  <td style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11 }}>{s.fechaReporte ?? '—'}</td>
+                  <td>
+                    <span className="badge-estado" style={{
+                      background: s.estadoTramite === 'RECIBIDA' ? '#fef3c7' : '#e0e7ff',
+                      color: s.estadoTramite === 'RECIBIDA' ? '#92400e' : '#3730a3',
+                    }}>{s.estadoTramite ?? '—'}</span>
+                  </td>
+                  <td>
+                    <span className="badge-estado" style={{
+                      background: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#cffafe' :
+                                   s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#d1fae5' :
+                                   s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#d1fae5' :
+                                   '#f1f5f9',
+                      color: s.estadoEvidencia === 'PENDIENTE_MONITORISTA' ? '#155e75' :
+                             s.estadoEvidencia === 'EVIDENCIA_ENVIADA' ? '#065f46' :
+                             s.estadoEvidencia === 'SIN_EVIDENCIA_REQUERIDA' ? '#065f46' :
+                             '#475569',
+                    }}>{s.estadoEvidencia ?? '—'}</span>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {tab === 'pendientes' ? (
+                      <TomarCasoBoton solicitudId={s.id} />
+                    ) : (
+                      <Link href={`/fiscalia/expedientes/${s.token ?? s.id}`} style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        fontFamily: 'JetBrains Mono,monospace', fontSize: 9,
+                        letterSpacing: '0.08em', textTransform: 'uppercase',
+                        padding: '5px 14px', border: '1px solid #475569',
+                        background: '#ffffff', color: '#475569',
+                        cursor: 'pointer', textDecoration: 'none',
+                        transition: 'all 0.15s ease',
+                      }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#475569'; e.currentTarget.style.color = '#ffffff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = '#475569'; }}
+                      >
+                        <Eye size={12} /> Ver Expediente
+                      </Link>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

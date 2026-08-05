@@ -6,6 +6,13 @@
 
 ## 2026 — Agosto
 
+### — Nuevo componente global SegmentPage + REGLA en Convenciones (2026-08-05)
+Se estandariza la navegación por segmentos de estado al estilo del tablón de despacho:
+- **Nuevo componente `components/partials/SegmentPage.tsx`**: segmento de página con botones Barlow Condensed 14/700 (borde `#e2e8f0`, activo con fondo `accent` sólido, icono + badge de conteo `rgba(255,255,255,.2)`). Soporta `onChange` (estado local) o `href` por tab (`<Link>` server-safe).
+- **Nueva REGLA en `Convenciones.md`**: "Segmento de Página (SegmentPage)" — análoga a PageHeader (estructura + tokens + reglas + referencias conformes). Prohibido reimplementar el patrón inline.
+- **`TabSolicitudes` (fiscalia/solicitudes)** migra sus tabs inline (JetBrains Mono con border-bottom) al `SegmentPage` estilo tablón.
+- Typecheck, lint (0 errores) y build OK; `npm run check:responsive` ✅ 0 nuevas (100).
+
 ### — Módulo Fiscalía alineado a Centinela + PageHeader + Responsive (2026-08-05)
 Las 11 páginas de `app/fiscalia` (hub + solicitudes + asegurados + liberaciones + detenidos + expedientes y sus 5 vistas destino `[id]`) se alinean a la REGLA de diseño:
 - **Header Centinela**: se retira el `backHref`/`backLabel` del `DashboardHeader` en las 10 páginas destino porque el regreso vive en el `PageHeader` (regla de regreso). El hub `/fiscalia` conserva su `backHref` dinámico (solo cuando el rol no es Fiscalía).
