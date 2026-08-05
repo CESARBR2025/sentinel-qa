@@ -67,6 +67,7 @@ flowchart TD
 5. El botón genera el mismo `.pptx` sin filtros: siempre las 3 secciones.
 6. El slide del PPT es una **página vertical 7.5×10in** que replica la Ficha UDAI: foto frontal del detenido (única, grande), fotos de objetos a un costado, tabla de nombre/apodo/folio, tabla "DATOS GENERALES DETENIDO", tabla "EVENTO DELICTIVO" (con lugar de la detención y zona de operación) y tabla "ANTECEDENTES" de dos columnas. Las fotos `derecho`/`izquierdo` no se dibujan en la ficha (siguen en el expediente).
 7. Paleta del PPT alineada a `DESIGN.md`: acento institucional default `#1f355a` (`COLOR_PRIMARY`) y texto principal `#0F172A` (`COLOR_TITLE`) en `lib/reporte-detenidos/ppt-service.ts` — deliberadamente **no** se usa el morado `#7c3aed` (ese es exclusivo del acento de Fiscalía, no de este reporte).
+8. El logo del encabezado de la ficha es `public/logo_ficha_udai.png` (la estrella/placa institucional extraída de `FORMATO FICHA DE DETENIDOS.pptx`, el formato oficial UDAI) — no el logo de producto Centinela. Si el archivo no existe, `imagenLogo()` omite el logo sin romper el PPT.
 
 ## Origen de los campos de la ficha
 

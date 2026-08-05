@@ -84,7 +84,9 @@ function addDividerSlide(pptx: PptxGenJS, titulo: string, cantidad: number) {
 }
 
 function imagenLogo(): { data: string } | { path: string } | null {
-  const p = path.resolve(process.cwd(), 'public', 'logo_sentinel.png')
+  // Misma estrella/placa institucional del formato oficial UDAI (extraída de
+  // FORMATO FICHA DE DETENIDOS.pptx), no el logo de producto Centinela.
+  const p = path.resolve(process.cwd(), 'public', 'logo_ficha_udai.png')
   try {
     if (!fs.existsSync(p)) return null
     const buf = fs.readFileSync(p)
