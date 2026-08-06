@@ -4,7 +4,7 @@
  *  - /_next/static: cache-first (archivos con hash, inmutables) → la página /offline se ve con estilos.
  *  - Resto: stale-while-revalidate.
  */
-const VERSION = 'centinela-offline-v4';
+const VERSION = 'centinela-offline-v5';
 const OFFLINE_URL = '/offline';
 
 self.addEventListener('install', (event) => {
@@ -105,15 +105,23 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification(titulo, {
-      body: mensaje,
-      icon: '/logo_sentinel.png',
-      badge: '/logo_sentinel.png',
-      tag: href || undefined,
-      data: { href: href || '/' },
-      requireInteraction: esCritico,
-      vibrate: VIBRACION[severidad] || VIBRACION.info,
-    })
+    Promise.all([
+      self.registration.showNotification(titulo, {
+        body: mensaje,
+        icon: '/logo_sentinel.png',
+        badge: '/logo_sentinel.png',
+        tag: href || undefined,
+        data: { href: href || '/' },
+        requireInteraction: esCritico,
+        vibrate: VIBRACION[severidad] || VIBRACION.info,
+      }),
+      // Avisa a las pestañas ya abiertas de este origen para que refresquen
+      // su contador/alerta de inmediato, sin esperar al próximo poll de 30s
+      // ni a que el usuario haga click en la notificación del sistema.
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        for (const client of clientList) client.postMessage({ tipo: 'notificacion-push' });
+      }),
+    ])
   );
 });
 

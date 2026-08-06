@@ -185,6 +185,19 @@ export function CampanillaNotificaciones() {
     return () => clearTimeout(t)
   }, [refrescarContador])
 
+  // Puente near-instant: cuando llega un push mientras la pestaña está
+  // abierta, el SW manda un postMessage — refresca de inmediato en vez de
+  // esperar al próximo tick del polling de 30s. Si el navegador no soporta
+  // service workers (o no hay uno registrado, ej. en dev), no pasa nada.
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    const onMessage = (e: MessageEvent) => {
+      if (e.data?.tipo === 'notificacion-push') void refrescarContador()
+    }
+    navigator.serviceWorker.addEventListener('message', onMessage)
+    return () => navigator.serviceWorker.removeEventListener('message', onMessage)
+  }, [refrescarContador])
+
   // El polling se detiene con la pestaña oculta: no tiene sentido consultar
   // mientras nadie mira, y evita acumular peticiones en pestañas de fondo.
   const [visible, setVisible] = useState(true)

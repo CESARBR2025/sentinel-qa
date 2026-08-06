@@ -1118,7 +1118,7 @@ const VIBRACION = {
 };
 ```
 
-Solo tiene efecto en Android (Chrome/Edge/Firefox); iOS lo ignora sin error. `VERSION` en `centinela-offline-v4`.
+Solo tiene efecto en Android (Chrome/Edge/Firefox); iOS lo ignora sin error. `VERSION` en `centinela-offline-v5`.
 
 ## Banner de pantalla completa (in-app)
 
@@ -1159,3 +1159,33 @@ Existió `components/oficial/GuardiaPermisosOficial.tsx`, montado en `app/oficia
 - **Push**: `TogglePush.tsx` (dropdown de `CampanillaNotificaciones.tsx`) deja activar/desactivar con un click; `usePushSubscription().activar()` guarda la suscripción en `push_subscriptions` (BD) — persiste entre sesiones sin volver a pedirlo.
 
 Ninguno de los dos exige reinstalar ni recargar en bucle; ambos son "actívalo una vez y queda guardado", sin pantalla que impida usar el resto de la app mientras tanto.
+
+# Sincronización casi-instantánea en foreground (plan `plan-notificaciones-tiempo-real/`)
+
+Antes de este plan, una pestaña abierta y quieta (sin navegar) solo se
+enteraba de notificaciones nuevas vía el polling de 30s de
+`CampanillaNotificaciones.tsx`/`ContadorAsignaciones.tsx` — y ese polling no
+refrescaba de inmediato al recuperar el foco tras estar oculto, solo
+reiniciaba el timer completo. Dos fixes independientes:
+
+**`hooks/usePolling.ts`**: dispara `fn()` de inmediato cuando `activo` pasa de
+`false` a `true` después del montaje inicial (ej. la pestaña recupera
+visibilidad) — antes solo re-armaba el `setInterval`, podía tardar hasta
+`intervalMs` completos en refrescar aunque el usuario acabara de volver a
+mirar la pantalla.
+
+**Puente Service Worker → pestaña abierta**: `public/sw.js`, en el listener
+`push`, además de `showNotification()` hace `self.clients.matchAll()` +
+`postMessage({ tipo: 'notificacion-push' })` a todas las pestañas del origen.
+`CampanillaNotificaciones.tsx` escucha ese mensaje
+(`navigator.serviceWorker.addEventListener('message', ...)`) y llama a
+`refrescarContador()` de inmediato — el banner de alerta crítica y el
+contador de no leídas se actualizan en 1-2s en vez de hasta 30s, **siempre
+que el usuario tenga push activado** (toggle de un click en la campanita, ver
+sección de arriba). Sin push activo, sigue dependiendo del polling normal +
+el fix de recuperar-foco.
+
+No se agregó este puente a `ContadorAsignaciones.tsx` (badge informativo, no
+urgente) ni se acortó el intervalo global de 30s — el caso reportado
+(banner de despacho asignado no aparecía hasta navegar) quedó cubierto sin
+tocar el costo de BD del polling normal.
