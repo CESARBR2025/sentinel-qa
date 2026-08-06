@@ -1149,46 +1149,13 @@ severidad = 'critico' AND push_reescalado_en IS NULL
 
 `/api/cron/notificaciones` sigue protegido con `CRON_SECRET`. **El QA actual vive en Vercel Hobby**, que limita los Cron Jobs propios del dashboard a 1 ejecución/día — insuficiente para un umbral de 5 minutos. Disparador elegido: **GitHub Actions** (`.github/workflows/cron-notificaciones.yml`, `schedule: '*/5 * * * *'`), que hace `curl` con el header `Authorization: Bearer $CRON_SECRET` contra `APP_URL` (hoy `https://sentinel-qa-seven.vercel.app`, definido como `env` al inicio del workflow). Es host-agnóstico a propósito: cuando el sistema migre del QA de Vercel al server propio de la empresa, el único cambio necesario es esa URL — no depende de Vercel Cron ni de ningún otro mecanismo específico de esa plataforma. Requiere el secret `CRON_SECRET` configurado tanto en GitHub (Settings → Secrets and variables → Actions) como en el entorno donde corra la app.
 
-# Guardia de permisos obligatorios — solo Oficial de Campo (plan `plan-notificaciones-forzadas/`)
+# Guardia de permisos obligatorios — REVERTIDO (2026-08-06)
 
-**Alcance explícitamente acotado**: únicamente rutas `/oficial/*`. Decisión confirmada con el usuario — es el único rol con un consumidor real de la ubicación (el mapa de cercanía del despacho, `AsignacionMapa.tsx`). No se generaliza a otros roles (Fiscalía/Juzgado/Admin) porque no habría ningún uso real de ese permiso ahí.
+Existió `components/oficial/GuardiaPermisosOficial.tsx`, montado en `app/oficial/layout.tsx`: overlay de pantalla completa (`zIndex` máximo) que bloqueaba **todo** `/oficial/*` hasta que ubicación y push estuvieran ambos en estado `activo`, sin botón de "continuar sin esto".
 
-`components/oficial/GuardiaPermisosOficial.tsx`, montado en `app/oficial/layout.tsx` **dentro** de `OficialUbicacionProvider` (necesita `useUbicacionOficial()`):
+**Se eliminó a petición del usuario** — el bloqueo total dificultaba el uso normal de la app (ciclos de "denegado → recargar", oficial atrapado si el navegador no cooperaba). Requisito real, ya cubierto sin el guard:
 
-```
-app/oficial/layout.tsx
-  OficialUbicacionProvider           (ya existía, tracking de ubicación)
-    GuardiaPermisosOficial            (nuevo — este plan)
-      {children}
-```
+- **Ubicación**: `OficialUbicacionProvider` (`components/oficial/OficialUbicacionTracker.tsx`) ya dispara el prompt del navegador automáticamente al montar vía `watchPosition` — se pide una sola vez, el navegador recuerda la decisión por origen. Si el permiso está denegado, muestra un banner descartable (no bloqueante) en vez de un overlay.
+- **Push**: `TogglePush.tsx` (dropdown de `CampanillaNotificaciones.tsx`) deja activar/desactivar con un click; `usePushSubscription().activar()` guarda la suscripción en `push_subscriptions` (BD) — persiste entre sesiones sin volver a pedirlo.
 
-## Comportamiento
-
-Bloqueo **total**, sin botón de "continuar sin esto" (decisión explícita del usuario — ubicación y push son "vitales" para el despacho de campo). El overlay (`zIndex: 2147483647`, el máximo) cubre toda la pantalla sin cerrar ni click-outside; `children` se sigue renderizando por debajo (no se desmonta el árbol), el overlay solo bloquea visual e interactivamente.
-
-Condición: `bloqueado = !ubicacionOk || !pushOk`, con:
-- `ubicacionOk = soportado && !permisoDenegado && posicionActual !== null` (de `useUbicacionOficial()`, ya existente).
-- `pushOk = estadoPush === 'activo'` (de `usePushSubscription()`, del plan de push).
-
-## Los 6 estados que cubre
-
-| Estado | Mensaje / acción |
-|---|---|
-| Ubicación no soportada | Instrucción de usar navegador compatible, sin acción posible |
-| Ubicación denegada | Instrucciones para reactivar manualmente (ícono de sitio del navegador) + botón "Ya lo activé, recargar" |
-| Ubicación pendiente | "Obteniendo señal GPS…" — sin botón, el prompt ya lo disparó `OficialUbicacionProvider` solo al montar |
-| Push no soportado | Instrucción de usar navegador compatible |
-| Push denegado | Instrucciones para reactivar + botón "Ya las activé, recargar" |
-| Push pendiente/cargando | Botón "Activar notificaciones" (reutiliza `usePushSubscription().activar()`) |
-
-## Colchón de seguridad
-
-Si `usePushSubscription` queda en `'cargando'` más de 8 segundos (llegó a pasar en producción durante el desarrollo de este plan, causa no confirmada — posible condición de carrera con el registro del service worker), el guard **no se queda congelado**: a los 8s se ofrece el botón "Activar notificaciones" igual (tratando `'cargando'` prolongado como `'inactivo'`) más un botón genérico "Recargar página" como salida manual.
-
-## Sin paso de confirmación — entra automático
-
-Se probó un paso intermedio ("Bienvenido" + botón "Entrar al sistema", con estado `entrado` persistido en `localStorage`) para no perder el contexto de por qué el guard se cerró. Se descartó: el usuario pidió explícitamente que, en cuanto ambos permisos estén OK, se entre directo sin click extra — el overlay bloqueante simplemente deja de renderizarse (`if (!bloqueado) return children`), sin ningún paso intermedio. Además, ese diseño con `entrado` tenía un efecto (`useEffect` sincronizando `entrado` desde `bloqueado`) que disparaba la regla de lint `react-hooks/set-state-in-effect` y bloqueaba el commit — otra razón para no reintroducirlo sin necesidad real.
-
-## Redundancia aceptada (no es un bug)
-
-`usePushSubscription` también se usa en `TogglePush.tsx` (dropdown de la campanita, montado globalmente incluso dentro de `/oficial/*`). Hay dos instancias independientes del hook corriendo a la vez en esas rutas — no conflictivo, sí redundante (dos `serviceWorker.ready`, dos llamadas a `estadoSuscripcion`). No se optimizó con un contexto compartido — costo marginal, no justifica la abstracción todavía.
+Ninguno de los dos exige reinstalar ni recargar en bucle; ambos son "actívalo una vez y queda guardado", sin pantalla que impida usar el resto de la app mientras tanto.

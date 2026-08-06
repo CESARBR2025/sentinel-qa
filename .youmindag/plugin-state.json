@@ -1,13 +1,17 @@
 {
-  "toolCallCount": 11445,
-  "lastTask": "apruebo el plan y si al final la tabla de solicitud_fotos ya no se usa; eliminala",
+  "toolCallCount": 11475,
+  "lastTask": "achis verifica que paso:\n⚠ Unsupported metadata themeColor is configured in metadata export in /oficial/despachos. Please move it to viewport export instead.\nRead more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport\n GET /oficial/despachos 200 in 483ms (next.js: 356ms, proxy.ts: 63ms, application-code: 64ms)\n[browser] TypeError: Cannot read properties of null (reading 'enqueueModel') (app/error.tsx:18:13)\n[browser] TypeError: Cannot read properties of null (reading 'enqueueModel') (app/error.tsx:18:13)\n\n",
   "lastCheckpointKey": "",
-  "editsSinceLastCheck": 0,
+  "editsSinceLastCheck": 2,
   "editsSinceGraphifyUpdate": 1,
-  "grepCount": 68,
-  "graphifyQueryCount": 4,
-  "editsSinceLastReinject": 2,
+  "grepCount": 2,
+  "graphifyQueryCount": 2,
+  "editsSinceLastReinject": 1,
   "_graphifyCache": {
+    "31324568": {
+      "result": "NODE e93a70a Merge pull request #28 from presidenciaSJR/conexion [src=git loc= community=28]\nNODE b60297f upload responsive [src=git loc= community=0]\nNODE context-loader.js [src=.opencode/plugins/context-loader.js loc=L1 community=29]\nNODE 22bf125 Merge pull request #20 from presidenciaSJR/conexion [src=git loc= community=88]\nNODE benchmark.mjs [src=scripts/benchmark.mjs loc=L1 community=46]\nNODE 0d9172a mejorando flujo de 911-despacho [src=git loc= community=88]\nNODE 13a3120 update catalogos sspm [src=git loc= community=60]\nNODE ab-test.mjs [src=scripts/ab-test.mjs loc=L1 community=62]\nNODE audit-responsive.mjs [src=scripts/audit-responsive.mjs loc=L1 community=101]\nNODE da8377d limpieza de codigo muerto [src=git loc= community=66]\nNODE 3c12c41 cambios en flujo de 911-despacho [src=git loc= community=29]\nNODE 7a1ae94 911-rondin [src=git loc= community=29]\n  ... (truncated)",
+      "ts": 1786027323307
+    },
     "39797648": {
       "result": "NODE 863c575 Merge pull request #24 from presidenciaSJR/feature/testing [src=git loc= community=1]\nNODE page.tsx [src=app/prevencion/medidas/[id]/page.tsx loc=L1 community=6]\nNODE testing [src=git loc= community=10]\nNODE conexion [src=git loc= community=10]\nNODE feature/testing [src=git loc= community=10]\nNODE main [src=git loc= community=10]\nNODE 27dcb21 Merge branch 'feature/testing' into feature/reportes [src=git loc= community=1]\nNODE 0068216 Mejora de Dashboard, Login y transiciones de pantallas [src=git loc= community=46]\nNODE auth.ts [src=lib/auth.ts loc=L1 community=0]\nNODE auth [src=lib/auth.ts loc=L7 community=0]\nNODE 5618308 guardado e evidencias con ed [src=git loc= community=0]\nNODE fix/subir-fotografias [src=git loc= community=4]\n  ... (truncated)",
       "ts": 1784179574972
@@ -544,16 +548,18 @@
       "result": "NODE page.tsx [src=app/prevencion/medidas/[id]/page.tsx loc=L1 community=5]\nNODE testing [src=git loc= community=10]\nNODE conexion [src=git loc= community=50]\nNODE auth.ts [src=lib/auth.ts loc=L1 community=0]\nNODE auth [src=lib/auth.ts loc=L7 community=0]\nNODE 0068216 Mejora de Dashboard, Login y transiciones de pantallas [src=git loc= community=27]\nNODE page.tsx [src=app/monitorista/incidentes-camara/nuevo/page.tsx loc=L1 community=49]\nNODE service.ts [src=lib/oficial/service.ts loc=L1 community=7]\nNODE actions.ts [src=lib/fiscalia/actions.ts loc=L1 community=3]\nNODE route.ts [src=app/api/via/infracciones/registradas/[id]/route.ts loc=L1 community=8]\nNODE repository.ts [src=lib/oficial/repository.ts loc=L1 community=7]\nNODE actions.ts [src=lib/agente_juzgado/actions.ts loc=L1 community=6]\n  ... (truncated)",
       "ts": 1785940901021
     },
+    "-776502449": {
+      "result": "NODE e93a70a Merge pull request #28 from presidenciaSJR/conexion [src=git loc= community=28]\nNODE b60297f upload responsive [src=git loc= community=0]\nNODE context-loader.js [src=.opencode/plugins/context-loader.js loc=L1 community=29]\nNODE 22bf125 Merge pull request #20 from presidenciaSJR/conexion [src=git loc= community=88]\nNODE benchmark.mjs [src=scripts/benchmark.mjs loc=L1 community=46]\nNODE 0d9172a mejorando flujo de 911-despacho [src=git loc= community=88]\nNODE 13a3120 update catalogos sspm [src=git loc= community=60]\nNODE ab-test.mjs [src=scripts/ab-test.mjs loc=L1 community=62]\nNODE audit-responsive.mjs [src=scripts/audit-responsive.mjs loc=L1 community=101]\nNODE da8377d limpieza de codigo muerto [src=git loc= community=66]\nNODE 3c12c41 cambios en flujo de 911-despacho [src=git loc= community=29]\nNODE 7a1ae94 911-rondin [src=git loc= community=29]\n  ... (truncated)",
+      "ts": 1786027134967
+    },
     "-2102532823": {
-      "result": "Graphify First-Hop Summary\nGraph: 4438 nodes, 14163 edges, 169 communities, density 0.0014, average degree 6.3826, undirected\n\nTop hubs:\n  1. auth (degree 160, community 1 Community 1, lib/auth.ts)\n  2. query() (degree 67, community 37 Community 37, lib/db.ts)\n  3. DashboardHeader() (degree 63, community 1 Community 1, components/partials/Header.tsx)\n  4. PageHeader() (degree 48, community 1 Community 1, components/partials/PageHeader.tsx)\n  5. PageHeaderLink() (degree 42, community 1 Community 1, components/partials/PageHeader.tsx)\n\nKey communities:\n  1. Community 0 - Community 0: 189 nodes, 509 internal edges, density 0.0287; top nodes: 06c55f5 Merge branch 'feature/testing' into feature/reportes, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia, 41ea169 Merge branch 'testing' into conexion\n  2. Community 1 - Community 1: 162 nodes, 514 internal edges, density 0.0394; top nodes: auth.ts, auth, 0068216 Mejora de Dashboard, Login y transiciones de pantallas\n  3. Community 2 - Community 2: 134 nodes, 372 internal edges, density 0.0417; top nodes: 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, f2c66e6 Extender roles y permisos finos a incidentes, prevención, auxiliar, 911, análisis, denuncia D1 y Formato N\n  4. Community 3 - Community 3: 114 nodes, 219 internal edges, density 0.034; top nodes: actions.ts, service.ts, repository.ts\n  ... (truncated)",
-      "ts": 1785947446605
+      "result": "Graphify First-Hop Summary\nGraph: 4637 nodes, 14648 edges, 177 communities, density 0.0014, average degree 6.3179, undirected\n\nTop hubs:\n  1. auth (degree 164, community 1 Community 1, lib/auth.ts)\n  2. query() (degree 73, community 25 Community 25, lib/db.ts)\n  3. DashboardHeader() (degree 66, community 1 Community 1, components/partials/Header.tsx)\n  4. PageHeader() (degree 55, community 1 Community 1, components/partials/PageHeader.tsx)\n  5. PageHeaderLink() (degree 47, community 1 Community 1, components/partials/PageHeader.tsx)\n\nKey communities:\n  1. Community 0 - Community 0: 182 nodes, 479 internal edges, density 0.0291; top nodes: 06c55f5 Merge branch 'feature/testing' into feature/reportes, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia, 41ea169 Merge branch 'testing' into conexion\n  2. Community 1 - Community 1: 164 nodes, 528 internal edges, density 0.0395; top nodes: auth.ts, auth, 0068216 Mejora de Dashboard, Login y transiciones de pantallas\n  3. Community 2 - Community 2: 146 nodes, 275 internal edges, density 0.026; top nodes: actions.ts, service.ts, types.ts\n  4. Community 3 - Community 3: 145 nodes, 394 internal edges, density 0.0377; top nodes: 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, f2c66e6 Extender roles y permisos finos a incidentes, prevención, auxiliar, 911, análisis, denuncia D1 y Formato N\n  ... (truncated)",
+      "ts": 1786027323065
     }
   },
-  "ymSearchCount": 3,
-  "ymEditCount": 5,
-  "ymLastSyncAt": 1786025935839,
+  "ymSearchCount": 2,
   "ymDocNudge": {
-    "911": 1785995965727,
-    "Notificaciones": 1786025894534
-  }
+    "911": 1786027942362
+  },
+  "ymEditCount": 2
 }

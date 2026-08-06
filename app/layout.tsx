@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 import SwRegister from "@/components/sw-register";
@@ -13,12 +13,15 @@ export const metadata: Metadata = {
   title: "SSPM San Juan del Río - CENTINELA",
   description: "Sistema de Gestión Seguridad Pública",
   manifest: "/manifest.json",
-  themeColor: "#1f355a",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "CENTINELA",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1f355a",
 };
 
 export default function RootLayout({
