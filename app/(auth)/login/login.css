@@ -5,6 +5,7 @@
    · móvil   ≤720px   → solo formulario, cabecera compacta
    · tablet  721–1200 → columna única, cabecera compacta + sesión
    · desktop >1200px  → split 2 columnas (hero + formulario)
+   Piloto Apple-style — ver DESIGN.md §10 (consume tokens --apple-* de globals.css).
    ──────────────────────────────────────────────────────────────────────────── */
 
 .login-scope {
@@ -17,18 +18,16 @@
   --text-dim: #64748b;
   --text-mute: #4a5878;
   --navy: #1f355a;
-  --red: #1f355a;
-  --red-hi: #447df9;
-  --gold: #1f355a;
-  --gold-hi: #f0be4c;
-  --ok: #1f355a;
+  --accent: #1f355a;      /* antes --red / --gold, ambos ya eran #1f355a en la práctica */
+  --accent-hi: #274268;   /* hover, antes --red-hi/--gold-hi mezclados */
+  --ok: #16a34a;          /* antes --ok: #1f355a (mismo color que accent, sin distinguir éxito) */
 
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
   color: var(--text);
   background: var(--ink);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--apple-font-display);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -47,23 +46,6 @@
 @media (min-width: 1201px) {
   .login-stage { height: 100vh; height: 100dvh; overflow: hidden; }
 }
-
-.login-stage-bg {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(rgba(31,53,90,.06) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(31,53,90,.06) 1px, transparent 1px);
-  background-size: 44px 44px;
-  pointer-events: none;
-}
-
-/* ── Esquinas doradas ─────────────────────────────────────────────────────── */
-.login-corner { position: absolute; width: 22px; height: 22px; border: 0 solid var(--gold); opacity: .6; }
-.login-corner.tl { top: 18px; left: 18px; border-top-width: 1px; border-left-width: 1px; }
-.login-corner.tr { top: 18px; right: 18px; border-top-width: 1px; border-right-width: 1px; }
-.login-corner.bl { bottom: 18px; left: 18px; border-bottom-width: 1px; border-left-width: 1px; }
-.login-corner.br { bottom: 18px; right: 18px; border-bottom-width: 1px; border-right-width: 1px; }
-@media (max-width: 1200px) { .login-corner { display: none; } }
 
 /* ── Panel izquierdo (hero) ── solo desktop ───────────────────────────────── */
 .login-panel-left {
@@ -96,7 +78,7 @@
 }
 .login-brand-glow {
   position: absolute; inset: -6px; border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0%, rgba(212,164,58,.10) 35%, rgba(212,164,58,0) 72%);
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0%, rgba(31,53,90,.10) 35%, rgba(31,53,90,0) 72%);
   filter: blur(6px);
 }
 .login-brand-logo {
@@ -107,7 +89,7 @@
 }
 .login-brand-divider {
   width: 1px; height: clamp(36px, 6.4vh, 52px);
-  background: linear-gradient(180deg, transparent, var(--gold), transparent);
+  background: linear-gradient(180deg, transparent, var(--accent), transparent);
   flex-shrink: 0; opacity: .55;
 }
 .login-brand-divider-soft { width: 1px; height: clamp(36px, 6.4vh, 52px); background: var(--line-2); flex-shrink: 0; }
@@ -116,28 +98,40 @@
 
 .login-hero-section { flex-shrink: 0; }
 .login-kicker {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; color: var(--red); letter-spacing: .3em; text-transform: uppercase;
+  font-family: var(--apple-font-display);
+  font-size: 12px; color: var(--accent); letter-spacing: .01em; text-transform: none;
   margin-bottom: clamp(10px, 1.8vh, 20px);
   display: flex; align-items: center; gap: 10px;
 }
-.login-kicker::before { content: ''; width: 26px; height: 1px; background: var(--red); display: inline-block; }
+.login-kicker::before { content: ''; width: 26px; height: 1px; background: var(--accent); display: inline-block; }
 .login-hero-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: clamp(10px, 2.2vh, 24px); }
 .login-hero { height: clamp(130px, 28vh, 320px); object-fit: contain; filter: drop-shadow(0 8px 24px rgba(31,53,90,.55)); }
 .login-h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 800; font-size: clamp(64px, 16vh, 176px); line-height: .9;
-  letter-spacing: .14em; text-transform: uppercase; color: var(--text);
-  margin: 0; text-shadow: 0 0 40px rgba(31,53,90,.1); text-align: center;
+  font-family: var(--apple-font-display);
+  font-weight: 600;
+  font-size: clamp(48px, 11vh, 120px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--text);
+  margin: 0;
+  text-align: center;
 }
 .login-mono-line {
   display: flex; gap: 10px; align-items: center; margin-top: clamp(8px, 1.6vh, 16px);
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .32em;
-  color: var(--text-dim); text-transform: uppercase;
+  font-family: var(--apple-font-display); font-size: 12px; letter-spacing: .01em;
+  color: var(--text-dim); text-transform: none;
 }
 
 /* ── Panel derecho (formulario) ───────────────────────────────────────────── */
-.login-panel-right { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--ink); }
+.login-panel-right {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--ink);
+  border-radius: var(--radius-xl);
+}
 
 /* Cabecera compacta — tablet y móvil (oculta en desktop) */
 .login-compact-head {
@@ -149,18 +143,18 @@
 @media (max-width: 1200px) { .login-compact-head { display: flex; } }
 .login-compact-logo { height: 38px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(31,53,90,.5)); }
 .login-compact-title {
-  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-  font-size: 30px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); line-height: 1;
+  font-family: var(--apple-font-display); font-weight: 600;
+  font-size: 28px; letter-spacing: -0.01em; text-transform: none; color: var(--accent); line-height: 1;
 }
 .login-compact-divider { width: 1px; height: 24px; background: var(--line-2); flex-shrink: 0; }
 .login-compact-sub {
-  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .18em;
-  color: var(--text-dim); text-transform: uppercase; white-space: nowrap;
+  font-family: var(--apple-font-display); font-size: 11px; letter-spacing: .01em;
+  color: var(--text-dim); text-transform: none; white-space: nowrap;
 }
 .login-compact-session {
   margin-left: auto; display: flex; align-items: center; gap: 8px;
-  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .18em;
-  color: var(--gold); text-transform: uppercase; white-space: nowrap;
+  font-family: var(--apple-font-display); font-size: 11px; letter-spacing: .01em;
+  color: var(--accent); text-transform: none; white-space: nowrap;
 }
 @media (max-width: 720px) {
   .login-compact-sub, .login-compact-divider, .login-compact-session { display: none; }
@@ -170,13 +164,13 @@
 .login-topbar {
   display: flex; justify-content: space-between; align-items: center;
   padding: 14px 28px; border-bottom: 1px solid var(--line);
-  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);
-  letter-spacing: .2em; text-transform: uppercase; background: rgba(255,255,255,.8); flex-shrink: 0;
+  font-family: var(--apple-font-display); font-size: 11px; color: var(--text-dim);
+  letter-spacing: .01em; text-transform: none; background: rgba(255,255,255,.8); flex-shrink: 0;
 }
 @media (max-width: 1200px) { .login-topbar { display: none; } }
 .login-topbar-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
-  box-shadow: 0 0 10px var(--gold); display: inline-block; animation: pulse 2.2s ease-in-out infinite;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  display: inline-block;
 }
 
 /* Contenedor principal del formulario */
@@ -185,23 +179,35 @@
 @media (max-width: 1200px) { .login-main { padding: 40px 32px; } }
 @media (max-width: 720px)  { .login-main { padding: 28px 16px; } }
 
-.login-form { margin: auto; width: 100%; max-width: 480px; }
+/* Card glass del formulario — piloto Apple-style (DESIGN.md §10) */
+.login-form {
+  margin: auto;
+  width: 100%;
+  max-width: 480px;
+  background: var(--apple-glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--apple-glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--apple-shadow-glass);
+  padding: clamp(28px, 5vh, 44px);
+}
 
 /* Encabezado del formulario */
 .login-form-head { margin-bottom: 38px; }
 .login-badge {
   display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .24em;
-  color: var(--gold); text-transform: uppercase;
-  border: 1px solid var(--gold); padding: 6px 12px; margin-bottom: 18px;
+  font-family: var(--apple-font-display); font-size: 12px; letter-spacing: .01em;
+  color: var(--accent); text-transform: none; font-weight: 600;
+  border: 1px solid var(--accent); padding: 6px 12px; margin-bottom: 18px;
+  border-radius: var(--radius-lg);
 }
 .login-form-title {
-  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-  font-size: 44px; letter-spacing: .02em; text-transform: uppercase; margin: 0; color: var(--text);
+  font-family: var(--apple-font-display); font-weight: 600;
+  font-size: 36px; letter-spacing: -0.01em; text-transform: none; margin: 0; color: var(--text);
 }
 .login-form-sub { color: var(--text-dim); font-size: 14.5px; margin-top: 10px; }
 @media (max-width: 720px) {
-  .login-form-title { font-size: 32px; }
+  .login-form-title { font-size: 28px; }
   .login-form-sub { font-size: 13px; }
 }
 
@@ -209,22 +215,22 @@
 .login-stepper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 36px; }
 .login-step {
   border-top: 3px solid var(--line-2); padding-top: 12px; min-width: 0;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em;
-  color: var(--text-mute); text-transform: uppercase;
+  font-family: var(--apple-font-display); font-size: 12px; letter-spacing: .01em;
+  color: var(--text-mute); text-transform: none;
 }
-.login-step.is-active { border-top-color: var(--gold); color: var(--gold); }
+.login-step.is-active { border-top-color: var(--accent); color: var(--accent); }
 .login-step.is-done { border-top-color: var(--ok); color: var(--ok); }
 .login-step-num { margin-right: 8px; }
 @media (max-width: 720px) {
   .login-stepper { gap: 6px; }
-  .login-step { font-size: 9px; letter-spacing: .08em; }
+  .login-step { font-size: 10px; letter-spacing: .01em; }
   .login-step-num { margin-right: 4px; }
 }
 
 /* ── OTP ──────────────────────────────────────────────────────────────────── */
 .otp-input-wrapper { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 8px; }
 @media (max-width: 720px) { .otp-input-wrapper { gap: 4px; } }
-.otp-input-field { font-size: 26px; }
+.otp-input-field { font-size: 26px; border-radius: var(--radius-lg); }
 @media (max-width: 720px) { .otp-input-field { font-size: 20px; } }
 
 /* ── Terminal de logs (oculto por ahora, se conserva el estilo) ───────────── */
@@ -252,44 +258,32 @@
   display: flex; align-items: center; justify-content: center; flex-direction: column;
   animation: fadein .5s ease forwards;
 }
-.cyber-success-grid {
-  position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(74,158,106,.08) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(74,158,106,.08) 1px, transparent 1px);
-  background-size: 40px 40px; pointer-events: none;
-}
-.cyber-success-line {
-  position: absolute; top: 50%; left: 0; right: 0; height: 1px;
-  background: rgba(31,53,90,.4); box-shadow: 0 0 15px rgba(31,53,90,.6);
-}
 .cyber-success-icon {
   width: clamp(92px, 16vw, 120px); height: clamp(92px, 16vw, 120px);
-  background: var(--ink); border-radius: 4px; border: 1px solid var(--ok);
+  background: var(--ink); border-radius: var(--radius-full); border: 1px solid var(--ok);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 40px rgba(74,158,106,.35), inset 0 0 20px rgba(74,158,106,.2);
+  box-shadow: var(--apple-shadow-glass);
   margin-bottom: 36px; position: relative; z-index: 2;
-  animation: cyber-reveal-success 1.2s cubic-bezier(0.1,0.9,0.2,1) forwards;
+  animation: successPop .4s ease-out both;
 }
 .cyber-success-title {
-  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-  font-size: 46px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px;
-  color: var(--text); text-shadow: 0 0 20px rgba(31,53,90,.2);
+  font-family: var(--apple-font-display); font-weight: 600;
+  font-size: 40px; letter-spacing: -0.01em; text-transform: none; margin: 0 0 8px;
+  color: var(--text);
 }
 @media (max-width: 720px) {
   .cyber-success-icon { margin-bottom: 24px; }
-  .cyber-success-title { font-size: 32px; }
+  .cyber-success-title { font-size: 30px; }
 }
 
 /* ── Animaciones ──────────────────────────────────────────────────────────── */
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes cyber-reveal-success {
-  0% { opacity: 0; transform: scale(.95); clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%); }
-  50% { opacity: 1; transform: scale(1.02); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); filter: drop-shadow(0 0 10px rgba(74,158,106,.8)); }
-  100% { transform: scale(1); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+@keyframes successPop {
+  from { opacity: 0; transform: scale(.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 @keyframes text-glitch {
   0% { opacity: 0; transform: translateY(10px); }

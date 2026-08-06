@@ -73,8 +73,8 @@ function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
   return (
     <div className="terminal-panel">
       <div className="terminal-head">
-        <span className="terminal-dot" style={{ background:'var(--red)' }} />
-        <span className="terminal-dot" style={{ background:'var(--gold)' }} />
+        <span className="terminal-dot" style={{ background:'var(--accent)' }} />
+        <span className="terminal-dot" style={{ background:'var(--accent)' }} />
         <span className="terminal-dot" style={{ background:'var(--ok)' }} />
         <span style={{ marginLeft:6 }}>ssp-secure@terminal — /auth/session</span>
       </div>
@@ -82,7 +82,7 @@ function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
         {lines.map(l => (
           <div key={l.k} style={{ whiteSpace:'pre' }}>
             <span style={{ color:'var(--text-mute)', marginRight:10 }}>[{l.ts}]</span>
-            <span style={{ color: l.type==='ok'?'var(--ok)':l.type==='warn'?'var(--gold)':l.type==='err'?'var(--red)':l.type==='info'?'#6da4d0':'var(--text-mute)' }}>
+            <span style={{ color: l.type==='ok'?'var(--ok)':l.type==='warn'?'var(--accent)':l.type==='err'?'var(--accent)':l.type==='info'?'#6da4d0':'var(--text-mute)' }}>
               {l.type==='err'?'✗ ':l.type==='ok'?'✓ ':l.type==='warn'?'⚠ ':'› '}{l.text}
             </span>
           </div>
@@ -90,7 +90,7 @@ function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
         <div style={{ whiteSpace:'pre' }}>
           <span style={{ color:'var(--text-mute)', marginRight:10 }}>[--:--:--]</span>
           <span style={{ color:'var(--text-mute)' }}>$ </span>
-          <span style={{ display:'inline-block', width:7, height:13, background:'var(--gold)', verticalAlign:'middle', marginLeft:3, animation:'blink 1s step-end infinite' }}/>
+          <span style={{ display:'inline-block', width:7, height:13, background:'var(--accent)', verticalAlign:'middle', marginLeft:3, animation:'blink 1s step-end infinite' }}/>
         </div>
       </div>
     </div>
@@ -152,11 +152,11 @@ function OtpInput({ value, onChange, error, focusFirst }: { value: string; onCha
           maxLength={1}
           style={{
             width:'100%', aspectRatio:'1/1.15',
-            background:'var(--ink-2)', border:`1px solid ${error?'var(--red)':value[i]?'var(--gold)':'var(--line-2)'}`,
-            color: error?'var(--red)':value[i]?'var(--gold)':'var(--text)',
+            background:'var(--ink-2)', border:`1px solid ${error?'var(--accent)':value[i]?'var(--accent)':'var(--line-2)'}`,
+            color: error?'var(--accent)':value[i]?'var(--accent)':'var(--text)',
             textAlign:'center', fontFamily:'JetBrains Mono,monospace',
-            fontWeight:700, outline:'none',
-            boxShadow: value[i]&&!error?'0 0 0 3px rgba(212,164,58,0.12)':error?'0 0 0 3px rgba(192,34,58,0.15)':'none',
+            fontWeight:700, outline:'none', borderRadius:'var(--radius-lg)',
+            boxShadow: value[i]&&!error?'0 0 0 3px rgba(31,53,90,0.12)':error?'0 0 0 3px rgba(31,53,90,0.15)':'none',
           }}
           className="otp-input-field"
         />
@@ -278,13 +278,6 @@ function LoginContent() {
   return (
     <div className="login-scope">
       <div className="login-stage">
-        <div className="login-stage-bg" />
-
-        <div className="login-corner tl" />
-        <div className="login-corner tr" />
-        <div className="login-corner bl" />
-        <div className="login-corner br" />
-
         {/* ── PANEL IZQUIERDO (desktop) ── */}
         <aside className="login-panel-left">
           <div className="login-brand-row">
@@ -313,11 +306,11 @@ function LoginContent() {
               <img src="/chaleco.png" alt="CENTINELA" className="login-hero" />
             </div>
             <h1 className="login-h1">
-              <span style={{ color:'var(--gold)' }}>CENTINELA</span>
+              <span style={{ color:'var(--accent)' }}>Centinela</span>
             </h1>
             <div className="login-mono-line">
-              <span>S.S.P.M.</span><span style={{ color:'var(--gold)' }}>·</span>
-              <span>SAN JUAN DEL RÍO</span><span style={{ color:'var(--gold)' }}>·</span>
+              <span>S.S.P.M.</span><span style={{ color:'var(--accent)' }}>·</span>
+              <span>San Juan del Río</span><span style={{ color:'var(--accent)' }}>·</span>
               <span>QRO</span>
             </div>
           </div>
@@ -330,13 +323,13 @@ function LoginContent() {
           <header className="login-compact-head">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/chaleco.png" alt="CENTINELA" className="login-compact-logo" />
-            <span className="login-compact-title">CENTINELA</span>
+            <span className="login-compact-title">Centinela</span>
             <span className="login-compact-divider" />
-            <span className="login-compact-sub">SSPM · SAN JUAN DEL RÍO · QRO</span>
+            <span className="login-compact-sub">SSPM · San Juan del Río · QRO</span>
             <span className="login-compact-session">
-              <span style={{ color:'var(--text-dim)' }}>CIFRADO TLS 1.3</span>
+              <span style={{ color:'var(--text-dim)' }}>Cifrado TLS 1.3</span>
               <span style={{ color:'var(--text-dim)' }}>·</span>
-              <span>SESIÓN {sessionId}</span>
+              <span>Sesión {sessionId}</span>
             </span>
           </header>
 
@@ -344,12 +337,12 @@ function LoginContent() {
           <div className="login-topbar">
             <div style={{ display:'flex',alignItems:'center',gap:10 }}>
               <span className="login-topbar-dot" />
-              <span>SSPM-SJR · ACCESO SEGURO</span>
+              <span>SSPM-SJR · Acceso seguro</span>
             </div>
-            <div style={{ display:'flex',alignItems:'center',gap:10,color:'var(--gold)' }}>
-              <span>CIFRADO TLS 1.3</span>
+            <div style={{ display:'flex',alignItems:'center',gap:10,color:'var(--accent)' }}>
+              <span>Cifrado TLS 1.3</span>
               <span style={{ color:'var(--text-dim)' }}>·</span>
-              <span>SESIÓN {sessionId}</span>
+              <span>Sesión {sessionId}</span>
             </div>
           </div>
 
@@ -360,7 +353,7 @@ function LoginContent() {
               <div className="login-form-head">
                 <span className="login-badge">
                   <IconShield />
-                  {phase === 'otp' || phase === 'submitting-2' ? 'ETAPA 2 · VERIFICACIÓN 2FA' : 'ETAPA 1 · CREDENCIALES'}
+                  {phase === 'otp' || phase === 'submitting-2' ? 'Verificación en dos pasos' : 'Paso 1 de 2 · Credenciales'}
                 </span>
                 <h2 className="login-form-title">
                   {phase === 'otp' || phase === 'submitting-2' ? 'Verificación en dos pasos' : 'Inicio de sesión'}
@@ -373,7 +366,7 @@ function LoginContent() {
               </div>
 
               <div className="login-stepper">
-                {[['01','CREDENCIALES',1],['02','DOBLE FACTOR',2],['03','TABLERO C4',3]].map(([num,label,s]) => {
+                {[['01','Credenciales',1],['02','Doble factor',2],['03','Tablero',3]].map(([num,label,s]) => {
                   const n = Number(s)
                   const active = step === n
                   const done   = step > n
@@ -389,59 +382,59 @@ function LoginContent() {
               {(phase === 'idle' || phase === 'submitting-1') && (
                 <form onSubmit={handleLogin}>
                   <div style={{ marginBottom:22 }}>
-                    <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
+                    <div style={{ fontFamily:'var(--apple-font-display)',fontSize:13,fontWeight:500,color:'var(--text-dim)',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
                       <span>Correo institucional</span>
-                      <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>formato: usuario@gmail.com</span>
+                      <span style={{ color:'var(--text-mute)',fontSize:12 }}>formato: usuario@gmail.com</span>
                     </div>
-                    <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'16px 18px',boxShadow:failed==='credentials'?'0 0 0 3px rgba(192,34,58,.15)':'none',transition:'border-color .15s,box-shadow .15s' }}>
+                    <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--accent)':'var(--line-2)'}`,padding:'16px 18px',borderRadius:'var(--radius-lg)',boxShadow:failed==='credentials'?'0 0 0 3px rgba(31,53,90,.15)':'none',transition:'border-color .15s,box-shadow .15s' }}>
                       <IconUser />
                       <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="usuario@sjr.gob.mx" autoComplete="email" type="email" required disabled={phase==='submitting-1'}
-                        style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:15,letterSpacing:'0.06em',minWidth:0 }}
-                        onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--gold)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(212,164,58,.12)' }}
-                        onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--red)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
+                        style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'var(--apple-font-display)',fontSize:15,minWidth:0 }}
+                        onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--accent)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(31,53,90,0.12)' }}
+                        onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--accent)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
                       />
                     </div>
                   </div>
 
                   <div style={{ marginBottom:6 }}>
-                    <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
+                    <div style={{ fontFamily:'var(--apple-font-display)',fontSize:13,fontWeight:500,color:'var(--text-dim)',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
                       <span>Contraseña</span>
-                      <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>mín. 8 caracteres</span>
+                      <span style={{ color:'var(--text-mute)',fontSize:12 }}>mín. 8 caracteres</span>
                     </div>
-                    <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--red)':'var(--line-2)'}`,padding:'16px 18px',transition:'border-color .15s,box-shadow .15s' }}>
+                    <div className={failed==='credentials'?'field-input-shake':''} style={{ display:'flex',alignItems:'center',gap:12,background:'var(--ink-2)',border:`1px solid ${failed==='credentials'?'var(--accent)':'var(--line-2)'}`,padding:'16px 18px',borderRadius:'var(--radius-lg)',transition:'border-color .15s,box-shadow .15s' }}>
                       <IconLock />
                       <input type={showPwd?'text':'password'} value={pwd} onChange={e=>setPwd(e.target.value)} placeholder="••••••••••••" autoComplete="current-password" required disabled={phase==='submitting-1'}
-                        style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'JetBrains Mono,monospace',fontSize:15,letterSpacing:'0.06em',minWidth:0 }}
-                        onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--gold)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(212,164,58,.12)' }}
-                        onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--red)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
+                        style={{ flex:1,background:'transparent',border:'none',outline:'none',color:'var(--text)',fontFamily:'var(--apple-font-display)',fontSize:15,minWidth:0 }}
+                        onFocus={e=>{ e.currentTarget.parentElement!.style.borderColor='var(--accent)'; e.currentTarget.parentElement!.style.boxShadow='0 0 0 3px rgba(31,53,90,0.12)' }}
+                        onBlur={e=>{ e.currentTarget.parentElement!.style.borderColor=failed==='credentials'?'var(--accent)':'var(--line-2)'; e.currentTarget.parentElement!.style.boxShadow='' }}
                       />
-                      <button type="button" onClick={()=>setShowPwd(s=>!s)} style={{ background:'none',border:'none',color:'var(--text-dim)',cursor:'pointer',fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.15em',padding:'4px 6px',flexShrink:0 }}>
-                        {showPwd?'OCULTAR':'VER'}
+                      <button type="button" onClick={()=>setShowPwd(s=>!s)} style={{ background:'none',border:'none',color:'var(--text-dim)',cursor:'pointer',fontFamily:'var(--apple-font-display)',fontSize:13,fontWeight:500,padding:'4px 6px',flexShrink:0 }}>
+                        {showPwd?'Ocultar':'Ver'}
                       </button>
                     </div>
                   </div>
 
                   {failed === 'credentials' && (
-                    <div style={{ marginTop:16,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <div style={{ marginTop:16,padding:'12px 16px',borderLeft:'3px solid var(--accent)',background:'rgba(31,53,90,.06)',color:'var(--accent)',fontFamily:'var(--apple-font-display)',fontSize:13,lineHeight:1.4,borderRadius:'var(--radius-lg)',display:'flex',alignItems:'center',gap:10 }}>
                       <span>⚠</span><span>Credenciales incorrectas · Verifique sus datos de acceso</span>
                     </div>
                   )}
 
                   {failed === 'server' && (
-                    <div style={{ marginTop:16,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <div style={{ marginTop:16,padding:'12px 16px',borderLeft:'3px solid var(--accent)',background:'rgba(31,53,90,.06)',color:'var(--accent)',fontFamily:'var(--apple-font-display)',fontSize:13,lineHeight:1.4,borderRadius:'var(--radius-lg)',display:'flex',alignItems:'center',gap:10 }}>
                       <span>⚠</span><span>No se pudo conectar con el servidor · Intenta de nuevo en unos momentos</span>
                     </div>
                   )}
 
                   <button type="submit" disabled={phase==='submitting-1'||!email||!pwd}
-                    style={{ marginTop:28,display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%',padding:'18px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:15.5,letterSpacing:'0.2em',textTransform:'uppercase',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
-                    onMouseEnter={e=>{if(phase!=='submitting-1')e.currentTarget.style.background='var(--red-hi)'}}
-                    onMouseLeave={e=>{e.currentTarget.style.background='var(--red)'}}>
+                    style={{ marginTop:28,display:'flex',alignItems:'center',justifyContent:'center',gap:8,width:'100%',padding:'16px 18px',background:'var(--accent)',color:'#fff',border:'1px solid var(--accent)',borderRadius:'var(--radius-lg)',fontFamily:'var(--apple-font-display)',fontWeight:600,fontSize:15,textTransform:'none',cursor:phase==='submitting-1'?'not-allowed':'pointer',opacity:(!email||!pwd)?0.5:1,transition:'background .15s' }}
+                    onMouseEnter={e=>{if(phase!=='submitting-1')e.currentTarget.style.background='var(--accent-hi)'}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='var(--accent)'}}>
                     {phase==='submitting-1'
                       ? generating2FA
                         ? <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:14 }}><span style={{ width:13,height:13,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Generando código 2FA...</span>
                         : <span style={{ display:'flex',alignItems:'center',gap:8,fontSize:14 }}><span style={{ width:13,height:13,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }} /> Validando…</span>
-                      : <span>⬢ Acceder al sistema</span>}
+                      : <span>Acceder al sistema</span>}
                   </button>
                 </form>
               )}
@@ -449,37 +442,37 @@ function LoginContent() {
               {/* ── FASE 2: TOTP ── */}
               {(phase === 'otp' || phase === 'submitting-2') && (
                 <div>
-                  <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.2em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
+                  <div style={{ fontFamily:'var(--apple-font-display)',fontSize:13,fontWeight:500,color:'var(--text-dim)',marginBottom:10,display:'flex',justifyContent:'space-between' }}>
                     <span>Código de verificación · 6 dígitos</span>
-                    <span style={{ color:'var(--text-mute)',letterSpacing:'0.1em' }}>App autenticadora</span>
+                    <span style={{ color:'var(--text-mute)',fontSize:12 }}>App autenticadora</span>
                   </div>
                   <OtpInput value={otp} onChange={setOtp} error={failed==='otp'} focusFirst={focusOtpInput} />
-                  <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono,monospace',fontSize:10.5,letterSpacing:'0.16em',color:'var(--text-dim)',textTransform:'uppercase',marginBottom:28 }}>
-                    <span>Código se renueva en <span style={{ color:'var(--gold)' }}>00:{String(otpTime).padStart(2,'0')}</span></span>
+                  <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'var(--apple-font-display)',fontSize:13,color:'var(--text-dim)',marginBottom:28 }}>
+                    <span>Código se renueva en <span style={{ color:'var(--accent)',fontWeight:600 }}>00:{String(otpTime).padStart(2,'0')}</span></span>
                     <span style={{ color:'var(--text-mute)' }}>Google · Authy</span>
                   </div>
 
                   {failed === 'otp' && (
-                    <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--accent)',background:'rgba(31,53,90,.06)',color:'var(--accent)',fontFamily:'var(--apple-font-display)',fontSize:13,lineHeight:1.4,borderRadius:'var(--radius-lg)',display:'flex',alignItems:'center',gap:10 }}>
                       <span>⚠</span><span>Token incorrecto · Verifica tu app autenticadora e intenta de nuevo</span>
                     </div>
                   )}
 
                   {failed === 'server' && (
-                    <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--red)',background:'rgba(192,34,58,.08)',color:'var(--red)',fontFamily:'JetBrains Mono,monospace',fontSize:11.5,letterSpacing:'0.1em',display:'flex',alignItems:'center',gap:10 }}>
+                    <div style={{ marginBottom:18,padding:'12px 16px',borderLeft:'3px solid var(--accent)',background:'rgba(31,53,90,.06)',color:'var(--accent)',fontFamily:'var(--apple-font-display)',fontSize:13,lineHeight:1.4,borderRadius:'var(--radius-lg)',display:'flex',alignItems:'center',gap:10 }}>
                       <span>⚠</span><span>No se pudo conectar con el servidor · Intenta de nuevo en unos momentos</span>
                     </div>
                   )}
 
                   <button onClick={handleOtpSubmit} disabled={phase==='submitting-2'||otp.length!==6}
-                    style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'19px 18px',background:'var(--red)',color:'#fff',border:'1px solid var(--red)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:16,letterSpacing:'0.22em',textTransform:'uppercase',cursor:otp.length!==6||phase==='submitting-2'?'not-allowed':'pointer',opacity:otp.length!==6?0.5:1 }}>
+                    style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'16px 18px',background:'var(--accent)',color:'#fff',border:'1px solid var(--accent)',borderRadius:'var(--radius-lg)',fontFamily:'var(--apple-font-display)',fontWeight:600,fontSize:16,textTransform:'none',cursor:otp.length!==6||phase==='submitting-2'?'not-allowed':'pointer',opacity:otp.length!==6?0.5:1 }}>
                     {phase==='submitting-2'
                       ? <><span style={{ width:14,height:14,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin .7s linear infinite' }}/> Verificando token…</>
                       : <>Confirmar e ingresar <IconArrow /></>}
                   </button>
 
                   <button onClick={()=>{setPhase('idle');setFailed(null);setOtp('')}}
-                    style={{ marginTop:12,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'19px 18px',background:'transparent',color:'var(--text)',border:'1px solid var(--line-2)',fontFamily:'Barlow Condensed,sans-serif',fontWeight:700,fontSize:16,letterSpacing:'0.22em',textTransform:'uppercase',cursor:'pointer' }}>
+                    style={{ marginTop:12,display:'flex',alignItems:'center',justifyContent:'center',gap:12,width:'100%',padding:'16px 18px',background:'transparent',color:'var(--text-dim)',border:'1px solid var(--line-2)',borderRadius:'var(--radius-lg)',fontFamily:'var(--apple-font-display)',fontWeight:600,fontSize:16,textTransform:'none',cursor:'pointer' }}>
                     ← Volver a credenciales
                   </button>
                 </div>
@@ -503,9 +496,9 @@ function LoginContent() {
               </div>
 
               <div className="cyber-success-text" style={{ textAlign:'center',position:'relative',zIndex:2 }}>
-                <div style={{ fontFamily:'JetBrains Mono,monospace',fontSize:12,color:'var(--ok)',letterSpacing:'0.4em',textTransform:'uppercase',marginBottom:12 }}>[ STATUS: AUTHENTICATED ]</div>
+                <div style={{ fontFamily:'var(--apple-font-display)',fontSize:13,fontWeight:600,color:'var(--ok)',letterSpacing:'0.02em',marginBottom:12 }}>[ Estado: autenticado ]</div>
                 <h3 className="cyber-success-title">Acceso concedido</h3>
-                <p style={{ fontFamily:'JetBrains Mono,monospace',fontSize:11,letterSpacing:'0.18em',color:'var(--gold)',textTransform:'uppercase',margin:0 }}>Iniciando enlace seguro con el núcleo C4...</p>
+                <p style={{ fontFamily:'var(--apple-font-display)',fontSize:13,color:'var(--text-dim)',margin:0 }}>Iniciando enlace seguro con el núcleo C4...</p>
               </div>
             </div>
           )}

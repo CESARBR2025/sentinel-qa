@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import {
   MessageSquare, User, AlertTriangle, MapPin,
   ClipboardCheck, Clock, Shield, Send, Search,
-  FileText, Gavel, Car, Hash, Archive, ArrowLeft
+  FileText, Gavel, Car, Hash, Archive, ArrowLeft, Loader2
 } from 'lucide-react'
 import { crearReporteCampoOficial } from "@/lib/oficial/actions"
 import { MapaUbicacion } from './MapaUbicacion'
@@ -68,6 +68,7 @@ interface PrefillDespacho {
 
 export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, embedded = false }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho, embedded?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const store = useOficialFormStore()
   const s = useOficialFormStore.getState()
   const step = store.step
@@ -185,7 +186,8 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
     return () => window.removeEventListener('pageshow', onPageShow)
   }, [])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (isSubmitting) return
     const fd = new FormData()
     const st = useOficialFormStore.getState()
 
@@ -264,7 +266,15 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
       return
     }
 
-    crearReporteCampoOficial(fd)
+    setIsSubmitting(true)
+    try {
+      await crearReporteCampoOficial(fd)
+    } catch (err) {
+      if (err instanceof Error && 'digest' in err && String((err as { digest?: unknown }).digest).startsWith('NEXT_REDIRECT')) throw err
+      console.error('[REPORTE CAMPO] Error al registrar:', err)
+      alert('Ocurrió un error al registrar el reporte. Intenta nuevamente.')
+      setIsSubmitting(false)
+    }
   }
 
   const Wrapper: any = embedded ? 'div' : 'main'
@@ -936,14 +946,14 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
               SIGUIENTE →
             </button>
           ) : (
-            <button type="button" onClick={handleSubmit} style={{
-              padding: '12px 48px', background: '#1f355a',
-              color: '#ffffff', border: 'none', borderRadius: 2, cursor: 'pointer',
+            <button type="button" onClick={handleSubmit} disabled={isSubmitting} style={{
+              padding: '12px 48px', background: isSubmitting ? '#64748b' : '#1f355a',
+              color: '#ffffff', border: 'none', borderRadius: 2, cursor: isSubmitting ? 'default' : 'pointer',
               fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 600,
               textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 10,
             }}>
-              <Send size={14} />
-              REGISTRAR REPORTE
+              {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+              {isSubmitting ? 'REGISTRANDO…' : 'REGISTRAR REPORTE'}
             </button>
           )}
         </div>

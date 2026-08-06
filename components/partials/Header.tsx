@@ -23,6 +23,8 @@ interface DashboardHeaderProps {
   // Texto sobre el nombre del operador (ej. "Agente Fiscalía", "Juez Cívico") —
   // reemplaza el genérico "Operador Identificado" cuando la página lo necesita.
   roleLabel?: string;
+  // Piloto Apple-style (DESIGN.md §10) — default 'tactico' no cambia nada.
+  variant?: 'tactico' | 'apple';
 }
 
 // Header único de referencia — mismo diseño exacto que app/dashboard/page.tsx
@@ -34,8 +36,10 @@ export function DashboardHeader({
   backHref,
   backLabel = 'Dashboard',
   roleLabel = 'Operador Identificado',
+  variant = 'tactico',
 }: DashboardHeaderProps) {
   const { esMovil, esTablet } = useResponsive()
+  const isApple = variant === 'apple'
   // user es opcional: las páginas cliente (formularios) no resuelven la sesión
   // en el servidor, así que el header cae a la sesión del cliente (authClient),
   // igual que SubHeader. Las páginas servidor siguen pasando user explícito.
@@ -55,15 +59,17 @@ export function DashboardHeader({
         paddingLeft: esMovil ? 14 : esTablet ? 32 : 64,
         paddingRight: esMovil ? 14 : esTablet ? 32 : 64,
         paddingTop: 'env(safe-area-inset-top)',
-        borderBottom: '1px solid #e2e8f0',
-        background: esMovil ? '#f8fafc' : 'rgba(248,250,252,0.85)',
+        borderBottom: isApple ? '1px solid var(--apple-glass-border)' : '1px solid #e2e8f0',
+        background: isApple ? 'rgba(255,255,255,0.72)' : (esMovil ? '#f8fafc' : 'rgba(248,250,252,0.85)'),
         // En móvil se quita el blur: el backdrop-filter sobre un sticky con
         // contenido que desborda es el origen del "cuadro negro" en Safari/Chrome.
-        backdropFilter: esMovil ? 'none' : 'blur(10px)',
+        backdropFilter: isApple ? 'blur(20px) saturate(180%)' : (esMovil ? 'none' : 'blur(10px)'),
       }}
     >
       {/* Corner Decorator */}
-      <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#1f355a' }} />
+      {!isApple && (
+        <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#1f355a' }} />
+      )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 24, minWidth: 0 }}>
         <img
@@ -73,37 +79,40 @@ export function DashboardHeader({
         />
 
         <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 10,
-              letterSpacing: '0.3em',
-              color: '#3e5171',
-              textTransform: 'uppercase',
-              marginBottom: 4,
-              display: esMovil ? 'none' : 'flex',
-              alignItems: 'center',
-              gap: 8,
-            }}
-          >
-            <span style={{ width: 8, height: 8, background: '#3e5171', display: 'inline-block' }} />
-            Sistema Táctico
-          </div>
+          {/* Kicker táctico — se oculta en el piloto Apple */}
+          {!isApple && (
+            <div
+              style={{
+                fontFamily: 'JetBrains Mono,monospace',
+                fontSize: 10,
+                letterSpacing: '0.3em',
+                color: '#3e5171',
+                textTransform: 'uppercase',
+                marginBottom: 4,
+                display: esMovil ? 'none' : 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <span style={{ width: 8, height: 8, background: '#3e5171', display: 'inline-block' }} />
+              Sistema Táctico
+            </div>
+          )}
 
           <h1
             style={{
-              fontFamily: 'Barlow Condensed,sans-serif',
-              fontWeight: 800,
+              fontFamily: isApple ? 'var(--apple-font-display)' : 'Barlow Condensed,sans-serif',
+              fontWeight: isApple ? 600 : 800,
               fontSize: esMovil ? 20 : esTablet ? 36 : 56,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
+              letterSpacing: isApple ? 'normal' : '0.06em',
+              textTransform: isApple ? 'none' : 'uppercase',
               margin: 0,
               color: '#0f172a',
               lineHeight: 1,
               whiteSpace: 'nowrap',
             }}
           >
-            CENTINELA
+            {isApple ? 'Centinela' : 'CENTINELA'}
           </h1>
         </div>
 
@@ -114,11 +123,11 @@ export function DashboardHeader({
             <Link
               href={backHref}
               style={{
-                fontFamily: 'JetBrains Mono,monospace',
+                fontFamily: isApple ? 'var(--apple-font-display)' : 'JetBrains Mono,monospace',
                 fontSize: 10,
-                letterSpacing: '0.25em',
-                color: '#64748b',
-                textTransform: 'uppercase',
+                letterSpacing: isApple ? 'normal' : '0.25em',
+                color: isApple ? '#475569' : '#64748b',
+                textTransform: isApple ? 'none' : 'uppercase',
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',

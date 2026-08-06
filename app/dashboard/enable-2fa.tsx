@@ -60,7 +60,7 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── confirm-pwd ───────────────────────────────────────────────────────────
   if (step === 'confirm-pwd') return (
-    <Card title="Confirmar contraseña" tag="Paso 1 / 3" tagColor="#3e5171">
+    <Card title="Confirmar contraseña" tag="Paso 1 de 3" tagColor="#1f355a">
       <p style={s.body}>Ingresa tu contraseña actual para continuar.</p>
       <div style={{ position:'relative' }}>
         <input
@@ -71,8 +71,8 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
           style={{ ...s.input, paddingRight:48 }}
         />
         <button type="button" onClick={() => setShowPwd(v => !v)}
-          style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'#94a3b8', cursor:'pointer', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.12em' }}>
-          {showPwd ? 'OCULTAR' : 'VER'}
+          style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'#94a3b8', cursor:'pointer', fontFamily:'var(--apple-font-display)', fontSize:12 }}>
+          {showPwd ? 'Ocultar' : 'Ver'}
         </button>
       </div>
       {error && <div style={s.err}>⚠ {error}</div>}
@@ -87,22 +87,22 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── qr ───────────────────────────────────────────────────────────────────
   if (step === 'qr') return (
-    <Card title="Escanea el código QR" tag="Paso 2 / 3" tagColor="#3e5171">
+    <Card title="Escanea el código QR" tag="Paso 2 de 3" tagColor="#1f355a">
       <p style={s.body}>Abre <b style={{ color:'#0f172a' }}>Google Authenticator</b>, <b style={{ color:'#0f172a' }}>Authy</b> o cualquier app TOTP y escanea:</p>
       <div style={{ display:'flex', justifyContent:'center', margin:'16px 0' }}>
         {qrUrl
-          ? <div style={{ padding:8, background:'#ffffff', border:'1px solid #e2e8f0' }}>
+          ? <div style={{ padding:8, background:'#ffffff', border:'1px solid #e2e8f0', borderRadius:'var(--radius-lg)' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qrUrl} alt="QR 2FA" width={200} height={200} />
             </div>
-          : <div style={{ width:200, height:200, background:'#ffffff', border:'1px solid #e2e8f0' }} />
+          : <div style={{ width:200, height:200, background:'#ffffff', border:'1px solid #e2e8f0', borderRadius:'var(--radius-lg)' }} />
         }
       </div>
-      <button type="button" onClick={() => setShowUri(v => !v)} style={{ ...s.ghost, fontSize:10, marginBottom:8 }}>
+      <button type="button" onClick={() => setShowUri(v => !v)} style={{ ...s.ghost, fontSize:12, marginBottom:8 }}>
         {showUri ? 'Ocultar clave manual' : '¿No puedes escanear? Ver clave manual'}
       </button>
       {showUri && (
-        <div style={{ padding:'8px 10px', background:'#f8fafc', border:'1px solid #e2e8f0', marginBottom:12, wordBreak:'break-all', fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#3e5171' }}>
+        <div style={{ padding:'8px 10px', background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'var(--radius-lg)', marginBottom:12, wordBreak:'break-all', fontFamily:'var(--apple-font-display)', fontSize:12, color:'#1f355a' }}>
           {totpUri}
         </div>
       )}
@@ -112,13 +112,13 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── verify ────────────────────────────────────────────────────────────────
   if (step === 'verify') return (
-    <Card title="Confirma el código" tag="Paso 3 / 3" tagColor="#3e5171">
+    <Card title="Confirma el código" tag="Paso 3 de 3" tagColor="#1f355a">
       <p style={s.body}>Ingresa el código de 6 dígitos que muestra tu app para confirmar que está configurada.</p>
       <input
         ref={inputRef} type="text" inputMode="numeric" maxLength={6}
         value={code} onChange={e => { setCode(e.target.value.replace(/\D/g,'').slice(0,6)); setError('') }}
         placeholder="000000"
-        style={{ ...s.input, textAlign:'center', fontSize:24, letterSpacing:'0.5em', fontFamily:'JetBrains Mono,monospace' }}
+        style={{ ...s.input, textAlign:'center', fontSize:24, letterSpacing:'0.5em', fontFamily:'var(--apple-font-display)' }}
       />
       {error && <div style={s.err}>⚠ {error}</div>}
       <div style={{ display:'flex', gap:8, marginTop:12 }}>
@@ -132,9 +132,9 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 
   // ── done ──────────────────────────────────────────────────────────────────
   return (
-    <Card title="Verificación en dos pasos" tag="Activo" tagColor="#10b981">
+    <Card title="Verificación en dos pasos" tag="Activo" tagColor="#16a34a">
       <p style={s.body}>Tu cuenta está protegida con autenticación TOTP. Cada inicio de sesión pedirá el código de tu app autenticadora.</p>
-      <div style={{ display:'flex', alignItems:'center', gap:10, fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#10b981', letterSpacing:'0.1em' }}>
+      <div style={{ display:'flex', alignItems:'center', gap:10, fontFamily:'var(--apple-font-display)', fontSize:13, color:'#16a34a' }}>
         <span style={{ fontSize:18 }}>✓</span> 2FA configurado correctamente
       </div>
     </Card>
@@ -142,19 +142,21 @@ export function Enable2FA({ enabled }: { enabled: boolean }) {
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
+// Piloto Apple-style (DESIGN.md §10) — mismo lenguaje que el resto del hub.
 function Card({ title, tag, tagColor, children }: { title: string; tag: string; tagColor: string; children: React.ReactNode }) {
   return (
-    <div style={{ 
-      border:'1px solid #e2e8f0', // Corregido
-      background:'#ffffff', 
-      padding:'24px 20px', 
+    <div style={{
+      border:'1px solid #e2e8f0',
+      background:'#ffffff',
+      borderRadius:'var(--radius-lg)',
+      padding:'24px 20px',
       position:'relative',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.05)' // Añadido
+      boxShadow: 'var(--shadow-card)',
     }}>
-      <div style={{ position:'absolute', top:-1, left:0, width:32, height:2, background:'#3e5171' }}/>
+      <div style={{ position:'absolute', top:-1, left:0, width:32, height:2, background:'#1f355a' }}/>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
-        <span style={{ fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:15, letterSpacing:'0.06em', textTransform:'uppercase', color:'#0f172a' }}>{title}</span>
-        <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', padding:'3px 8px', border:`1px solid ${tagColor}`, color:tagColor }}>{tag}</span>
+        <span style={{ fontFamily:'var(--apple-font-display)', fontWeight:600, fontSize:15, color:'#0f172a' }}>{title}</span>
+        <span style={{ fontFamily:'var(--apple-font-display)', fontSize:11, fontWeight:600, padding:'3px 10px', borderRadius:'var(--radius-full)', border:`1px solid ${tagColor}`, color:tagColor }}>{tag}</span>
       </div>
       {children}
     </div>
@@ -162,9 +164,9 @@ function Card({ title, tag, tagColor, children }: { title: string; tag: string; 
 }
 
 const s = {
-  body:  { fontFamily:'JetBrains Mono,monospace', fontSize:11, color:'#64748b', letterSpacing:'0.06em', lineHeight:1.6, marginBottom:14 } as React.CSSProperties,
-  input: { width:'100%', padding:'10px 12px', background:'#f8fafc', border:'1px solid #e2e8f0', color:'#0f172a', fontFamily:'JetBrains Mono,monospace', fontSize:13, outline:'none', boxSizing:'border-box' } as React.CSSProperties,
-  btn:   { width:'100%', padding:'11px 14px', background:'#1f355a', color:'#fff', border:'1px solid #1f355a', fontFamily:'Barlow Condensed,sans-serif', fontWeight:700, fontSize:13, letterSpacing:'0.18em', textTransform:'uppercase', cursor:'pointer' } as React.CSSProperties, // Azul
-  ghost: { padding:'9px 14px', background:'transparent', color:'#64748b', border:'1px solid #e2e8f0', fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', cursor:'pointer' } as React.CSSProperties,
-  err:   { marginTop:8, padding:'8px 10px', borderLeft:'3px solid #ef4444', background:'#fef2f2', color:'#ef4444', fontFamily:'JetBrains Mono,monospace', fontSize:11, letterSpacing:'0.08em' } as React.CSSProperties, // Fondo limpio
+  body:  { fontFamily:'var(--apple-font-display)', fontSize:13, color:'#64748b', lineHeight:1.6, marginBottom:14 } as React.CSSProperties,
+  input: { width:'100%', padding:'10px 12px', background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'var(--radius-lg)', color:'#0f172a', fontFamily:'var(--apple-font-display)', fontSize:13, outline:'none', boxSizing:'border-box' } as React.CSSProperties,
+  btn:   { width:'100%', padding:'11px 14px', background:'#1f355a', color:'#fff', border:'1px solid #1f355a', borderRadius:'var(--radius-lg)', fontFamily:'var(--apple-font-display)', fontWeight:600, fontSize:14, cursor:'pointer' } as React.CSSProperties,
+  ghost: { padding:'9px 14px', background:'transparent', color:'#64748b', border:'1px solid #e2e8f0', borderRadius:'var(--radius-lg)', fontFamily:'var(--apple-font-display)', fontSize:13, cursor:'pointer' } as React.CSSProperties,
+  err:   { marginTop:8, padding:'8px 10px', borderLeft:'3px solid #ef4444', background:'#fef2f2', color:'#ef4444', fontFamily:'var(--apple-font-display)', fontSize:12 } as React.CSSProperties,
 }

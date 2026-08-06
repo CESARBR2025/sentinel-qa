@@ -67,3 +67,16 @@
 - El PPT pasa de una página horizontal con tabla simple a una página vertical (7.5×10in) que replica la estructura de secciones del formato oficial.
 
 **Consecuencia**: el módulo deja de ser un simple "listado + tabla" y pasa a depender de datos capturados en un paso adicional de Fiscalía (datos biográficos + antecedentes externos) — un detenido sin esos datos biográficos capturados igual aparece en `/reporte-detenidos` (el criterio de completitud sigue siendo las 3 fotos en `evidencias_detenido`), pero su ficha en el PPT mostrará esos campos vacíos.
+
+## ADR-008: Piloto de lenguaje visual Apple-style, alcance limitado a Login + Hub (plan-apple-pilot, 2026-08-06)
+
+**Contexto**: El usuario pidió un lenguaje "premium, estilo Apple" porque Centinela "se siente gubernamental/viejo". Se le advirtió que la skill de diseño propuesta excluye dashboards/tablas/formularios multi-paso (la mayoría del sistema, que hoy sigue el "tablón de despacho" de `DESIGN.md` §1-9 y funciona bajo presión operativa). Decidió acotar a un piloto de **1-2 pantallas** y **sin modo oscuro**: Login (`app/(auth)/login/`) y Hub (`app/dashboard/page.tsx` + `module-cards.tsx`).
+
+**Decisión**:
+- Tipografía de sistema (`var(--apple-font-display)`, pila `-apple-system...`) en vez de Barlow Condensed 800/JetBrains Mono uppercase; sentence-case.
+- Un solo acento de color (`primary`/`#1f355a`); tokens "glass" nuevos (`--apple-glass-*`, sombras tintadas de `primary`) en `@theme inline` de `app/globals.css` — variantes alfa, sin colores nuevos. Documentado en `DESIGN.md` §10.
+- Materialidad glass (`backdrop-filter`), radios `--radius-xl`/`--radius-lg`, motion `framer-motion` sutil (fade + translateY), iconos `lucide-react`. Sin dependencias ni fuentes nuevas.
+- `DashboardHeader` **no** se reescribe: se le agrega `variant?: 'tactico' | 'apple'` (default `'tactico'`) — las ~100 páginas que lo usan quedan pixel-idénticas.
+- La lógica de auth/2FA, redirect por rol (`obtenerHubRol`) y el gate `esAdmin` de `SspmGeneral` no se tocan; en login solo cambia CSS + literales de texto.
+
+**Consecuencias**: Solo 2 superficies cambian de lenguaje visual; el resto del sistema queda intacto y a la espera de validar el piloto antes de decidir si se extiende. El código real divergió del plan en puntos menores documentados en el reporte de ejecución (p. ej. `.login-form` pasó a card glass para que los tokens tuvieran efecto; el "▚▚▚" parpadeante se eliminó para cumplir "sin parpadeos infinitos"). Revertir el piloto = quitar `variant="apple"` y los estilos de las 2 vistas.

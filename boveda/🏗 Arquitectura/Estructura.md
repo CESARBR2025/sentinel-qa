@@ -385,6 +385,7 @@
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   ├── enable-2fa.tsx
+│   │   ├── fade-in.tsx
 │   │   ├── module-cards.tsx
 │   │   ├── page.tsx
 │   │   ├── sign-out-button.tsx
@@ -711,7 +712,6 @@
 │   │   ├── ContadorAsignaciones.tsx
 │   │   ├── DespachoContent.tsx
 │   │   ├── FormularioRecorrido.tsx
-│   │   ├── GuardiaPermisosOficial.tsx
 │   │   ├── MapaPinFijo.tsx
 │   │   ├── MapaUbicacion.tsx
 │   │   ├── MiUbicacionSection.tsx
@@ -1221,6 +1221,15 @@
 │   ├── Login Hi-Fi.html
 │   ├── Login Wireframes.html
 │   └── login-app.jsx
+├── plan-apple-pilot/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
 ├── plan-notificaciones-forzadas/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1228,6 +1237,13 @@
 │   ├── etapa-3.md
 │   ├── etapa-4.md
 │   ├── etapa-5.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
+├── plan-notificaciones-tiempo-real/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
 ├── plan-pwa-push/
@@ -1341,6 +1357,8 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

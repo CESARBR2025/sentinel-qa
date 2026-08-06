@@ -523,3 +523,58 @@ En cambio `finalizarRevisionAction` (mismo archivo) sí hacía bien `ORDER BY cr
 ```
 
 **Prevención**: al leer un campo de un objeto tipado `Record<string, unknown>` (común en vistas que consumen `raw` de `ExpedienteExp` u objetos similares de queries SQL crudas) para usarlo como condición de renderizado JSX, envolver siempre en `Boolean(...)` — nunca dejar el valor `unknown` crudo antes del `&&`.
+
+---
+
+## Pre-commit falla: `react-hooks/refs` — "Cannot update ref during render" (hooks/usePolling.ts)
+
+**Qué es el bloqueo del commit (memorizar — no volver a investigar de cero)**:
+
+El hook de pre-commit es `husky` → `.husky/pre-commit`, que corre **dos comandos en secuencia**:
+1. `npx lint-staged` — según `package.json`, `lint-staged` corre `eslint --fix` sobre los archivos staged que matcheen `*.{js,mjs,ts,tsx,jsx}`. **ESTO es lo que más falla.**
+2. `npm run check:responsive` — auditoría de la REGLA Responsive (grids inline multicolumna), no toca ESLint.
+
+Cuando un commit falla, el mensaje `husky - pre-commit script failed (code 1)` viene de uno de estos dos. El culpable típico es `lint-staged` → `eslint`.
+
+**De dónde sale la regla `react-hooks/refs`**: NO está en `eslint.config.mjs` (ese archivo solo define la regla custom `responsive/no-inline-multicol-grid` y junta configs de next). La regla entra **transitivamente** vía `eslint-config-next` (`eslint.config.mjs` importa `nextVitals` + `nextTs` de `eslint-config-next/*`), que carga el plugin `react-hooks` con las reglas nuevas (v5/6). Por eso un archivo que "antes pasaba" puede fallar tras actualizar `eslint-config-next` sin tocar la config del proyecto.
+
+**Síntoma**:
+```
+hooks/usePolling.ts
+  6:3  error  Error: Cannot update ref during render
+  const fnRef = useRef(fn)
+> fnRef.current = fn
+      ^^^^^^^^^^^^^ Cannot update ref during render   react-hooks/refs
+```
+
+**Causa raíz**: el patrón "ref que siempre apunta a la última función" (`const ref = useRef(fn); ref.current = fn` en el cuerpo del componente) asigna `.current` **durante el render**. La regla `react-hooks/refs` lo prohíbe: los refs no deben leerse/escribirse durante el render. Nota: `useRef(fn)` como inicializador sí está bien; lo prohibido es la **asignación** `ref.current = X` en el cuerpo.
+
+**Fix idiomático en React 19** (este repo usa `react@19.2.4`, que exporta `useEffectEvent` en runtime y en `@types/react`): reemplazar el ref-para-latest por `useEffectEvent`, que siempre invoca la última versión de `fn` sin re-ejecutar el efecto cuando `fn` cambia de identidad por render:
+
+```ts
+'use client'
+import { useEffect, useEffectEvent, useRef } from 'react'
+
+export function usePolling(fn: () => void, intervalMs: number, activo = true) {
+  const onTick = useEffectEvent(fn)   // siempre llama la última fn
+  const yaActivadoAntesRef = useRef(false)  // se escribe SOLO dentro del useEffect, ok
+
+  useEffect(() => {
+    if (!activo) return
+    if (yaActivadoAntesRef.current) onTick()  // refetch inmediato al recuperar visibilidad
+    yaActivadoAntesRef.current = true
+    const id = setInterval(() => onTick(), intervalMs)
+    return () => clearInterval(id)
+  }, [intervalMs, activo])
+}
+```
+
+**Trampa de `lint-staged` que más tiempo roba**: `lint-staged` corre sobre el contenido **staged en git**, NO sobre el working tree. Si editas/arreglas el archivo pero no vuelves a `git add`, el hook sigue viendo la versión vieja y falla igual. **Siempre `git add` de nuevo tras el fix** y re-correr `npx lint-staged` a mano para verificar antes de intentar el commit.
+
+**Cómo diagnosticar rápido un pre-commit roto**:
+1. `git diff --cached --name-only` — ver qué está staged (lint-staged solo ve esto).
+2. Correr el paso que falla directo, sin pasar por git: `npx lint-staged` (o `npm run check:responsive` si el mensaje apunta a la REGLA Responsive).
+3. `npx eslint <archivo-señalado>` — reproducción más chica; el error apunta al archivo y línea exactos.
+4. Si el error es de una regla react-hooks/refs sobre `ref.current = ...` en el cuerpo del componente → aplicar `useEffectEvent` (o mover la asignación a un `useEffect` si `useEffectEvent` no aplica). Verificar luego `npx tsc --noEmit` y `npm run build` (el cambio de mecanismo interno de un hook compartido como `usePolling` debe compilar con todos sus consumidores).
+
+**Prevención**: no escribir `ref.current = X` en el cuerpo de componentes/hooks — si el objetivo es "tener la última versión de algo dentro de un effect/interval", usar `useEffectEvent` (React 19+). Las asignaciones a refs van solo dentro de effects, event handlers o callbacks.
