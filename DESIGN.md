@@ -86,8 +86,8 @@ Estructura: título + subtítulo a la izquierda; botones de acción a la derecha
 | Elemento | Estilo |
 |---|---|
 | Contenedor | `flex; justifyContent: space-between; alignItems: flex-end; marginBottom: 32; flexWrap: wrap; gap: 16` |
-| Título `<h2>` | Barlow Condensed 800 32px `0.06em` uppercase `#0f172a`; acento en `accentColor` |
-| Subtítulo `<p>` | JetBrains Mono 10px `0.15em` uppercase `#64748b` |
+| Título `<h2>` | Barlow Condensed 800 `clamp(22px, 6vw, 32px)` `0.06em` uppercase `#0f172a`; acento en `accentColor` |
+| Subtítulo `<p>` | JetBrains Mono 10px `0.15em` uppercase `#64748b`; `wordBreak: break-word` |
 | Botón primario | Barlow Condensed 700 13px `0.15em` uppercase; padding 10px 24px; bg `#0f172a`; color `#fff`; sin borde |
 | Botón secundario | Mismo texto; padding 10px 20px; bg `#f1f5f9`; color `#475569`; border 1px `#e2e8f0` |
 
@@ -104,14 +104,14 @@ Componente `components/partials/SegmentPage.tsx`. Estilo **tablón de despacho**
 
 | Elemento | Estilo |
 |---|---|
-| Contenedor | `flex; flexWrap: wrap; gap: 0; marginBottom: 24` |
-| Botón | Barlow Condensed 700 14px `0.06em` uppercase; padding 10px 24px; border 1px `#e2e8f0`; borderBottom 2px accent cuando activo |
+| Contenedor | `flex; flexWrap: nowrap; overflowX: auto; gap: 0; marginBottom: 24`, clase `.scrollbar-hide` |
+| Botón | Barlow Condensed 700 14px `0.06em` uppercase; padding `10px clamp(14px, 4vw, 24px)`; `whiteSpace: nowrap; flexShrink: 0`; border 1px `#e2e8f0`; borderBottom 2px accent cuando activo |
 | Botón activo | `background: accent; color: #fff` |
 | Botón inactivo | `background: #fff; color: #64748b` |
 | Icono | size 13, opcional, `gap: 8` con el texto |
 | Badge conteo | Inter 700 10px; padding 0 7px; radius 8; lineHeight 18px; activo `rgba(255,255,255,.2)`/`#fff`; inactivo `#f1f5f9`/`#64748b` |
 
-Reglas: `onChange(key)` para estado local, `href` por tab para navegación server-safe. `accent` de cada tab es su color semántico (default `#1f355a`). `count` opcional (si se omite no hay badge). `activeKey` marca el activo; el primer tab no es especial (no hay track gris, a diferencia del `SegmentControl` de `/oficial`). Referencias: `TablonDespacho.tsx` (origen), `Bitacora911.tsx`.
+Reglas: `onChange(key)` para estado local, `href` por tab para navegación server-safe. `accent` de cada tab es su color semántico (default `#1f355a`). `count` opcional (si se omite no hay badge). `activeKey` marca el activo; el primer tab no es especial (no hay track gris, a diferencia del `SegmentControl` de `/oficial`). El contenedor **no hace wrap** — es una tira horizontal con scroll (`overflowX: auto`, scrollbar oculta vía `.scrollbar-hide`) para que en móvil los tabs se deslicen en vez de apilarse en 2 filas. Referencias: `TablonDespacho.tsx` (origen), `Bitacora911.tsx`.
 
 ### StepIndicator — indicador de pasos (REGLA)
 
@@ -119,13 +119,34 @@ Componente `components/partials/StepIndicator.tsx`. **Prohibido reimplementar in
 
 | Elemento | Estilo |
 |---|---|
-| "Paso N de M" | Barlow Condensed 800 28px `0.04em` uppercase `#1f355a` |
+| "Paso N de M" | Barlow Condensed 800 `clamp(20px, 5.5vw, 28px)` `0.04em` uppercase `#1f355a` |
 | Nombre del paso | JetBrains Mono 600 11px `0.18em` uppercase `#94a3b8` |
 | Contenedor fila | `flex; alignItems: baseline; gap: 12; flexWrap: wrap` |
 | Barra de progreso | height 2px, radius 1, track `#e2e8f0`, fill `#1f355a`, width `(paso/total)*100%`, transition width .25s |
-| Contenedor | `marginBottom: 32` |
+| Contenedor | `marginBottom: clamp(20px, 5vw, 32px)` |
 
-`paso` es 1-based. Sin hooks (SSR-safe).
+`paso` es 1-based. Sin hooks (SSR-safe). El tamaño de fuente y el margen usan `clamp()` (no media queries) precisamente porque el componente no tiene hooks — es la forma responsive válida para un componente server-safe.
+
+### Header general — DashboardHeader / SubHeader (REGLA)
+
+Componentes `components/partials/Header.tsx` (`DashboardHeader`, usado en ~100 páginas) y `components/partials/SubHeader.tsx` (variante compacta). **Prohibido reimplementar el chrome superior inline.** Ambos son componentes cliente (`useResponsive()`), a diferencia de `PageHeader`/`SegmentPage`/`StepIndicator`.
+
+| Elemento | Móvil ≤720px | Tablet 721–1200px | Desktop >1200px |
+|---|---|---|---|
+| Altura `DashboardHeader` | 56px | 72px | 104px |
+| Altura `SubHeader` | 48px | 56px | 64px |
+| Logo | 26px | 44px | 64px |
+| Título "CENTINELA" | Barlow 800 20px | Barlow 800 36px | Barlow 800 56px |
+| Kicker "Sistema Táctico" | oculto | visible | visible |
+| `CambiarSesionDev` (dev) | oculto | oculto | visible |
+| Navegación por `children` | oculta | oculta | visible |
+| `SignOutButton` | solo ícono `LogOut` 40×40 | solo ícono `LogOut` 40×40 | texto "Cerrar sesión →" |
+
+**Reglas:**
+- Ambos headers son `position: sticky; top: 0` y llevan `paddingTop: env(safe-area-inset-top)` — obligatorio por el `viewportFit: 'cover'` del manifest (PWA `standalone` puede quedar bajo notch/Dynamic Island sin esto).
+- Los botones de acción del lado derecho (campanita `CampanillaNotificaciones`, `SignOutButton` en modo ícono) usan un tamaño uniforme de **40×40px** — mínimo recomendado de target táctil en PWA.
+- `CampanillaNotificaciones` se auto-abastece (no requiere props) y siempre se renderiza — no ocultar.
+- `CambiarSesionDev` es una herramienta temporal de desarrollo: se oculta en el chrome compacto de móvil/tablet aunque siga visible en desktop (no tiene gate de `NODE_ENV`, ver `boveda/🗺 Roadmap/Pendientes.md`).
 
 ### Cards hub — `.card-o` (patrón)
 
@@ -250,6 +271,7 @@ Breakpoints: **móvil ≤720px · tablet 721–1200px · desktop >1200px** (alin
 - **Componentes cliente**: `useResponsive()` de `hooks/useResponsive.ts` → `{ esMovil, esTablet, esDesktop }` (SSR-safe). `useMediaQuery(query)` para casos puntuales.
 - **Componentes servidor**: sin hooks → usar clases CSS (§5).
 - Grids de formularios 2/3 → 1 col en móvil. Tablas → scroll horizontal. Headers hacen wrap. Modales 90vw/90vh con scroll.
+- **Polish PWA** (`app/globals.css`): `body { overscroll-behavior-y: contain }` evita el rebote/pull-to-refresh del navegador en modo `standalone`; `button, a { -webkit-tap-highlight-color: transparent }` quita el flash gris nativo al tocar; `.scrollbar-hide` oculta la barra de scroll manteniendo el scroll funcional (usada por `SegmentPage`). Todo elemento `position: sticky/fixed` que pueda tocar el borde superior/inferior de la pantalla (headers, toasts, banners de instalación) debe sumar `env(safe-area-inset-*)` a su padding — el manifest declara `display: "standalone"` y `viewportFit: "cover"` (`app/layout.tsx`), así que el contenido puede quedar bajo notch/Dynamic Island sin esto.
 
 ## 9 · Agent Prompt Guide
 

@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { LogOut } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 
@@ -20,12 +21,18 @@ export function SignOutButton() {
       onClick={handleSignOut}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      aria-label="Cerrar sesión"
       style={{
         fontFamily:      'JetBrains Mono,monospace',
         fontSize:        10,
         letterSpacing:   '0.18em',
         textTransform:   'uppercase',
-        padding:         esMovil ? '8px 10px' : '8px 14px',
+        display:         esMovil ? 'flex' : 'block',
+        alignItems:      esMovil ? 'center' : undefined,
+        justifyContent:  esMovil ? 'center' : undefined,
+        width:           esMovil ? 40 : undefined,
+        height:          esMovil ? 40 : undefined,
+        padding:         esMovil ? 0 : '8px 14px',
         border:          `1px solid ${hover ? '#c0223a' : '#2a3a5e'}`,
         background:      hover ? 'rgba(192,34,58,0.12)' : 'transparent',
         color:           hover ? '#e03349' : '#7f8faf',
@@ -35,7 +42,7 @@ export function SignOutButton() {
         transition:      'all .15s ease',
       }}
     >
-      {esMovil ? 'Salir →' : 'Cerrar sesión →'}
+      {esMovil ? <LogOut size={16} /> : 'Cerrar sesión →'}
     </button>
   )
 }

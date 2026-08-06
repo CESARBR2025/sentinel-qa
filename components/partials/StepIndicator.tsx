@@ -20,9 +20,9 @@ export function StepIndicator({
   const pct = Math.min(100, Math.max(0, (paso / total) * 100))
 
   return (
-    <div style={{ marginBottom: 32 }}>
+    <div style={{ marginBottom: 'clamp(20px, 5vw, 32px)' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
-        <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#1f355a' }}>
+        <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 'clamp(20px, 5.5vw, 28px)', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#1f355a' }}>
           Paso {paso} de {total}
         </span>
         <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#94a3b8' }}>

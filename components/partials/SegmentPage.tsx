@@ -41,7 +41,10 @@ const DEFAULT_ACCENT = '#1f355a'
 
 export function SegmentPage({ tabs, activeKey, onChange, marginBottom = 24 }: SegmentPageProps) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 0, marginBottom }}>
+    <div
+      className="scrollbar-hide"
+      style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', WebkitOverflowScrolling: 'touch', gap: 0, marginBottom }}
+    >
       {tabs.map(t => {
         const activo = t.key === activeKey
         const accent = t.accent ?? DEFAULT_ACCENT
@@ -62,9 +65,9 @@ export function SegmentPage({ tabs, activeKey, onChange, marginBottom = 24 }: Se
           </>
         )
         const estilo: React.CSSProperties = {
-          display: 'flex', alignItems: 'center', gap: 8, padding: '10px 24px',
+          display: 'flex', alignItems: 'center', gap: 8, padding: '10px clamp(14px, 4vw, 24px)',
           fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 14,
-          letterSpacing: '0.06em', textTransform: 'uppercase',
+          letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap', flexShrink: 0,
           border: '1px solid #e2e8f0', cursor: 'pointer', transition: 'all .15s',
           background: activo ? accent : '#ffffff',
           color: activo ? '#ffffff' : '#64748b',

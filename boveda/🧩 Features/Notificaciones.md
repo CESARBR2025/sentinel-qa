@@ -1185,6 +1185,10 @@ Condición: `bloqueado = !ubicacionOk || !pushOk`, con:
 
 Si `usePushSubscription` queda en `'cargando'` más de 8 segundos (llegó a pasar en producción durante el desarrollo de este plan, causa no confirmada — posible condición de carrera con el registro del service worker), el guard **no se queda congelado**: a los 8s se ofrece el botón "Activar notificaciones" igual (tratando `'cargando'` prolongado como `'inactivo'`) más un botón genérico "Recargar página" como salida manual.
 
+## Sin paso de confirmación — entra automático
+
+Se probó un paso intermedio ("Bienvenido" + botón "Entrar al sistema", con estado `entrado` persistido en `localStorage`) para no perder el contexto de por qué el guard se cerró. Se descartó: el usuario pidió explícitamente que, en cuanto ambos permisos estén OK, se entre directo sin click extra — el overlay bloqueante simplemente deja de renderizarse (`if (!bloqueado) return children`), sin ningún paso intermedio. Además, ese diseño con `entrado` tenía un efecto (`useEffect` sincronizando `entrado` desde `bloqueado`) que disparaba la regla de lint `react-hooks/set-state-in-effect` y bloqueaba el commit — otra razón para no reintroducirlo sin necesidad real.
+
 ## Redundancia aceptada (no es un bug)
 
 `usePushSubscription` también se usa en `TogglePush.tsx` (dropdown de la campanita, montado globalmente incluso dentro de `/oficial/*`). Hay dos instancias independientes del hook corriendo a la vez en esas rutas — no conflictivo, sí redundante (dos `serviceWorker.ready`, dos llamadas a `estadoSuscripcion`). No se optimizó con un contexto compartido — costo marginal, no justifica la abstracción todavía.

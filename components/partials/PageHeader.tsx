@@ -21,7 +21,7 @@ import type { ReactNode } from 'react'
 export const pageHeaderTitleStyle: React.CSSProperties = {
   fontFamily: 'Barlow Condensed,sans-serif',
   fontWeight: 800,
-  fontSize: 32,
+  fontSize: 'clamp(22px, 6vw, 32px)',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
   color: '#0f172a',
@@ -35,6 +35,7 @@ export const pageHeaderSubtitleStyle: React.CSSProperties = {
   letterSpacing: '0.15em',
   textTransform: 'uppercase',
   margin: 0,
+  wordBreak: 'break-word',
 }
 
 const btnBase: React.CSSProperties = {

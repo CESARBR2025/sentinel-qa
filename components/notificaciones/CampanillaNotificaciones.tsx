@@ -264,8 +264,8 @@ export function CampanillaNotificaciones() {
         aria-label={`Notificaciones${noLeidas > 0 ? ` (${noLeidas} sin leer)` : ''}`}
         style={{
           position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: 38, height: 38, border: '1px solid #e2e8f0', background: '#fff',
-          cursor: 'pointer', color: noLeidas > 0 ? '#1f355a' : '#64748b',
+          width: 40, height: 40, border: '1px solid #e2e8f0', background: '#fff',
+          cursor: 'pointer', color: noLeidas > 0 ? '#1f355a' : '#64748b', flexShrink: 0,
           animation: sacudir ? 'campanilla-shake 0.5s ease-in-out' : 'none',
         }}
       >

@@ -40,12 +40,15 @@
 | `EXPEDIENTE_SSPM_INFRACCIONES` | Sí | — |
 | `X_INFRACCIONES_KEY` | No | API Key para consulta de infracciones por CURP (app móvil) |
 | `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` | No | VECTOR DE MAPS |
-| `VAPID_PUBLIC_KEY` | No | — |
+| `VAPID_PUBLIC_KEY` | No | NOTIFICACIONES |
 | `VAPID_PRIVATE_KEY` | No | — |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | No | — |
 | `VAPID_SUBJECT` | No | — |
 | `CRON_SECRET` | No | — |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

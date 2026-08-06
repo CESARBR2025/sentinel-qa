@@ -51,8 +51,10 @@ export function DashboardHeader({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: esMovil ? 72 : esTablet ? 88 : 104,
-        padding: esMovil ? '0 16px' : esTablet ? '0 32px' : '0 64px',
+        height: esMovil ? 56 : esTablet ? 72 : 104,
+        paddingLeft: esMovil ? 14 : esTablet ? 32 : 64,
+        paddingRight: esMovil ? 14 : esTablet ? 32 : 64,
+        paddingTop: 'env(safe-area-inset-top)',
         borderBottom: '1px solid #e2e8f0',
         background: esMovil ? '#f8fafc' : 'rgba(248,250,252,0.85)',
         // En móvil se quita el blur: el backdrop-filter sobre un sticky con
@@ -63,11 +65,11 @@ export function DashboardHeader({
       {/* Corner Decorator */}
       <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#1f355a' }} />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 12 : esTablet ? 16 : 24, minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 24, minWidth: 0 }}>
         <img
           src="/chaleco.png"
           alt="S"
-          style={{ height: esMovil ? 32 : esTablet ? 48 : 64, flexShrink: 0, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
+          style={{ height: esMovil ? 26 : esTablet ? 44 : 64, flexShrink: 0, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
         />
 
         <div style={{ minWidth: 0 }}>
@@ -92,7 +94,7 @@ export function DashboardHeader({
             style={{
               fontFamily: 'Barlow Condensed,sans-serif',
               fontWeight: 800,
-              fontSize: esMovil ? 24 : esTablet ? 40 : 56,
+              fontSize: esMovil ? 20 : esTablet ? 36 : 56,
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
               margin: 0,
@@ -108,7 +110,7 @@ export function DashboardHeader({
         {/* BOTÓN REGRESAR — solo si la página pasó un destino real */}
         {backHref && (
           <>
-            <div style={{ width: 1, height: esMovil ? 28 : esTablet ? 32 : 40, background: '#e2e8f0', flexShrink: 0 }} />
+            <div style={{ width: 1, height: esMovil ? 24 : esTablet ? 32 : 40, background: '#e2e8f0', flexShrink: 0 }} />
             <Link
               href={backHref}
               style={{
@@ -130,10 +132,10 @@ export function DashboardHeader({
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 32 }}>
-        {/* Temporal (dev): cambiar de usuario sin login. Desktop muestra el
-            bloque de usuario; móvil/tablet un ícono compacto. */}
-        {!currentUser ? null : (
+      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 8 : esTablet ? 12 : 32 }}>
+        {/* Temporal (dev): cambiar de usuario sin login. Se oculta en el chrome
+            compacto de móvil/tablet (no estorba en la PWA); desktop lo conserva. */}
+        {!currentUser || esMovil || esTablet ? null : (
           <CambiarSesionDev currentUser={currentUser} roleLabel={roleLabel} />
         )}
 

@@ -53,6 +53,10 @@ export function GuardiaPermisosOficial({ children }: { children: React.ReactNode
   const pushOk = estadoPush === 'activo'
   const bloqueado = !ubicacionOk || !pushOk
 
+  // En cuanto ambos permisos quedan OK, entra directo — sin paso de
+  // confirmación intermedio. (Se probó un modal de "Bienvenido" con botón
+  // "Entrar al sistema" antes de esto; se quitó porque el usuario lo pidió
+  // automático, sin click extra.)
   if (!bloqueado) return <>{children}</>
 
   return (

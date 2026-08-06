@@ -31,7 +31,14 @@ export function SubHeader({
   const { esMovil, esTablet } = useResponsive()
 
   return (
-    <header style={{ borderBottom: '1px solid #e2e8f0', padding: esMovil ? '0 12px' : esTablet ? '0 24px' : '0 48px', height: 64, display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 14 : 24, background: '#ffffff' }}>
+    <header style={{
+      borderBottom: '1px solid #e2e8f0',
+      paddingLeft: esMovil ? 12 : esTablet ? 24 : 48,
+      paddingRight: esMovil ? 12 : esTablet ? 24 : 48,
+      paddingTop: 'env(safe-area-inset-top)',
+      height: esMovil ? 48 : esTablet ? 56 : 64,
+      display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 14 : 24, background: '#ffffff',
+    }}>
       <Link href={backHref} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.25em', color: '#64748b', textTransform: 'uppercase', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap' }}>
         <ArrowLeft size={14} /> {esMovil ? null : backLabel}
       </Link>
