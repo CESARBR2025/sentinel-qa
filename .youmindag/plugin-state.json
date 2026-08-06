@@ -548,5 +548,7 @@
       "result": "Graphify First-Hop Summary\nGraph: 4438 nodes, 14163 edges, 169 communities, density 0.0014, average degree 6.3826, undirected\n\nTop hubs:\n  1. auth (degree 160, community 1 Community 1, lib/auth.ts)\n  2. query() (degree 67, community 37 Community 37, lib/db.ts)\n  3. DashboardHeader() (degree 63, community 1 Community 1, components/partials/Header.tsx)\n  4. PageHeader() (degree 48, community 1 Community 1, components/partials/PageHeader.tsx)\n  5. PageHeaderLink() (degree 42, community 1 Community 1, components/partials/PageHeader.tsx)\n\nKey communities:\n  1. Community 0 - Community 0: 189 nodes, 509 internal edges, density 0.0287; top nodes: 06c55f5 Merge branch 'feature/testing' into feature/reportes, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia, 41ea169 Merge branch 'testing' into conexion\n  2. Community 1 - Community 1: 162 nodes, 514 internal edges, density 0.0394; top nodes: auth.ts, auth, 0068216 Mejora de Dashboard, Login y transiciones de pantallas\n  3. Community 2 - Community 2: 134 nodes, 372 internal edges, density 0.0417; top nodes: 5618308 guardado e evidencias con ed, 77ddf58 Merge branch 'feature/testing' of https://github.com/presidenciaSJR/seguridad_publica into feature/testing, f2c66e6 Extender roles y permisos finos a incidentes, prevención, auxiliar, 911, análisis, denuncia D1 y Formato N\n  4. Community 3 - Community 3: 114 nodes, 219 internal edges, density 0.034; top nodes: actions.ts, service.ts, repository.ts\n  ... (truncated)",
       "ts": 1785947446605
     }
-  }
+  },
+  "ymSearchCount": 2,
+  "ymEditCount": 4
 }

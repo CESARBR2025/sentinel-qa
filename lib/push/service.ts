@@ -2,11 +2,22 @@ import webpush from 'web-push'
 import { suscripcionesParaAudiencia, eliminarSuscripcion } from './repository'
 import type { PayloadPush } from './types'
 
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT!,
-  process.env.VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
-)
+let vapidConfigurado = false
+
+// Lazy, no a nivel de módulo: Next.js importa este archivo al "coleccionar"
+// datos de cada ruta durante el build (incluida /api/cron/notificaciones, que
+// no llega a ejecutar nada), así que un setVapidDetails() en el top-level
+// tumbaba el build entero si la env var no estaba disponible en ese paso,
+// en vez de fallar en runtime dentro del try/catch de abajo.
+function asegurarVapid(): void {
+  if (vapidConfigurado) return
+  webpush.setVapidDetails(
+    process.env.VAPID_SUBJECT!,
+    process.env.VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!,
+  )
+  vapidConfigurado = true
+}
 
 /**
  * Manda el push a todos los dispositivos de la audiencia de un evento (mismo
@@ -23,6 +34,7 @@ export async function enviarPush(
   payload: PayloadPush,
 ): Promise<void> {
   try {
+    asegurarVapid()
     const suscripciones = await suscripcionesParaAudiencia(rolId, userId)
     if (suscripciones.length === 0) return
 

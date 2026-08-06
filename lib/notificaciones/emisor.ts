@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { after } from 'next/server'
 import { query } from '@/lib/db'
 import { definicionEvento, type ClaveEvento } from './catalogo'
 import { rolesSuscritos, idsRolesPorNombre } from './repository'
@@ -89,10 +90,14 @@ export async function emitir(evento: ClaveEvento | string, datos: DatosEmision):
       // re-notificar por push un evento que ya se mandó antes.
       if (result.rows.length === 0) continue
 
-      // Push va sin `await`: no puede alargar la respuesta del flujo de negocio
-      // que llamó a emitir(). enviarPush() ya nunca lanza (mismo contrato que
-      // esta función), así que no hace falta .catch() adicional aquí.
-      void enviarPush(fila.rolId, fila.userId, { titulo, mensaje: datos.mensaje, href, severidad: def.severidad })
+      // Push va vía after(): no puede alargar la respuesta del flujo de negocio
+      // que llamó a emitir(), pero tampoco puede quedar como una promesa suelta
+      // (`void`) — en runtime serverless (Vercel) la función puede cortarse en
+      // cuanto se manda la respuesta, matando ese envío a medias. after()
+      // mantiene la ejecución viva hasta terminar, en cualquier plataforma.
+      // enviarPush() ya nunca lanza (mismo contrato que esta función), así que
+      // no hace falta .catch() adicional aquí.
+      after(() => enviarPush(fila.rolId, fila.userId, { titulo, mensaje: datos.mensaje, href, severidad: def.severidad }))
     }
   } catch (e) {
     // Degradación silenciosa: el flujo de negocio ya se completó.
