@@ -48,6 +48,21 @@ export async function contarNoLeidas(userId: string, rolId: number | null): Prom
   return Number(result.rows[0]?.total ?? 0)
 }
 
+/** Para la alerta de pantalla completa: la crítica no leída más reciente, o null. */
+export async function criticaMasRecienteSinLeer(
+  userId: string,
+  rolId: number | null,
+): Promise<Notificacion | null> {
+  const result = await query<Record<string, unknown>>(
+    `${SELECT_USUARIO}
+       AND l.user_id IS NULL AND n.severidad = 'critico'
+     ORDER BY n.creado_en DESC
+     LIMIT 1`,
+    [userId, rolId],
+  )
+  return result.rows[0] ? rowToNotificacion(result.rows[0]) : null
+}
+
 export async function contarTotal(userId: string, rolId: number | null): Promise<number> {
   const result = await query<{ total: string }>(
     `SELECT count(*)::int AS total FROM notificaciones_eventos n
@@ -189,4 +204,45 @@ export async function purgarAntiguas(dias: number): Promise<number> {
     [String(dias)],
   )
   return result.rowCount ?? 0
+}
+
+// ─── Escalación (cron) ────────────────────────────────────────────────────
+
+export interface CandidataEscalacion {
+  id: string
+  rolId: number | null
+  userId: string | null
+  titulo: string
+  mensaje: string
+  href: string | null
+}
+
+/**
+ * Críticas sin ninguna lectura, con más de `minutos` de antigüedad y que
+ * todavía no se han escalado. Para una fila dirigida a un rol, "sin lectura"
+ * significa que NADIE del rol la ha visto — simplificación deliberada, no se
+ * pide que cada integrante individual la haya leído.
+ */
+export async function candidatasEscalacion(minutos: number): Promise<CandidataEscalacion[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT n.id, n.rol_id, n.user_id, n.titulo, n.mensaje, n.href
+       FROM notificaciones_eventos n
+      WHERE n.severidad = 'critico'
+        AND n.push_reescalado_en IS NULL
+        AND n.creado_en < now() - ($1 || ' minutes')::interval
+        AND NOT EXISTS (SELECT 1 FROM notificaciones_lecturas l WHERE l.notificacion_id = n.id)`,
+    [String(minutos)],
+  )
+  return result.rows.map(r => ({
+    id: String(r.id),
+    rolId: r.rol_id === null || r.rol_id === undefined ? null : Number(r.rol_id),
+    userId: r.user_id === null || r.user_id === undefined ? null : String(r.user_id),
+    titulo: String(r.titulo),
+    mensaje: String(r.mensaje),
+    href: r.href === null || r.href === undefined ? null : String(r.href),
+  }))
+}
+
+export async function marcarEscalada(id: string): Promise<void> {
+  await query(`UPDATE notificaciones_eventos SET push_reescalado_en = now() WHERE id = $1`, [id])
 }

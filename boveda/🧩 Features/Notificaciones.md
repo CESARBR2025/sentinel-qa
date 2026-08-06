@@ -1101,3 +1101,90 @@ el protocolo).
   fire-and-forget. Documentación histórica del "sin push" sigue en `911.md`
   regla 18 / `Reporte Campo.md` — obsoleta para este punto.
 - Si notificas por **permiso** en vez de por **rol**, cambia `idsRolesPorNombre`/`rolesSuscritos` por su equivalente de permisos — pero perderás la matriz simple evento×rol y ganarás granularidad.
+
+# Notificaciones críticas más visibles (plan `plan-notificaciones-forzadas/`)
+
+Alcance: **todo el sistema**, cualquier rol — a diferencia del guard de permisos de más abajo, que sí está acotado. El banner de pantalla completa y la escalación solo aplican a `severidad: 'critico'` (hoy: `despacho.asignado`, `despacho.refuerzos`, `incidente.cerrado_detencion`, `busqueda.creada`, `busqueda_plazo`); la vibración, en cambio, aplica a **todos los niveles** (ver abajo).
+
+## Vibración escalada por severidad (`public/sw.js`)
+
+`showNotification` siempre manda `vibrate` — nunca se omite, a diferencia del diseño inicial que solo vibraba en crítico. La intensidad escala con la severidad:
+
+```js
+const VIBRACION = {
+  info: [120],                          // un pulso corto
+  aviso: [200, 100, 200],               // dos pulsos medios
+  critico: [300, 150, 300, 150, 300],   // tres pulsos largos
+};
+```
+
+Solo tiene efecto en Android (Chrome/Edge/Firefox); iOS lo ignora sin error. `VERSION` en `centinela-offline-v4`.
+
+## Banner de pantalla completa (in-app)
+
+El polling ya existente de `CampanillaNotificaciones.tsx` (cada 30s, `/api/notificaciones/contador`) se extendió con un segundo campo barato: `criticaMasRecienteSinLeer(userId, rolId)` (`lib/notificaciones/repository.ts`) — la crítica sin leer más reciente, o `null`. Si cambia respecto a la última vista (`criticaVistaRef`), se muestra `components/notificaciones/AlertaCriticaBanner.tsx` — banner rojo de ancho completo, vía portal, `zIndex: 2147483000` (por encima del dropdown, por debajo del guard de permisos de Oficial). No depende de que el dropdown esté abierto ni de en qué sección de la app esté el usuario.
+
+- **"Ver"**: marca leída (mismo endpoint `/api/notificaciones/leer`) y navega al `href`.
+- **"Descartar"**: solo oculta el banner — no marca leída, el contador de la campanita sigue reflejando lo pendiente.
+- Sonido distinto (`sonarAlertaCritica`, onda cuadrada, 6 tonos) del sonido normal de la campanita.
+- A diferencia del sonido normal (que se omite en la primera carga de la sesión), el banner **sí aparece desde la primera carga** si ya hay una crítica pendiente — es el caso que se quiere resolver.
+
+## Contador en el título de la pestaña
+
+`document.title` se prefija con `(N)` mientras `noLeidas > 0`, actualizado en cada tick del mismo polling de 30s. Limitación conocida: si el usuario navega a otra ruta sin que cambie el conteo, el prefijo puede tardar hasta el siguiente poll en reflejarse sobre el nuevo título de la página.
+
+## Escalación: reenvío de críticas sin leer
+
+Columna nueva `notificaciones_eventos.push_reescalado_en` (migración `0042_notificaciones_escalacion.sql`, nullable — `NULL` = no escalada). `lib/notificaciones/checker.ts::escalarCriticasSinLeer()`, corrida desde `/api/cron/notificaciones` junto a `generarAlertasBusquedas()`:
+
+```sql
+severidad = 'critico' AND push_reescalado_en IS NULL
+  AND creado_en < now() - (UMBRAL_ESCALACION_MINUTOS || ' minutes')::interval
+  AND NOT EXISTS (SELECT 1 FROM notificaciones_lecturas WHERE notificacion_id = n.id)
+```
+
+`UMBRAL_ESCALACION_MINUTOS = 5` (constante en código, sin UI de configuración). Reenvía vía `enviarPush` (mismo servicio del plan de push) con el título prefijado `⚠ `, y marca `push_reescalado_en = now()` — **un solo reintento**, no reenvío infinito (evita spam si el dispositivo tiene las notificaciones bloqueadas a nivel de sistema operativo). Para una fila dirigida a un rol, "sin leer" significa que **nadie** del rol la ha visto — simplificación deliberada, no se exige que cada integrante individual la haya leído.
+
+### El cron no se autoinvoca — disparador real
+
+`/api/cron/notificaciones` sigue protegido con `CRON_SECRET`. **El QA actual vive en Vercel Hobby**, que limita los Cron Jobs propios del dashboard a 1 ejecución/día — insuficiente para un umbral de 5 minutos. Disparador elegido: **GitHub Actions** (`.github/workflows/cron-notificaciones.yml`, `schedule: '*/5 * * * *'`), que hace `curl` con el header `Authorization: Bearer $CRON_SECRET` contra `APP_URL` (hoy `https://sentinel-qa-seven.vercel.app`, definido como `env` al inicio del workflow). Es host-agnóstico a propósito: cuando el sistema migre del QA de Vercel al server propio de la empresa, el único cambio necesario es esa URL — no depende de Vercel Cron ni de ningún otro mecanismo específico de esa plataforma. Requiere el secret `CRON_SECRET` configurado tanto en GitHub (Settings → Secrets and variables → Actions) como en el entorno donde corra la app.
+
+# Guardia de permisos obligatorios — solo Oficial de Campo (plan `plan-notificaciones-forzadas/`)
+
+**Alcance explícitamente acotado**: únicamente rutas `/oficial/*`. Decisión confirmada con el usuario — es el único rol con un consumidor real de la ubicación (el mapa de cercanía del despacho, `AsignacionMapa.tsx`). No se generaliza a otros roles (Fiscalía/Juzgado/Admin) porque no habría ningún uso real de ese permiso ahí.
+
+`components/oficial/GuardiaPermisosOficial.tsx`, montado en `app/oficial/layout.tsx` **dentro** de `OficialUbicacionProvider` (necesita `useUbicacionOficial()`):
+
+```
+app/oficial/layout.tsx
+  OficialUbicacionProvider           (ya existía, tracking de ubicación)
+    GuardiaPermisosOficial            (nuevo — este plan)
+      {children}
+```
+
+## Comportamiento
+
+Bloqueo **total**, sin botón de "continuar sin esto" (decisión explícita del usuario — ubicación y push son "vitales" para el despacho de campo). El overlay (`zIndex: 2147483647`, el máximo) cubre toda la pantalla sin cerrar ni click-outside; `children` se sigue renderizando por debajo (no se desmonta el árbol), el overlay solo bloquea visual e interactivamente.
+
+Condición: `bloqueado = !ubicacionOk || !pushOk`, con:
+- `ubicacionOk = soportado && !permisoDenegado && posicionActual !== null` (de `useUbicacionOficial()`, ya existente).
+- `pushOk = estadoPush === 'activo'` (de `usePushSubscription()`, del plan de push).
+
+## Los 6 estados que cubre
+
+| Estado | Mensaje / acción |
+|---|---|
+| Ubicación no soportada | Instrucción de usar navegador compatible, sin acción posible |
+| Ubicación denegada | Instrucciones para reactivar manualmente (ícono de sitio del navegador) + botón "Ya lo activé, recargar" |
+| Ubicación pendiente | "Obteniendo señal GPS…" — sin botón, el prompt ya lo disparó `OficialUbicacionProvider` solo al montar |
+| Push no soportado | Instrucción de usar navegador compatible |
+| Push denegado | Instrucciones para reactivar + botón "Ya las activé, recargar" |
+| Push pendiente/cargando | Botón "Activar notificaciones" (reutiliza `usePushSubscription().activar()`) |
+
+## Colchón de seguridad
+
+Si `usePushSubscription` queda en `'cargando'` más de 8 segundos (llegó a pasar en producción durante el desarrollo de este plan, causa no confirmada — posible condición de carrera con el registro del service worker), el guard **no se queda congelado**: a los 8s se ofrece el botón "Activar notificaciones" igual (tratando `'cargando'` prolongado como `'inactivo'`) más un botón genérico "Recargar página" como salida manual.
+
+## Redundancia aceptada (no es un bug)
+
+`usePushSubscription` también se usa en `TogglePush.tsx` (dropdown de la campanita, montado globalmente incluso dentro de `/oficial/*`). Hay dos instancias independientes del hook corriendo a la vez en esas rutas — no conflictivo, sí redundante (dos `serviceWorker.ready`, dos llamadas a `estadoSuscripcion`). No se optimizó con un contexto compartido — costo marginal, no justifica la abstracción todavía.

@@ -28,9 +28,13 @@
 | `lib/oficial/actions.ts` | crearReporteCampoOficial, marcarEnCaminoOficial, marcarEnSitioOficial, asignarPatrulla, reportarUbicacionOficial, actualizarTelefono |
 | `lib/permisos/core.ts` | obtenerPermisosUsuario, tienePermiso, listarPermisosPorUsuario, guardarPermiso, obtenerPlantillaRol, tienePlantillaRol, guardarPlantillaSeccion, aplicarPlantillaRol, guardarPermisosSeccionesAction, guardarPlantillaSeccionesAction |
 | `lib/prevencion/actions.ts` | createMedida, createVisita, addAutoridadMedida, createProrroga, createFicha, createSeguimiento, cancelarFicha, createSolicitud, createSolicitudC4, createContestacion, createMedidaApi, updateMedidaApi, updateMedidaStatusApi, createVisitaApi, createFichaApi, updateFichaApi, cancelarFichaApi, createSeguimientoApi, createSolicitudApi, updateSolicitudApi, createSolicitudC4Api, createContestacionApi |
+| `lib/push/actions.ts` | suscribirPush, desuscribirPush, estadoSuscripcion |
 | `lib/rol-servicios/actions.ts` | createRol, updateEncabezadoRol, createAsignacion, deleteAsignacion, upsertEstadoFuerza, createObservacion, deleteObservacion, guardarFirmas |
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

@@ -1,0 +1,25 @@
+name: Cron notificaciones
+
+# Disparador externo de /api/cron/notificaciones. Necesario porque Vercel
+# Hobby (usado hoy como QA) limita los Cron Jobs propios a 1 ejecución/día —
+# insuficiente para la escalación de críticas (umbral de 5 min). No depende
+# de Vercel: cuando el sistema migre al server de la empresa, el único
+# cambio necesario en este archivo es actualizar APP_URL más abajo.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+env:
+  # QA temporal en Vercel — actualizar al dominio del server de la empresa
+  # cuando se migre.
+  APP_URL: https://sentinel-qa-seven.vercel.app
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar /api/cron/notificaciones
+        run: |
+          curl -sf -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$APP_URL/api/cron/notificaciones"

@@ -696,8 +696,10 @@
 │   ├── nCoordinacion/
 │   │   └── ProfileDropdownCoordinacion.tsx
 │   ├── notificaciones/
+│   │   ├── AlertaCriticaBanner.tsx
 │   │   ├── CampanillaNotificaciones.tsx
-│   │   └── ListaHistorial.tsx
+│   │   ├── ListaHistorial.tsx
+│   │   └── TogglePush.tsx
 │   ├── oficial/
 │   │   ├── navegacion/
 │   │   │   ├── AsignacionCard.tsx
@@ -709,6 +711,7 @@
 │   │   ├── ContadorAsignaciones.tsx
 │   │   ├── DespachoContent.tsx
 │   │   ├── FormularioRecorrido.tsx
+│   │   ├── GuardiaPermisosOficial.tsx
 │   │   ├── MapaPinFijo.tsx
 │   │   ├── MapaUbicacion.tsx
 │   │   ├── MiUbicacionSection.tsx
@@ -806,6 +809,7 @@
 │   │   ├── Toast.tsx
 │   │   └── ToastAuto.tsx
 │   ├── FilaDetenidoRol.tsx
+│   ├── InstalarApp.tsx
 │   ├── LoadingProvider.tsx
 │   ├── PageTransition.tsx
 │   └── sw-register.tsx
@@ -890,6 +894,7 @@
 │   ├── useIncidentes.ts
 │   ├── useMediaQuery.ts
 │   ├── usePolling.ts
+│   ├── usePushSubscription.ts
 │   ├── useRegistroDetenido.ts
 │   ├── useReporteCampo.ts
 │   └── useResponsive.ts
@@ -1017,6 +1022,8 @@
 │   │   │   ├── 0037_datos_biograficos_detenido.sql
 │   │   │   ├── 0038_antecedentes_externos_detenido.sql
 │   │   │   ├── 0039_formato_incidencia_complemento.sql
+│   │   │   ├── 0041_push_subscriptions.sql
+│   │   │   ├── 0042_notificaciones_escalacion.sql
 │   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
@@ -1122,6 +1129,11 @@
 │   │   ├── semaforo.ts
 │   │   ├── timeline.ts
 │   │   └── types.ts
+│   ├── push/
+│   │   ├── actions.ts
+│   │   ├── repository.ts
+│   │   ├── service.ts
+│   │   └── types.ts
 │   ├── recursos/
 │   │   └── token-recurso.ts
 │   ├── reporte-detenidos/
@@ -1209,91 +1221,17 @@
 │   ├── Login Hi-Fi.html
 │   ├── Login Wireframes.html
 │   └── login-app.jsx
-├── plan-auditoria-url/
-│   ├── 00-contexto.md
-│   ├── etapa-0-auditoria.md
-│   ├── etapa-1-cierre-autorizacion.md
-│   ├── etapa-2-idor-hardening.md
-│   ├── etapa-3-cosmetica-opcional.md
-│   ├── README.md
-│   └── test-qa.md
-├── plan-cierre-idor-pendientes/
-│   ├── 00-contexto.md
-│   ├── etapa-1-token-solicitudes-generales.md
-│   ├── etapa-2-autorizacion-uploads.md
-│   ├── README.md
-│   └── test-qa.md
-├── plan-formato-faltasadministrativas/
+├── plan-notificaciones-forzadas/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
 │   ├── etapa-2.md
 │   ├── etapa-3.md
 │   ├── etapa-4.md
 │   ├── etapa-5.md
-│   ├── etapa-6.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
-├── plan-formato-incidencias/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-formulario-d1/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── etapa-7.md
-│   ├── etapa-8.md
-│   └── README.md
-├── plan-mapa-despacho/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-10.md
-│   ├── etapa-11.md
-│   ├── etapa-12.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── etapa-7.md
-│   ├── etapa-8.md
-│   ├── etapa-9.md
-│   ├── README.md
-│   └── test-qa.md
-├── plan-navegacion-modal/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── README.md
-│   └── test-qa.md
-├── plan-navegacion-oficial/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── etapa-7.md
-│   ├── README.md
-│   └── test-qa.md
 ├── plan-pwa-push/
 │   ├── 00-contexto.md
-│   └── etapa-1.md
-├── plan-reporte-detenidos/
-│   ├── 00-contexto.md
 │   ├── etapa-1.md
 │   ├── etapa-2.md
 │   ├── etapa-3.md
@@ -1301,41 +1239,26 @@
 │   ├── etapa-5.md
 │   ├── etapa-6.md
 │   ├── etapa-7.md
-│   ├── etapa-8.md
-│   └── README.md
-├── plan-reporte-detenidos-bueno/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── etapa-7.md
-│   ├── etapa-8.md
-│   └── README.md
-├── plan-reporte-ppt/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   └── README.md
-├── plan-saneamiento-bd-d1/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── etapa-7.md
-│   ├── etapa-8.md
-│   ├── etapa-9.md
+│   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
 ├── public/
 │   ├── files-xlsx/
 │   │   └── flota-vehicular-nuevo.xlsx
+│   ├── icons/
+│   │   ├── icon-144.png
+│   │   ├── icon-192.png
+│   │   ├── icon-384.png
+│   │   ├── icon-48.png
+│   │   ├── icon-512.png
+│   │   ├── icon-72.png
+│   │   ├── icon-96.png
+│   │   ├── icon-maskable-144.png
+│   │   ├── icon-maskable-192.png
+│   │   ├── icon-maskable-384.png
+│   │   ├── icon-maskable-48.png
+│   │   ├── icon-maskable-512.png
+│   │   ├── icon-maskable-72.png
+│   │   └── icon-maskable-96.png
 │   ├── marca_agua/
 │   │   └── plantilla-orden-salida.png
 │   ├── uploads/
@@ -1418,6 +1341,9 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

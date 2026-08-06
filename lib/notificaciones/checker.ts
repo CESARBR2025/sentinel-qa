@@ -1,9 +1,16 @@
 import { query } from '@/lib/db'
 import { calcularFechaEsperada, getLabelSeguimiento } from '@/lib/prevencion/timeline'
 import { emitir } from './emisor'
+import { enviarPush } from '@/lib/push/service'
+import { candidatasEscalacion, marcarEscalada } from './repository'
 
 const HITOS_ALERTAR = ['CONTESTACION_INICIAL', '24H', '48H', '72H'] as const
 const UNA_HORA_MS   = 60 * 60 * 1000
+
+// Cuánto tiempo sin ninguna lectura antes de reintentar el push. Ajustar solo
+// junto con el schedule real del cron — escalar antes de lo que el cron
+// puede detectar no tiene efecto.
+const UMBRAL_ESCALACION_MINUTOS = 5
 
 /**
  * Genera las alertas de plazo de las fichas de búsqueda activas.
@@ -64,4 +71,29 @@ export async function generarAlertasBusquedas(): Promise<number> {
   }
 
   return emitidas
+}
+
+/**
+ * Reenvía el push de notificaciones críticas que nadie ha leído después de
+ * UMBRAL_ESCALACION_MINUTOS. Un solo reintento por notificación (marcado con
+ * push_reescalado_en) — no es un reenvío infinito.
+ */
+export async function escalarCriticasSinLeer(): Promise<number> {
+  const candidatas = await candidatasEscalacion(UMBRAL_ESCALACION_MINUTOS)
+  let escaladas = 0
+  for (const c of candidatas) {
+    try {
+      await enviarPush(c.rolId, c.userId, {
+        titulo: `⚠ ${c.titulo}`,
+        mensaje: c.mensaje,
+        href: c.href,
+        severidad: 'critico',
+      })
+      await marcarEscalada(c.id)
+      escaladas++
+    } catch (e) {
+      console.error('[notificaciones] fallo al escalar', c.id, e)
+    }
+  }
+  return escaladas
 }

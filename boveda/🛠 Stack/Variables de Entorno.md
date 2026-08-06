@@ -40,11 +40,15 @@
 | `EXPEDIENTE_SSPM_INFRACCIONES` | Sí | — |
 | `X_INFRACCIONES_KEY` | No | API Key para consulta de infracciones por CURP (app móvil) |
 | `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` | No | VECTOR DE MAPS |
-| `VAPID_PUBLIC_KEY` | Sí | Web Push — clave pública VAPID (servidor, envío) |
-| `VAPID_PRIVATE_KEY` | Sí | Web Push — clave privada VAPID (servidor, envío, secreto) |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Sí | Web Push — clave pública VAPID expuesta al cliente (pushManager.subscribe) |
-| `VAPID_SUBJECT` | Sí | Web Push — mailto:/URL de contacto del remitente (requerido por el protocolo VAPID) |
+| `VAPID_PUBLIC_KEY` | No | — |
+| `VAPID_PRIVATE_KEY` | No | — |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | No | — |
+| `VAPID_SUBJECT` | No | — |
+| `CRON_SECRET` | No | — |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

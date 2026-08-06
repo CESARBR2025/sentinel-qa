@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { definicionEvento } from '@/lib/notificaciones/catalogo'
 import { TogglePush } from './TogglePush'
+import { AlertaCriticaBanner } from './AlertaCriticaBanner'
 
 // Cuántas notificaciones se muestran en el dropdown. El resto vive en /notificaciones.
 const MAX_DROPDOWN = 5
@@ -93,6 +94,29 @@ function sonarAlerta() {
   }
 }
 
+function sonarAlertaCritica() {
+  try {
+    const ctx = new AudioContext()
+    const t = ctx.currentTime
+    for (let i = 0; i < 6; i++) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain); gain.connect(ctx.destination)
+      osc.type = 'square'
+      const on = t + i * 0.22
+      const off = on + 0.16
+      osc.frequency.setValueAtTime(i % 2 === 0 ? 1046 : 784, on)
+      gain.gain.setValueAtTime(0, on)
+      gain.gain.linearRampToValueAtTime(0.18, on + 0.03)
+      gain.gain.setValueAtTime(0.18, off - 0.04)
+      gain.gain.linearRampToValueAtTime(0, off)
+      osc.start(on); osc.stop(off + 0.01)
+    }
+  } catch {
+    // AudioContext bloqueado por el navegador — se omite el sonido.
+  }
+}
+
 export function CampanillaNotificaciones() {
   const [abierto, setAbierto] = useState(false)
   const [noLeidas, setNoLeidas] = useState(0)
@@ -106,14 +130,17 @@ export function CampanillaNotificaciones() {
   const previoRef = useRef(0)
   const router = useRouter()
   const { esMovil } = useResponsive()
+  const [alertaCritica, setAlertaCritica] = useState<Notificacion | null>(null)
+  const criticaVistaRef = useRef<string | null>(null)
 
-  // Sólo el conteo: una query indexada, sin traer la lista completa. Es lo
-  // único que corre en cada intervalo del polling.
+  // Sólo el conteo (+ la crítica no leída más reciente, si hay una nueva):
+  // dos queries indexadas, sin traer la lista completa. Es lo único que corre
+  // en cada intervalo del polling.
   const refrescarContador = useCallback(async () => {
     try {
       const r = await fetch('/api/notificaciones/contador', { cache: 'no-store' })
       if (!r.ok) return
-      const { noLeidas: n } = await r.json() as { noLeidas: number }
+      const { noLeidas: n, critica } = await r.json() as { noLeidas: number; critica: Notificacion | null }
       setNoLeidas(n)
       if (n > previoRef.current && previoRef.current !== 0) {
         sonarAlerta()
@@ -121,6 +148,19 @@ export function CampanillaNotificaciones() {
         setTimeout(() => setSacudir(false), 600)
       }
       previoRef.current = n
+
+      document.title = n > 0
+        ? `(${n > 99 ? '99+' : n}) ${document.title.replace(/^\(\d+\+?\)\s/, '')}`
+        : document.title.replace(/^\(\d+\+?\)\s/, '')
+
+      // A diferencia del sonido normal, la alerta crítica sí se muestra desde
+      // la primera carga si ya hay una pendiente — es justo el caso que se
+      // quiere resolver (que no pase desapercibida aunque el usuario acabe de entrar).
+      if (critica && critica.id !== criticaVistaRef.current) {
+        criticaVistaRef.current = critica.id
+        setAlertaCritica(critica)
+        sonarAlertaCritica()
+      }
     } catch {
       // Sin red: se reintenta en el siguiente intervalo.
     }
@@ -368,6 +408,22 @@ export function CampanillaNotificaciones() {
           </Link>
         </div>,
         document.body,
+      )}
+
+      {alertaCritica && (
+        <AlertaCriticaBanner
+          critica={alertaCritica}
+          onVer={() => {
+            setNoLeidas(c => Math.max(0, c - 1))
+            void fetch('/api/notificaciones/leer', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: alertaCritica.id }),
+            })
+            setAlertaCritica(null)
+          }}
+          onDescartar={() => setAlertaCritica(null)}
+        />
       )}
     </div>
   )

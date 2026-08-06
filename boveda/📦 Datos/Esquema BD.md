@@ -1,6 +1,6 @@
 # Esquema de Base de Datos — Sentinel SSPM
 
-> Documentación generada desde `information_schema` el 2026-08-05.
+> Documentación generada desde `information_schema` el 2026-08-06.
 > Fuente de verdad del schema real en PostgreSQL.
 
 ---
@@ -1110,6 +1110,7 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 12 | `grupo_id` | `uuid` | SÍ | — |
 | 13 | `clave_dedup` | `text` | SÍ | — |
 | 14 | `creado_en` | `timestamp` | NO | `now()` |
+| 15 | `push_reescalado_en` | `timestamp` | SÍ | — |
 
 **Foreign Keys**
 

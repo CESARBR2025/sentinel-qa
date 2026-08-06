@@ -4,7 +4,7 @@
  *  - /_next/static: cache-first (archivos con hash, inmutables) → la página /offline se ve con estilos.
  *  - Resto: stale-while-revalidate.
  */
-const VERSION = 'centinela-offline-v2';
+const VERSION = 'centinela-offline-v4';
 const OFFLINE_URL = '/offline';
 
 self.addEventListener('install', (event) => {
@@ -94,6 +94,15 @@ self.addEventListener('push', (event) => {
   }
 
   const { titulo = 'CENTINELA', mensaje = '', href = '/', severidad = 'info' } = payload;
+  const esCritico = severidad === 'critico';
+
+  // Vibración en todos los niveles, escalada: más corta/suave en info, más
+  // larga/intensa en crítico — nunca se manda sin vibrar.
+  const VIBRACION = {
+    info: [120],
+    aviso: [200, 100, 200],
+    critico: [300, 150, 300, 150, 300],
+  };
 
   event.waitUntil(
     self.registration.showNotification(titulo, {
@@ -102,7 +111,8 @@ self.addEventListener('push', (event) => {
       badge: '/logo_sentinel.png',
       tag: href || undefined,
       data: { href: href || '/' },
-      requireInteraction: severidad === 'critico',
+      requireInteraction: esCritico,
+      vibrate: VIBRACION[severidad] || VIBRACION.info,
     })
   );
 });

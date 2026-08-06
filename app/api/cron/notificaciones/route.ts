@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generarAlertasBusquedas } from '@/lib/notificaciones/checker'
+import { generarAlertasBusquedas, escalarCriticasSinLeer } from '@/lib/notificaciones/checker'
 import { obtenerRetencionDias, purgarAntiguas } from '@/lib/notificaciones/repository'
 
 // Mantenimiento del sistema de notificaciones: genera las alertas de plazo y
@@ -19,8 +19,9 @@ export async function GET(req: NextRequest) {
   }
 
   const alertas = await generarAlertasBusquedas()
+  const escaladas = await escalarCriticasSinLeer()
   const dias = await obtenerRetencionDias()
   const purgadas = await purgarAntiguas(dias)
 
-  return NextResponse.json({ alertasGeneradas: alertas, purgadas, retencionDias: dias })
+  return NextResponse.json({ alertasGeneradas: alertas, escaladas, purgadas, retencionDias: dias })
 }

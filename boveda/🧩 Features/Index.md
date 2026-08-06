@@ -45,7 +45,7 @@
 | formato-n-fgr | (Pendiente) | ✨ Detectado |
 | formato-n-medios-alternativos | (Pendiente) | ✨ Detectado |
 | formato-n-rnd | (Pendiente) | ✨ Detectado |
-| formatos-udai | Formatos UDAI exportables a Excel: **Faltas Administrativas** (bitácora solo-lectura de `iph_detenidos`) y **Reportes de Incidencias** (anclado en `incidentes`, sin `iph_detenidos`, con captura manual y segmentación Pendientes/Completas) — ver [[Formatos UDAI]] | ✨ Detectado |
+| formatos-udai | (Pendiente) | ✨ Detectado |
 | health | (Pendiente) | ✨ Detectado |
 | incidentes | (Pendiente) | ✨ Detectado |
 | incidentes_camaras | (Pendiente) | ✨ Detectado |
@@ -55,12 +55,13 @@
 | monitorista | (Pendiente) | ✨ Detectado |
 | n-coordinacion | (Pendiente) | ✨ Detectado |
 | nCoordinacion | (Pendiente) | ✨ Detectado |
-| notificaciones | Notificaciones in-app (campanita, polling 30s) + push a dispositivo vía Web Push/VAPID (ver [[Notificaciones]]) | ✨ Detectado |
-| offline | PWA: service worker de fallback offline + instalación (maskable, Add to Home Screen) (ver [[PWA Offline]]) | ✨ Detectado |
+| notificaciones | (Pendiente) | ✨ Detectado |
+| offline | (Pendiente) | ✨ Detectado |
 | oficial | (Pendiente) | ✨ Detectado |
 | ordenSalida | (Pendiente) | ✨ Detectado |
 | permisos | (Pendiente) | ✨ Detectado |
 | prevencion | (Pendiente) | ✨ Detectado |
+| push | (Pendiente) | ✨ Detectado |
 | recursos | (Pendiente) | ✨ Detectado |
 | reporte-detenidos | (Pendiente) | ✨ Detectado |
 | reportes | (Pendiente) | ✨ Detectado |
@@ -76,6 +77,9 @@
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 
