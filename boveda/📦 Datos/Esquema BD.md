@@ -447,6 +447,59 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 - `fichas_inteligencia_detenidos_folio_key`: `CREATE UNIQUE INDEX fichas_inteligencia_detenidos_folio_key ON public.fichas_inteligencia_detenidos USING btree (folio)`
 
+### \`formato_incidencia_complemento\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `incidente_id` | `uuid` | NO | — |
+| 3 | `rt` | `text` | SÍ | — |
+| 4 | `turno` | `text` | SÍ | — |
+| 5 | `articulos_objetos` | `text` | SÍ | — |
+| 6 | `ap_nuc` | `text` | SÍ | — |
+| 7 | `calle_afec` | `text` | SÍ | — |
+| 8 | `numero_afec` | `text` | SÍ | — |
+| 9 | `colonia_afec` | `text` | SÍ | — |
+| 10 | `fuero_override` | `text` | SÍ | — |
+| 11 | `agrupamiento` | `text` | SÍ | — |
+| 12 | `folio_rnd` | `text` | SÍ | — |
+| 13 | `originario` | `text` | SÍ | — |
+| 14 | `nuc_cu` | `text` | SÍ | — |
+| 15 | `edad` | `integer` | SÍ | — |
+| 16 | `fecha_nacimiento` | `date` | SÍ | — |
+| 17 | `sexo` | `text` | SÍ | — |
+| 18 | `calle_det` | `text` | SÍ | — |
+| 19 | `numero_det` | `text` | SÍ | — |
+| 20 | `colonia_det` | `text` | SÍ | — |
+| 21 | `marca` | `text` | SÍ | — |
+| 22 | `submarca` | `text` | SÍ | — |
+| 23 | `tipo_vehiculo` | `text` | SÍ | — |
+| 24 | `color` | `text` | SÍ | — |
+| 25 | `placas` | `text` | SÍ | — |
+| 26 | `estado_vehiculo` | `text` | SÍ | — |
+| 27 | `niv` | `text` | SÍ | — |
+| 28 | `motor` | `text` | SÍ | — |
+| 29 | `modelo` | `text` | SÍ | — |
+| 30 | `fecha_ingreso` | `timestamp` | SÍ | — |
+| 31 | `fecha_salida` | `timestamp` | SÍ | — |
+| 32 | `otro_delito` | `text` | SÍ | — |
+| 33 | `masc` | `text` | SÍ | — |
+| 34 | `umecas` | `text` | SÍ | — |
+| 35 | `completado_en` | `timestamp` | SÍ | — |
+| 36 | `completado_por` | `text` | SÍ | — |
+| 37 | `creado_en` | `timestamp` | NO | `now()` |
+| 38 | `actualizado_en` | `timestamp` | SÍ | — |
+
+**Foreign Keys**
+
+- `formato_incidencia_complemento_completado_por_fkey`: `completado_por` → `users(id)`
+- `formato_incidencia_complemento_incidente_id_fkey`: `incidente_id` → `incidentes(id)`
+
+**Índices**
+
+- `formato_incidencia_complemento_incidente_id_key`: `CREATE UNIQUE INDEX formato_incidencia_complemento_incidente_id_key ON public.formato_incidencia_complemento USING btree (incidente_id)`
+- `idx_formato_incidencia_complemento_incidente`: `CREATE INDEX idx_formato_incidencia_complemento_incidente ON public.formato_incidencia_complemento USING btree (incidente_id)`
+
 ### \`formato_n_armas_aseguradas\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -1453,6 +1506,28 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 **Índices**
 
 - `permisos_plantillas_rol_seccion_uq`: `CREATE UNIQUE INDEX permisos_plantillas_rol_seccion_uq ON public.permisos_plantillas USING btree (rol_id, seccion)`
+
+### \`push_subscriptions\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `user_id` | `text` | NO | — |
+| 3 | `endpoint` | `text` | NO | — |
+| 4 | `p256dh` | `text` | NO | — |
+| 5 | `auth` | `text` | NO | — |
+| 6 | `user_agent` | `text` | SÍ | — |
+| 7 | `creado_en` | `timestamp` | NO | `now()` |
+| 8 | `ultimo_uso` | `timestamp` | SÍ | — |
+
+**Foreign Keys**
+
+- `push_subscriptions_user_id_fkey`: `user_id` → `users(id)`
+
+**Índices**
+
+- `idx_push_subscriptions_user`: `CREATE INDEX idx_push_subscriptions_user ON public.push_subscriptions USING btree (user_id)`
+- `push_subscriptions_endpoint_key`: `CREATE UNIQUE INDEX push_subscriptions_endpoint_key ON public.push_subscriptions USING btree (endpoint)`
 
 ### \`rol_asignaciones\`
 

@@ -35,6 +35,7 @@
 | `expediente/vista/[token]` | GET | (Pendiente) |
 | `fiscalia/expediente/subir-foto` | POST | (Pendiente) |
 | `formatos-udai/faltas-administrativas/exportar` | GET | (Pendiente) |
+| `formatos-udai/reportes-incidencias/exportar` | GET | (Pendiente) |
 | `health` | GET | (Pendiente) |
 | `incidentes` | GET | (Pendiente) |
 | `incidentes/[id]` | GET | (Pendiente) |
@@ -129,6 +130,8 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

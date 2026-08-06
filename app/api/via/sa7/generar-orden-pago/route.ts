@@ -105,13 +105,15 @@ export async function POST(req: NextRequest) {
       nombreUsuario: nombre_usuario,
       apellidosUsuario: apellidos_usuario,
       rfc: "",
-      conceptosIds: ["31378"],
-      cantidades: { "31378": 1 },
-      referencias: { "31378": [`${nombre_usuario} ${apellidos_usuario}`] },
+      conceptosIds: ["31381"],
+      cantidades: { "31381": descuento },
+      referencias: { "31381": [`${nombre_usuario} ${apellidos_usuario}`] },
       id_usuario_general: "17336",
       tipo_tramite: "via_v2_cobro_infracciones_online",
       folio,
     };
+
+    console.log(payloadSA7);
 
     console.log(
       `[SA7][${folio}] Payload enviado a SA7:`,

@@ -3,13 +3,21 @@
 import { useState } from 'react'
 import { FileSpreadsheet } from 'lucide-react'
 
-export function BotonExportarExcel() {
+interface BotonExportarExcelProps {
+  href?: string
+  nombreArchivo?: string
+}
+
+export function BotonExportarExcel({
+  href = '/api/formatos-udai/faltas-administrativas/exportar',
+  nombreArchivo,
+}: BotonExportarExcelProps) {
   const [pending, setPending] = useState(false)
 
   const handleExport = async () => {
     setPending(true)
     try {
-      const res = await fetch('/api/formatos-udai/faltas-administrativas/exportar', { method: 'GET' })
+      const res = await fetch(href, { method: 'GET' })
       if (!res.ok) {
         const err = await res.json()
         throw new Error(err.error)
@@ -18,7 +26,7 @@ export function BotonExportarExcel() {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `formato_faltas_administrativas_${new Date().toISOString().split('T')[0]}.xlsx`
+      a.download = nombreArchivo ?? `formato_faltas_administrativas_${new Date().toISOString().split('T')[0]}.xlsx`
       a.click()
       window.URL.revokeObjectURL(url)
     } catch (err) {

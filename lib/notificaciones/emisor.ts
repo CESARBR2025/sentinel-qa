@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { query } from '@/lib/db'
 import { definicionEvento, type ClaveEvento } from './catalogo'
 import { rolesSuscritos, idsRolesPorNombre } from './repository'
+import { enviarPush } from '@/lib/push/service'
 
 export interface DatosEmision {
   mensaje: string
@@ -69,18 +70,29 @@ export async function emitir(evento: ClaveEvento | string, datos: DatosEmision):
       const claveDedup = datos.dedup
         ? `${datos.dedup}:r${fila.rolId ?? ''}:u${fila.userId ?? ''}`
         : null
-      await query(
+      const result = await query<{ id: string }>(
         `INSERT INTO notificaciones_eventos
            (user_id, rol_id, evento, titulo, mensaje, href, severidad,
             entidad_tipo, entidad_id, emitida_por, grupo_id, clave_dedup)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-         ON CONFLICT (clave_dedup) WHERE clave_dedup IS NOT NULL DO NOTHING`,
+         ON CONFLICT (clave_dedup) WHERE clave_dedup IS NOT NULL DO NOTHING
+         RETURNING id`,
         [
           fila.userId, fila.rolId, evento, titulo, datos.mensaje, href, def.severidad,
           datos.entidadTipo ?? null, datos.entidadId ?? null,
           datos.emitidaPor ?? null, grupoId, claveDedup,
         ],
       )
+
+      // Solo push si la fila se insertó de verdad: con `ON CONFLICT ... DO NOTHING`
+      // y una clave de dedup repetida, el INSERT no afecta filas y no debe
+      // re-notificar por push un evento que ya se mandó antes.
+      if (result.rows.length === 0) continue
+
+      // Push va sin `await`: no puede alargar la respuesta del flujo de negocio
+      // que llamó a emitir(). enviarPush() ya nunca lanza (mismo contrato que
+      // esta función), así que no hace falta .catch() adicional aquí.
+      void enviarPush(fila.rolId, fila.userId, { titulo, mensaje: datos.mensaje, href, severidad: def.severidad })
     }
   } catch (e) {
     // Degradación silenciosa: el flujo de negocio ya se completó.

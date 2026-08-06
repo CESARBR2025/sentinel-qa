@@ -983,4 +983,121 @@ en las dos por separado, o la notificación se duplica.
 - **Doble emisión**: si una entidad de negocio tiene dos rutas que hacen el mismo INSERT (server action + endpoint API gemelo), pon `emitir()` en un servicio compartido, no en ambas, o duplicarás la notificación.
 - **Ruido**: instrumentar muchos eventos de golpe puede saturar al usuario. Defaults del catálogo conservadores; la matriz del admin es la válvula de ajuste.
 - **Roles de prueba/basura**: filtra `activo = true` en cualquier query de roles usada por la matriz.
+
+---
+
+# Push a dispositivo (Web Push / VAPID)
+
+Las notificaciones in-app de arriba llegan solo si la pestaña está abierta y
+visible (polling 30s). El **push** replica el mismo evento como notificación
+del sistema operativo al celular/laptop, aun con la pestaña cerrada. Se
+implementa con **Web Push estándar (VAPID)** — **no** Firebase Cloud
+Messaging: el `sw.js` ya era manual y sin dependencias, y el modelo de
+audiencia (rol/usuario resuelto en `emisor.ts`) ya resuelve lo que FCM daría
+vía "topics". No hay cuenta/SDK externo.
+
+## Arquitectura
+
+- **Un solo punto de integración en `emisor.ts`**: dentro de `emitir()`,
+  después del `INSERT` exitoso en `notificaciones_eventos`, se dispara
+  `enviarPush(fila.rolId, fila.userId, payload)` **sin `await`**
+  (fire-and-forget — seguro porque el deploy es un servidor Node persistente
+  `next start`, no serverless; en serverless este supuesto habría que
+  revisarlo). Con esto **todos** los eventos del catálogo heredan push
+  automáticamente — no se toca ningún call site de negocio
+  (`lib/incidentes/`, `lib/fiscalia/`, `lib/agente_juzgado/`, etc.).
+- **`RETURNING id` + `ON CONFLICT ... DO NOTHING`**: el push solo se dispara
+  cuando la fila se insertó de verdad. Los eventos con `dedup` (`despacho.
+  asignado`, `despacho.en_camino`/`en_sitio`, `busqueda_plazo`) no re-notifican
+  por push en un reintento ya deduplicado.
+- **Payload mínimo**: `{ titulo, mensaje, href, severidad }` — mismos campos
+  que la campanita in-app. Sin acciones enriquecidas ni imágenes.
+- **Suscripciones muertas**: un envío que responde 404/410 (usuario revocó el
+  permiso o desinstaló) borra esa suscripción en el momento.
+
+## Tabla `push_subscriptions`
+
+```sql
+CREATE TABLE push_subscriptions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  endpoint text NOT NULL UNIQUE,
+  p256dh text NOT NULL,
+  auth text NOT NULL,
+  user_agent text,
+  creado_en timestamptz NOT NULL DEFAULT NOW(),
+  ultimo_uso timestamptz
+);
+```
+
+- `endpoint` es **único por dispositivo+navegador+origen** (lo asigna el push
+  service del navegador) → `UNIQUE` evita duplicar la misma suscripción si el
+  usuario repite el toggle.
+- Un usuario puede tener **varias filas** (celular + laptop + tablet) — el
+  fan-out de un evento manda a todas.
+- `ON DELETE CASCADE`: borrar un usuario borra sus suscripciones.
+- `user_id` es `text` porque así es `users.id` en better-auth.
+
+## Módulo nuevo `lib/push/` (mismo patrón de capas)
+
+```
+lib/push/
+├── types.ts       — PushSubscriptionRow, PayloadPush, SuscripcionCliente
+├── repository.ts  — guardarSuscripcion, eliminarSuscripcion, tieneSuscripcion, suscripcionesParaAudiencia
+├── service.ts     — enviarPush(rolId, userId, payload): web-push + limpieza 404/410
+└── actions.ts     — 'use server': suscribirPush/desuscribirPush/estadoSuscripcion (reusan sesionConRol())
+```
+
+- `suscripcionesParaAudiencia(rolId, userId)` expande el rol a personas reales
+  (`JOIN users ON rol_id = $1 AND activo = true` O `user_id = $2`) porque el
+  push va por dispositivo, no por rol.
+- `enviarPush` **nunca lanza** (mismo contrato que `emitir()`).
+- `service.ts` configura VAPID en módulo (`setVapidDetails`) con
+  `VAPID_SUBJECT`/`VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY`.
+
+## Cliente
+
+- `hooks/usePushSubscription.ts` — ciclo completo: detección de soporte
+  (`PushManager`/`serviceWorker`), permiso (`Notification.requestPermission`,
+  solo desde un gesto del usuario), alta/baja (`pushManager.subscribe` con
+  `applicationServerKey` = `NEXT_PUBLIC_VAPID_PUBLIC_KEY` decodificada de
+  base64url), estado reflejado contra `estadoSuscripcion()`.
+- `components/notificaciones/TogglePush.tsx` — ítem dentro del dropdown de
+  `CampanillaNotificaciones.tsx` (antes del link "Ver todas"). Estados:
+  activar / desactivar / cargando / denegado / no-soportado (este último se
+  oculta). No se creó pantalla de configuración nueva.
+
+## Service worker (`public/sw.js`)
+
+2 listeners **agregados** (no se tocó la lógica offline `install`/`activate`/
+`fetch`; `VERSION` bump a `centinela-offline-v2` para forzar actualización):
+
+- `push` — `event.data.json()` con fallback a texto plano (un JSON inválido
+  nunca debe tirar excepción dentro del SW). Muestra `showNotification` con
+  `tag: href` (varias notificaciones al mismo destino se colapsan si el
+  dispositivo estuvo offline) y `requireInteraction: severidad === 'critico'`.
+- `notificationclick` — cierra, enfoca/`navigate` a `data.href` si hay una
+  ventana del mismo origen, o `openWindow` si no.
+
+## Variables de entorno (ver `Variables de Entorno.md`)
+
+`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` (par servidor, secreto),
+`NEXT_PUBLIC_VAPID_PUBLIC_KEY` (la misma pública, expuesta al cliente para
+`pushManager.subscribe`), `VAPID_SUBJECT` (mailto: de contacto, requerido por
+el protocolo).
+
+## Limitación de plataforma (no es bug del sistema)
+
+- **Android** (Chrome/Edge/Firefox): push funciona sin instalar la PWA, basta
+  el permiso de notificaciones.
+- **iOS/iPadOS Safari**: push **solo funciona con la PWA instalada al Home
+  Screen** (Safari 16.4+). En pestaña normal Safari no soporta Push API. Por
+  eso la instalabilidad (ver `PWA Offline.md`) es requisito del push en
+  iPhone/iPad — hardware real de oficiales de campo.
+- **Safari desktop** (macOS 13+): soporta push con matices; no se optimiza
+  para ese caso, degrada con gracia (toggle oculto / denegado).
+- **Fue un decisión de arquitectura previa que push NO existía** (modelo
+  serverless); ahora el deploy es Node persistente y sí se puede disparar
+  fire-and-forget. Documentación histórica del "sin push" sigue en `911.md`
+  regla 18 / `Reporte Campo.md` — obsoleta para este punto.
 - Si notificas por **permiso** en vez de por **rol**, cambia `idsRolesPorNombre`/`rolesSuscritos` por su equivalente de permisos — pero perderás la matriz simple evento×rol y ganarás granularidad.

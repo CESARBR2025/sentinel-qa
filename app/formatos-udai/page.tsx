@@ -38,6 +38,13 @@ export default async function FormatosUdaiPage() {
             enlace="/formatos-udai/faltas-administrativas"
             estadisticas={[]}
           />
+          <OptionSquare
+            titulo="Formato Reportes de Incidencias"
+            subtitulo="Bitácora de incidentes y puestas a disposición, en el formato oficial UDAI, exportable a Excel."
+            icono={<FileSpreadsheet size={28} />}
+            enlace="/formatos-udai/reportes-incidencias"
+            estadisticas={[]}
+          />
         </div>
       </main>
 

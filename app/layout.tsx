@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 import SwRegister from "@/components/sw-register";
+import InstalarApp from "@/components/InstalarApp";
 import { Toaster } from "sonner";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ export default function RootLayout({
         <PageTransition />
         {children}
         <SwRegister />
+        <InstalarApp />
         <Toaster
           position="top-right"
           richColors

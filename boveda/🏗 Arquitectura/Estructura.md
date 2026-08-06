@@ -197,7 +197,9 @@
 │   │   │   └── expediente/
 │   │   │       └── subir-foto/
 │   │   ├── formatos-udai/
-│   │   │   └── faltas-administrativas/
+│   │   │   ├── faltas-administrativas/
+│   │   │   │   └── exportar/
+│   │   │   └── reportes-incidencias/
 │   │   │       └── exportar/
 │   │   ├── health/
 │   │   │   └── route.ts
@@ -465,6 +467,8 @@
 │   ├── formatos-udai/
 │   │   ├── faltas-administrativas/
 │   │   │   └── page.tsx
+│   │   ├── reportes-incidencias/
+│   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── incidentes/
 │   │   └── page.tsx
@@ -667,7 +671,9 @@
 │   │   └── TomarCasoModal.tsx
 │   ├── formatos-udai/
 │   │   ├── BotonExportarExcel.tsx
-│   │   └── DetalleFaltaAdministrativaModal.tsx
+│   │   ├── CompletarDatosModal.tsx
+│   │   ├── DetalleFaltaAdministrativaModal.tsx
+│   │   └── DetalleReporteIncidenciaModal.tsx
 │   ├── forms/
 │   │   └── FormKit.tsx
 │   ├── incidentes/
@@ -1010,6 +1016,7 @@
 │   │   │   ├── 0036_fks_faltantes_e_indices.sql
 │   │   │   ├── 0037_datos_biograficos_detenido.sql
 │   │   │   ├── 0038_antecedentes_externos_detenido.sql
+│   │   │   ├── 0039_formato_incidencia_complemento.sql
 │   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
@@ -1050,6 +1057,7 @@
 │   │   ├── service.ts
 │   │   └── types.ts
 │   ├── formatos-udai/
+│   │   ├── actions.ts
 │   │   ├── permisos.ts
 │   │   ├── repository.ts
 │   │   └── types.ts
@@ -1231,7 +1239,10 @@
 │   ├── etapa-2.md
 │   ├── etapa-3.md
 │   ├── etapa-4.md
-│   └── etapa-5.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
 ├── plan-formulario-d1/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1278,6 +1289,9 @@
 │   ├── etapa-7.md
 │   ├── README.md
 │   └── test-qa.md
+├── plan-pwa-push/
+│   ├── 00-contexto.md
+│   └── etapa-1.md
 ├── plan-reporte-detenidos/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1404,6 +1418,8 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
 
 
 

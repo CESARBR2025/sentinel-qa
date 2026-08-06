@@ -1,137 +1,52 @@
-# Etapa 4 — Exportación `.xlsx` (2 hojas, idénticas al oficial)
+# Etapa 4 — Vista de tabla, segmentada Pendientes/Completas, con "Completar datos"
 
-Depende de Etapa 1 (repository). Calcar `app/api/formatos-udai/faltas-administrativas/exportar/route.ts` — mismo patrón de `ExcelJS`, pero **una sola ruta que agrega 2 `worksheet`s** al mismo `Workbook`, en el mismo orden y con los mismos nombres de hoja que el archivo oficial: primero `PUESTAS A DISPOSICION`, después `INCIDENCIA`.
+Depende de Etapa 2 (repository + `actions.ts`) y Etapa 3 (link desde el hub). **Leer `DESIGN.md` completo antes de tocar esta UI.**
 
-## Archivo a crear
+Una sola tabla (no hay tab por hoja del Excel), segmentada por `SegmentPage` en `Pendientes` / `Completas`. El universo ya viene filtrado desde la Etapa 2 (`WHERE inc.estatus IN ('atendido','cerrado_detencion')`) — los incidentes en curso no llegan aquí, no hace falta ningún filtro adicional en esta capa.
 
-`app/api/formatos-udai/reportes-incidencias/exportar/route.ts`
+## Archivos a crear
 
-```ts
-import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { headers } from 'next/headers'
-import ExcelJS from 'exceljs'
-import { tienePermiso } from '@/lib/formatos-udai/permisos'
-import {
-  listarPuestasDisposicionParaExportar,
-  listarReportesIncidenciaParaExportar,
-} from '@/lib/formatos-udai/repository'
-import type { PuestaDisposicionRow, ReporteIncidenciaRow } from '@/lib/formatos-udai/types'
+- `app/formatos-udai/reportes-incidencias/page.tsx`
+- `components/formatos-udai/CompletarDatosModal.tsx`
+- `components/formatos-udai/DetalleReporteIncidenciaModal.tsx`
 
-const HEADERS_PUESTA_DISPOSICION = [
-  'IPH', 'FOLIO 911', 'FECHA EVENTO', 'DIA EVENTO', 'HORA EVENTO', 'DELITO',
-  'ARTICULOS U OBJETOS', 'MODUS', 'CALLE', 'NÚMERO O REFERENCIA', 'COLONIA', 'SECTOR',
-  'RT', 'TURNO', 'CRP', 'AGRUPAMIENTO', 'AFECTADO', 'CALLE AFEC', 'NUMERO AFEC',
-  'COLONIA AFEC', 'MARCA', 'SUBMARCA', 'TIPO', 'COLOR', 'PLACAS', 'ESTADO', 'NIV',
-  'MOTOR', 'MODELO', 'DETENIDO', 'ALIAS', 'FECHA DE NAC', 'EDAD', 'SEXO', 'CALLE DET',
-  'NUMERO DET', 'COLONIA DET', 'LATITUD', 'LONGITUD', 'MUNICIPIO', 'ORIGINARIO',
-  'NUC / CU', 'FUERO', 'FOLIO RND', 'LATITUD2', 'LONGITUD3', 'AGENTE_APREHENSOR',
-  'FECHA DE INGRESO', 'FECHA DE SALIDA', 'OTRO DELITO', 'MASC', 'UMECAS',
-]
+## 1. Página
 
-const HEADERS_INCIDENCIA = [
-  'IPH', 'FOLIO 911', 'FECHA EVENTO', 'FECHA REPORTE2', 'DIA EVENTO', 'HORA REPORTE',
-  'HORA INICIO EVENTO', 'HORA FINAL EVENTO', 'HORA PROMEDIO', 'DELITO',
-  'ARTICULOS U OBJETOS', 'MODUS', 'CALLE', 'NÚMERO O REFERENCIA', 'COLONIA', 'SECTOR',
-  'RT', 'TURNO', 'CRP', 'AFECTADO', 'CALLE AFEC', 'NUMERO AFEC', 'COLONIA AFEC',
-  'TELEFONO AFEC', 'MARCA', 'SUBMARCA', 'TIPO', 'COLOR', 'PLACAS', 'ESTADO', 'NIV',
-  'MOTOR', 'MODELO', 'AP/NUC', 'FUERO', 'LATITUD', 'LONGITUD', 'AGENTE_APREHENSOR',
-]
+Mismo esqueleto que la Etapa 4 de la revisión anterior de este plan (`PageHeader` + `SegmentPage` con tabs `pendientes`/`completas` vía `?tab=` + tabla + `BotonExportarExcel`) — sin cambios de estructura, solo de columnas mostradas. Reusar:
 
-function formatFecha(iso: string | null): string {
-  if (!iso) return ''
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/)
-  if (!m) return iso
-  return `${m[3]}/${m[2]}/${m[1]}`
-}
-
-function formatHora(time: string | null): string {
-  if (!time) return ''
-  return time.slice(0, 5)
-}
-
-function filaPuestaDisposicion(r: PuestaDisposicionRow): unknown[] {
-  return [
-    r.iph ?? '', r.folio911 ?? '', formatFecha(r.fechaEvento), r.diaEvento ?? '', r.horaEvento ?? '',
-    r.delito ?? '', r.articulosObjetos ?? '', r.modus ?? '', r.calle ?? '', r.numeroReferencia ?? '',
-    r.colonia ?? '', r.sector ?? '', r.rt ?? '', r.turno ?? '', r.crp ?? '', r.agrupamiento ?? '',
-    r.afectado ?? '', r.calleAfec ?? '', r.numeroAfec ?? '', r.coloniaAfec ?? '',
-    r.marca ?? '', r.submarca ?? '', r.tipo ?? '', r.color ?? '', r.placas ?? '', r.estado ?? '',
-    r.niv ?? '', r.motor ?? '', r.modelo ?? '',
-    r.detenido ?? '', r.alias ?? '', formatFecha(r.fechaNacimiento), r.edad ?? '', r.sexo ?? '',
-    r.calleDet ?? '', r.numeroDet ?? '', r.coloniaDet ?? '',
-    r.latitud ?? '', r.longitud ?? '', r.municipio ?? '', r.originario ?? '', r.nucCu ?? '',
-    r.fuero ?? '', r.folioRnd ?? '', r.latitud2 ?? '', r.longitud3 ?? '', r.agenteAprehensor ?? '',
-    r.fechaIngreso ?? '', r.fechaSalida ?? '', r.otroDelito ?? '', r.masc ?? '', r.umecas ?? '',
-  ]
-}
-
-function filaIncidencia(r: ReporteIncidenciaRow): unknown[] {
-  return [
-    r.iph ?? '', r.folio911 ?? '', formatFecha(r.fechaEvento), formatFecha(r.fechaReporte2), r.diaEvento ?? '',
-    formatHora(r.horaReporte), formatHora(r.horaInicioEvento), formatHora(r.horaFinalEvento), formatHora(r.horaPromedio),
-    r.delito ?? '', r.articulosObjetos ?? '', r.modus ?? '', r.calle ?? '', r.numeroReferencia ?? '', r.colonia ?? '',
-    r.sector ?? '', r.rt ?? '', r.turno ?? '', r.crp ?? '',
-    r.afectado ?? '', r.calleAfec ?? '', r.numeroAfec ?? '', r.coloniaAfec ?? '', r.telefonoAfec ?? '',
-    r.marca ?? '', r.submarca ?? '', r.tipo ?? '', r.color ?? '', r.placas ?? '', r.estado ?? '', r.niv ?? '',
-    r.motor ?? '', r.modelo ?? '', r.apNuc ?? '', r.fuero ?? '',
-    r.latitud ?? '', r.longitud ?? '', r.agenteAprehensor ?? '',
-  ]
-}
-
-export async function GET() {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  if (!(await tienePermiso(session.user.id, 'formatos_udai', 'ver'))) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
-  }
-
-  const [puestasDisposicion, incidencias] = await Promise.all([
-    listarPuestasDisposicionParaExportar(),
-    listarReportesIncidenciaParaExportar(),
-  ])
-
-  const wb = new ExcelJS.Workbook()
-  wb.creator = 'CENTINELA · SSPM'
-  wb.created = new Date()
-
-  const wsPuesta = wb.addWorksheet('PUESTAS A DISPOSICION')
-  wsPuesta.addRow(HEADERS_PUESTA_DISPOSICION)
-  wsPuesta.getRow(1).font = { bold: true }
-  wsPuesta.getRow(1).height = 30
-  HEADERS_PUESTA_DISPOSICION.forEach((_, i) => { wsPuesta.getColumn(i + 1).width = 20 })
-  puestasDisposicion.forEach(r => wsPuesta.addRow(filaPuestaDisposicion(r)))
-
-  const wsIncidencia = wb.addWorksheet('INCIDENCIA')
-  wsIncidencia.addRow(HEADERS_INCIDENCIA)
-  wsIncidencia.getRow(1).font = { bold: true }
-  wsIncidencia.getRow(1).height = 30
-  HEADERS_INCIDENCIA.forEach((_, i) => { wsIncidencia.getColumn(i + 1).width = 20 })
-  incidencias.forEach(r => wsIncidencia.addRow(filaIncidencia(r)))
-
-  const buffer = await wb.xlsx.writeBuffer()
-  const fecha = new Date().toISOString().split('T')[0]
-
-  return new NextResponse(new Uint8Array(buffer), {
-    headers: {
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': `attachment; filename="FORMATO_INCIDENCIA_${fecha}.xlsx"`,
-    },
-  })
-}
+```tsx
+const registros = await listarReportesIncidencia()
+const pendientes = registros.filter(r => r.estadoCompletitud === 'pendiente')
+const completas = registros.filter(r => r.estadoCompletitud === 'completa')
 ```
 
-## Notas
+Columnas de la tabla (resumen, el detalle completo va en el modal): **Fecha Evento, Folio 911, Delito, Detenido** (`—` si el incidente no tuvo detención), **Sector, Acciones** (`DetalleReporteIncidenciaModal` + `CompletarDatosModal`).
 
-- Los encabezados están copiados **carácter por carácter** del archivo oficial (incluye `Ñ` en `NÚMERO O REFERENCIA`, `/` en `AP/NUC` y `NUC / CU` con espacios alrededor de la barra, `_` en `AGENTE_APREHENSOR`). No "normalizar" ni corregir mayúsculas/acentos — el objetivo es que el archivo exportado sea diff-comparable columna por columna contra el oficial.
-- El orden de hojas (`PUESTAS A DISPOSICION` primero, `INCIDENCIA` después) replica el orden real del archivo original — verificado al abrirlo con `openpyxl` (`wb.sheetnames`).
-- No se aplica el formato `'SI'`/vacío de booleanos que sí usa la exportación de Faltas Administrativas — ninguna columna de estas 2 hojas es booleana.
-- Conectar el `BotonExportarExcel` de la Etapa 3 a `/api/formatos-udai/reportes-incidencias/exportar`.
+`BotonExportarExcel` apunta a `/api/formatos-udai/reportes-incidencias/exportar` (ver generalización con props `href`/`nombreArchivo` ya descrita en la revisión anterior — sigue igual, no cambia).
+
+## 2. `CompletarDatosModal.tsx`
+
+Mismo patrón visual (`createPortal`, overlay) que `DetalleFaltaAdministrativaModal.tsx`, con inputs editables. Llama a `guardarComplementoIncidencia` (`@/lib/formatos-udai/actions`) con `incidenteId: row.id`.
+
+Campos del formulario, agrupados:
+
+**"Hoja Incidencia"**: `rt`, `turno`, `articulosObjetos` (`<textarea>`), `apNuc`, `calleAfec`, `numeroAfec`, `coloniaAfec`, `fueroOverride` (con nota de ayuda: "el FUERO ya se calcula automático a partir del grupo de adscripción; solo llenar si está mal").
+
+**"Hoja Puestas a Disposición" — mostrar solo si el incidente tiene detención** (`row.detenido` no nulo, o mejor: pasar como prop explícita si el repository expone `ofi_hay_detencion`; si no se agregó ese campo al tipo, usar como proxy que `row.agrupamiento`/`row.detenido` ya vengan con algo, o simplemente mostrar la sección siempre pero aclarar en el título "(solo aplica si hubo detención)"): `agrupamiento`, `folioRnd`, `originario`, `nucCu` (con nota: "sugerido desde CURP capturado por Análisis si existe, verificar antes de guardar"), `edad`, `fechaNacimiento`, `sexo`, `calleDet`, `numeroDet`, `coloniaDet`, `marca`, `submarca`, `tipoVehiculo`, `color`, `placas`, `estadoVehiculo`, `niv`, `motor`, `modelo`, `fechaIngreso`/`fechaSalida` (`<input type="datetime-local">`), `otroDelito` (`<textarea>`), `masc`, `umecas` (texto libre).
+
+Botones: **"Guardar progreso"** (`marcarCompleto: false`) y **"Guardar y marcar como completa"** (`marcarCompleto: true`, primario). Mismo comportamiento de `pending`/cierre que se describió en la revisión anterior.
+
+## 3. `DetalleReporteIncidenciaModal.tsx`
+
+Solo lectura, mismo patrón de `Seccion`/`Grid`/`Campo` que `DetalleFaltaAdministrativaModal.tsx`. Secciones: "Identificación y tiempos", "Hecho", "Afectado", "Vehículo", "Detenido" (solo si `row.detenido` u otros campos de esa sección no son todos `null`), "Administrativo (Puesta a Disposición)". Badge de estado (Pendiente/Completa) en el header, junto al `FOLIO 911`.
 
 ## Criterios de aceptación
 
 1. `npx tsc --noEmit` sin errores.
-2. Descargar el `.xlsx` y abrirlo: debe tener exactamente 2 hojas nombradas `PUESTAS A DISPOSICION` e `INCIDENCIA`, con el mismo número de columnas y mismos encabezados (en el mismo orden) que `FORMATO INCIDENCIA.xlsx` original.
-3. Las filas exportadas coinciden en cantidad con `iph_detenidos` (10 en este momento).
+2. `/formatos-udai/reportes-incidencias` carga sin redirect para un usuario con permiso `formatos_udai:ver`.
+3. Aparecen exactamente 7 registros repartidos entre "Pendientes"/"Completas" (todos en "Pendientes" al principio, ninguno tiene fila en `formato_incidencia_complemento` todavía).
+4. Para el incidente `SSPM/INC/2026/007`, el modal de detalle muestra ya resueltos (sin necesidad de captura manual): folio 911, fecha/hora evento, sector, CRP, delito, coordenadas, y datos de vehículo/detenido extraídos del JSON del reporte de campo.
+5. "Completar datos" en ese mismo incidente solo pide los campos que de verdad faltan (RT, TURNO, ARTICULOS U OBJETOS, AP/NUC, etc.) — no todo el formulario en blanco.
+6. Guardar marcando como completa mueve el registro a la pestaña "Completas" sin recargar manualmente.
 
 Detenerse aquí y esperar confirmación antes de pasar a Etapa 5.

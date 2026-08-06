@@ -4,7 +4,7 @@
  *  - /_next/static: cache-first (archivos con hash, inmutables) → la página /offline se ve con estilos.
  *  - Resto: stale-while-revalidate.
  */
-const VERSION = 'centinela-offline-v1';
+const VERSION = 'centinela-offline-v2';
 const OFFLINE_URL = '/offline';
 
 self.addEventListener('install', (event) => {
@@ -79,6 +79,48 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => hit);
       return hit || network;
+    })
+  );
+});
+
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+
+  let payload;
+  try {
+    payload = event.data.json();
+  } catch {
+    payload = { titulo: 'CENTINELA', mensaje: event.data.text() };
+  }
+
+  const { titulo = 'CENTINELA', mensaje = '', href = '/', severidad = 'info' } = payload;
+
+  event.waitUntil(
+    self.registration.showNotification(titulo, {
+      body: mensaje,
+      icon: '/logo_sentinel.png',
+      badge: '/logo_sentinel.png',
+      tag: href || undefined,
+      data: { href: href || '/' },
+      requireInteraction: severidad === 'critico',
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const href = event.notification.data?.href || '/';
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        const url = new URL(client.url);
+        if (url.origin === self.location.origin && 'focus' in client) {
+          client.navigate(href);
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(href);
     })
   );
 });

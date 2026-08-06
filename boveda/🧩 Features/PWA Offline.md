@@ -57,3 +57,48 @@ crash runtime → error.tsx (rutas) / global-error.tsx (layout raíz)
   (JetBrains Mono / Barlow Condensed) no están cacheadas por el navegador.
 - El SW solo aplica a navegadores que soporten service workers (Chrome, Edge,
   Firefox, Safari 11.1+; no en navegadores sin soporte).
+
+---
+
+# Instalación (Add to Home Screen)
+
+Complemento de instalabilidad de la PWA, **distinto** del SW de offline que
+documenta el resto de este archivo — mismo `public/sw.js`, mismo
+`public/manifest.json`, no son sistemas separados. El push a dispositivo
+(ver `Notificaciones.md`) depende de esta instalación en iPhone/iPad.
+
+## Iconos maskable
+
+- `public/icons/icon-maskable-{48,72,96,144,192,384,512}.png` + variantes
+  `icon-{size}.png` generados con `sharp` desde `public/logo_sentinel.png`
+  (script de un solo uso; `sharp` quedó como devDependency para regenerarlos).
+- El recorte aplica la zona segura del 80% central sobre fondo `#1f355a`
+  (`theme_color` del manifest): el logo (154×166, no cuadrado) se centra con
+  `fit: contain` al 80% y se extiende 10% por lado.
+- Por qué: Android recorta los iconos `purpose: any` en un círculo/squircle en
+  el launcher; sin una variante `maskable` dedicada el logo se ve recortado.
+- `public/manifest.json` mantiene los 2 iconos `any` originales intactos y
+  agrega 2 entradas `maskable` (192/512).
+
+## Componente `components/InstalarApp.tsx`
+
+Banner fijo (bottom, `zIndex 9999`, fondo `#1f355a`) montado en
+`app/layout.tsx` junto a `SwRegister`. Aparece solo cuando tiene sentido:
+
+- **Android / desktop**: escucha `beforeinstallprompt` (solo dispara si el
+  navegador considera la PWA instalable: manifest válido + SW registrado +
+  HTTPS) y muestra botón "Instalar" que invoca `prompt()` del evento nativo.
+- **iOS**: Safari no dispara `beforeinstallprompt`; se detecta por user-agent
+  y se muestra un banner de instrucciones manuales ("Compartir → Agregar a
+  inicio"), sin botón.
+- **Descarte**: `sessionStorage` (`pwa-instalar-descartado`) — no es
+  permanente, puede volver a aparecer en la siguiente visita si sigue sin
+  instalar.
+- No se muestra si ya está instalada (`display-mode: standalone` o
+  `navigator.standalone`).
+
+## Requisito para push en iOS
+
+Safari/iPadOS solo permite Push API **con la PWA instalada al Home Screen**
+(iOS 16.4+); en pestaña normal no hay push. Por eso instalabilidad y push van
+juntos en este proyecto.

@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { definicionEvento } from '@/lib/notificaciones/catalogo'
+import { TogglePush } from './TogglePush'
 
 // Cuántas notificaciones se muestran en el dropdown. El resto vive en /notificaciones.
 const MAX_DROPDOWN = 5
@@ -350,6 +351,8 @@ export function CampanillaNotificaciones() {
               )
             })}
           </div>
+
+          <TogglePush />
 
           <Link
             href="/notificaciones"
