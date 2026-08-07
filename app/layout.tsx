@@ -10,9 +10,14 @@ import { cn } from "@/lib/utils";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: "SSPM San Juan del Río - CENTINELA",
+  title: "CENTINELA",
   description: "Sistema de Gestión Seguridad Pública",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo_sentinel.png",
+    shortcut: "/logo_sentinel.png",
+    apple: "/logo_sentinel.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

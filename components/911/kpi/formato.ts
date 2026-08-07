@@ -16,6 +16,16 @@ export const COLOR_ESTATUS: Record<string, string> = {
   cerrado_detencion: '#0f766e',
 }
 
+// Fondo de badge por estatus (pareja con COLOR_ESTATUS, §2 DESIGN.md):
+// el badge usa fondo + color fuerte para legibilidad sobre superficie clara.
+export const BG_ESTATUS: Record<string, string> = {
+  sin_despachar: '#fee2e2',
+  en_despacho: '#ffedd5',
+  en_sitio: '#fef3c7',
+  atendido: '#dcfce7',
+  cerrado_detencion: '#ccfbf1',
+}
+
 export function formatearFechaHora(iso: string): string {
   if (!iso) return '—'
   const d = new Date(iso)

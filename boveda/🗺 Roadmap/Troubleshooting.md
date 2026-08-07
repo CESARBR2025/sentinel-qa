@@ -578,3 +578,19 @@ export function usePolling(fn: () => void, intervalMs: number, activo = true) {
 4. Si el error es de una regla react-hooks/refs sobre `ref.current = ...` en el cuerpo del componente → aplicar `useEffectEvent` (o mover la asignación a un `useEffect` si `useEffectEvent` no aplica). Verificar luego `npx tsc --noEmit` y `npm run build` (el cambio de mecanismo interno de un hook compartido como `usePolling` debe compilar con todos sus consumidores).
 
 **Prevención**: no escribir `ref.current = X` en el cuerpo de componentes/hooks — si el objetivo es "tener la última versión de algo dentro de un effect/interval", usar `useEffectEvent` (React 19+). Las asignaciones a refs van solo dentro de effects, event handlers o callbacks.
+
+---
+
+## Tabla de KPI Incidencias vacía al abrir la vista (falta carga inicial)
+
+**Síntoma**: `/agente_despacho/kpi-incidencias` abre con la tabla mostrando "Sin incidencias en el rango seleccionado" y sin tarjetas KPI, aunque la BD tenga incidentes en las últimas 24 h. Los datos solo aparecen tras presionar "Actualizar" o un preset.
+
+**Causa raíz**: `KpiIncidenciasView` (`components/911/kpi/KpiIncidenciasView.tsx`) inicializaba `incidentes=[]` y `kpi=null`, y `recargar` solo se disparaba desde `FiltrosRangoKpi` (botón Actualizar / presets). **No existía ninguna consulta al montar**, así que el rango default (últimas 24 h) nunca se consultaba automáticamente.
+
+**Fix**: agregar la carga inicial en el montaje:
+```ts
+// El rango default (últimas 24 h) debe consultarse apenas se abre la vista.
+useEffect(() => { recargar(filtrosIniciales()) }, [recargar])
+```
+
+**Verificación**: la query del rango default devuelve datos (`SELECT count(*) FROM incidentes WHERE fecha_hora_inicio >= now() - interval '24 hours'`). Si esto da 0, el problema no es este — revisar el filtro de estatus/canal o el rango de fechas.

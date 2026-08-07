@@ -16,7 +16,7 @@ Ruta: `/agente_despacho/kpi-incidencias`, accesible desde la segunda tarjeta del
 4. **Tabla** — folio, fecha/hora, tipo, prioridad, canal, ubicación, estatus. Fila clickeable → modal de detalle. Las filas sin coordenadas se marcan con un icono (existen en la tabla pero no en los mapas).
 5. **Modal de detalle** — consume `GET /api/incidentes/[id]` (que ya registra audit `VIEW`) y muestra clasificación, reportante, ubicación, narrativa, despacho, personas afectadas, extorsión, alarma escolar y reporte de campo legacy.
 
-**Refresco manual**, con botón "Actualizar" — a diferencia de `TablonDespacho`, aquí no hay polling: el rango puede ser histórico y no tiene sentido repolear.
+**Refresco manual**, con botón "Actualizar" — a diferencia de `TablonDespacho`, aquí no hay polling: el rango puede ser histórico y no tiene sentido repolear. Aun así, **el rango default (últimas 24 h) se consulta automáticamente al montar** (`useEffect` → `recargar(filtrosIniciales())`): antes la vista abría con la tabla vacía hasta que el usuario presionaba un preset o "Actualizar".
 
 ## Regla de coordenadas — el reporte de campo manda
 
@@ -48,6 +48,16 @@ Al momento de construir el módulo: 90 incidentes, 89 con ubicación efectiva (8
 ## Decisiones
 
 - **Permisos**: la página usa `tieneAccesoSeccion(userId, '911_despacho')` — la misma verificación que `/agente_911/despacho`, para no inventar una sección nueva ni requerir migración de BD. La API usa `verificarAccesoIncidentesApi(userId, 'ver')` (sección `incidentes`), igual que el resto de rutas de incidentes.
+- **Migración Apple-style (2026-08-07)**: el módulo completo (`KpiIncidenciasView`, `FiltrosRangoKpi`, `TablaIncidencias`, `ModalDetalleIncidencia`, overlays de mapas, `formato`) migró del lenguaje táctico a `DESIGN.md` (tipografía `var(--apple-font-display)`, sentence-case, radios de §6, superficies planas con `--shadow-card`, badges estatus con pareja `BG_ESTATUS`/`COLOR_ESTATUS`, botones con hover+press y `prefers-reduced-motion`). El wrapper de página quedó con la regla de regreso (`backHref` en `DashboardHeader`). Ver `DESIGN.md §10`.
+- **Rediseño UI/UX (2026-08-07)**: la vista pasó de "pila vertical plana" a dashboard operativo (Enfoque A):
+  - `FiltrosRangoKpi` → **toolbar compacta** (presets pills + botón "Filtros avanzados" con badge de conteo + Actualizar); los filtros avanzados (desde/hasta/estatus/canal/prioridad/tipo) van en un **disclosure colapsable** que se auto-abre al tocar un campo. Colapsado por defecto.
+  - **`KpiResumen`** (nuevo): franja de 4 tarjetas con **count-up** (rAF + easing, respeta `prefers-reduced-motion`): Total (hero), Con ubicación (con barra de %), Desde reporte de campo, Sin coordenadas.
+  - **`ColoniasCalientes`** (nuevo): card con **donut del top 5 de colonias más calientes** (SVG nativo, centro con total, **tooltip custom al hover** con colonia/valor/%) y debajo **tabla con el ranking y contador de incidentes** (top 8, medalla de ranking, chip MapPin, mini-barra). Colores tomados de la **columna Estatus** (`COLOR_ESTATUS` + variantes `BG_ESTATUS` de `formato.ts`), en orden de calor: rojo (más reportes) → teal (menos); cada fila de la tabla hereda su color y variante clara. Deriva el conteo client-side de `incidentes[].colonia` — sin backend nuevo. Reemplazó al panel `BarrasDistribucion` (barras % por estatus/prioridad), para que el agente identifique "áreas calientes" actuales por zona.
+  - Grid desktop **mapa (2fr) + distribución (1fr)** (`minmax(280px,1fr)`), colapsa a 1 col ≤1000px. Altura del mapa 520px.
+  - `TablaIncidencias` → **ordenamiento** (folio/fecha/prioridad/estatus), **búsqueda** (folio/tipo/canal/zona), **paginación** (20/página), header **sticky** (`.kpi-tabla-scroll`, max-height 560px), y **export CSV** client-side (BOM UTF-8 para Excel).
+  - **`EstadosVista`** (nuevo): skeletons shimmer replicando la silueta del layout + empty state con CTA "Ampliar a 7 días".
+  - La nota de "sin coordenadas" dejó de ser texto suelto: pasó a KPI card + pie del panel de mapa.
+  - Modal de detalle: chips de estatus/prioridad/canal bajo el folio.
 - **Loader de Google Maps**: ambos mapas comparten `useMapaIncidencias()`, que usa `useJsApiLoader` con el id `'google-map-script'` (el mismo que el resto del proyecto — otro id provoca "API loaded multiple times"). El array de librerías vive a nivel de módulo: inline se reiniciaría en cada render.
 - **Basemap compartido**: `ESTILOS_MAPA` en `useMapaIncidencias.ts` atenúa el terreno y apaga los POIs comerciales. Lo usan las dos vistas, para que alternar Puntos/Calor no cambie el aspecto del panel y lo único saturado en pantalla sean los datos.
 

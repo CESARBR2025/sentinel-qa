@@ -397,14 +397,16 @@ function Callout({ x, y, onCerrar, children }: { x: number; y: number; onCerrar:
     }}>
       <div style={{
         position: 'relative', background: '#fff',
-        border: '1px solid #e2e8f0', boxShadow: '0 10px 28px -8px rgba(15,23,42,0.35)',
+        border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
+        boxShadow: 'var(--shadow-elevated)',
         padding: '14px 16px',
       }}>
         <button
           type="button" onClick={onCerrar} aria-label="Cerrar"
+          className="kpi-callout-cerrar"
           style={{
             position: 'absolute', top: 8, right: 8, border: 'none', background: 'transparent',
-            cursor: 'pointer', color: '#94a3b8', padding: 2, lineHeight: 0,
+            cursor: 'pointer', color: '#94a3b8', padding: 4, lineHeight: 0, borderRadius: 'var(--radius-md)',
           }}
         >
           <X size={14} />
@@ -423,11 +425,11 @@ function Callout({ x, y, onCerrar, children }: { x: number; y: number; onCerrar:
 
 function FichaIncidente({ inc, onVerDetalle }: { inc: IncidenteGeo; onVerDetalle: (id: string) => void }) {
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', width: 240, paddingRight: 16, color: '#0f172a' }}>
+    <div style={{ fontFamily: 'var(--apple-font-display)', width: 240, paddingRight: 16, color: '#0f172a' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 600 }}>{inc.folio}</span>
+        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600 }}>{inc.folio}</span>
         <span style={{
-          fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 7px',
+          fontSize: 10, fontWeight: 500, padding: '2px 8px', borderRadius: 'var(--radius-full)',
           background: colorPrioridad(inc.prioridadOrden), color: '#fff',
         }}>
           {inc.prioridad ?? 'S/P'}
@@ -442,10 +444,12 @@ function FichaIncidente({ inc, onVerDetalle }: { inc: IncidenteGeo; onVerDetalle
         type="button"
         onClick={() => onVerDetalle(inc.id)}
         style={{
-          marginTop: 10, width: '100%', padding: '7px 10px', border: 'none', cursor: 'pointer',
-          background: '#1f355a', color: '#fff', fontFamily: 'JetBrains Mono, monospace',
-          fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+          marginTop: 10, width: '100%', padding: '9px 14px', border: 'none', cursor: 'pointer',
+          borderRadius: 'var(--radius-lg)', background: '#1f355a', color: '#fff',
+          fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 13,
+          transition: 'all 0.3s ease-out',
         }}
+        className="kpi-map-btn"
       >
         Detalles
       </button>
@@ -456,14 +460,13 @@ function FichaIncidente({ inc, onVerDetalle }: { inc: IncidenteGeo; onVerDetalle
 function ListaZona({ incidentes, onVerDetalle }: { incidentes: IncidenteGeo[]; onVerDetalle: (id: string) => void }) {
   const visibles = incidentes.slice(0, 6)
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', width: 260, paddingRight: 16, color: '#0f172a' }}>
+    <div style={{ fontFamily: 'var(--apple-font-display)', width: 260, paddingRight: 16, color: '#0f172a' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
-        <span style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 24, fontWeight: 800, lineHeight: 1 }}>
+        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, lineHeight: 1 }}>
           {incidentes.length}
         </span>
         <span style={{
-          fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.1em',
-          textTransform: 'uppercase', color: '#64748b',
+          fontFamily: 'var(--apple-font-display)', fontWeight: 500, fontSize: 11, color: '#64748b',
         }}>
           Incidencia{incidentes.length === 1 ? '' : 's'} en {RADIO_CLICK_M} m
         </span>
@@ -476,13 +479,13 @@ function ListaZona({ incidentes, onVerDetalle }: { incidentes: IncidenteGeo[]; o
             onClick={() => onVerDetalle(inc.id)}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
-              padding: '7px 0', border: 'none', borderBottom: '1px solid #f1f5f9',
+              padding: '8px 0', border: 'none', borderBottom: '1px solid #f1f5f9',
               background: 'transparent', cursor: 'pointer', textAlign: 'left', width: '100%',
             }}
           >
             <span style={{ minWidth: 0 }}>
               <span style={{
-                display: 'block', fontFamily: 'JetBrains Mono, monospace', fontSize: 11,
+                display: 'block', fontFamily: 'var(--apple-font-display)', fontSize: 12,
                 fontWeight: 600, color: '#0f172a',
               }}>
                 {inc.folio}
@@ -502,7 +505,7 @@ function ListaZona({ incidentes, onVerDetalle }: { incidentes: IncidenteGeo[]; o
         ))}
       </div>
       {incidentes.length > visibles.length && (
-        <div style={{ fontSize: 11, color: '#94a3b8', paddingTop: 7 }}>
+        <div style={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}>
           Y {incidentes.length - visibles.length} más en esta zona
         </div>
       )}
@@ -515,29 +518,29 @@ function Leyenda({ pico, total }: { pico: number; total: number }) {
     <div style={{
       position: 'absolute', bottom: 14, left: 14, zIndex: 2,
       background: 'rgba(255,255,255,0.94)', border: '1px solid #e2e8f0',
-      padding: '9px 12px', backdropFilter: 'blur(4px)',
-      boxShadow: '0 2px 8px rgba(15,23,42,0.08)',
+      padding: '10px 14px', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+      borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-elevated)',
     }}>
       <div style={{
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.12em',
-        textTransform: 'uppercase', color: '#64748b', marginBottom: 6,
+        fontFamily: 'var(--apple-font-display)', fontWeight: 500, fontSize: 11,
+        color: '#64748b', marginBottom: 8,
       }}>
         Densidad de incidencias
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={etiquetaLeyenda}>Baja</span>
         <span style={{
-          width: 120, height: 8, borderRadius: 2,
+          width: 120, height: 8, borderRadius: 'var(--radius-full)',
           background: 'linear-gradient(90deg,#2563eb,#06b6d4,#84cc16,#eab308,#f97316,#dc2626)',
         }} />
         <span style={etiquetaLeyenda}>Alta</span>
       </div>
       {pico > 0 && (
         <div style={{
-          fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94a3b8',
-          marginTop: 6, letterSpacing: '0.06em',
+          fontFamily: 'var(--apple-font-display)', fontSize: 11, color: '#94a3b8',
+          marginTop: 8,
         }}>
-          {total} PUNTOS · PICO ≈ {pico} EN {RADIO_METROS} M
+          {total} puntos · pico ≈ {pico} en {RADIO_METROS} m
         </div>
       )}
     </div>
@@ -545,6 +548,5 @@ function Leyenda({ pico, total }: { pico: number; total: number }) {
 }
 
 const etiquetaLeyenda: React.CSSProperties = {
-  fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
-  letterSpacing: '0.1em', textTransform: 'uppercase', color: '#94a3b8',
+  fontFamily: 'var(--apple-font-display)', fontWeight: 500, fontSize: 11, color: '#64748b',
 }

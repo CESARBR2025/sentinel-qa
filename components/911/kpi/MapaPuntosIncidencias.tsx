@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { GoogleMap, MarkerF, InfoWindowF } from '@react-google-maps/api'
 import type { IncidenteGeo } from '@/lib/incidentes/types'
 import { useMapaIncidencias, MAPS_API_KEY, CENTRO_SJR, colorPrioridad, ESTILOS_MAPA } from './useMapaIncidencias'
-import { ETIQUETA_ESTATUS, formatearFechaHora, ubicacionTexto } from './formato'
+import { ETIQUETA_ESTATUS, COLOR_ESTATUS, BG_ESTATUS, formatearFechaHora, ubicacionTexto } from './formato'
 
 const OPCIONES_MAPA: google.maps.MapOptions = {
   streetViewControl: false,
@@ -95,10 +95,14 @@ export function MapaPuntosIncidencias({ incidentes, previewId, onPreviewChange, 
           position={{ lat: preview.latitud as number, lng: preview.longitud as number }}
           onCloseClick={() => onPreviewChange(null)}
         >
-          <div style={{ fontFamily: 'Inter, sans-serif', maxWidth: 280, color: '#0f172a' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 600 }}>{preview.folio}</span>
-              <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>
+          <div style={{ fontFamily: 'var(--apple-font-display)', maxWidth: 280, color: '#0f172a' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600 }}>{preview.folio}</span>
+              <span style={{
+                fontSize: 10, fontWeight: 500, padding: '2px 8px', borderRadius: 'var(--radius-full)',
+                color: COLOR_ESTATUS[preview.estatus] ?? '#64748b',
+                background: BG_ESTATUS[preview.estatus] ?? '#f1f5f9',
+              }}>
                 {ETIQUETA_ESTATUS[preview.estatus] ?? preview.estatus}
               </span>
             </div>
@@ -118,10 +122,12 @@ export function MapaPuntosIncidencias({ incidentes, previewId, onPreviewChange, 
               type="button"
               onClick={() => onVerDetalle(preview.id)}
               style={{
-                marginTop: 10, width: '100%', padding: '7px 10px', border: 'none', cursor: 'pointer',
-                background: '#1f355a', color: '#fff', fontFamily: 'JetBrains Mono, monospace',
-                fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
+                marginTop: 10, width: '100%', padding: '9px 14px', border: 'none', cursor: 'pointer',
+                borderRadius: 'var(--radius-lg)', background: '#1f355a', color: '#fff',
+                fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 13,
+                transition: 'all 0.3s ease-out',
               }}
+              className="kpi-map-btn"
             >
               Detalles
             </button>
@@ -147,12 +153,12 @@ function LeyendaPuntos() {
     <div style={{
       position: 'absolute', bottom: 14, left: 14, zIndex: 2,
       background: 'rgba(255,255,255,0.94)', border: '1px solid #e2e8f0',
-      padding: '9px 12px', backdropFilter: 'blur(4px)',
-      boxShadow: '0 2px 8px rgba(15,23,42,0.08)',
+      padding: '10px 14px', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+      borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-elevated)',
     }}>
       <div style={{
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.12em',
-        textTransform: 'uppercase', color: '#64748b', marginBottom: 7,
+        fontFamily: 'var(--apple-font-display)', fontWeight: 500, fontSize: 11,
+        color: '#64748b', marginBottom: 8,
       }}>
         Prioridad
       </div>
@@ -160,18 +166,18 @@ function LeyendaPuntos() {
         {PRIORIDADES_LEYENDA.map(p => (
           <span key={p.orden} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
             <span style={{ width: 9, height: 9, borderRadius: '50%', background: colorPrioridad(p.orden) }} />
-            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, color: '#475569' }}>{p.nombre}</span>
+            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, color: '#475569' }}>{p.nombre}</span>
           </span>
         ))}
       </div>
-      <div style={{ display: 'flex', gap: 12, paddingTop: 7, borderTop: '1px solid #e2e8f0' }}>
+      <div style={{ display: 'flex', gap: 12, paddingTop: 8, borderTop: '1px solid #e2e8f0' }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
           <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#64748b', border: '1.5px solid #fff' }} />
-          <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, color: '#475569' }}>Reporte de campo</span>
+          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, color: '#475569' }}>Reporte de campo</span>
         </span>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
           <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#fff', border: '2px solid #64748b' }} />
-          <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, color: '#475569' }}>Captura 911</span>
+          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, color: '#475569' }}>Captura 911</span>
         </span>
       </div>
     </div>
@@ -182,8 +188,8 @@ export function AvisoMapa({ altura, texto }: { altura: number; texto: string }) 
   return (
     <div style={{
       height: altura, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: '#f1f5f9', border: '1px dashed #cbd5e1', color: '#64748b',
-      fontFamily: 'JetBrains Mono, monospace', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+      background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: 'var(--radius-lg)',
+      color: '#64748b', fontFamily: 'var(--apple-font-display)', fontSize: 13,
     }}>
       {texto}
     </div>

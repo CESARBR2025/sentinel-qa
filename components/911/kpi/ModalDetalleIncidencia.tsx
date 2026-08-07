@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { X, Clock, MapPin, User, Tag, AlertTriangle, BookOpen, Building2, Phone, FileText } from 'lucide-react'
 import type { IncidenteDetalleCompleto } from '@/lib/incidentes/types'
-import { ETIQUETA_ESTATUS, COLOR_ESTATUS, formatearFechaHora } from './formato'
+import { ETIQUETA_ESTATUS, COLOR_ESTATUS, BG_ESTATUS, formatearFechaHora } from './formato'
+import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 
 export function ModalDetalleIncidencia({ incidenteId, onClose }: {
   incidenteId: string
@@ -47,8 +48,10 @@ export function ModalDetalleIncidencia({ incidenteId, onClose }: {
       ref={overlayRef}
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
       style={{
-        position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', zIndex: 1000,
-        display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '32px 16px', overflowY: 'auto',
+        position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)',
+        backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)', zIndex: 1000,
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+        padding: '28px 16px', overflowY: 'auto',
       }}
     >
       <div
@@ -57,57 +60,80 @@ export function ModalDetalleIncidencia({ incidenteId, onClose }: {
         aria-label="Detalle de la incidencia"
         style={{
           background: '#fff', width: '100%', maxWidth: 800,
-          boxShadow: '0 25px 60px -16px rgba(15,23,42,0.5)',
-          borderRadius: 0, overflow: 'hidden',
+          maxHeight: '90vh', display: 'flex', flexDirection: 'column',
+          borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-modal)',
+          overflow: 'hidden',
         }}
       >
         {/* HEADER */}
         <div style={{
-          background: '#f8fafc', borderBottom: '1px solid #e2e8f0',
-          padding: '18px 24px', position: 'sticky', top: 0, zIndex: 1,
+          background: '#fff', borderBottom: '1px solid #e2e8f0',
+          padding: '18px 24px', flexShrink: 0,
         }}>
+          <style dangerouslySetInnerHTML={{ __html: `
+            .kpi-modal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; }
+            .kpi-modal-grid.cols-1 { grid-template-columns: minmax(0, 1fr); }
+            @media (max-width: 720px) { .kpi-modal-grid { grid-template-columns: minmax(0, 1fr); } }
+            .kpi-modal-cerrar { border: 1px solid #e2e8f0; background: #fff; cursor: pointer; color: #64748b; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: var(--radius-lg); transition: all 0.3s ease-out; }
+            .kpi-modal-cerrar:hover { background: #f1f5f9; color: #475569; }
+            .kpi-modal-cerrar:active { transform: scale(0.97); transition: transform 0.12s ease-out, background-color 0.12s ease-out; }
+            @media (prefers-reduced-motion: reduce) { .kpi-modal-cerrar:active { transform: none; } }
+          `}} />
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
               <div style={{
-                width: 40, height: 40, background: '#1f355a', display: 'flex',
+                width: 44, height: 44, borderRadius: 'var(--radius-lg)',
+                background: 'rgba(31,53,90,0.08)', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}>
-                <AlertTriangle size={18} color="#fff" />
+                <AlertTriangle size={20} color="#1f355a" />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{
-                  fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
-                  letterSpacing: '0.16em', textTransform: 'uppercase', color: '#64748b', marginBottom: 2,
-                }}>
-                  Incidencia
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <span style={{
-                    fontFamily: 'Barlow Condensed, sans-serif', fontSize: 26,
-                    fontWeight: 800, letterSpacing: '0.04em', color: '#0f172a',
+                <div style={{ minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: 'var(--apple-font-display)', fontWeight: 500, fontSize: 12,
+                    color: '#64748b', marginBottom: 2,
                   }}>
+                    Incidencia
+                  </div>
+                  <div style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 26, color: '#0f172a' }}>
                     {detalle?.folio ?? '···'}
-                  </span>
+                  </div>
                   {detalle && (
-                    <span style={{
-                      fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.08em',
-                      textTransform: 'uppercase', padding: '3px 10px',
-                      color: COLOR_ESTATUS[detalle.estatus] ?? '#64748b',
-                      border: `1px solid ${COLOR_ESTATUS[detalle.estatus] ?? '#cbd5e1'}`,
-                      background: `${COLOR_ESTATUS[detalle.estatus] ?? '#f1f5f9'}15`,
-                    }}>
-                      {ETIQUETA_ESTATUS[detalle.estatus] ?? detalle.estatus}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 6 }}>
+                      <span style={{
+                        fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 500,
+                        padding: '3px 10px', borderRadius: 'var(--radius-full)',
+                        color: COLOR_ESTATUS[detalle.estatus] ?? '#64748b',
+                        background: BG_ESTATUS[detalle.estatus] ?? '#f1f5f9',
+                      }}>
+                        {ETIQUETA_ESTATUS[detalle.estatus] ?? detalle.estatus}
+                      </span>
+                      {detalle.prioridad && (
+                        <span style={{
+                          fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 500,
+                          padding: '3px 10px', borderRadius: 'var(--radius-full)',
+                          color: colorPorPrioridad(detalle.prioridad).principal,
+                          background: colorPorPrioridad(detalle.prioridad).fondo,
+                        }}>
+                          Prioridad {detalle.prioridad}
+                        </span>
+                      )}
+                      {detalle.canal && (
+                        <span style={{
+                          fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 500,
+                          padding: '3px 10px', borderRadius: 'var(--radius-full)',
+                          color: '#475569', background: '#f1f5f9',
+                        }}>
+                          Canal {detalle.canal}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
-              </div>
             </div>
             <button
               type="button" onClick={onClose} aria-label="Cerrar"
-              style={{
-                border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer',
-                color: '#64748b', padding: 8, display: 'flex', flexShrink: 0,
-              }}
+              className="kpi-modal-cerrar"
             >
               <X size={18} />
             </button>
@@ -115,12 +141,12 @@ export function ModalDetalleIncidencia({ incidenteId, onClose }: {
         </div>
 
         {/* BODY */}
-        <div style={{ padding: '20px 24px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ padding: '20px 24px 28px', display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto' }}>
           {error && (
             <div style={{
               display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px',
               background: '#fef2f2', border: '1px solid #fecaca', color: '#b91c1c',
-              fontFamily: 'Inter, sans-serif', fontSize: 13,
+              borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13,
             }}>
               <AlertTriangle size={16} /> {error}
             </div>
@@ -129,8 +155,7 @@ export function ModalDetalleIncidencia({ incidenteId, onClose }: {
           {!error && !detalle && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 0' }}>
               <div style={{
-                fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8',
-                letterSpacing: '0.14em', textTransform: 'uppercase',
+                fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8',
               }}>
                 Cargando detalle…
               </div>
@@ -258,21 +283,21 @@ export function ModalDetalleIncidencia({ incidenteId, onClose }: {
 function Seccion({ icono, titulo, children }: { icono: React.ReactNode; titulo: string; children: React.ReactNode }) {
   return (
     <div style={{
-      border: '1px solid #e2e8f0', background: '#fafbfc',
+      border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', overflow: 'hidden',
+      background: '#fff', boxShadow: 'var(--shadow-card)',
     }}>
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px',
-        borderBottom: '1px solid #e2e8f0', background: '#fff',
+        display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',
+        borderBottom: '1px solid #e2e8f0', background: '#f8fafc',
       }}>
         <span style={{ color: '#1f355a', display: 'flex' }}>{icono}</span>
         <span style={{
-          fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
-          letterSpacing: '0.18em', textTransform: 'uppercase', color: '#1f355a',
+          fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, color: '#1f355a',
         }}>
           {titulo}
         </span>
       </div>
-      <div style={{ padding: '12px 14px' }}>
+      <div style={{ padding: '16px' }}>
         {children}
       </div>
     </div>
@@ -281,10 +306,7 @@ function Seccion({ icono, titulo, children }: { icono: React.ReactNode; titulo: 
 
 function Grid({ cols = 2, children }: { cols?: number; children: React.ReactNode }) {
   return (
-    <div style={{
-      display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-      gap: '10px 20px',
-    }}>
+    <div className={`kpi-modal-grid${cols === 1 ? ' cols-1' : ''}`}>
       {children}
     </div>
   )
@@ -294,13 +316,13 @@ function Campo({ etiqueta, valor }: { etiqueta: string; valor: string | null | u
   return (
     <div style={{ minWidth: 0 }}>
       <div style={{
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 8, letterSpacing: '0.12em',
-        textTransform: 'uppercase', color: '#94a3b8', marginBottom: 3,
+        fontFamily: 'var(--apple-font-display)', fontWeight: 500, fontSize: 11,
+        color: '#94a3b8', marginBottom: 4,
       }}>
         {etiqueta}
       </div>
       <div style={{
-        fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#0f172a',
+        fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#0f172a',
         whiteSpace: 'pre-wrap', wordWrap: 'break-word', lineHeight: 1.5,
       }}>
         {valor?.trim() ? valor : <span style={{ color: '#cbd5e1' }}>—</span>}
