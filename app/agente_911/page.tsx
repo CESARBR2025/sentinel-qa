@@ -4,9 +4,10 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Users, BarChart3, ChevronRight } from 'lucide-react'
 import { verificarRolAgente911 } from '@/lib/agente_911/service'
-import { getStats } from '@/lib/911/service'
+import { getStats, getStatsPorTipo } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader } from '@/components/partials/PageHeader'
+import { KpiTiposIncidencias } from '@/components/911/KpiTiposIncidencias'
 import { getUserWithRole, obtenerHubRol } from '@/lib/auth/helpers'
 import { APP_VERSION } from "@/lib/constants"
 
@@ -26,7 +27,19 @@ export default async function Agente911DashboardPage() {
   const hoy = new Date()
   hoy.setHours(0, 0, 0, 0)
   const hoyISO = hoy.toISOString()
-  const stats = await getStats(hoyISO)
+
+  const hace7Dias = new Date(hoy)
+  hace7Dias.setDate(hace7Dias.getDate() - 6)
+  hace7Dias.setHours(0, 0, 0, 0)
+
+  const hace30Dias = new Date(hoy)
+  hace30Dias.setDate(hace30Dias.getDate() - 29)
+  hace30Dias.setHours(0, 0, 0, 0)
+
+  const [stats, statsPorTipo] = await Promise.all([
+    getStats(hoyISO),
+    getStatsPorTipo(hoyISO, hace7Dias.toISOString(), hace30Dias.toISOString()),
+  ])
 
   const hoy911 = stats.channels.find(c => c.canal === '911')?.count ?? 0
 
@@ -134,19 +147,9 @@ export default async function Agente911DashboardPage() {
           subtitle={`${user.name} ${user.apellido ?? ''} · central de atención y despacho`}
         />
 
-        {/* KPI único: resumen del día */}
+        {/* KPI: incidencias por tipo con segmento día/semana/mes */}
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)' }}>
-          <div className="desp-kpi-head">
-            <span className="desp-kpi-title">Resumen del día</span>
-            <span className="desp-kpi-date">
-              {hoy.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
-            </span>
-          </div>
-          <div className="desp-kpi-stats">
-            <StatBloque etiqueta="Incidentes Hoy" valor={stats.hoy} />
-            <StatBloque etiqueta="Vía 911" valor={hoy911} />
-            <StatBloque etiqueta="Histórico" valor={stats.total} />
-          </div>
+          <KpiTiposIncidencias stats={statsPorTipo} />
         </div>
 
         {/* Cards */}
@@ -213,15 +216,6 @@ export default async function Agente911DashboardPage() {
         </div>
 
       </div>
-    </div>
-  )
-}
-
-function StatBloque({ etiqueta, valor }: { etiqueta: string; valor: number }) {
-  return (
-    <div className="stat-bloque">
-      <div className="stat-bloque-label">{etiqueta}</div>
-      <div className="stat-bloque-value">{valor}</div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { query } from '@/lib/db'
-import type { CatalogoItem, IncidenteDetalle, IncidenteStats, CatalogosJerarquicos, SubtipoEmergencia, IncidenteCatalogo, Dependencia } from './types'
+import type { CatalogoItem, IncidenteDetalle, IncidenteStats, CatalogosJerarquicos, SubtipoEmergencia, IncidenteCatalogo, Dependencia, StatsPorTipo } from './types'
 import { rowToCatalogo, rowToIncidenteDetalle } from './mapper'
 
 function rowToSubtipo(row: Record<string, unknown>): SubtipoEmergencia {
@@ -58,6 +58,31 @@ export async function obtenerStats(hoyISO: string): Promise<IncidenteStats> {
     enDespacho: enDespacho.rows[0].count,
     channels: channelsResult.rows,
   }
+}
+
+export async function obtenerStatsPorTipo(
+  desdeDiaISO: string,
+  desdeSemanaISO: string,
+  desdeMesISO: string,
+): Promise<StatsPorTipo[]> {
+  const result = await query<{ tipo_reporte: string; dia: number; semana: number; mes: number }>(
+    `SELECT
+       COALESCE(tipo_reporte, 'normal') AS tipo_reporte,
+       COUNT(*) FILTER (WHERE fecha_hora_inicio >= $1)::int AS dia,
+       COUNT(*) FILTER (WHERE fecha_hora_inicio >= $2)::int AS semana,
+       COUNT(*) FILTER (WHERE fecha_hora_inicio >= $3)::int AS mes
+     FROM incidentes
+     WHERE fecha_hora_inicio >= $3
+     GROUP BY 1
+     ORDER BY 1`,
+    [desdeDiaISO, desdeSemanaISO, desdeMesISO],
+  )
+  return result.rows.map(r => ({
+    tipoReporte: String(r.tipo_reporte),
+    dia: r.dia,
+    semana: r.semana,
+    mes: r.mes,
+  }))
 }
 
 export async function listarIncidentes(

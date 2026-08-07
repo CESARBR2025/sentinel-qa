@@ -66,6 +66,13 @@ export interface IncidenteStats {
   channels: { canal: string; count: number }[]
 }
 
+export interface StatsPorTipo {
+  tipoReporte: string
+  dia: number
+  semana: number
+  mes: number
+}
+
 export interface CatalogoItem {
   id: number
   nombre: string
