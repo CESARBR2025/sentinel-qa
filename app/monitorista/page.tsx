@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
-import { Camera, History, User, Video } from 'lucide-react'
+import { Camera, History, Video } from 'lucide-react'
 import { obtenerPermisosUsuario } from '@/lib/monitorista/permisos'
 import { getMonitoristaStats } from '@/lib/monitorista/repository'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -30,76 +30,120 @@ export default async function MonitoristaHubPage() {
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', background: 'var(--color-background)', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+      <style>{`
+        .card-o {
+          background: var(--apple-glass-bg); backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--apple-glass-border); padding: 32px;
+          text-decoration: none; transition: all 0.3s ease-out;
+          display: flex; flex-direction: column; min-height: 280px; height: 100%;
+          box-shadow: var(--apple-shadow-glass); cursor: pointer;
+          position: relative; overflow: hidden; width: 100%;
+          border-radius: var(--radius-xl);
+        }
+        .card-o:hover { border-color: rgba(31, 53, 90, 0.25); transform: translateY(-2px); box-shadow: var(--apple-shadow-glass-hover); }
+        .card-o:active {
+          transform: scale(0.97); box-shadow: var(--apple-shadow-glass); border-color: rgba(31, 53, 90, 0.25);
+          transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .12s ease-out;
+        }
+        .card-o:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+        .co-icon { transition: all 0.3s ease; }
+        .co-footer { display: flex; gap: 24; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+        .co-stat-label { font-family: var(--apple-font-display); font-size: 11px; font-weight: 500; color: #64748b; text-transform: none; letter-spacing: normal; margin-bottom: 4px; }
+        .co-link {
+          margin-top: 20px; font-family: var(--apple-font-display); font-size: 13px; font-weight: 600;
+          color: #64748b; display: flex; align-items: center; gap: 8px; letter-spacing: normal; text-transform: none;
+        }
+        .card-o:hover .co-link { color: #1f355a; }
+        .co-link-arrow { transition: transform 0.3s ease; }
+        .card-o:hover .co-link-arrow { transform: translateX(4px); }
+        @media (prefers-reduced-motion: reduce) {
+          .card-o, .card-o:hover, .card-o:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
+          .card-o:hover .co-icon, .card-o:active .co-icon { transform: none; }
+          .co-link-arrow { transition: none; }
+          .card-o:hover .co-link-arrow { transform: none; }
+        }
+      `}</style>
+
       <DashboardHeader user={user as { name: string; apellido?: string; email: string }} roleLabel="Monitorista" backHref={backHref} />
 
-      <main className="pad-dashboard" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 40 }}>
+      <main className="pad-dashboard" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Panel"
           accent="Monitorista"
-          subtitle={`${user.name} ${user.apellido ?? ''} · centro de monitoreo: solicitudes de evidencia, detenidos e incidentes de cámara`}
+          subtitle={`${user.name} ${user.apellido ?? ''} · centro de monitoreo: solicitudes de evidencia e incidentes de cámara`}
         />
 
         <div className="cat-cards-grid">
-          {permisos.solicitudes.puede_ver && <Link href="/monitorista/solicitudes" style={{ textDecoration: 'none' }}>
-            <div style={cardStyle}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                <Camera size={28} color="#1f355a" />
-                <span style={onlineStyle}>ONLINE</span>
+          {permisos.solicitudes.puede_ver && <Link href="/monitorista/solicitudes" className="card-o">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <Camera size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Solicitudes de Evidencia</div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Denuncias D1 · Incidentes</div>
-              <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Pendientes</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{d1Pend.length + stats.solsPend}</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{d1Comp.length + stats.solsComp}</div></div>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Evidencia
               </div>
-              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#1f355a', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Solicitudes de Evidencia
+              </h3>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Denuncias D1 e incidentes solicitados por Fiscalía y Juzgado
+              </p>
+            </div>
+            <div className="co-footer">
+              <div><div className="co-stat-label">Pendientes</div><div style={{ ...coStatValue, color: '#b45309' }}>{d1Pend.length + stats.solsPend}</div></div>
+              <div><div className="co-stat-label">Completadas</div><div style={{ ...coStatValue, color: '#16a34a' }}>{d1Comp.length + stats.solsComp}</div></div>
+            </div>
+            <div className="co-link">Acceder <span className="co-link-arrow">→</span></div>
           </Link>}
 
-          {permisos.detenidos.puede_ver && <Link href="/monitorista/detenidos" style={{ textDecoration: 'none' }}>
-            <div style={cardStyle}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                <User size={28} color="#059669" />
-                <span style={onlineStyle}>ONLINE</span>
+          {permisos.incidentes_camara.puede_ver && <Link href="/monitorista/incidentes-camara" className="card-o">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <Video size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Fotos de Detenidos</div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Solicitar y revisar evidencia de Fiscalía/Juzgado</div>
-              <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Enviados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#b45309' }}>{stats.detPend}</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Completados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#15803d' }}>{stats.detComp}</div></div>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Cámara
               </div>
-              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#1f355a', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Reporte de Incidente en Cámara
+              </h3>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Registro de incidentes captados en cámara durante el turno
+              </p>
+            </div>
+            <div className="co-footer">
+              <div><div className="co-stat-label">Personas</div><div style={{ ...coStatValue, color: '#1f355a' }}>{stats.icStats?.personas ?? 0}</div></div>
+              <div><div className="co-stat-label">Vehículos</div><div style={{ ...coStatValue, color: '#1f355a' }}>{stats.icStats?.vehiculos ?? 0}</div></div>
+            </div>
+            <div className="co-link">Acceder <span className="co-link-arrow">→</span></div>
           </Link>}
 
-          {permisos.incidentes_camara.puede_ver && <Link href="/monitorista/incidentes-camara" style={{ textDecoration: 'none' }}>
-            <div style={cardStyle}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                <Video size={28} color="#7c3aed" />
-                <span style={onlineStyle}>ONLINE</span>
+          {permisos.historial.puede_ver && <Link href="/monitorista/historial" className="card-o">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <History size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Reporte Incidente en Cámara</div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Registro de incidentes captados en camara en turno</div>
-              <div style={{ display: 'flex', gap: 24, paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Personas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{stats.icStats?.personas ?? 0}</div></div>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Vehículos</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#7c3aed' }}>{stats.icStats?.vehiculos ?? 0}</div></div>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Historial
               </div>
-              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>ACCEDER →</div>
             </div>
-          </Link>}
-
-          {permisos.historial.puede_ver && <Link href="/monitorista/historial" style={{ textDecoration: 'none' }}>
-            <div style={cardStyle}>
-              <div style={{ marginBottom: 20 }}><History size={28} color="#64748b" /></div>
-              <div style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', marginBottom: 8 }}>Historial</div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b', textTransform: 'uppercase', marginBottom: 20 }}>Actividad registrada</div>
-              <div style={{ paddingTop: 16, borderTop: '1px solid #e2e8f0' }}>
-                <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase' }}>Registros</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 24, fontWeight: 700, color: '#0f172a' }}>{stats.histCount}</div></div>
-              </div>
-              <div style={{ marginTop: 20, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 8 }}>VER →</div>
+            <div style={{ flexGrow: 1 }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
+                Historial
+              </h3>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+                Actividad registrada por el centro de monitoreo
+              </p>
             </div>
+            <div className="co-footer">
+              <div><div className="co-stat-label">Registros</div><div style={coStatValue}>{stats.histCount}</div></div>
+            </div>
+            <div className="co-link">Ver <span className="co-link-arrow">→</span></div>
           </Link>}
         </div>
 
@@ -109,5 +153,10 @@ export default async function MonitoristaHubPage() {
   )
 }
 
-const cardStyle: import('react').CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, cursor: 'pointer', borderRadius: 2 }
-const onlineStyle: import('react').CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 10, color: '#059669', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }
+const coStatValue: import('react').CSSProperties = {
+  fontFamily: 'var(--apple-font-display)',
+  fontSize: 24,
+  fontWeight: 600,
+  color: '#0f172a',
+  lineHeight: 1.1,
+}

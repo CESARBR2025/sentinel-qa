@@ -69,15 +69,14 @@ export const MAPA_SECCIONES: Record<string, string[]> = {
   '/api/formatos-udai': ['formatos_udai'],
 
   // ── Monitorista / cámaras ───────────────────────────────────────────────
-  '/monitorista/detenidos': ['detenidos'],
   '/monitorista/historial': ['historial'],
   '/monitorista/incidentes-camara': ['incidentes_camara'],
   '/monitorista/solicitudes': ['solicitudes'],
   '/monitorista/denuncias': ['solicitudes'],
-  '/monitorista': ['solicitudes', 'detenidos', 'incidentes_camara', 'historial'],
-  '/api/detenidos': ['detenidos'],
-  '/api/registro-detenidos': ['detenidos'],
-  '/api/monitorista': ['solicitudes', 'detenidos', 'incidentes_camara', 'historial'],
+  '/monitorista': ['solicitudes', 'incidentes_camara', 'historial'],
+  '/api/detenidos': ['analisis'],
+  '/api/registro-detenidos': ['analisis'],
+  '/api/monitorista': ['solicitudes', 'incidentes_camara', 'historial'],
 
   // ── Auxiliar / Corralón ─────────────────────────────────────────────────
   '/auxiliar/checklist': ['auxiliar_checklist'],

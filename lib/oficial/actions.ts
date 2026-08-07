@@ -5,7 +5,7 @@ import { headers }        from 'next/headers'
 import { redirect }       from 'next/navigation'
 import { crearReporte }   from './service'
 import { revalidatePath } from 'next/cache'
-import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
+import { tryActionRaw, ValidationError, NotFoundError } from '@/lib/error-handler'
 import { actualizarPatrullaOficial, actualizarTelefonoOficial, actualizarUbicacionOficial, telefonoExiste } from './repository'
 import { emitir } from '@/lib/notificaciones/emisor'
 
@@ -13,7 +13,7 @@ export async function crearReporteCampoOficial(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId, hayDetenidos, destino } =
+  const { reporteId, quiereDenuncia, calle, colonia, latitud, longitud, oficialId, destino } =
     await tryActionRaw(async () => crearReporte(session.user.id, formData))
 
   revalidatePath('/oficial')
@@ -34,10 +34,6 @@ export async function crearReporteCampoOficial(formData: FormData) {
       destino:  destino  ?? '',
     })
     redirect(`/denuncia/nuevo?${params}`)
-  }
-
-  if (hayDetenidos) {
-    redirect(`/oficial/reportes/${reporteId}/fotos`)
   }
 
   redirect('/oficial?exito=1')

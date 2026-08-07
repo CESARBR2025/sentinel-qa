@@ -6,6 +6,36 @@
 
 ## 2026 — Agosto
 
+### — KPIs Generales: card en /dashboard + Panel 911 (SSPM) (2026-08-07)
+Primer bloque del dashboard de KPIs para el admin de SSPM. Analiza los 3 flujos de reportes 911 (normal, alarma escolar, extorsión) por rango de fecha/hora.
+- **Card "KPIs Generales"** en `/dashboard` (sección "SSPM General", solo `esAdmin`) → `/dashboard/kpis`, con `SegmentPage` nivel 1 **SSPM / Infracciones** (Infracciones = placeholder "Próximamente") y nivel 2 dentro de SSPM el tab **911**.
+- **Panel 911** (`components/911/kpi-generales/Panel911.tsx` + `FiltroRango911.tsx`): filtro Apple-style con presets 24h/7d/30d/Hoy + rango custom `datetime-local` + refresco manual (sin polling, patrón de `FiltrosRangoKpi` reimplementado en Apple-style). 5 secciones: resumen por tipo/canal, atención y despacho, tiempos de respuesta, alarmas escolares, extorsión (tendencia diaria con barras CSS, sin librería de charts). Enlace al mapa de `/agente_despacho/kpi-incidencias` (no se duplica).
+- **Queries nuevas** en `lib/911/repository.ts` (`obtenerResumenPorTipoYCanal`, `obtenerTiemposRespuesta911`, `obtenerKpiAlarmaEscolar`, `obtenerKpiExtorsion`) + service `obtenerKpisGenerales911` que reusa `obtenerKpiIncidencias` de `lib/incidentes`. API `GET /api/incidentes/kpi-911-generales` admin-only.
+- **Hallazgo BD real**: `incidente_alarma_escolar` no tiene `hora_canalizacion`/`hora_arribo` — se derivan de despacho (`fecha_hora_despacho` + `MIN(hora_llegada)` con `es_refuerzo=false`), como `obtenerAlarmasEscolaresDetalle`. El % de canalización de extorsión reusa el JOIN de unidad real de `obtenerExtorsionesDetalle` (default `'C4'`).
+- **Estados de los stats KPI**: cards glass individuales por métrica (`.kpi-stat`: `--apple-glass-bg` + blur, `--radius-xl`, sombra glass, número 44px con `tabular-nums`), alineadas al estilo de las cards de `/dashboard` (`module-cards.tsx`); en móvil colapsan a una sola fila de columnas iguales (densidad nativa §8).
+- **Cards de `/dashboard`** ("Catálogos" / "KPIs Generales" en `sspm-general.tsx`): alineadas al patrón module-card (icono lucide 24px con `transform-origin: top left` en el scale hover, título 26px, CTA "Acceder →", hover/press por CSS sin hooks, sin barra de color superior, contenedor `.cat-cards-grid`).
+- **Documentación**: nuevo patrón "Cards individuales — anatomía interna" en `DESIGN.md` §4 (icono → título → sub → CTA, tokens, estados de motion, reglas server/client y prohibiciones).
+- Typecheck, lint (0 errores) y build OK; rutas `/dashboard/kpis` y `/api/incidentes/kpi-911-generales` compiladas; verificado con sesión admin real (API 200, páginas 200, gate no-admin redirige).
+
+### — Eliminación completa del flujo "Fotos de Detenidos" (2026-08-07)
+Flujo descartado por decisión del usuario; se removió **todo** el workflow (no solo la card de monitorista), verificado previamente con un análisis de usos:
+- **Monitorista**: card del hub, páginas `/monitorista/detenidos{/,[id],/nueva}`, componentes `BatchEnvioFotos`, `CardEnvioFoto`, `EditarCampoDetenido`, `BuscadorEvento`, `SubirFotoDetenido`, `TablaDetenidos`/`AccionesDetenido` (código muerto), APIs `/api/monitorista/detenidos/[id]/{subir-foto,enviar-foto,editar-campo}`, `lib/monitorista/detenido-service.ts` y funciones de detenidos de `repository/service/mapper/types`.
+- **Oficial**: página `/oficial/reportes/[id]/fotos` y el `redirect` en `lib/oficial/actions.ts` (al cerrar reporte con detenido ahora va directo a `/oficial?exito=1`).
+- **Fiscalía/Juzgado**: páginas `/fiscalia/detenidos*` y `/agente_juzgado/detenidos*`, `components/{fiscalia,agente_juzgado}/SubirFotoDetenido.tsx`, `components/FilaDetenidoRol.tsx`, `lib/detenidos-compartido.ts`, `/api/expediente/subir-foto-detenido`. Se quitaron las cards de "Fotos de Detenidos" de sus hubs.
+- **Notificaciones**: se eliminaron los eventos `incidente.cerrado_detencion`, `foto.solicitada`, `foto.rechazada` (nunca se emitían). Se conservan `evidencia.solicitada`/`evidencia.entregada` (flujo de solicitudes).
+- **Permisos**: se eliminó la sección `detenidos` (permisos.ts/registro.ts/mapa-secciones.ts). Las APIs de Análisis IPH/ficha (`/api/detenidos/*`, `/api/registro-detenidos/registrar`) se re-gatearon de `monitorista('detenidos')` a `analisis` (siguen usando el repository de monitorista).
+- **Se conserva**: flujo de solicitudes de evidencia, incidentes cámara, historial, módulo Análisis (IPH/ficha), `lib/reporte-detenidos` + `/reporte-detenidos` (PPT vivo, lee `evidencias_detenido`), `/api/fiscalia/expediente/subir-foto` + `FotosExpedienteSection` (expediente de Fiscalía). Tablas `solicitud_fotos`/`evidencias_detenido` quedan sin escritores (datos conservados).
+- Typecheck, lint (0 errores), build y `check:responsive` (0 nuevas) verificados.
+
+### — Migración Apple-style del módulo Monitorista (2026-08-07)
+- **Hub `app/monitorista/page.tsx`**: cards `.card-o` glass (blur + `--apple-shadow-glass` + radius `--radius-xl`), hover/press + `prefers-reduced-motion`, un solo acento `#1f355a` (antes mezclaba `#059669`/`#7c3aed`), tipografía `var(--apple-font-display)` sentence-case. Se eliminó el `@import` de Google Fonts (Barlow Condensed/JetBrains Mono) y los badges "ONLINE"/"ACCEDER →" tácticos.
+- **Páginas destino de las cards** (`solicitudes`, `detenidos`, `incidentes-camara`, `historial`): quitaron `@import` táctico, fondo raíz `var(--color-background)`, tipografía Apple, botón de regreso vía `backHref` en `DashboardHeader` (patrón nativo) en vez del `PageHeaderLink "← Panel"`, y StatCards tácticos → panel KPI flat (`.kpi-panel` + `.stat-bloque` con divisores, patrón `StatBloque` de `agente_despacho`).
+- **`components/monitorista/BandejaSolicitudes.tsx`**: tabs a `SegmentPage` pill; badges de estado y origen → pill `--radius-full` con tokens; botones Subir/Completar/Ver → clases `.mon-btn-*` (radius `--radius-lg`, sentence-case, hover/press).
+- **`components/monitorista/FilaIncidenteCamara.tsx`**: celdas y chip de turno → Apple (pill `--radius-full`).
+- **`components/partials/SegmentPage.tsx`**: migrado a pill Apple-style según DESIGN.md §4 (antes Barlow Condensed/uppercase con borde inferior). API sin cambios. Impacta a `components/fiscalia/TabSolicitudes.tsx` y `app/formatos-udai/reportes-incidencias/page.tsx`.
+- **Pendiente**: sub-páginas (`solicitudes/[id]`, `detenidos/[id]`, `detenidos/nueva`, `incidentes-camara/nuevo`, `incidentes-camara/[id]`, `denuncias/[id]`) y componentes restantes (`BatchEnvioFotos`, `SubirFotoDetenido`, `GaleriaEvidencias`, `CardEnvioFoto`, `SubirEvidenciaModal`, `AccionesDetenido`, `EditarCampoDetenido`, `BuscadorEvento`, `BotonSubirDenuncia`).
+- Typecheck, lint (0 errores) y build OK.
+
 ### — Reporte de Números Telefónicos accesible desde el panel Agente 911 (2026-08-06)
 - **Card "Reportes"** en `app/agente_911/page.tsx` → `agente_911/reportes` → card "Reporte de Números Telefónicos" → `agente_911/reportes/numeros`.
 - **Página de tabla** (`app/agente_911/reportes/numeros/page.tsx`): título "Reporte de Números Telefónicos" + fecha de reporte, filtro por rango de fechas (`components/911/reportes/FiltroRangoFechas.tsx`, URL params `from`/`to`), tabla de 4 columnas (Folio / Número de teléfono reportado / Fecha de reporte / Tipo de incidencia, `TablaNumerosTelefonicos.tsx`) y botón Exportar a Excel.

@@ -23,9 +23,9 @@ export function FilaIncidenteCamara({
   }
 }) {
   const turnoLabel: Record<string, string> = {
-    MATUTINO: '07-15 HRS',
-    VESPERTINO: '15-22 HRS',
-    NOCTURNO: '22-07 HRS',
+    MATUTINO: '07-15 hrs',
+    VESPERTINO: '15-22 hrs',
+    NOCTURNO: '22-07 hrs',
   }
 
   function formatFecha(raw: string): string {
@@ -42,7 +42,7 @@ export function FilaIncidenteCamara({
       onMouseLeave={e => (e.currentTarget.style.background = '')}
     >
       <Td>{formatFecha(registro.fecha)}</Td>
-      <Td><span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, background: '#f1f5f9', padding: '2px 8px', borderRadius: 2, color: '#475569' }}>{turnoLabel[registro.turno] || registro.turno}</span></Td>
+      <Td><span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, background: '#f1f5f9', padding: '2px 10px', borderRadius: 'var(--radius-full)', color: '#475569' }}>{turnoLabel[registro.turno] || registro.turno}</span></Td>
       <Td>{registro.personasSinNovedad}</Td>
       <Td>{registro.personasConAntecedentes}</Td>
       <Td>{registro.vehiculosRevisar}</Td>
@@ -59,5 +59,5 @@ export function FilaIncidenteCamara({
 }
 
 function Td({ children }: { children: React.ReactNode }) {
-  return <td style={{ fontFamily: 'Inter', fontSize: 12, color: '#1e293b', padding: '10px 12px' }}>{children}</td>
+  return <td style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#1e293b', padding: '10px 12px' }}>{children}</td>
 }

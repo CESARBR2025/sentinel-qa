@@ -1,7 +1,7 @@
 import type {
   SolicitudEvidencia, Evidencia, HistorialEntry, DenunciaDetalle,
-  SolicitudEvidenciaJson, EvidenciaArchivo, ReporteDetenido, SolicitudFoto,
-  Dependencia, IncidenteCamara, Turno, IphDetenido, EvidenciaDetenido,
+  SolicitudEvidenciaJson, EvidenciaArchivo,
+  IncidenteCamara, Turno, IphDetenido,
   PrellenadoCompleto,
 } from './types'
 
@@ -119,59 +119,6 @@ export function rowToEvidenciaArchivo(row: Record<string, unknown>): EvidenciaAr
   }
 }
 
-export function rowToDependencia(row: Record<string, unknown>): Dependencia {
-  return {
-    id: Number(row.id),
-    clave: str(row.clave) ?? '',
-    nombre: str(row.nombre) ?? '',
-  }
-}
-
-export function rowToSolicitudFotos(rows: Record<string, unknown>[]): SolicitudFoto[] {
-  return rows.map(r => ({
-    id: str(r.id) ?? '',
-    tipoFoto: str(r.tipo_foto) ?? '',
-    enviadoA: str(r.enviado_a),
-    estado: str(r.estado) ?? '',
-  }))
-}
-
-function parseDetenidos(raw: unknown): string {
-  if (typeof raw === 'string') {
-    try {
-      const arr = JSON.parse(raw)
-      return Array.isArray(arr) && arr.length > 0 ? (arr[0].nombre || 'Sin nombre') : 'Sin nombre'
-    } catch {
-      return str(raw) || 'Sin nombre'
-    }
-  }
-  if (Array.isArray(raw) && raw.length > 0) return raw[0].nombre || 'Sin nombre'
-  return 'Sin nombre'
-}
-
-export function rowToReporteDetenido(
-  row: Record<string, unknown>,
-  fotos: SolicitudFoto[],
-): ReporteDetenido {
-  return {
-    id: str(row.id) ?? '',
-    folioDetenido: str(row.folio_reporte_campo) ?? 'Sin folio',
-    nombreDetenido: parseDetenidos(row.ofi_detenidos),
-    tipoIncidente: str(row.ofi_tipo_incidente),
-    delitoDenuncia: str(row.delito_denuncia),
-    marcoLegal: str(row.marco_legal_mostrar),
-    faltaAdministrativa: str(row.falta_administrativa),
-    modusOperandi: str(row.modus_operandi),
-    autoridadRecibe: str(row.ofi_autoridad_recibe),
-    oficialNombre: str(row.ofi_oficial_nombre),
-    hayDetencion: bool(row.ofi_hay_detencion),
-    hayVehiculo: bool(row.ofi_hay_vehiculo),
-    hayCateo: bool(row.ofi_hay_cateo),
-    createdAt: str(row.created_at) ?? '',
-    fotos,
-  }
-}
-
 export function rowToIncidenteCamara(row: Record<string, unknown>): IncidenteCamara {
   function fmtFecha(v: unknown): string {
     if (v instanceof Date) return v.toISOString().slice(0, 10)
@@ -205,17 +152,6 @@ export function rowToIphDetenido(row: Record<string, unknown>): IphDetenido {
     delito: str(row.delito),
     fechaEvento: str(row.fecha_evento) ?? str(row.fechaEvento),
     genero: str(row.genero),
-  }
-}
-
-export function rowToEvidenciaDetenido(row: Record<string, unknown>): EvidenciaDetenido {
-  return {
-    id: str(row.id) ?? '',
-    tipoFoto: str(row.tipo_foto) ?? '',
-    urlArchivo: str(row.url_archivo),
-    nombreArchivo: str(row.nombre_archivo),
-    subidoPor: str(row.subido_por),
-    rolSubio: str(row.rol_subio),
   }
 }
 

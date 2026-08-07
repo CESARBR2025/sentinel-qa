@@ -1,29 +1,25 @@
 import { query } from '@/lib/db'
 import type {
-  SolicitudEvidencia, Evidencia, HistorialEntry, IncidenteCamara,
-  IphDetenido, EvidenciaDetenido, PrellenadoCompleto,
+  SolicitudEvidencia, Evidencia, HistorialEntry,
+  IphDetenido, PrellenadoCompleto,
 } from './types'
 import {
   rowToSolicitudEvidencia, rowToEvidencia, rowToHistorialEntry,
-  rowToIncidenteCamara, rowToIphDetenido, rowToEvidenciaDetenido,
+  rowToIphDetenido,
   rowToPrellenadoCompleto, parseSolicitudesJson,
 } from './mapper'
 
 export async function getMonitoristaStats(monitoristaId: string) {
-  const [solsPend, solsComp, histCount, detPend, detComp, icStats] = await Promise.all([
+  const [solsPend, solsComp, histCount, icStats] = await Promise.all([
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'pendiente'"),
     query<{ c: number }>("SELECT count(*)::int as c FROM solicitudes_evidencia WHERE status = 'completada'"),
     query<{ c: number }>("SELECT count(*)::int as c FROM monitorista_historial WHERE monitorista_id = $1", [monitoristaId]),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado IN ('pendiente','enviado','rechazado')"),
-    query<{ c: number }>("SELECT count(*)::int as c FROM solicitud_fotos sf INNER JOIN ofi_reportes_campo rc ON rc.id = sf.reporte_campo_id WHERE sf.estado NOT IN ('pendiente','enviado','rechazado')"),
     query<{ personas: number; vehiculos: number }>("SELECT COALESCE(SUM(total_personas_revisadas),0)::int as personas, COALESCE(SUM(vehiculos_revisar),0)::int as vehiculos FROM incidentes_camara"),
   ])
   return {
     solsPend: solsPend.rows[0]?.c ?? 0,
     solsComp: solsComp.rows[0]?.c ?? 0,
     histCount: histCount.rows[0]?.c ?? 0,
-    detPend: detPend.rows[0]?.c ?? 0,
-    detComp: detComp.rows[0]?.c ?? 0,
     icStats: icStats.rows[0],
   }
 }
@@ -167,14 +163,6 @@ export async function crearSolicitudEvidencia(body: {
   return r.rows[0].id
 }
 
-export async function obtenerFolioReporteCampo(id: string): Promise<string | null> {
-  const r = await query<{ folio: string | null }>(
-    `SELECT folio_reporte_campo as folio FROM ofi_reportes_campo WHERE id = $1 LIMIT 1`,
-    [id],
-  )
-  return r.rows[0]?.folio ?? null
-}
-
 export async function obtenerSolicitudFolioIncidente(id: string): Promise<{ folioIncidente: string } | null> {
   const r = await query<Record<string, unknown>>(
     `SELECT folio_incidente FROM solicitudes_evidencia WHERE id = $1 LIMIT 1`,
@@ -284,24 +272,6 @@ export async function obtenerPrellenadoCompleto(id: string): Promise<PrellenadoC
   return result.rows[0] ? rowToPrellenadoCompleto(result.rows[0]) : null
 }
 
-export async function listarEvidenciasDetenido(reporteCampoId: string): Promise<EvidenciaDetenido[]> {
-  const result = await query<Record<string, unknown>>(
-    `SELECT sub.id, sub.tipo_foto, sub.url_archivo, sub.nombre_archivo, sub.subido_por,
-            COALESCE(r.nombre, 'Monitorista') as rol_subio
-     FROM (
-       SELECT ed.id, ed.tipo_foto, ed.url_archivo, ed.nombre_archivo, ed.subido_por,
-              ROW_NUMBER() OVER (PARTITION BY ed.tipo_foto ORDER BY ed.creado_en DESC) as rn
-       FROM evidencias_detenido ed
-       WHERE ed.reporte_campo_id = $1
-     ) sub
-     LEFT JOIN users u ON sub.subido_por = u.id
-     LEFT JOIN roles r ON u.rol_id = r.id
-     WHERE sub.rn = 1
-     ORDER BY sub.tipo_foto`, [reporteCampoId],
-  )
-  return result.rows.map(rowToEvidenciaDetenido)
-}
-
 export async function obtenerDenunciasPendientesRaw(): Promise<Record<string, unknown>[]> {
   const result = await query<Record<string, unknown>>(
     `SELECT id, folio_denuncia, estado_tramite, estado_evidencia, created_at, monitorista_fechas_requeridas
@@ -348,60 +318,6 @@ export async function obtenerEvidenciasDenunciaRaw(denunciaId: string): Promise<
   return result.rows
 }
 
-export async function getDestinosRaw(): Promise<Record<string, unknown>[]> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT id, clave, nombre FROM cat_dependencias WHERE tipo = 'externa' AND activo = true AND clave IN ('FISCALIA','JUZGADO_CIVICO') ORDER BY nombre`,
-  )
-  return r.rows
-}
-
-export async function listarReportesConDetenidosRaw(): Promise<Record<string, unknown>[]> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT rc.id, rc.ofi_folio_cad, rc.folio_reporte_campo, rc.ofi_tipo_incidente,
-       rc.modus_operandi, rc.falta_administrativa, rc.delito, rc.marco_legal,
-       rc.ofi_autoridad_recibe, CONCAT(u.name, ' ', u.apellido) AS ofi_oficial_nombre,
-       rc.ofi_hay_detencion, rc.ofi_hay_vehiculo, rc.ofi_hay_cateo,
-       rc.ofi_detenidos, rc.created_at,
-       COALESCE(rc.delito, ord.delito) as delito_denuncia,
-       COALESCE(rc.marco_legal, ord.marco_legal) as marco_legal_mostrar
-    FROM ofi_reportes_campo rc
-    LEFT JOIN ofi_oficiales o ON o.id = rc.ofi_oficial_id
-    LEFT JOIN users u ON u.id = o.user_id
-    LEFT JOIN ofi_reporte_denuncia ord ON ord.reporte_campo_id = rc.id
-    WHERE rc.ofi_detenidos IS NOT NULL
-      AND rc.ofi_detenidos::text NOT IN ('[]', '1')
-    ORDER BY rc.created_at DESC LIMIT 100`,
-  )
-  return r.rows
-}
-
-export async function obtenerReportePorIdRaw(id: string): Promise<Record<string, unknown> | null> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT rc.id, rc.ofi_folio_cad, rc.folio_reporte_campo, rc.ofi_tipo_incidente,
-       rc.modus_operandi, rc.falta_administrativa, rc.delito, rc.marco_legal,
-       rc.ofi_autoridad_recibe, CONCAT(u.name, ' ', u.apellido) AS ofi_oficial_nombre,
-       rc.ofi_hay_detencion, rc.ofi_hay_vehiculo, rc.ofi_hay_cateo,
-       rc.ofi_detenidos, rc.created_at,
-       COALESCE(rc.delito, ord.delito) as delito_denuncia,
-       COALESCE(rc.marco_legal, ord.marco_legal) as marco_legal_mostrar
-    FROM ofi_reportes_campo rc
-    LEFT JOIN ofi_oficiales o ON o.id = rc.ofi_oficial_id
-    LEFT JOIN users u ON u.id = o.user_id
-    LEFT JOIN ofi_reporte_denuncia ord ON ord.reporte_campo_id = rc.id
-    WHERE rc.id = $1 LIMIT 1`,
-    [id],
-  )
-  return r.rows[0] ?? null
-}
-
-export async function obtenerSolicitudFotosRaw(reporteCampoId: string): Promise<Record<string, unknown>[]> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT id, tipo_foto, enviado_a, estado FROM solicitud_fotos WHERE reporte_campo_id = $1 ORDER BY tipo_foto`,
-    [reporteCampoId],
-  )
-  return r.rows
-}
-
 export async function listarRegistrosRaw(turno?: string): Promise<Record<string, unknown>[]> {
   let sql = `SELECT * FROM incidentes_camara`
   const params: unknown[] = []
@@ -428,106 +344,6 @@ export async function obtenerRegistroPorFechaTurnoRaw(fecha: string, turno: stri
     [fecha, turno],
   )
   return r.rows[0] ?? null
-}
-
-export async function actualizarCampo(id: string, campo: string, valor: string): Promise<void> {
-  if (!['modus_operandi', 'falta_administrativa', 'delito', 'marco_legal'].includes(campo)) {
-    throw new Error('Campo no válido para edición')
-  }
-  await query(
-    `UPDATE ofi_reportes_campo
-     SET modus_operandi = CASE WHEN $1 = 'modus_operandi' THEN $2 ELSE modus_operandi END,
-         falta_administrativa = CASE WHEN $1 = 'falta_administrativa' THEN $2 ELSE falta_administrativa END,
-         delito = CASE WHEN $1 = 'delito' THEN $2 ELSE delito END,
-         marco_legal = CASE WHEN $1 = 'marco_legal' THEN $2 ELSE marco_legal END
-     WHERE id = $3`,
-    [campo, valor || null, id],
-  )
-}
-
-export async function crearSolicitudFotos(reporteCampoId: string): Promise<boolean> {
-  const existentes = await query<{ c: number }>(
-    `SELECT count(*)::int as c FROM solicitud_fotos WHERE reporte_campo_id = $1`, [reporteCampoId],
-  )
-  if (existentes.rows[0].c > 0) return false
-  for (const tipo of ['frontal', 'derecho', 'izquierdo']) {
-    await query(
-      `INSERT INTO solicitud_fotos (reporte_campo_id, tipo_foto, estado) VALUES ($1, $2, 'pendiente')`,
-      [reporteCampoId, tipo],
-    )
-  }
-  return true
-}
-
-export async function enviarFoto(fotoId: string, destino: string): Promise<void> {
-  await query(
-    `UPDATE solicitud_fotos SET estado = 'enviado', enviado_a = $1 WHERE id = $2 AND estado = 'pendiente'`,
-    [destino, fotoId],
-  )
-}
-
-export async function subirFotoDetenido(
-  reporteCampoId: string,
-  tipoFoto: string,
-  urlArchivo: string,
-  nombreArchivo: string,
-  subidoPor: string,
-) {
-  await query(
-    `INSERT INTO evidencias_detenido (reporte_campo_id, tipo_foto, url_archivo, nombre_archivo, subido_por)
-     VALUES ($1, $2, $3, $4, $5)`,
-    [reporteCampoId, tipoFoto, urlArchivo, nombreArchivo, subidoPor],
-  )
-}
-
-export async function completarSolicitudFoto(reporteCampoId: string, tipoFoto: string): Promise<boolean> {
-  const updResult = await query(
-    `UPDATE solicitud_fotos SET estado = 'completado', enviado_a = 'MONITORISTA'
-     WHERE reporte_campo_id = $1::uuid AND tipo_foto = $2::varchar`,
-    [reporteCampoId, tipoFoto],
-  )
-  if (updResult.rowCount === 0) {
-    await query(
-      `INSERT INTO solicitud_fotos (reporte_campo_id, tipo_foto, estado, enviado_a)
-       VALUES ($1::uuid, $2::varchar, 'completado', 'MONITORISTA')`,
-      [reporteCampoId, tipoFoto],
-    )
-  }
-  return true
-}
-
-export async function obtenerObtenerSolicitudFoto(reporteCampoId: string, tipoFoto: string): Promise<{ id: string; estado: string; enviadoA: string } | undefined> {
-  const r = await query<Record<string, unknown>>(
-    `SELECT id, estado, enviado_a FROM solicitud_fotos WHERE reporte_campo_id = $1 AND tipo_foto = $2 LIMIT 1`,
-    [reporteCampoId, tipoFoto],
-  )
-  if (!r.rows[0]) return undefined
-  return {
-    id: String(r.rows[0].id),
-    estado: String(r.rows[0].estado),
-    enviadoA: String(r.rows[0].enviado_a ?? ''),
-  }
-}
-
-export async function insertarEvidenciaDetenido(
-  reporteCampoId: string,
-  tipoFoto: string,
-  urlArchivo: string,
-  nombreArchivo: string,
-  subidoPor: string,
-) {
-  await query(
-    `INSERT INTO evidencias_detenido (reporte_campo_id, tipo_foto, url_archivo, nombre_archivo, subido_por)
-     VALUES ($1, $2, $3, $4, $5)`,
-    [reporteCampoId, tipoFoto, urlArchivo, nombreArchivo, subidoPor],
-  )
-}
-
-export async function actualizarSolicitudFotoEstado(fotoId: string) {
-  await query(
-    `UPDATE solicitud_fotos SET estado = 'completado' WHERE id = $1`,
-    [fotoId],
-  )
 }
 
 export async function registrarIphDetenido(data: Record<string, unknown>) {
@@ -595,13 +411,6 @@ export async function registrarFichaInteligencia(data: Record<string, unknown>) 
       data.zonaOperacion, data.puestaDisposicion, data.modusOperandi,
       data.infoAdicional, data.antecedentes, data.faltasAdmin, data.capturadoPor,
     ],
-  )
-}
-
-export async function rechazarFoto(fotoId: string): Promise<void> {
-  await query(
-    `UPDATE solicitud_fotos SET estado = 'rechazado' WHERE id = $1 AND estado = 'enviado'`,
-    [fotoId],
   )
 }
 

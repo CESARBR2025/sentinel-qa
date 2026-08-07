@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { registrarIphDetenido } from "@/lib/monitorista/repository";
-import { tienePermiso } from "@/lib/monitorista/permisos";
+import { tienePermiso } from "@/lib/analisis/permisos";
 
 export async function POST(req: Request) {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-    if (!(await tienePermiso(session.user.id, "detenidos", "crear"))) {
+    if (!(await tienePermiso(session.user.id, "analisis", "crear"))) {
         return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 

@@ -1,19 +1,16 @@
 import { query } from '@/lib/db'
 import { obtenerGuestToken, subirArchivoExpediente } from './expediente'
 import type {
-  DenunciaDetalle, EvidenciaArchivo, Dependencia, ReporteDetenido,
-  SolicitudFoto, IncidenteCamara, Turno,
+  DenunciaDetalle, EvidenciaArchivo, IncidenteCamara, Turno,
 } from './types'
 import {
-  rowToDenunciaDetalle, rowToEvidenciaArchivo, rowToDependencia,
-  rowToReporteDetenido, rowToSolicitudFotos, rowToIncidenteCamara,
-  parseSolicitudesJson,
+  rowToDenunciaDetalle, rowToEvidenciaArchivo,
+  rowToIncidenteCamara,
 } from './mapper'
 import {
   obtenerDenunciasPendientesRaw, obtenerDenunciasAtendidasRaw,
   obtenerDenunciaPorIdRaw, obtenerEvidenciasDenunciaRaw,
-  getDestinosRaw, listarReportesConDetenidosRaw, obtenerReportePorIdRaw,
-  obtenerSolicitudFotosRaw, listarRegistrosRaw, obtenerRegistroRaw,
+  listarRegistrosRaw, obtenerRegistroRaw,
   obtenerRegistroPorFechaTurnoRaw,
   insertHistorial,
 } from './repository'
@@ -79,48 +76,6 @@ export async function subirEvidenciaDenuncia(
 
 // Re-export marcarSolicitudAtendida from repository
 export { marcarSolicitudAtendida } from './repository'
-
-// ==================== Detenido service ====================
-
-export async function getDestinos(): Promise<Dependencia[]> {
-  const rows = await getDestinosRaw()
-  return rows.map(rowToDependencia)
-}
-
-export async function listarReportesConDetenidos(): Promise<ReporteDetenido[]> {
-  const rows = await listarReportesConDetenidosRaw()
-  const result: ReporteDetenido[] = []
-  for (const row of rows) {
-    const id = String(row.id)
-    const fotosRaw = await obtenerSolicitudFotosRaw(id)
-    const fotos = rowToSolicitudFotos(fotosRaw)
-    const nombre = parseDetenidos(row.ofi_detenidos)
-    if (nombre === 'Sin nombre' && fotosRaw.length === 0) continue
-    result.push(rowToReporteDetenido(row, fotos))
-  }
-  return result
-}
-
-function parseDetenidos(raw: unknown): string {
-  if (typeof raw === 'string') {
-    try {
-      const arr = JSON.parse(raw)
-      return Array.isArray(arr) && arr.length > 0 ? (arr[0].nombre || 'Sin nombre') : 'Sin nombre'
-    } catch {
-      return String(raw || 'Sin nombre')
-    }
-  }
-  if (Array.isArray(raw) && raw.length > 0) return raw[0].nombre || 'Sin nombre'
-  return 'Sin nombre'
-}
-
-export async function obtenerReportePorId(id: string): Promise<ReporteDetenido | null> {
-  const row = await obtenerReportePorIdRaw(id)
-  if (!row) return null
-  const fotosRaw = await obtenerSolicitudFotosRaw(id)
-  const fotos = rowToSolicitudFotos(fotosRaw)
-  return rowToReporteDetenido(row, fotos)
-}
 
 // ==================== Incidentes Cámara service ====================
 

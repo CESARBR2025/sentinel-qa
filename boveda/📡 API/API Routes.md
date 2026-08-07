@@ -30,7 +30,6 @@
 | `dev/cambiar-sesion` | POST | (Pendiente) |
 | `expediente/proxy` | GET | (Pendiente) |
 | `expediente/subir` | POST | (Pendiente) |
-| `expediente/subir-foto-detenido` | POST | (Pendiente) |
 | `expediente/token` | POST | (Pendiente) |
 | `expediente/vista/[token]` | GET | (Pendiente) |
 | `fiscalia/expediente/subir-foto` | POST | (Pendiente) |
@@ -44,13 +43,11 @@
 | `incidentes/atendidos` | GET | (Pendiente) |
 | `incidentes/bitacora-911` | GET | (Pendiente) |
 | `incidentes/en-despacho` | GET | (Pendiente) |
+| `incidentes/kpi-911-generales` | GET | (Pendiente) |
 | `incidentes/kpi-geo` | GET | (Pendiente) |
 | `incidentes/pendientes-despacho` | GET | (Pendiente) |
 | `monitorista/denuncias/[id]/completar-solicitud` | POST | (Pendiente) |
 | `monitorista/denuncias/subir` | POST | (Pendiente) |
-| `monitorista/detenidos/[id]/editar-campo` | POST | (Pendiente) |
-| `monitorista/detenidos/[id]/enviar-foto` | POST | (Pendiente) |
-| `monitorista/detenidos/[id]/subir-foto` | POST | (Pendiente) |
 | `monitorista/evidencias/subir` | POST | (Pendiente) |
 | `monitorista/historial` | GET | (Pendiente) |
 | `monitorista/incidentes-camara` | GET, POST | (Pendiente) |
@@ -132,6 +129,9 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

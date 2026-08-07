@@ -56,11 +56,6 @@ export const EVENTOS = {
     rolesPorDefecto: ['agente_despacho'],
     href: () => `/agente_911/despacho`,
   },
-  'incidente.cerrado_detencion': {
-    label: 'Incidente cerrado con detención', modulo: 'Incidentes', severidad: 'critico',
-    rolesPorDefecto: ['Monitorista', 'agente_fiscalia'],
-    href: () => `/monitorista/detenidos`,
-  },
 
   // ── Oficial de campo ───────────────────────────────────────────────────────
   'reporte_campo.cerrado': {
@@ -121,16 +116,6 @@ export const EVENTOS = {
     label: 'Evidencia entregada', modulo: 'Monitorista', severidad: 'aviso',
     rolesPorDefecto: ['agente_fiscalia', 'agente_juzgado'],
     href: id => `/fiscalia/solicitudes/${id}`,
-  },
-  'foto.solicitada': {
-    label: 'Fotos de detenido solicitadas', modulo: 'Monitorista', severidad: 'aviso',
-    rolesPorDefecto: ['Oficial de Campo'],
-    href: id => `/oficial/reportes/${id}/fotos`,
-  },
-  'foto.rechazada': {
-    label: 'Foto de detenido rechazada', modulo: 'Monitorista', severidad: 'aviso',
-    rolesPorDefecto: ['Oficial de Campo'],
-    href: id => `/oficial/reportes/${id}/fotos`,
   },
   'iph.registrado': {
     label: 'IPH de detenido registrado', modulo: 'Análisis', severidad: 'info',

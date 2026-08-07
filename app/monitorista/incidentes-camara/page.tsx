@@ -2,14 +2,13 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { listarRegistros, TURNOS } from '@/lib/monitorista/incidentes-camara-service'
-import Link from 'next/link'
 import React from 'react'
-import { Camera, BarChart3, Filter } from 'lucide-react'
 import { FilaIncidenteCamara } from '@/components/monitorista/FilaIncidenteCamara'
 import { tienePermiso } from '@/lib/monitorista/permisos'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { SegmentPage } from '@/components/partials/SegmentPage'
 
 export default async function IncidentesCamaraPage({
   searchParams,
@@ -32,8 +31,25 @@ export default async function IncidentesCamaraPage({
   const totalMotos = registros.reduce((s, r) => s + r.motosRevisadas, 0)
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--color-background)', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+      <style>{`
+        .kpi-panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+        .kpi-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid #e2e8f0; }
+        .kpi-title { font-family: var(--apple-font-display); font-size: 13px; font-weight: 600; color: #1f355a; }
+        .kpi-stats { display: flex; flex-wrap: wrap; }
+        .stat-bloque { flex: 1 1 180px; min-width: 0; padding: 20px 24px; }
+        .stat-bloque + .stat-bloque { border-left: 1px solid #f1f5f9; }
+        .stat-bloque-label { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 6px; }
+        .stat-bloque-value { font-family: var(--apple-font-display); font-size: 32px; font-weight: 600; line-height: 1; color: #0f172a; }
+        @media (max-width: 720px) {
+          .kpi-head { padding: 10px 16px; }
+          .kpi-stats { flex-wrap: nowrap; }
+          .stat-bloque { flex: 1 1 0; padding: 10px 6px; text-align: center; }
+          .stat-bloque-label { font-size: 9px; margin-bottom: 3px; }
+          .stat-bloque-value { font-size: 20px; }
+        }
+        .tabla-wrap { background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+      `}</style>
       <ToastAuto show={exito === 'creado'} mensaje="Registro creado exitosamente" />
       <ToastAuto show={exito === 'actualizado'} mensaje="Registro actualizado exitosamente" />
       <DashboardHeader
@@ -43,74 +59,70 @@ export default async function IncidentesCamaraPage({
         backLabel="Panel"
       />
 
-      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Incidentes por"
           accent="Cámara"
           subtitle="Cámaras de vigilancia · registro de novedades por turno"
-          actions={<PageHeaderLink href="/monitorista/incidentes-camara/nuevo">+ Nuevo Registro</PageHeaderLink>}
+          actions={<PageHeaderLink href="/monitorista/incidentes-camara/nuevo">+ Nuevo registro</PageHeaderLink>}
         />
 
-        <div className="grid-2">
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <BarChart3 size={20} color="#1f355a" />
-              <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total Registros</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{registros.length}</div></div>
-            </div>
+        <div className="kpi-panel">
+          <div className="kpi-head">
+            <span className="kpi-title">Resumen por turno</span>
           </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Camera size={20} color="#059669" />
-              <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Personas Revisadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{totalPersonas}</div></div>
+          <div className="kpi-stats">
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Total registros</div>
+              <div className="stat-bloque-value">{registros.length}</div>
             </div>
-          </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Camera size={20} color="#b45309" />
-              <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Vehículos Revisados</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{totalVehiculos}</div></div>
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Personas revisadas</div>
+              <div className="stat-bloque-value">{totalPersonas}</div>
             </div>
-          </div>
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 20, borderRadius: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Camera size={20} color="#7c3aed" />
-              <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Motos Revisadas</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 700, color: '#0f172a' }}>{totalMotos}</div></div>
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Vehículos revisados</div>
+              <div className="stat-bloque-value">{totalVehiculos}</div>
+            </div>
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Motos revisadas</div>
+              <div className="stat-bloque-value">{totalMotos}</div>
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-          <Filter size={14} color="#64748b" />
-          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>Filtrar por turno:</span>
-          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-            <Link href="/monitorista/incidentes-camara" style={filtroBtn(!turnoFilter)}>TODOS</Link>
-            <Link href="/monitorista/incidentes-camara?turno=MATUTINO" style={filtroBtn(turnoFilter === 'MATUTINO')}>07-15 HRS</Link>
-            <Link href="/monitorista/incidentes-camara?turno=VESPERTINO" style={filtroBtn(turnoFilter === 'VESPERTINO')}>15-22 HRS</Link>
-            <Link href="/monitorista/incidentes-camara?turno=NOCTURNO" style={filtroBtn(turnoFilter === 'NOCTURNO')}>22-07 HRS</Link>
-          </div>
-        </div>
+        <SegmentPage
+          tabs={[
+            { key: '', label: 'Todos', href: '/monitorista/incidentes-camara' },
+            { key: 'MATUTINO', label: '07-15 hrs', href: '/monitorista/incidentes-camara?turno=MATUTINO' },
+            { key: 'VESPERTINO', label: '15-22 hrs', href: '/monitorista/incidentes-camara?turno=VESPERTINO' },
+            { key: 'NOCTURNO', label: '22-07 hrs', href: '/monitorista/incidentes-camara?turno=NOCTURNO' },
+          ]}
+          activeKey={turnoValido ?? ''}
+        />
 
-        <div className="tabla-wrap" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2 }}>
+        <div className="tabla-wrap">
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
                 <Th>Fecha</Th>
                 <Th>Turno</Th>
-                <Th>Sin Novedad</Th>
-                <Th>Con Antec.</Th>
-                <Th>Veh. Revisar</Th>
+                <Th>Sin novedad</Th>
+                <Th>Con antecedentes</Th>
+                <Th>Veh. revisar</Th>
                 <Th>Veh. REPUVE</Th>
                 <Th>Motos</Th>
-                <Th>Persec.</Th>
-                <Th>Aseg.</Th>
-                <Th>Recup.</Th>
+                <Th>Persecuciones</Th>
+                <Th>Asegurados</Th>
+                <Th>Recuperados</Th>
                 <Th>Incendios</Th>
                 <Th>Tránsito</Th>
-                <Th>Total Personas</Th>
+                <Th>Total personas</Th>
               </tr>
             </thead>
             <tbody>
               {registros.length === 0 && (
-                <tr><td colSpan={13} style={{ padding: 32, textAlign: 'center', fontFamily: 'Inter', fontSize: 13, color: '#94a3b8' }}>No hay registros</td></tr>
+                <tr><td colSpan={13} style={{ padding: 32, textAlign: 'center', fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>No hay registros</td></tr>
               )}
               {registros.map(r => (
                 <FilaIncidenteCamara key={r.id} registro={r} />
@@ -124,15 +136,5 @@ export default async function IncidentesCamaraPage({
 }
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.1em', color: '#64748b', textTransform: 'uppercase', textAlign: 'left', padding: '10px 12px', fontWeight: 600 }}>{children}</th>
-}
-
-function filtroBtn(active: boolean): React.CSSProperties {
-  return {
-    fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 600, textTransform: 'uppercase',
-    letterSpacing: '0.1em', padding: '4px 12px', textDecoration: 'none', borderRadius: 2,
-    background: active ? '#0f172a' : '#f1f5f9',
-    color: active ? '#ffffff' : '#475569',
-    border: active ? '1px solid #0f172a' : '1px solid #e2e8f0',
-  }
+  return <th style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, letterSpacing: 'normal', color: '#64748b', textTransform: 'none', textAlign: 'left', padding: '10px 12px', fontWeight: 600 }}>{children}</th>
 }

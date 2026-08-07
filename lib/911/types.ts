@@ -1,3 +1,5 @@
+import type { KpiIncidencias } from '@/lib/incidentes/types'
+
 export interface IncidenteResumen {
   id: string
   folio: string
@@ -110,4 +112,45 @@ export interface CatalogosJerarquicos {
   prioridades: CatalogoItem[]
   canalizaciones: CatalogoItem[]
   dependencias: Dependencia[]
+}
+
+export interface Resumen911 {
+  total: number
+  porTipo: { tipoReporte: string; total: number }[]
+  porCanal: { canal: string; total: number }[]
+  canalizadosADespacho: number
+  sinCanalizacion: number
+  sinDespacharAhora: number
+}
+
+export interface TiemposRespuesta911 {
+  capturaDespachoMin: number | null
+  despachoLlegadaMin: number | null
+  capturaLlegadaMin: number | null
+  muestras: number
+}
+
+export interface KpiAlarmaEscolar {
+  total: number
+  falsas: number
+  porcentajeFalsas: number
+  activacionesTotales: number
+  tiempoArriboPromedioMin: number | null
+  topEstablecimientos: { establecimiento: string; total: number }[]
+}
+
+export interface KpiExtorsion {
+  total: number
+  tendenciaDiaria: { dia: string; total: number }[]
+  topGruposDelictivos: { grupoDelictivo: string; total: number }[]
+  canalizadosADespacho: number
+  porcentajeCanalizados: number
+}
+
+export interface KpisGenerales911 {
+  resumen: Resumen911
+  atencion: KpiIncidencias
+  tiempos: TiemposRespuesta911
+  alarmaEscolar: KpiAlarmaEscolar
+  extorsion: KpiExtorsion
 }

@@ -102,10 +102,6 @@
 │   │   │   ├── puesta-disposicion/
 │   │   │   │   └── [id]/
 │   │   │   └── page.tsx
-│   │   ├── detenidos/
-│   │   │   ├── [id]/
-│   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
 │   │   ├── liberaciones/
 │   │   │   ├── [id]/
 │   │   │   │   └── page.tsx
@@ -194,8 +190,6 @@
 │   │   │   │   └── route.ts
 │   │   │   ├── subir/
 │   │   │   │   └── route.ts
-│   │   │   ├── subir-foto-detenido/
-│   │   │   │   └── route.ts
 │   │   │   ├── token/
 │   │   │   │   └── route.ts
 │   │   │   └── vista/
@@ -221,6 +215,8 @@
 │   │   │   │   └── route.ts
 │   │   │   ├── en-despacho/
 │   │   │   │   └── route.ts
+│   │   │   ├── kpi-911-generales/
+│   │   │   │   └── route.ts
 │   │   │   ├── kpi-geo/
 │   │   │   │   └── route.ts
 │   │   │   ├── pendientes-despacho/
@@ -230,8 +226,6 @@
 │   │   │   ├── denuncias/
 │   │   │   │   ├── [id]/
 │   │   │   │   └── subir/
-│   │   │   ├── detenidos/
-│   │   │   │   └── [id]/
 │   │   │   ├── evidencias/
 │   │   │   │   └── subir/
 │   │   │   ├── historial/
@@ -394,6 +388,9 @@
 │   │   │   │   └── page.tsx
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
+│   │   ├── kpis/
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
 │   │   ├── enable-2fa.tsx
 │   │   ├── fade-in.tsx
 │   │   ├── module-cards.tsx
@@ -414,10 +411,6 @@
 │   │   │   ├── [reporteCampoId]/
 │   │   │   ├── puesta-disposicion/
 │   │   │   │   └── [id]/
-│   │   │   └── page.tsx
-│   │   ├── detenidos/
-│   │   │   ├── [id]/
-│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── expedientes/
 │   │   │   └── [solicitudId]/
@@ -494,12 +487,6 @@
 │   │   ├── denuncias/
 │   │   │   └── [id]/
 │   │   │       └── page.tsx
-│   │   ├── detenidos/
-│   │   │   ├── [id]/
-│   │   │   │   └── page.tsx
-│   │   │   ├── nueva/
-│   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
 │   │   ├── historial/
 │   │   │   └── page.tsx
 │   │   ├── incidentes-camara/
@@ -530,7 +517,6 @@
 │   │   │   └── page.tsx
 │   │   ├── reportes/
 │   │   │   └── [id]/
-│   │   │       ├── fotos/
 │   │   │       └── page.tsx
 │   │   ├── rondin/
 │   │   │   └── page.tsx
@@ -591,6 +577,13 @@
 │   │   │   ├── ModalDetalleIncidencia.tsx
 │   │   │   ├── TablaIncidencias.tsx
 │   │   │   └── useMapaIncidencias.ts
+│   │   ├── kpi-generales/
+│   │   │   ├── graficos/
+│   │   │   │   ├── BarraRankeada.tsx
+│   │   │   │   ├── DonutKpi.tsx
+│   │   │   │   └── TendenciaDiaria.tsx
+│   │   │   ├── FiltroRango911.tsx
+│   │   │   └── Panel911.tsx
 │   │   ├── radio/
 │   │   │   ├── FormRondinEscalado.tsx
 │   │   │   └── Input.tsx
@@ -606,6 +599,7 @@
 │   │   ├── Bitacora911.tsx
 │   │   ├── DespachadorActividadTracker.tsx
 │   │   ├── FiltrosIncidentes.tsx
+│   │   ├── KpiTiposIncidencias.tsx
 │   │   ├── MapaFicha911.tsx
 │   │   ├── ModalConfirmacion911.tsx
 │   │   ├── ModuleCard.tsx
@@ -637,7 +631,6 @@
 │   │   ├── JuzgadoDashboard.tsx
 │   │   ├── JuzgadoTable.tsx
 │   │   ├── ProfileDropdown.tsx
-│   │   ├── SubirFotoDetenido.tsx
 │   │   ├── TabSolicitudes.tsx
 │   │   ├── ToastExito.tsx
 │   │   └── TomarCasoModal.tsx
@@ -682,7 +675,6 @@
 │   │   ├── PedirEvidenciasModal.tsx
 │   │   ├── PrintButton.tsx
 │   │   ├── ProfileDropdown.tsx
-│   │   ├── SubirFotoDetenido.tsx
 │   │   ├── TabAsegurados.tsx
 │   │   ├── TabSolicitudes.tsx
 │   │   ├── ToastExito.tsx
@@ -699,18 +691,11 @@
 │   ├── maps/
 │   │   └── GoogleMapPicker.tsx
 │   ├── monitorista/
-│   │   ├── AccionesDetenido.tsx
 │   │   ├── BandejaSolicitudes.tsx
-│   │   ├── BatchEnvioFotos.tsx
 │   │   ├── BotonSubirDenuncia.tsx
-│   │   ├── BuscadorEvento.tsx
-│   │   ├── CardEnvioFoto.tsx
-│   │   ├── EditarCampoDetenido.tsx
 │   │   ├── FilaIncidenteCamara.tsx
 │   │   ├── GaleriaEvidencias.tsx
-│   │   ├── SubirEvidenciaModal.tsx
-│   │   ├── SubirFotoDetenido.tsx
-│   │   └── TablaDetenidos.tsx
+│   │   └── SubirEvidenciaModal.tsx
 │   ├── nCoordinacion/
 │   │   └── ProfileDropdownCoordinacion.tsx
 │   ├── notificaciones/
@@ -815,13 +800,13 @@
 │   │   ├── badge.tsx
 │   │   ├── button.tsx
 │   │   ├── card.tsx
+│   │   ├── chart.tsx
 │   │   ├── input.tsx
 │   │   ├── label.tsx
 │   │   ├── select.tsx
 │   │   ├── separator.tsx
 │   │   ├── Toast.tsx
 │   │   └── ToastAuto.tsx
-│   ├── FilaDetenidoRol.tsx
 │   ├── InstalarApp.tsx
 │   ├── LoadingProvider.tsx
 │   ├── PageTransition.tsx
@@ -1104,7 +1089,6 @@
 │   ├── monitorista/
 │   │   ├── actions.ts
 │   │   ├── denuncia-service.ts
-│   │   ├── detenido-service.ts
 │   │   ├── expediente.ts
 │   │   ├── incidentes-camara-service.ts
 │   │   ├── mapper.ts
@@ -1216,7 +1200,6 @@
 │   ├── auth.ts
 │   ├── constants.ts
 │   ├── db.ts
-│   ├── detenidos-compartido.ts
 │   ├── error-handler.ts
 │   └── utils.ts
 ├── login-desing/
@@ -1246,6 +1229,17 @@
 │   ├── etapa-3.md
 │   ├── etapa-4.md
 │   ├── etapa-5.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
+├── plan-dashboard-kpi-admin/
+│   ├── 00-contexto.md
+│   ├── etapa-01.md
+│   ├── etapa-02.md
+│   ├── etapa-03.md
+│   ├── etapa-04.md
+│   ├── etapa-05.md
+│   ├── etapa-06.md
+│   ├── etapa-07.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
 ├── plan-footer-sistema/
@@ -1408,6 +1402,9 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

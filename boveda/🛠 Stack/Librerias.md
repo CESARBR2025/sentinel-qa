@@ -34,6 +34,7 @@
 | react | 19.2.4 |
 | react-dom | 19.2.4 |
 | react-signature-canvas | ^1.1.0-alpha.2 |
+| recharts | ^3.8.0 |
 | shadcn | ^4.16.0 |
 | simpleheat | ^0.4.0 |
 | sonner | ^2.0.7 |
@@ -67,6 +68,9 @@
 | tsx | ^4.21.0 |
 | typescript | 5.9.3 |
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

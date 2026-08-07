@@ -20,7 +20,6 @@ export const MODULOS_POR_ROL: Record<string, ModuloPermisos> = {
     secciones: SECCIONES_MONITORISTA,
     seccionLabels: {
       solicitudes: 'Solicitudes',
-      detenidos: 'Detenidos',
       incidentes_camara: 'Incidentes Cámara',
       historial: 'Historial',
     },

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { ShieldAlert } from 'lucide-react'
 
 /**
  * Fallback de error para rutas (crash de la app). Sustituye la página
@@ -20,41 +21,17 @@ export default function Error({
 
   return (
     <div className="err-scope">
-      <div className="err-bg" />
-      <div className="err-corner tl" />
-      <div className="err-corner tr" />
-      <div className="err-corner bl" />
-      <div className="err-corner br" />
-
       <main className="err-card">
-        <div className="err-shield">
-          <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <path
-              d="M24 3l17 6.4v12.2c0 10.1-7 17.3-17 20.4-10-3.1-17-10.3-17-20.4V9.4L24 3z"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14 24l6.5 6.5L34 17.5"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <div className="err-icon">
+          <ShieldAlert size={28} strokeWidth={1.5} />
         </div>
 
-        <p className="err-kicker">SSPM SAN JUAN DEL RÍO · CENTINELA</p>
-        <h1 className="err-title">
-          ERROR <span className="err-title-accent">DE SISTEMA</span>
-        </h1>
+        <p className="err-kicker">SSPM · San Juan del Río · Centinela</p>
+        <h1 className="err-title">Error de sistema</h1>
         <p className="err-sub">
           Ocurrió un problema inesperado. Puedes reintentar o volver al inicio.
         </p>
-        {error.digest ? (
-          <p className="err-digest">REF: {error.digest}</p>
-        ) : null}
+        {error.digest ? <p className="err-digest">REF: {error.digest}</p> : null}
 
         <div className="err-actions">
           <button type="button" className="err-btn" onClick={() => unstable_retry()}>
@@ -74,120 +51,123 @@ export default function Error({
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #f8fafc;
+          background: #f1f5f9;
           color: #0f172a;
-          font-family: 'Inter', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+          font-family: var(--apple-font-display);
+          -webkit-font-smoothing: antialiased;
           overflow: hidden;
           padding: 24px;
           box-sizing: border-box;
         }
-        .err-bg {
-          position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(31,53,90,.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(31,53,90,.06) 1px, transparent 1px);
-          background-size: 44px 44px;
-          pointer-events: none;
-        }
-        .err-corner {
-          position: absolute;
-          width: 26px;
-          height: 26px;
-          border: 0 solid #1f355a;
-          opacity: .55;
-          z-index: 1;
-        }
-        .err-corner.tl { top: 18px; left: 18px; border-top-width: 1px; border-left-width: 1px; }
-        .err-corner.tr { top: 18px; right: 18px; border-top-width: 1px; border-right-width: 1px; }
-        .err-corner.bl { bottom: 18px; left: 18px; border-bottom-width: 1px; border-left-width: 1px; }
-        .err-corner.br { bottom: 18px; right: 18px; border-bottom-width: 1px; border-right-width: 1px; }
         .err-card {
           position: relative;
           z-index: 1;
-          width: min(480px, 100%);
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-top: 3px solid #1f355a;
-          border-radius: 4px;
-          box-shadow: 0 20px 60px rgba(15,23,42,.10), 0 4px 12px rgba(15,23,42,.05);
-          padding: clamp(28px, 6vw, 52px);
+          width: min(440px, 100%);
+          background: var(--apple-glass-bg);
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--apple-glass-border);
+          border-radius: var(--radius-xl);
+          box-shadow: var(--apple-shadow-glass);
+          padding: clamp(28px, 6vw, 48px);
           text-align: center;
           box-sizing: border-box;
         }
-        .err-shield { width: 64px; height: 64px; margin: 0 auto 16px; color: #1f355a; }
-        .err-shield svg { width: 64px; height: 64px; }
+        .err-icon {
+          width: 60px;
+          height: 60px;
+          margin: 0 auto 18px;
+          border-radius: var(--radius-full);
+          background: rgba(239, 68, 68, 0.12);
+          color: #ef4444;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         .err-kicker {
           margin: 0 0 10px;
-          font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-          font-size: 10px;
-          letter-spacing: .28em;
-          text-transform: uppercase;
+          font-weight: 500;
+          font-size: 12px;
+          letter-spacing: 0;
+          text-transform: none;
           color: #64748b;
         }
         .err-title {
-          margin: 0 0 14px;
-          font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-          font-weight: 800;
-          font-size: clamp(30px, 5vw, 42px);
-          letter-spacing: .05em;
-          text-transform: uppercase;
-          line-height: 1;
+          margin: 0 0 12px;
+          font-weight: 600;
+          font-size: clamp(24px, 5vw, 30px);
+          letter-spacing: 0;
+          text-transform: none;
+          line-height: 1.1;
           color: #0f172a;
         }
-        .err-title-accent { color: #1f355a; }
         .err-sub {
           margin: 0 auto;
-          max-width: 340px;
-          font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-          font-size: 12px;
-          line-height: 1.7;
+          max-width: 320px;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 1.5;
           color: #64748b;
         }
         .err-digest {
-          margin: 10px 0 0;
-          font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-          font-size: 9.5px;
-          letter-spacing: .08em;
+          margin: 14px 0 0;
+          font-weight: 400;
+          font-size: 12px;
+          letter-spacing: 0;
           color: #94a3b8;
         }
         .err-actions {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 16px;
-          margin-top: 26px;
+          gap: 12px;
+          margin-top: 28px;
           flex-wrap: wrap;
         }
         .err-btn {
-          padding: 12px 28px;
-          background: linear-gradient(180deg, #274268 0%, #1f355a 100%);
+          font-family: var(--apple-font-display);
+          font-weight: 600;
+          font-size: 14px;
+          text-transform: none;
+          letter-spacing: 0;
+          padding: 10px 20px;
+          background: #0f172a;
           color: #fff;
-          border: 1px solid #1f355a;
-          border-radius: 3px;
-          font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-          font-weight: 700;
-          font-size: 15px;
-          letter-spacing: .08em;
-          text-transform: uppercase;
+          border: none;
+          border-radius: var(--radius-lg);
           cursor: pointer;
-          transition: filter .12s ease, box-shadow .12s ease, transform .12s ease;
+          transition: transform .3s ease-out, box-shadow .3s ease-out;
         }
-        .err-btn:hover { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(31,53,90,.25); transform: translateY(-1px); }
-        .err-btn:active { transform: translateY(0); }
+        .err-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22); }
+        .err-btn:active { transform: scale(0.97); box-shadow: none; transition: transform .12s ease-out, box-shadow .12s ease-out; }
         .err-link {
-          color: #1f355a;
-          font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-          font-size: 11px;
-          letter-spacing: .08em;
-          text-transform: uppercase;
+          display: inline-flex;
+          align-items: center;
+          font-family: var(--apple-font-display);
+          font-weight: 600;
+          font-size: 14px;
+          text-transform: none;
+          letter-spacing: 0;
+          padding: 10px 18px;
+          background: #f1f5f9;
+          color: #475569;
+          border: 1px solid #e2e8f0;
+          border-radius: var(--radius-lg);
           text-decoration: none;
-          border-bottom: 1px solid rgba(31,53,90,.35);
-          padding-bottom: 2px;
+          transition: transform .3s ease-out, box-shadow .3s ease-out, border-color .3s ease-out;
         }
-        .err-link:hover { border-bottom-color: #1f355a; }
-        @media (max-width: 480px) {
-          .err-corner { display: none; }
+        .err-link:hover { transform: translateY(-1px); border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.10); }
+        .err-link:active { transform: scale(0.97); transition: transform .12s ease-out, box-shadow .12s ease-out; }
+        @media (prefers-reduced-transparency: reduce) {
+          .err-card {
+            background: #ffffff;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .err-btn, .err-btn:hover, .err-btn:active,
+          .err-link, .err-link:hover, .err-link:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
         }
       `}</style>
     </div>

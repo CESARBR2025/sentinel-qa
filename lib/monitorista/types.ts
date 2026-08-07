@@ -1,12 +1,3 @@
-export interface MonitoristaStats {
-  solicitudesPendientes: number
-  solicitudesCompletadas: number
-  historialCount: number
-  detenidosPendientes: number
-  detenidosCompletados: number
-  incidentesCamaraStats: { personas: number; vehiculos: number } | null
-}
-
 export interface SolicitudEvidencia {
   id: string
   incidenteId: string
@@ -77,37 +68,6 @@ export interface EvidenciaArchivo {
   nombreArchivo: string | null
 }
 
-export interface Dependencia {
-  id: number
-  clave: string
-  nombre: string
-}
-
-export interface SolicitudFoto {
-  id: string
-  tipoFoto: string
-  enviadoA: string | null
-  estado: string
-}
-
-export interface ReporteDetenido {
-  id: string
-  folioDetenido: string
-  nombreDetenido: string
-  tipoIncidente: string | null
-  delitoDenuncia: string | null
-  marcoLegal: string | null
-  faltaAdministrativa: string | null
-  modusOperandi: string | null
-  autoridadRecibe: string | null
-  oficialNombre: string | null
-  hayDetencion: boolean
-  hayVehiculo: boolean
-  hayCateo: boolean
-  createdAt: string
-  fotos: SolicitudFoto[]
-}
-
 export type Turno = 'MATUTINO' | 'VESPERTINO' | 'NOCTURNO'
 
 export interface IncidenteCamara {
@@ -135,15 +95,6 @@ export interface IphDetenido {
   delito: string | null
   fechaEvento: string | null
   genero: string | null
-}
-
-export interface EvidenciaDetenido {
-  id: string
-  tipoFoto: string
-  urlArchivo: string | null
-  nombreArchivo: string | null
-  subidoPor: string | null
-  rolSubio: string | null
 }
 
 export interface PrellenadoCompleto {

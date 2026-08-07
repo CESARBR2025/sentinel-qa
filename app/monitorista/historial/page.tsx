@@ -7,7 +7,8 @@ import { tienePermiso } from '@/lib/monitorista/permisos'
 import { listarHistorial } from '@/lib/monitorista/repository'
 import type { HistorialEntry } from '@/lib/monitorista/types'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { DashboardFooter } from '@/components/partials/Footer'
+import { PageHeader } from '@/components/partials/PageHeader'
 
 export default async function HistorialPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -22,7 +23,7 @@ export default async function HistorialPage() {
     solicitud_cancelada: { label: 'Solicitud cancelada', icon: <XCircle size={14} color="#dc2626" /> },
     incidente_creado: { label: 'Incidente por cámara creado', icon: <Plus size={14} color="#1f355a" /> },
     incidente_editado: { label: 'Incidente por cámara editado', icon: <Edit size={14} color="#b45309" /> },
-    campo_editado: { label: 'Campo de detenido editado', icon: <PenBox size={14} color="#7c3aed" /> },
+    campo_editado: { label: 'Campo de detenido editado', icon: <PenBox size={14} color="#1f355a" /> },
     ppt_generado: { label: 'PPT de detenidos generado', icon: <FileText size={14} color="#059669" /> },
   }
 
@@ -35,36 +36,39 @@ export default async function HistorialPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--color-background)', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+      <style>{`
+        .tabla-wrap { background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+      `}</style>
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
         roleLabel="Monitorista"
+        backHref="/monitorista"
+        backLabel="Panel"
       />
 
-      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Historial"
           subtitle="Registro de actividad"
-          actions={<PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>}
         />
 
-        <div className="tabla-wrap" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
-          {registros.length === 0 && <div style={{ padding: 48, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>Sin actividad registrada</div>}
+        <div className="tabla-wrap">
+          {registros.length === 0 && <div style={{ padding: 48, textAlign: 'center', fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>Sin actividad registrada</div>}
           {registros.length > 0 && (
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 720 }}>
-              <thead><tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
-                <th style={thStyle}>ACCIÓN</th><th style={thStyle}>DETALLE</th><th style={thStyle}>MONITORISTA</th><th style={thStyle}>FECHA</th>
+              <thead><tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                <th style={thStyle}>Acción</th><th style={thStyle}>Detalle</th><th style={thStyle}>Monitorista</th><th style={thStyle}>Fecha</th>
               </tr></thead>
               <tbody>
                 {registros.map((r) => {
                   const info = accionLabel[String(r.accion)] ?? { label: String(r.accion), icon: null }
                   return (
                     <tr key={String(r.id)} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={tdStyle}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{info.icon}<span style={{ fontFamily: 'JetBrains Mono', fontSize: 11 }}>{info.label}</span></div></td>
-                      <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{formatearDetalle(r)}</td>
-                      <td style={{ ...tdStyle, fontFamily: 'Inter', fontSize: 12, color: '#1e293b' }}>{String(r.monitoristaNombre ?? '—')}</td>
-                      <td style={{ ...tdStyle, fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{new Date(String(r.creadoEn)).toLocaleString('es-MX')}</td>
+                      <td style={tdStyle}><div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{info.icon}<span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500 }}>{info.label}</span></div></td>
+                      <td style={{ ...tdStyle, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>{formatearDetalle(r)}</td>
+                      <td style={{ ...tdStyle, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#1e293b' }}>{String(r.monitoristaNombre ?? '—')}</td>
+                      <td style={{ ...tdStyle, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>{new Date(String(r.creadoEn)).toLocaleString('es-MX')}</td>
                     </tr>
                   )
                 })}
@@ -72,10 +76,12 @@ export default async function HistorialPage() {
             </table>
           )}
         </div>
+
+        <DashboardFooter />
       </main>
     </div>
   )
 }
 
-const thStyle: React.CSSProperties = { padding: '14px 24px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: 10, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }
-const tdStyle: React.CSSProperties = { padding: '14px 24px', fontFamily: 'Inter', fontSize: 13 }
+const thStyle: React.CSSProperties = { padding: '14px 24px', textAlign: 'left', fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', fontWeight: 600, textTransform: 'none', letterSpacing: 'normal' }
+const tdStyle: React.CSSProperties = { padding: '14px 24px', fontFamily: 'var(--apple-font-display)', fontSize: 13 }

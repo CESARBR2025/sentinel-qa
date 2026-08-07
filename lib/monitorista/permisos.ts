@@ -1,6 +1,6 @@
 import * as core from '@/lib/permisos/core'
 
-export const SECCIONES = ['solicitudes', 'detenidos', 'incidentes_camara', 'historial'] as const
+export const SECCIONES = ['solicitudes', 'incidentes_camara', 'historial'] as const
 export type Seccion = typeof SECCIONES[number]
 export type Accion = core.Accion
 export type PermisoSeccion = core.PermisoSeccion

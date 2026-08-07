@@ -4,14 +4,14 @@ import { headers } from 'next/headers';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { registrarFichaInteligencia } from '@/lib/monitorista/repository';
-import { tienePermiso } from '@/lib/monitorista/permisos';
+import { tienePermiso } from '@/lib/analisis/permisos';
 
 export async function POST(req: Request) {
   try {
     // 1. Validar Sesión
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) return NextResponse.json({ message: "No autorizado" }, { status: 401 });
-    if (!(await tienePermiso(session.user.id, 'detenidos', 'crear'))) {
+    if (!(await tienePermiso(session.user.id, 'analisis', 'crear'))) {
       return NextResponse.json({ message: "No autorizado" }, { status: 403 });
     }
 
@@ -74,8 +74,9 @@ export async function POST(req: Request) {
       message: "Ficha de Inteligencia guardada correctamente" 
     }, { status: 201 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error)
     console.error("ERROR_REGISTRO_INTELIGENCIA:", error);
-    return NextResponse.json({ message: "Error interno: " + error.message }, { status: 500 });
+    return NextResponse.json({ message: "Error interno: " + msg }, { status: 500 });
   }
 }

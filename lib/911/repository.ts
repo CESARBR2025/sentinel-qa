@@ -1,5 +1,5 @@
 import { query } from '@/lib/db'
-import type { CatalogoItem, IncidenteDetalle, IncidenteStats, CatalogosJerarquicos, SubtipoEmergencia, IncidenteCatalogo, Dependencia, StatsPorTipo } from './types'
+import type { CatalogoItem, IncidenteDetalle, IncidenteStats, CatalogosJerarquicos, SubtipoEmergencia, IncidenteCatalogo, StatsPorTipo, Resumen911, TiemposRespuesta911, KpiAlarmaEscolar, KpiExtorsion } from './types'
 import { rowToCatalogo, rowToIncidenteDetalle } from './mapper'
 
 function rowToSubtipo(row: Record<string, unknown>): SubtipoEmergencia {
@@ -242,4 +242,176 @@ export async function actualizarActividadDespachador(userId: string): Promise<vo
     `UPDATE users SET ultima_actividad_despacho_en = NOW() WHERE id = $1`,
     [userId],
   )
+}
+
+// ─── KPIs Generales (panel admin) ─────────────────────────────────────────
+
+export async function obtenerResumenPorTipoYCanal(desde: string, hasta: string): Promise<Resumen911> {
+  const [porTipoCanal, sinDespacharAhora] = await Promise.all([
+    query<{ tipo_reporte: string; canal: string; requiere_despacho: boolean; total: number }>(
+      `SELECT COALESCE(tipo_reporte, 'normal') AS tipo_reporte, canal,
+              COALESCE(requiere_despacho, false) AS requiere_despacho,
+              count(*)::int AS total
+       FROM incidentes
+       WHERE fecha_hora_inicio >= $1 AND fecha_hora_inicio <= $2
+       GROUP BY 1, 2, 3`,
+      [desde, hasta],
+    ),
+    // Independiente del rango: cuántos están sin despachar AHORA MISMO.
+    // Misma query que ya usa obtenerStats (línea ~50), sin filtro de fecha.
+    query<{ count: number }>(
+      `SELECT count(*)::int AS count FROM incidentes WHERE estatus = $1 AND requiere_despacho = $2`,
+      ['sin_despachar', true],
+    ),
+  ])
+
+  const porTipoMap = new Map<string, number>()
+  const porCanalMap = new Map<string, number>()
+  let total = 0, canalizadosADespacho = 0, sinCanalizacion = 0
+
+  for (const r of porTipoCanal.rows) {
+    porTipoMap.set(r.tipo_reporte, (porTipoMap.get(r.tipo_reporte) ?? 0) + r.total)
+    porCanalMap.set(r.canal, (porCanalMap.get(r.canal) ?? 0) + r.total)
+    total += r.total
+    if (r.requiere_despacho) canalizadosADespacho += r.total
+    else sinCanalizacion += r.total
+  }
+
+  return {
+    total,
+    porTipo: [...porTipoMap].map(([tipoReporte, total]) => ({ tipoReporte, total })),
+    porCanal: [...porCanalMap].map(([canal, total]) => ({ canal, total })),
+    canalizadosADespacho,
+    sinCanalizacion,
+    sinDespacharAhora: sinDespacharAhora.rows[0]?.count ?? 0,
+  }
+}
+
+export async function obtenerTiemposRespuesta911(desde: string, hasta: string): Promise<TiemposRespuesta911> {
+  const result = await query<{ captura_despacho_min: number | null; despacho_llegada_min: number | null; captura_llegada_min: number | null; muestras: number }>(
+    `WITH primeras_llegadas AS (
+       SELECT despacho_id, MIN(hora_llegada) AS hora_llegada
+       FROM incidente_despacho_unidades
+       WHERE hora_llegada IS NOT NULL
+       GROUP BY despacho_id
+     )
+     SELECT
+       AVG(EXTRACT(EPOCH FROM (d.fecha_hora_despacho - i.fecha_hora_inicio)) / 60) AS captura_despacho_min,
+       AVG(EXTRACT(EPOCH FROM (pl.hora_llegada - d.fecha_hora_despacho)) / 60) AS despacho_llegada_min,
+       AVG(EXTRACT(EPOCH FROM (pl.hora_llegada - i.fecha_hora_inicio)) / 60) AS captura_llegada_min,
+       count(pl.hora_llegada)::int AS muestras
+     FROM incidentes i
+     JOIN incidente_despacho d ON d.incidente_id = i.id
+     LEFT JOIN primeras_llegadas pl ON pl.despacho_id = d.id
+     WHERE i.fecha_hora_inicio >= $1 AND i.fecha_hora_inicio <= $2`,
+    [desde, hasta],
+  )
+  const r = result.rows[0]
+  return {
+    capturaDespachoMin: r?.captura_despacho_min != null ? Number(r.captura_despacho_min) : null,
+    despachoLlegadaMin: r?.despacho_llegada_min != null ? Number(r.despacho_llegada_min) : null,
+    capturaLlegadaMin: r?.captura_llegada_min != null ? Number(r.captura_llegada_min) : null,
+    muestras: r?.muestras ?? 0,
+  }
+}
+
+export async function obtenerKpiAlarmaEscolar(desde: string, hasta: string): Promise<KpiAlarmaEscolar> {
+  // incidente_alarma_escolar NO tiene columnas hora_canalizacion/hora_arribo:
+  // la canalización es incidente_despacho.fecha_hora_despacho y el arribo es
+  // MIN(hora_llegada) de las unidades (es_refuerzo=false) — misma derivación
+  // que obtenerAlarmasEscolaresDetalle (lib/reportes-operativos/repository.ts).
+  const [totales, top] = await Promise.all([
+    query<{ total: number; falsas: number; activaciones_totales: number; tiempo_arribo_min: number | null }>(
+      `SELECT
+         count(*)::int AS total,
+         count(*) FILTER (WHERE a.es_falso = true)::int AS falsas,
+         COALESCE(SUM(a.activaciones), 0)::int AS activaciones_totales,
+         AVG(EXTRACT(EPOCH FROM (du.hora_arribo - d.fecha_hora_despacho)) / 60)
+           FILTER (WHERE du.hora_arribo IS NOT NULL AND d.fecha_hora_despacho IS NOT NULL) AS tiempo_arribo_min
+       FROM incidentes i
+       JOIN incidente_alarma_escolar a ON a.incidente_id = i.id
+       LEFT JOIN incidente_despacho d ON d.incidente_id = i.id
+       LEFT JOIN LATERAL (
+         SELECT MIN(du2.hora_llegada) AS hora_arribo
+         FROM incidente_despacho_unidades du2
+         WHERE du2.despacho_id = d.id AND du2.es_refuerzo = false
+       ) du ON true
+       WHERE i.fecha_hora_inicio >= $1 AND i.fecha_hora_inicio <= $2`,
+      [desde, hasta],
+    ),
+    query<{ establecimiento: string; total: number }>(
+      `SELECT a.establecimiento, count(*)::int AS total
+       FROM incidentes i
+       JOIN incidente_alarma_escolar a ON a.incidente_id = i.id
+       WHERE i.fecha_hora_inicio >= $1 AND i.fecha_hora_inicio <= $2 AND a.establecimiento IS NOT NULL
+       GROUP BY a.establecimiento
+       ORDER BY total DESC
+       LIMIT 5`,
+      [desde, hasta],
+    ),
+  ])
+  const t = totales.rows[0]
+  const total = t?.total ?? 0
+  const falsas = t?.falsas ?? 0
+  return {
+    total,
+    falsas,
+    porcentajeFalsas: total > 0 ? Math.round((falsas / total) * 1000) / 10 : 0,
+    activacionesTotales: t?.activaciones_totales ?? 0,
+    tiempoArriboPromedioMin: t?.tiempo_arribo_min != null ? Number(t.tiempo_arribo_min) : null,
+    topEstablecimientos: top.rows.map(r => ({ establecimiento: r.establecimiento, total: r.total })),
+  }
+}
+
+export async function obtenerKpiExtorsion(desde: string, hasta: string): Promise<KpiExtorsion> {
+  // Canalizados = extorsiones con unidad real asignada: mismo subquery de
+  // resolución de unidad que obtenerExtorsionesDetalle (lib/reportes-operativos/
+  // repository.ts) — cruza con incidente_despacho_unidades.unidad_placa vía
+  // incidente_despacho, default 'C4' si no hubo despacho. Unidad != 'C4' = canalizado.
+  const [totales, tendencia, gruposTop] = await Promise.all([
+    query<{ total: number; canalizados: number }>(
+      `SELECT
+         count(*)::int AS total,
+         count(*) FILTER (WHERE (
+           SELECT string_agg(du.unidad_placa, ', ')
+           FROM incidente_despacho_unidades du
+           JOIN incidente_despacho d ON d.id = du.despacho_id
+           WHERE d.incidente_id = i.id AND du.unidad_placa IS NOT NULL AND du.unidad_placa <> ''
+         ) IS NOT NULL)::int AS canalizados
+       FROM incidentes i
+       JOIN incidente_extorsion e ON e.incidente_id = i.id
+       WHERE i.fecha_hora_inicio >= $1 AND i.fecha_hora_inicio <= $2`,
+      [desde, hasta],
+    ),
+    query<{ dia: Date | string; total: number }>(
+      `SELECT i.fecha_hora_inicio::date AS dia, count(*)::int AS total
+       FROM incidentes i
+       JOIN incidente_extorsion e ON e.incidente_id = i.id
+       WHERE i.fecha_hora_inicio >= $1 AND i.fecha_hora_inicio <= $2
+       GROUP BY 1 ORDER BY 1`,
+      [desde, hasta],
+    ),
+    query<{ grupo_delictivo: string; total: number }>(
+      `SELECT e.grupo_delictivo, count(*)::int AS total
+       FROM incidentes i
+       JOIN incidente_extorsion e ON e.incidente_id = i.id
+       WHERE i.fecha_hora_inicio >= $1 AND i.fecha_hora_inicio <= $2
+         AND e.grupo_delictivo IS NOT NULL AND e.grupo_delictivo <> ''
+       GROUP BY e.grupo_delictivo ORDER BY total DESC LIMIT 5`,
+      [desde, hasta],
+    ),
+  ])
+  const t = totales.rows[0]
+  const total = t?.total ?? 0
+  const canalizados = t?.canalizados ?? 0
+  return {
+    total,
+    tendenciaDiaria: tendencia.rows.map(r => ({
+      dia: r.dia instanceof Date ? r.dia.toISOString().slice(0, 10) : String(r.dia),
+      total: r.total,
+    })),
+    topGruposDelictivos: gruposTop.rows.map(r => ({ grupoDelictivo: r.grupo_delictivo, total: r.total })),
+    canalizadosADespacho: canalizados,
+    porcentajeCanalizados: total > 0 ? Math.round((canalizados / total) * 1000) / 10 : 0,
+  }
 }

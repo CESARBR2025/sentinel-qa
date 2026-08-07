@@ -1,8 +1,6 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { ClipboardList, CheckCircle2, Clock } from 'lucide-react'
-import React from 'react'
 import { BandejaSolicitudes } from '@/components/monitorista/BandejaSolicitudes'
 import type { SolicitudRow } from '@/components/monitorista/BandejaSolicitudes'
 import { obtenerDenunciasPendientes, obtenerDenunciasAtendidas } from '@/lib/monitorista/denuncia-service'
@@ -12,7 +10,7 @@ import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import type { SolicitudEvidencia } from '@/lib/monitorista/types'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 
 export default async function SolicitudesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -69,39 +67,68 @@ export default async function SolicitudesPage() {
   const completadas = [...denunciaItemsAtend, ...(await mapGral(gralComp, 'completada'))]
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <DashboardHeader user={session.user as { name: string; apellido?: string; email: string }} roleLabel="Monitorista" />
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--color-background)', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+      <style>{`
+        .kpi-panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+        .kpi-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid #e2e8f0; }
+        .kpi-title { font-family: var(--apple-font-display); font-size: 13px; font-weight: 600; color: #1f355a; }
+        .kpi-date { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #94a3b8; }
+        .kpi-stats { display: flex; flex-wrap: wrap; }
+        .stat-bloque { flex: 1 1 180px; min-width: 0; padding: 20px 24px; }
+        .stat-bloque + .stat-bloque { border-left: 1px solid #f1f5f9; }
+        .stat-bloque-label { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 6px; }
+        .stat-bloque-value { font-family: var(--apple-font-display); font-size: 36px; font-weight: 600; line-height: 1; color: #0f172a; }
+        @media (max-width: 720px) {
+          .kpi-head { padding: 10px 16px; }
+          .kpi-title { font-size: 12px; }
+          .kpi-date { font-size: 10px; }
+          .kpi-stats { flex-wrap: nowrap; }
+          .stat-bloque { flex: 1 1 0; padding: 10px 8px; text-align: center; }
+          .stat-bloque-label { font-size: 10px; margin-bottom: 3px; }
+          .stat-bloque-value { font-size: 21px; }
+        }
+      `}</style>
+      <DashboardHeader
+        user={session.user as { name: string; apellido?: string; email: string }}
+        roleLabel="Monitorista"
+        backHref="/monitorista"
+        backLabel="Panel"
+      />
 
-      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Solicitudes de"
           accent="Evidencia"
           subtitle="Panel de solicitudes · denuncias D1 y solicitudes generales"
-          actions={<PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>}
         />
 
-        <div className="grid-3">
-          <StatCard icon={<Clock size={20} color="#1f355a" />} label="Pendientes" value={pendientes.length} />
-          <StatCard icon={<CheckCircle2 size={20} color="#059669" />} label="Completadas" value={completadas.length} />
-          <StatCard icon={<ClipboardList size={20} color="#64748b" />} label="Acciones Hoy" value={histCount} />
+        <div className="kpi-panel">
+          <div className="kpi-head">
+            <span className="kpi-title">Solicitudes</span>
+            <span className="kpi-date">
+              {hoy.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </span>
+          </div>
+          <div className="kpi-stats">
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Pendientes</div>
+              <div className="stat-bloque-value">{pendientes.length}</div>
+            </div>
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Completadas</div>
+              <div className="stat-bloque-value">{completadas.length}</div>
+            </div>
+            <div className="stat-bloque">
+              <div className="stat-bloque-label">Acciones hoy</div>
+              <div className="stat-bloque-value">{histCount}</div>
+            </div>
+          </div>
         </div>
 
         <BandejaSolicitudes pendientes={pendientes} completadas={completadas} />
 
         <DashboardFooter />
       </main>
-    </div>
-  )
-}
-
-function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
-  return (
-    <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        {icon}
-        <div><div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{label}</div><div style={{ fontFamily: 'Barlow Condensed', fontSize: 32, fontWeight: 700, color: '#0f172a' }}>{value}</div></div>
-      </div>
     </div>
   )
 }
