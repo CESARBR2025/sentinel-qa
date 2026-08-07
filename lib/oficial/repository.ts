@@ -1,5 +1,6 @@
 import pool, { query } from "@/lib/db";
 import { ValidationError, NotFoundError } from "@/lib/error-handler";
+import { marcarLeidasPorEntidad } from "@/lib/notificaciones/repository";
 import {
   rowToOficial,
   rowToReporteResumen,
@@ -203,6 +204,9 @@ export async function insertarReporteCampo(
     }
 
     await cliente.query("COMMIT");
+    // Fuera de la transacción: si el incidente se cerró, ya no debe quedar
+    // ninguna notificación crítica de "nuevo despacho" pendiente para nadie.
+    if (data.incidenteId) await marcarLeidasPorEntidad('incidente', data.incidenteId);
     return result.rows[0].id;
   } catch (err) {
     await cliente.query("ROLLBACK");

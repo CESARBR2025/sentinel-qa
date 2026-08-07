@@ -15,7 +15,7 @@
 //   obtenerPermisosUsuario), no una sección de `permisos`.
 export const MAPA_SECCIONES: Record<string, string[]> = {
   // ── 911 ────────────────────────────────────────────────────────────────
-  '/agente_911/ciudadano': ['911_ciudadano'],
+  '/agente_911/ciudadano': ['911_ciudadano', 'incidentes'],
   '/agente_911/despacho': ['911_despacho'],
   '/agente_911/rondin': ['911_rondin', 'incidentes'],
   '/agente_911/whatsapp': ['911_whatsapp', 'incidentes'],

@@ -3,6 +3,7 @@ import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 import SwRegister from "@/components/sw-register";
 import InstalarApp from "@/components/InstalarApp";
+import { NotificacionesProvider } from "@/components/notificaciones/NotificacionesProvider";
 import { Toaster } from "sonner";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ export default function RootLayout({
     <html lang="es" style={{ background: '#070b16' }} className={cn("font-sans", geist.variable)}>
       <body style={{ margin: 0, background: '#070b16' }} suppressHydrationWarning>
         <PageTransition />
-        {children}
+        <NotificacionesProvider>{children}</NotificacionesProvider>
         <SwRegister />
         <InstalarApp />
         <Toaster

@@ -94,6 +94,30 @@ export async function marcarTodasLeidasParaUsuario(userId: string, rolId: number
   )
 }
 
+// El estado de lectura vive desacoplado del estatus de la entidad (ej. un
+// incidente): cerrar el incidente no marcaba las notificaciones como leídas,
+// así que una alerta crítica de un caso ya resuelto seguía apareciendo
+// indefinidamente. Se llama al cerrar/resolver la entidad — marca como leída,
+// para TODOS sus destinatarios (usuario directo o cada miembro del rol), toda
+// notificación ligada a esa entidad.
+export async function marcarLeidasPorEntidad(entidadTipo: string, entidadId: string) {
+  await query(
+    `INSERT INTO notificaciones_lecturas (notificacion_id, user_id)
+     SELECT n.id, n.user_id FROM notificaciones_eventos n
+      WHERE n.entidad_tipo = $1 AND n.entidad_id = $2 AND n.user_id IS NOT NULL
+     ON CONFLICT DO NOTHING`,
+    [entidadTipo, entidadId],
+  )
+  await query(
+    `INSERT INTO notificaciones_lecturas (notificacion_id, user_id)
+     SELECT n.id, u.id FROM notificaciones_eventos n
+     JOIN users u ON u.rol_id = n.rol_id
+      WHERE n.entidad_tipo = $1 AND n.entidad_id = $2 AND n.rol_id IS NOT NULL
+     ON CONFLICT DO NOTHING`,
+    [entidadTipo, entidadId],
+  )
+}
+
 // ─── Suscripciones (matriz evento × rol del panel admin) ─────────────────────
 
 export async function listarSuscripciones(): Promise<SuscripcionEventoRol[]> {

@@ -3,9 +3,10 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { DespachoForm } from '@/components/911/despacho/DespachoForm'
 import MapaSeguimientoOficial from '@/components/911/despacho/MapaSeguimientoOficial'
+import { SegmentPage } from '@/components/partials/SegmentPage'
 import { colorPorPrioridad } from '@/lib/incidentes/prioridad-colores'
 import { labelEstatus } from '@/lib/911/estatus-c4'
-import { MapPin, Clock, Phone, MessageSquare, Radio, Shield, CheckCircle2, AlertTriangle, FileText } from 'lucide-react'
+import { MapPin, Clock, Phone, MessageSquare, Radio, Shield, CheckCircle2, AlertTriangle, FileText, ChevronDown, ChevronRight, User, ShieldAlert, Users, Car, Navigation, BadgeCheck, RadioTower, UserRound, ClipboardList } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -61,26 +62,61 @@ function esHoy(iso: string): boolean {
   return d.getDate() === h.getDate() && d.getMonth() === h.getMonth() && d.getFullYear() === h.getFullYear()
 }
 
+function fmtHora(iso: string): string {
+  return new Date(iso).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+}
+
+function fmtDiaHora(iso: string): string {
+  return new Date(iso).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+
+function iniciales(nombre: string | null): string {
+  if (!nombre) return '—'
+  const ini = nombre.trim().split(/\s+/).slice(0, 2).map(p => p[0]?.toUpperCase() ?? '').join('')
+  return ini || '?'
+}
+
+const AVATAR_COLORES: { bg: string; fg: string }[] = [
+  { bg: '#e0e7ff', fg: '#4338ca' },
+  { bg: '#d1fae5', fg: '#047857' },
+  { bg: '#fae8ff', fg: '#a21caf' },
+  { bg: '#ffe4e6', fg: '#be123c' },
+  { bg: '#ccfbf1', fg: '#0f766e' },
+  { bg: '#fef3c7', fg: '#b45309' },
+  { bg: '#dbeafe', fg: '#1d4ed8' },
+  { bg: '#f3e8ff', fg: '#7c3aed' },
+]
+
+function colorAvatar(nombre: string | null): { bg: string; fg: string } {
+  const semilla = (nombre ?? '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  return AVATAR_COLORES[semilla % AVATAR_COLORES.length]
+}
+
 function CanalBadge({ canal, origenRondin }: { canal: string; origenRondin?: boolean }) {
   const label = origenRondin ? 'Rondín' : canal
-  const config: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-    '911':      { icon: <Phone size={11} />,         color: '#dc2626', bg: '#fef2f2' },
-    'whatsapp': { icon: <MessageSquare size={11} />, color: '#059669', bg: '#f0fdf4' },
-    'radio':    { icon: <Radio size={11} />,         color: '#1f355a', bg: '#eff1f3' },
-  }
-  const c = origenRondin
-    ? { icon: config[canal]?.icon ?? null, color: '#1e40af', bg: '#eff6ff' }
-    : config[canal] ?? { icon: null, color: '#64748b', bg: '#f8fafc' }
+  const icono =
+    canal === '911' ? <Phone size={12} /> :
+    canal === 'whatsapp' ? <MessageSquare size={12} /> :
+    canal === 'radio' ? <Radio size={12} /> : null
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: c.bg, color: c.color, borderRadius: 'var(--radius-full)' }}>
-      {c.icon} {label}
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#f1f5f9', color: '#475569', borderRadius: 'var(--radius-full)', whiteSpace: 'nowrap' }}>
+      {icono} {label}
+    </span>
+  )
+}
+
+function BadgeSemantico({ bg, color, icon, children }: { bg: string; color: string; icon?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: bg, color, borderRadius: 'var(--radius-full)', whiteSpace: 'nowrap', textTransform: 'none', letterSpacing: 'normal' }}>
+      {icon}
+      {children}
     </span>
   )
 }
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode; accent: string }[] = [
-  { key: 'pendientes',  label: 'Pendientes',  icon: <AlertTriangle size={13} />, accent: '#b45309' },
-  { key: 'en_despacho', label: labelEstatus('en_despacho'), icon: <Shield size={13} />, accent: '#1f355a' },
+  { key: 'pendientes',  label: 'Pendientes', icon: <AlertTriangle size={13} />, accent: '#b45309' },
+  { key: 'en_despacho', label: labelEstatus('en_despacho', false), icon: <Shield size={13} />, accent: '#1f355a' },
   { key: 'atendidos',   label: 'Atendidos',   icon: <CheckCircle2 size={13} />,  accent: '#15803d' },
 ]
 
@@ -150,46 +186,27 @@ export function TablonDespacho() {
         </div>
       )}
 
-      {/* Segment control */}
-      <div className="scrollbar-hide" style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', WebkitOverflowScrolling: 'touch', gap: 6, marginBottom: 24 }}>
-        {TABS.map(t => {
-          const activo = tab === t.key
-          const conteo = t.key === 'pendientes' ? pendientes.length : t.key === 'en_despacho' ? enDespacho.length : atendidos.length
-          return (
-            <button key={t.key} onClick={() => cambiarTab(t.key)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8, padding: '9px clamp(14px, 4vw, 20px)',
-                fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, textTransform: 'none', letterSpacing: 'normal',
-                border: 'none', cursor: 'pointer', transition: 'all .15s', whiteSpace: 'nowrap', flexShrink: 0,
-                background: activo ? t.accent : '#f1f5f9',
-                color: activo ? '#ffffff' : '#64748b',
-                borderRadius: 'var(--radius-full)',
-              }}>
-              {t.icon}
-              {t.label}
-              <span style={{
-                fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600,
-                background: activo ? 'rgba(255,255,255,.22)' : '#e2e8f0',
-                color: activo ? '#ffffff' : '#64748b',
-                padding: '0 7px', borderRadius: 'var(--radius-full)', lineHeight: '18px',
-              }}>
-                {conteo}
-              </span>
-            </button>
-          )
-        })}
-      </div>
+      <SegmentPage
+        tabs={TABS.map(t => ({
+          ...t,
+          count: t.key === 'pendientes' ? pendientes.length : t.key === 'en_despacho' ? enDespacho.length : atendidos.length,
+        }))}
+        activeKey={tab}
+        onChange={(k) => cambiarTab(k as TabKey)}
+        marginBottom={24}
+      />
 
       {/* Estado vacío */}
       {!cargando && listaActual.length === 0 && (
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '64px 32px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 20, fontWeight: 600, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', marginBottom: 8 }}>Sin registros</div>
+          <CheckCircle2 size={32} color="#94a3b8" style={{ marginBottom: 12 }} />
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 18, fontWeight: 600, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', marginBottom: 6 }}>Sin registros</div>
           <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8', margin: 0 }}>No hay incidentes en este estado</p>
         </div>
       )}
 
       {/* Lista plana */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {listaActual.map(card => (
           <CardRow
             key={card.id}
@@ -204,6 +221,27 @@ export function TablonDespacho() {
 
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .card-despacho {
+          transition: box-shadow .3s ease-out, transform .3s ease-out, border-color .3s ease-out;
+        }
+        .card-despacho:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--apple-shadow-glass-hover);
+          border-color: rgba(31,53,90,0.25);
+        }
+        .card-despacho:active {
+          transform: scale(0.97);
+          box-shadow: var(--shadow-card);
+          transition: transform .12s ease-out, box-shadow .12s ease-out;
+        }
+        .card-despacho-titulo { text-transform: none; letter-spacing: normal; }
+        @media (prefers-reduced-motion: reduce) {
+          .card-despacho, .card-despacho:hover, .card-despacho:active {
+            transform: none;
+            transition: box-shadow .15s ease, border-color .15s ease;
+          }
+        }
       `}</style>
     </div>
   )
@@ -217,117 +255,172 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
 }) {
   const pc = colorPorPrioridad(card.prioridad)
   const urgente = slaPorcentaje(card.fechaHoraInicio, card.prioridad) >= 75
+  const esAtendido = tab === 'atendidos'
+  const conDetencion = !!card.hayDetencion
+
+  const primeraSalida = card.unidades?.find(u => u.horaSalida)?.horaSalida ?? null
+  const primeraLlegada = card.unidades?.find(u => u.horaLlegada)?.horaLlegada ?? null
+
+  const hrefDetalle = card.canal === 'whatsapp' ? `/agente_911/whatsapp/incidentes/${card.id}` : card.canal === 'radio' ? `/agente_911/rondin/incidentes/${card.id}` : `/agente_911/ciudadano/incidentes/${card.id}`
 
   return (
-    <div style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-card)', border: '1px solid #e2e8f0' }}>
+    <div className="card-despacho" style={{ borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-card)', border: '1px solid #e2e8f0', background: '#ffffff' }}>
       <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={abierto}
         onClick={onToggle}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle() } }}
         style={{
-          borderLeft: `4px solid ${pc.principal}`,
-          padding: '16px 20px', cursor: 'pointer',
-          transition: 'background .1s',
+          padding: '18px 20px', cursor: 'pointer',
           background: abierto ? '#f8fafc' : '#ffffff',
-        }}>
-        {/* Línea 1: folio + badges + tiempo */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#0f172a', letterSpacing: '-0.01em' }}>{card.folio}</span>
+          transition: 'background .15s',
+          outline: 'none',
+        }}
+      >
+        {/* Línea 1: folio + canal + prioridad + estado + tiempo */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', letterSpacing: '-0.01em' }}>{card.folio}</span>
           <CanalBadge canal={card.canal} origenRondin={card.origenRondin} />
-          <span style={{
-            fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px',
-            background: pc.fondo, color: pc.oscuro, border: `1px solid ${pc.principal}`,
-            borderRadius: 'var(--radius-full)', textTransform: 'none', letterSpacing: 'normal',
-          }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: pc.fondo, color: pc.oscuro, borderRadius: 'var(--radius-full)', whiteSpace: 'nowrap', textTransform: 'none', letterSpacing: 'normal' }}>
+            <span style={{ width: 8, height: 8, borderRadius: 'var(--radius-full)', background: pc.principal, display: 'inline-block', flexShrink: 0 }} />
             {card.prioridad ?? 'Sin prioridad'}
           </span>
           {urgente && tab === 'pendientes' && (
-            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#fef2f2', color: '#dc2626', borderRadius: 'var(--radius-full)' }}>
-              <Clock size={10} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 3 }} /> SLA
-            </span>
+            <BadgeSemantico bg="#fef2f2" color="#dc2626" icon={<Clock size={11} />}>SLA</BadgeSemantico>
           )}
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+          {esAtendido && (
+            conDetencion
+              ? <BadgeSemantico bg="#fef2f2" color="#dc2626" icon={<ShieldAlert size={11} />}>Cerrado · Detención</BadgeSemantico>
+              : <BadgeSemantico bg="#f0fdf4" color="#15803d" icon={<CheckCircle2 size={11} />}>Cerrado</BadgeSemantico>
+          )}
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
             {esHoy(card.fechaHoraInicio) && (
-              <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#eff6ff', color: '#1e40af', borderRadius: 'var(--radius-full)' }}>
-                Hoy
-              </span>
+              <BadgeSemantico bg="#eff6ff" color="#1e40af">Hoy</BadgeSemantico>
             )}
-            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
-              <Clock size={11} /> {tiempoRelativo(card.fechaHoraInicio)}
+            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8', display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
+              <Clock size={12} /> {tiempoRelativo(card.fechaHoraInicio)}
             </span>
-            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8', transition: 'transform .2s', display: 'inline-block', transform: abierto ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-              ▼
-            </span>
+            <ChevronDown size={16} color="#94a3b8" style={{ transition: 'transform .2s', transform: abierto ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }} />
           </div>
         </div>
 
         {/* Línea 2: tipo incidente */}
-        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 500, color: '#334155', marginBottom: 6, lineHeight: 1.4 }}>
+        <div className="card-despacho-titulo" style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#334155', marginBottom: 6, lineHeight: 1.4 }}>
           {card.tipoIncidente || 'Sin clasificar'}
         </div>
 
         {/* Línea 3: ubicación */}
         {card.calle && (
-          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6 }}>
-            <MapPin size={12} color="#94a3b8" />
-            {card.calle}{card.colonia ? `, ${card.colonia}` : ''}
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6, minWidth: 0 }}>
+            <MapPin size={12} color="#94a3b8" style={{ flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.calle}{card.colonia ? `, ${card.colonia}` : ''}</span>
           </div>
         )}
 
-        {/* Línea 4: ficha completa */}
+        {/* Línea 4 (Atendidos): meta de servicio */}
+        {esAtendido && (card.fechaHoraDespacho || primeraSalida || primeraLlegada) && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', marginBottom: 10 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Clock size={11} color="#94a3b8" />
+              {card.fechaHoraDespacho ? `Despachado ${fmtDiaHora(card.fechaHoraDespacho)}` : 'Sin despacho'}
+            </span>
+            {primeraSalida && <span>· Salió {fmtHora(primeraSalida)}</span>}
+            {primeraLlegada && <span>· Llegó {fmtHora(primeraLlegada)}</span>}
+          </div>
+        )}
+
+        {/* Línea 5: CTA */}
         <div style={{ marginTop: 4 }}>
-          <Link href={card.canal === 'whatsapp' ? `/agente_911/whatsapp/incidentes/${card.id}` : card.canal === 'radio' ? `/agente_911/rondin/incidentes/${card.id}` : `/agente_911/ciudadano/incidentes/${card.id}`}
+          <Link href={hrefDetalle}
             onClick={e => e.stopPropagation()}
-            style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#92400e', background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 'var(--radius-lg)', padding: '4px 12px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, letterSpacing: 'normal', textTransform: 'none' }}>
-            <FileText size={11} /> Más detalles del reporte →
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#475569', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '7px 14px', textDecoration: 'none', letterSpacing: 'normal', textTransform: 'none', transition: 'all .2s' }}>
+            <FileText size={12} /> Ver reporte
+            <ChevronRight size={13} color="#94a3b8" />
           </Link>
         </div>
       </div>
 
       {/* Expandido */}
       {abierto && (
-        <div style={{ background: '#ffffff', borderTop: '1px solid #e2e8f0', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ background: '#ffffff', borderTop: '1px solid #e2e8f0', padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+          {/* ─── ATENDIDOS: resumen de cierre ─── */}
+          {esAtendido && (
+            <ResumenCierre card={card} />
+          )}
 
           {/* ─── PERSONAL ASIGNADO ─── */}
           {(card.unidades?.length > 0 || card.elementos?.length > 0) && (
-            <div>
-              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color: '#64748b', letterSpacing: 'normal', textTransform: 'none', marginBottom: 8 }}>
-                Personal asignado
+            <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', borderBottom: '1px solid #e2e8f0', background: 'linear-gradient(180deg,#f8fafc,#f1f5f9)' }}>
+                <Users size={15} color="#1f355a" />
+                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal', textTransform: 'none' }}>Personal asignado</span>
+                <span style={{ marginLeft: 'auto', fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, background: '#e2e8f0', color: '#475569', padding: '0 8px', borderRadius: 'var(--radius-full)', lineHeight: '18px' }}>
+                  {card.unidades.length + card.elementos.length}
+                </span>
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {card.unidades.map((u, i) => (
-                  <div key={u.id || i} style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600,
-                    padding: '5px 10px',
-                    background: u.horaSalida ? '#f0fdf4' : u.esRefuerzo ? '#fff7ed' : '#f1f5f9',
-                    border: `1px solid ${u.horaSalida ? '#bbf7d0' : u.esRefuerzo ? '#fed7aa' : '#e2e8f0'}`,
-                    borderRadius: 'var(--radius-full)',
-                  }}>
-                    <span style={{ color: u.horaSalida ? '#16a34a' : u.esRefuerzo ? '#c2410c' : '#1f355a' }}>
-                      {u.placa || '—'}
-                    </span>
-                    {u.esRefuerzo && <span style={{ fontSize: 11, opacity: .7 }}>Ref</span>}
-                    <span style={{ fontSize: 12, color: '#64748b', fontWeight: 400, marginLeft: 4 }}>
-                      {u.horaSalida
-                        ? `Salió ${new Date(u.horaSalida).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}`
-                        : 'Pendiente'}
-                    </span>
-                    {u.horaLlegada && (
-                      <span style={{ fontSize: 12, color: '#64748b', fontWeight: 400 }}>
-                        · Llegó {new Date(u.horaLlegada).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    )}
+
+              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {card.unidades.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, color: '#94a3b8', letterSpacing: 'normal', textTransform: 'none' }}>Unidades</div>
+                    {card.unidades.map((u, i) => (
+                      <div key={u.id || i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)' }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: 'rgba(31,53,90,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <Car size={17} color="#1f355a" />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#0f172a' }}>{u.placa || '—'}</span>
+                            {u.esRefuerzo && <BadgeSemantico bg="#fff7ed" color="#c2410c" icon={<RadioTower size={11} />}>Ref</BadgeSemantico>}
+                          </div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 3 }}>
+                            {u.horaLlegada
+                              ? <BadgeSemantico bg="#f0fdf4" color="#15803d" icon={<CheckCircle2 size={11} />}>En sitio</BadgeSemantico>
+                              : u.horaSalida
+                                ? <BadgeSemantico bg="#eff6ff" color="#1e40af" icon={<Navigation size={11} />}>En ruta</BadgeSemantico>
+                                : <BadgeSemantico bg="#f1f5f9" color="#64748b" icon={<Clock size={11} />}>Pendiente</BadgeSemantico>}
+                            {u.horaSalida && (
+                              <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                <Clock size={11} color="#94a3b8" /> Salió {fmtHora(u.horaSalida)}
+                              </span>
+                            )}
+                            {u.horaLlegada && (
+                              <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                                <MapPin size={11} color="#94a3b8" /> Llegó {fmtHora(u.horaLlegada)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {card.elementos.map((e, i) => (
-                  <div key={`e-${i}`} style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: 'var(--apple-font-display)', fontSize: 13,
-                    padding: '5px 10px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-full)',
-                  }}>
-                    <span style={{ fontWeight: 500, color: '#1e293b' }}>{e.nombre || '—'}</span>
-                    <span style={{ fontSize: 12, color: '#64748b' }}>({e.nomina || 's/n'})</span>
-                    {e.esPrioritario && <span style={{ fontSize: 11, fontWeight: 600, padding: '1px 5px', background: '#dcfce7', color: '#16a34a', borderRadius: 'var(--radius-full)' }}>P</span>}
-                    {e.esRefuerzo && <span style={{ fontSize: 11, fontWeight: 600, padding: '1px 5px', background: '#fed7aa', color: '#c2410c', borderRadius: 'var(--radius-full)' }}>R</span>}
+                )}
+
+                {card.elementos.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, color: '#94a3b8', letterSpacing: 'normal', textTransform: 'none' }}>Elementos</div>
+                    {card.elementos.map((e, i) => (
+                      <div key={`e-${i}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)' }}>
+                        {(() => {
+                          const av = e.esPrioritario ? { bg: '#dcfce7', fg: '#15803d' } : colorAvatar(e.nombre)
+                          return (
+                            <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-full)', background: av.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, color: av.fg }}>
+                              {iniciales(e.nombre)}
+                            </div>
+                          )
+                        })()}
+                        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.nombre || '—'}</span>
+                          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, color: '#94a3b8' }}>Nómina {e.nomina || 's/n'}</span>
+                        </div>
+                        {e.esPrioritario && <BadgeSemantico bg="#dcfce7" color="#16a34a" icon={<BadgeCheck size={11} />}>Prioritario</BadgeSemantico>}
+                        {e.esRefuerzo && <BadgeSemantico bg="#fff7ed" color="#c2410c" icon={<RadioTower size={11} />}>Refuerzo</BadgeSemantico>}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}
@@ -335,9 +428,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
           {/* ─── UBICACIÓN EN VIVO DEL OFICIAL (solo en_despacho) ─── */}
           {tab === 'en_despacho' && card.latitud != null && card.longitud != null && (
             <div>
-              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color: '#64748b', letterSpacing: 'normal', textTransform: 'none', marginBottom: 8 }}>
-                Ubicación en vivo del oficial
-              </div>
+              <SectionTitle>Ubicación en vivo del oficial</SectionTitle>
               <MapaSeguimientoOficial
                 incidenteLat={card.latitud}
                 incidenteLng={card.longitud}
@@ -369,9 +460,7 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
           {/* ─── ASIGNAR NUEVAS UNIDADES / REFUERZOS ─── */}
           {tab === 'pendientes' && (
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '16px' }}>
-              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal', textTransform: 'none', marginBottom: 12 }}>
-                {card.origenRondin ? 'Asignar unidades' : 'Asignar unidades y elementos'}
-              </div>
+              <SectionTitle>{card.origenRondin ? 'Asignar unidades' : 'Asignar unidades y elementos'}</SectionTitle>
               <DespachoForm
                 incidenteId={card.id}
                 incidenteLat={card.latitud ?? null}
@@ -390,48 +479,14 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
           {/* ─── REFUERZOS (solo en_despacho) ─── */}
           {tab === 'en_despacho' && (
             <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 'var(--radius-lg)', padding: '16px' }}>
-              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#c2410c', letterSpacing: 'normal', textTransform: 'none', marginBottom: 12 }}>
-                Enviar refuerzos
-              </div>
+              <SectionTitle color="#c2410c">Enviar refuerzos</SectionTitle>
               <DespachoForm incidenteId={card.id} incidenteLat={card.latitud ?? null} incidenteLng={card.longitud ?? null} modo="refuerzo" onDespachado={onCambio} incidentePrioridad={card.prioridad} />
             </div>
           )}
 
-          {/* ─── ATENDIDOS: badges de cierre ─── */}
-          {tab === 'atendidos' && (
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-              {card.estatus === 'atendido' && !card.hayDetencion && (
-                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#f0fdf4', color: '#15803d', borderRadius: 'var(--radius-full)' }}>
-                  {labelEstatus('atendido')}
-                </span>
-              )}
-              {card.hayDetencion && (
-                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#fef2f2', color: '#dc2626', borderRadius: 'var(--radius-full)' }}>
-                  Con detención
-                </span>
-              )}
-              {card.ofiAutoridadRecibe && (
-                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#f5f3ff', color: '#7c3aed', borderRadius: 'var(--radius-full)' }}>
-                  {card.ofiAutoridadRecibe === 'JUZGADO_CIVICO' ? 'Juzgado Cívico' : card.ofiAutoridadRecibe}
-                </span>
-              )}
-              {card.d1Pendiente && (
-                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#fff7ed', color: '#c2410c', borderRadius: 'var(--radius-full)' }}>
-                  D1 pendiente
-                </span>
-              )}
-              {card.accionesRealizadas && (
-                <div style={{ width: '100%', marginTop: 4 }}>
-                  <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color: '#64748b', letterSpacing: 'normal', textTransform: 'none', marginBottom: 2 }}>Acciones</div>
-                  <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{card.accionesRealizadas}</div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ─── DETALLE DEL INCIDENTE (colapsable) ─── */}
+          {/* ─── DETALLE DEL INCIDENTE (colapsable, no en Atendidos) ─── */}
           {tab !== 'atendidos' && (card.descripcion || card.capturadoPor || card.origenRondin || card.fechaHoraDespacho) && (
-            <DetalleIncidente card={card} tab={tab} />
+            <DetalleIncidente card={card} />
           )}
         </div>
       )}
@@ -439,33 +494,128 @@ function CardRow({ card, abierto, tab, onToggle, onCambio }: {
   )
 }
 
+// ─── Resumen de cierre (tab Atendidos) ──────────────────────────────────────
+
+function ResumenCierre({ card }: { card: CardData }) {
+  const conDetencion = !!card.hayDetencion
+  const autoridad = card.ofiAutoridadRecibe === 'JUZGADO_CIVICO' ? 'Juzgado Cívico' : card.ofiAutoridadRecibe
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderBottom: '1px solid #e2e8f0', background: 'linear-gradient(180deg,#f8fafc,#f1f5f9)' }}>
+          <ClipboardList size={14} color="#1f355a" />
+          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal', textTransform: 'none' }}>Datos complementarios</span>
+        </div>
+        <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="grid-2">
+            <CeldaResumen
+              icono={<CheckCircle2 size={14} color="#15803d" />}
+              etiqueta="Estatus"
+              valor={conDetencion
+                ? <BadgeSemantico bg="#fef2f2" color="#dc2626" icon={<ShieldAlert size={12} />}>Cerrado · Detención</BadgeSemantico>
+                : <BadgeSemantico bg="#f0fdf4" color="#15803d" icon={<CheckCircle2 size={12} />}>Cerrado</BadgeSemantico>}
+            />
+            <CeldaResumen
+              icono={<User size={14} color="#7c3aed" />}
+              etiqueta="Autoridad que recibe"
+              valor={autoridad ?? '—'}
+            />
+            <CeldaResumen
+              icono={<ShieldAlert size={14} color={conDetencion ? '#dc2626' : '#94a3b8'} />}
+              etiqueta="Detención"
+              valor={conDetencion
+                ? <BadgeSemantico bg="#fef2f2" color="#dc2626">Sí</BadgeSemantico>
+                : <BadgeSemantico bg="#f1f5f9" color="#64748b">No</BadgeSemantico>}
+            />
+            <CeldaResumen
+              icono={<FileText size={14} color={card.d1Pendiente ? '#c2410c' : '#16a34a'} />}
+              etiqueta="Reporte D1"
+              valor={card.d1Pendiente
+                ? <BadgeSemantico bg="#fff7ed" color="#c2410c">Pendiente</BadgeSemantico>
+                : <BadgeSemantico bg="#f0fdf4" color="#15803d">Completado</BadgeSemantico>}
+            />
+          </div>
+
+          {card.accionesRealizadas && (
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '12px 14px' }}>
+              <SectionTitle>Acciones realizadas</SectionTitle>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{card.accionesRealizadas}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <DetalleReporte card={card} />
+    </div>
+  )
+}
+
+function DetalleReporte({ card }: { card: CardData }) {
+  if (!card.descripcion && !card.capturadoPor) return null
+  return (
+    <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderBottom: '1px solid #e2e8f0', background: 'linear-gradient(180deg,#f8fafc,#f1f5f9)' }}>
+        <FileText size={14} color="#1f355a" />
+        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal', textTransform: 'none' }}>Detalle del reporte</span>
+      </div>
+      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {card.descripcion && (
+          <div>
+            <SectionTitle>Descripción</SectionTitle>
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{card.descripcion}</div>
+          </div>
+        )}
+        {card.capturadoPor && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b' }}>
+            <UserRound size={12} color="#94a3b8" /> Capturado por: {card.capturadoPor}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function CeldaResumen({ icono, etiqueta, valor }: { icono: React.ReactNode; etiqueta: string; valor: React.ReactNode }) {
+  return (
+    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color: '#64748b', textTransform: 'none', letterSpacing: 'normal' }}>
+        {icono}
+        {etiqueta}
+      </div>
+      <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 500, color: '#0f172a', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {valor}
+      </div>
+    </div>
+  )
+}
+
+function SectionTitle({ children, color = '#64748b' }: { children: React.ReactNode; color?: string }) {
+  return (
+    <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color, letterSpacing: 'normal', textTransform: 'none', marginBottom: 8 }}>
+      {children}
+    </div>
+  )
+}
+
 // ─── Detalle del incidente (colapsable) ────────────────────────────────────
 
-function DetalleIncidente({ card }: { card: CardData; tab: TabKey }) {
+function DetalleIncidente({ card, omitirDespachado, omitirDetalleReporte }: { card: CardData; omitirDespachado?: boolean; omitirDetalleReporte?: boolean }) {
   const [abierto, setAbierto] = useState(false)
 
   return (
     <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 12 }}>
-      <div
+      <button
+        type="button"
         onClick={() => setAbierto(!abierto)}
-        style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', userSelect: 'none', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#64748b', letterSpacing: 'normal', textTransform: 'none' }}>
-        <span style={{ transition: 'transform .2s', display: 'inline-block', transform: abierto ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+        aria-expanded={abierto}
+        style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', userSelect: 'none', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#64748b', letterSpacing: 'normal', textTransform: 'none', background: 'none', border: 'none', padding: 0 }}>
+        <ChevronRight size={16} color="#94a3b8" style={{ transition: 'transform .2s', display: 'inline-block', transform: abierto ? 'rotate(90deg)' : 'rotate(0deg)' }} />
         Detalle del incidente
-      </div>
+      </button>
       {abierto && (
         <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
-          {card.descripcion && (
-            <div>
-              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color: '#64748b', letterSpacing: 'normal', textTransform: 'none', marginBottom: 4 }}>Descripción</div>
-              <div style={{ fontFamily: 'var(--apple-font-display)', color: '#334155', lineHeight: 1.5 }}>{card.descripcion}</div>
-            </div>
-          )}
-
-          {card.capturadoPor && (
-            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8' }}>
-              Capturado por: {card.capturadoPor}
-            </div>
-          )}
+          {!omitirDetalleReporte && <DetalleReporte card={card} />}
 
           {card.origenRondin && (card.prioritarioNombre || card.elementos?.find(e => e.esPrioritario)?.nombre) && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 'var(--radius-lg)' }}>
@@ -483,15 +633,9 @@ function DetalleIncidente({ card }: { card: CardData; tab: TabKey }) {
             </div>
           )}
 
-          {card.fechaHoraDespacho && (
+          {!omitirDespachado && card.fechaHoraDespacho && (
             <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Clock size={10} /> Despachado: {new Date(card.fechaHoraDespacho).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
-            </div>
-          )}
-
-          {card.fechaHoraDespacho && (
-            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Clock size={10} /> Despachado: {new Date(card.fechaHoraDespacho).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+              <Clock size={11} /> Despachado: {fmtDiaHora(card.fechaHoraDespacho)}
             </div>
           )}
         </div>

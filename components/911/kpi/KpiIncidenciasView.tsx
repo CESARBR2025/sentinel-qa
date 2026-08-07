@@ -189,7 +189,7 @@ function PanelMapa({ titulo, icono, nota, toggle, children }: {
   return (
     <div style={{
       background: '#fff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow-card)', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+      boxShadow: 'var(--shadow-card)', overflow: 'clip', display: 'flex', flexDirection: 'column',
     }}>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '14px 18px',

@@ -12,7 +12,7 @@ import {
     PhoneCall, Hash, Building2, UserRound, Globe, Gauge, Ruler, KeyRound,
 } from "lucide-react";
 import React from "react";
-import { tieneAccesoSeccion } from "@/lib/911/permisos";
+import { tienePermiso } from "@/lib/permisos/core";
 import { labelEstatus } from "@/lib/911/estatus-c4";
 
 const ETIQUETA_TIPO: Record<string, string> = {
@@ -67,7 +67,11 @@ export default async function DetalleCiudadanoCompletoPage({ params }: { params:
     const { id } = await params;
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) redirect("/login");
-    if (!(await tieneAccesoSeccion(session.user.id, "911_ciudadano"))) redirect("/dashboard");
+    // Igual que el detalle de whatsapp/rondin: quien tenga acceso a la bitácora
+    // general de incidentes (ej. despachador, bitacorista) también puede ver el
+    // detalle de un reporte de canal ciudadano, no solo quien captura ese canal.
+    const tieneAcceso = (await tienePermiso(session.user.id, "911_ciudadano", "ver")) || (await tienePermiso(session.user.id, "incidentes", "ver"))
+    if (!tieneAcceso) redirect("/dashboard");
 
     const backHref = '/agente_911/ciudadano/incidentes'
     const backLabel = 'Bitácora'

@@ -1,10 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { usePolling } from '@/hooks/usePolling'
 import { useResponsive } from '@/hooks/useResponsive'
 import {
   Bell, BellRing, BellOff, CheckCheck, X,
@@ -13,24 +11,11 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { definicionEvento } from '@/lib/notificaciones/catalogo'
+import type { Notificacion } from '@/lib/notificaciones/types'
+import { useNotificaciones } from './NotificacionesProvider'
 import { TogglePush } from './TogglePush'
-import { AlertaCriticaBanner } from './AlertaCriticaBanner'
 
-// Cuántas notificaciones se muestran en el dropdown. El resto vive en /notificaciones.
-const MAX_DROPDOWN = 5
-const INTERVALO_MS = 30_000
 const ANCHO_DROPDOWN = 360
-
-interface Notificacion {
-  id: string
-  evento: string
-  titulo: string
-  mensaje: string
-  href: string | null
-  severidad: 'info' | 'aviso' | 'critico'
-  leida: boolean
-  creadoEn: string
-}
 
 const COLOR_SEVERIDAD: Record<string, string> = {
   info: '#0284c7',
@@ -71,144 +56,14 @@ function haceCuanto(fecha: string): string {
   return `hace ${Math.floor(hrs / 24)} d`
 }
 
-function sonarAlerta() {
-  try {
-    const ctx = new AudioContext()
-    const t = ctx.currentTime
-    for (let i = 0; i < 4; i++) {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain); gain.connect(ctx.destination)
-      osc.type = 'triangle'
-      const on = t + i * 0.18
-      const off = on + 0.18
-      osc.frequency.setValueAtTime(i % 2 === 0 ? 880 : 660, on)
-      gain.gain.setValueAtTime(0, on)
-      gain.gain.linearRampToValueAtTime(0.14, on + 0.04)
-      gain.gain.setValueAtTime(0.14, off - 0.06)
-      gain.gain.linearRampToValueAtTime(0, off)
-      osc.start(on); osc.stop(off + 0.01)
-    }
-  } catch {
-    // AudioContext bloqueado por el navegador — se omite el sonido.
-  }
-}
-
-function sonarAlertaCritica() {
-  try {
-    const ctx = new AudioContext()
-    const t = ctx.currentTime
-    for (let i = 0; i < 6; i++) {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain); gain.connect(ctx.destination)
-      osc.type = 'square'
-      const on = t + i * 0.22
-      const off = on + 0.16
-      osc.frequency.setValueAtTime(i % 2 === 0 ? 1046 : 784, on)
-      gain.gain.setValueAtTime(0, on)
-      gain.gain.linearRampToValueAtTime(0.18, on + 0.03)
-      gain.gain.setValueAtTime(0.18, off - 0.04)
-      gain.gain.linearRampToValueAtTime(0, off)
-      osc.start(on); osc.stop(off + 0.01)
-    }
-  } catch {
-    // AudioContext bloqueado por el navegador — se omite el sonido.
-  }
-}
-
 export function CampanillaNotificaciones() {
+  const { noLeidas, items, cargando, sacudir, cargarLista, abrirNotificacion, marcarTodas } = useNotificaciones()
   const [abierto, setAbierto] = useState(false)
-  const [noLeidas, setNoLeidas] = useState(0)
-  const [items, setItems] = useState<Notificacion[]>([])
-  const [cargando, setCargando] = useState(false)
   // Posición calculada del botón, para pintar el dropdown vía portal.
   const [posicion, setPosicion] = useState<{ top: number; right: number } | null>(null)
   const botonRef = useRef<HTMLButtonElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const [sacudir, setSacudir] = useState(false)
-  const previoRef = useRef(0)
-  const router = useRouter()
   const { esMovil } = useResponsive()
-  const [alertaCritica, setAlertaCritica] = useState<Notificacion | null>(null)
-  const criticaVistaRef = useRef<string | null>(null)
-
-  // Sólo el conteo (+ la crítica no leída más reciente, si hay una nueva):
-  // dos queries indexadas, sin traer la lista completa. Es lo único que corre
-  // en cada intervalo del polling.
-  const refrescarContador = useCallback(async () => {
-    try {
-      const r = await fetch('/api/notificaciones/contador', { cache: 'no-store' })
-      if (!r.ok) return
-      const { noLeidas: n, critica } = await r.json() as { noLeidas: number; critica: Notificacion | null }
-      setNoLeidas(n)
-      if (n > previoRef.current && previoRef.current !== 0) {
-        sonarAlerta()
-        setSacudir(true)
-        setTimeout(() => setSacudir(false), 600)
-      }
-      previoRef.current = n
-
-      document.title = n > 0
-        ? `(${n > 99 ? '99+' : n}) ${document.title.replace(/^\(\d+\+?\)\s/, '')}`
-        : document.title.replace(/^\(\d+\+?\)\s/, '')
-
-      // A diferencia del sonido normal, la alerta crítica sí se muestra desde
-      // la primera carga si ya hay una pendiente — es justo el caso que se
-      // quiere resolver (que no pase desapercibida aunque el usuario acabe de entrar).
-      if (critica && critica.id !== criticaVistaRef.current) {
-        criticaVistaRef.current = critica.id
-        setAlertaCritica(critica)
-        sonarAlertaCritica()
-      }
-    } catch {
-      // Sin red: se reintenta en el siguiente intervalo.
-    }
-  }, [])
-
-  const cargarLista = useCallback(async () => {
-    setCargando(true)
-    try {
-      const r = await fetch(`/api/notificaciones?limite=${MAX_DROPDOWN}`, { cache: 'no-store' })
-      if (!r.ok) return
-      const data = await r.json() as { notificaciones: Notificacion[]; noLeidas: number }
-      setItems(data.notificaciones)
-      setNoLeidas(data.noLeidas)
-      previoRef.current = data.noLeidas
-    } finally {
-      setCargando(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    const t = setTimeout(() => void refrescarContador(), 0)
-    return () => clearTimeout(t)
-  }, [refrescarContador])
-
-  // Puente near-instant: cuando llega un push mientras la pestaña está
-  // abierta, el SW manda un postMessage — refresca de inmediato en vez de
-  // esperar al próximo tick del polling de 30s. Si el navegador no soporta
-  // service workers (o no hay uno registrado, ej. en dev), no pasa nada.
-  useEffect(() => {
-    if (!('serviceWorker' in navigator)) return
-    const onMessage = (e: MessageEvent) => {
-      if (e.data?.tipo === 'notificacion-push') void refrescarContador()
-    }
-    navigator.serviceWorker.addEventListener('message', onMessage)
-    return () => navigator.serviceWorker.removeEventListener('message', onMessage)
-  }, [refrescarContador])
-
-  // El polling se detiene con la pestaña oculta: no tiene sentido consultar
-  // mientras nadie mira, y evita acumular peticiones en pestañas de fondo.
-  const [visible, setVisible] = useState(true)
-  useEffect(() => {
-    const onVis = () => setVisible(document.visibilityState === 'visible')
-    onVis()
-    document.addEventListener('visibilitychange', onVis)
-    return () => document.removeEventListener('visibilitychange', onVis)
-  }, [])
-
-  usePolling(() => { void refrescarContador() }, INTERVALO_MS, visible)
 
   // Cerrar al hacer click fuera. El dropdown vive en un portal (document.body,
   // ver más abajo por qué), así que "fuera" significa fuera del botón Y fuera
@@ -235,28 +90,9 @@ export function CampanillaNotificaciones() {
     if (nuevo) await cargarLista()
   }
 
-  async function abrirNotificacion(n: Notificacion) {
+  async function alAbrirNotificacion(n: Notificacion) {
     setAbierto(false)
-    if (!n.leida) {
-      setNoLeidas(c => Math.max(0, c - 1))
-      setItems(prev => prev.map(x => x.id === n.id ? { ...x, leida: true } : x))
-      void fetch('/api/notificaciones/leer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: n.id }),
-      })
-    }
-    if (n.href) router.push(n.href)
-  }
-
-  async function marcarTodas() {
-    setNoLeidas(0)
-    setItems(prev => prev.map(x => ({ ...x, leida: true })))
-    await fetch('/api/notificaciones/leer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todas: true }),
-    })
+    await abrirNotificacion(n)
   }
 
   return (
@@ -413,7 +249,7 @@ export function CampanillaNotificaciones() {
                   <button
                     key={n.id}
                     type="button"
-                    onClick={() => void abrirNotificacion(n)}
+                    onClick={() => void alAbrirNotificacion(n)}
                     style={{
                       display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%',
                       textAlign: 'left', cursor: 'pointer',
@@ -477,22 +313,6 @@ export function CampanillaNotificaciones() {
           </div>
         </>,
         document.body,
-      )}
-
-      {alertaCritica && (
-        <AlertaCriticaBanner
-          critica={alertaCritica}
-          onVer={() => {
-            setNoLeidas(c => Math.max(0, c - 1))
-            void fetch('/api/notificaciones/leer', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: alertaCritica.id }),
-            })
-            setAlertaCritica(null)
-          }}
-          onDescartar={() => setAlertaCritica(null)}
-        />
       )}
     </div>
   )

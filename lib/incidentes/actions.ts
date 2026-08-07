@@ -10,6 +10,7 @@ import { generarFolioIncidente } from './folio'
 import { registrarAudit } from './audit'
 import { tienePermiso, Accion } from '@/lib/incidentes/permisos'
 import { emitir } from '@/lib/notificaciones/emisor'
+import { marcarLeidasPorEntidad } from '@/lib/notificaciones/repository'
 import { tryAction, tryActionRaw, AppError, ValidationError, NotFoundError, ForbiddenError, UnauthorizedError } from '@/lib/error-handler'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -920,6 +921,9 @@ export async function cerrarPorDetencion(incidenteId: string) {
   })
 
   await registrarAudit({ userId: session.user.id, accion: 'UPDATE', entidad: 'incidentes', entidadId: incidenteId, payload: { estatus_nuevo: 'cerrado_detencion' } })
+  // El incidente ya se cerró: ninguna notificación de despacho ligada a él
+  // debe seguir apareciendo como crítica pendiente.
+  await marcarLeidasPorEntidad('incidente', incidenteId)
   revalidatePath(`/incidentes/${incidenteId}`)
 }
 

@@ -68,7 +68,7 @@ export function ColoniasCalientes({ incidentes }: { incidentes: IncidenteGeo[] }
   return (
     <aside className="kpi-colonias" aria-label="Colonias con más reportes del periodo" style={{
       background: '#fff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow-card)', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+      boxShadow: 'var(--shadow-card)', overflow: 'clip', display: 'flex', flexDirection: 'column',
     }}>
       <style dangerouslySetInnerHTML={{ __html: `
         .kpi-col-tabla tbody tr { transition: background-color 0.15s; }
@@ -90,7 +90,7 @@ export function ColoniasCalientes({ incidentes }: { incidentes: IncidenteGeo[] }
           <div style={{ minWidth: 0 }}>
             <div style={{
               fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 16,
-              color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+              color: '#0f172a', whiteSpace: 'nowrap', overflow: 'clip', textOverflow: 'ellipsis',
             }}>
               Colonias con más reportes
             </div>
@@ -137,7 +137,7 @@ export function ColoniasCalientes({ incidentes }: { incidentes: IncidenteGeo[] }
           <div style={{ padding: '0 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
             <div style={{
               border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
-              background: '#f8fafc', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+              background: '#f8fafc', overflow: 'clip', display: 'flex', flexDirection: 'column',
             }}>
               <div style={{
                 padding: '10px 14px', borderBottom: '1px solid #e2e8f0',
@@ -350,7 +350,7 @@ function FilaTabla({ colonia, total, max, ranking }: {
             <MapPin size={12} strokeWidth={2} />
           </span>
           <span style={{
-            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            overflow: 'clip', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             fontWeight: 500,
           }}>
             {colonia}
@@ -365,7 +365,7 @@ function FilaTabla({ colonia, total, max, ranking }: {
           }}>
             {n}
           </span>
-          <div style={{ width: 56, height: 4, borderRadius: 'var(--radius-full)', background: track, overflow: 'hidden' }}>
+          <div style={{ width: 56, height: 4, borderRadius: 'var(--radius-full)', background: track, overflow: 'clip' }}>
             <div style={{
               height: '100%', borderRadius: 'var(--radius-full)', background: color,
               width: `${Math.min(Math.max((total / max) * 100, total > 0 ? 12 : 0), 100)}%`,

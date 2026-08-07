@@ -553,7 +553,6 @@
 │   ├── sin_robos/
 │   │   └── page.tsx
 │   ├── error.tsx
-│   ├── favicon.ico
 │   ├── global-error.tsx
 │   ├── globals.css
 │   ├── layout.tsx
@@ -569,9 +568,12 @@
 │   │   │   ├── TablonDespacho.tsx
 │   │   │   └── UnidadCards.tsx
 │   │   ├── kpi/
+│   │   │   ├── ColoniasCalientes.tsx
+│   │   │   ├── EstadosVista.tsx
 │   │   │   ├── FiltrosRangoKpi.tsx
 │   │   │   ├── formato.ts
 │   │   │   ├── KpiIncidenciasView.tsx
+│   │   │   ├── KpiResumen.tsx
 │   │   │   ├── MapaCalorIncidencias.tsx
 │   │   │   ├── MapaPuntosIncidencias.tsx
 │   │   │   ├── ModalDetalleIncidencia.tsx
@@ -582,8 +584,18 @@
 │   │   │   │   ├── BarraRankeada.tsx
 │   │   │   │   ├── DonutKpi.tsx
 │   │   │   │   └── TendenciaDiaria.tsx
+│   │   │   ├── secciones/
+│   │   │   │   ├── SeccionAlarmasEscolares.tsx
+│   │   │   │   ├── SeccionAtencion.tsx
+│   │   │   │   ├── SeccionCard.tsx
+│   │   │   │   ├── SeccionExtorsion.tsx
+│   │   │   │   ├── SeccionResumen.tsx
+│   │   │   │   └── SeccionTiempos.tsx
 │   │   │   ├── FiltroRango911.tsx
-│   │   │   └── Panel911.tsx
+│   │   │   ├── formatos.ts
+│   │   │   ├── Panel911.tsx
+│   │   │   ├── SkeletonKpi.tsx
+│   │   │   └── StatBloque.tsx
 │   │   ├── radio/
 │   │   │   ├── FormRondinEscalado.tsx
 │   │   │   └── Input.tsx
@@ -699,9 +711,10 @@
 │   ├── nCoordinacion/
 │   │   └── ProfileDropdownCoordinacion.tsx
 │   ├── notificaciones/
-│   │   ├── AlertaCriticaBanner.tsx
+│   │   ├── AlertaCriticaToast.tsx
 │   │   ├── CampanillaNotificaciones.tsx
 │   │   ├── ListaHistorial.tsx
+│   │   ├── NotificacionesProvider.tsx
 │   │   └── TogglePush.tsx
 │   ├── oficial/
 │   │   ├── navegacion/
@@ -1402,6 +1415,7 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
 
 
 

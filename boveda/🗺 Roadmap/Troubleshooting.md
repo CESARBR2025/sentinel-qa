@@ -4,6 +4,16 @@
 
 ---
 
+## Bloque "Despachado:" duplicado en el detalle del tablón (2026-08-07) — CORREGIDO
+
+**Síntoma**: al expandir el "Detalle del incidente" de una card en `/agente_911/despacho`, la fecha de despacho aparecía dos veces ("Despachado: ..." y "Despachado: ..." idénticas).
+
+**Causa raíz**: en `components/911/despacho/TablonDespacho.tsx`, la función `DetalleIncidente` renderizaba dos `<div>` consecutivos e idénticos con `card.fechaHoraDespacho` (quedó un bloque duplicado al añadir el primero).
+
+**Fix (2026-08-07)**: eliminado el segundo bloque durante el rediseño UI de la card; además, en la tab Atendidos la fecha ya se muestra en la meta-línea del header, así que el detalle recibe `omitirDespachado` para no repetirla.
+
+---
+
 ## Error TS2305: Module has no exported member 'X'
 
 **Síntoma**: `Module '"@/lib/monitorista/detenido-service"' has no exported member 'crearSolicitudFotos'`
@@ -594,3 +604,53 @@ useEffect(() => { recargar(filtrosIniciales()) }, [recargar])
 ```
 
 **Verificación**: la query del rango default devuelve datos (`SELECT count(*) FROM incidentes WHERE fecha_hora_inicio >= now() - interval '24 hours'`). Si esto da 0, el problema no es este — revisar el filtro de estatus/canal o el rango de fechas.
+
+---
+
+## REGLA Responsive: `overflow:'hidden'` en archivos con tabla (auditor `check:responsive`)
+
+**Síntoma**: `npm run check:responsive` marca como NUEVA un archivo en la categoría `overflow:'hidden' en archivo con tabla` (gate de pre-commit, exit 1).
+
+**Causa raíz**: el detector `scripts/audit-responsive.mjs` (`overflowHidden`) marca cualquier archivo que contenga `(<table|>tabla|Tabla)` **y** el literal `overflow: 'hidden'`. Ojo: importar `TablaIncidencias` (palabra "Tabla") o un `overflow: 'hidden'` en texto/barra ya dispara la regla, no solo contenedores.
+
+**Fix**:
+1. En contenedores de card/panel que recortan un radio → usar **`overflow: 'clip'`** (recorta sin crear scroll container y no rompe el scroll horizontal interno de `.tabla-wrap`). Soporte: Chrome 90+, Safari 16+, Firefox 81+.
+2. En celdas con `text-overflow: ellipsis` → `overflow: 'clip'` funciona igual (spec: text-overflow aplica con hidden/clip/scroll).
+3. En `TablaIncidencias`, al quitar `overflow:'hidden'` de la `<section>` con radio, dar `borderRadius` superior al header y `'0 0 var(--radius-lg) var(--radius-lg)'` al footer de paginación para conservar el recorte visual.
+4. Verificar con `npm run check:responsive` → debe dar `0 NUEVA(S)`.
+
+**No** agregar el archivo a `scripts/responsive/exceptions.json` (amplía deuda) salvo que sea estrictamente necesario.
+
+---
+
+## Alerta crítica de notificaciones sigue apareciendo con el incidente ya resuelto
+
+**Síntoma**: el toast de "Alerta crítica" (`AlertaCriticaToast`, evento `despacho.asignado`) sigue mostrándose para un incidente que ya está en "Atendidos"/cerrado.
+
+**Causa raíz**: el estado de lectura de una notificación (`notificaciones_lecturas`) vive completamente desacoplado del estatus de la entidad a la que se refiere (`incidentes.estatus`). Cerrar/resolver un incidente (`atendido`, `cerrado_detencion`) no marcaba como leídas las notificaciones ligadas a él (`entidad_tipo='incidente'`), así que `criticaMasRecienteSinLeer` (`lib/notificaciones/repository.ts`) la seguía devolviendo indefinidamente. Se agrava con el hecho de que `CampanillaNotificaciones` se remonta en cada navegación (ver nota abajo), lo que reactiva la alerta cada vez que cambias de página.
+
+**Fix**: `lib/notificaciones/repository.ts` expone `marcarLeidasPorEntidad(entidadTipo, entidadId)` — inserta la lectura para todos los destinatarios (`user_id` directo o cada miembro del `rol_id`) de las notificaciones ligadas a esa entidad. Se llama en los dos puntos donde un incidente pasa a estado cerrado:
+- `lib/oficial/repository.ts` (`crearReporteCampo`, tras el `COMMIT` de la transacción que cierra el reporte de campo).
+- `lib/incidentes/actions.ts` (`cerrarPorDetencion`).
+
+Si se agrega un nuevo flujo que cierre un incidente (nuevo `UPDATE incidentes SET estatus = 'atendido'|'cerrado_detencion'`), debe llamar también a `marcarLeidasPorEntidad('incidente', incidenteId)`.
+
+**Nota relacionada — CORREGIDA (2026-08-07)**: `DashboardHeader` (y por tanto `CampanillaNotificaciones`) se importa directo en ~76 `page.tsx` en vez de vivir en un layout raíz persistente — cada navegación desmontaba/remontaba el componente, reiniciando el `setInterval` de polling (30s) y reseteando `criticaVistaRef`/`previoRef`. En vez de mover `DashboardHeader` a un layout compartido (cambio grande, riesgoso para ~76 páginas con props por página), se extrajo el estado a `components/notificaciones/NotificacionesProvider.tsx` — un Context Provider montado **una sola vez** en `app/layout.tsx` (el layout raíz sobrevive a la navegación cliente del App Router). `CampanillaNotificaciones` quedó como componente de UI puro (`useNotificaciones()`), sin dueño del `setInterval`/refs — el polling, el conteo previo y el id de la última crítica vista ahora persisten sin importar cuántas veces se remonte el botón de la campanita. El provider gatea el polling con `authClient.useSession()` (no corre en `/login` u otras páginas públicas). `AlertaCriticaToast` también se renderiza una sola vez desde el provider, no desde cada instancia de `CampanillaNotificaciones` (antes `Header.tsx` y `SubHeader.tsx` podían montarla por separado).
+
+---
+
+## Botón "Más detalles del reporte" en el tablón de despacho no lleva a ningún lado (rol despachador)
+
+**Síntoma**: en `/agente_911/despacho`, tab "Atendidos" (o cualquier tab), el botón "Más detalles del reporte →" de una tarjeta de canal ciudadano/teléfono no muestra la ficha — visualmente "no pasa nada" (en realidad sí navega, pero termina rebotado a `/dashboard`, que para el rol despachador redirige de vuelta a su propio hub, dando la sensación de que el botón no hizo nada).
+
+**Causa raíz**: `TablonDespacho.tsx` arma el link según el canal del incidente — `/agente_911/ciudadano/incidentes/[id]` (teléfono, default), `/agente_911/whatsapp/incidentes/[id]` o `/agente_911/rondin/incidentes/[id]`. Las tres páginas de detalle tienen guardas de permiso **inconsistentes**:
+- whatsapp y rondin: `tienePermiso(user, '911_whatsapp'|'911_rondin', 'ver') || tienePermiso(user, 'incidentes', 'ver')` — con fallback a la sección genérica `incidentes` (bitácora general), agregado a propósito para que cualquiera con acceso a la bitácora vea el detalle histórico aunque esos canales ya no se asignen a ningún rol operativo.
+- ciudadano: solo `tieneAccesoSeccion(user, '911_ciudadano')` — **sin** ese fallback.
+
+Verificado contra la BD real (`SELECT ... FROM permisos WHERE usuario_id = ...`): el usuario de prueba del rol `agente_despacho` tiene `puede_ver=true` en `911_despacho` **e `incidentes`**, pero NO en `911_ciudadano`. El mismo hueco existía duplicado en el gate grueso del proxy (`lib/permisos/mapa-secciones.ts`): `'/agente_911/rondin': ['911_rondin', 'incidentes']` y `'/agente_911/whatsapp': ['911_whatsapp', 'incidentes']` sí tenían el fallback; `'/agente_911/ciudadano': ['911_ciudadano']` no — así que la petición se bloqueaba en el proxy antes de que la página siquiera corriera su propio check.
+
+**Fix**:
+1. `app/agente_911/ciudadano/incidentes/[id]/page.tsx`: reemplazado `tieneAccesoSeccion(session.user.id, '911_ciudadano')` por `tienePermiso(session.user.id, '911_ciudadano', 'ver') || tienePermiso(session.user.id, 'incidentes', 'ver')`, igual que sus hermanas whatsapp/rondin.
+2. `lib/permisos/mapa-secciones.ts`: `'/agente_911/ciudadano': ['911_ciudadano', 'incidentes']` (antes solo `['911_ciudadano']`).
+
+**Prevención**: las tres páginas de detalle de incidente por canal (`ciudadano`/`whatsapp`/`rondin`) deben mantener la misma guarda de permiso (sección propia del canal `||` `incidentes` genérico), tanto en la página como en `mapa-secciones.ts`. Si se agrega un cuarto canal, replicar el mismo patrón en ambos lugares.

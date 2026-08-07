@@ -101,7 +101,7 @@ export function TablaIncidencias({ incidentes, previewId, onSeleccionar, onVerDe
   return (
     <section style={{
       background: '#fff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow-card)', overflow: 'hidden',
+      boxShadow: 'var(--shadow-card)',
     }}>
       <style dangerouslySetInnerHTML={{ __html: `
         .kpi-tabla { width: 100%; border-collapse: collapse; }
@@ -136,6 +136,7 @@ export function TablaIncidencias({ incidentes, previewId, onSeleccionar, onVerDe
       <div style={{
         padding: '14px 18px', borderBottom: '1px solid #e2e8f0', display: 'flex',
         justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+        borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
           <h2 style={{
@@ -269,6 +270,7 @@ export function TablaIncidencias({ incidentes, previewId, onSeleccionar, onVerDe
       <div style={{
         padding: '12px 18px', borderTop: '1px solid #e2e8f0', display: 'flex',
         justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+        borderRadius: '0 0 var(--radius-lg) var(--radius-lg)',
       }}>
         <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b' }}>
           {filtrados.length === 0
