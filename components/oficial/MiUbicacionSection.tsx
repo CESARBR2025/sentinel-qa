@@ -1,10 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { useUbicacionOficial } from './OficialUbicacionTracker'
+import { MapaMiUbicacion } from './MapaMiUbicacion'
 
 export function MiUbicacionSection() {
   const { posicionActual, ultimoEnvio, segundosParaProximoEnvio, permisoDenegado, soportado } = useUbicacionOficial()
+  const [direccion, setDireccion] = useState<{ calle: string; colonia: string }>({ calle: '', colonia: '' })
 
   const estado = !soportado || permisoDenegado
     ? { texto: 'No disponible', color: '#dc2626', bg: '#fee2e2', dot: '#dc2626' }
@@ -13,74 +16,61 @@ export function MiUbicacionSection() {
       : { texto: 'Buscando señal...', color: '#94a3b8', bg: '#f1f5f9', dot: '#94a3b8' }
 
   return (
-    <div style={{
-      flex: '1 1 380px', background: '#fff', border: '1px solid #e2e8f0', padding: 32,
-      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', alignSelf: 'flex-start',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-        <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, textTransform: 'uppercase', margin: 0, color: '#0f172a', letterSpacing: '0.04em' }}>
-          Mi Ubicación
-        </h2>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 9999, fontFamily: 'JetBrains Mono,monospace', fontSize: 8, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', background: estado.bg, color: estado.color }}>
-          <span style={{ width: 5, height: 5, borderRadius: '50%', background: estado.dot }} />
-          {estado.texto}
-        </span>
+    <>
+      <div className="pf-head">
+        <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-lg)', background: 'rgba(31,53,90,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <MapPin size={18} color="#1f355a" strokeWidth={1.5} />
+        </div>
+        <div>
+          <h2 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 20, fontWeight: 600, textTransform: 'none', margin: 0, color: '#0f172a', letterSpacing: 'normal' }}>
+            Mi Ubicación
+          </h2>
+          <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', margin: '2px 0 0' }}>
+            Reporte de geolocalización al despacho
+          </p>
+        </div>
       </div>
 
       {!soportado || permisoDenegado ? (
-        <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b', textAlign: 'center', margin: 0 }}>
+        <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', margin: '20px 0 0', lineHeight: 1.5 }}>
           {permisoDenegado
             ? 'Bloqueaste el permiso de ubicación en el navegador — el despachador no podrá verte en el mapa de cercanía.'
             : 'Tu navegador no soporta geolocalización.'}
         </p>
       ) : (
         <>
-          <div className="up-placa-box">
-            <div className="up-placa-header">
-              <span>LAT</span>
-              <span>LNG</span>
-            </div>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 18, fontWeight: 700, color: posicionActual ? '#0f172a' : '#cbd5e1', letterSpacing: '0.05em', textAlign: 'center', lineHeight: 1.2 }}>
-              {posicionActual ? `${posicionActual.lat.toFixed(5)}, ${posicionActual.lng.toFixed(5)}` : 'Esperando GPS...'}
-            </div>
-            <div className="up-placa-footer">
-              <MapPin size={9} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
-              POSICIÓN ACTUAL DEL NAVEGADOR
-            </div>
+          <div className="pf-row">
+            <span className="pf-label">Estatus</span>
+            <span className="pf-badge" style={{ background: estado.bg, color: estado.color }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: estado.dot }} />
+              {estado.texto}
+            </span>
+          </div>
+          <div className="pf-row">
+            <span className="pf-label">Calle</span>
+            <span className="pf-value">{direccion.calle || (posicionActual ? 'Detectando...' : '—')}</span>
+          </div>
+          <div className="pf-row">
+            <span className="pf-label">Colonia</span>
+            <span className="pf-value">{direccion.colonia || (posicionActual ? 'Detectando...' : '—')}</span>
           </div>
 
-          <div style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid #f1f5f9' }}>
-            <div>
-              <div className="pf-label">Próxima actualización al despacho</div>
-              <div className="pf-value" style={{ fontFamily: 'JetBrains Mono,monospace', color: segundosParaProximoEnvio <= 5 ? '#dc2626' : '#0f172a' }}>
-                en {segundosParaProximoEnvio}s
-              </div>
-            </div>
-            <div style={{
-              width: 40, height: 40, borderRadius: '50%',
-              background: segundosParaProximoEnvio <= 5 ? '#fef2f2' : '#f1f5f9',
-              border: `2px solid ${segundosParaProximoEnvio <= 5 ? '#dc2626' : '#cbd5e1'}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, fontWeight: 700, color: segundosParaProximoEnvio <= 5 ? '#dc2626' : '#64748b' }}>
-                {segundosParaProximoEnvio}
-              </span>
-            </div>
-          </div>
+          <MapaMiUbicacion lat={posicionActual?.lat ?? null} lng={posicionActual?.lng ?? null} onDireccion={setDireccion} />
 
-          <div style={{ marginTop: 10 }}>
-            <div className="pf-label">Último envío confirmado</div>
-            <div className="pf-value">
+          <div className="pf-row">
+            <span className="pf-label">Próxima actualización</span>
+            <span className="pf-value">en {segundosParaProximoEnvio}s</span>
+          </div>
+          <div className="pf-row">
+            <span className="pf-label">Último envío confirmado</span>
+            <span className="pf-value">
               {ultimoEnvio
-                ? `${ultimoEnvio.en.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} — ${ultimoEnvio.lat.toFixed(5)}, ${ultimoEnvio.lng.toFixed(5)}`
+                ? `${ultimoEnvio.en.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`
                 : 'Aún no se ha enviado ningún reporte'}
-            </div>
+            </span>
           </div>
         </>
       )}
-    </div>
+    </>
   )
 }

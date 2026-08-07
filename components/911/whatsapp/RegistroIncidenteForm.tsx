@@ -1,20 +1,23 @@
 'use client';
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     MessageSquare, User, AlertTriangle, MapPin,
-    ClipboardCheck, Shield, Send, Hash, Search
+    ClipboardCheck, Shield, Send, Hash
 } from 'lucide-react';
 import { RolField } from '@/components/rol_servicios/RolInputs';
 import { DashboardHeader } from "@/components/partials/Header";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { createIncidente } from '@/lib/incidentes/actions';
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from '@/lib/maps/googleMapsConfig'
+import type { AuthUser } from '@/lib/auth'
+import type { CatalogosJerarquicos } from '@/lib/911/types'
 
-interface Despachador { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }
+interface Despachador { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean; enLinea: boolean }
 
-export default function RegistroIncidenteZen({ user, catalogos, despachadores }: { user: any, catalogos: any, despachadores: Despachador[] }) {
+type CampoChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+
+export default function RegistroIncidenteZen({ user, catalogos, despachadores }: { user: AuthUser, catalogos: CatalogosJerarquicos, despachadores: Despachador[] }) {
     // 2. TODOS LOS ESTADOS DENTRO DE LA FUNCIÓN
-    const [canal, setCanal] = useState('WHATSAPP');
     const [isAnonimo, setIsAnonimo] = useState(false);
     const [latitud, setLatitud] = useState<number | null>(null);
     const [longitud, setLongitud] = useState<number | null>(null);
@@ -32,16 +35,16 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
     const [selectedSubtipo, setSelectedSubtipo] = useState<string>("")
     const [selectedIncidente, setSelectedIncidente] = useState<string>("")
     const subTiposFiltrados = selectedTipo
-        ? catalogos.subtipos.filter((s: any) => s.tipoEmergenciaId === Number(selectedTipo))
+        ? catalogos.subtipos.filter((s) => s.tipoEmergenciaId === Number(selectedTipo))
         : []
     const incidentesFiltrados = selectedSubtipo
-        ? catalogos.incidentes.filter((i: any) => i.subtipoEmergenciaId === Number(selectedSubtipo))
+        ? catalogos.incidentes.filter((i) => i.subtipoEmergenciaId === Number(selectedSubtipo))
         : []
     const prioridadAutocompletada = selectedIncidente
-        ? catalogos.incidentes.find((i: any) => i.id === Number(selectedIncidente))?.prioridadCatalogo
+        ? catalogos.incidentes.find((i) => i.id === Number(selectedIncidente))?.prioridadCatalogo
         : null
     const esImprocedente = selectedTipo
-        ? catalogos.emergencias.find((e: any) => e.id === Number(selectedTipo))?.codigo === '7'
+        ? catalogos.emergencias.find((e) => e.id === Number(selectedTipo))?.codigo === '7'
         : false
 
     // Canalización a despacho
@@ -49,12 +52,13 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
     const [prioridadManualId, setPrioridadManualId] = useState('')
     const [despachadorId, setDespachadorId] = useState('')
     const prioridadEfectiva = prioridadManualId
-        ? catalogos.prioridades.find((p: any) => p.id === Number(prioridadManualId))?.nombre
+        ? catalogos.prioridades.find((p) => p.id === Number(prioridadManualId))?.nombre
         : prioridadAutocompletada
     const esAltaPrioridad = String(prioridadEfectiva).toUpperCase() === 'ALTA'
     const despachadorSeleccionado = despachadores.find((d) => d.id === despachadorId)
     const despachadorNoDisponible = Boolean(despachadorSeleccionado && !despachadorSeleccionado.activo)
-    const dependenciaSspm = catalogos.dependencias.find((d: any) => d.clave === 'SEGURIDAD_PUBLICA')
+    const despachadorSinActividad = Boolean(despachadorSeleccionado && despachadorSeleccionado.activo && !despachadorSeleccionado.enLinea)
+    const dependenciaSspm = catalogos.dependencias.find((d) => d.clave === 'SEGURIDAD_PUBLICA')
 
     // Cargar la API de Google
     const { isLoaded } = useJsApiLoader({
@@ -95,7 +99,7 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
     };
 
     return (
-        <form action={createIncidente as any} style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+        <form action={async (formData: FormData) => { await createIncidente(formData) }} style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
 
             {/* 3. CAMPOS OCULTOS (Aquí es donde se pasan los datos al servidor) */}
             <input type="hidden" name="canal" value="whatsapp" />
@@ -108,7 +112,7 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
 
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-            <DashboardHeader user={user} />
+            <DashboardHeader user={{ name: user.name, apellido: user.apellido ?? undefined, email: user.email }} />
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 48px' }}>
                 <div style={{ marginBottom: '40px' }}>
@@ -145,27 +149,27 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
                                 <RolField label="Tipo de Emergencia" icon={AlertTriangle} as="select" name="tipoEmergenciaId"
                                     value={selectedTipo}
-                                    onChange={(e: any) => { setSelectedTipo(e.target.value); setSelectedSubtipo(""); setSelectedIncidente("") }}>
+                                    onChange={(e: CampoChangeEvent) => { setSelectedTipo(e.target.value); setSelectedSubtipo(""); setSelectedIncidente("") }}>
                                     <option value="">Seleccionar...</option>
-                                    {catalogos.emergencias.map((item: any) => (
+                                    {catalogos.emergencias.map((item) => (
                                         <option key={item.id} value={item.id}>{item.codigo} - {item.nombre}</option>
                                     ))}
                                 </RolField>
                                 <RolField label="Subtipo" icon={AlertTriangle} as="select" name="subtipoEmergenciaId"
                                     value={selectedSubtipo}
-                                    onChange={(e: any) => { setSelectedSubtipo(e.target.value); setSelectedIncidente("") }}
+                                    onChange={(e: CampoChangeEvent) => { setSelectedSubtipo(e.target.value); setSelectedIncidente("") }}
                                     disabled={!selectedTipo}>
                                     <option value="">{selectedTipo ? "Seleccionar subtipo..." : "Primero seleccione tipo"}</option>
-                                    {subTiposFiltrados.map((item: any) => (
+                                    {subTiposFiltrados.map((item) => (
                                         <option key={item.id} value={item.id}>{item.codigo} - {item.nombre}</option>
                                     ))}
                                 </RolField>
                                 <RolField label="Incidente Específico" icon={AlertTriangle} as="select" name="tipoIncidenteId"
                                     value={selectedIncidente}
-                                    onChange={(e: any) => setSelectedIncidente(e.target.value)}
+                                    onChange={(e: CampoChangeEvent) => setSelectedIncidente(e.target.value)}
                                     disabled={!selectedSubtipo}>
                                     <option value="">{selectedSubtipo ? "Seleccionar incidente..." : "Primero seleccione subtipo"}</option>
-                                    {incidentesFiltrados.map((item: any) => (
+                                    {incidentesFiltrados.map((item) => (
                                         <option key={item.id} value={item.id}>{item.codigoCatalogo && `${item.codigoCatalogo} - `}{item.nombre}</option>
                                     ))}
                                 </RolField>
@@ -173,9 +177,9 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
                                 <RolField label="Prioridad (autocompletada)" icon={AlertTriangle} value={prioridadAutocompletada || "—"} disabled />
                                 <RolField label="Ajuste Manual de Prioridad" icon={AlertTriangle} as="select" name="prioridadId"
-                                    value={prioridadManualId} onChange={(e: any) => setPrioridadManualId(e.target.value)}>
+                                    value={prioridadManualId} onChange={(e: CampoChangeEvent) => setPrioridadManualId(e.target.value)}>
                                     <option value="">Automática (por catálogo)</option>
-                                    {catalogos.prioridades.map((item: any) => <option key={item.id} value={item.id}>{item.nombre}</option>)}
+                                    {catalogos.prioridades.map((item) => <option key={item.id} value={item.id}>{item.nombre}</option>)}
                                 </RolField>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -251,7 +255,7 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                                         icon={MapPin}
                                         placeholder="Nombre de la calle..."
                                         value={direccion.calle}
-                                        onChange={(e: any) => setDireccion({ ...direccion, calle: e.target.value })}
+                                        onChange={(e: CampoChangeEvent) => setDireccion({ ...direccion, calle: e.target.value })}
                                     />
                                 </div>
 
@@ -262,7 +266,7 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                                     icon={Hash}
                                     placeholder="Ej. 102-A"
                                     value={direccion.numeroExterior} // <--- Conectado
-                                    onChange={(e: any) => setDireccion({ ...direccion, numeroExterior: e.target.value })}
+                                    onChange={(e: CampoChangeEvent) => setDireccion({ ...direccion, numeroExterior: e.target.value })}
                                 />
 
                                 {/* NÚMERO INTERIOR (Sigue siendo manual) */}
@@ -276,7 +280,7 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                                         icon={MapPin}
                                         placeholder="Nombre de la colonia..."
                                         value={direccion.colonia}
-                                        onChange={(e: any) => setDireccion({ ...direccion, colonia: e.target.value })}
+                                        onChange={(e: CampoChangeEvent) => setDireccion({ ...direccion, colonia: e.target.value })}
                                     />
                                 </div>
 
@@ -298,7 +302,7 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                                 key={esImprocedente ? 'imp' : 'normal'}
                                 disabled={esImprocedente}
                                 defaultValue={esImprocedente ? 'false' : 'true'}
-                                onChange={(e: any) => setRequiereDespacho(e.target.value)}>
+                                onChange={(e: CampoChangeEvent) => setRequiereDespacho(e.target.value)}>
                                 <option value="true">Sí (Enviar a despacho)</option>
                                 <option value="false">Solo registro estadístico</option>
                             </RolField>
@@ -326,12 +330,17 @@ export default function RegistroIncidenteZen({ user, catalogos, despachadores }:
                                         ⚠ Prioridad ALTA: el despachador seleccionado figura como inactivo — considera elegir otro
                                     </div>
                                 )}
+                                {esAltaPrioridad && !despachadorNoDisponible && despachadorSinActividad && (
+                                    <div style={{ padding: '10px 14px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2, fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#92400e', marginBottom: 10 }}>
+                                        ⚠ Prioridad ALTA: el despachador seleccionado no está en línea en este momento — considera elegir otro
+                                    </div>
+                                )}
                                 <select name="despachadorId" value={despachadorId} onChange={(e) => setDespachadorId(e.target.value)}
                                     style={{ width: '100%', padding: '10px 14px', border: '1px solid #e2e8f0', borderLeft: '3px solid #3e5171', borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13 }}>
                                     <option value="">Seleccionar despachador...</option>
                                     {despachadores.map((d) => (
                                         <option key={d.id} value={d.id}>
-                                            {d.name} {d.apellido} {d.activo ? '' : '(inactivo)'}
+                                            {d.name} {d.apellido} {d.activo ? '' : '(inactivo)'} {d.activo && !d.enLinea ? '(sin actividad reciente)' : ''}
                                         </option>
                                     ))}
                                 </select>

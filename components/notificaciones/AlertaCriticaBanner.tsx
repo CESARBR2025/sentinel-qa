@@ -29,30 +29,33 @@ export function AlertaCriticaBanner({ critica, onVer, onDescartar }: Props) {
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2147483000,
       background: '#dc2626', color: '#fff',
-      padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12,
+      padding: '12px 16px', paddingTop: 'calc(12px + env(safe-area-inset-top))',
+      display: 'flex', alignItems: 'center', gap: 12,
       boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
     }}>
       <Siren size={20} style={{ flexShrink: 0 }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.85 }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, opacity: 0.85 }}>
           Alerta crítica
         </div>
-        <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 13.5, fontWeight: 600 }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13.5, fontWeight: 600 }}>
           {critica.titulo}
         </div>
-        <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, opacity: 0.9 }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 400, opacity: 0.9 }}>
           {critica.mensaje}
         </div>
       </div>
       <button type="button" onClick={ver} style={{
         flexShrink: 0, background: '#fff', color: '#dc2626', border: 'none',
-        padding: '7px 14px', borderRadius: 3, cursor: 'pointer',
-        fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700,
+        padding: '9px 16px', borderRadius: 'var(--radius-lg)', cursor: 'pointer',
+        fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600,
       }}>
         Ver
       </button>
       <button type="button" onClick={onDescartar} aria-label="Descartar" style={{
-        flexShrink: 0, background: 'transparent', border: 'none', color: '#fff', opacity: 0.85, cursor: 'pointer',
+        flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 32, height: 32, background: 'transparent', border: 'none', borderRadius: 'var(--radius-md)',
+        color: '#fff', opacity: 0.85, cursor: 'pointer',
       }}>
         <X size={18} />
       </button>

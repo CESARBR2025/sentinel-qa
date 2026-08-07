@@ -30,11 +30,10 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
   if (!incidenteBasico) notFound()
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
+        variant="apple"
       />
 
       <main style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box', overflowX: 'clip' }}>
@@ -55,8 +54,8 @@ export default async function AtenderDespachoPage({ params }: { params: Promise<
           />
         </div>
 
-        <footer style={{ padding: '24px 0', fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94a3b8', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
-          SSPM · SAN JUAN DEL RÍO · CENTINELA {APP_VERSION} · OFICIAL
+        <footer style={{ padding: '24px 0', fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#94a3b8', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
+          SSPM · San Juan del Río · Centinela {APP_VERSION} · Oficial
         </footer>
       </main>
     </div>

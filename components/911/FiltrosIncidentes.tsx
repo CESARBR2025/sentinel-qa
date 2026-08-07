@@ -55,7 +55,7 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
     <div style={wrapperStyle}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' }}>
         <div style={fieldStyle}>
-          <label style={labelStyle}>FOLIO</label>
+          <label style={labelStyle}>Folio</label>
           <div style={{ display: 'flex', gap: 4 }}>
             <input
               value={folio}
@@ -71,7 +71,7 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
         </div>
 
         <div style={fieldStyle}>
-          <label style={labelStyle}>CANAL</label>
+          <label style={labelStyle}>Canal</label>
           <select value={searchParams.get('canal') ?? ''} onChange={e => setParam('canal', e.target.value)} style={inputStyle}>
             <option value="">Todos</option>
             {CANALES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -79,7 +79,7 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
         </div>
 
         <div style={fieldStyle}>
-          <label style={labelStyle}>ESTATUS</label>
+          <label style={labelStyle}>Estatus</label>
           <select value={searchParams.get('estatus') ?? ''} onChange={e => setParam('estatus', e.target.value)} style={inputStyle}>
             <option value="">Todos</option>
             {ESTATUS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
@@ -87,7 +87,7 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
         </div>
 
         <div style={fieldStyle}>
-          <label style={labelStyle}>TIPO DE INCIDENTE</label>
+          <label style={labelStyle}>Tipo de incidente</label>
           <select value={searchParams.get('tipoIncidenteId') ?? ''} onChange={e => setParam('tipoIncidenteId', e.target.value)} style={inputStyle}>
             <option value="">Todos</option>
             {tiposIncidente.map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
@@ -95,7 +95,7 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
         </div>
 
         <div style={fieldStyle}>
-          <label style={labelStyle}>PRIORIDAD</label>
+          <label style={labelStyle}>Prioridad</label>
           <select value={searchParams.get('prioridadId') ?? ''} onChange={e => setParam('prioridadId', e.target.value)} style={inputStyle}>
             <option value="">Todas</option>
             {prioridades.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
@@ -103,18 +103,18 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
         </div>
 
         <div style={fieldStyle}>
-          <label style={labelStyle}>DESDE</label>
+          <label style={labelStyle}>Desde</label>
           <input type="date" value={searchParams.get('desde') ?? ''} onChange={e => setParam('desde', e.target.value)} style={inputStyle} />
         </div>
 
         <div style={fieldStyle}>
-          <label style={labelStyle}>HASTA</label>
+          <label style={labelStyle}>Hasta</label>
           <input type="date" value={searchParams.get('hasta') ?? ''} onChange={e => setParam('hasta', e.target.value)} style={inputStyle} />
         </div>
 
         {hayFiltros && (
           <button onClick={limpiar} style={btnLimpiarStyle}>
-            <X size={12} /> LIMPIAR
+            <X size={12} /> Limpiar
           </button>
         )}
       </div>
@@ -122,9 +122,9 @@ export function FiltrosIncidentes({ tiposIncidente, prioridades }: Props) {
   )
 }
 
-const wrapperStyle: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '16px 20px', marginBottom: 24 }
+const wrapperStyle: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '16px 20px', marginBottom: 24, boxShadow: 'var(--shadow-card)' }
 const fieldStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 4, minWidth: 140 }
-const labelStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', fontWeight: 600, letterSpacing: '0.1em' }
-const inputStyle: React.CSSProperties = { fontFamily: 'Inter', fontSize: 12, padding: '7px 10px', border: '1px solid #e2e8f0', borderRadius: 2, background: '#ffffff', color: '#1e293b', outline: 'none', width: '100%' }
-const btnBuscarStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0 10px', background: '#0f172a', color: '#ffffff', border: 'none', borderRadius: 2, cursor: 'pointer' }
-const btnLimpiarStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '8px 14px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 2, cursor: 'pointer' }
+const labelStyle: React.CSSProperties = { fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', fontWeight: 500, letterSpacing: 'normal', textTransform: 'none' }
+const inputStyle: React.CSSProperties = { fontFamily: 'var(--apple-font-display)', fontSize: 14, padding: '9px 12px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', background: '#ffffff', color: '#1e293b', outline: 'none', width: '100%' }
+const btnBuscarStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', padding: '0 10px', background: '#0f172a', color: '#ffffff', border: 'none', borderRadius: 'var(--radius-lg)', cursor: 'pointer' }
+const btnLimpiarStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, padding: '8px 14px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 'var(--radius-lg)', cursor: 'pointer' }

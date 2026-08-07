@@ -163,9 +163,7 @@ export interface ExtorsionRow {
   telefonoExtorsion: string | null
   grupoDelictivo: string | null
   modusOperandi: string | null
-  unidadResultado: string | null
-  folioReporte: string | null
-  fecha: string | null
+  resultado: string | null
   creadoEn: string
 }
 

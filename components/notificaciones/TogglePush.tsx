@@ -4,11 +4,11 @@ import { BellPlus, BellOff, Loader2 } from 'lucide-react'
 import { usePushSubscription } from '@/hooks/usePushSubscription'
 
 const ESTILO_BASE: React.CSSProperties = {
-  display: 'flex', alignItems: 'center', gap: 6, width: '100%',
-  padding: '10px 14px', border: 'none', borderTop: '1px solid #e2e8f0',
+  display: 'flex', alignItems: 'center', gap: 8, width: '100%', flexShrink: 0,
+  padding: '11px 14px', border: 'none', borderTop: '1px solid #e2e8f0',
   background: 'transparent', cursor: 'pointer', textAlign: 'left',
-  fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
-  letterSpacing: '0.1em', textTransform: 'uppercase', color: '#64748b',
+  fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500,
+  letterSpacing: 'normal', textTransform: 'none', color: '#64748b',
 }
 
 export function TogglePush() {

@@ -27,54 +27,59 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
   const params = await searchParams
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <ToastExito show={params.exito === '1'} folio={params.folio} />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         .card-o {
-          background: #ffffff; border: 1px solid #e2e8f0; padding: 32px;
-          text-decoration: none; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-          display: flex; flex-direction: column; min-height: 280px;
-          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); cursor: pointer;
-          position: relative; overflow: hidden; width: 100%; max-width: 520px;
+          background: var(--apple-glass-bg); backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--apple-glass-border); padding: 32px;
+          text-decoration: none; transition: all 0.3s ease-out;
+          display: flex; flex-direction: column; min-height: 280px; height: 100%;
+          box-shadow: var(--apple-shadow-glass); cursor: pointer;
+          position: relative; overflow: hidden; width: 100%;
+          border-radius: var(--radius-xl);
         }
-        .card-o:hover { border-color: #1f355a; transform: translateY(-5px); box-shadow: 0 20px 40px -12px rgba(31, 53, 90,0.15); }
-        .card-o:hover .co-top { width: 100%; }
-        .card-o:hover .co-left { height: 100%; }
+        .card-o:hover { border-color: rgba(31, 53, 90, 0.25); transform: translateY(-2px); box-shadow: var(--apple-shadow-glass-hover); }
+        .card-o:active {
+          transform: scale(0.97); box-shadow: var(--apple-shadow-glass); border-color: rgba(31, 53, 90, 0.25);
+          transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .12s ease-out;
+        }
         .card-o:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+        .co-icon { transition: all 0.3s ease; }
+        @media (prefers-reduced-motion: reduce) {
+          .card-o, .card-o:hover, .card-o:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
+          .card-o:hover .co-icon, .card-o:active .co-icon { transform: none; }
+        }
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Oficial en Campo" backHref={backHref} />
+      <DashboardHeader user={user} roleLabel="Oficial en Campo" backHref={backHref} variant="apple" />
 
-      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
         <PageHeader
           title="Panel"
           accent="Oficial"
-          subtitle={`${user.name} ${user.apellido ?? ''} · operación en campo`}
+          subtitle="Despachos, rondín e infracciones desde un solo lugar"
         />
 
         {/* Cards */}
-        <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 40 }}>
+        <div className="cat-cards-grid">
 
           {/* Card: Mis Despachos */}
-          <Link href="/oficial/despachos" className="card-o" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+          <Link href="/oficial/despachos" className="card-o">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <Shield size={32} />
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <Shield size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                DESPACHOS
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Despachos
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
                 Reportes y Despachos
               </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
                 Atiende tus despachos activos, revisa reportes cerrados y gestiona denuncias desde un solo lugar
               </p>
             </div>
@@ -82,69 +87,60 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
           </Link>
 
           {/* Card: Rondín */}
-          <Link href="/oficial/rondin" className="card-o" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+          <Link href="/oficial/rondin" className="card-o">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <Radio size={32} />
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <Radio size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                ESCALA A DESPACHO
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Escala a despacho
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
                 Reporte de Rondín
               </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
                 Registra un avistamiento en rondín — genera solicitud de despacho para asignación de unidades
               </p>
             </div>
           </Link>
 
           {/* Card: Captura de Infracciones */}
-          <Link href="/infracciones/captura" className="card-o" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+          <Link href="/infracciones/captura" className="card-o">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <FileBadge2 size={32} />
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <FileBadge2 size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                VÍA · MÓDULO
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Vía · módulo
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
                 Captura de Infracciones
               </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
                 Registra una nueva infracción de tránsito con datos del vehículo, infractor y ubicación
               </p>
             </div>
           </Link>
 
           {/* Card: Configuración de mi Perfil */}
-          <Link href="/oficial/configuracion" className="card-o" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
+          <Link href="/oficial/configuracion" className="card-o">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <Settings size={32} />
+              <div className="co-icon" style={{ color: '#64748b' }}>
+                <Settings size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                CONFIGURACIÓN
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Configuración
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
+              <h3 style={{ fontFamily: 'var(--apple-font-display)', fontSize: 26, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', margin: '0 0 8px 0', color: '#0f172a' }}>
                 Configuración de mi Perfil
               </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+              <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
                 Actualiza tus datos personales, unidad asignada y más
               </p>
             </div>
@@ -153,11 +149,10 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
         </div>
 
         {/* Footer */}
-        <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
+        <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#94a3b8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>SSPM · San Juan del Río · Qro</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · OFICIAL</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
+            <span>Centinela {APP_VERSION} · Oficial</span>
           </div>
         </div>
 

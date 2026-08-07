@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Car } from "lucide-react";
 import { ModalSeleccionarUnidad } from "./ModalSeleccionarUnidad";
 import type { PatrullaAsignacion } from "@/lib/flota/types";
 
@@ -17,100 +17,71 @@ export function UnidadAsignadaSection({
   const [modalAbierto, setModalAbierto] = useState(false);
 
   return (
-    <div
-      style={{
-        flex: "1 1 380px",
-        background: "#fff",
-        border: "1px solid #e2e8f0",
-        padding: 32,
-        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
-        alignSelf: "flex-start",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-        <h2
-          style={{
-            fontFamily: "Barlow Condensed,sans-serif",
-            fontSize: 20,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            margin: 0,
-            color: "#0f172a",
-            letterSpacing: "0.04em",
-          }}
-        >
-          Unidad Asignada
-        </h2>
+    <>
+      <div className="pf-head">
+        <div style={{ width: 40, height: 40, borderRadius: "var(--radius-lg)", background: "rgba(31,53,90,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Car size={18} color="#1f355a" strokeWidth={1.5} />
+        </div>
+        <div>
+          <h2 style={{ fontFamily: "var(--apple-font-display)", fontSize: 20, fontWeight: 600, textTransform: "none", margin: 0, color: "#0f172a", letterSpacing: "normal" }}>
+            Unidad Asignada
+          </h2>
+          <p style={{ fontFamily: "var(--apple-font-display)", fontSize: 13, color: "#64748b", margin: "2px 0 0" }}>
+            {patrullaActual ? "Vehículo de servicio en tu turno" : "Sin unidad asignada para tu turno"}
+          </p>
+        </div>
       </div>
 
       {patrullaActual ? (
         <>
-          {/* Placa — asignada */}
-          <div className="up-placa-box">
-            <div className="up-placa-header">
-              <span>SSPM</span>
-              <span>QRO</span>
-            </div>
-            <div className="up-placa-numero">
+          <div className="pf-row">
+            <span className="pf-label">Placa</span>
+            <span className="pf-value" style={{ fontFamily: "var(--apple-font-display)", fontWeight: 600, letterSpacing: "0.04em" }}>
               {patrullaActual.etiqueta}
-            </div>
-            <div className="up-placa-footer">SAN JUAN DEL RÍO</div>
+            </span>
           </div>
-
-          <div className="up-modelo">{patrullaActual.detalle}</div>
-
-          <div style={{ marginTop: 10, display: "flex", justifyContent: "center" }}>
-            <span className="up-badge up-badge-asignada">
+          <div className="pf-row">
+            <span className="pf-label">Unidad</span>
+            <span className="pf-value">{patrullaActual.detalle}</span>
+          </div>
+          <div className="pf-row">
+            <span className="pf-label">Estatus</span>
+            <span className="pf-badge pf-badge-activo">
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#16a34a" }} />
               Asignada
             </span>
           </div>
-
-          <div className="up-footer" style={{ display: "flex", justifyContent: "center" }}>
+          <div className="pf-actions">
             <button
               type="button"
               onClick={() => setModalAbierto(true)}
               className="up-btn-secondary"
             >
               <Pencil size={12} />
-              Cambiar Unidad
+              Cambiar unidad
             </button>
           </div>
         </>
       ) : (
         <>
-          {/* Placa — sin asignar */}
-          <div className="up-placa-box up-placa-box-empty">
-            <div className="up-placa-header">
-              <span style={{ color: "#94a3b8" }}>SSPM</span>
-              <span style={{ color: "#94a3b8" }}>QRO</span>
-            </div>
-            <div className="up-placa-numero up-placa-numero-empty">
-              — — — — —
-            </div>
-            <div className="up-placa-footer" style={{ color: "#94a3b8" }}>
-              SIN ASIGNAR
-            </div>
-          </div>
-
-          <div className="up-modelo up-modelo-empty">
-            No tienes una unidad asignada
-          </div>
-
-          <div style={{ marginTop: 10, display: "flex", justifyContent: "center" }}>
-            <span className="up-badge up-badge-sin">
+          <div className="pf-row">
+            <span className="pf-label">Estatus</span>
+            <span className="pf-badge pf-badge-inactivo" style={{ background: "#f1f5f9", color: "#64748b" }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#94a3b8" }} />
               Sin asignar
             </span>
           </div>
-
-          <div className="up-footer" style={{ display: "flex", justifyContent: "center" }}>
+          <div className="pf-row">
+            <span className="pf-label">Unidad</span>
+            <span className="pf-value" style={{ color: "#94a3b8" }}>—</span>
+          </div>
+          <div className="pf-actions">
             <button
               type="button"
               onClick={() => setModalAbierto(true)}
               className="up-btn-primary"
             >
-              Asignar Unidad
+              Asignar unidad
             </button>
           </div>
         </>
@@ -123,6 +94,6 @@ export function UnidadAsignadaSection({
           onClose={() => setModalAbierto(false)}
         />
       )}
-    </div>
+    </>
   );
 }

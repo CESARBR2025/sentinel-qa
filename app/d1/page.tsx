@@ -1,11 +1,9 @@
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { Plus } from 'lucide-react';
 
 import { DashboardHeader } from '@/components/partials/Header';
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader';
-import { styles } from '@/components/reportes/d1/styles';
+import { PageHeader } from '@/components/partials/PageHeader';
 import { D1Filters } from '@/components/reportes/d1/D1Filters';
 import { D1ReportsTable } from '@/components/reportes/d1/D1ReportsTable';
 import { listarReportesD1 } from '@/lib/d1/service'
@@ -28,15 +26,12 @@ export default async function ReportesD1Page({
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-            <DashboardHeader user={user} roleLabel="Sistema Cosmos" />
+            <DashboardHeader user={user} roleLabel="Sistema Cosmos" backHref="/agente_reportes" backLabel="Panel de Reportes" />
             <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
                 <PageHeader
                     title="Registro de"
                     accent="Reportes D1"
                     subtitle="SSPM · Sistema de Denuncia D1"
-                    actions={
-                        <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
-                    }
                 />
                 <D1Filters />
                 <D1ReportsTable data={data} />

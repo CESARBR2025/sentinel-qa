@@ -1,7 +1,11 @@
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
 import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialesLista } from '@/lib/admin-transito/actions'
 import { ToastAuto } from '@/components/ui/ToastAuto'
+import { DashboardHeader } from '@/components/partials/Header'
+import { DashboardFooter } from '@/components/partials/Footer'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import OficialesTable from '@/components/admin-transito/OficialesTable'
 
@@ -11,6 +15,8 @@ export default async function OficialesPage({
   searchParams: Promise<{ exito?: string; error?: string }>
 }) {
   const { exito, error } = await searchParams
+  const session = await auth.api.getSession({ headers: await headers() })
+  const user = session!.user as { name: string; apellido?: string; email: string }
   const oficiales = await obtenerOficialesLista()
 
   const deptos = await listarDepartamentosActivos()
@@ -18,7 +24,9 @@ export default async function OficialesPage({
   const patrullas = await listarPatrullasParaAsignacion()
 
   return (
-    <div>
+    <>
+      <DashboardHeader user={user} variant="apple" roleLabel="Admin Tránsito" backHref="/admin-transito" backLabel="Admin Tránsito" />
+      <main className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <ToastAuto show={exito === 'destituido'} mensaje="Oficial destituido correctamente" />
       <ToastAuto show={exito === 'reactivado'} mensaje="Oficial reactivado correctamente" />
       <ToastAuto show={exito === 'reincorporado'} mensaje="Oficial reincorporado correctamente" />
@@ -30,10 +38,7 @@ export default async function OficialesPage({
         title="Gestión de"
         accent="Oficiales"
         subtitle={`${oficiales.length} oficial${oficiales.length !== 1 ? 'es' : ''} registrado${oficiales.length !== 1 ? 's' : ''}`}
-        actions={<>
-          <PageHeaderLink href="/admin-transito" variant="secondary">← Panel</PageHeaderLink>
-          <PageHeaderLink href="/admin-transito/oficiales/nuevo">+ Registrar Oficial</PageHeaderLink>
-        </>}
+        actions={<PageHeaderLink href="/admin-transito/oficiales/nuevo">+ Registrar Oficial</PageHeaderLink>}
       />
 
       <div
@@ -78,6 +83,9 @@ export default async function OficialesPage({
           </tbody>
         </table>
       </div>
-    </div>
+
+      <DashboardFooter />
+      </main>
+    </>
   )
 }

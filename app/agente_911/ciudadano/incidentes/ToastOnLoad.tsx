@@ -25,7 +25,7 @@ export default function ToastOnLoad() {
         color: '#fff',
         padding: '16px 24px',
         borderRadius: '4px',
-        fontFamily: 'JetBrains Mono, monospace',
+        fontFamily: 'var(--apple-font-display)',
         fontSize: '13px',
         fontWeight: '600',
         boxShadow: '0 4px 16px rgba(0,0,0,0.2)',

@@ -822,7 +822,8 @@ alerta al subir el contador, y polling pausado con pestaña oculta.
 Puntos de diseño a preservar si se porta:
 - **Portal a `document.body`**, no `position:absolute` anidado — evita que el
   dropdown quede tapado por tarjetas con `backdrop-filter`/`overflow` en la página.
-- Posición calculada con `getBoundingClientRect()` del botón al abrir.
+- Posición calculada con `getBoundingClientRect()` del botón al abrir (solo se usa en
+  tablet/desktop — ver bottom sheet abajo).
 - `usePolling` sólo trae el **contador**; la lista completa (`MAX_DROPDOWN = 5`)
   se pide sólo al abrir el dropdown o si el contador sube.
 - Optimistic UI: al hacer click en una notificación se marca leída en el estado
@@ -830,9 +831,24 @@ Puntos de diseño a preservar si se porta:
 - `sonarAlerta()` usa Web Audio API directo (osciladores), sin archivo de audio —
   evita depender de un asset; se degrada en silencio si `AudioContext` está bloqueado.
 
+**Bottom sheet nativo en móvil (≤720px, `esMovil` de `useResponsive()`)**: en vez del
+dropdown flotante top-anchored que usa tablet/desktop, en móvil el mismo panel (header +
+lista + `TogglePush` + link "Ver todas" — un solo bloque de JSX, sin duplicar markup, solo
+ramifica el `style` inline por `esMovil`) se renderiza como hoja que sube desde abajo:
+`position:fixed; left/right:0; bottom:0`, radios solo arriba (`var(--radius-xl) var(--radius-xl) 0 0`),
+`maxHeight:82vh` con la lista en `flex:1; overflowY:auto` para que header/footer queden fijos,
+`paddingBottom: env(safe-area-inset-bottom)`, drag-handle decorativo, botón `X` explícito de
+cierre (el backdrop de fondo — `rgba(15,23,42,.45)`, click cierra — ya lo hacía el listener
+global de `mousedown`, el `onClick` del backdrop es redundante a propósito por claridad).
+Animación de entrada `translateY(100%)→0` vía clase `.campanilla-sheet`, respeta
+`prefers-reduced-motion`. Mismo patrón documentado en `DESIGN.md §4` ("Cards hub — variante
+compacta") y `§8` ("Densidad nativa en móvil") — si se necesita otro bottom sheet en el
+sistema (perfil, filtros), replicar esta implementación en vez de crear un componente nuevo
+desde cero.
+
 Código completo: ver `components/notificaciones/CampanillaNotificaciones.tsx`
-de este repo (307 líneas, cópialo tal cual y ajusta sólo la paleta de colores
-inline al tema del proyecto destino).
+de este repo (cópialo tal cual y ajusta sólo la paleta de colores inline al tema del
+proyecto destino).
 
 **Montaje**: se monta **dentro** de los componentes de header compartidos
 (`Header.tsx`/`SubHeader.tsx` en este repo), no en cada página — así una sola
@@ -1128,6 +1144,7 @@ El polling ya existente de `CampanillaNotificaciones.tsx` (cada 30s, `/api/notif
 - **"Descartar"**: solo oculta el banner — no marca leída, el contador de la campanita sigue reflejando lo pendiente.
 - Sonido distinto (`sonarAlertaCritica`, onda cuadrada, 6 tonos) del sonido normal de la campanita.
 - A diferencia del sonido normal (que se omite en la primera carga de la sesión), el banner **sí aparece desde la primera carga** si ya hay una crítica pendiente — es el caso que se quiere resolver.
+- Tipografía Apple-style (`var(--apple-font-display)`, antes JetBrains Mono/Inter mezclados) y `paddingTop: calc(12px + env(safe-area-inset-top))` — es `position:fixed; top:0`, así que sin el safe-area el banner queda debajo del notch/status bar en PWA `standalone` (mismo motivo que obliga el safe-area en `DashboardHeader`, ver `DESIGN.md §8`).
 
 ## Contador en el título de la pestaña
 

@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { FileDown, Download, Bike, Car, ShieldAlert, Gavel, Search } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { ReportStat } from '@/components/reportes/deteccion_camara/ReportStat'
 import { ReportFilters } from '@/components/reportes/modulo_incidentes/ReportFilters'
 import { ReportesTabs } from '@/components/reportes/modulo_incidentes/ReportesTabs'
@@ -35,7 +35,7 @@ export default async function ReportesOperativosPage({
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
 
-      <DashboardHeader user={user} roleLabel="Resumen de Incidentes" />
+      <DashboardHeader user={user} roleLabel="Resumen de Incidentes" backHref="/agente_reportes" backLabel="Panel de Reportes" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
@@ -43,7 +43,6 @@ export default async function ReportesOperativosPage({
           accent="Operativos"
           subtitle="SSPM · Inteligencia Operativa"
           actions={<>
-            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
             <button style={{ ...styles.primaryButton, background: 'white', color: '#0F172A', border: '1px solid #CBD5E1' }}>
               <FileDown size={16} /> PDF
             </button>

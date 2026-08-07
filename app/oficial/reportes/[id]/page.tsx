@@ -6,12 +6,12 @@ import { AlertTriangle, CheckCircle2, MapPin, User, Shield, Car, Home } from 'lu
 import Link from 'next/link'
 import { MapaPinFijo } from '@/components/oficial/MapaPinFijo'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 
-const LBL: React.CSSProperties = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }
-const VAL: React.CSSProperties = { fontFamily: 'Inter,sans-serif', fontSize: 14, color: '#1e293b' }
-const CARD: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, padding: '24px 28px' }
-const SEC: React.CSSProperties  = { fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 18, textTransform: 'uppercase', color: '#0f172a', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }
+const LBL: React.CSSProperties = { fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }
+const VAL: React.CSSProperties = { fontFamily: 'var(--apple-font-display)', fontSize: 14, color: '#1e293b' }
+const CARD: React.CSSProperties = { background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', padding: '24px 28px' }
+const SEC: React.CSSProperties  = { fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 16, textTransform: 'none', letterSpacing: 'normal', color: '#0f172a', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }
 
 export default async function ReporteDetallePage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -28,14 +28,15 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
   const pendienteDenu = r.quiereDenuncia && !r.d1
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
+        variant="apple"
+        backHref="/oficial/despachos"
+        backLabel="Mis Despachos"
       />
 
-      <div className="pad-pagina" style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="pad-pagina" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
         {/* Encabezado */}
         <PageHeader
@@ -44,15 +45,14 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
           subtitle={`Folio CAD: ${r.ofiFolioCad || 'S/C'} · ${new Date(r.createdAt).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}
           actions={
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-              <PageHeaderLink href="/oficial/despachos" variant="secondary">← Mis Despachos</PageHeaderLink>
               {tieneDenuncia && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
-                  <CheckCircle2 size={11} /> CON DENUNCIA D1
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '3px 10px', background: '#dcfce7', color: '#16a34a', borderRadius: 'var(--radius-full)' }}>
+                  <CheckCircle2 size={11} /> Con denuncia D1
                 </span>
               )}
               {pendienteDenu && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
-                  <AlertTriangle size={11} /> DENUNCIA PENDIENTE
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '3px 10px', background: '#fef3c7', color: '#b45309', borderRadius: 'var(--radius-full)' }}>
+                  <AlertTriangle size={11} /> Denuncia pendiente
                 </span>
               )}
             </div>
@@ -61,19 +61,19 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
 
         {/* Sin denuncia — opción de generarla (visible siempre que no haya D1) */}
         {!tieneDenuncia && !pendienteDenu && (
-          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderLeft: '4px solid #1f355a', borderRadius: 2, padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderLeft: '4px solid #1f355a', borderRadius: 'var(--radius-lg)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
             <div>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 18, color: '#0f172a', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 16, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal', marginBottom: 4 }}>
                 Sin denuncia registrada
               </div>
-              <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b' }}>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>
                 No se vinculó una denuncia a este reporte. Puedes generar una ahora si la situación lo requiere.
               </div>
             </div>
             <Link
               href={`/denuncia/nuevo?reporteCampoId=${r.id}&calle=${encodeURIComponent(r.ofiCalle ?? '')}&colonia=${encodeURIComponent(r.ofiColonia ?? '')}&lat=${r.ofiLatitud ?? ''}&lng=${r.ofiLongitud ?? ''}&oficial=${encodeURIComponent(r.ofiOficialNombre ?? '')}`}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#1f355a', color: '#ffffff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2, whiteSpace: 'nowrap' }}>
-              GENERAR DENUNCIA
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#1f355a', color: '#ffffff', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, textTransform: 'none', letterSpacing: 'normal', textDecoration: 'none', borderRadius: 'var(--radius-lg)', whiteSpace: 'nowrap' }}>
+              Generar denuncia
             </Link>
           </div>
         )}
@@ -158,7 +158,7 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
                   <span style={LBL}>Vehículos Asegurados</span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
                     {r.ofiVehiculos.map((v, i) => (
-                      <div key={i} style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, color: '#334155', padding: '8px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2 }}>
+                      <div key={i} style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#334155', padding: '8px 12px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)' }}>
                         #{i+1} · {v.tipo} · Placas: {v.placas} · Serie: {v.serie} · Color: {v.color} · Destino: {v.destino}
                       </div>
                     ))}
@@ -216,19 +216,19 @@ export default async function ReporteDetallePage({ params }: { params: Promise<{
 
         {/* Completar denuncia pendiente */}
         {pendienteDenu && (
-          <div style={{ background: '#fefce8', border: '1px solid #fde68a', borderLeft: '4px solid #d97706', borderRadius: 2, padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: '#fefce8', border: '1px solid #fde68a', borderLeft: '4px solid #d97706', borderRadius: 'var(--radius-lg)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
             <div>
-              <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 18, color: '#b45309', textTransform: 'uppercase', marginBottom: 4 }}>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 16, color: '#b45309', textTransform: 'none', letterSpacing: 'normal', marginBottom: 4 }}>
                 Denuncia pendiente de registro
               </div>
-              <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#92400e' }}>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#92400e' }}>
                 La víctima indicó que desea hacer la denuncia pero aún no se ha registrado el D1.
               </div>
             </div>
             <Link
               href={`/denuncia/nuevo?reporteCampoId=${r.id}&calle=${encodeURIComponent(r.ofiCalle ?? '')}&colonia=${encodeURIComponent(r.ofiColonia ?? '')}&lat=${r.ofiLatitud ?? ''}&lng=${r.ofiLongitud ?? ''}&oficial=${encodeURIComponent(r.ofiOficialNombre ?? '')}`}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#d97706', color: '#ffffff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2, whiteSpace: 'nowrap' }}>
-              <AlertTriangle size={14} /> COMPLETAR DENUNCIA
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#d97706', color: '#ffffff', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, textTransform: 'none', letterSpacing: 'normal', textDecoration: 'none', borderRadius: 'var(--radius-lg)', whiteSpace: 'nowrap' }}>
+              <AlertTriangle size={14} /> Completar denuncia
             </Link>
           </div>
         )}

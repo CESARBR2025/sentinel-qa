@@ -2,7 +2,7 @@ import { TabSolicitudes } from '@/components/fiscalia/TabSolicitudes'
 import { obtenerDashboardFiscalia, obtenerSolicitudes } from '@/lib/fiscalia/actions'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 
 export default async function SolicitudesPage() {
   const user = await obtenerDashboardFiscalia()
@@ -19,14 +19,13 @@ export default async function SolicitudesPage() {
         .badge-estado { font-family: 'JetBrains Mono',monospace; font-size: 9px; letter-spacing: 0.06em; padding: 3px 10px; display: inline-block; text-transform: uppercase; }
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Solicitudes de Evidencias" />
+      <DashboardHeader user={user} roleLabel="Solicitudes de Evidencias" backHref="/fiscalia" backLabel="Panel" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
         <PageHeader
           title="Solicitudes de"
           accent="Evidencias"
           subtitle="Reportes de denuncias con solicitud de evidencias a monitorista"
-          actions={<PageHeaderLink href="/fiscalia" variant="secondary">← Panel</PageHeaderLink>}
         />
 
         <TabSolicitudes pendientes={pendientes} finalizadas={finalizadas} />

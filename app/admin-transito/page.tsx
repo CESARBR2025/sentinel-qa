@@ -1,9 +1,18 @@
 import Link from 'next/link'
 import { Users, ArrowRight } from 'lucide-react'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { DashboardHeader } from '@/components/partials/Header'
+import { DashboardFooter } from '@/components/partials/Footer'
 
 export default async function AdminTransitoDashboardPage() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  const user = session!.user as { name: string; apellido?: string; email: string }
+
   return (
-    <div>
+    <>
+      <DashboardHeader user={user} variant="apple" roleLabel="Admin Tránsito" backHref="/dashboard" backLabel="Dashboard" />
+      <main className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <style>{`
         .at-card:hover {
           border-color: #1f355a !important;
@@ -124,6 +133,9 @@ export default async function AdminTransitoDashboardPage() {
         </div>
         <ArrowRight size={20} color="#94a3b8" />
       </Link>
-    </div>
+
+      <DashboardFooter />
+      </main>
+    </>
   )
 }

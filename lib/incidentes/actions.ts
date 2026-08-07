@@ -40,6 +40,21 @@ async function esTipoImprocedente(tipoEmergenciaId: number | null): Promise<bool
   return result.rows[0]?.codigo === '7'
 }
 
+// Regla de negocio: un teléfono con 5+ reportes previos se marca como "usuario
+// frecuente" de forma automática. El conteo se hace sobre la BD (telefono_reportante).
+async function conteoTelFrecuente(telefono: string | null): Promise<number> {
+  if (!telefono) return 0
+  const result = await query<{ n: number }>(
+    `SELECT COUNT(*)::int AS n FROM incidentes WHERE telefono_reportante = $1`,
+    [telefono],
+  )
+  return result.rows[0]?.n ?? 0
+}
+
+async function resolverEsUsuarioFrecuente(formData: FormData, telefono: string | null): Promise<boolean> {
+  return bool(formData, 'esUsuarioFrecuente') || (await conteoTelFrecuente(telefono)) >= 5
+}
+
 // Antes resolvía los destinatarios a mano por permiso y hacía un fan-out de una
 // fila por monitorista. Ahora emite una sola notificación dirigida al rol, con
 // la audiencia configurable desde la matriz del panel de administración.
@@ -130,6 +145,8 @@ export async function createIncidente(formData: FormData) {
     throw new ValidationError('Un incidente de tipo Improcedentes no se puede canalizar a despacho — solo se registra con fines estadísticos')
   }
 
+  const telefonoReportante = str(formData, 'telefonoReportante')
+  const esUsuarioFrecuente = await resolverEsUsuarioFrecuente(formData, telefonoReportante)
 
   const inc = await query<{ id: string }>(
     `INSERT INTO incidentes (
@@ -146,7 +163,7 @@ export async function createIncidente(formData: FormData) {
     [
       folio, consecutivo, canal, tipoReporte, nombreReportante,
       anonimo, sexo, num(formData, 'edad'),
-      bool(formData, 'esUsuarioFrecuente'), bool(formData, 'esPersonaAfectada'),
+      esUsuarioFrecuente, bool(formData, 'esPersonaAfectada'),
       bool(formData, 'esMigrante'),
       str(formData, 'calle'), str(formData, 'numero_exterior'), str(formData, 'numero_interior'),
       str(formData, 'colonia'), str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
@@ -158,7 +175,7 @@ export async function createIncidente(formData: FormData) {
       canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
       canal === 'radio' ? str(formData, 'nombreOficial') : null,
       num(formData, 'medioCanalizacionId'), bool(formData, 'requiereDespacho'),
-      estatus, session.user.id, str(formData, 'folioCad'), bool(formData, 'svvNotificado'), num(formData, 'dependenciaId'), str(formData, 'telefonoReportante'),
+      estatus, session.user.id, str(formData, 'folioCad'), bool(formData, 'svvNotificado'), num(formData, 'dependenciaId'), telefonoReportante,
     ],
   )
   const incidenteId = inc.rows[0].id
@@ -242,6 +259,7 @@ export async function createIncidente(formData: FormData) {
   revalidatePath('/agente_911/whatsapp');
   revalidatePath('/agente_911/rondin');
   revalidatePath('/agente_911/ciudadano');
+  revalidatePath('/agente_911/ciudadano/nuevoreporte');
   revalidatePath('/incidentes');
 
   redirect(targetPath);
@@ -288,6 +306,9 @@ export async function createIncidenteCliente(formData: FormData) {
     throw new ValidationError('Un incidente de tipo Improcedentes no se puede canalizar a despacho — solo se registra con fines estadísticos')
   }
 
+  const telefonoReportante = str(formData, 'telefonoReportante')
+  const esUsuarioFrecuente = await resolverEsUsuarioFrecuente(formData, telefonoReportante)
+
   const inc = await query<{ id: string }>(
     `INSERT INTO incidentes (
       folio, folio_consecutivo, canal, tipo_reporte, nombre_reportante,
@@ -303,7 +324,7 @@ export async function createIncidenteCliente(formData: FormData) {
     [
       folio, consecutivo, canal, tipoReporte, nombreReportante,
       anonimo, sexo, num(formData, 'edad'),
-      bool(formData, 'esUsuarioFrecuente'), bool(formData, 'esPersonaAfectada'),
+      esUsuarioFrecuente, bool(formData, 'esPersonaAfectada'),
       bool(formData, 'esMigrante'),
       str(formData, 'calle'), str(formData, 'numero_exterior'), str(formData, 'numero_interior'),
       str(formData, 'colonia'), str(formData, 'entreCalles'), str(formData, 'referenciaUbicacion'),
@@ -315,7 +336,7 @@ export async function createIncidenteCliente(formData: FormData) {
       canal === 'whatsapp' ? str(formData, 'grupoWhatsapp') : null,
       canal === 'radio' ? str(formData, 'nombreOficial') : null,
       num(formData, 'medioCanalizacionId'), bool(formData, 'requiereDespacho'),
-      estatus, session.user.id, str(formData, 'folioCad'), bool(formData, 'svvNotificado'), num(formData, 'dependenciaId'), str(formData, 'telefonoReportante'),
+      estatus, session.user.id, str(formData, 'folioCad'), bool(formData, 'svvNotificado'), num(formData, 'dependenciaId'), telefonoReportante,
     ],
   )
   const incidenteId = inc.rows[0].id
@@ -377,9 +398,19 @@ export async function createIncidenteCliente(formData: FormData) {
   revalidatePath('/agente_911/whatsapp');
   revalidatePath('/agente_911/rondin');
   revalidatePath('/agente_911/ciudadano');
+  revalidatePath('/agente_911/ciudadano/nuevoreporte');
   revalidatePath('/incidentes');
 
   return { id: incidenteId, folio }
+}
+
+/**
+ * Verificación en vivo desde el formulario: devuelve cuántos reportes previos
+ * tiene el teléfono en la BD para auto-marcar "usuario frecuente" (>= 5).
+ */
+export async function verificarTelefonoFrecuente(telefono: string): Promise<{ count: number }> {
+  await requireOperador('ver')
+  return { count: await conteoTelFrecuente(telefono?.trim() || null) }
 }
 // ─── Personas afectadas ───────────────────────────────────────────────────────
 export async function addPersonaAfectada(formData: FormData) {
@@ -903,12 +934,11 @@ export async function createExtorsion(formData: FormData) {
     if (est3 === 'atendido' || est3 === 'cerrado_detencion') throw new ValidationError('No se puede modificar un incidente cerrado')
 
     await query(
-      `INSERT INTO incidente_extorsion (incidente_id, telefono_extorsion, grupo_delictivo, modus_operandi, unidad_resultado, folio_reporte, fecha) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      `INSERT INTO incidente_extorsion (incidente_id, telefono_extorsion, grupo_delictivo, modus_operandi, resultado) VALUES ($1,$2,$3,$4,$5)`,
       [
         incidenteId,
         str(formData, 'telefonoExtorsion'), str(formData, 'grupoDelictivo'),
-        str(formData, 'modusOperandi'), str(formData, 'unidadResultado'),
-        str(formData, 'folioReporte'), str(formData, 'fecha'),
+        str(formData, 'modusOperandi'), str(formData, 'resultado'),
       ],
     )
 

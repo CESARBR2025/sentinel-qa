@@ -6,7 +6,7 @@ import { MapPin, Clock, Shield, ChevronRight, FileText, CheckCircle2, AlertTrian
 import { verificarRolOficial, listarDespachosAsignados, listarDespachosAtendidos, contarDespachosAsignadosOficial, contarDespachosAtendidosOficial } from '@/lib/oficial/service'
 import type { DespachoAsignado, DespachoAtendido } from '@/lib/oficial/types'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { labelEstatus } from '@/lib/911/estatus-c4'
 import { SegmentControl } from '@/components/oficial/SegmentControl'
 import { ToastExito } from '@/components/oficial/ToastExito'
@@ -22,11 +22,10 @@ function ResolucionBadge({ estatus }: { estatus: string }) {
   return (
     <span
       style={{
-        fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700,
-        padding: '2px 8px', borderRadius: 2,
-        background: isDetencion ? '#fef2f2' : '#f0fdfa',
-        color: isDetencion ? '#991b1b' : '#0f766e',
-        border: `1px solid ${isDetencion ? '#fecaca' : '#ccfbf1'}`,
+        fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600,
+        padding: '2px 10px', borderRadius: 'var(--radius-full)',
+        background: isDetencion ? '#fee2e2' : '#dcfce7',
+        color: isDetencion ? '#dc2626' : '#16a34a',
       }}
     >
       {isDetencion ? labelEstatus('cerrado_detencion') : labelEstatus('atendido')}
@@ -37,27 +36,28 @@ function ResolucionBadge({ estatus }: { estatus: string }) {
 function D1Badge({ d }: { d: DespachoAtendido }) {
   if (d.d1Id) {
     return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, padding: '3px 10px', background: '#dcfce7', color: '#16a34a', borderRadius: 'var(--radius-full)' }}>
         <CheckCircle2 size={11} /> D1: {d.d1Folio}
       </span>
     )
   }
   if (d.quiereDenuncia) {
     return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
-        <AlertTriangle size={11} /> DENUNCIA PENDIENTE
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, padding: '3px 10px', background: '#fef3c7', color: '#b45309', borderRadius: 'var(--radius-full)' }}>
+        <AlertTriangle size={11} /> Denuncia pendiente
       </span>
     )
   }
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, padding: '3px 10px', background: '#eff1f3', color: '#1f355a', border: '1px solid #c3c8d2', borderRadius: 2 }}>
-      <FileText size={11} /> SIN DENUNCIA
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 500, padding: '3px 10px', background: '#f1f5f9', color: '#64748b', borderRadius: 'var(--radius-full)' }}>
+      <FileText size={11} /> Sin denuncia
     </span>
   )
 }
 
 const cardStyle: React.CSSProperties = {
-  background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4,
+  background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
+  boxShadow: 'var(--shadow-card)',
   padding: '20px 24px', textDecoration: 'none', color: 'inherit',
   display: 'flex', flexDirection: 'column', gap: 10,
 }
@@ -84,19 +84,20 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
       <ToastExito show={exito === '1'} folio={folio} />
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
+        variant="apple"
+        backHref="/oficial"
+        backLabel="Panel"
       />
 
-      <main className="pad-pagina" style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
+      <main className="pad-pagina" style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
 
         <PageHeader
           title="Despachos"
           accent="y Reportes"
           subtitle="Asignaciones activas y atendidas"
-          actions={<PageHeaderLink href="/oficial" variant="secondary">← Panel</PageHeaderLink>}
         />
 
         <div style={{ marginBottom: 24 }}>
@@ -110,13 +111,13 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
         </div>
 
         {list.length === 0 && (
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '64px 24px', textAlign: 'center' }}>
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', padding: '64px 24px', textAlign: 'center' }}>
             <Shield size={32} color="#cbd5e1" style={{ marginBottom: 12 }} />
-            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: 8 }}>
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 20, fontWeight: 600, color: '#64748b', marginBottom: 8 }}>
               {tab === 'atendidos' ? 'Sin despachos atendidos' : 'Sin asignaciones activas'}
             </div>
-            <p style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#94a3b8', letterSpacing: '0.1em', margin: 0 }}>
-              {tab === 'atendidos' ? 'NO HAY DESPACHOS CERRADOS EN TU HISTORIAL' : 'NO TIENES SOLICITUDES DE DESPACHO PENDIENTES'}
+            <p style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8', margin: 0 }}>
+              {tab === 'atendidos' ? 'No hay despachos cerrados en tu historial' : 'No tienes solicitudes de despacho pendientes'}
             </p>
           </div>
         )}
@@ -127,41 +128,41 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
               style={{ ...cardStyle, flexDirection: 'row', alignItems: 'center', textDecoration: 'none' } as React.CSSProperties}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{d.folio}</span>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#0f172a' }}>{d.folio}</span>
                   {d.estatus === 'en_sitio' && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#f0fdfa', color: '#0f766e', border: '1px solid #ccfbf1', borderRadius: 2 }}>
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, padding: '2px 10px', background: '#dcfce7', color: '#16a34a', borderRadius: 'var(--radius-full)' }}>
                       {labelEstatus('en_sitio')}
                     </span>
                   )}
                   {d.prioridad && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', borderRadius: 2 }}>
-                      {d.prioridad.toUpperCase()}
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, padding: '2px 10px', background: '#fef3c7', color: '#b45309', borderRadius: 'var(--radius-full)' }}>
+                      {d.prioridad}
                     </span>
                   )}
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b' }}>{d.tipoIncidente || 'Sin clasificar'}</span>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>{d.tipoIncidente || 'Sin clasificar'}</span>
                   {d.canal === 'radio' && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
-                      RONDÍN
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, padding: '2px 10px', background: '#f1f5f9', color: '#64748b', borderRadius: 'var(--radius-full)' }}>
+                      Rondín
                     </span>
                   )}
                 </div>
                 {(d.calle || d.colonia) && (
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
                     <MapPin size={11} />{[d.calle, d.colonia].filter(Boolean).join(', ')}
                   </span>
                 )}
                 {d.descripcion && (
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#475569', lineHeight: 1.5 }}>{d.descripcion}</span>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#475569', lineHeight: 1.5 }}>{d.descripcion}</span>
                 )}
-                <div style={{ display: 'flex', gap: 16, fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8' }}>
+                <div style={{ display: 'flex', gap: 16, fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Clock size={10} /> DESPACHADO: {formatDate(d.fechaHoraDespacho)}
+                    <Clock size={11} /> Despachado: {formatDate(d.fechaHoraDespacho)}
                   </span>
-                  {d.unidades.length > 0 && <span>UNIDADES: {d.unidades.join(' · ')}</span>}
+                  {d.unidades.length > 0 && <span>Unidades: {d.unidades.join(' · ')}</span>}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, color: '#1f355a', flexShrink: 0 }}>
-                ATENDER <ChevronRight size={14} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#1f355a', flexShrink: 0 }}>
+                Atender <ChevronRight size={14} />
               </div>
             </Link>
           ))}
@@ -171,47 +172,47 @@ export default async function MisDespachosPage({ searchParams }: { searchParams:
             return (
               <div key={d.incidenteId} style={cardStyle}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, fontWeight: 700, color: '#0f172a' }}>{d.folio}</span>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, color: '#0f172a' }}>{d.folio}</span>
                   <D1Badge d={d} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                   <ResolucionBadge estatus={d.estatus} />
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b' }}>{d.tipoIncidente || 'Sin clasificar'}</span>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>{d.tipoIncidente || 'Sin clasificar'}</span>
                   {d.canal === 'radio' && (
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, padding: '2px 8px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
-                      RONDÍN
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600, padding: '2px 10px', background: '#f1f5f9', color: '#64748b', borderRadius: 'var(--radius-full)' }}>
+                      Rondín
                     </span>
                   )}
                 </div>
                 {(d.calle || d.colonia) && (
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
                     <MapPin size={11} />{[d.calle, d.colonia].filter(Boolean).join(', ')}
                   </span>
                 )}
                 {d.acciones && (
-                  <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#475569', lineHeight: 1.5 }}>{d.acciones}</span>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#475569', lineHeight: 1.5 }}>{d.acciones}</span>
                 )}
-                <div style={{ display: 'flex', gap: 16, fontFamily: 'JetBrains Mono', fontSize: 10, color: '#94a3b8' }}>
+                <div style={{ display: 'flex', gap: 16, fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Clock size={10} /> CERRADO: {formatDate(d.fechaCierre)}
+                    <Clock size={11} /> Cerrado: {formatDate(d.fechaCierre)}
                   </span>
                   {d.folioReporteCampo && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <FileText size={10} /> {d.folioReporteCampo}
+                      <FileText size={11} /> {d.folioReporteCampo}
                     </span>
                   )}
-                  {d.unidades.length > 0 && <span>UNIDADES: {d.unidades.join(' · ')}</span>}
+                  {d.unidades.length > 0 && <span>Unidades: {d.unidades.join(' · ')}</span>}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 4, borderTop: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 12, borderTop: '1px solid #f1f5f9' }}>
                   {necesitaDenuncia ? (
                     <Link href={`/denuncia/nuevo?reporteCampoId=${d.reporteCampoId}`}
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, color: '#b45309', textDecoration: 'none', padding: '6px 12px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2 }}>
-                      COMPLETAR DENUNCIA <ChevronRight size={14} />
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#b45309', textDecoration: 'none', padding: '8px 14px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 'var(--radius-lg)' }}>
+                      Completar denuncia <ChevronRight size={14} />
                     </Link>
                   ) : (
                     <Link href={`/oficial/reportes/${d.reporteCampoId}`}
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, color: '#1f355a', textDecoration: 'none', padding: '6px 12px' }}>
-                      VER REPORTE <ChevronRight size={14} />
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#1f355a', textDecoration: 'none', padding: '8px 14px' }}>
+                      Ver reporte <ChevronRight size={14} />
                     </Link>
                   )}
                 </div>

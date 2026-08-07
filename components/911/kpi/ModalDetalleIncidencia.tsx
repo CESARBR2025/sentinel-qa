@@ -216,7 +216,7 @@ export function ModalDetalleIncidencia({ incidenteId, onClose }: {
                     <Campo etiqueta="Teléfono" valor={detalle.extorsion.telefonoExtorsion} />
                     <Campo etiqueta="Grupo delictivo" valor={detalle.extorsion.grupoDelictivo} />
                     <Campo etiqueta="Modus operandi" valor={detalle.extorsion.modusOperandi} />
-                    <Campo etiqueta="Resultado" valor={detalle.extorsion.unidadResultado} />
+                    <Campo etiqueta="Resultado" valor={detalle.extorsion.resultado} />
                   </Grid>
                 </Seccion>
               )}

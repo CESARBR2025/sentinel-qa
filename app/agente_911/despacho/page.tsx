@@ -2,9 +2,10 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { DashboardFooter } from '@/components/partials/Footer'
 import { TablonDespacho } from '@/components/911/despacho/TablonDespacho'
+import { DespachadorActividadTracker } from '@/components/911/DespachadorActividadTracker'
 import { tieneAccesoSeccion, obtenerRolNombre } from '@/lib/911/permisos'
 
 export default async function DespachoPage() {
@@ -19,22 +20,21 @@ export default async function DespachoPage() {
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <style dangerouslySetInnerHTML={{
         __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}} />
-      <DashboardHeader user={user} />
-      <main className="pad-pagina" style={{ width: '100%' }}>
+      <DashboardHeader user={user} variant="apple" backHref={backHref} backLabel={backLabel} />
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <PageHeader
           title="Reportes"
           accent="de Despacho"
           subtitle="Tablón de incidentes pendientes, asignación de unidades y elementos por turno"
-          actions={<PageHeaderLink href={backHref} variant="secondary">← {backLabel}</PageHeaderLink>}
         />
+        <DespachadorActividadTracker />
         <TablonDespacho />
-        <div style={{ marginTop: 40 }}><DashboardFooter /></div>
+        <DashboardFooter />
       </main>
     </div>
   )

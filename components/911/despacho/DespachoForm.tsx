@@ -7,9 +7,9 @@ import type { UnidadParaDespacho } from '@/lib/flota/types'
 import { UnidadResumenCard, UnidadCardsStyles } from './UnidadCards'
 import { SeleccionarUnidadesModal } from './SeleccionarUnidadesModal'
 
-const BTN: React.CSSProperties    = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', background: '#1f355a', color: '#fff', fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', borderRadius: 6, boxShadow: '0 2px 8px rgba(31,53,90,0.25)' }
-const ERR: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#dc2626', marginTop: 4 }
-const LBL: React.CSSProperties    = { fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 8 }
+const BTN: React.CSSProperties    = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '12px 22px', background: '#1f355a', color: '#fff', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, textTransform: 'none', letterSpacing: 'normal', border: 'none', cursor: 'pointer', borderRadius: 'var(--radius-lg)', boxShadow: '0 3px 10px rgba(31,53,90,0.28)' }
+const ERR: React.CSSProperties    = { fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#dc2626', marginTop: 4 }
+const LBL: React.CSSProperties    = { fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', fontWeight: 500, display: 'block', marginBottom: 8 }
 
 export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = null, onDespachado, modo = 'despacho', prioritario, prioritarioPatrullaId = null, incidentePrioridad = null }: {
   incidenteId: string
@@ -90,10 +90,10 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
 
   if (exito) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 18px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 18px', background: '#dcfce7', border: '1px solid #86efac', borderRadius: 'var(--radius-lg)' }}>
         <CheckCircle size={18} color="#16a34a" />
-        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#15803d', fontWeight: 700 }}>
-          {esRefuerzo ? 'REFUERZOS ENVIADOS — Actualizando tablón...' : tienePrioritario ? 'DESPACHADO CON PRIORITARIO — Actualizando tablón...' : 'DESPACHADO — Actualizando tablón...'}
+        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#15803d', fontWeight: 600 }}>
+          {esRefuerzo ? 'Refuerzos enviados — actualizando tablón...' : tienePrioritario ? 'Despachado con prioritario — actualizando tablón...' : 'Despachado — actualizando tablón...'}
         </span>
       </div>
     )
@@ -114,11 +114,11 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
             disabled={cargandoUnidades}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
-              padding: '12px 14px', borderRadius: 8, cursor: cargandoUnidades ? 'default' : 'pointer',
+              padding: '12px 14px', borderRadius: 'var(--radius-lg)', cursor: cargandoUnidades ? 'default' : 'pointer',
               border: `1.5px solid ${unidadesSeleccionadas.length > 0 ? '#1f355a' : '#e2e8f0'}`,
-              background: unidadesSeleccionadas.length > 0 ? '#eff6ff' : '#fff',
+              background: unidadesSeleccionadas.length > 0 ? '#f1f5f9' : '#fff',
             }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'Inter,sans-serif', fontSize: 12.5, fontWeight: 600, color: '#0f172a' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 500, color: '#0f172a' }}>
               {cargandoUnidades
                 ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Cargando unidades cercanas...</>
                 : <><ShieldCheck size={16} color="#1f355a" />
@@ -129,7 +129,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
             {!cargandoUnidades && <ChevronRight size={16} color="#94a3b8" />}
           </button>
           {!cargandoUnidades && unidadesDisponibles.length === 0 && (
-            <div style={{ marginTop: 8, fontFamily: 'Inter,sans-serif', fontSize: 11.5, color: '#94a3b8' }}>
+            <div style={{ marginTop: 8, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
               No hay unidades activas registradas.
             </div>
           )}
@@ -142,15 +142,15 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
 
           {tienePrioritario && (
             unidadPrioritaria ? null : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, padding: '8px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8 }}>
-                <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#15803d', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, padding: '8px 12px', background: '#dcfce7', border: '1px solid #86efac', borderRadius: 'var(--radius-lg)' }}>
+                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#15803d', fontWeight: 600 }}>
                   {prioritario!.nombre}
                 </span>
-                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#16a34a' }}>
+                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#16a34a' }}>
                   ({prioritario!.nomina})
                 </span>
-                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, padding: '1px 6px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 999, marginLeft: 'auto' }}>
-                  PRIORITARIO
+                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '1px 8px', background: '#f1f5f9', color: '#1f355a', borderRadius: 'var(--radius-full)', marginLeft: 'auto' }}>
+                  Prioritario
                 </span>
               </div>
             )
@@ -163,8 +163,8 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
               ))}
             </div>
           ) : !tienePrioritario && (
-            <div style={{ padding: '16px 12px', border: '1px dashed #e2e8f0', borderRadius: 8, textAlign: 'center' }}>
-              <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 11.5, color: '#94a3b8' }}>
+            <div style={{ padding: '16px 12px', border: '1px dashed #e2e8f0', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
+              <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
                 Elige unidades arriba para ver aquí su tripulación
               </span>
             </div>
@@ -177,8 +177,8 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
       <div>
         <button onClick={handleSubmit} disabled={isPending} style={{ ...BTN, opacity: isPending ? 0.7 : 1, background: esRefuerzo ? '#c2410c' : (tienePrioritario ? '#16a34a' : '#1f355a') }}>
           {isPending
-            ? <><Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> {esRefuerzo ? 'ENVIANDO...' : 'DESPACHANDO...'}</>
-            : (esRefuerzo ? 'ENVIAR REFUERZOS' : tienePrioritario ? 'DESPACHAR Y ASIGNAR' : 'DESPACHAR INCIDENTE')}
+            ? <><Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> {esRefuerzo ? 'Enviando...' : 'Despachando...'}</>
+            : (esRefuerzo ? 'Enviar refuerzos' : tienePrioritario ? 'Despachar y asignar' : 'Despachar incidente')}
         </button>
       </div>
 

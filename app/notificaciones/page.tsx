@@ -42,13 +42,13 @@ export default async function NotificacionesPage({ searchParams }: {
   const totalPaginas = Math.max(Math.ceil(total / POR_PAGINA), 1)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
       `}} />
       <SubHeader backHref="/dashboard" backLabel="Dashboard" title="Mis" accent="Notificaciones" user={user} />
 
-      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 48px' }}>
+      <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 48px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <ListaHistorial
           notificaciones={enriquecidas}
           noLeidas={noLeidas}
@@ -57,7 +57,7 @@ export default async function NotificacionesPage({ searchParams }: {
           totalPaginas={totalPaginas}
           soloNoLeidas={soloNoLeidas}
         />
-        <div style={{ marginTop: 40 }}><DashboardFooter /></div>
+        <DashboardFooter />
       </main>
     </div>
   )

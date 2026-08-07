@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { DashboardFooter } from '@/components/partials/Footer'
 import { getFormatoNStats } from '@/lib/reportes/repository'
 import { tienePermiso } from '@/lib/reportes/permisos'
@@ -82,16 +82,13 @@ export default async function EnvioDeFormatosPage() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
-      <DashboardHeader user={user} roleLabel="Envío de Formatos" />
+      <DashboardHeader user={user} roleLabel="Envío de Formatos" backHref="/agente_reportes" backLabel="Panel de Reportes" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Envío de"
           accent="Formatos"
           subtitle="Formato N · Coordinación"
-          actions={
-            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
-          }
         />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>

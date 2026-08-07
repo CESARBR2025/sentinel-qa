@@ -69,6 +69,20 @@ export interface ExtorsionRow {
   incidencia: string | null
 }
 
+// Reporte de Llamadas de Extorsión 911 (formato C4): 9 columnas oficiales.
+export interface ExtorsionDetalleRow {
+  folio: string | null
+  folioReporte: string | null
+  telefono: string | null
+  fecha: unknown
+  hora: string | null
+  lugar: string | null
+  grupoDelictivo: string | null
+  modusOperandi: string | null
+  unidad: string | null
+  resultado: string | null
+}
+
 export interface ReporteCampoGeneralRow {
   fecha: unknown
   folio: string | null

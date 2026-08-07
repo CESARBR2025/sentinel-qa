@@ -31,21 +31,20 @@ export default async function FormatoNMediosAlternativosPage({
   return (
     <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <DashboardHeader user={user} roleLabel="Medios Alternativos" />
+      <DashboardHeader user={user} roleLabel="Medios Alternativos" backHref="/envio-de-formatos" backLabel="Envío de Formatos" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Medios"
           accent="Alternativos"
           subtitle="Formato N a Coordinación"
-          actions={<>
-            <PageHeaderLink href="/envio-de-formatos" variant="secondary">← Envío de Formatos</PageHeaderLink>
+          actions={
             <PageHeaderLink href="/formato-n-medios-alternativos/nuevo">
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 <Plus size={14} /> NUEVO REPORTE
               </span>
             </PageHeaderLink>
-          </>}
+          }
         />
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center' }}>

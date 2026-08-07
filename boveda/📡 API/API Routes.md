@@ -82,7 +82,6 @@
 | `reportes-operativos/exportar-excel` | GET | (Pendiente) |
 | `reportes-sin-d1/exportar` | GET | (Pendiente) |
 | `reportes-sin-novedad/exportar` | GET | (Pendiente) |
-| `reportes-telefonicos/exportar` | GET | (Pendiente) |
 | `reportes/formato-n-armas-aseguradas` | GET, POST | (Pendiente) |
 | `reportes/formato-n-armas-aseguradas/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-atencion-victimas` | GET, POST | (Pendiente) |
@@ -101,6 +100,7 @@
 | `reportes/formato-n-rnd` | GET, POST | (Pendiente) |
 | `reportes/formato-n-rnd/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-rnd/fuente` | GET | (Pendiente) |
+| `reportes/numeros-extorsion/exportar` | GET | (Pendiente) |
 | `rol-servicios/externos/rh` | GET | (Pendiente) |
 | `uploads/[...path]` | GET | (Pendiente) |
 | `via/ciudadano/completar-solicitud` | POST | (Pendiente) |
@@ -130,62 +130,6 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

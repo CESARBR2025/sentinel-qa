@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Download, Users, Car, ShieldAlert, Flame } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { ReportStat }      from '@/components/reportes/deteccion_camara/ReportStat'
 import { ReportFilters }   from '@/components/reportes/deteccion_camara/ReportFilters'
 import { ReportTable }     from '@/components/reportes/deteccion_camara/ReportTables'
@@ -32,19 +32,18 @@ export default async function ReportesDeteccionCamaraPage({
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Incidentes en Cámara" />
+      <DashboardHeader user={user} roleLabel="Incidentes en Cámara" backHref="/agente_reportes" backLabel="Panel de Reportes" />
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Registros por"
           accent="Turno"
           subtitle="SSPM · Detección por Cámara"
-          actions={<>
-            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
+          actions={
             <a href={`/api/camara/exportar?${excelParams}`}
               style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               <Download size={16} /> EXCEL
             </a>
-          </>}
+          }
         />
 
         <ReportFilters />

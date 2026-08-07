@@ -21,7 +21,7 @@ export default async function AnalisisHubPage() {
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         .card-o {
@@ -39,7 +39,7 @@ export default async function AnalisisHubPage() {
 
       <DashboardHeader user={user} roleLabel="Análisis" backHref={backHref} />
 
-      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard" style={{ maxWidth: 1400, margin: '0 auto', flex: 1, display: 'flex', flexDirection: 'column', gap: 48 }}>
 
         <PageHeader
           title="Panel"

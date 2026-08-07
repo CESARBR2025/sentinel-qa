@@ -8,7 +8,7 @@ import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } fro
 
 const containerBaseStyle: React.CSSProperties = {
   width: '100%',
-  borderRadius: '2px',
+  borderRadius: 'var(--radius-lg)',
   border: '1px solid #e2e8f0',
 };
 
@@ -35,8 +35,8 @@ const LOADING_STYLE: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   background: '#f1f5f9',
-  fontFamily: 'Inter,sans-serif',
-  fontSize: 12,
+  fontFamily: 'var(--apple-font-display)',
+  fontSize: 13,
   color: '#94a3b8',
 };
 
@@ -52,8 +52,8 @@ const ERROR_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   background: '#fef2f2',
   color: '#dc2626',
-  fontFamily: 'Inter,sans-serif',
-  fontSize: 12,
+  fontFamily: 'var(--apple-font-display)',
+  fontSize: 13,
   textAlign: 'center',
 };
 

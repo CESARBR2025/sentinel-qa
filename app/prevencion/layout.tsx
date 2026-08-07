@@ -17,7 +17,7 @@ export default async function PrevencionLayout({ children }: { children: React.R
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,system-ui,sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
       {/* La campanita ya viene dentro de DashboardHeader — antes se montaba
@@ -28,11 +28,11 @@ export default async function PrevencionLayout({ children }: { children: React.R
       <PrevencionNav />
 
       {/* Contenido */}
-      <main className="pad-pagina">
+      <main className="pad-pagina" style={{ flex: 1 }}>
         {children}
       </main>
 
-      <footer style={{ padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
+      <footer style={{ marginTop: 'auto', padding: '24px 48px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', textAlign: 'center', borderTop: '1px solid #e2e8f0' }}>
         SSPM · SAN JUAN DEL RÍO · QRO · CENTINELA {APP_VERSION}
       </footer>
     </div>

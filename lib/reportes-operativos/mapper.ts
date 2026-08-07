@@ -1,7 +1,7 @@
 import type {
   VehiculoRow, CateoRow, DetencionOfiRow, DetencionIncRow,
   OrdenAprehensionRow, HidrocarburoRow, ArmaRow, DrogaRow,
-  ExtorsionRow, ReporteCampoGeneralRow, ReporteCampoIncidenteGeneralRow,
+  ExtorsionRow, ExtorsionDetalleRow, ReporteCampoGeneralRow, ReporteCampoIncidenteGeneralRow,
 } from './types'
 
 function toStr(val: unknown): string | null {
@@ -99,6 +99,21 @@ export function rowToExtorsion(row: Record<string, unknown>): ExtorsionRow {
     telefono: toStr(row.telefono),
     fecha: row.fecha ?? null,
     incidencia: toStr(row.incidencia),
+  }
+}
+
+export function rowToExtorsionDetalle(row: Record<string, unknown>): ExtorsionDetalleRow {
+  return {
+    folio: toStr(row.folio),
+    folioReporte: toStr(row.folio_reporte),
+    telefono: toStr(row.telefono),
+    fecha: row.fecha ?? null,
+    hora: toStr(row.hora),
+    lugar: toStr(row.lugar),
+    grupoDelictivo: toStr(row.grupo_delictivo),
+    modusOperandi: toStr(row.modus_operandi),
+    unidad: toStr(row.unidad),
+    resultado: toStr(row.resultado),
   }
 }
 

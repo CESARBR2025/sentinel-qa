@@ -9,7 +9,8 @@ import { RondinTabla } from './RondinTabla'
 import { useRondinFormStore } from '@/stores/useRondinFormStore'
 import { loadGoogleMaps } from '@/lib/maps/loadGoogleMaps'
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
+import { DashboardHeader } from '@/components/partials/Header'
 import type { RondinOficialResumen } from '@/lib/oficial/types'
 import type { CatalogosJerarquicos } from '@/lib/911/types'
 
@@ -125,8 +126,9 @@ export function RondinPageClient({
 
   if (view === 'form') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+
+        <DashboardHeader variant="apple" roleLabel="Rondín" backHref="/oficial" backLabel="Panel" />
 
         <div className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <header style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -135,12 +137,12 @@ export function RondinPageClient({
             style={{
               alignSelf: 'flex-start',
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              color: '#64748b', fontFamily: 'JetBrains Mono,monospace',
-              fontSize: 11, textDecoration: 'none', marginBottom: 24,
+              color: '#64748b', fontFamily: 'var(--apple-font-display)',
+              fontSize: 13, fontWeight: 500, textDecoration: 'none', marginBottom: 24,
               background: 'none', border: 'none', cursor: 'pointer', padding: 0,
             }}
           >
-            <ArrowLeft size={13} /> VOLVER A REPORTES
+            <ArrowLeft size={13} /> Volver a reportes
           </button>
 
           <PageHeader
@@ -160,22 +162,22 @@ export function RondinPageClient({
 
               <Seccion titulo="Origen">
                 <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 12, marginBottom: 8 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'JetBrains Mono,monospace', fontSize: 11, padding: '6px 14px', background: '#eff1f3', border: '1px solid #c3c8d2', borderRadius: 2, color: '#1c3051' }}>
-                    <span style={{ fontWeight: 600, letterSpacing: '0.05em' }}>FOLIO</span>
-                    <span style={{ fontWeight: 700 }}>{folio}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--apple-font-display)', fontSize: 13, padding: '6px 14px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', color: '#1f355a' }}>
+                    <span style={{ fontWeight: 500 }}>Folio</span>
+                    <span style={{ fontWeight: 600 }}>{folio}</span>
                   </div>
                 </div>
                 {nombreOficial ? (
                   <>
                     <input type="hidden" name="nombreOficial" value={nombreOficial} />
                     <div style={{ gridColumn: '1 / -1' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 2 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#dcfce7', border: '1px solid #86efac', borderRadius: 'var(--radius-lg)' }}>
                         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a' }} />
-                        <span style={{ fontFamily: 'Inter', fontSize: 13, color: '#15803d', fontWeight: 600 }}>
+                        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#15803d', fontWeight: 600 }}>
                           Reporta: {nombreOficial}
                         </span>
-                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#16a34a', marginLeft: 'auto' }}>
-                          OFICIAL EN RONDÍN
+                        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#16a34a', marginLeft: 'auto' }}>
+                          Oficial en rondín
                         </span>
                       </div>
                     </div>
@@ -262,7 +264,7 @@ export function RondinPageClient({
                   <input name="referenciaUbicacion" placeholder="Ej. frente a la tienda…" style={inputStyle} />
                 </Campo>
                 <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal' }}>
                     Toca el mapa para fijar el punto, o arrastra el marcador para ajustarlo
                   </span>
                   <GoogleMapPicker
@@ -276,12 +278,12 @@ export function RondinPageClient({
                 </div>
                 <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <button type="button" onClick={obtenerUbicacion} disabled={obteniendoUbicacion}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 18px', background: obteniendoUbicacion ? '#e2e8f0' : '#f8fafc', color: obteniendoUbicacion ? '#94a3b8' : '#1f355a', border: `1px solid ${obteniendoUbicacion ? '#e2e8f0' : '#1f355a'}`, borderRadius: 2, cursor: obteniendoUbicacion ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'all .15s' }}>
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 18px', background: obteniendoUbicacion ? '#e2e8f0' : '#ffffff', color: obteniendoUbicacion ? '#94a3b8' : '#1f355a', border: `1px solid ${obteniendoUbicacion ? '#e2e8f0' : '#1f355a'}`, borderRadius: 'var(--radius-lg)', cursor: obteniendoUbicacion ? 'wait' : 'pointer', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 13, letterSpacing: 'normal', textTransform: 'none', transition: 'all .15s' }}>
                     {obteniendoUbicacion ? <Loader2 size={14} /> : <Crosshair size={14} />}
-                    {obteniendoUbicacion ? 'OBTENIENDO UBICACIÓN…' : 'OBTENER UBICACIÓN ACTUAL'}
+                    {obteniendoUbicacion ? 'Obteniendo ubicación…' : 'Obtener ubicación actual'}
                   </button>
                   {errorUbicacion && (
-                    <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#dc2626' }}>{errorUbicacion}</div>
+                    <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#dc2626' }}>{errorUbicacion}</div>
                   )}
                 </div>
               </Seccion>
@@ -295,8 +297,9 @@ export function RondinPageClient({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+
+      <DashboardHeader variant="apple" roleLabel="Rondín" backHref="/oficial" backLabel="Panel" />
 
       <div className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <header style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -304,7 +307,6 @@ export function RondinPageClient({
           title="Reportes de"
           accent="Rondín"
           subtitle="Avistamientos escalados a despacho"
-          actions={<PageHeaderLink href="/oficial" variant="secondary">← Volver al panel</PageHeaderLink>}
         />
       </header>
 
@@ -313,22 +315,22 @@ export function RondinPageClient({
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         }}>
-          <div style={{ display: 'flex', gap: 0 }}>
+          <div style={{ display: 'flex', gap: 6 }}>
             <div style={{
-              padding: '8px 20px',
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              background: '#ffffff', color: '#0f172a',
-              border: '1px solid #e2e8f0',
-              display: 'flex', alignItems: 'center', gap: 7,
-              cursor: 'default',
+              padding: '9px clamp(14px, 4vw, 20px)',
+              fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600,
+              letterSpacing: 'normal', textTransform: 'none',
+              background: '#1f355a', color: '#ffffff',
+              borderRadius: 'var(--radius-full)', border: 'none',
+              display: 'flex', alignItems: 'center', gap: 8,
+              cursor: 'default', whiteSpace: 'nowrap',
             }}>
-              <FileText size={13} />
+              <FileText size={14} />
               Enviados
               <span style={{
-                background: '#e2e8f0', color: '#475569',
-                padding: '0 6px', fontSize: 10, borderRadius: 2,
-                marginLeft: 2,
+                background: 'rgba(255,255,255,.22)', color: '#ffffff',
+                padding: '0 7px', fontSize: 11, fontWeight: 600, borderRadius: 'var(--radius-full)',
+                lineHeight: '18px',
               }}>
                 {rondines.length}
               </span>
@@ -341,13 +343,13 @@ export function RondinPageClient({
               display: 'inline-flex', alignItems: 'center', gap: 7,
               background: '#1f355a', color: '#ffffff', border: 'none',
               padding: '10px 22px',
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              cursor: 'pointer', borderRadius: 2,
+              fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600,
+              letterSpacing: 'normal', textTransform: 'none',
+              cursor: 'pointer', borderRadius: 'var(--radius-lg)',
               transition: 'background 0.2s',
-              boxShadow: '0 2px 8px rgba(31, 53, 90,0.2)',
+              boxShadow: '0 3px 10px rgba(31, 53, 90, 0.28)',
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#1c3051' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#132138' }}
             onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '#1f355a' }}
           >
             <Plus size={15} />
@@ -359,7 +361,7 @@ export function RondinPageClient({
         <div style={{
           flex: 1,
           background: '#ffffff', border: '1px solid #e2e8f0',
-          borderRadius: 2,
+          borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', overflow: 'hidden',
         }}>
           <RondinTabla rondines={rondines} folioNuevo={folioNuevo} />
         </div>
@@ -373,16 +375,16 @@ function SubmitButton() {
   const { pending } = useFormStatus()
   return (
     <button type="submit" disabled={pending}
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', background: pending ? '#98a2b3' : '#1f355a', color: '#ffffff', border: 'none', borderRadius: 2, cursor: pending ? 'wait' : 'pointer', fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 16, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-      {pending ? <><Loader2 size={15} /> ESCALANDO…</> : <><MapPin size={15} /> ESCALAR A DESPACHO</>}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', background: pending ? '#94a3b8' : '#1f355a', color: '#ffffff', border: 'none', borderRadius: 'var(--radius-lg)', cursor: pending ? 'wait' : 'pointer', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 15, textTransform: 'none', letterSpacing: 'normal', boxShadow: pending ? 'none' : '0 3px 10px rgba(31,53,90,0.28)' }}>
+      {pending ? <><Loader2 size={15} /> Escalando…</> : <><MapPin size={15} /> Escalar a despacho</>}
     </button>
   )
 }
 
 function Seccion({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
-    <div style={{ flex: 1, background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '20px 24px' }}>
-      <h2 style={{ fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 17, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#0f172a', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div style={{ flex: 1, background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', padding: '20px 24px' }}>
+      <h2 style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 16, textTransform: 'none', letterSpacing: 'normal', color: '#0f172a', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: 8 }}>
         <MapPin size={14} color="#1f355a" /> {titulo}
       </h2>
       <div className="grid-2" style={{ gap: 14 }}>
@@ -395,7 +397,7 @@ function Seccion({ titulo, children }: { titulo: string; children: React.ReactNo
 function Campo({ label, requerido, ancho, children }: { label: string; requerido?: boolean; ancho?: boolean; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 5, gridColumn: ancho ? '1 / -1' : undefined }}>
-      <label style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+      <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', fontWeight: 500, letterSpacing: 'normal', textTransform: 'none' }}>
         {label}{requerido && <span style={{ color: '#dc2626' }}> *</span>}
       </label>
       {children}
@@ -404,7 +406,6 @@ function Campo({ label, requerido, ancho, children }: { label: string; requerido
 }
 
 const inputStyle: React.CSSProperties = {
-  fontFamily: 'Inter', fontSize: 13, padding: '9px 12px',
-  border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
-  borderRadius: 2, background: '#ffffff', color: '#1e293b', outline: 'none', width: '100%',
+  fontFamily: 'var(--apple-font-display)', fontSize: 14, padding: '11px 13px',
+  border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', background: '#ffffff', color: '#1e293b', outline: 'none', width: '100%',
 }

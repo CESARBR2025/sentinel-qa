@@ -39,9 +39,9 @@ export function ContadorAsignaciones() {
 
   return (
     <div style={{ marginTop: 16 }}>
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, padding: '3px 10px', background: '#eff1f3', color: '#1c3051', border: '1px solid #c3c8d2', borderRadius: 2 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '3px 10px', background: '#fef3c7', color: '#b45309', borderRadius: 'var(--radius-full)' }}>
         <AlertTriangle size={11} />
-        {asignados} ASIGNACIÓN{asignados !== 1 ? 'ES' : ''} ACTIVA{asignados !== 1 ? 'S' : ''}
+        {asignados} asignación{asignados !== 1 ? 'es' : ''} activa{asignados !== 1 ? 's' : ''}
       </span>
     </div>
   )

@@ -99,18 +99,20 @@ async function main() {
          VALUES ($1, $2, $3, true)
          ON CONFLICT (codigo) DO UPDATE SET nombre = EXCLUDED.nombre, clave = EXCLUDED.clave
          RETURNING id`,
-        [codigo, clave, tipoData.nombre]
+        [codigo, clave, tipoData.nombre.toUpperCase()]
       )
       const tipoId = tipoResult.rows[0].id
 
-      // 2. Insertar subtipos
+      // 2. Insertar subtipos — el nombre de subtipo es la clave del JSON (ej.
+      // "actos_relacionados_con_el_patrimonio"); se normaliza a MAYÚSCULAS legible.
       for (const [subKey, subData] of Object.entries(tipoData.subtipos)) {
+        const nombreSubtipo = subKey.toUpperCase().replace(/_/g, ' ')
         const subResult = await client.query(
           `INSERT INTO cat_subtipos_emergencia (tipo_emergencia_id, codigo, nombre)
            VALUES ($1, $2, $3)
            ON CONFLICT (tipo_emergencia_id, codigo) DO UPDATE SET nombre = EXCLUDED.nombre
            RETURNING id`,
-          [tipoId, subData.codigo_subtipo, subKey]
+          [tipoId, subData.codigo_subtipo, nombreSubtipo]
         )
         const subtipoId = subResult.rows[0].id
 

@@ -100,17 +100,17 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
     <div ref={overlayRef} onClick={handleOverlayClick} style={{
       position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      zIndex: 1000, padding: 16, backdropFilter: 'blur(2px)',
+      zIndex: 1000, padding: 16, backdropFilter: 'blur(4px)',
       overscrollBehavior: 'contain', overflow: 'hidden',
     }}>
       <div style={{
         background: '#fff', width: '100%', maxWidth: mostrarMapa ? 'min(1040px, 94vw)' : 640, maxHeight: '88vh',
-        display: 'flex', flexDirection: 'column', borderRadius: 10, overflow: 'hidden',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+        display: 'flex', flexDirection: 'column', borderRadius: 'var(--radius-xl)', overflow: 'hidden',
+        boxShadow: 'var(--shadow-modal)',
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', borderBottom: '1px solid #e2e8f0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontFamily: 'var(--apple-font-display)', fontSize: 18, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', color: '#0f172a' }}>
             <ShieldCheck size={20} color="#1f355a" />
             Unidades cercanas al hecho
           </div>
@@ -135,7 +135,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, flex: 1 }}>
               <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#f8fafc' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', background: '#f8fafc' }}>
                   <Search size={16} color="#94a3b8" />
                   <input
                     type="text"
@@ -143,16 +143,16 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
                     value={busqueda}
                     onChange={e => setBusqueda(e.target.value)}
                     autoFocus
-                    style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a' }}
+                    style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'var(--apple-font-display)', fontSize: 14, color: '#0f172a' }}
                   />
-                  <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8' }}>
+                  <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#94a3b8' }}>
                     {filtradas.length} de {unidadesActuales.length}
                   </span>
                 </div>
               </div>
               <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', padding: '14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {filtradas.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: 40, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#94a3b8' }}>
+                  <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
                     No se encontraron unidades
                   </div>
                 ) : (
@@ -174,7 +174,7 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
         ) : (
           <>
             <div style={{ padding: '16px 24px', borderBottom: '1px solid #f1f5f9' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#f8fafc' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', background: '#f8fafc' }}>
                 <Search size={16} color="#94a3b8" />
                 <input
                   type="text"
@@ -182,16 +182,16 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
                   value={busqueda}
                   onChange={e => setBusqueda(e.target.value)}
                   autoFocus
-                  style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#0f172a' }}
+                  style={{ border: 'none', background: 'transparent', outline: 'none', flex: 1, fontFamily: 'var(--apple-font-display)', fontSize: 14, color: '#0f172a' }}
                 />
-                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8' }}>
+                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#94a3b8' }}>
                   {filtradas.length} de {unidadesActuales.length}
                 </span>
               </div>
             </div>
             <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', padding: '14px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
               {filtradas.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 40, fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#94a3b8' }}>
+                <div style={{ textAlign: 'center', padding: 40, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
                   No se encontraron unidades
                 </div>
               ) : (
@@ -212,14 +212,14 @@ export function SeleccionarUnidadesModal({ unidades, seleccionadas, prioritarioN
 
         {/* Actions */}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '16px 24px', borderTop: '1px solid #e2e8f0' }}>
-          <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b' }}>
+          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>
             {seleccionLocal.length} unidad{seleccionLocal.length !== 1 ? 'es' : ''} seleccionada{seleccionLocal.length !== 1 ? 's' : ''}
           </span>
           <div style={{ display: 'flex', gap: 10 }}>
-            <button onClick={onClose} style={{ padding: '10px 20px', border: '1px solid #e2e8f0', borderRadius: 6, background: '#fff', cursor: 'pointer', fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#475569' }}>
+            <button onClick={onClose} style={{ padding: '10px 20px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', background: '#fff', cursor: 'pointer', fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 500, color: '#475569' }}>
               Cancelar
             </button>
-            <button onClick={() => onConfirmar(seleccionLocal)} style={{ padding: '10px 24px', border: 'none', borderRadius: 6, background: '#1f355a', color: '#fff', cursor: 'pointer', fontFamily: 'Inter,sans-serif', fontSize: 13, fontWeight: 600 }}>
+            <button onClick={() => onConfirmar(seleccionLocal)} style={{ padding: '10px 24px', border: 'none', borderRadius: 'var(--radius-lg)', background: '#1f355a', color: '#fff', cursor: 'pointer', fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600 }}>
               Confirmar selección
             </button>
           </div>

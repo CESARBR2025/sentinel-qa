@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Calendar, CheckCircle2, CircleDot, Download } from 'lucide-react'
 import { pageWrap, fontsImport } from '@/components/reportes/form-styles'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 
 type Periodo = 'diario' | 'semanal' | 'mensual'
 
@@ -121,16 +121,13 @@ export default function ConsolidarFormatoNPage() {
   return (
     <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <DashboardHeader roleLabel="Consolidado Formato N" />
+      <DashboardHeader roleLabel="Consolidado Formato N" backHref="/envio-de-formatos" backLabel="Envío de Formatos" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Consolidado"
           accent="Formato N"
           subtitle="Formato N a Coordinación"
-          actions={
-            <PageHeaderLink href="/envio-de-formatos" variant="secondary">← Envío de Formatos</PageHeaderLink>
-          }
         />
 
         <div style={{ ...cardStyle, display: 'flex', gap: 16, alignItems: 'flex-end', flexWrap: 'wrap' }}>

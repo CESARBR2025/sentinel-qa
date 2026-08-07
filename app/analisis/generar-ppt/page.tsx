@@ -15,7 +15,7 @@ export default async function RegistroInteligenciaPage() {
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -24,7 +24,7 @@ export default async function RegistroInteligenciaPage() {
 
       <DashboardHeader user={user} backHref="/analisis" backLabel="Análisis" />
 
-      <main style={{ maxWidth: '1300px', margin: '0 auto', padding: '40px 48px' }}>
+      <main style={{ maxWidth: '1300px', margin: '0 auto', padding: '40px 48px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ marginBottom: '32px' }}>
             <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#c0223a', fontWeight: 700, letterSpacing: '0.2em' }}>
                 INTELIGENCIA E INVESTIGACIÓN
@@ -39,9 +39,7 @@ export default async function RegistroInteligenciaPage() {
             <RegistroInteligenciaDetenido />
         </div>
 
-        <div style={{ marginTop: 60 }}>
-            <DashboardFooter />
-        </div>
+        <DashboardFooter />
       </main>
     </div>
   )

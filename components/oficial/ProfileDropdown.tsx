@@ -46,10 +46,11 @@ export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, r
           gap: 10,
           padding: '8px 12px',
           border: `1px solid ${open ? '#1f355a' : '#e2e8f0'}`,
-          background: open ? '#eff1f3' : '#ffffff',
+          background: open ? '#f1f5f9' : '#ffffff',
           cursor: 'pointer',
           transition: 'all 0.15s ease',
-          fontFamily: 'Inter,sans-serif',
+          fontFamily: 'var(--apple-font-display)',
+          borderRadius: 'var(--radius-lg)',
         }}
         onMouseEnter={e => { if (!open) { e.currentTarget.style.borderColor = '#98a2b3'; e.currentTarget.style.background = '#f8fafc'; }}}
         onMouseLeave={e => { if (!open) { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#ffffff'; }}}
@@ -58,8 +59,8 @@ export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, r
           width: 30, height: 30,
           background: '#1f355a', color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'Barlow Condensed,sans-serif',
-          fontSize: 14, fontWeight: 700,
+          fontFamily: 'var(--apple-font-display)',
+          fontSize: 13, fontWeight: 600,
           borderRadius: '50%',
           flexShrink: 0,
         }}>
@@ -67,10 +68,10 @@ export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, r
         </div>
 
         <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#0f172a', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#0f172a', fontWeight: 600 }}>
             {fullName}
           </div>
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b' }}>
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b' }}>
             {rolLabel}
           </div>
         </div>
@@ -92,19 +93,21 @@ export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, r
             top: 'calc(100% + 4px)',
             right: 0,
             width: 240,
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            boxShadow: '0 12px 32px -8px rgba(0,0,0,0.12)',
+            background: 'var(--apple-glass-bg)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            border: '1px solid var(--apple-glass-border)',
+            boxShadow: 'var(--apple-shadow-glass)',
             zIndex: 50,
             overflow: 'hidden',
+            borderRadius: 'var(--radius-lg)',
           }}
         >
           {/* Header info */}
           <div style={{ padding: '16px', borderBottom: '1px solid #f1f5f9' }}>
-            <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, color: '#0f172a', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#0f172a', fontWeight: 600 }}>
               {fullName}
             </div>
-            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#64748b', marginTop: 2 }}>
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#64748b', marginTop: 2 }}>
               {email}
             </div>
           </div>
@@ -122,8 +125,8 @@ export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, r
                   border: 'none',
                   background: 'transparent',
                   cursor: 'pointer',
-                  fontFamily: 'Inter,sans-serif',
-                  fontSize: 12,
+                  fontFamily: 'var(--apple-font-display)',
+                  fontSize: 13,
                   color: '#475569',
                   transition: 'background 0.15s',
                 }}
@@ -150,8 +153,8 @@ export function ProfileDropdown({ name, apellido, email, mostrarPerfil = true, r
               border: 'none',
               background: 'transparent',
               cursor: signingOut ? 'not-allowed' : 'pointer',
-              fontFamily: 'Inter,sans-serif',
-              fontSize: 12,
+              fontFamily: 'var(--apple-font-display)',
+              fontSize: 13,
               color: '#dc2626',
               transition: 'background 0.15s',
             }}

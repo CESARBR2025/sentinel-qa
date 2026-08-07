@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { tienePermiso } from '@/lib/formatos-udai/permisos'
 import { listarFaltasAdministrativas } from '@/lib/formatos-udai/repository'
 import { BotonExportarExcel } from '@/components/formatos-udai/BotonExportarExcel'
@@ -39,17 +39,14 @@ export default async function FaltasAdministrativasPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Formatos UDAI" />
+      <DashboardHeader user={user} roleLabel="Formatos UDAI" backHref="/formatos-udai" backLabel="Formatos UDAI" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Formato"
           accent="Faltas Administrativas"
           subtitle="Bitácora de detenidos por falta administrativa — formato oficial UDAI"
-          actions={<>
-            <PageHeaderLink href="/formatos-udai" variant="secondary">← Formatos UDAI</PageHeaderLink>
-            <BotonExportarExcel />
-          </>}
+          actions={<BotonExportarExcel />}
         />
 
         <div className="tabla-wrap">

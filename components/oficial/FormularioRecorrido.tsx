@@ -3,9 +3,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import {
-  MessageSquare, User, AlertTriangle, MapPin,
-  ClipboardCheck, Clock, Shield, Send, Search,
-  FileText, Gavel, Car, Hash, Archive, ArrowLeft, Loader2
+  MessageSquare, User, Send, Search, Hash, ArrowLeft, Loader2
 } from 'lucide-react'
 import { crearReporteCampoOficial } from "@/lib/oficial/actions"
 import { MapaUbicacion } from './MapaUbicacion'
@@ -26,8 +24,8 @@ const STEPS = [
 const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = false, ...props }: any) => {
   const Component = as
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', gridColumn: fullWidth ? '1 / -1' : 'auto' }}>
-      <label style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', gridColumn: fullWidth ? '1 / -1' : 'auto' }}>
+      <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal' }}>
         {label}
       </label>
       <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
@@ -37,13 +35,13 @@ const SentinelField = ({ label, icon: Icon, as = 'input', name, fullWidth = fals
           name={name}
           style={{
             width: '100%',
-            padding: `12px 12px 12px ${Icon ? '40px' : '12px'}`,
+            padding: `11px 13px 11px ${Icon ? '38px' : '13px'}`,
             background: props.disabled ? '#f8fafc' : '#ffffff',
             border: '1px solid #e2e8f0',
-            borderLeft: '4px solid #1f355a',
-            borderRadius: '2px',
-            fontFamily: 'Inter, sans-serif',
+            borderRadius: 'var(--radius-lg)',
+            fontFamily: 'var(--apple-font-display)',
             fontSize: '14px',
+            color: '#1e293b',
             outline: 'none',
             minHeight: as === 'textarea' ? '120px' : 'auto',
             ...props.style
@@ -66,11 +64,10 @@ interface PrefillDespacho {
   longitud?: number
 }
 
-export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, embedded = false }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho, embedded?: boolean }) {
+export function FormularioRecorrido({ catalogos, incidenteId, prefill, embedded = false }: { user: any, catalogos: any, incidenteId?: string, prefill?: PrefillDespacho, embedded?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const store = useOficialFormStore()
-  const s = useOficialFormStore.getState()
   const step = store.step
   const setStep = store.setStep
   const isAnonimo = store.isAnonimo
@@ -184,6 +181,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
     }
     window.addEventListener('pageshow', onPageShow)
     return () => window.removeEventListener('pageshow', onPageShow)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSubmit = async () => {
@@ -286,22 +284,20 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
   return (
     <form ref={formRef} onSubmit={(e) => e.preventDefault()} style={embedded ? { color: '#1e293b' } : { minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
 
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-
       <Wrapper className={wrapperClassName} style={wrapperStyle}>
 
         {!embedded && (
           <div style={{ marginBottom: '32px' }}>
-            <a href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, textDecoration: 'none', marginBottom: 16 }}>
+            <a href="/oficial" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, textDecoration: 'none', marginBottom: 16 }}>
               <ArrowLeft size={14} /> Volver al panel
             </a>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
+            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
               Oficial en Campo
             </span>
             <h1 style={{
-              fontFamily: 'Barlow Condensed, sans-serif',
-              fontWeight: 800, fontSize: 32, letterSpacing: '0.02em',
-              textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a'
+              fontFamily: 'var(--apple-font-display)',
+              fontWeight: 600, fontSize: 28, letterSpacing: 'normal',
+              textTransform: 'none', margin: '4px 0 0 0', color: '#0f172a'
             }}>
               Reporte de <span style={{ color: '#1f355a' }}>Recorrido</span>
             </h1>
@@ -428,7 +424,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                           Detenidos
                         </span>
                         <button type="button" onClick={() => store.setDetenidos([...detenidos, { nombre: '', apellidoPaterno: '', apellidoMaterno: '' }])} className="of-btn-toggle" style={{ fontSize: 10 }}>
-                          + AGREGAR DETENIDO
+                          + Agregar detenido
                         </button>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -445,8 +441,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               placeholder="Nombre(s)"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
-                                border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
-                                borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
+                                border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13,
                                 outline: 'none',
                               }}
                             />
@@ -460,8 +455,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               placeholder="Ap. Paterno"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
-                                border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
-                                borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
+                                border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13,
                                 outline: 'none',
                               }}
                             />
@@ -475,8 +469,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               placeholder="Ap. Materno"
                               style={{
                                 flex: 1, padding: '10px 12px', background: '#ffffff',
-                                border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a',
-                                borderRadius: 2, fontFamily: 'Inter, sans-serif', fontSize: 13,
+                                border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13,
                                 outline: 'none',
                               }}
                             />
@@ -545,7 +538,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                           store.setNumVehiculos(n)
                           store.setVehiculos(Array.from({ length: n }, (_, i) => vehiculos[i] ?? { placas: '', serie: '', color: '', tipo: '', destino: '' }))
                         }}
-                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, fontFamily: 'JetBrains Mono,monospace', fontSize: 12, background: '#ffffff', outline: 'none', minWidth: 60 }}
+                        style={{ padding: '6px 12px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13, background: '#ffffff', outline: 'none', minWidth: 60 }}
                       >
                         <option value={0}>0</option>
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => <option key={n} value={n}>{n}</option>)}
@@ -557,7 +550,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                           <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 12, border: '1px solid #e2e8f0', borderRadius: 2, flexWrap: 'wrap' }}>
                             <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 600, minWidth: 20 }}>#{i + 1}</span>
                             <select value={v.tipo} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], tipo: e.target.value }; store.setVehiculos(next) }}
-                              style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
+                              style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 12, outline: 'none', background: '#fff' }}>
                               <option value="">Tipo</option>
                               <option value="automovil">Automóvil</option>
                               <option value="camioneta">Camioneta</option>
@@ -566,13 +559,13 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                               <option value="motocicleta">Motocicleta</option>
                             </select>
                             <input value={v.placas} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], placas: e.target.value }; store.setVehiculos(next) }}
-                              placeholder="Placas" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                              placeholder="Placas" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13, outline: 'none' }} />
                             <input value={v.serie} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], serie: e.target.value }; store.setVehiculos(next) }}
-                              placeholder="Núm. Serie" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                              placeholder="Núm. Serie" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13, outline: 'none' }} />
                             <input value={v.color} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], color: e.target.value }; store.setVehiculos(next) }}
-                              placeholder="Color" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 13, outline: 'none' }} />
+                              placeholder="Color" style={{ flex: 1, padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 13, outline: 'none' }} />
                             <select value={v.destino} onChange={(e) => { const next = [...vehiculos]; next[i] = { ...next[i], destino: e.target.value }; store.setVehiculos(next) }}
-                              style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', background: '#fff' }}>
+                              style={{ padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 12, outline: 'none', background: '#fff' }}>
                               <option value="">Destino</option>
                               <option value="CORRALON MW">CORRALON MW</option>
                               <option value="CORRALON MEJIA">CORRALON MEJIA</option>
@@ -621,7 +614,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 {/* ÓRDENES DE APREHENSIÓN */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal' }}>
                       ¿Órdenes de Aprehensión?
                     </span>
                     <button type="button" onClick={() => $('hayOrdenAprehension', !store.hayOrdenAprehension)} className="of-btn-toggle"
@@ -632,11 +625,11 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                   {store.hayOrdenAprehension && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.ordenesAprehension.map((o, i) => (
-                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, gap: 12 }}>
+                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', gap: 12 }}>
                           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: '1 / -1' }}>#{i + 1}</span>
                           {(['fecha', 'nombrePersona', 'estatus', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
-                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                              <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>
                                 {campo === 'fecha' ? 'Fecha' : campo === 'nombrePersona' ? 'Nombre Persona' : campo === 'estatus' ? 'Estatus' : 'Nombre Seguimiento'}
                               </label>
                               <input type={campo === 'fecha' ? 'date' : 'text'}
@@ -646,12 +639,12 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                             </div>
                           ))}
                           <div style={{ gridColumn: '1 / -1' }}>
-                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>Observaciones</label>
                             <textarea value={o.observaciones} onChange={(e) => { const next = [...store.ordenesAprehension]; next[i].observaciones = e.target.value; store.setOrdenesAprehension(next) }}
-                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
                           </div>
                           <button type="button" onClick={() => store.setOrdenesAprehension(store.ordenesAprehension.filter((_, j) => j !== i))}
-                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, textAlign: 'left' }}>
                             ✕ ELIMINAR
                           </button>
                         </div>
@@ -659,7 +652,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       <button type="button"
                         onClick={() => store.setOrdenesAprehension([...store.ordenesAprehension, { fecha: '', nombrePersona: '', observaciones: '', estatus: '', nombreSeguimiento: '' }])}
                         className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
-                        + AGREGAR ORDEN
+                        + Agregar orden
                       </button>
                     </div>
                   )}
@@ -670,7 +663,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 {/* HIDROCARBUROS */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal' }}>
                       ¿Detención Delito Hidrocarburo?
                     </span>
                     <button type="button" onClick={() => $('hayHidrocarburo', !store.hayHidrocarburo)} className="of-btn-toggle"
@@ -681,11 +674,11 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                   {store.hayHidrocarburo && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.hidrocarburos.map((h, i) => (
-                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, gap: 12 }}>
+                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', gap: 12 }}>
                           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: '1 / -1' }}>#{i + 1}</span>
                           {(['fecha', 'nombrePersona', 'datosVehiculo', 'litrosExtraccion', 'nombreToma', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
-                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                              <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>
                                 {campo === 'fecha' ? 'Fecha' : campo === 'nombrePersona' ? 'Nombre Persona' : campo === 'datosVehiculo' ? 'Datos Vehículo' : campo === 'litrosExtraccion' ? 'Litros Extracción' : campo === 'nombreToma' ? 'Nombre Toma Clandestina' : 'Nombre Seguimiento'}
                               </label>
                               <input type={campo === 'fecha' ? 'date' : 'text'}
@@ -695,12 +688,12 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                             </div>
                           ))}
                           <div style={{ gridColumn: '1 / -1' }}>
-                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>Observaciones</label>
                             <textarea value={h.observaciones} onChange={(e) => { const next = [...store.hidrocarburos]; next[i].observaciones = e.target.value; store.setHidrocarburos(next) }}
-                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
                           </div>
                           <button type="button" onClick={() => store.setHidrocarburos(store.hidrocarburos.filter((_, j) => j !== i))}
-                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, textAlign: 'left' }}>
                             ✕ ELIMINAR
                           </button>
                         </div>
@@ -708,7 +701,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       <button type="button"
                         onClick={() => store.setHidrocarburos([...store.hidrocarburos, { fecha: '', nombrePersona: '', datosVehiculo: '', litrosExtraccion: '', nombreToma: '', observaciones: '', nombreSeguimiento: '' }])}
                         className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
-                        + AGREGAR REGISTRO
+                        + Agregar registro
                       </button>
                     </div>
                   )}
@@ -719,7 +712,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 {/* ARMAS DE FUEGO */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal' }}>
                       ¿Armas de Fuego?
                     </span>
                     <button type="button" onClick={() => $('hayArmaFuego', !store.hayArmaFuego)} className="of-btn-toggle"
@@ -730,11 +723,11 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                   {store.hayArmaFuego && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.armasFuego.map((a, i) => (
-                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, gap: 12 }}>
+                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', gap: 12 }}>
                           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: '1 / -1' }}>#{i + 1}</span>
                           {(['fecha', 'datos', 'cartuchos', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
-                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                              <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>
                                 {campo === 'fecha' ? 'Fecha' : campo === 'datos' ? 'Datos del Arma' : campo === 'cartuchos' ? 'Cartuchos' : 'Nombre Seguimiento'}
                               </label>
                               <input type={campo === 'fecha' ? 'date' : 'text'}
@@ -744,12 +737,12 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                             </div>
                           ))}
                           <div style={{ gridColumn: '1 / -1' }}>
-                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>Observaciones</label>
                             <textarea value={a.observaciones} onChange={(e) => { const next = [...store.armasFuego]; next[i].observaciones = e.target.value; store.setArmasFuego(next) }}
-                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
                           </div>
                           <button type="button" onClick={() => store.setArmasFuego(store.armasFuego.filter((_, j) => j !== i))}
-                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, textAlign: 'left' }}>
                             ✕ ELIMINAR
                           </button>
                         </div>
@@ -757,7 +750,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       <button type="button"
                         onClick={() => store.setArmasFuego([...store.armasFuego, { fecha: '', datos: '', cartuchos: '', observaciones: '', nombreSeguimiento: '' }])}
                         className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
-                        + AGREGAR ARMA
+                        + Agregar arma
                       </button>
                     </div>
                   )}
@@ -768,7 +761,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 {/* DOSIS DE DROGA */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal' }}>
                       ¿Dosis de Droga?
                     </span>
                     <button type="button" onClick={() => $('hayDroga', !store.hayDroga)} className="of-btn-toggle"
@@ -779,11 +772,11 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                   {store.hayDroga && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {store.drogas.map((d, i) => (
-                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderLeft: '3px solid #1f355a', borderRadius: 2, gap: 12 }}>
+                        <div key={i} className="grid-3" style={{ padding: 16, border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', gap: 12 }}>
                           <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#1f355a', fontWeight: 700, gridColumn: '1 / -1' }}>#{i + 1}</span>
                           {(['fecha', 'cantidad', 'nombre', 'nombreSeguimiento'] as const).map(campo => (
                             <div key={campo}>
-                              <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>
+                              <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>
                                 {campo === 'fecha' ? 'Fecha' : campo === 'cantidad' ? 'Cantidad' : campo === 'nombre' ? 'Nombre Droga' : 'Nombre Seguimiento'}
                               </label>
                               <input type={campo === 'fecha' ? 'date' : 'text'}
@@ -793,12 +786,12 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                             </div>
                           ))}
                           <div style={{ gridColumn: '1 / -1' }}>
-                            <label style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 4 }}>Observaciones</label>
+                            <label style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b', textTransform: 'none', letterSpacing: 'normal', display: 'block', marginBottom: 4 }}>Observaciones</label>
                             <textarea value={d.observaciones} onChange={(e) => { const next = [...store.drogas]; next[i].observaciones = e.target.value; store.setDrogas(next) }}
-                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter,sans-serif', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
+                              style={{ width: '100%', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: 12, outline: 'none', minHeight: 60, resize: 'vertical' }} />
                           </div>
                           <button type="button" onClick={() => store.setDrogas(store.drogas.filter((_, j) => j !== i))}
-                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, textAlign: 'left' }}>
+                            style={{ gridColumn: '1 / -1', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, textAlign: 'left' }}>
                             ✕ ELIMINAR
                           </button>
                         </div>
@@ -806,14 +799,14 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                       <button type="button"
                         onClick={() => store.setDrogas([...store.drogas, { fecha: '', cantidad: '', nombre: '', observaciones: '', nombreSeguimiento: '' }])}
                         className="of-btn-toggle" style={{ alignSelf: 'flex-start' }}>
-                        + AGREGAR DOSIS
+                        + Agregar dosis
                       </button>
                     </div>
                   )}
                 </div>
               </div>
               <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 20 }}>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
+                <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal', marginBottom: 16 }}>
                   Apoyos
                 </div>
                 <div className="grid-2" style={{ gap: 12 }}>
@@ -827,12 +820,12 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                     { key: 'apoyo_cateosFgr', label: 'Apoyo a Cateos FGR' },
                     { key: 'apoyo_cateosFge', label: 'Apoyo a Cateos FGE' },
                   ] as const).map(({ key, label }) => (
-                    <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 2, gap: 12, flexWrap: 'wrap' }}>
-                      <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#1e293b' }}>{label}</span>
+                    <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', gap: 12, flexWrap: 'wrap' }}>
+                      <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#1e293b' }}>{label}</span>
                       <button type="button"
                         onClick={() => $(key, !store[key])}
-                        style={{ padding: '4px 14px', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700, border: '1px solid', borderRadius: 2, cursor: 'pointer', background: store[key] ? '#1f355a' : '#ffffff', color: store[key] ? '#ffffff' : '#64748b', borderColor: store[key] ? '#1f355a' : '#e2e8f0' }}>
-                        {store[key] ? 'SÍ' : 'NO'}
+                        style={{ padding: '4px 14px', fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, border: '1px solid', borderRadius: 'var(--radius-lg)', cursor: 'pointer', background: store[key] ? '#1f355a' : '#ffffff', color: store[key] ? '#ffffff' : '#64748b', borderColor: store[key] ? '#1f355a' : '#e2e8f0' }}>
+                        {store[key] ? 'Sí' : 'No'}
                       </button>
                     </div>
                   ))}
@@ -845,7 +838,7 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
           {step === 6 && (
             <section className="of-card">
               <h2 className="of-section-title">Resumen del Reporte</h2>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#334155', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#334155', display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div className="of-resumen-block">
                   <span className="of-resumen-label">Origen</span>
                   <div className="of-resumen-grid">
@@ -895,20 +888,20 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
                 value={store.observaciones}
                 onChange={(e: any) => $('observaciones', e.target.value)}
                 placeholder="Observaciones finales..." />
-              <div style={{ marginTop: 24, padding: '20px 24px', background: '#eff1f3', border: '1px solid #c3c8d2', borderRadius: 2 }}>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700, color: '#1c3051', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <div style={{ marginTop: 24, padding: '20px 24px', background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)' }}>
+                <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', marginBottom: 12, textTransform: 'none', letterSpacing: 'normal' }}>
                   ¿La víctima desea hacer la denuncia?
                 </div>
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                   <button type="button"
                     onClick={() => $('quiereDenuncia', true)}
-                    style={{ padding: '10px 28px', background: store.quiereDenuncia ? '#1f355a' : '#ffffff', color: store.quiereDenuncia ? '#ffffff' : '#1f355a', border: '1px solid #1f355a', borderRadius: 2, fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                    SÍ, DESEA DENUNCIAR
+                    style={{ padding: '10px 28px', background: store.quiereDenuncia ? '#1f355a' : '#ffffff', color: store.quiereDenuncia ? '#ffffff' : '#1f355a', border: '1px solid #1f355a', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, letterSpacing: 'normal', textTransform: 'none', cursor: 'pointer' }}>
+                    Sí, desea denunciar
                   </button>
                   <button type="button"
                     onClick={() => $('quiereDenuncia', false)}
-                    style={{ padding: '10px 28px', background: !store.quiereDenuncia ? '#0f172a' : '#ffffff', color: !store.quiereDenuncia ? '#ffffff' : '#64748b', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer' }}>
-                    NO
+                    style={{ padding: '10px 28px', background: !store.quiereDenuncia ? '#0f172a' : '#ffffff', color: !store.quiereDenuncia ? '#ffffff' : '#64748b', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 14, letterSpacing: 'normal', textTransform: 'none', cursor: 'pointer' }}>
+                    No
                   </button>
                 </div>
               </div>
@@ -924,14 +917,14 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
             style={{
               padding: '12px 32px', background: step === 0 ? '#f1f5f9' : '#ffffff',
               color: step === 0 ? '#cbd5e1' : '#1e293b',
-              border: '1px solid #e2e8f0', borderRadius: 2, cursor: step === 0 ? 'default' : 'pointer',
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600,
-              textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 8,
+              border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', cursor: step === 0 ? 'default' : 'pointer',
+              fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600,
+              textTransform: 'none', letterSpacing: 'normal', display: 'flex', alignItems: 'center', gap: 8,
             }}>
-            ← ANTERIOR
+            ← Anterior
           </button>
 
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8' }}>
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, color: '#94a3b8' }}>
             {step + 1} / {STEPS.length}
           </div>
 
@@ -939,21 +932,21 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
             <button type="button" onClick={() => setStep(Math.min(STEPS.length - 1, step + 1))}
               style={{
                 padding: '12px 32px', background: '#0f172a',
-                color: '#ffffff', border: 'none', borderRadius: 2, cursor: 'pointer',
-                fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600,
-                textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 8,
+                color: '#ffffff', border: 'none', borderRadius: 'var(--radius-lg)', cursor: 'pointer',
+                fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600,
+                textTransform: 'none', letterSpacing: 'normal', display: 'flex', alignItems: 'center', gap: 8,
               }}>
-              SIGUIENTE →
+              Siguiente →
             </button>
           ) : (
             <button type="button" onClick={handleSubmit} disabled={isSubmitting} style={{
               padding: '12px 48px', background: isSubmitting ? '#64748b' : '#1f355a',
-              color: '#ffffff', border: 'none', borderRadius: 2, cursor: isSubmitting ? 'default' : 'pointer',
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 600,
-              textTransform: 'uppercase', letterSpacing: '0.15em', display: 'flex', alignItems: 'center', gap: 10,
+              color: '#ffffff', border: 'none', borderRadius: 'var(--radius-lg)', cursor: isSubmitting ? 'default' : 'pointer',
+              fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600,
+              textTransform: 'none', letterSpacing: 'normal', display: 'flex', alignItems: 'center', gap: 10,
             }}>
               {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-              {isSubmitting ? 'REGISTRANDO…' : 'REGISTRAR REPORTE'}
+              {isSubmitting ? 'Registrando…' : 'Registrar reporte'}
             </button>
           )}
         </div>
@@ -967,14 +960,15 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
           background: #ffffff;
           border: 1px solid #e2e8f0;
           padding: 32px;
-          border-radius: 2px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-card);
         }
         .of-section-title {
-          font-family: 'Barlow Condensed', sans-serif !important;
-          font-size: 18px !important;
-          font-weight: 700 !important;
-          text-transform: uppercase !important;
+          font-family: var(--apple-font-display) !important;
+          font-size: 16px !important;
+          font-weight: 600 !important;
+          text-transform: none !important;
+          letter-spacing: normal !important;
           color: #1e293b !important;
           margin-bottom: 24px !important;
           display: flex;
@@ -983,31 +977,34 @@ export function FormularioRecorrido({ user, catalogos, incidenteId, prefill, emb
         }
         .of-section-title::before {
           content: '';
-          width: 4px; height: 18px;
+          width: 3px; height: 16px;
           background: #1f355a;
+          border-radius: var(--radius-full);
           display: inline-block;
         }
         .of-btn-toggle {
           height: 46px; padding: 0 16px;
           background: #ffffff; color: #64748b;
-          border: 1px solid #e2e8f0; border-radius: 2px;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 9px; font-weight: 600; cursor: pointer;
+          border: 1px solid #e2e8f0; border-radius: var(--radius-lg);
+          font-family: var(--apple-font-display);
+          font-size: 13px; font-weight: 500; cursor: pointer;
+          text-transform: none; letter-spacing: normal;
           transition: all 0.2s;
         }
         .of-btn-toggle:hover { background: #f8fafc; border-color: #1f355a; }
         input:focus, textarea:focus, select:focus {
           border-color: #1f355a !important;
-          box-shadow: 0 0 0 1px rgba(31, 53, 90, 0.1);
+          box-shadow: 0 0 0 3px rgba(31, 53, 90, 0.12);
         }
         .of-resumen-block {
           padding: 16px;
           border: 1px solid #e2e8f0;
           border-left: 3px solid #1f355a;
+          border-radius: var(--radius-md);
         }
         .of-resumen-label {
-          font-size: 9px; font-weight: 600; color: #1f355a;
-          text-transform: uppercase; letter-spacing: 0.15em;
+          font-size: 12px; font-weight: 500; color: #1f355a;
+          text-transform: none; letter-spacing: normal;
           display: block; margin-bottom: 12px;
         }
         .of-resumen-grid {

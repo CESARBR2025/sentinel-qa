@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Users } from 'lucide-react'
+import { Users, BarChart3, ChevronRight } from 'lucide-react'
 import { verificarRolAgente911 } from '@/lib/agente_911/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -30,27 +30,103 @@ export default async function Agente911DashboardPage() {
 
   const hoy911 = stats.channels.find(c => c.canal === '911')?.count ?? 0
 
-
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-        .card-911 {
-          background: #ffffff; border: 1px solid #e2e8f0; padding: 32px;
-          text-decoration: none; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-          display: flex; flex-direction: column; min-height: 280px;
-          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); cursor: pointer;
-          position: relative; overflow: hidden; width: 100%; max-width: 520px;
+        .desp-main { display: flex; flex-direction: column; flex: 1; gap: 48px; width: 100%; }
+        @media (max-width: 720px) { .desp-main { gap: 20px; } }
+
+        .desp-kpi-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid #e2e8f0; }
+        .desp-kpi-title { font-family: var(--apple-font-display); font-size: 13px; font-weight: 600; color: #1f355a; }
+        .desp-kpi-date { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #94a3b8; }
+        .desp-kpi-stats { display: flex; flex-wrap: wrap; }
+        @media (max-width: 720px) {
+          .desp-kpi-head { padding: 10px 16px; }
+          .desp-kpi-title { font-size: 12px; }
+          .desp-kpi-date { font-size: 10px; }
+          .desp-kpi-stats { flex-wrap: nowrap; }
         }
-        .card-911:hover { border-color: #1f355a; transform: translateY(-5px); box-shadow: 0 20px 40px -12px rgba(31, 53, 90,0.15); }
-        .card-911:hover .co-top { width: 100%; }
-        .card-911:hover .co-left { height: 100%; }
+
+        .stat-bloque { flex: 1 1 180px; min-width: 0; padding: 20px 24px; }
+        .stat-bloque + .stat-bloque { border-left: 1px solid #f1f5f9; }
+        .stat-bloque-label { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 6px; }
+        .stat-bloque-value { font-family: var(--apple-font-display); font-size: 36px; font-weight: 600; line-height: 1; color: #0f172a; }
+        @media (max-width: 720px) {
+          .stat-bloque { flex: 1 1 0; padding: 10px 8px; text-align: center; }
+          .stat-bloque-label { font-size: 10px; margin-bottom: 3px; }
+          .stat-bloque-value { font-size: 21px; }
+        }
+
+        .desp-cards-grid { padding-top: 20px; }
+        @media (max-width: 720px) { .desp-cards-grid { padding-top: 0; } }
+
+        .card-911 {
+          background: var(--apple-glass-bg); backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--apple-glass-border); padding: 32px;
+          text-decoration: none; transition: all 0.3s ease-out;
+          display: flex; flex-direction: column; min-height: 280px;
+          box-shadow: var(--apple-shadow-glass); cursor: pointer;
+          position: relative; overflow: hidden; width: 100%;
+          border-radius: var(--radius-xl);
+        }
+        .card-911:hover { border-color: rgba(31, 53, 90, 0.25); transform: translateY(-2px); box-shadow: var(--apple-shadow-glass-hover); }
         .card-911:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+        .card-911:active {
+          transform: scale(0.97); box-shadow: var(--apple-shadow-glass); border-color: rgba(31, 53, 90, 0.25);
+          transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .12s ease-out;
+        }
+
+        .card-911-icon { color: #64748b; margin-bottom: 32px; display: inline-flex; transition: all 0.3s ease; }
+        .card-911-chip { position: absolute; top: 32px; right: 32px; font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; }
+        .card-911-body { flex-grow: 1; min-width: 0; }
+        .card-911-title { font-family: var(--apple-font-display); font-size: 26px; font-weight: 600; margin: 0 0 8px; color: #0f172a; }
+        .card-911-desc { font-family: var(--apple-font-display); font-size: 13px; color: #64748b; line-height: 1.5; margin: 0; }
+        .card-911-meta { display: none; }
+        .card-911-stats { margin-top: 16px; display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+        .card-911-stat-label { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; }
+        .card-911-stat-value { font-family: var(--apple-font-display); font-size: 22px; font-weight: 600; color: #0f172a; }
+        .card-911-chevron { display: none; transition: transform .2s ease; }
+        .card-911:hover .card-911-chevron, .card-911:active .card-911-chevron { transform: translateX(3px); }
+
+        @media (max-width: 720px) {
+          .card-911 {
+            flex-direction: row; align-items: center; gap: 14px;
+            padding: 14px 16px; min-height: unset; border-radius: var(--radius-lg);
+          }
+          .card-911-icon {
+            margin-bottom: 0; width: 44px; height: 44px; flex-shrink: 0;
+            border-radius: var(--radius-lg); background: rgba(31, 53, 90, 0.08);
+            align-items: center; justify-content: center;
+          }
+          .card-911-icon svg { width: 20px; height: 20px; }
+          .card-911-chip { display: none; }
+          .card-911-title { font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .card-911-desc { display: none; }
+          .card-911-meta {
+            display: block; margin-top: 2px; font-family: var(--apple-font-display);
+            font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          }
+          .card-911-stats { display: none; }
+          .card-911-chevron { display: block; color: #94a3b8; flex-shrink: 0; }
+        }
+
+        .desp-footer {
+          margin-top: auto; padding-top: 24px; border-top: 1px solid #e2e8f0;
+          font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #94a3b8;
+          display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+        }
+        @media (max-width: 720px) { .desp-footer { padding-top: 16px; font-size: 11px; } }
+
+        @media (prefers-reduced-motion: reduce) {
+          .card-911, .card-911:hover, .card-911:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
+          .card-911:hover .co-icon, .card-911:active .co-icon { transform: none; }
+          .card-911:hover .card-911-chevron, .card-911:active .card-911-chevron { transform: none; }
+        }
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Agente 911" backHref={backHref} />
+      <DashboardHeader user={user} roleLabel="Agente 911" backHref={backHref} variant="apple" />
 
-      <div className="pad-dashboard" style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard desp-main">
 
         <PageHeader
           title="Panel"
@@ -58,69 +134,94 @@ export default async function Agente911DashboardPage() {
           subtitle={`${user.name} ${user.apellido ?? ''} · central de atención y despacho`}
         />
 
-        {/* KPI */}
-        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', fontFamily: 'JetBrains Mono,monospace' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20, background: '#ffffff', border: '1px solid #e2e8f0', padding: '16px 24px' }}>
-            <div>
-              <div style={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: 11, marginBottom: 4 }}>Incidentes Hoy</div>
-              <div style={{ fontWeight: 700, fontSize: 28, color: '#1f355a', lineHeight: 1 }}>{stats.hoy}</div>
-            </div>
-            <div style={{ width: 1, height: 36, background: '#e2e8f0' }} />
-            <div>
-              <div style={{ color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: 10, marginBottom: 4 }}>Vía 911</div>
-              <div style={{ fontWeight: 700, fontSize: 20, color: '#0f172a', lineHeight: 1 }}>{hoy911}</div>
-            </div>
+        {/* KPI único: resumen del día */}
+        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)' }}>
+          <div className="desp-kpi-head">
+            <span className="desp-kpi-title">Resumen del día</span>
+            <span className="desp-kpi-date">
+              {hoy.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </span>
+          </div>
+          <div className="desp-kpi-stats">
+            <StatBloque etiqueta="Incidentes Hoy" valor={stats.hoy} />
+            <StatBloque etiqueta="Vía 911" valor={hoy911} />
+            <StatBloque etiqueta="Histórico" valor={stats.total} />
           </div>
         </div>
 
         {/* Cards */}
-        <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 20 }}>
+        <div className="cat-cards-grid desp-cards-grid">
 
-          {/* Card: Ciudadano */}
-          <Link href="/agente_911/ciudadano/incidentes" className="card-911" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <Users size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                CANAL 911
-              </div>
+          <Link href="/agente_911/ciudadano/incidentes" className="card-911">
+            <div className="card-911-icon co-icon">
+              <Users size={32} strokeWidth={1.5} />
             </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Ciudadano
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
-                Base de datos de atención, registros de identidad y antecedentes de contacto
+            <span className="card-911-chip">Canal 911</span>
+            <div className="card-911-body">
+              <h3 className="card-911-title">Reportes Telefónicos de Ciudadano</h3>
+              <p className="card-911-desc">
+                Registro de llamadas al 911 y su atención — bitácora de incidentes por teléfono
               </p>
+              <div className="card-911-meta">{hoy911} hoy · {stats.total} histórico</div>
             </div>
-            <div style={{ marginTop: 16, display: 'flex', gap: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
+            <div className="card-911-stats">
               <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hoy</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{hoy911}</div>
+                <div className="card-911-stat-label">Hoy</div>
+                <div className="card-911-stat-value">{hoy911}</div>
               </div>
               <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.total}</div>
+                <div className="card-911-stat-label">Total</div>
+                <div className="card-911-stat-value">{stats.total}</div>
               </div>
             </div>
+            <ChevronRight className="card-911-chevron" size={20} />
+          </Link>
+
+          <Link href="/agente_911/reportes" className="card-911">
+            <div className="card-911-icon co-icon">
+              <BarChart3 size={32} strokeWidth={1.5} />
+            </div>
+            <span className="card-911-chip">Estadísticas</span>
+            <div className="card-911-body">
+              <h3 className="card-911-title">Reportes</h3>
+              <p className="card-911-desc">
+                Concentrados estadísticos y reportes de números telefónicos del canal 911
+              </p>
+              <div className="card-911-meta">Números de extorsión · exportación a Excel</div>
+            </div>
+            <div className="card-911-stats">
+              <div>
+                <div className="card-911-stat-label">Vista</div>
+                <div className="card-911-stat-value">Reportes</div>
+              </div>
+              <div>
+                <div className="card-911-stat-label">Formato</div>
+                <div className="card-911-stat-value">Excel</div>
+              </div>
+            </div>
+            <ChevronRight className="card-911-chevron" size={20} />
           </Link>
 
         </div>
 
         {/* Footer */}
-        <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
+        <div className="desp-footer">
+          <div>SSPM · San Juan del Río · Qro</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · 911</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
+            <span>Centinela {APP_VERSION} · 911</span>
           </div>
         </div>
 
       </div>
+    </div>
+  )
+}
+
+function StatBloque({ etiqueta, valor }: { etiqueta: string; valor: number }) {
+  return (
+    <div className="stat-bloque">
+      <div className="stat-bloque-label">{etiqueta}</div>
+      <div className="stat-bloque-value">{valor}</div>
     </div>
   )
 }

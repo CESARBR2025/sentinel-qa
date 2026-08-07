@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { tienePermiso } from '@/lib/reporte-detenidos/permisos'
 import { listarDetenidosCompletos } from '@/lib/reporte-detenidos/repository'
 import { BotonGenerarPpt } from '@/components/reporte-detenidos/BotonGenerarPpt'
@@ -19,7 +19,7 @@ export default async function ReporteDetenidosPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Agente Reportes" />
+      <DashboardHeader user={user} roleLabel="Agente Reportes" backHref="/agente_reportes" backLabel="Panel de Reportes" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
@@ -27,10 +27,7 @@ export default async function ReporteDetenidosPage() {
           accent="Detenidos"
           accentColor="#059669"
           subtitle="Detenidos con fotografía frontal, derecho e izquierdo ya completadas por Fiscalía/Juzgado"
-          actions={<>
-            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
-            <BotonGenerarPpt />
-          </>}
+          actions={<BotonGenerarPpt />}
         />
 
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, overflow: 'auto' }}>

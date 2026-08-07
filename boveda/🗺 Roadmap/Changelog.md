@@ -6,6 +6,31 @@
 
 ## 2026 — Agosto
 
+### — Reporte de Números Telefónicos accesible desde el panel Agente 911 (2026-08-06)
+- **Card "Reportes"** en `app/agente_911/page.tsx` → `agente_911/reportes` → card "Reporte de Números Telefónicos" → `agente_911/reportes/numeros`.
+- **Página de tabla** (`app/agente_911/reportes/numeros/page.tsx`): título "Reporte de Números Telefónicos" + fecha de reporte, filtro por rango de fechas (`components/911/reportes/FiltroRangoFechas.tsx`, URL params `from`/`to`), tabla de 4 columnas (Folio / Número de teléfono reportado / Fecha de reporte / Tipo de incidencia, `TablaNumerosTelefonicos.tsx`) y botón Exportar a Excel.
+- **Export** `app/api/reportes/numeros-extorsion/exportar/route.ts` con ExcelJS (cabecera institucional + columnas + autofiltro), que reutiliza `obtenerDatosNumeros911()` para que tabla y Excel coincidan.
+- **Origen de datos**: `incidentes` (`telefono_reportante`, `fecha_hora_inicio`, folio) + `cat_tipos_incidente.nombre`, canal `911`, filtrado por rango de fechas. Incluye **todos** los reportes 911 (no solo extorsión) — cada reporte 911 es una incidencia.
+- **Corrección de alcance**: inicialmente se consultaba `incidente_extorsion` (solo extorsión), por lo que folios de tipo `normal` (ej. `SSPM-AL-20260806-000015` "DAÑO A PROPIEDAD AJENA") no aparecían. Se cambió a la fuente `incidentes` canal 911; `obtenerDatosTelefonicos`/`incidente_extorsion` queda intacto para `/estadisticos`.
+- **Seguridad**: sesión + `tieneAccesoSeccion('911_ciudadano')` en páginas y API.
+- **Fix descarga Excel**: el botón usaba `<a href>` nativo a la ruta API, pero `PageTransition` (globla en `app/layout.tsx`, captura de clics) intercepta la navegación interna y aborta la descarga. Se reemplaza por botón **cliente** `components/911/reportes/BotonExportarExcel.tsx` (fetch → blob → `a.download()`), patrón ya probado en formatos UDAI / camara / D1.
+- Typecheck y build OK; rutas `/agente_911/reportes`, `/agente_911/reportes/numeros` y `/api/reportes/numeros-extorsion/exportar` compiladas.
+
+### — Clasificación técnica 911: catálogo nacional en mayúsculas legible (2026-08-06)
+- **Causa raíz en BD**: `cat_subtipos_emergencia.nombre` se almacenaba en snake_case (`actos_relacionados_con_el_patrimonio`) y `cat_tipos_emergencia.nombre` en proper-case (`Médico`, `Seguridad`); el select anteponía el código (`304 - actos_...`).
+- **Fix de datos real** (vía `DATABASE_URL`): subtipos → `UPPER(REPLACE(nombre,'_',' '))` y tipos → `UPPER(nombre)`. Ej: `304 - ACTOS RELACIONADOS CON EL PATRIMONIO`, `3 - SEGURIDAD`.
+- **Prevención de regresión** (`lib/db/seed-catalogo-nacional.ts`): el seed normaliza subtipo (`subKey.toUpperCase().replace(/_/g,' ')`) y tipo (`tipoData.nombre.toUpperCase()`) al insertar, para que re-sembrar no revierta.
+- **UI (`Formulario911.tsx`, Clasificación Técnica)**: tipo y subtipo muestran solo el nombre en mayúsculas (sin prefijo de código); el incidente específico muestra solo el texto. Se elimina el campo **"Ajuste Manual de Prioridad"** (`select prioridadId`); la prioridad queda regida por el catálogo (se conserva el campo readonly "Prioridad autocompletada" + hidden `prioridadCatalogo`).
+- Typecheck, lint (0 errores) y build OK.
+
+### — Formulario 911 ciudadano: folio real, usuario frecuente auto, fusionar paso de personas (2026-08-06)
+- **Folio real (`lib/incidentes/folio.ts`)**: formato `SSPM-AL-AAAAMMDD-######` (antes `SSPM/INC/año/###`). Se genera server-side al publicar el reporte (commit), usando la secuencia `folio_consecutivo` por año con `pg_advisory_xact_lock` + el UNIQUE `incidentes_folio_uq`; el campo del formulario es informativo ("Se asigna al publicar") y el folio real llega vía `?creado=true&folio=...`.
+- **Usuario frecuente automático** (`lib/incidentes/actions.ts`): `resolverEsUsuarioFrecuente` marca `es_usuario_frecuente=true` si el teléfono tiene 5+ reportes previos en `incidentes.telefono_reportante`. Nueva server action `verificarTelefonoFrecuente` para check en vivo (onBlur) desde el formulario; el campo pasa de `select` manual a indicador readonly + hidden `esUsuarioFrecuente`.
+- **Fusionar personas en paso Reportante**: el campo `esPersonaAfectada` ahora significa "¿el reportante es la persona afectada?"; si es `false` se renderiza la lista dinámica de personas (p_nombre/p_sexo/p_edad) dentro del paso 2. Se elimina el paso 3 → wizard de 7 a 6 pasos (pasos reindexados).
+- **Estatus Inicial oculto**: se retira el input readonly de Estatus en Canalización (el estatus se fija `sin_despachar` server-side).
+- **Ruta dedicada** `/agente_911/ciudadano/nuevoreporte` para la captura; `/agente_911/ciudadano` queda como redirect (backward-compatible, conserva guard de permisos `911_ciudadano`). Links de bitácora y revisar apuntan a la nueva ruta.
+- Typecheck, lint (0 errores) y build OK; ruta `/nuevoreporte` registrada.
+
 ### — Nuevo componente global SegmentPage + REGLA en Convenciones (2026-08-05)
 Se estandariza la navegación por segmentos de estado al estilo del tablón de despacho:
 - **Nuevo componente `components/partials/SegmentPage.tsx`**: segmento de página con botones Barlow Condensed 14/700 (borde `#e2e8f0`, activo con fondo `accent` sólido, icono + badge de conteo `rgba(255,255,255,.2)`). Soporta `onChange` (estado local) o `href` por tab (`<Link>` server-safe).

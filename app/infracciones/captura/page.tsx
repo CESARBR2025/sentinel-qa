@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { verificarRolOficial } from "@/lib/oficial/service";
 import { DashboardHeader } from "@/components/partials/Header";
-import { PageHeader, PageHeaderLink } from "@/components/partials/PageHeader";
+import { PageHeader } from "@/components/partials/PageHeader";
 import FormularioInfraccion from "@/features/via/oficiales/components/FormularioInfraccion";
 import { APP_VERSION } from "@/lib/constants"
 
@@ -22,7 +22,7 @@ export default async function CapturaPage() {
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Nueva Infracción" />
+      <DashboardHeader user={user} roleLabel="Nueva Infracción" backHref="/oficial" backLabel="Panel" />
 
       <div className="pad-pagina" style={{ maxWidth: 1400, margin: "0 auto", display: "flex", flexDirection: "column" }}>
 
@@ -30,7 +30,6 @@ export default async function CapturaPage() {
           title="Captura de"
           accent="Infracciones"
           subtitle="Registro de una nueva infracción de tránsito"
-          actions={<PageHeaderLink href="/oficial" variant="secondary">← Panel</PageHeaderLink>}
         />
 
         {/* Form */}

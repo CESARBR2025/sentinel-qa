@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import {
-  Camera, Zap, ShieldAlert, BarChart3, Globe, FolderClock, PackageX,
+  Camera, Zap, ShieldAlert, Globe, FolderClock, PackageX,
   Send, FileText, User,
 } from 'lucide-react'
 import { OptionSquare } from '@/components/reportes/menuOption'
@@ -117,14 +117,6 @@ export default async function AgenteReportesPage() {
     {
       titulo: 'Estadísticas',
       cards: [
-        {
-          titulo: 'Reportes Telefónicos',
-          subtitulo: 'Generación automática de concentrados diarios, semanales y mensuales para mando.',
-          icono: <BarChart3 size={28} />,
-          enlace: '/estadisticos',
-          seccion: 'reportes_ciudadano',
-          estadisticas: [{ label: 'Corte', value: 'Semanal' }, { label: 'Eficiencia', value: '92%' }],
-        },
         {
           titulo: 'Reporte de Detenidos',
           subtitulo: 'Presentación con fotografías, evento, delitos, falta administrativa y modus operandi — diario, semanal y mensual.',

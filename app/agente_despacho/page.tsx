@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Shield, MapPin } from 'lucide-react'
+import { Shield, MapPin, ChevronRight } from 'lucide-react'
 import { verificarRolAgenteDespacho } from '@/lib/agente_despacho/service'
 import { getStats } from '@/lib/911/service'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -29,26 +29,116 @@ export default async function AgenteDespachoDashboardPage() {
   const stats = await getStats(hoyISO)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-        .card-911 {
-          background: #ffffff; border: 1px solid #e2e8f0; padding: 32px;
-          text-decoration: none; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-          display: flex; flex-direction: column; min-height: 280px;
-          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); cursor: pointer;
-          position: relative; overflow: hidden; width: 100%; max-width: 520px;
+        /* Espaciado entre secciones — compacto en móvil para que la vista
+           quepa sin scroll en un viewport tipo iPhone (≤720px). */
+        .desp-main { display: flex; flex-direction: column; flex: 1; gap: 48px; }
+        @media (max-width: 720px) { .desp-main { gap: 20px; } }
+
+        /* Card KPI — Resumen del día */
+        .desp-kpi-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid #e2e8f0; }
+        .desp-kpi-title { font-family: var(--apple-font-display); font-size: 13px; font-weight: 600; color: #1f355a; }
+        .desp-kpi-date { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #94a3b8; }
+        .desp-kpi-stats { display: flex; flex-wrap: wrap; }
+        @media (max-width: 720px) {
+          .desp-kpi-head { padding: 10px 16px; }
+          .desp-kpi-title { font-size: 12px; }
+          .desp-kpi-date { font-size: 10px; }
+          .desp-kpi-stats { flex-wrap: nowrap; }
         }
-        .card-911:hover { border-color: #1f355a; transform: translateY(-5px); box-shadow: 0 20px 40px -12px rgba(31, 53, 90,0.15); }
-        .card-911:hover .co-top { width: 100%; }
-        .card-911:hover .co-left { height: 100%; }
-        .card-911:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+
+        .stat-bloque { flex: 1 1 180px; min-width: 0; padding: 20px 24px; }
         .stat-bloque + .stat-bloque { border-left: 1px solid #f1f5f9; }
+        .stat-bloque-label { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; margin-bottom: 6px; }
+        .stat-bloque-value { font-family: var(--apple-font-display); font-size: 36px; font-weight: 600; line-height: 1; color: #0f172a; }
+        @media (max-width: 720px) {
+          .stat-bloque { flex: 1 1 0; padding: 10px 8px; text-align: center; }
+          .stat-bloque-label { font-size: 10px; margin-bottom: 3px; }
+          .stat-bloque-value { font-size: 21px; }
+        }
+
+        /* Cards de navegación — hero glass en tablet/desktop, fila compacta
+           tipo lista nativa (icono · texto · chevron) en móvil. */
+        .desp-cards-grid { padding-top: 20px; }
+        @media (max-width: 720px) { .desp-cards-grid { padding-top: 0; gap: 10px; } }
+
+        .card-911 {
+          background: var(--apple-glass-bg); backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--apple-glass-border); padding: 32px;
+          text-decoration: none; transition: all 0.3s ease-out;
+          display: flex; flex-direction: column; min-height: 280px;
+          box-shadow: var(--apple-shadow-glass); cursor: pointer;
+          position: relative; overflow: hidden; width: 100%;
+          border-radius: var(--radius-xl);
+        }
+        .card-911:hover { border-color: rgba(31, 53, 90, 0.25); transform: translateY(-2px); box-shadow: var(--apple-shadow-glass-hover); }
+        .card-911:hover .co-icon { color: #1f355a; transform: scale(1.1); }
+        /* Feedback de "presionado" — el toque/click se siente respondido de inmediato
+           (transición corta .12s), y la vuelta a reposo hereda la .3s de arriba (más
+           suave). Reemplaza el highlight azul nativo del navegador en <a>. */
+        .card-911:active {
+          transform: scale(0.97); box-shadow: var(--apple-shadow-glass); border-color: rgba(31, 53, 90, 0.25);
+          transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .12s ease-out;
+        }
+
+        .card-911-icon { color: #64748b; margin-bottom: 32px; display: inline-flex; transition: all 0.3s ease; }
+        .card-911-chip { position: absolute; top: 32px; right: 32px; font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; }
+        .card-911-body { flex-grow: 1; min-width: 0; }
+        .card-911-title { font-family: var(--apple-font-display); font-size: 26px; font-weight: 600; margin: 0 0 8px; color: #0f172a; }
+        .card-911-desc { font-family: var(--apple-font-display); font-size: 13px; color: #64748b; line-height: 1.5; margin: 0; }
+        .card-911-meta { display: none; }
+        .card-911-stats { margin-top: 16px; display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+        .card-911-stat-label { font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #64748b; }
+        .card-911-stat-value { font-family: var(--apple-font-display); font-size: 22px; font-weight: 600; color: #0f172a; }
+        /* affordance de navegación: el chevron se desliza un poco al presionar/hover,
+           igual que el botón "disclosure" de una lista nativa iOS/Android. */
+        .card-911-chevron { display: none; transition: transform .2s ease; }
+        .card-911:hover .card-911-chevron, .card-911:active .card-911-chevron { transform: translateX(3px); }
+
+        @media (max-width: 720px) {
+          .card-911 {
+            flex-direction: row; align-items: center; gap: 14px;
+            padding: 14px 16px; min-height: unset; border-radius: var(--radius-lg);
+          }
+          .card-911-icon {
+            margin-bottom: 0; width: 44px; height: 44px; flex-shrink: 0;
+            border-radius: var(--radius-lg); background: rgba(31, 53, 90, 0.08);
+            align-items: center; justify-content: center;
+          }
+          .card-911-icon svg { width: 20px; height: 20px; }
+          .card-911-chip { display: none; }
+          .card-911-title { font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .card-911-desc { display: none; }
+          .card-911-meta {
+            display: block; margin-top: 2px; font-family: var(--apple-font-display);
+            font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          }
+          .card-911-stats { display: none; }
+          .card-911-chevron { display: block; color: #94a3b8; flex-shrink: 0; }
+        }
+
+        .desp-footer {
+          margin-top: auto; padding-top: 24px; border-top: 1px solid #e2e8f0;
+          font-family: var(--apple-font-display); font-size: 12px; font-weight: 500; color: #94a3b8;
+          display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+        }
+        @media (max-width: 720px) { .desp-footer { padding-top: 16px; font-size: 11px; } }
+
+        /* Motion con propósito (DESIGN.md §1/§9): las micro-animaciones de arriba
+           son transform/opacity puros, cortas y disparadas por interacción real
+           (hover/active) — no decorativas ni en loop. Se desactivan igual bajo
+           prefers-reduced-motion, dejando solo el cambio de color/sombra como feedback. */
+        @media (prefers-reduced-motion: reduce) {
+          .card-911, .card-911:hover, .card-911:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
+          .card-911:hover .co-icon, .card-911:active .co-icon { transform: none; }
+          .card-911:hover .card-911-chevron, .card-911:active .card-911-chevron { transform: none; }
+        }
       `}</style>
 
-      <DashboardHeader user={user} roleLabel="Agente Despacho" backHref={backHref} />
+      <DashboardHeader user={user} roleLabel="Agente Despacho" backHref={backHref} variant="apple" />
 
-      <div className="pad-dashboard" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 48 }}>
+      <div className="pad-dashboard desp-main" style={{ width: '100%' }}>
 
         <PageHeader
           title="Panel"
@@ -57,16 +147,14 @@ export default async function AgenteDespachoDashboardPage() {
         />
 
         {/* KPI único: resumen del día */}
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', padding: '14px 24px', borderBottom: '1px solid #e2e8f0' }}>
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#1f355a', fontWeight: 600 }}>
-              Resumen del día
-            </span>
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8' }}>
+        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)' }}>
+          <div className="desp-kpi-head">
+            <span className="desp-kpi-title">Resumen del día</span>
+            <span className="desp-kpi-date">
               {hoy.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
             </span>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <div className="desp-kpi-stats">
             <StatBloque etiqueta="Incidentes Hoy" valor={stats.hoy} />
             <StatBloque etiqueta="Pendientes Despacho" valor={stats.sinDespachar} />
             <StatBloque etiqueta="En Campo" valor={stats.enDespacho} />
@@ -74,82 +162,67 @@ export default async function AgenteDespachoDashboardPage() {
         </div>
 
         {/* Cards */}
-        <div style={{ flex: 1, display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', alignItems: 'flex-start', paddingTop: 20 }}>
+        <div className="cat-cards-grid desp-cards-grid">
 
           {/* Card única: tablón unificado — 911, whatsapp y rondín (auto-escalado) convergen aquí, no hay universo separado que consultar */}
-          <Link href="/agente_911/despacho" className="card-911" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <Shield size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                REPORTES
-              </div>
+          <Link href="/agente_911/despacho" className="card-911">
+            <div className="card-911-icon co-icon">
+              <Shield size={32} strokeWidth={1.5} />
             </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                Reportes de Despacho
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+            <span className="card-911-chip">Reportes</span>
+            <div className="card-911-body">
+              <h3 className="card-911-title">Reportes de Despacho</h3>
+              <p className="card-911-desc">
                 Tablón de incidentes pendientes, asignación de unidades y elementos por turno
               </p>
+              <div className="card-911-meta">{stats.sinDespachar} pendientes · {stats.enDespacho} en campo</div>
             </div>
-            <div style={{ marginTop: 16, display: 'flex', gap: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
+            <div className="card-911-stats">
               <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Pendientes</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.sinDespachar}</div>
+                <div className="card-911-stat-label">Pendientes</div>
+                <div className="card-911-stat-value">{stats.sinDespachar}</div>
               </div>
               <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>En Campo</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.enDespacho}</div>
+                <div className="card-911-stat-label">En Campo</div>
+                <div className="card-911-stat-value">{stats.enDespacho}</div>
               </div>
             </div>
+            <ChevronRight className="card-911-chevron" size={20} />
           </Link>
 
           {/* KPI geolocalizado: mapa de puntos + mapa de calor por rango de fecha/hora */}
-          <Link href="/agente_despacho/kpi-incidencias" className="card-911" style={{ textDecoration: 'none' }}>
-            <div className="co-top" style={{ position: 'absolute', top: 0, left: 0, height: 2, background: '#1f355a', transition: 'width 0.4s ease', width: 32 }} />
-            <div className="co-left" style={{ position: 'absolute', top: 0, left: 0, width: 2, background: '#1f355a', transition: 'height 0.4s ease', height: 32 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-              <div className="co-icon" style={{ color: '#64748b', transition: 'all 0.3s ease' }}>
-                <MapPin size={32} />
-              </div>
-              <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1f355a' }} />
-                ANÁLISIS
-              </div>
+          <Link href="/agente_despacho/kpi-incidencias" className="card-911">
+            <div className="card-911-icon co-icon">
+              <MapPin size={32} strokeWidth={1.5} />
             </div>
-            <div style={{ flexGrow: 1 }}>
-              <h3 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 28, fontWeight: 800, textTransform: 'uppercase', margin: '0 0 8px 0', color: '#0f172a' }}>
-                KPI Incidencias
-              </h3>
-              <p style={{ fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b', lineHeight: 1.5, margin: 0 }}>
+            <span className="card-911-chip">Análisis</span>
+            <div className="card-911-body">
+              <h3 className="card-911-title">KPI Incidencias</h3>
+              <p className="card-911-desc">
                 Mapa de ubicación y mapa de calor de las incidencias por rango de fecha y hora, con tabla y detalle
               </p>
+              <div className="card-911-meta">{stats.hoy} hoy · {stats.total} histórico</div>
             </div>
-            <div style={{ marginTop: 16, display: 'flex', gap: 16, paddingTop: 12, borderTop: '1px solid #e2e8f0' }}>
+            <div className="card-911-stats">
               <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hoy</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.hoy}</div>
+                <div className="card-911-stat-label">Hoy</div>
+                <div className="card-911-stat-value">{stats.hoy}</div>
               </div>
               <div>
-                <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Histórico</div>
-                <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 20, fontWeight: 700, color: '#0f172a' }}>{stats.total}</div>
+                <div className="card-911-stat-label">Histórico</div>
+                <div className="card-911-stat-value">{stats.total}</div>
               </div>
             </div>
+            <ChevronRight className="card-911-chevron" size={20} />
           </Link>
 
         </div>
 
         {/* Footer */}
-        <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #e2e8f0', fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.18em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>SSPM · SAN JUAN DEL RÍO · QRO</div>
+        <div className="desp-footer">
+          <div>SSPM · San Juan del Río · Qro</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span>CENTINELA {APP_VERSION} · DESPACHO</span>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#1f355a' }} />
+            <span>Centinela {APP_VERSION} · Despacho</span>
           </div>
         </div>
 
@@ -160,13 +233,9 @@ export default async function AgenteDespachoDashboardPage() {
 
 function StatBloque({ etiqueta, valor }: { etiqueta: string; valor: number }) {
   return (
-    <div className="stat-bloque" style={{ flex: '1 1 180px', minWidth: 0, padding: '20px 24px' }}>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#64748b', marginBottom: 6 }}>
-        {etiqueta}
-      </div>
-      <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 36, fontWeight: 800, lineHeight: 1, color: '#0f172a' }}>
-        {valor}
-      </div>
+    <div className="stat-bloque">
+      <div className="stat-bloque-label">{etiqueta}</div>
+      <div className="stat-bloque-value">{valor}</div>
     </div>
   )
 }

@@ -48,7 +48,7 @@ export default async function NCoordinacionPage({
     return (
         <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
             <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
-            <DashboardHeader user={user} roleLabel="Grupo de Coordinación" />
+            <DashboardHeader user={user} roleLabel="Grupo de Coordinación" backHref="/agente_reportes" backLabel="Panel de Reportes" />
 
             <div className="pad-pagina" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 32 }}>
 
@@ -64,14 +64,11 @@ export default async function NCoordinacionPage({
                     accentColor="#2563eb"
                     subtitle="PARTE DE NOVEDADES · reporte de coordinación"
                     actions={
-                        <>
-                            <PageHeaderLink href="/agente_reportes" variant="secondary">← Panel de Reportes</PageHeaderLink>
-                            <PageHeaderLink href={`/api/nCoordinacion/generar?fecha=${fecha}`}>
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                                    <FileDown size={16} /> GENERAR WORD
-                                </span>
-                            </PageHeaderLink>
-                        </>
+                        <PageHeaderLink href={`/api/nCoordinacion/generar?fecha=${fecha}`}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                                <FileDown size={16} /> GENERAR WORD
+                            </span>
+                        </PageHeaderLink>
                     }
                 />
 

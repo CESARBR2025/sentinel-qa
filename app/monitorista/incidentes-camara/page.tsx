@@ -39,6 +39,8 @@ export default async function IncidentesCamaraPage({
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
         roleLabel="Monitorista"
+        backHref="/monitorista"
+        backLabel="Panel"
       />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
@@ -46,10 +48,7 @@ export default async function IncidentesCamaraPage({
           title="Incidentes por"
           accent="Cámara"
           subtitle="Cámaras de vigilancia · registro de novedades por turno"
-          actions={<>
-            <PageHeaderLink href="/monitorista" variant="secondary">← Panel</PageHeaderLink>
-            <PageHeaderLink href="/monitorista/incidentes-camara/nuevo">+ Nuevo Registro</PageHeaderLink>
-          </>}
+          actions={<PageHeaderLink href="/monitorista/incidentes-camara/nuevo">+ Nuevo Registro</PageHeaderLink>}
         />
 
         <div className="grid-2">

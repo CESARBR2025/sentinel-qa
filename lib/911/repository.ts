@@ -64,7 +64,7 @@ export async function listarIncidentes(
   canal: string | null,
   page: number,
   pageSize: number,
-  estatus?: string | null,
+  canalizacion?: 'canalizados' | 'sin_canalizacion' | null,
 ): Promise<{ rows: IncidenteDetalle[]; total: number }> {
   const offset = (page - 1) * pageSize
   const conditions: string[] = []
@@ -76,16 +76,11 @@ export async function listarIncidentes(
     conditions.push(`i.canal = $${idx}`)
     params.push(canal)
   }
-  if (estatus) {
+  if (canalizacion) {
     idx++
-    // Grupo "cerrado": agrupa atendido + cerrado_detencion (vocabulario C4).
-    if (estatus === 'cerrado') {
-      conditions.push(`i.estatus = ANY($${idx}::text[])`)
-      params.push(['atendido', 'cerrado_detencion'])
-    } else {
-      conditions.push(`i.estatus = $${idx}`)
-      params.push(estatus)
-    }
+    // Canalizados = requirieron envío a despacho; Sin canalización = no.
+    conditions.push(`COALESCE(i.requiere_despacho, false) = $${idx}`)
+    params.push(canalizacion === 'canalizados')
   }
 
   const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : ''
@@ -184,23 +179,26 @@ export async function obtenerTiposIncidente(): Promise<CatalogoItem[]> {
   return result.rows.map(rowToCatalogo)
 }
 
-export async function contarPorEstatus(canal: string): Promise<{ estatus: string; count: number }[]> {
-  const result = await query<{ estatus: string; count: number }>(
-    `SELECT estatus, count(*)::int as count FROM incidentes WHERE canal = $1 GROUP BY estatus`,
+export async function contarPorCanalizacion(canal: string): Promise<{ clave: string; count: number }[]> {
+  const result = await query<{ clave: string; count: number }>(
+    `SELECT CASE WHEN COALESCE(requiere_despacho, false) THEN 'canalizados' ELSE 'sin_canalizacion' END AS clave, count(*)::int as count
+     FROM incidentes WHERE canal = $1 GROUP BY 1`,
     [canal],
   )
   return result.rows
 }
 
-export async function obtenerDespachadores(): Promise<{ id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }[]> {
+export async function obtenerDespachadores(): Promise<{ id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean; enLinea: boolean }[]> {
   const result = await query<Record<string, unknown>>(
-    `SELECT DISTINCT u.id, u.name, u.apellido, u.activo, r.nombre AS rol_nombre
+    `SELECT DISTINCT u.id, u.name, u.apellido, u.activo, r.nombre AS rol_nombre,
+       (u.ultima_actividad_despacho_en IS NOT NULL
+        AND u.ultima_actividad_despacho_en > NOW() - INTERVAL '5 minutes') AS en_linea
      FROM users u
      INNER JOIN permisos p ON p.usuario_id = u.id
      LEFT JOIN roles r ON u.rol_id = r.id
      WHERE p.seccion = '911_despacho' AND p.puede_ver = true
      AND u.dependencia_id = (SELECT id FROM cat_dependencias WHERE clave = 'SEGURIDAD_PUBLICA' LIMIT 1)
-     ORDER BY u.name`,
+     ORDER BY en_linea DESC, u.name`,
   )
   return result.rows.map(r => ({
     id: String(r.id),
@@ -208,5 +206,13 @@ export async function obtenerDespachadores(): Promise<{ id: string; name: string
     apellido: r.apellido ? String(r.apellido) : '',
     rolNombre: r.rol_nombre ? String(r.rol_nombre) : null,
     activo: Boolean(r.activo),
+    enLinea: Boolean(r.en_linea),
   }))
+}
+
+export async function actualizarActividadDespachador(userId: string): Promise<void> {
+  await query(
+    `UPDATE users SET ultima_actividad_despacho_en = NOW() WHERE id = $1`,
+    [userId],
+  )
 }

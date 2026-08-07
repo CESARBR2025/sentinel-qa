@@ -92,7 +92,7 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             width: 38, height: 38, border: '1px solid #e2e8f0', background: '#fff',
-            cursor: 'pointer', color: '#64748b',
+            borderRadius: 'var(--radius-lg)', cursor: 'pointer', color: '#64748b',
           }}
         >
           <Users size={17} />
@@ -110,8 +110,7 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
         >
           <div
             style={{
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#64748b',
-              letterSpacing: '0.1em', textTransform: 'uppercase',
+              fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#94a3b8',
             }}
           >
             {roleLabel} · dev
@@ -119,15 +118,15 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <span
               style={{
-                fontFamily: 'JetBrains Mono,monospace', fontSize: 13, color: '#1f355a',
-                letterSpacing: '0.12em', fontWeight: 600,
+                fontFamily: 'var(--apple-font-display)', fontSize: 14, color: '#0f172a',
+                fontWeight: 600,
               }}
             >
               {currentUser?.name ?? ''} {currentUser?.apellido ?? ''}
             </span>
             <ChevronDown size={14} color="#64748b" style={{ transition: 'transform .15s ease', transform: abierto ? 'rotate(180deg)' : 'none' }} />
           </div>
-          <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8', letterSpacing: '0.08em' }}>
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8' }}>
             {currentUser?.email?.toLowerCase() ?? ''}
           </div>
         </button>
@@ -142,8 +141,9 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
             width: esMovil ? 'auto' : 360, zIndex: 999999,
             maxWidth: 'calc(100vw - 24px)', maxHeight: 'calc(100vh - 24px)',
             display: 'flex', flexDirection: 'column',
-            background: '#fff', border: '1px solid #e2e8f0',
-            boxShadow: '0 16px 40px -12px rgba(15,23,42,0.35)',
+            background: 'var(--apple-glass-bg)', backdropFilter: 'blur(20px) saturate(180%)',
+            border: '1px solid var(--apple-glass-border)', borderRadius: 'var(--radius-xl)',
+            boxShadow: 'var(--apple-shadow-glass-hover)', overflow: 'hidden',
           }}
         >
           <div style={{
@@ -151,17 +151,16 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
             padding: '12px 14px', borderBottom: '1px solid #e2e8f0', flexShrink: 0,
           }}>
             <span style={{
-              fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: '#1f355a',
+              fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#0f172a',
             }}>
               Cambiar de sesión
             </span>
             <span style={{
-              fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.1em',
-              textTransform: 'uppercase', color: '#c0223a', border: '1px solid #c0223a',
-              padding: '1px 6px',
+              fontFamily: 'var(--apple-font-display)', fontSize: 11, fontWeight: 600,
+              color: '#b45309', background: '#FEF3C7', borderRadius: 'var(--radius-full)',
+              padding: '2px 10px',
             }}>
-              dev
+              Dev
             </span>
           </div>
 
@@ -187,8 +186,8 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
                   rolActual = u.rolNombre
                   items.push(
                     <div key={`rol-${rolActual ?? 'sin'}`} style={{
-                      padding: '8px 14px 4px', fontFamily: 'JetBrains Mono, monospace',
-                      fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase',
+                      padding: '8px 14px 4px', fontFamily: 'var(--apple-font-display)',
+                      fontSize: 11, fontWeight: 600,
                       color: '#94a3b8', borderTop: items.length > 0 ? '1px solid #f1f5f9' : 'none',
                     }}>
                       {rolActual ?? 'Sin rol'}
@@ -205,11 +204,11 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
                       display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                       textAlign: 'left', cursor: 'pointer', padding: '9px 14px',
                       border: 'none', borderBottom: '1px solid #f1f5f9',
-                      background: esActual ? '#f8fafc' : '#fff',
+                      background: esActual ? '#f8fafc' : 'transparent',
                     }}
                   >
                     <span style={{
-                      flexShrink: 0, width: 28, height: 28, borderRadius: '50%',
+                      flexShrink: 0, width: 28, height: 28, borderRadius: 'var(--radius-full)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       background: esActual ? 'rgba(31,53,90,0.12)' : '#f1f5f9',
                       color: esActual ? '#1f355a' : '#64748b',
@@ -217,19 +216,19 @@ export function CambiarSesionDev({ currentUser, roleLabel = 'Operador Identifica
                       <Users size={14} />
                     </span>
                     <span style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ display: 'block', fontFamily: 'Inter, sans-serif', fontSize: 12.5, fontWeight: esActual ? 700 : 500, color: '#0f172a' }}>
+                      <span style={{ display: 'block', fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: esActual ? 600 : 500, color: '#0f172a' }}>
                         {u.name} {u.apellido}
                       </span>
-                      <span style={{ display: 'block', fontFamily: 'JetBrains Mono, monospace', fontSize: 9.5, color: '#94a3b8' }}>
+                      <span style={{ display: 'block', fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8' }}>
                         {u.email.toLowerCase()}
                       </span>
                     </span>
                     {esActual && (
                       <span style={{
-                        flexShrink: 0, fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
-                        letterSpacing: '0.1em', textTransform: 'uppercase', color: '#1f355a',
+                        flexShrink: 0, fontFamily: 'var(--apple-font-display)', fontSize: 11,
+                        fontWeight: 600, color: '#1f355a',
                       }}>
-                        actual
+                        Actual
                       </span>
                     )}
                   </button>,

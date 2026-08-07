@@ -7,7 +7,7 @@ import { SubirFotoDetenido } from '@/components/monitorista/SubirFotoDetenido'
 import Link from 'next/link'
 import { Camera } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 
 export default async function FotosDetenidoPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -31,11 +31,12 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
   const folio = String(rc.folio_reporte_campo || '')
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-
+    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader
         user={session.user as { name: string; apellido?: string; email: string }}
+        variant="apple"
+        backHref="/oficial"
+        backLabel="Panel"
       />
 
       <div className="pad-pagina" style={{ maxWidth: 700, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 32, minHeight: '100vh' }}>
@@ -44,15 +45,14 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
           title="Fotos del"
           accent="Detenido"
           subtitle={nombre}
-          actions={<PageHeaderLink href="/oficial" variant="secondary">← Panel</PageHeaderLink>}
         />
 
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 2 }}>
-          <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 18, fontWeight: 700, textTransform: 'uppercase', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10, letterSpacing: '0.05em' }}>
+        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: 24, borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)' }}>
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 16, fontWeight: 600, textTransform: 'none', letterSpacing: 'normal', color: '#0f172a', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
             <Camera size={18} /> {nombre}
           </div>
-          {folio && <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#64748b', marginBottom: 16 }}>Folio: {folio}</div>}
-          <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#64748b', marginBottom: 20, lineHeight: 1.5 }}>
+          {folio && <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, color: '#64748b', marginBottom: 16 }}>Folio: {folio}</div>}
+          <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', marginBottom: 20, lineHeight: 1.5 }}>
             Puedes subir las fotografías del detenido ahora o hacerlo después. Si no las subes ahora, el Monitorista podrá solicitarlas a Fiscalía/Juzgado más tarde.
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -64,12 +64,12 @@ export default async function FotosDetenidoPage({ params }: { params: Promise<{ 
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
           <Link href="/oficial?exito=1" style={{
-            fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 600,
-            textTransform: 'uppercase', letterSpacing: '0.1em',
+            fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600,
+            textTransform: 'none', letterSpacing: 'normal',
             padding: '10px 24px', background: '#0f172a', color: '#ffffff',
-            border: 'none', borderRadius: 2, cursor: 'pointer', textDecoration: 'none',
+            border: 'none', borderRadius: 'var(--radius-lg)', cursor: 'pointer', textDecoration: 'none',
           }}>
-            CONTINUAR SIN FOTOS
+            Continuar sin fotos
           </Link>
         </div>
       </div>

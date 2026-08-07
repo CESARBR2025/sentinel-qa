@@ -180,9 +180,7 @@ export function rowToExtorsion(row: Record<string, unknown>): ExtorsionRow {
     telefonoExtorsion: toStr(row.telefono_extorsion),
     grupoDelictivo: toStr(row.grupo_delictivo),
     modusOperandi: toStr(row.modus_operandi),
-    unidadResultado: toStr(row.unidad_resultado),
-    folioReporte: toStr(row.folio_reporte),
-    fecha: toStr(row.fecha),
+    resultado: toStr(row.resultado),
     creadoEn: toStr(row.creado_en) ?? '',
   }
 }

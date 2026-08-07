@@ -23,22 +23,21 @@ export function SignOutButton() {
       onMouseLeave={() => setHover(false)}
       aria-label="Cerrar sesión"
       style={{
-        fontFamily:      'JetBrains Mono,monospace',
-        fontSize:        10,
-        letterSpacing:   '0.18em',
-        textTransform:   'uppercase',
+        fontFamily:      'var(--apple-font-display)',
+        fontSize:        13,
+        fontWeight:      500,
         display:         esMovil ? 'flex' : 'block',
         alignItems:      esMovil ? 'center' : undefined,
         justifyContent:  esMovil ? 'center' : undefined,
         width:           esMovil ? 40 : undefined,
         height:          esMovil ? 40 : undefined,
         padding:         esMovil ? 0 : '8px 14px',
-        border:          `1px solid ${hover ? '#c0223a' : '#2a3a5e'}`,
-        background:      hover ? 'rgba(192,34,58,0.12)' : 'transparent',
-        color:           hover ? '#e03349' : '#7f8faf',
+        borderRadius:    'var(--radius-lg)',
+        border:          `1px solid ${hover ? '#cbd5e1' : '#e2e8f0'}`,
+        background:      hover ? '#f1f5f9' : 'transparent',
+        color:           hover ? '#0f172a' : '#64748b',
         cursor:          'pointer',
         whiteSpace:      'nowrap',
-        boxShadow:       hover ? '0 0 0 3px rgba(192,34,58,0.15)' : 'none',
         transition:      'all .15s ease',
       }}
     >

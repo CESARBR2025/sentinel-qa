@@ -17,12 +17,9 @@ export default async function KpiIncidenciasPage() {
   const user = session.user as { name: string; apellido?: string; email: string }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-      <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
-      `}} />
-      <DashboardHeader user={user} />
-      <main className="pad-pagina" style={{ width: '100%' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
+      <DashboardHeader user={user} variant="apple" />
+      <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <PageHeader
           title="KPI"
           accent="Incidencias"
@@ -33,7 +30,7 @@ export default async function KpiIncidenciasPage() {
           tiposIncidente={catalogos.incidentes.map(t => ({ id: t.id, nombre: t.nombre }))}
           prioridades={catalogos.prioridades.map(p => ({ id: p.id, nombre: p.nombre }))}
         />
-        <div style={{ marginTop: 40 }}><DashboardFooter /></div>
+        <DashboardFooter />
       </main>
     </div>
   )

@@ -2,23 +2,21 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from "@react-google-maps/api";
 import { toast } from "sonner"
 import { GOOGLE_MAPS_LOADER_ID, GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_LIBRARIES } from "@/lib/maps/googleMapsConfig"
 import { StepIndicator } from "@/components/partials/StepIndicator";
-import { labelEstatus } from "@/lib/911/estatus-c4";
+import { verificarTelefonoFrecuente } from "@/lib/incidentes/actions";
+import ModalConfirmacion911 from "@/components/911/ModalConfirmacion911";
 
 const COORDS_DEFAULT = { lat: 20.3889, lng: -99.9961 }
 
 const STEPS = [
     'Incidente',
     'Reportante',
-    'Personas',
     'Ubicación',
     'Clasificación',
     'Canalización',
-    'Observaciones',
 ]
 
 export default function Formulario911({ user, catalogos, despachadores }: {
@@ -31,9 +29,8 @@ export default function Formulario911({ user, catalogos, despachadores }: {
         canalizaciones: { id: number; nombre: string }[]
         dependencias: { id: number; clave: string; nombre: string; tipo: string }[]
     }
-    despachadores: { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean }[]
+    despachadores: { id: string; name: string; apellido: string; rolNombre: string | null; activo: boolean; enLinea: boolean }[]
 }) {
-    const router = useRouter()
     const [step, setStep] = useState(1);
     const [anonimo, setAnonimo] = useState(false);
     const [tipoReporte, setTipoReporte] = useState("normal");
@@ -48,6 +45,25 @@ export default function Formulario911({ user, catalogos, despachadores }: {
 
     const [esLlamadaAlarma, setEsLlamadaAlarma] = useState(false);
     const [nombreResponsable, setNombreResponsable] = useState("");
+
+    // Regla de negocio: usuario frecuente automático (>=5 reportes del mismo teléfono)
+    const [usuarioFrecuente, setUsuarioFrecuente] = useState(false);
+    const [verificandoTel, setVerificandoTel] = useState(false);
+
+    // ¿El reportante es la persona afectada? Si NO, se renderizan las personas en paso 2.
+    const [esPersonaAfectada, setEsPersonaAfectada] = useState("false");
+
+    const verificarTelefono = useCallback(async () => {
+        const tel = formRef.current
+            ?.querySelector<HTMLInputElement>('input[name="telefonoReportante"]')?.value?.trim()
+        if (!tel) { setUsuarioFrecuente(false); return }
+        setVerificandoTel(true)
+        try {
+            const { count } = await verificarTelefonoFrecuente(tel)
+            setUsuarioFrecuente(count >= 5)
+        } catch { /* silencioso: el servidor re-verifica al publicar */ }
+        finally { setVerificandoTel(false) }
+    }, [])
 
     // Estado para selects jerárquicos de 3 niveles
     const [selectedTipo, setSelectedTipo] = useState<string>("")
@@ -162,6 +178,9 @@ export default function Formulario911({ user, catalogos, despachadores }: {
         }
     };
 
+    const [modalAbierto, setModalAbierto] = useState(false)
+    const [modalCtx, setModalCtx] = useState<{ data: Record<string, string>; coords: typeof COORDS_DEFAULT } | null>(null)
+
     const handleSubmit = () => {
         if (coords.lat === COORDS_DEFAULT.lat && coords.lng === COORDS_DEFAULT.lng) {
             toast.error('Coloca el marcador en la ubicación del incidente en el mapa')
@@ -170,13 +189,13 @@ export default function Formulario911({ user, catalogos, despachadores }: {
         const fd = new FormData(formRef.current!)
         fd.append("latitud", coords.lat.toString());
         fd.append("longitud", coords.lng.toString());
-        const data = Object.fromEntries(fd.entries())
-        sessionStorage.setItem('revisar_form_data', JSON.stringify(data))
-        sessionStorage.setItem('revisar_coords', JSON.stringify(coords))
-        sessionStorage.setItem('revisar_catalogos', JSON.stringify(catalogos))
-        sessionStorage.setItem('revisar_despachadores', JSON.stringify(despachadores))
-        router.push('/agente_911/ciudadano/revisar')
+        const data: Record<string, string> = {};
+        fd.forEach((value, key) => { data[key] = String(value) })
+        setModalCtx({ data, coords })
+        setModalAbierto(true)
     }
+
+    const reload = () => { window.location.reload() }
 
     return (
         <><form ref={formRef} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
@@ -191,7 +210,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                 <div className="grid">
                     <div>
                         <label>Folio del Incidente</label>
-                        <input type="text" placeholder="INC-0000" className="readonly-input" value="SISTEMA-GENERADO" readOnly />
+                        <input type="text" placeholder="SSPM-AL-AAAAMMDD-######" className="readonly-input" value="Se asigna al publicar" readOnly />
                     </div>
                     <div>
                         <label>Folio CAD</label>
@@ -261,21 +280,31 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     </div>
                     <div>
                         <label>Teléfono del reportante (ANI)</label>
-                        <input type="text" name="telefonoReportante" defaultValue="4421234567" placeholder="442..." />
+                        <input type="text" name="telefonoReportante" defaultValue="4421234567" placeholder="442..." onBlur={verificarTelefono} />
                     </div>
 
                     <div>
                         <label>¿Usuario Frecuente?</label>
-                        <select name="esUsuarioFrecuente">
-                            <option value="false">No</option>
-                            <option value="true">Sí</option>
-                        </select>
+                        <input
+                            type="text"
+                            className="readonly-input"
+                            readOnly
+                            value={verificandoTel ? 'Verificando...' : usuarioFrecuente ? 'SÍ (Automático)' : 'No'}
+                        />
+                        <input type="hidden" name="esUsuarioFrecuente" value={usuarioFrecuente ? 'true' : 'false'} />
+                        <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'var(--apple-font-display)' }}>
+                            Se marca automáticamente si el teléfono tiene 5+ reportes previos
+                        </span>
                     </div>
                     <div>
-                        <label>¿Persona Afectada?</label>
-                        <select name="esPersonaAfectada">
-                            <option value="false">No</option>
-                            <option value="true">Sí</option>
+                        <label>¿El reportante es la persona afectada?</label>
+                        <select
+                            name="esPersonaAfectada"
+                            value={esPersonaAfectada}
+                            onChange={(e) => setEsPersonaAfectada(e.target.value)}
+                        >
+                            <option value="false">No (hay otras personas afectadas)</option>
+                            <option value="true">Sí (el reportante es la persona afectada)</option>
                         </select>
                     </div>
                     <div>
@@ -286,49 +315,45 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         </select>
                     </div>
                 </div>
-            </div>
-            </div>
 
-            {/* STEP 3 — SECCIÓN 03 */}
-            <div style={{ display: step === 3 ? 'block' : 'none' }}>
-            <div className="panel">
-                <div className="titulo-con-boton">
-                    <h2 className="sentinel-title">Personas Afectadas</h2>
-                    <button type="button" className="btn-secundario" onClick={agregarPersona}>
-                        + Agregar Registro
-                    </button>
-                </div>
-
-                {personas.map((_, index) => (
-                    <div key={index} className="persona-card">
-                        <div className="grid">
-                            <div>
-                                <label>Nombre</label>
-                                {/* Agregamos name="p_nombre" */}
-                                <input type="text" name="p_nombre" defaultValue="María López" placeholder="Nombre completo" />
-                            </div>
-                            <div>
-                                <label>Sexo</label>
-                                {/* Agregamos name="p_sexo" */}
-                                <select name="p_sexo">
-                                    <option value="NE">N/E</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Femenino</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Edad</label>
-                                {/* Agregamos name="p_edad" */}
-                                <input type="number" name="p_edad" defaultValue="30" />
-                            </div>
+                {esPersonaAfectada === "false" && (
+                    <div style={{ marginTop: 24 }}>
+                        <div className="titulo-con-boton">
+                            <h2 className="sentinel-title">Personas Afectadas</h2>
+                            <button type="button" className="btn-secundario" onClick={agregarPersona}>
+                                + Agregar Registro
+                            </button>
                         </div>
+
+                        {personas.map((_, index) => (
+                            <div key={index} className="persona-card">
+                                <div className="grid">
+                                    <div>
+                                        <label>Nombre</label>
+                                        <input type="text" name="p_nombre" defaultValue="María López" placeholder="Nombre completo" />
+                                    </div>
+                                    <div>
+                                        <label>Sexo</label>
+                                        <select name="p_sexo">
+                                            <option value="NE">N/E</option>
+                                            <option value="M">Masculino</option>
+                                            <option value="F">Femenino</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Edad</label>
+                                        <input type="number" name="p_edad" defaultValue="30" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                )}
             </div>
             </div>
 
-            {/* STEP 4 — SECCIÓN 04 */}
-            <div style={{ display: step === 4 ? 'block' : 'none' }}>
+            {/* STEP 3 — SECCIÓN 03 (Ubicación) */}
+            <div style={{ display: step === 3 ? 'block' : 'none' }}>
             <div className="panel">
                 <h2 className="sentinel-title">Ubicación</h2>
 
@@ -342,12 +367,12 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                             <input
                                 type="text"
                                 placeholder="Escribe una dirección para centrar el mapa..."
-                                style={{ marginBottom: '10px', borderLeft: '3px solid #3e5171' }}
+                                style={{ marginBottom: '10px', borderLeft: '3px solid #1f355a' }}
                             />
                         </Autocomplete>
 
                         <GoogleMap
-                            mapContainerStyle={{ width: '100%', height: '300px', borderRadius: '4px' }}
+                            mapContainerStyle={{ width: '100%', height: '300px', borderRadius: 'var(--radius-lg)' }}
                             center={coords}
                             zoom={15}
                             onLoad={(map) => setMap(map)}
@@ -360,8 +385,8 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                                 onDragEnd={(e) => e.latLng && setCoords({ lat: e.latLng.lat(), lng: e.latLng.lng() })}
                             />
                         </GoogleMap>
-                        <p style={{ fontSize: '10px', color: '#64748b', marginTop: '5px', fontFamily: 'monospace' }}>
-                            COORDENADAS SELECCIONADAS: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)}
+                        <p style={{ fontSize: '12px', color: '#64748b', marginTop: '6px', fontFamily: 'var(--apple-font-display)' }}>
+                            Coordenadas seleccionadas: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)}
                         </p>
                     </div>
                 ) : (
@@ -439,12 +464,12 @@ export default function Formulario911({ user, catalogos, despachadores }: {
             </div>
             </div>
 
-            {/* STEP 5 — Clasificación (extorsión/alarma + clasificación técnica) */}
-            <div style={{ display: step === 5 ? 'block' : 'none' }}>
+            {/* STEP 4 — Clasificación (extorsión/alarma + clasificación técnica) */}
+            <div style={{ display: step === 4 ? 'block' : 'none' }}>
 
             {tipoReporte === "extorsion" && (
-                <div className="panel" style={{ borderLeftColor: "#e11d48" }}>
-                    <h2 className="sentinel-title" style={{ color: "#e11d48" }}>Detalles de Extorsión</h2>
+                <div className="panel" style={{ borderLeft: '4px solid #dc2626' }}>
+                    <h2 className="sentinel-title" style={{ color: "#dc2626" }}>Detalles de Extorsión</h2>
                     <div className="grid">
                         <div>
                             <label>Teléfono de Extorsión</label>
@@ -458,13 +483,17 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                             <label>Modus Operandi</label>
                             <input type="text" name="modusOperandi" defaultValue="Llamada telefónica amenazando" />
                         </div>
+                        <div>
+                            <label>Resultado</label>
+                            <input type="text" name="resultado" defaultValue="Orientación" placeholder="Orientación, Reportante cuelga la llamada..." />
+                        </div>
                     </div>
                 </div>
             )}
 
             {tipoReporte === "alarma_escolar" && (
-                <div className="panel" style={{ borderLeftColor: "#059669" }}>
-                    <h2 className="sentinel-title" style={{ color: "#059669" }}>Detalles de Alarma Escolar</h2>
+                <div className="panel" style={{ borderLeft: '4px solid #16a34a' }}>
+                    <h2 className="sentinel-title" style={{ color: "#16a34a" }}>Detalles de Alarma Escolar</h2>
                     <div className="grid">
                         <div>
                             <label>Establecimiento / Escuela</label>
@@ -542,7 +571,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                                     <option value="">Seleccionar...</option>
                                     {catalogos.emergencias.map((item) => (
                                         <option key={item.id} value={item.id}>
-                                            {item.codigo} - {item.nombre}
+                                            {item.nombre.toUpperCase()}
                                         </option>
                                     ))}
                                 </select>
@@ -562,7 +591,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                                     <option value="">{selectedTipo ? "Seleccionar subtipo..." : "Primero seleccione tipo"}</option>
                                     {subTiposFiltrados.map((item) => (
                                         <option key={item.id} value={item.id}>
-                                            {item.codigo} - {item.nombre}
+                                            {item.nombre.toUpperCase()}
                                         </option>
                                     ))}
                                 </select>
@@ -579,7 +608,7 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                                     <option value="">{selectedSubtipo ? "Seleccionar incidente..." : "Primero seleccione subtipo"}</option>
                                     {incidentesFiltrados.map((item) => (
                                         <option key={item.id} value={item.id}>
-                                            {item.codigoCatalogo && `${item.codigoCatalogo} - `}{item.nombre}
+                                            {item.nombre}
                                         </option>
                                     ))}
                                 </select>
@@ -593,16 +622,6 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                                     value={prioridadAutocompletada || "—"}
                                 />
                                 <input type="hidden" name="prioridadCatalogo" value={prioridadAutocompletada || ""} />
-                            </div>
-                            <div>
-                                <label>Ajuste Manual de Prioridad</label>
-                                <select name="prioridadId">
-                                    <option value="">Automática (por catálogo)</option>
-                                    {catalogos.prioridades.map((item) => (
-                                        <option key={item.id} value={item.id}>{item.nombre}</option>
-                                    ))}
-                                </select>
-                                <span style={{ fontSize: 10, color: '#94a3b8' }}>Sobrescribe la prioridad del catálogo si es necesario</span>
                             </div>
                             <div style={{ gridColumn: "1 / -1" }}>
                                 <label>Descripción del Incidente</label>
@@ -620,27 +639,22 @@ export default function Formulario911({ user, catalogos, despachadores }: {
             </div>
             {/* cierra STEP 5 (Clasificación) */}
 
-            {/* STEP 6 — SECCIÓN 06 Canalización */}
-            {tipoReporte !== "extorsion" && (
-                <div style={{ display: step === 6 ? 'block' : 'none' }}>
+            {/* STEP 5 — SECCIÓN 05 Canalización (también para extorsión: puede terminar con unidad real despachada) */}
+            <div style={{ display: step === 5 ? 'block' : 'none' }}>
                 <div className="panel">
-                    <h2>Canalización</h2>
+                    <h2 className="sentinel-title">Canalización</h2>
                         <div className="grid">
                             <div>
                                 <label>¿Requiere Despacho?</label>
                                 <select key={esImprocedente ? "imp" : "normal"} name="requiereDespacho" disabled={esImprocedente} defaultValue={esImprocedente ? "false" : "true"}>
-                                    <option value="true">Sí (Enviar a despacho)</option>
-                                    <option value="false">Solo registro estadístico</option>
+                                    <option value="true">Requiere Despacho</option>
+                                    <option value="false">No requiere despacho</option>
                                 </select>
                                 {esImprocedente && (
-                                    <span style={{ fontSize: 10, color: '#b45309', fontFamily: 'Inter, sans-serif' }}>
+                                    <span style={{ fontSize: 10, color: '#b45309', fontFamily: 'var(--apple-font-display)' }}>
                                         Tipo Improcedentes: no se canaliza a despacho, solo se registra con fines estadísticos
                                     </span>
                                 )}
-                            </div>
-                            <div>
-                                <label>Estatus Inicial</label>
-                                <input value={labelEstatus('sin_despachar')} className="readonly-input" readOnly />
                             </div>
                             <div>
                                 <label>Dependencia Responsable</label>
@@ -649,16 +663,16 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                                         <option key={d.id} value={d.id}>{d.nombre}</option>
                                     ))}
                                 </select>
-                                <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'Inter, sans-serif' }}>
+                                <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'var(--apple-font-display)' }}>
                                     Por el momento, todos los despachos se canalizan a Seguridad Pública
                                 </span>
                             </div>
                             <div>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
-                                    <input type="checkbox" name="svvNotificado" value="true" style={{ width: 'auto', borderLeft: 'none' }} />
+                                    <input type="checkbox" name="svvNotificado" value="true" style={{ width: 'auto' }} />
                                     Notificar a Monitoristas (SVV)
                                 </label>
-                                <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'Inter, sans-serif' }}>
+                                <span style={{ fontSize: 10, color: '#94a3b8', fontFamily: 'var(--apple-font-display)' }}>
                                     Los monitoristas recibirán una notificación para revisar cámaras cercanas
                                 </span>
                             </div>
@@ -668,150 +682,163 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                             <label>Observaciones del Operador</label>
                             <textarea name="observaciones" rows={3} defaultValue="Reporte de prueba para verificar flujo de creación" placeholder="Notas internas..." />
                         </div>
-                </div>
-                </div>
-                )}
-                {/* cierra STEP 6 (Canalización) */}
 
-            {/* STEP 7 — OBSERVACIONES FINAL */}
-            <div style={{ display: step === 7 ? 'block' : 'none' }}>
-            <div className="panel">
-                <h2 className="sentinel-title">Observaciones</h2>
-                <textarea rows={4} defaultValue="Sin novedades adicionales" placeholder="Notas adicionales del operador..." />
-            </div>
-            </div>
+                        <div style={{ marginTop: "16px" }}>
+                            <label>Observaciones</label>
+                            <textarea rows={4} defaultValue="Sin novedades adicionales" placeholder="Notas adicionales del operador..." />
+                        </div>
+                </div>
+                </div>
+                {/* cierra STEP 5 (Canalización) */}
 
             {/* NAVEGACIÓN */}
             <div style={{ marginTop: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
                 <button type="button" onClick={() => setStep(Math.max(1, step - 1))}
                     disabled={step === 1}
                     className="btn-secundario" style={{ padding: '12px 32px' }}>
-                    ← ANTERIOR
+                    ← Anterior
                 </button>
 
-                <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 10, color: '#94a3b8' }}>
+                <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
                     {step} / {STEPS.length}
                 </span>
 
                 {step < STEPS.length ? (
                     <button type="button" onClick={() => setStep(Math.min(STEPS.length, step + 1))}
                         className="btn-principal" style={{ padding: '12px 32px' }}>
-                        SIGUIENTE →
+                        Siguiente →
                     </button>
                 ) : (
                     <button type="button" onClick={handleSubmit} className="btn-principal">
-                        PUBLICAR REPORTE EN BITÁCORA
+                        Publicar reporte en bitácora
                     </button>
                 )}
             </div>
 
             <style jsx>{`
-                /* CONTENEDORES TIPO CENTINELA */
+                /* CONTENEDORES */
                 .panel {
                     background: #ffffff;
                     border: 1px solid #e2e8f0;
-                    border-radius: 4px;
-                    padding: 32px;
-                    margin-bottom: 32px;
-                    box-shadow: 0 1px 2px rgba(0,0,0,0.01);
+                    border-radius: var(--radius-lg);
+                    padding: 28px;
+                    margin-bottom: 28px;
+                    box-shadow: var(--shadow-card);
                 }
 
-                /* TÍTULOS EN BARLOW */
+                /* TÍTULOS DE SECCIÓN */
                 .sentinel-title {
-                    font-family: 'Barlow Condensed', sans-serif;
+                    font-family: var(--apple-font-display);
                     color: #0f172a;
-                    margin-bottom: 24px;
-                    font-size: 18px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.05em;
+                    margin-bottom: 20px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    text-transform: none;
+                    letter-spacing: normal;
                     display: flex;
                     align-items: center;
-                    gap: 12px;
+                    gap: 10px;
                 }
                 .sentinel-title::before {
                     content: '';
-                    width: 4px;
-                    height: 18px;
-                    background: #3e5171;
+                    width: 3px;
+                    height: 16px;
+                    background: #1f355a;
+                    border-radius: var(--radius-full);
                     display: block;
                 }
 
                 .grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 24px;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 20px 22px;
+                }
+                @media (max-width: 720px) {
+                    .grid { grid-template-columns: 1fr; }
                 }
 
-                /* ETIQUETAS EN JETBRAINS MONO */
+                /* ETIQUETAS */
                 label {
                     display: block;
-                    margin-bottom: 8px;
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 10px;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
+                    margin-bottom: 6px;
+                    font-family: var(--apple-font-display);
+                    font-size: 12px;
+                    font-weight: 500;
+                    text-transform: none;
+                    letter-spacing: normal;
                     color: #64748b;
                 }
 
-                /* INPUTS TÉCNICOS */
+                /* INPUTS */
                 input, select, textarea {
                     width: 100%;
                     border: 1px solid #e2e8f0;
-                    border-left: 3px solid #0f172a;
-                    border-radius: 2px;
-                    padding: 10px 12px;
-                    font-family: 'Inter', sans-serif;
-                    font-size: 13px;
+                    border-radius: var(--radius-lg);
+                    padding: 11px 13px;
+                    font-family: var(--apple-font-display);
+                    font-size: 14px;
                     color: #1e293b;
                     transition: all 0.2s;
-                    background: #ffffff;
+                    background: #f8fafc;
                 }
                 input:focus, select:focus, textarea:focus {
                     outline: none;
-                    border-color: #3e5171;
-                    background: #fcfcfc;
+                    border-color: #1f355a;
+                    background: #ffffff;
+                    box-shadow: 0 0 0 3px rgba(31,53,90,0.12);
                 }
 
                 .readonly-input {
                     background: #f8fafc;
-                    border-left-color: #cbd5e1;
-                    font-weight: 600;
+                    font-weight: 500;
                     color: #64748b;
                 }
 
                 /* BOTONES */
                 .btn-principal {
-                    background: #0f172a;
-                    color: white;
+                    background: #1f355a;
+                    color: #ffffff;
                     border: none;
-                    padding: 16px 48px;
-                    border-radius: 2px;
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 11px;
-                    font-weight: 700;
-                    letter-spacing: 0.15em;
+                    padding: 14px 26px;
+                    border-radius: var(--radius-lg);
+                    font-family: var(--apple-font-display);
+                    font-size: 15px;
+                    font-weight: 600;
+                    letter-spacing: normal;
+                    text-transform: none;
                     cursor: pointer;
-                    transition: all 0.2s;
+                    transition: all 0.15s;
+                    box-shadow: 0 3px 10px rgba(31,53,90,0.28);
                 }
                 .btn-principal:hover {
-                    background: #1e293b;
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    background: #274268;
+                    box-shadow: 0 4px 14px rgba(31,53,90,0.32);
+                }
+                .btn-principal:active {
+                    transform: scale(0.97);
                 }
 
                 .btn-secundario {
-                    background: transparent;
-                    color: #3e5171;
-                    border: 1px solid #3e5171;
-                    padding: 6px 14px;
-                    border-radius: 2px;
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 9px;
-                    font-weight: 700;
-                    text-transform: uppercase;
+                    background: #ffffff;
+                    color: #64748b;
+                    border: 1px solid #e2e8f0;
+                    padding: 11px 20px;
+                    border-radius: var(--radius-lg);
+                    font-family: var(--apple-font-display);
+                    font-size: 13px;
+                    font-weight: 500;
+                    text-transform: none;
+                    letter-spacing: normal;
                     cursor: pointer;
+                    transition: all 0.15s;
+                }
+                .btn-secundario:hover {
+                    border-color: #1f355a;
+                    color: #1f355a;
+                    background: #f8fafc;
+                }
+                .btn-secundario:active {
+                    transform: scale(0.97);
                 }
 
                 .titulo-con-boton {
@@ -820,15 +847,14 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     align-items: center;
                     flex-wrap: wrap;
                     gap: 12px;
-                    margin-bottom: 24px;
+                    margin-bottom: 20px;
                 }
 
                 .persona-card {
                     padding: 20px;
                     background: #f8fafc;
                     border: 1px solid #e2e8f0;
-                    border-left: 3px solid #3e5171;
-                    border-radius: 2px;
+                    border-radius: var(--radius-lg);
                     margin-bottom: 12px;
                 }
 
@@ -836,10 +862,21 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                     background: #f1f5f9;
                     color: #94a3b8;
                     cursor: not-allowed;
-                    border-left-color: #e2e8f0;
                 }
             `}</style>
         </form>
+
+        {modalAbierto && modalCtx && (
+            <ModalConfirmacion911
+                open
+                data={modalCtx.data}
+                coords={modalCtx.coords}
+                catalogos={catalogos}
+                despachadores={despachadores}
+                onClose={() => setModalAbierto(false)}
+                onNuevo={reload}
+            />
+        )}
     </>
 )
 }

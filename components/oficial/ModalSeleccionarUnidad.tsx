@@ -66,7 +66,7 @@ export function ModalSeleccionarUnidad({
         justifyContent: "center",
         zIndex: 1000,
         padding: 16,
-        backdropFilter: "blur(2px)",
+        backdropFilter: "blur(4px)",
       }}
     >
       <div
@@ -77,7 +77,9 @@ export function ModalSeleccionarUnidad({
           maxHeight: "90vh",
           display: "flex",
           flexDirection: "column",
-          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+          boxShadow: "var(--shadow-modal)",
+          borderRadius: "var(--radius-xl)",
+          overflow: "hidden",
         }}
       >
         {/* Header */}
@@ -95,10 +97,10 @@ export function ModalSeleccionarUnidad({
               display: "flex",
               alignItems: "center",
               gap: 10,
-              fontFamily: "Barlow Condensed,sans-serif",
-              fontSize: 20,
-              fontWeight: 700,
-              textTransform: "uppercase",
+              fontFamily: "var(--apple-font-display)",
+              fontSize: 18,
+              fontWeight: 600,
+              textTransform: "none",
               color: "#0f172a",
             }}
           >
@@ -127,9 +129,10 @@ export function ModalSeleccionarUnidad({
               display: "flex",
               alignItems: "center",
               gap: 10,
-              padding: "8px 14px",
+              padding: "10px 14px",
               border: "1px solid #e2e8f0",
               background: "#f8fafc",
+              borderRadius: "var(--radius-lg)",
             }}
           >
             <Search size={16} color="#94a3b8" />
@@ -144,15 +147,16 @@ export function ModalSeleccionarUnidad({
                 background: "transparent",
                 outline: "none",
                 flex: 1,
-                fontFamily: "Inter,sans-serif",
-                fontSize: 13,
+                fontFamily: "var(--apple-font-display)",
+                fontSize: 14,
                 color: "#0f172a",
               }}
             />
             <span
               style={{
-                fontFamily: "JetBrains Mono,monospace",
-                fontSize: 9,
+                fontFamily: "var(--apple-font-display)",
+                fontSize: 12,
+                fontWeight: 500,
                 color: "#94a3b8",
               }}
             >
@@ -168,7 +172,7 @@ export function ModalSeleccionarUnidad({
               style={{
                 textAlign: "center",
                 padding: 40,
-                fontFamily: "Inter,sans-serif",
+                fontFamily: "var(--apple-font-display)",
                 fontSize: 13,
                 color: "#94a3b8",
               }}
@@ -193,10 +197,10 @@ export function ModalSeleccionarUnidad({
                       esSeleccionada
                         ? "1px solid #1f355a"
                         : "1px solid transparent",
-                    background: esSeleccionada ? "#eff1f3" : "transparent",
+                    background: esSeleccionada ? "#f1f5f9" : "transparent",
                     cursor: "pointer",
                     textAlign: "left",
-                    borderRadius: 4,
+                    borderRadius: "var(--radius-lg)",
                     marginBottom: 4,
                     transition: "all 0.15s ease",
                   }}
@@ -229,8 +233,8 @@ export function ModalSeleccionarUnidad({
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
-                        fontFamily: "JetBrains Mono,monospace",
-                        fontSize: 12,
+                        fontFamily: "var(--apple-font-display)",
+                        fontSize: 14,
                         fontWeight: 600,
                         color: "#0f172a",
                         marginBottom: 2,
@@ -240,8 +244,8 @@ export function ModalSeleccionarUnidad({
                     </div>
                     <div
                       style={{
-                        fontFamily: "Inter,sans-serif",
-                        fontSize: 12,
+                        fontFamily: "var(--apple-font-display)",
+                        fontSize: 13,
                         color: "#64748b",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -254,14 +258,15 @@ export function ModalSeleccionarUnidad({
                   {esSeleccionada && (
                     <span
                       style={{
-                        fontFamily: "JetBrains Mono,monospace",
-                        fontSize: 8,
+                        fontFamily: "var(--apple-font-display)",
+                        fontSize: 12,
                         color: "#1f355a",
-                        letterSpacing: "0.1em",
                         fontWeight: 600,
+                        textTransform: "none",
+                        letterSpacing: "normal",
                       }}
                     >
-                      ACTUAL
+                      Actual
                     </span>
                   )}
                 </button>
@@ -287,9 +292,11 @@ export function ModalSeleccionarUnidad({
               border: "1px solid #e2e8f0",
               background: "#fff",
               cursor: "pointer",
-              fontFamily: "Inter,sans-serif",
-              fontSize: 13,
+              fontFamily: "var(--apple-font-display)",
+              fontSize: 14,
+              fontWeight: 500,
               color: "#475569",
+              borderRadius: "var(--radius-lg)",
             }}
           >
             Cancelar
@@ -305,10 +312,11 @@ export function ModalSeleccionarUnidad({
               color: "#fff",
               cursor:
                 !seleccionada || enviando ? "not-allowed" : "pointer",
-              fontFamily: "Inter,sans-serif",
-              fontSize: 13,
+              fontFamily: "var(--apple-font-display)",
+              fontSize: 14,
               fontWeight: 600,
               opacity: !seleccionada || enviando ? 0.6 : 1,
+              borderRadius: "var(--radius-lg)",
             }}
           >
             {enviando ? "Asignando..." : "Asignar Unidad"}

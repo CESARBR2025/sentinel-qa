@@ -108,8 +108,8 @@ export function OficialUbicacionProvider({ children }: { children: React.ReactNo
         <div style={{
           position: 'fixed', top: 12, right: 12, zIndex: 1000,
           display: 'flex', alignItems: 'center', gap: 8,
-          padding: '8px 12px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 4,
-          fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#92400e', boxShadow: '0 2px 8px rgba(0,0,0,.08)',
+          padding: '10px 14px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 'var(--radius-lg)',
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#92400e', boxShadow: 'var(--apple-shadow-glass)',
           maxWidth: 320,
         }}>
           <MapPinOff size={14} />

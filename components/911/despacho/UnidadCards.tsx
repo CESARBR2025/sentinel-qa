@@ -23,7 +23,7 @@ function iniciales(nombre: string): string {
 const AVATAR: React.CSSProperties = {
   width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontFamily: 'Inter,sans-serif', fontSize: 9, fontWeight: 700,
+  fontFamily: 'var(--apple-font-display)', fontSize: 10, fontWeight: 600,
   background: 'linear-gradient(135deg,#1f355a 0%,#33507e 100%)', color: '#fff',
   border: '2px solid #fff', boxShadow: '0 0 0 1px #e2e8f0',
 }
@@ -44,7 +44,7 @@ export function TripulacionList({ oficiales, prioritarioNomina, esPrioritaria = 
   if (oficiales.length === 0) {
     return (
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#94a3b8', fontStyle: 'italic',
+        display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8', fontStyle: 'italic',
         paddingLeft: indentado ? 34 : 0,
       }}>
         {!indentado && <Users size={12} />} Sin tripulación asignada
@@ -58,7 +58,7 @@ export function TripulacionList({ oficiales, prioritarioNomina, esPrioritaria = 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: compacto ? 4 : 5, paddingLeft: indentado ? 34 : 0 }}>
       {visibles.map(o => (
-        <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: compacto ? 6 : 7, fontFamily: 'Inter,sans-serif', fontSize: 11.5, opacity: yaPrioritario(o.noNomina) ? 0.5 : 1 }}>
+        <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: compacto ? 6 : 7, fontFamily: 'var(--apple-font-display)', fontSize: 13, opacity: yaPrioritario(o.noNomina) ? 0.5 : 1 }}>
           <span style={{
             ...AVATAR, width: avatarSize, height: avatarSize, fontSize: 8, flexShrink: 0,
             ...(compacto ? { border: 'none', boxShadow: 'none' } : {}),
@@ -68,12 +68,12 @@ export function TripulacionList({ oficiales, prioritarioNomina, esPrioritaria = 
           </span>
           <span style={{ color: '#334155', fontWeight: 500 }}>{o.nombre}</span>
           {yaPrioritario(o.noNomina) && (
-            <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, fontWeight: 700, color: '#16a34a' }}>{badgeLabel}</span>
+            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, color: '#16a34a' }}>{badgeLabel}</span>
           )}
         </div>
       ))}
       {restantes > 0 && (
-        <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10.5, color: '#94a3b8', paddingLeft: avatarSize + (compacto ? 6 : 7) }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8', paddingLeft: avatarSize + (compacto ? 6 : 7) }}>
           +{restantes} más
         </div>
       )}
@@ -107,10 +107,10 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
         <span style={{
           alignSelf: 'flex-start',
           display: 'inline-flex', alignItems: 'center', gap: 3,
-          padding: '2px 8px', borderRadius: 999,
+          padding: '2px 10px', borderRadius: 'var(--radius-full)',
           background: '#eef2ff', color: '#7c3aed',
           border: '1px solid #c7d2fe',
-          fontFamily: 'Inter,sans-serif', fontSize: 8.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, letterSpacing: 'normal', textTransform: 'none',
         }}>
           PRIORITARIO
         </span>
@@ -120,9 +120,9 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
         <span style={{
           alignSelf: 'flex-start',
           display: 'inline-flex', alignItems: 'center', gap: 3,
-          padding: '2px 8px', borderRadius: 999,
+          padding: '2px 10px', borderRadius: 'var(--radius-full)',
           background: '#16a34a', color: '#fff',
-          fontFamily: 'Inter,sans-serif', fontSize: 8.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, letterSpacing: 'normal', textTransform: 'none',
         }}>
           <Navigation size={9} /> Más cercana
         </span>
@@ -132,10 +132,10 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
         <span style={{
           alignSelf: 'flex-start',
           display: 'inline-flex', alignItems: 'center', gap: 3,
-          padding: '2px 8px', borderRadius: 999,
+          padding: '2px 10px', borderRadius: 'var(--radius-full)',
           background: '#fef2f2', color: '#dc2626',
           border: '1px solid #fecaca',
-          fontFamily: 'Inter,sans-serif', fontSize: 8.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, letterSpacing: 'normal', textTransform: 'none',
         }}>
           OCUPADA
         </span>
@@ -144,7 +144,7 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            width: 34, height: 34, borderRadius: 8, flexShrink: 0,
+            width: 34, height: 34, borderRadius: 'var(--radius-lg)', flexShrink: 0,
             background: seleccionada ? '#1f355a' : '#eef1f6',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background .15s ease',
@@ -152,21 +152,21 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
             <ShieldCheck size={17} color={seleccionada ? '#fff' : '#5c7096'} />
           </div>
           <div>
-            <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 18, fontWeight: 800, color: '#0f172a', letterSpacing: '0.03em', lineHeight: 1.1 }}>
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 18, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal', lineHeight: 1.1 }}>
               {unidad.etiqueta}
             </div>
-            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, color: '#94a3b8', fontWeight: 500 }}>{unidad.placa || 'Sin placas'}</div>
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8', fontWeight: 500 }}>{unidad.placa || 'Sin placas'}</div>
           </div>
         </div>
 
         {unidad.distanciaKm != null && (
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            fontFamily: 'JetBrains Mono,monospace', fontSize: 12, fontWeight: 700,
+            fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600,
             color: esMasCercana ? '#16a34a' : '#1f355a',
             background: esMasCercana ? '#f0fdf4' : '#eff6ff',
             border: `1px solid ${esMasCercana ? '#bbf7d0' : '#dbeafe'}`,
-            padding: '4px 9px', borderRadius: 999,
+            padding: '4px 9px', borderRadius: 'var(--radius-full)',
           }}>
             <Navigation size={10} />{formatDistancia(unidad.distanciaKm)}
           </span>
@@ -177,7 +177,7 @@ export function UnidadCard({ unidad, seleccionada, esMasCercana, prioritarioNomi
 
       <TripulacionList oficiales={unidad.oficiales} prioritarioNomina={prioritarioNomina} />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontFamily: 'Inter,sans-serif', fontSize: 10.5 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 12 }}>
         {antiguedad ? <MapPin size={11} color={antiguedad.fresco ? '#16a34a' : '#b45309'} /> : <MapPinOff size={11} color="#cbd5e1" />}
         {antiguedad
           ? <span style={{ color: antiguedad.fresco ? '#16a34a' : '#b45309', fontWeight: 600 }}>{antiguedad.texto}</span>
@@ -197,7 +197,7 @@ export function UnidadResumenCard({ unidad, prioritarioNomina, esPrioritaria = f
 
   return (
     <div style={{
-      padding: '10px 12px', borderRadius: 8, display: 'flex', flexDirection: 'column', gap: 8,
+      padding: '10px 12px', borderRadius: 'var(--radius-lg)', display: 'flex', flexDirection: 'column', gap: 8,
       border: `1px solid ${esPrioritaria ? '#bbf7d0' : '#dbeafe'}`,
       background: esPrioritaria ? '#f0fdf4' : '#f8fafc',
     }}>
@@ -207,16 +207,16 @@ export function UnidadResumenCard({ unidad, prioritarioNomina, esPrioritaria = f
             <ShieldCheck size={14} color="#fff" />
           </div>
           <div>
-            <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontSize: 15, fontWeight: 800, color: '#0f172a', letterSpacing: '0.02em' }}>
+            <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal' }}>
               {unidad.etiqueta}
             </span>
             {unidad.placa && (
-              <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 9.5, color: '#94a3b8', marginLeft: 6 }}>{unidad.placa}</span>
+              <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#94a3b8', marginLeft: 6 }}>{unidad.placa}</span>
             )}
           </div>
         </div>
         {esPrioritaria && (
-          <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 8, fontWeight: 700, padding: '2px 7px', background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 999, letterSpacing: '0.06em' }}>
+          <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, padding: '2px 10px', background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 'var(--radius-full)', letterSpacing: 'normal', textTransform: 'none' }}>
             PRIORITARIO
           </span>
         )}
@@ -234,7 +234,7 @@ export function UnidadResumenCard({ unidad, prioritarioNomina, esPrioritaria = f
 
 export function UnidadCardSkeleton() {
   return (
-    <div style={{ padding: '14px 16px', border: '1px solid #f1f5f9', borderRadius: 10, background: '#fff', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ padding: '14px 16px', border: '1px solid #f1f5f9', borderRadius: 'var(--radius-lg)', background: '#fff', display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div className="dq-skel" style={{ width: 34, height: 34, borderRadius: 8 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -254,11 +254,11 @@ export function UnidadCardsStyles() {
   return (
     <style>{`
       .dq-unidad-card {
-        border: 1.5px solid #e5e9f0; border-radius: 10px; background: #fff; cursor: pointer;
-        box-shadow: 0 1px 2px rgba(15,23,42,0.04); transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+        border: 1.5px solid #e2e8f0; border-radius: var(--radius-lg); background: #fff; cursor: pointer;
+        box-shadow: var(--shadow-card); transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
       }
-      .dq-unidad-card:hover { border-color: #94a3b8; box-shadow: 0 4px 12px rgba(15,23,42,0.08); }
-      .dq-unidad-card.dq-selected { border-color: #1f355a; background: linear-gradient(135deg,#eff6ff 0%,#f5f8ff 100%); box-shadow: 0 4px 14px rgba(31,53,90,0.16); }
+      .dq-unidad-card:hover { border-color: #94a3b8; box-shadow: var(--shadow-elevated); }
+      .dq-unidad-card.dq-selected { border-color: #1f355a; background: #f1f5f9; box-shadow: 0 4px 14px rgba(31,53,90,0.16); }
       .dq-check {
         position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%;
         background: #cbd5e1; display: flex; align-items: center; justify-content: center;

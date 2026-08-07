@@ -179,8 +179,8 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
   useEffect(() => {
     if (fase !== 'navegando') return
     if (!navigator.geolocation) {
-      setErrorGps('Este navegador no soporta geolocalización.')
-      return
+      const t = setTimeout(() => setErrorGps('Este navegador no soporta geolocalización.'), 0)
+      return () => clearTimeout(t)
     }
     const watchId = navigator.geolocation.watchPosition(
       pos => {
@@ -232,7 +232,7 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
 
   if (loadError) {
     return (
-      <div style={{ ...containerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626', fontFamily: 'Inter,sans-serif', fontSize: 13 }}>
+      <div style={{ ...containerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626', fontFamily: 'var(--apple-font-display)', fontSize: 13 }}>
         Error cargando Google Maps.
       </div>
     )
@@ -243,7 +243,7 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         gap: 20, width: '100%', height: '100%', flex: 1, padding: 24, boxSizing: 'border-box',
-        fontFamily: 'Inter,sans-serif', textAlign: 'center', background: '#f8fafc',
+        fontFamily: 'var(--apple-font-display)', textAlign: 'center', background: '#f8fafc',
       }}>
         <style>{`
           @keyframes llegadaCheckIn {
@@ -259,21 +259,22 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
         }}>
           <CheckCircle2 size={52} color="#16a34a" strokeWidth={1.75} />
         </div>
-        <div style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 26, color: '#0f172a', textTransform: 'uppercase' }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 26, color: '#0f172a', textTransform: 'none', letterSpacing: 'normal' }}>
           Has llegado a destino
         </div>
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12, color: '#64748b' }}>{folio}</div>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, color: '#64748b' }}>{folio}</div>
         <button
           onClick={() => onAtender?.()}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '14px 40px', marginTop: 12, fontFamily: 'Barlow Condensed, sans-serif',
-            fontWeight: 700, fontSize: 16, letterSpacing: '0.06em', textTransform: 'uppercase',
-            border: '1px solid #16a34a', borderRadius: 2, cursor: 'pointer',
+            padding: '14px 40px', marginTop: 12, fontFamily: 'var(--apple-font-display)',
+            fontWeight: 600, fontSize: 15, textTransform: 'none', letterSpacing: 'normal',
+            border: 'none', borderRadius: 'var(--radius-lg)', cursor: 'pointer',
             background: '#16a34a', color: '#fff', transition: 'all .15s',
+            boxShadow: '0 3px 10px rgba(22,163,74,0.28)',
           }}
         >
-          ATENDER
+          Atender
         </button>
       </div>
     )
@@ -281,7 +282,7 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
 
   if (!isLoaded || !posicionActual) {
     return (
-      <div style={{ ...containerStyle, display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter,sans-serif', fontSize: 13, color: '#64748b' }}>
+      <div style={{ ...containerStyle, display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b' }}>
         <span>{errorGps ?? 'Obteniendo tu ubicación…'}</span>
       </div>
     )
@@ -294,39 +295,40 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap',
-        gap: 8, padding: '12px 16px', background: '#1c3051', color: '#fff',
-        fontFamily: 'Inter,sans-serif',
+        gap: 8, padding: '12px 16px', background: 'var(--apple-glass-bg)', backdropFilter: 'blur(20px) saturate(180%)',
+        borderBottom: '1px solid var(--apple-glass-border)', color: '#0f172a',
+        fontFamily: 'var(--apple-font-display)',
       }}>
         <div>
-          <div style={{ fontSize: 11, opacity: 0.75, fontFamily: 'JetBrains Mono,monospace' }}>{folio}</div>
+          <div style={{ fontSize: 12, fontWeight: 500, color: '#64748b' }}>{folio}</div>
           <div style={{ fontSize: 14, fontWeight: 600 }}>{direccion ?? 'Destino del incidente'}</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {leg && (
-            <div style={{ textAlign: 'right', fontFamily: 'Barlow Condensed,sans-serif' }}>
-              <div style={{ fontSize: 20, fontWeight: 700 }}>{leg.duration?.text}</div>
-              <div style={{ fontSize: 12, opacity: 0.8 }}>{leg.distance?.text}</div>
+            <div style={{ textAlign: 'right', fontFamily: 'var(--apple-font-display)' }}>
+              <div style={{ fontSize: 20, fontWeight: 600 }}>{leg.duration?.text}</div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: '#64748b' }}>{leg.distance?.text}</div>
             </div>
           )}
           <button
             onClick={dispararLlegada}
             disabled={pendienteLlegada}
             style={{
-              padding: '8px 16px', fontFamily: 'Barlow Condensed, sans-serif',
-              fontWeight: 700, fontSize: 13, letterSpacing: '0.05em', textTransform: 'uppercase',
+              padding: '8px 16px', fontFamily: 'var(--apple-font-display)',
+              fontWeight: 600, fontSize: 13, textTransform: 'none', letterSpacing: 'normal',
               cursor: pendienteLlegada ? 'wait' : 'pointer',
-              border: '1px solid #14b8a6', borderRadius: 2,
-              background: pendienteLlegada ? '#ccfbf1' : '#14b8a6',
+              border: 'none', borderRadius: 'var(--radius-lg)',
+              background: pendienteLlegada ? '#ccfbf1' : '#16a34a',
               color: '#fff', opacity: pendienteLlegada ? 0.7 : 1,
             }}
           >
-            {pendienteLlegada ? '...' : 'YA ESTOY AQUÍ'}
+            {pendienteLlegada ? '...' : 'Ya estoy aquí'}
           </button>
         </div>
       </div>
 
       {errorRuta && (
-        <div style={{ padding: '8px 16px', background: '#fef2f2', color: '#dc2626', fontSize: 12, fontFamily: 'Inter,sans-serif' }}>
+        <div style={{ padding: '8px 16px', background: '#fef2f2', color: '#dc2626', fontSize: 12, fontFamily: 'var(--apple-font-display)' }}>
           {errorRuta}
         </div>
       )}
@@ -355,18 +357,16 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
         </GoogleMap>
 
         {/* Etiqueta flotante del destino — pill blanco estilo Google Maps/DiDi,
-            excepción deliberada al borderRadius:2 institucional del resto del
-            proyecto, porque el objetivo explícito de este HUD es replicar esa
-            estética de navegación. */}
+            con `var(--radius-full)` de DESIGN.md §6 (antes borderRadius: 999). */}
         <div style={{
           position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
           display: 'flex', alignItems: 'center', gap: 8, maxWidth: '78%',
-          padding: '10px 18px', borderRadius: 999, background: '#ffffff',
-          boxShadow: '0 2px 10px rgba(15,23,42,.22)',
+          padding: '10px 18px', borderRadius: 'var(--radius-full)', background: '#ffffff',
+          boxShadow: 'var(--apple-shadow-glass)',
         }}>
           <Flag size={14} color="#dc2626" style={{ flexShrink: 0 }} />
           <span style={{
-            fontFamily: 'Inter,sans-serif', fontSize: 13, fontWeight: 600, color: '#0f172a',
+            fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600, color: '#0f172a',
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>
             {direccion ?? 'Destino del incidente'}
@@ -382,7 +382,7 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
                 width: 44, height: 44, borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 border: '1px solid #e2e8f0', background: '#ffffff', cursor: 'pointer',
-                boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+                boxShadow: 'var(--apple-shadow-glass)',
               }}
             >
               <Compass
@@ -397,22 +397,22 @@ export function NavegacionDespacho({ incidenteId, destino, folio, direccion, pri
             onClick={toggleModoNavegacion}
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
-              padding: '10px 14px', fontFamily: 'Barlow Condensed,sans-serif',
-              fontWeight: 700, fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase',
-              border: '1px solid #1f355a', borderRadius: 2, cursor: 'pointer',
-              background: '#ffffff', color: '#1c3051', boxShadow: '0 2px 8px rgba(0,0,0,.15)',
+              padding: '10px 14px', fontFamily: 'var(--apple-font-display)',
+              fontWeight: 600, fontSize: 12, textTransform: 'none', letterSpacing: 'normal',
+              border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', cursor: 'pointer',
+              background: '#ffffff', color: '#1f355a', boxShadow: 'var(--apple-shadow-glass)',
             }}
           >
             {modoNavegacion ? <MapIcon size={15} /> : <Navigation2 size={15} />}
-            {modoNavegacion ? 'VISTA DE ARRIBA' : 'MODO NAVEGACIÓN'}
+            {modoNavegacion ? 'Vista de arriba' : 'Modo navegación'}
           </button>
         </div>
 
         {avisoMapId && (
           <div style={{
             position: 'absolute', bottom: 12, left: 12, right: 12, zIndex: 10,
-            padding: '10px 14px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2,
-            fontFamily: 'Inter,sans-serif', fontSize: 12, color: '#92400e',
+            padding: '10px 14px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 'var(--radius-lg)',
+            fontFamily: 'var(--apple-font-display)', fontSize: 12, color: '#92400e',
           }}>
             El modo navegación necesita un Map ID vectorial configurado (<code>NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID</code>). Pídele a tu administrador que lo configure en Google Cloud Console.
           </div>

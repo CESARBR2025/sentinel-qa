@@ -3,6 +3,7 @@ import { getIncidentesPaginados } from "@/lib/911/service";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/partials/Header";
+import { PageHeader, PageHeaderLink } from "@/components/partials/PageHeader";
 import { Eye, Plus, Calendar, MapPin, Hash, Shield, Car } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/911/Pagination";
@@ -32,63 +33,49 @@ export default async function ListadoRondinPage({
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
-        <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b' }}>
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b' }}>
+            <style>{`
+                .fila-rondin { transition: background 0.15s ease; }
+                .fila-rondin:hover { background: #f8fafc; }
+            `}</style>
 
             <DashboardHeader user={{ name: session.user.name, apellido: session.user.apellido ?? undefined, email: session.user.email }} backHref={backHref} backLabel={backLabel} />
 
-            <main style={{ maxWidth: '1240px', margin: '0 auto', padding: '40px 48px' }}>
-                
-                {/* HEADER DE SECCIÓN */}
-                <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <div>
-                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.3em', color: '#1f355a', textTransform: 'uppercase', fontWeight: 600 }}>
-                            Operatividad y Prevención
-                        </span>
-                        <h1 style={{
-                            fontFamily: 'Barlow Condensed, sans-serif',
-                            fontWeight: 800, fontSize: 32, letterSpacing: '0.02em',
-                            textTransform: 'uppercase', margin: '4px 0 0 0', color: '#0f172a'
-                        }}>
-                            BITÁCORA DE <span style={{ color: '#3e5171' }}>RONDINES / RADIO</span>
-                        </h1>
-                    </div>
+            <main className="pad-pagina" style={{ flex: 1, maxWidth: 1400, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column' }}>
 
-                    <Link href="/agente_911/rondin" style={btnNuevoStyle}>
-                        <Plus size={14} color="#3e5171" />
-                        <span>NUEVO REGISTRO</span>
-                    </Link>
-                </div>
+                <PageHeader
+                    title="Bitácora"
+                    accent="Rondines / Radio"
+                    subtitle="Recorridos en campo reportados por el canal de radio"
+                    actions={<PageHeaderLink href="/agente_911/rondin">+ Nuevo Registro</PageHeaderLink>}
+                />
 
-                {/* TABLA TÁCTICA */}
+                {/* TABLA */}
                 <div style={cardStyle}>
-                    <div style={sectionTitleStyle}>
-                        <div style={decoratorStyle} /> RECORRIDOS EN CAMPO
-                    </div>
-
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <div className="tabla-wrap">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 720 }}>
                         <thead>
                             <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
-                                <th style={thStyle}><div style={headerInnerStyle}><Hash size={12}/> FOLIO</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><Calendar size={12}/> FECHA</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><Shield size={12}/> OFICIAL</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><Car size={12}/> TIPO / MOTIVO</div></th>
-                                <th style={thStyle}><div style={headerInnerStyle}><MapPin size={12}/> UBICACIÓN</div></th>
-                                <th style={thStyle}>ESTATUS</th>
-                                <th style={{ ...thStyle, textAlign: 'right' }}>ACCIONES</th>
+                                <th style={thStyle}><div style={headerInnerStyle}><Hash size={12}/> Folio</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><Calendar size={12}/> Fecha</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><Shield size={12}/> Oficial</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><Car size={12}/> Tipo / Motivo</div></th>
+                                <th style={thStyle}><div style={headerInnerStyle}><MapPin size={12}/> Ubicación</div></th>
+                                <th style={thStyle}>Estatus</th>
+                                <th style={{ ...thStyle, textAlign: 'right' }}>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {listado.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} style={{ padding: '60px', textAlign: 'center', color: '#94a3b8', fontFamily: 'JetBrains Mono', fontSize: 12 }}>
-                                        NO HAY RECORRIDOS REGISTRADOS EN ESTE CANAL
+                                    <td colSpan={7} style={{ padding: '60px', textAlign: 'center', color: '#94a3b8', fontFamily: 'var(--apple-font-display)', fontSize: 14 }}>
+                                        No hay recorridos registrados en este canal
                                     </td>
                                 </tr>
                             ) : (
                                 listado.map((item) => (
-                                    <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                        <td style={{ ...tdStyle, fontWeight: 700, fontFamily: 'JetBrains Mono', color: '#0f172a' }}>
+                                    <tr key={item.id} className="fila-rondin" style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                        <td style={{ ...tdStyle, fontWeight: 600, fontFamily: 'var(--apple-font-display)', color: '#0f172a' }}>
                                             {item.folio}
                                         </td>
                                         <td style={tdStyle}>
@@ -96,14 +83,14 @@ export default async function ListadoRondinPage({
                                                 day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' 
                                             })}
                                         </td>
-                                        <td style={{ ...tdStyle, fontSize: '11px', fontWeight: 600 }}>
-                                            {item.nombreOficial?.toUpperCase() || 'N/E'}
+                                        <td style={{ ...tdStyle, fontSize: '12px', fontWeight: 600 }}>
+                                            {item.nombreOficial || 'N/E'}
                                         </td>
                                         <td style={{ ...tdStyle, color: '#1f355a', fontWeight: 500 }}>
-                                            {item.tipoNombre?.toUpperCase() || 'RECORRIDO GENERAL'}
+                                            {item.tipoNombre || 'Recorrido general'}
                                         </td>
                                         <td style={tdStyle}>
-                                            {item.colonia?.toUpperCase() || 'S/C'}
+                                            {item.colonia || 'S/C'}
                                         </td>
                                         <td style={tdStyle}>
                                             <div style={getStatusBadgeStyle(item.estatus)}>
@@ -113,7 +100,7 @@ export default async function ListadoRondinPage({
                                         <td style={{ ...tdStyle, textAlign: 'right' }}>
                                             <Link href={`/911/rondin/incidentes/${item.id}`} style={btnViewStyle}>
                                                 <Eye size={14} />
-                                                DETALLES
+                                                Detalles
                                             </Link>
                                         </td>
                                     </tr>
@@ -121,8 +108,9 @@ export default async function ListadoRondinPage({
                             )}
                         </tbody>
                     </table>
+                    </div>
 
-                    {/* PAGINACIÓN INTEGRADA */}
+                    {/* PAGINACIÓN */}
                     <Pagination 
                         currentPage={page}
                         totalPages={totalPages}
@@ -134,67 +122,50 @@ export default async function ListadoRondinPage({
             </main>
 
             <footer style={footerStyle}>
-                SSPM · UNIDAD DE ANÁLISIS TÁCTICO · {new Date().getFullYear()}
+                SSPM · San Juan del Río · Qro
             </footer>
         </div>
     );
 }
 
-// ... (El resto de tus estilos se mantienen igual)
-const cardStyle = { 
-    background: '#ffffff', border: '1px solid #e2e8f0', padding: '32px', 
-    borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' 
+const cardStyle: React.CSSProperties = {
+    background: '#ffffff', border: '1px solid #e2e8f0', overflow: 'hidden',
+    borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)',
 };
-
-const sectionTitleStyle: React.CSSProperties = { 
-    fontFamily: 'Barlow Condensed', fontSize: '18px', fontWeight: 700, 
-    textTransform: 'uppercase', color: '#1e293b', marginBottom: '24px',
-    display: 'flex', alignItems: 'center', gap: '12px'
-};
-
-const decoratorStyle = { width: '4px', height: '18px', background: '#3e5171' };
 
 const thStyle: React.CSSProperties = {
-    padding: '16px 12px', textAlign: 'left', fontFamily: 'JetBrains Mono', fontSize: '10px',
-    color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600
+    padding: '14px 12px', textAlign: 'left', fontFamily: 'var(--apple-font-display)', fontSize: '12px',
+    color: '#64748b', textTransform: 'none', letterSpacing: 'normal', fontWeight: 600,
 };
 
 const headerInnerStyle = { display: 'flex', alignItems: 'center', gap: '8px' };
 
 const tdStyle: React.CSSProperties = {
-    padding: '16px 12px', fontFamily: 'Inter', fontSize: '13px', color: '#475569'
-};
-
-const btnNuevoStyle: React.CSSProperties = {
-    background: '#0f172a', color: '#ffffff', padding: '12px 24px', borderRadius: '2px',
-    fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 600, 
-    display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none',
-    letterSpacing: '0.1em'
+    padding: '14px 12px', fontFamily: 'var(--apple-font-display)', fontSize: '13px', color: '#475569',
 };
 
 const btnViewStyle: React.CSSProperties = {
     display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#1f355a',
-    fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 600, 
-    textDecoration: 'none', textTransform: 'uppercase'
+    fontFamily: 'var(--apple-font-display)', fontSize: '13px', fontWeight: 600,
+    textDecoration: 'none', textTransform: 'none', letterSpacing: 'normal',
 };
 
 const footerStyle: React.CSSProperties = {
-    padding: '32px', fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#94a3b8',
-    textAlign: 'center', letterSpacing: '0.2em'
+    marginTop: 'auto', padding: '24px 0', fontFamily: 'var(--apple-font-display)', fontSize: '12px', color: '#94a3b8',
+    textAlign: 'center', letterSpacing: 'normal', textTransform: 'none',
 };
 
 function getStatusBadgeStyle(estatus: string): React.CSSProperties {
     const base: React.CSSProperties = {
-        padding: '4px 10px', borderRadius: '2px', fontSize: '9px', 
-        fontWeight: 700, fontFamily: 'JetBrains Mono', display: 'inline-block',
-        border: '1px solid'
+        padding: '3px 10px', borderRadius: 'var(--radius-full)', fontSize: '12px',
+        fontWeight: 600, fontFamily: 'var(--apple-font-display)', display: 'inline-block',
     };
     switch (estatus) {
-        case 'sin_despachar': return { ...base, background: '#fffbeb', color: '#b45309', borderColor: '#fef3c7' }; 
-        case 'en_despacho':   return { ...base, background: '#eff1f3', color: '#1c3051', borderColor: '#dbdfe5' }; 
-        case 'en_sitio':      return { ...base, background: '#f0fdfa', color: '#0f766e', borderColor: '#ccfbf1' }; 
-        case 'atendido':      return { ...base, background: '#f0fdf4', color: '#15803d', borderColor: '#dcfce7' }; 
-        case 'cerrado_detencion': return { ...base, background: '#faf5ff', color: '#7c3aed', borderColor: '#e9d5ff' }; 
-        default:              return { ...base, background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' };
+        case 'sin_despachar': return { ...base, background: '#fef3c7', color: '#b45309' };
+        case 'en_despacho':   return { ...base, background: '#f1f5f9', color: '#1f355a' };
+        case 'en_sitio':      return { ...base, background: '#ccfbf1', color: '#0f766e' };
+        case 'atendido':      return { ...base, background: '#dcfce7', color: '#16a34a' };
+        case 'cerrado_detencion': return { ...base, background: '#f5f3ff', color: '#7c3aed' };
+        default:              return { ...base, background: '#f8fafc', color: '#64748b' };
     }
 }

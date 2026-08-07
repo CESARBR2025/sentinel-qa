@@ -1,7 +1,8 @@
 import { query } from '@/lib/db'
 
 export async function generarFolioIncidente(): Promise<{ folio: string; consecutivo: number }> {
-  const año = new Date().getFullYear()
+  const ahora = new Date()
+  const año = ahora.getFullYear()
 
   await query(`SELECT pg_advisory_xact_lock($1)`, [año])
 
@@ -12,6 +13,9 @@ export async function generarFolioIncidente(): Promise<{ folio: string; consecut
     [año],
   )
   const consecutivo = result.rows[0].next
-  const folio = `SSPM/INC/${año}/${String(consecutivo).padStart(3, '0')}`
+  const mes = String(ahora.getMonth() + 1).padStart(2, '0')
+  const dia = String(ahora.getDate()).padStart(2, '0')
+  const fecha = `${año}${mes}${dia}`
+  const folio = `SSPM-AL-${fecha}-${String(consecutivo).padStart(6, '0')}`
   return { folio, consecutivo }
 }

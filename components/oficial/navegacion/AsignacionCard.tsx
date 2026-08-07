@@ -18,23 +18,24 @@ export function AsignacionCard({ folio, direccion, prioridad, onIniciar, pendien
     <div style={{
       display: 'flex', flexDirection: 'column', gap: 20,
       width: '100%', maxWidth: 480, margin: '32px auto',
-      background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2,
-      boxShadow: '0 1px 3px rgba(15,23,42,0.08)',
+      background: 'var(--apple-glass-bg)', backdropFilter: 'blur(20px) saturate(180%)',
+      border: '1px solid var(--apple-glass-border)', borderRadius: 'var(--radius-xl)',
+      boxShadow: 'var(--apple-shadow-glass)',
       padding: 28, boxSizing: 'border-box',
-      fontFamily: 'Inter,sans-serif',
+      fontFamily: 'var(--apple-font-display)',
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700,
-          letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8',
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500,
+          color: '#64748b',
         }}>
           <Hash size={12} />
           Reporte No.
         </div>
         <div style={{
-          fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 28,
-          color: '#0f172a', lineHeight: 1.1,
+          fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 28,
+          color: '#0f172a', lineHeight: 1.1, letterSpacing: 'normal', textTransform: 'none',
         }}>
           {folio}
         </div>
@@ -45,13 +46,13 @@ export function AsignacionCard({ folio, direccion, prioridad, onIniciar, pendien
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 10, fontWeight: 700,
-          letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8',
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500,
+          color: '#64748b',
         }}>
           <MapPin size={12} />
           Ubicación
         </div>
-        <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 15, fontWeight: 500, color: '#334155' }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 15, fontWeight: 500, color: '#334155' }}>
           {direccion ?? 'Sin dirección registrada'}
         </div>
       </div>
@@ -59,9 +60,8 @@ export function AsignacionCard({ folio, direccion, prioridad, onIniciar, pendien
       <div>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 700,
-          letterSpacing: '0.08em', textTransform: 'uppercase',
-          padding: '6px 14px', borderRadius: 2,
+          fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600,
+          padding: '6px 14px', borderRadius: 'var(--radius-full)',
           background: color.fondo, color: color.oscuro, border: `1px solid ${color.principal}`,
         }}>
           Impacto: {prioridad ?? 'Sin definir'}
@@ -74,15 +74,16 @@ export function AsignacionCard({ folio, direccion, prioridad, onIniciar, pendien
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           width: '100%', padding: '16px 24px', marginTop: 4,
-          fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 16,
-          letterSpacing: '0.06em', textTransform: 'uppercase',
-          border: '1px solid #1f355a', borderRadius: 2,
+          fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 15,
+          textTransform: 'none', letterSpacing: 'normal',
+          border: 'none', borderRadius: 'var(--radius-lg)',
           background: pendiente ? '#c3c8d2' : '#1f355a',
           color: '#ffffff', cursor: pendiente ? 'wait' : 'pointer',
           opacity: pendiente ? 0.7 : 1, transition: 'all .15s',
+          boxShadow: pendiente ? 'none' : '0 3px 10px rgba(31,53,90,0.28)',
         }}
       >
-        {pendiente ? 'INICIANDO…' : '🚓 INICIAR NAVEGACIÓN'}
+        {pendiente ? 'Iniciando…' : 'Iniciar navegación'}
       </button>
     </div>
   )

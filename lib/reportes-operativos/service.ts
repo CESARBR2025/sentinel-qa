@@ -7,7 +7,7 @@ import {
     obtenerVehiculos, obtenerCateos, obtenerDetenidos,
     obtenerOrdenesAprehension, obtenerHidrocarburos,
     obtenerArmas, obtenerDrogas,
-    obtenerExtorsiones,
+    obtenerExtorsionesDetalle, obtenerNumerosTelefonicos911,
 } from './repository'
 
 function parseJsonb(val: unknown): Record<string, unknown>[] {
@@ -210,10 +210,33 @@ export async function obtenerDatosExcel(desde: string, hasta: string) {
     return { general, ...datos }
 }
 
-export async function obtenerDatosTelefonicos(desde?: string, hasta?: string) {
+// Reporte de Llamadas de Extorsión 911 (formato C4): 9 columnas oficiales
+// (FECHA, HORA, LUGAR, TELÉFONO, GRUPO DELICTIVO, MODUS OPERANDI, UNIDAD,
+// RESULTADO, FOLIO DE REPORTE).
+export async function obtenerDatosExtorsion(desde?: string, hasta?: string) {
     const d = desde ?? '2000-01-01'
     const h = hasta ?? new Date().toISOString().split('T')[0]
-    const rows = await obtenerExtorsiones(d, h)
+    const rows = await obtenerExtorsionesDetalle(d, h)
+    return rows.map(r => ({
+        folio: toStr(r.folio),
+        folioReporte: toStr(r.folioReporte) || '—',
+        telefono: toStr(r.telefono),
+        fecha: r.fecha instanceof Date
+            ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            : toStr(r.fecha),
+        hora: toStr(r.hora) || '—',
+        lugar: toStr(r.lugar) || '—',
+        grupoDelictivo: toStr(r.grupoDelictivo) || '—',
+        modusOperandi: toStr(r.modusOperandi) || '—',
+        unidad: toStr(r.unidad) || 'C4',
+        resultado: toStr(r.resultado) || '—',
+    }))
+}
+
+export async function obtenerDatosNumeros911(desde?: string, hasta?: string) {
+    const d = desde ?? '2000-01-01'
+    const h = hasta ?? new Date().toISOString().split('T')[0]
+    const rows = await obtenerNumerosTelefonicos911(d, h)
     return rows.map((r: ExtorsionRow) => ({
         folio: toStr(r.folio),
         telefono: toStr(r.telefono),

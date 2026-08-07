@@ -1,26 +1,26 @@
 'use client'
 
-import { Inbox, Shield, MapPin } from 'lucide-react'
+import { Inbox, MapPin } from 'lucide-react'
 import type { RondinOficialResumen } from '@/lib/oficial/types'
 import { labelEstatus } from '@/lib/911/estatus-c4'
 
-const ESTATUS_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  sin_despachar: { label: labelEstatus('sin_despachar'), color: '#b45309', bg: '#fef3c7', border: '#fde68a' },
-  en_despacho:   { label: labelEstatus('en_despacho'),   color: '#1c3051', bg: '#eff1f3', border: '#c3c8d2' },
-  en_sitio:      { label: labelEstatus('en_sitio'),      color: '#15803d', bg: '#f0fdf4', border: '#bbf7d0' },
-  atendido:      { label: labelEstatus('atendido'),      color: '#475569', bg: '#f1f5f9', border: '#e2e8f0' },
-  cerrado_detencion: { label: labelEstatus('cerrado_detencion'), color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
+const ESTATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+  sin_despachar: { label: labelEstatus('sin_despachar'), color: '#b45309', bg: '#fef3c7' },
+  en_despacho:   { label: labelEstatus('en_despacho'),   color: '#1f355a', bg: '#f1f5f9' },
+  en_sitio:      { label: labelEstatus('en_sitio'),      color: '#16a34a', bg: '#dcfce7' },
+  atendido:      { label: labelEstatus('atendido'),      color: '#475569', bg: '#f1f5f9' },
+  cerrado_detencion: { label: labelEstatus('cerrado_detencion'), color: '#7c3aed', bg: '#f5f3ff' },
 }
 
 function estatusBadge(estatus: string) {
-  const cfg = ESTATUS_CONFIG[estatus] ?? { label: estatus, color: '#64748b', bg: '#f8fafc', border: '#e2e8f0' }
+  const cfg = ESTATUS_CONFIG[estatus] ?? { label: estatus, color: '#64748b', bg: '#f8fafc' }
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 5,
-      fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 700,
-      padding: '3px 8px',
-      background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`,
-      borderRadius: 2,
+      fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600,
+      padding: '3px 10px',
+      background: cfg.bg, color: cfg.color,
+      borderRadius: 'var(--radius-full)',
     }}>
       <span style={{ width: 5, height: 5, borderRadius: '50%', background: cfg.color, display: 'inline-block' }} />
       {cfg.label}
@@ -39,19 +39,19 @@ function formatFecha(iso: string) {
 }
 
 export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialResumen[]; folioNuevo?: string }) {
-  const COLUMNS = ['FOLIO', 'FECHA', 'TIPO', 'UBICACIÓN', 'ESTATUS']
+  const COLUMNS = ['Folio', 'Fecha', 'Tipo', 'Ubicación', 'Estatus']
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div className="tabla-wrap" style={{ overflowX: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 640 }}>
         <thead>
           <tr style={{ background: '#f8fafc' }}>
             {COLUMNS.map((col) => (
               <th key={col} style={{
-                padding: '10px 14px', fontSize: 10, fontWeight: 700,
-                fontFamily: 'JetBrains Mono, monospace', color: '#64748b',
-                textAlign: 'left', textTransform: 'uppercase',
-                letterSpacing: '0.08em',
+                padding: '10px 14px', fontSize: 12, fontWeight: 600,
+                fontFamily: 'var(--apple-font-display)', color: '#64748b',
+                textAlign: 'left', textTransform: 'none',
+                letterSpacing: 'normal',
                 borderBottom: '1px solid #e2e8f0',
               }}>
                 {col}
@@ -67,12 +67,12 @@ export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialR
                 background: i % 2 === 0 ? '#ffffff' : '#fafbfc',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#f1f5f9' }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#f8fafc' }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? '#ffffff' : '#fafbfc' }}
             >
               <td style={{
-                padding: '10px 14px', fontSize: 11,
-                fontFamily: 'JetBrains Mono, monospace', fontWeight: 600,
+                padding: '10px 14px', fontSize: 13,
+                fontFamily: 'var(--apple-font-display)', fontWeight: 600,
                 color: '#0f172a',
                 borderBottom: '1px solid #f1f5f9',
               }}>
@@ -81,33 +81,33 @@ export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialR
                   {folioNuevo && r.folio === folioNuevo && (
                     <span style={{
                       display: 'inline-flex', alignItems: 'center',
-                      fontFamily: 'JetBrains Mono, monospace', fontSize: 9, fontWeight: 700,
-                      padding: '2px 6px', borderRadius: 2,
-                      background: '#22c55e', color: '#ffffff',
-                      letterSpacing: '0.08em',
+                      fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600,
+                      padding: '2px 8px', borderRadius: 'var(--radius-full)',
+                      background: '#16a34a', color: '#ffffff',
+                      letterSpacing: 'normal', textTransform: 'none',
                     }}>
-                      NUEVO
+                      Nuevo
                     </span>
                   )}
                 </div>
               </td>
               <td style={{
-                padding: '10px 14px', fontSize: 12,
-                fontFamily: 'Inter, sans-serif', color: '#475569',
+                padding: '10px 14px', fontSize: 13,
+                fontFamily: 'var(--apple-font-display)', color: '#475569',
                 borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap',
               }}>
                 {formatFecha(r.fechaHoraInicio)}
               </td>
               <td style={{
-                padding: '10px 14px', fontSize: 12,
-                fontFamily: 'Inter, sans-serif', color: '#334155',
+                padding: '10px 14px', fontSize: 13,
+                fontFamily: 'var(--apple-font-display)', color: '#334155',
                 borderBottom: '1px solid #f1f5f9',
               }}>
                 {r.tipoIncidente ?? '—'}
               </td>
               <td style={{
-                padding: '10px 14px', fontSize: 12,
-                fontFamily: 'Inter, sans-serif', color: '#64748b',
+                padding: '10px 14px', fontSize: 13,
+                fontFamily: 'var(--apple-font-display)', color: '#64748b',
                 borderBottom: '1px solid #f1f5f9',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -116,8 +116,8 @@ export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialR
                 </div>
               </td>
               <td style={{
-                padding: '10px 14px', fontSize: 12,
-                fontFamily: 'Inter, sans-serif',
+                padding: '10px 14px', fontSize: 13,
+                fontFamily: 'var(--apple-font-display)',
                 borderBottom: '1px solid #f1f5f9',
               }}>
                 {estatusBadge(r.estatus)}
@@ -127,13 +127,13 @@ export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialR
             <tr>
               <td colSpan={COLUMNS.length} style={{
                 padding: '60px 14px', textAlign: 'center', color: '#94a3b8',
-                fontFamily: 'Inter, sans-serif', fontSize: 13,
+                fontFamily: 'var(--apple-font-display)', fontSize: 13,
                 borderBottom: 'none',
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                   <Inbox size={36} color="#cbd5e1" />
                   <span style={{ fontWeight: 500 }}>No hay reportes de rondín enviados</span>
-                  <span style={{ fontSize: 11, color: '#b0b8c4' }}>
+                  <span style={{ fontSize: 12, color: '#b0b8c4' }}>
                     Los reportes que generes aparecerán aquí
                   </span>
                 </div>
@@ -144,8 +144,8 @@ export function RondinTabla({ rondines, folioNuevo }: { rondines: RondinOficialR
       </table>
       {rondines.length > 0 && (
         <div style={{
-          padding: '10px 14px', fontFamily: 'JetBrains Mono, monospace',
-          fontSize: 10, color: '#94a3b8',
+          padding: '10px 14px', fontFamily: 'var(--apple-font-display)',
+          fontSize: 12, fontWeight: 500, color: '#94a3b8',
           borderTop: '1px solid #f1f5f9',
         }}>
           Mostrando {rondines.length} reporte{rondines.length !== 1 ? 's' : ''}

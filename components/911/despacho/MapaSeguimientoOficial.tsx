@@ -10,7 +10,7 @@ import { formatAntiguedad } from './UnidadCards'
 const containerStyle: React.CSSProperties = {
   width: '100%',
   height: '340px',
-  borderRadius: '2px',
+  borderRadius: 'var(--radius-lg)',
   border: '1px solid #e2e8f0',
 }
 
@@ -20,8 +20,8 @@ const LOADING_STYLE: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   background: '#f1f5f9',
-  fontFamily: 'Inter,sans-serif',
-  fontSize: 12,
+  fontFamily: 'var(--apple-font-display)',
+  fontSize: 13,
   color: '#94a3b8',
 }
 
@@ -36,8 +36,8 @@ const ERROR_STYLE: React.CSSProperties = {
   boxSizing: 'border-box',
   background: '#fef2f2',
   color: '#dc2626',
-  fontFamily: 'Inter,sans-serif',
-  fontSize: 12,
+  fontFamily: 'var(--apple-font-display)',
+  fontSize: 13,
   textAlign: 'center',
 }
 
@@ -162,18 +162,18 @@ export default function MapaSeguimientoOficial({ incidenteLat, incidenteLng, pri
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         {conUbicacion.length === 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Inter,sans-serif', fontSize: 11, color: '#94a3b8', fontStyle: 'italic' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>
             <MapPinOff size={12} /> Sin ubicación reportada por los oficiales asignados
           </div>
         )}
         {conUbicacion.map(p => {
           const antiguedad = p.ultimaUbicacionEn ? formatAntiguedad(p.ultimaUbicacionEn) : null
           return (
-            <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 5, fontFamily: 'Inter,sans-serif', fontSize: 10.5 }}>
+            <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 5, fontFamily: 'var(--apple-font-display)', fontSize: 12 }}>
               <MapPin size={11} color={antiguedad?.fresco ? '#16a34a' : '#b45309'} />
               <span style={{ fontWeight: 600, color: '#334155' }}>{p.etiqueta}</span>
-              {p.esRefuerzo && <span style={{ fontSize: 8, fontWeight: 700, padding: '1px 5px', background: '#fff7ed', color: '#c2410c', borderRadius: 2 }}>REF</span>}
-              {p.esPrioritario && <span style={{ fontSize: 8, fontWeight: 700, padding: '1px 5px', background: '#dcfce7', color: '#16a34a', borderRadius: 2 }}>PRIORITARIO</span>}
+              {p.esRefuerzo && <span style={{ fontSize: 11, fontWeight: 600, padding: '1px 6px', background: '#fff7ed', color: '#c2410c', borderRadius: 'var(--radius-full)' }}>Ref</span>}
+              {p.esPrioritario && <span style={{ fontSize: 11, fontWeight: 600, padding: '1px 6px', background: '#dcfce7', color: '#16a34a', borderRadius: 'var(--radius-full)' }}>Prioritario</span>}
               {antiguedad
                 ? <span style={{ color: antiguedad.fresco ? '#16a34a' : '#b45309', fontWeight: 500 }}>{antiguedad.texto}</span>
                 : <span style={{ color: '#94a3b8' }}>sin ubicación</span>}

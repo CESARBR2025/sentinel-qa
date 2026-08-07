@@ -9,6 +9,8 @@ interface Tab {
   count?: number
 }
 
+const DEFAULT_ACCENT = '#1f355a'
+
 export function SegmentControl({ tabs, activeTab, paramName = 'tab' }: { tabs: Tab[]; activeTab: string; paramName?: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -31,13 +33,13 @@ export function SegmentControl({ tabs, activeTab, paramName = 'tab' }: { tabs: T
 
   return (
     <div
+      className="scrollbar-hide"
       style={{
         display: 'flex',
-        flexWrap: 'wrap',
-        background: '#f1f5f9',
-        borderRadius: 4,
-        padding: 3,
-        gap: 2,
+        flexWrap: 'nowrap',
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        gap: 6,
       }}
     >
       {tabs.map((tab) => {
@@ -45,20 +47,22 @@ export function SegmentControl({ tabs, activeTab, paramName = 'tab' }: { tabs: T
         return (
           <button
             key={tab.id}
+            type="button"
             onClick={() => onTabChange(tab.id)}
             style={{
-              all: 'unset',
               cursor: 'pointer',
-              fontFamily: 'JetBrains Mono, monospace',
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              padding: '8px 16px',
-              borderRadius: 3,
-              background: isActive ? '#ffffff' : 'transparent',
-              color: isActive ? '#1f355a' : '#64748b',
-              boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              fontFamily: 'var(--apple-font-display)',
+              fontSize: 14,
+              fontWeight: 600,
+              letterSpacing: '0.01em',
+              textTransform: 'none',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              padding: '9px clamp(14px, 4vw, 20px)',
+              borderRadius: 'var(--radius-full)',
+              border: 'none',
+              background: isActive ? DEFAULT_ACCENT : '#f1f5f9',
+              color: isActive ? '#ffffff' : '#64748b',
               transition: 'all 0.15s ease',
               display: 'inline-flex',
               alignItems: 'center',
@@ -69,13 +73,14 @@ export function SegmentControl({ tabs, activeTab, paramName = 'tab' }: { tabs: T
             {tab.count !== undefined && (
               <span
                 style={{
-                  background: isActive ? '#1f355a' : '#e2e8f0',
+                  fontFamily: 'var(--apple-font-display)',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  padding: '0 7px',
+                  borderRadius: 'var(--radius-full)',
+                  lineHeight: '18px',
+                  background: isActive ? 'rgba(255,255,255,.22)' : '#e2e8f0',
                   color: isActive ? '#ffffff' : '#64748b',
-                  fontSize: 10,
-                  fontWeight: 700,
-                  padding: '1px 7px',
-                  borderRadius: 10,
-                  lineHeight: '16px',
                 }}
               >
                 {tab.count}

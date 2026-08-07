@@ -1,0 +1,20 @@
+Eres el worker de implementación para el repo `seguridad_publica` (Next.js 16 + React 19 + Tailwind v4, `DESIGN.md` en la raíz es la fuente única de verdad visual del proyecto, deploy en Vercel).
+
+Hay un plan ya diseñado en la carpeta `plan-footer-sistema/` (raíz del repo). Tu trabajo es **ejecutarlo etapa por etapa**, no rediseñarlo.
+
+El usuario aprobó un footer Apple-style en `/agente_despacho` (`.desp-footer`, inline en `app/agente_despacho/page.tsx`) y pidió replicar ese mismo estilo en el componente compartido `components/partials/Footer.tsx` (`DashboardFooter`), usado en **34 páginas** de todo el sistema. Al investigar se confirmó un bug real (ya diagnosticado antes por el usuario en otra vista): `margin-top: auto` en `DashboardFooter` no pega el footer al fondo si la página que lo usa no tiene la cadena flex completa (`root: display:flex/flexDirection:column/minHeight:100vh` → wrapper de contenido: `flex:1`) — patrón documentado en `DESIGN.md §8` ("Footer de página pegado al fondo"). Son 7 etapas: la 1 restylea el componente en sí, las 2-4 auditan (y corrigen si hace falta) las páginas que probablemente ya tienen la cadena flex correcta, la 5 corrige el grupo de 5 páginas con un workaround manual confirmado (`<div style={{marginTop:40}}><DashboardFooter/></div>`), la 6 corrige el único caso sin ninguna mitigación previa, y la 7 cierra con Admin (incluye un caso especial con alcance acotado explícitamente).
+
+Instrucciones:
+
+1. Lee `plan-footer-sistema/README.md` completo primero.
+2. Lee `plan-footer-sistema/00-contexto.md` completo — ahí está la clasificación de las 34 páginas en Grupo A (auditar), Grupo B (hack a remover, confirmado), Grupo C (roto sin fix), y el caso especial de `admin/roles/agregar/page.tsx`. No la reabras ni la cuestiones.
+3. Lee `DESIGN.md §8` completo (sección "Footer de página pegado al fondo" y la de densidad nativa en móvil que la precede) antes de tocar cualquier archivo.
+4. Ejecuta `etapa-01.md`. Al terminar, corre sus "Criterios de aceptación" (incluye `npx tsc --noEmit`, y `npm run build`/`check:responsive` cuando la etapa lo pida). Reporta qué hiciste y **detente** — no sigas a la siguiente etapa sin que el usuario confirme.
+5. Repite el mismo patrón hasta `etapa-07.md`. La Etapa 1 debe ir primero (el resto depende del componente ya actualizado); las etapas 2-6 son independientes entre sí y se pueden hacer en cualquier orden relativo, pero ejecútalas en orden numérico salvo que el usuario pida otra cosa. La Etapa 7 va al final porque cierra con el checklist general.
+6. **Las etapas 2, 3 y 4 son de auditoría, no de fix directo** — el grep previo sugiere que esas páginas ya tienen la cadena flex correcta, pero cada etapa exige abrir el archivo real y confirmarlo (el `flex:1` podría estar en el elemento equivocado). No des una página por corregida solo porque `00-contexto.md` la clasificó en el Grupo A — verifícalo y repórtalo.
+7. **La Etapa 7 tiene un caso especial**: `admin/roles/agregar/page.tsx` es una página huérfana del lenguaje visual anterior (fuentes muertas, sin `DashboardHeader`, `maxWidth` fijo). El fix de esa etapa es **solo el posicionamiento del footer** — no la rediseñes, no le agregues el header del sistema, no le quites las fuentes muertas. Anota esa deuda en el reporte, no la resuelvas.
+8. No toques ningún archivo fuera de los listados en cada etapa, ni `app/agente_despacho/page.tsx` (su `.desp-footer` inline ya está aprobado y queda fuera de este plan a propósito).
+9. No agregues props ni variantes nuevas a `DashboardFooter` (ej. un sufijo de módulo) — no se pidió.
+10. Al terminar la Etapa 7, corre el checklist general de `README.md` completo: `npm run build`, `npm run check:responsive`, verificación manual en los 3 breakpoints de una página por grupo (una de Fiscalía, `notificaciones/page.tsx`, `analisis/generar-ppt`, `admin/roles/agregar`), ADR en `boveda/🏗 Arquitectura/Decisiones.md`, y agregar `DashboardFooter` a `DESIGN.md §4` como componente REGLA (mismo tratamiento que `PageHeader`/`SegmentPage`/`StepIndicator`).
+
+Empieza confirmando que leíste `README.md`, `00-contexto.md` y `DESIGN.md §8`, y luego arranca la Etapa 1.

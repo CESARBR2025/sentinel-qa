@@ -34,7 +34,6 @@
 | denuncias | (Pendiente) | ✨ Detectado |
 | emails | (Pendiente) | ✨ Detectado |
 | envio-de-formatos | (Pendiente) | ✨ Detectado |
-| estadisticos | (Pendiente) | ✨ Detectado |
 | expediente | (Pendiente) | ✨ Detectado |
 | fiscalia | (Pendiente) | ✨ Detectado |
 | flota | (Pendiente) | ✨ Detectado |
@@ -77,62 +76,6 @@
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
 <!-- AUTO-GENERATED END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

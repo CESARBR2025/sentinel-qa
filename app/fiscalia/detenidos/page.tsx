@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { FilaDetenidoRol } from '@/components/FilaDetenidoRol'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 
 export default async function DetenidosFiscaliaPage({
   searchParams,
@@ -36,6 +36,8 @@ export default async function DetenidosFiscaliaPage({
       <DashboardHeader
         user={{ name: user.name, apellido: user.apellido, email: user.email || '' }}
         roleLabel="Agente Fiscalía"
+        backHref="/fiscalia"
+        backLabel="Panel"
       />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 32 }}>
@@ -43,7 +45,6 @@ export default async function DetenidosFiscaliaPage({
           title="Fotos de"
           accent="Detenidos"
           subtitle="Detenidos con fotos pendientes · solicitudes del Monitorista"
-          actions={<PageHeaderLink href="/fiscalia" variant="secondary">← Panel</PageHeaderLink>}
         />
 
         {/* Stats */}

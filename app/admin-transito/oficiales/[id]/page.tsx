@@ -1,9 +1,12 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
 import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialPorId, actualizarOficial } from '@/lib/admin-transito/actions'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { DashboardHeader } from '@/components/partials/Header'
+import { PageHeader } from '@/components/partials/PageHeader'
 import PatrullaSelector from '@/components/admin-transito/PatrullaSelector'
 
 const labelStyle: React.CSSProperties = {
@@ -70,6 +73,9 @@ export default async function EditarOficialPage({
   const { id } = await params
   const { error } = await searchParams
 
+  const session = await auth.api.getSession({ headers: await headers() })
+  const user = session!.user as { name: string; apellido?: string; email: string }
+
   const oficial = await obtenerOficialPorId(id)
   if (!oficial) {
     redirect('/admin-transito/oficiales?error=no_encontrado')
@@ -80,11 +86,12 @@ export default async function EditarOficialPage({
   const patrullas = await listarPatrullasParaAsignacion()
 
   return (
-    <div>
+    <>
+      <DashboardHeader user={user} variant="apple" roleLabel="Admin Tránsito" backHref="/admin-transito/oficiales" backLabel="Oficiales" />
+      <main className="pad-pagina" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <PageHeader
         title="Editar"
         accent="Oficial"
-        actions={<PageHeaderLink href="/admin-transito/oficiales" variant="secondary">← Volver</PageHeaderLink>}
       />
 
       {error === 'datos_invalidos' && (
@@ -292,6 +299,7 @@ export default async function EditarOficialPage({
           </Link>
         </div>
       </form>
-    </div>
+      </main>
+    </>
   )
 }

@@ -1,8 +1,10 @@
 'use client'
 
 import { createPortal } from 'react-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
 import { NavegacionDespacho } from './NavegacionDespacho'
+
+const emptySubscribe = () => () => {}
 
 interface NavegacionModalProps {
   incidenteId: string
@@ -14,10 +16,9 @@ interface NavegacionModalProps {
 }
 
 export function NavegacionModal({ incidenteId, destino, folio, direccion, prioridad, onAtender }: NavegacionModalProps) {
-  const [montado, setMontado] = useState(false)
+  const montado = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
   useEffect(() => {
-    setMontado(true)
     const overflowPrevio = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
@@ -30,7 +31,8 @@ export function NavegacionModal({ incidenteId, destino, folio, direccion, priori
   return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 1000,
-      background: '#f8fafc', display: 'flex', flexDirection: 'column',
+      background: 'var(--apple-glass-bg)', backdropFilter: 'blur(20px) saturate(180%)',
+      display: 'flex', flexDirection: 'column',
     }}>
       <NavegacionDespacho
         incidenteId={incidenteId}

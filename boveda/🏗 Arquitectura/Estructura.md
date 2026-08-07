@@ -59,12 +59,17 @@
 │   │   │   │   ├── [id]/
 │   │   │   │   ├── page.tsx
 │   │   │   │   └── ToastOnLoad.tsx
-│   │   │   ├── revisar/
-│   │   │   │   ├── page.tsx
-│   │   │   │   └── RevisarFormulario.tsx
+│   │   │   ├── nuevoreporte/
+│   │   │   │   └── page.tsx
 │   │   │   ├── Formulario911.tsx
 │   │   │   └── page.tsx
 │   │   ├── despacho/
+│   │   │   └── page.tsx
+│   │   ├── reportes/
+│   │   │   ├── extorsion/
+│   │   │   │   └── page.tsx
+│   │   │   ├── numeros/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── rondin/
 │   │   │   ├── incidentes/
@@ -287,10 +292,12 @@
 │   │   │   ├── formato-n-medios-alternativos/
 │   │   │   │   ├── [id]/
 │   │   │   │   └── route.ts
-│   │   │   └── formato-n-rnd/
-│   │   │       ├── [id]/
-│   │   │       ├── fuente/
-│   │   │       └── route.ts
+│   │   │   ├── formato-n-rnd/
+│   │   │   │   ├── [id]/
+│   │   │   │   ├── fuente/
+│   │   │   │   └── route.ts
+│   │   │   └── numeros-extorsion/
+│   │   │       └── exportar/
 │   │   ├── reportes-d1/
 │   │   │   └── route.ts
 │   │   ├── reportes-incidentes/
@@ -303,9 +310,6 @@
 │   │   │   └── exportar/
 │   │   │       └── route.ts
 │   │   ├── reportes-sin-novedad/
-│   │   │   └── exportar/
-│   │   │       └── route.ts
-│   │   ├── reportes-telefonicos/
 │   │   │   └── exportar/
 │   │   │       └── route.ts
 │   │   ├── rol-servicios/
@@ -396,8 +400,6 @@
 │   ├── envio-de-formatos/
 │   │   ├── consolidar/
 │   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── estadisticos/
 │   │   └── page.tsx
 │   ├── fiscalia/
 │   │   ├── asegurados/
@@ -586,11 +588,18 @@
 │   │   ├── radio/
 │   │   │   ├── FormRondinEscalado.tsx
 │   │   │   └── Input.tsx
+│   │   ├── reportes/
+│   │   │   ├── BotonExportarExcel.tsx
+│   │   │   ├── FiltroRangoFechas.tsx
+│   │   │   ├── TablaExtorsion.tsx
+│   │   │   └── TablaNumerosTelefonicos.tsx
 │   │   ├── whatsapp/
 │   │   │   ├── FormSection.tsx
 │   │   │   └── RegistroIncidenteForm.tsx
 │   │   ├── Bitacora911.tsx
+│   │   ├── DespachadorActividadTracker.tsx
 │   │   ├── FiltrosIncidentes.tsx
+│   │   ├── ModalConfirmacion911.tsx
 │   │   ├── ModuleCard.tsx
 │   │   └── Pagination.tsx
 │   ├── admin/
@@ -712,6 +721,7 @@
 │   │   ├── ContadorAsignaciones.tsx
 │   │   ├── DespachoContent.tsx
 │   │   ├── FormularioRecorrido.tsx
+│   │   ├── MapaMiUbicacion.tsx
 │   │   ├── MapaPinFijo.tsx
 │   │   ├── MapaUbicacion.tsx
 │   │   ├── MiUbicacionSection.tsx
@@ -764,11 +774,6 @@
 │   │   │   ├── ReportStat.tsx
 │   │   │   ├── ReportTables.tsx
 │   │   │   └── styles.ts
-│   │   ├── estadisticos/
-│   │   │   ├── PhonePagination.tsx
-│   │   │   ├── PhoneReportsTable.tsx
-│   │   │   ├── PhoneStatsCards.tsx
-│   │   │   └── ReportFilters.tsx
 │   │   ├── incidentes/
 │   │   │   ├── FiltrosIncidencias.tsx
 │   │   │   ├── Paginacion.tsx
@@ -900,6 +905,7 @@
 │   └── useResponsive.ts
 ├── lib/
 │   ├── 911/
+│   │   ├── actions.ts
 │   │   ├── estatus-c4.ts
 │   │   ├── mapper.ts
 │   │   ├── permisos.ts
@@ -1024,6 +1030,8 @@
 │   │   │   ├── 0039_formato_incidencia_complemento.sql
 │   │   │   ├── 0041_push_subscriptions.sql
 │   │   │   ├── 0042_notificaciones_escalacion.sql
+│   │   │   ├── 0043_actividad_despachador.sql
+│   │   │   ├── 0044_extorsion_resultado.sql
 │   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
@@ -1230,6 +1238,17 @@
 │   ├── etapa-5.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
+├── plan-footer-sistema/
+│   ├── 00-contexto.md
+│   ├── etapa-01.md
+│   ├── etapa-02.md
+│   ├── etapa-03.md
+│   ├── etapa-04.md
+│   ├── etapa-05.md
+│   ├── etapa-06.md
+│   ├── etapa-07.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
 ├── plan-notificaciones-forzadas/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1255,6 +1274,28 @@
 │   ├── etapa-5.md
 │   ├── etapa-6.md
 │   ├── etapa-7.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
+├── plan-refact-ui/
+│   ├── 00-contexto.md
+│   ├── etapa-01.md
+│   ├── etapa-02.md
+│   ├── etapa-03.md
+│   ├── etapa-04.md
+│   ├── etapa-05.md
+│   ├── etapa-06.md
+│   ├── etapa-07.md
+│   ├── etapa-08.md
+│   ├── etapa-09.md
+│   ├── etapa-10.md
+│   ├── etapa-11.md
+│   ├── etapa-12.md
+│   ├── etapa-13.md
+│   ├── etapa-14.md
+│   ├── etapa-15.md
+│   ├── etapa-16.md
+│   ├── etapa-17.md
+│   ├── etapa-18.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
 ├── public/
@@ -1357,62 +1398,6 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

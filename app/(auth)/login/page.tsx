@@ -1,8 +1,10 @@
 'use client'
 import './login.css'
-import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
+import { useState, useEffect, useRef, useMemo, useSyncExternalStore, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
+
+const emptySubscribe = () => () => {}
 
 // ─── Iconos ───────────────────────────────────────────────────────────────────
 function IconUser() {
@@ -18,84 +20,6 @@ function IconArrow() {
   return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
 }
 
-// ─── Terminal de logs ─────────────────────────────────────────────────────────
-type LogType = 'ok' | 'warn' | 'err' | 'info' | 'dim'
-interface LogLine { k: number; ts: string; type: LogType; text: string }
-
-function Terminal({ phase, failed }: { phase: string; failed: string | null }) {
-  const [lines, setLines] = useState<LogLine[]>([])
-  const bodyRef = useRef<HTMLDivElement>(null)
-  const keyRef  = useRef(0)
-
-  const push = useCallback((type: LogType, text: string) => {
-    const now = new Date()
-    const ts  = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`
-    setLines(ls => [...ls, { k: keyRef.current++, ts, type, text }].slice(-9))
-  }, [])
-
-  useEffect(() => {
-    const boot: [number, LogType, string][] = [
-      [80,  'info', 'iniciando cliente SSPM-SJR v4.2.1'],
-      [320, 'dim',  'resolviendo host → sspm.sanjuandelrio.gob.mx'],
-      [520, 'dim',  'handshake TLS 1.3 — cert SHA-256 verificado'],
-      [120, 'ok',   'canal cifrado AES-256-GCM establecido'],
-      [200, 'dim',  'verificando integridad del cliente (0x4F··A1C2)'],
-      [340, 'warn', 'esperando credenciales de operador...'],
-    ]
-    let t = 0
-    const timers = boot.map(([d, type, text]) => { t += d; return setTimeout(() => push(type, text), t) })
-    return () => timers.forEach(clearTimeout)
-  }, [push])
-
-  useEffect(() => {
-    if (phase === 'submitting-1') {
-      push('info', 'enviando credenciales al servidor de auth')
-      setTimeout(() => push('dim', 'buscando operador en directorio...'), 300)
-    }
-    if (phase === 'otp') {
-      push('ok',   'credenciales válidas · operador localizado')
-      setTimeout(() => push('warn', 'pendiente: código 2FA del autenticador'), 250)
-      setTimeout(() => push('info', 'TOTP · Google/Authy/Microsoft Authenticator · TTL 30s'), 550)
-    }
-    if (phase === 'submitting-2') push('info', 'validando token TOTP...')
-    if (phase === 'success') {
-      push('ok', 'token aceptado · doble factor superado')
-      setTimeout(() => push('ok', 'sesión autorizada · abriendo tablero C4'), 250)
-    }
-    if (failed === 'credentials') push('err', 'credenciales rechazadas · verifique sus datos')
-    if (failed === 'otp')         push('err', 'token TOTP inválido · reintente')
-  }, [phase, failed]) // eslint-disable-line
-
-  useEffect(() => {
-    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight
-  }, [lines])
-
-  return (
-    <div className="terminal-panel">
-      <div className="terminal-head">
-        <span className="terminal-dot" style={{ background:'var(--accent)' }} />
-        <span className="terminal-dot" style={{ background:'var(--accent)' }} />
-        <span className="terminal-dot" style={{ background:'var(--ok)' }} />
-        <span style={{ marginLeft:6 }}>ssp-secure@terminal — /auth/session</span>
-      </div>
-      <div ref={bodyRef} className="terminal-body">
-        {lines.map(l => (
-          <div key={l.k} style={{ whiteSpace:'pre' }}>
-            <span style={{ color:'var(--text-mute)', marginRight:10 }}>[{l.ts}]</span>
-            <span style={{ color: l.type==='ok'?'var(--ok)':l.type==='warn'?'var(--accent)':l.type==='err'?'var(--accent)':l.type==='info'?'#6da4d0':'var(--text-mute)' }}>
-              {l.type==='err'?'✗ ':l.type==='ok'?'✓ ':l.type==='warn'?'⚠ ':'› '}{l.text}
-            </span>
-          </div>
-        ))}
-        <div style={{ whiteSpace:'pre' }}>
-          <span style={{ color:'var(--text-mute)', marginRight:10 }}>[--:--:--]</span>
-          <span style={{ color:'var(--text-mute)' }}>$ </span>
-          <span style={{ display:'inline-block', width:7, height:13, background:'var(--accent)', verticalAlign:'middle', marginLeft:3, animation:'blink 1s step-end infinite' }}/>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // ─── OTP — 6 inputs individuales ─────────────────────────────────────────────
 function OtpInput({ value, onChange, error, focusFirst }: { value: string; onChange: (v: string) => void; error?: boolean; focusFirst?: boolean }) {
@@ -196,7 +120,11 @@ function LoginContent() {
   const [pwd,     setPwd]     = useState('')
   const [showPwd, setShowPwd] = useState(false)
   const [otp,     setOtp]     = useState('')
-  const [sessionId] = useState(() => String(Math.floor(Math.random()*9000+1000))+'-QRO')
+  const montado = useSyncExternalStore(emptySubscribe, () => true, () => false)
+  const sessionId = useMemo(
+    () => (montado ? String(Math.floor(Math.random()*9000+1000))+'-QRO' : '----'),
+    [montado],
+  )
 
   // Tick de 1s para refrescar el contador TOTP (el valor se deriva de Date.now() en render)
   const [, setTick] = useState(0)

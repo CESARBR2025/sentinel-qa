@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { usePolling } from '@/hooks/usePolling'
 import { useResponsive } from '@/hooks/useResponsive'
 import {
-  Bell, BellRing, BellOff, CheckCheck,
+  Bell, BellRing, BellOff, CheckCheck, X,
   Siren, Shield, Gavel, Scale, Video, Search, KeyRound, Ticket, Truck,
   ShieldAlert, Car, ClipboardList, FileText, Megaphone,
   type LucideIcon,
@@ -269,15 +269,28 @@ export function CampanillaNotificaciones() {
     60% { transform: rotate(-8deg); }
     80% { transform: rotate(6deg); }
   }
+  .campanilla-btn { background: transparent; border: 1px solid #e2e8f0; transition: background .15s ease, border-color .15s ease; }
+  .campanilla-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+  /* Bottom sheet nativo en móvil — backdrop + hoja deslizándose desde abajo,
+     en vez del dropdown flotante que se usa en tablet/desktop. */
+  @keyframes campanilla-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes campanilla-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .campanilla-backdrop { animation: campanilla-backdrop-in .2s ease-out both; }
+  .campanilla-sheet { animation: campanilla-sheet-up .28s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @media (prefers-reduced-motion: reduce) {
+    .campanilla-backdrop, .campanilla-sheet { animation: none; }
+  }
 `}</style>
       <button
         ref={botonRef}
         type="button"
         onClick={() => void alternar()}
         aria-label={`Notificaciones${noLeidas > 0 ? ` (${noLeidas} sin leer)` : ''}`}
+        className="campanilla-btn"
         style={{
           position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: 40, height: 40, border: '1px solid #e2e8f0', background: '#fff',
+          width: 40, height: 40, borderRadius: 'var(--radius-lg)',
           cursor: 'pointer', color: noLeidas > 0 ? '#1f355a' : '#64748b', flexShrink: 0,
           animation: sacudir ? 'campanilla-shake 0.5s ease-in-out' : 'none',
         }}
@@ -286,8 +299,8 @@ export function CampanillaNotificaciones() {
         {noLeidas > 0 && (
           <span style={{
             position: 'absolute', top: -6, right: -6, minWidth: 18, height: 18, padding: '0 4px',
-            borderRadius: 9, background: '#dc2626', color: '#fff',
-            fontFamily: 'JetBrains Mono, monospace', fontSize: 10, fontWeight: 700,
+            borderRadius: 'var(--radius-full)', background: '#dc2626', color: '#fff',
+            fontFamily: 'var(--apple-font-display)', fontSize: 10, fontWeight: 700,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             {noLeidas > 99 ? '99+' : noLeidas}
@@ -307,119 +320,162 @@ export function CampanillaNotificaciones() {
         queda eliminado de raíz en vez de perseguido con más z-index.
       */}
       {abierto && posicion && createPortal(
-        <div
-          ref={dropdownRef}
-          style={{
-            position: 'fixed', top: posicion.top,
-            left: esMovil ? 12 : undefined, right: esMovil ? 12 : posicion.right,
-            width: esMovil ? 'auto' : ANCHO_DROPDOWN, zIndex: 999999,
-            maxWidth: 'calc(100vw - 24px)',
-            background: '#fff', border: '1px solid #e2e8f0',
-            boxShadow: '0 16px 40px -12px rgba(15,23,42,0.35)',
-          }}
-        >
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '12px 14px', borderBottom: '1px solid #e2e8f0',
-          }}>
-            <span style={{
-              fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: '#1f355a',
-            }}>
-              Notificaciones{noLeidas > 0 ? ` · ${noLeidas}` : ''}
-            </span>
-            {noLeidas > 0 && (
-              <button type="button" onClick={() => void marcarTodas()} style={{
-                display: 'flex', alignItems: 'center', gap: 4,
-                border: 'none', background: 'transparent', cursor: 'pointer',
-                fontFamily: 'JetBrains Mono, monospace', fontSize: 9, letterSpacing: '0.1em',
-                textTransform: 'uppercase', color: '#64748b',
-              }}>
-                <CheckCheck size={12} /> Marcar todas
-              </button>
-            )}
-          </div>
-
-          <div style={{ maxHeight: 380, overflowY: 'auto' }}>
-            {cargando && items.length === 0 && (
-              <p style={{ margin: 0, padding: '22px 14px', textAlign: 'center', color: '#94a3b8', fontSize: 12 }}>
-                Cargando…
-              </p>
-            )}
-            {!cargando && items.length === 0 && (
-              <div style={{ padding: '28px 14px', textAlign: 'center', color: '#94a3b8' }}>
-                <BellOff size={22} style={{ marginBottom: 6, opacity: 0.6 }} />
-                <p style={{ margin: 0, fontSize: 12 }}>Sin notificaciones</p>
-              </div>
-            )}
-            {items.map(n => {
-              const Icono = iconoDeEvento(n.evento)
-              const color = COLOR_SEVERIDAD[n.severidad] ?? '#0284c7'
-              return (
-                <button
-                  key={n.id}
-                  type="button"
-                  onClick={() => void abrirNotificacion(n)}
-                  style={{
-                    display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%',
-                    textAlign: 'left', cursor: 'pointer',
-                    padding: '11px 14px', border: 'none', borderBottom: '1px solid #f1f5f9',
-                    background: n.leida ? '#fff' : '#f8fafc',
-                  }}
-                >
-                  <span style={{
-                    flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: `${color}1a`, color,
-                  }}>
-                    <Icono size={15} />
-                  </span>
-                  <span style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
-                      <span style={{
-                        fontFamily: 'Inter, sans-serif', fontSize: 12.5,
-                        fontWeight: n.leida ? 500 : 700, color: '#0f172a',
-                        minWidth: 0, overflowWrap: 'break-word',
-                      }}>
-                        {n.titulo}
-                      </span>
-                      <span style={{ flexShrink: 0, fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94a3b8' }}>
-                        {haceCuanto(n.creadoEn)}
-                      </span>
-                    </span>
-                    <span style={{
-                      display: 'block', marginTop: 3, fontFamily: 'Inter, sans-serif',
-                      fontSize: 11.5, color: '#64748b', lineHeight: 1.45,
-                    }}>
-                      {n.mensaje}
-                    </span>
-                  </span>
-                  {!n.leida && (
-                    <span style={{
-                      flexShrink: 0, width: 7, height: 7, borderRadius: '50%',
-                      background: color, marginTop: 5,
-                    }} />
-                  )}
-                </button>
-              )
-            })}
-          </div>
-
-          <TogglePush />
-
-          <Link
-            href="/notificaciones"
-            onClick={() => setAbierto(false)}
-            style={{
-              display: 'block', padding: '11px 14px', borderTop: '1px solid #e2e8f0',
-              textAlign: 'center', textDecoration: 'none', color: '#1f355a',
-              fontFamily: 'JetBrains Mono, monospace', fontSize: 9,
-              letterSpacing: '0.14em', textTransform: 'uppercase',
+        <>
+          {esMovil && (
+            <div
+              onClick={() => setAbierto(false)}
+              className="campanilla-backdrop"
+              style={{ position: 'fixed', inset: 0, zIndex: 999998, background: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(2px)' }}
+            />
+          )}
+          <div
+            ref={dropdownRef}
+            className={esMovil ? 'campanilla-sheet' : undefined}
+            style={esMovil ? {
+              position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 999999,
+              width: '100%', maxHeight: '82vh',
+              display: 'flex', flexDirection: 'column',
+              background: 'var(--apple-glass-bg)', backdropFilter: 'blur(20px) saturate(180%)',
+              border: '1px solid var(--apple-glass-border)', borderBottom: 'none',
+              borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
+              boxShadow: 'var(--apple-shadow-glass-hover)', overflow: 'hidden',
+              paddingBottom: 'env(safe-area-inset-bottom)',
+            } : {
+              position: 'fixed', top: posicion.top, right: posicion.right,
+              width: ANCHO_DROPDOWN, zIndex: 999999,
+              maxWidth: 'calc(100vw - 24px)',
+              background: 'var(--apple-glass-bg)', backdropFilter: 'blur(20px) saturate(180%)',
+              border: '1px solid var(--apple-glass-border)', borderRadius: 'var(--radius-xl)',
+              boxShadow: 'var(--apple-shadow-glass-hover)', overflow: 'hidden',
             }}
           >
-            Ver todas
-          </Link>
-        </div>,
+            {esMovil && (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 2px', flexShrink: 0 }}>
+                <span style={{ width: 36, height: 4, borderRadius: 'var(--radius-full)', background: '#cbd5e1' }} />
+              </div>
+            )}
+
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: esMovil ? '8px 16px 14px' : '12px 14px', borderBottom: '1px solid #e2e8f0', flexShrink: 0,
+            }}>
+              <span style={{
+                fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600,
+                color: '#0f172a',
+              }}>
+                Notificaciones{noLeidas > 0 ? ` · ${noLeidas}` : ''}
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                {noLeidas > 0 && (
+                  <button type="button" onClick={() => void marcarTodas()} style={{
+                    display: 'flex', alignItems: 'center', gap: 4,
+                    border: 'none', background: 'transparent', cursor: 'pointer',
+                    fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500,
+                    color: '#64748b',
+                  }}>
+                    <CheckCheck size={12} /> Marcar todas
+                  </button>
+                )}
+                {esMovil && (
+                  <button
+                    type="button"
+                    onClick={() => setAbierto(false)}
+                    aria-label="Cerrar"
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      width: 28, height: 28, marginRight: -6, flexShrink: 0,
+                      border: 'none', borderRadius: 'var(--radius-md)', background: '#f1f5f9',
+                      color: '#64748b', cursor: 'pointer',
+                    }}
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div style={{ maxHeight: esMovil ? undefined : 380, flex: esMovil ? '1 1 auto' : undefined, minHeight: 0, overflowY: 'auto' }}>
+              {cargando && items.length === 0 && (
+                <p style={{ margin: 0, padding: '22px 14px', textAlign: 'center', color: '#94a3b8', fontSize: 12 }}>
+                  Cargando…
+                </p>
+              )}
+              {!cargando && items.length === 0 && (
+                <div style={{ padding: '28px 14px', textAlign: 'center', color: '#94a3b8' }}>
+                  <BellOff size={22} style={{ marginBottom: 6, opacity: 0.6 }} />
+                  <p style={{ margin: 0, fontSize: 12 }}>Sin notificaciones</p>
+                </div>
+              )}
+              {items.map(n => {
+                const Icono = iconoDeEvento(n.evento)
+                const color = COLOR_SEVERIDAD[n.severidad] ?? '#0284c7'
+                return (
+                  <button
+                    key={n.id}
+                    type="button"
+                    onClick={() => void abrirNotificacion(n)}
+                    style={{
+                      display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%',
+                      textAlign: 'left', cursor: 'pointer',
+                      padding: '11px 14px', border: 'none', borderBottom: '1px solid #f1f5f9',
+                      background: n.leida ? '#fff' : '#f8fafc',
+                    }}
+                  >
+                    <span style={{
+                      flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: `${color}1a`, color,
+                    }}>
+                      <Icono size={15} />
+                    </span>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+                        <span style={{
+                          fontFamily: 'var(--apple-font-display)', fontSize: 13,
+                          fontWeight: n.leida ? 500 : 600, color: '#0f172a',
+                          minWidth: 0, overflowWrap: 'break-word',
+                        }}>
+                          {n.titulo}
+                        </span>
+                        <span style={{ flexShrink: 0, fontFamily: 'var(--apple-font-display)', fontSize: 11, color: '#94a3b8' }}>
+                          {haceCuanto(n.creadoEn)}
+                        </span>
+                      </span>
+                      <span style={{
+                        display: 'block', marginTop: 3, fontFamily: 'var(--apple-font-display)',
+                        fontSize: 12.5, color: '#64748b', lineHeight: 1.45,
+                      }}>
+                        {n.mensaje}
+                      </span>
+                    </span>
+                    {!n.leida && (
+                      <span style={{
+                        flexShrink: 0, width: 7, height: 7, borderRadius: '50%',
+                        background: color, marginTop: 5,
+                      }} />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div style={{ flexShrink: 0 }}>
+              <TogglePush />
+
+              <Link
+                href="/notificaciones"
+                onClick={() => setAbierto(false)}
+                style={{
+                  display: 'block', padding: '11px 14px', borderTop: '1px solid #e2e8f0',
+                  textAlign: 'center', textDecoration: 'none', color: '#1f355a',
+                  fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 600,
+                }}
+              >
+                Ver todas
+              </Link>
+            </div>
+          </div>
+        </>,
         document.body,
       )}
 

@@ -26,6 +26,8 @@ export default async function AgregarRolPage() {
     <main
       style={{
         minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
         background: "#f8fafc", // Fondo claro táctico (Igual a D1)
         color: "#1e293b",
       }}
@@ -48,6 +50,7 @@ export default async function AgregarRolPage() {
     padding: "40px 32px", // Asegúrate de que esto sea exacto
     display: "flex",
     flexDirection: "column",
+    flex: 1,
     gap: "32px", // Este espacio entre el botón volver y el cuadro blanco
   }}
 >

@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { SignOutButton } from '@/app/dashboard/sign-out-button';
 import { CampanillaNotificaciones } from '@/components/notificaciones/CampanillaNotificaciones';
 import { CambiarSesionDev } from '@/components/dev/CambiarSesionDev';
@@ -23,7 +23,8 @@ interface DashboardHeaderProps {
   // Texto sobre el nombre del operador (ej. "Agente Fiscalía", "Juez Cívico") —
   // reemplaza el genérico "Operador Identificado" cuando la página lo necesita.
   roleLabel?: string;
-  // Piloto Apple-style (DESIGN.md §10) — default 'tactico' no cambia nada.
+  // Lenguaje visual (DESIGN.md). Default 'apple' — 'tactico' queda disponible
+  // solo por si una vista puntual necesita revertir temporalmente.
   variant?: 'tactico' | 'apple';
 }
 
@@ -36,7 +37,7 @@ export function DashboardHeader({
   backHref,
   backLabel = 'Dashboard',
   roleLabel = 'Operador Identificado',
-  variant = 'tactico',
+  variant = 'apple',
 }: DashboardHeaderProps) {
   const { esMovil, esTablet } = useResponsive()
   const isApple = variant === 'apple'
@@ -71,74 +72,70 @@ export function DashboardHeader({
         <div style={{ position: 'absolute', bottom: -1, left: 0, width: 64, height: 2, background: '#1f355a' }} />
       )}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 24, minWidth: 0 }}>
-        <img
-          src="/chaleco.png"
-          alt="S"
-          style={{ height: esMovil ? 26 : esTablet ? 44 : 64, flexShrink: 0, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
-        />
-
-        <div style={{ minWidth: 0 }}>
-          {/* Kicker táctico — se oculta en el piloto Apple */}
-          {!isApple && (
-            <div
-              style={{
-                fontFamily: 'JetBrains Mono,monospace',
-                fontSize: 10,
-                letterSpacing: '0.3em',
-                color: '#3e5171',
-                textTransform: 'uppercase',
-                marginBottom: 4,
-                display: esMovil ? 'none' : 'flex',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <span style={{ width: 8, height: 8, background: '#3e5171', display: 'inline-block' }} />
-              Sistema Táctico
-            </div>
-          )}
-
-          <h1
+      <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 6 : esTablet ? 10 : 14, minWidth: 0 }}>
+        {/* BOTÓN REGRESAR — icono solo, a la izquierda del logo (patrón nativo
+            iOS/Android). Solo se renderiza si la página pasó un destino real. */}
+        {backHref && (
+          <Link
+            href={backHref}
+            aria-label={backLabel}
+            title={backLabel}
             style={{
-              fontFamily: isApple ? 'var(--apple-font-display)' : 'Barlow Condensed,sans-serif',
-              fontWeight: isApple ? 600 : 800,
-              fontSize: esMovil ? 20 : esTablet ? 36 : 56,
-              letterSpacing: isApple ? 'normal' : '0.06em',
-              textTransform: isApple ? 'none' : 'uppercase',
-              margin: 0,
-              color: '#0f172a',
-              lineHeight: 1,
-              whiteSpace: 'nowrap',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 40, height: 40, flexShrink: 0, marginLeft: -8,
+              borderRadius: 'var(--radius-lg)',
+              color: isApple ? '#475569' : '#64748b',
             }}
           >
-            {isApple ? 'Centinela' : 'CENTINELA'}
-          </h1>
-        </div>
+            <ChevronLeft size={24} strokeWidth={2} />
+          </Link>
+        )}
 
-        {/* BOTÓN REGRESAR — solo si la página pasó un destino real */}
-        {backHref && (
-          <>
-            <div style={{ width: 1, height: esMovil ? 24 : esTablet ? 32 : 40, background: '#e2e8f0', flexShrink: 0 }} />
-            <Link
-              href={backHref}
+        <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 24, minWidth: 0 }}>
+          <img
+            src="/chaleco.png"
+            alt="S"
+            style={{ height: esMovil ? 26 : esTablet ? 44 : 64, flexShrink: 0, objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(31, 53, 90, 0.55))' }}
+          />
+
+          <div style={{ minWidth: 0 }}>
+            {/* Kicker táctico — se oculta en el piloto Apple */}
+            {!isApple && (
+              <div
+                style={{
+                  fontFamily: 'JetBrains Mono,monospace',
+                  fontSize: 10,
+                  letterSpacing: '0.3em',
+                  color: '#3e5171',
+                  textTransform: 'uppercase',
+                  marginBottom: 4,
+                  display: esMovil ? 'none' : 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <span style={{ width: 8, height: 8, background: '#3e5171', display: 'inline-block' }} />
+                Sistema Táctico
+              </div>
+            )}
+
+            <h1
               style={{
-                fontFamily: isApple ? 'var(--apple-font-display)' : 'JetBrains Mono,monospace',
-                fontSize: 10,
-                letterSpacing: isApple ? 'normal' : '0.25em',
-                color: isApple ? '#475569' : '#64748b',
+                fontFamily: isApple ? 'var(--apple-font-display)' : 'Barlow Condensed,sans-serif',
+                fontWeight: isApple ? 600 : 800,
+                fontSize: esMovil ? 20 : esTablet ? 36 : 56,
+                letterSpacing: isApple ? 'normal' : '0.06em',
                 textTransform: isApple ? 'none' : 'uppercase',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
+                margin: 0,
+                color: '#0f172a',
+                lineHeight: 1,
                 whiteSpace: 'nowrap',
               }}
             >
-              <ArrowLeft size={14} /> {esMovil ? null : backLabel}
-            </Link>
-          </>
-        )}
+              {isApple ? 'Centinela' : 'CENTINELA'}
+            </h1>
+          </div>
+        </div>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 8 : esTablet ? 12 : 32 }}>

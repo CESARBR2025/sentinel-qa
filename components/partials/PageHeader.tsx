@@ -19,39 +19,41 @@ import type { ReactNode } from 'react'
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const pageHeaderTitleStyle: React.CSSProperties = {
-  fontFamily: 'Barlow Condensed,sans-serif',
-  fontWeight: 800,
-  fontSize: 'clamp(22px, 6vw, 32px)',
-  letterSpacing: '0.06em',
-  textTransform: 'uppercase',
+  fontFamily: 'var(--apple-font-display)',
+  fontWeight: 600,
+  fontSize: 'clamp(22px, 5vw, 32px)',
+  letterSpacing: 'normal',
+  textTransform: 'none',
   color: '#0f172a',
   margin: '0 0 4px',
 }
 
 export const pageHeaderSubtitleStyle: React.CSSProperties = {
-  fontFamily: 'JetBrains Mono,monospace',
-  fontSize: 10,
+  fontFamily: 'var(--apple-font-display)',
+  fontWeight: 500,
+  fontSize: 13,
   color: '#64748b',
-  letterSpacing: '0.15em',
-  textTransform: 'uppercase',
+  letterSpacing: 'normal',
+  textTransform: 'none',
   margin: 0,
   wordBreak: 'break-word',
 }
 
 const btnBase: React.CSSProperties = {
-  fontFamily: 'Barlow Condensed,sans-serif',
-  fontWeight: 700,
-  fontSize: 13,
-  letterSpacing: '0.15em',
-  textTransform: 'uppercase',
+  fontFamily: 'var(--apple-font-display)',
+  fontWeight: 600,
+  fontSize: 14,
+  letterSpacing: 'normal',
+  textTransform: 'none',
   cursor: 'pointer',
   textDecoration: 'none',
   display: 'inline-block',
+  borderRadius: 'var(--radius-lg)',
 }
 
 const btnPrimario: React.CSSProperties = {
   ...btnBase,
-  padding: '10px 24px',
+  padding: '10px 20px',
   background: '#0f172a',
   color: '#fff',
   border: 'none',
@@ -59,7 +61,7 @@ const btnPrimario: React.CSSProperties = {
 
 const btnSecundario: React.CSSProperties = {
   ...btnBase,
-  padding: '10px 20px',
+  padding: '10px 18px',
   background: '#f1f5f9',
   color: '#475569',
   border: '1px solid #e2e8f0',
@@ -97,7 +99,7 @@ export function PageHeader({
   return (
     <div
       style={{
-        marginBottom: 32,
+        marginBottom: 'clamp(20px, 5vw, 32px)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-end',

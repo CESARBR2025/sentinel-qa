@@ -1,6 +1,6 @@
 # Esquema de Base de Datos — Sentinel SSPM
 
-> Documentación generada desde `information_schema` el 2026-08-06.
+> Documentación generada desde `information_schema` el 2026-08-07.
 > Fuente de verdad del schema real en PostgreSQL.
 
 ---
@@ -743,10 +743,8 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 3 | `telefono_extorsion` | `text` | SÍ | — |
 | 4 | `grupo_delictivo` | `text` | SÍ | — |
 | 5 | `modus_operandi` | `text` | SÍ | — |
-| 6 | `unidad_resultado` | `text` | SÍ | — |
-| 7 | `folio_reporte` | `text` | SÍ | — |
-| 8 | `fecha` | `date` | SÍ | — |
-| 9 | `creado_en` | `timestamp` | NO | `now()` |
+| 6 | `creado_en` | `timestamp` | NO | `now()` |
+| 7 | `resultado` | `text` | SÍ | — |
 
 **Foreign Keys**
 
@@ -1808,6 +1806,7 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 10 | `created_at` | `timestamp` | NO | `now()` |
 | 11 | `updated_at` | `timestamp` | NO | `now()` |
 | 12 | `dependencia_id` | `integer` | SÍ | — |
+| 13 | `ultima_actividad_despacho_en` | `timestamp` | SÍ | — |
 
 **Foreign Keys**
 

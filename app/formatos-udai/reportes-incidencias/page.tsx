@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { Clock3, CheckCircle2 } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
 import { DashboardFooter } from '@/components/partials/Footer'
-import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
+import { PageHeader } from '@/components/partials/PageHeader'
 import { SegmentPage } from '@/components/partials/SegmentPage'
 import { tienePermiso } from '@/lib/formatos-udai/permisos'
 import { listarReportesIncidencia } from '@/lib/formatos-udai/repository'
@@ -38,17 +38,14 @@ export default async function ReportesIncidenciasPage({
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
-      <DashboardHeader user={user} roleLabel="Formatos UDAI" />
+      <DashboardHeader user={user} roleLabel="Formatos UDAI" backHref="/formatos-udai" backLabel="Formatos UDAI" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Formato Reportes de"
           accent="Incidencias"
           subtitle="Bitácora de incidentes y puestas a disposición — formato oficial UDAI"
-          actions={<>
-            <PageHeaderLink href="/formatos-udai" variant="secondary">← Formatos UDAI</PageHeaderLink>
-            <BotonExportarExcel href="/api/formatos-udai/reportes-incidencias/exportar" nombreArchivo={`formato_incidencia_${new Date().toISOString().split('T')[0]}.xlsx`} />
-          </>}
+          actions={<BotonExportarExcel href="/api/formatos-udai/reportes-incidencias/exportar" nombreArchivo={`formato_incidencia_${new Date().toISOString().split('T')[0]}.xlsx`} />}
         />
 
         <SegmentPage

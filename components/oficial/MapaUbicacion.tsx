@@ -199,25 +199,25 @@ export function MapaUbicacion({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div ref={mapRef} style={{ width: '100%', height: 320, borderRadius: 2, border: '1px solid #e2e8f0' }} />
+      <div ref={mapRef} style={{ width: '100%', height: 320, borderRadius: 'var(--radius-lg)', border: '1px solid #e2e8f0' }} />
       {!loaded && (
-        <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#94a3b8' }}>
+        <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
           Cargando mapa...
         </div>
       )}
       <div style={{ display: 'flex', gap: 8 }}>
         <button type="button" onClick={goToMyLocation} className="of-map-btn">
-          <Target size={14} /> Mi Ubicación Actual
+          <Target size={14} /> Mi ubicación actual
         </button>
       </div>
       {currentLoc && (
         <div style={{
-          background: '#f8fafc', border: '1px solid #e2e8f0', padding: 12, borderRadius: 2,
-          fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#475569',
+          background: '#f8fafc', border: '1px solid #e2e8f0', padding: 12, borderRadius: 'var(--radius-lg)',
+          fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#475569',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
             <MapPin size={14} color="#1f355a" />
-            <span style={{ fontWeight: 600 }}>UBICACIÓN SELECCIONADA</span>
+            <span style={{ fontWeight: 600, textTransform: 'none', letterSpacing: 'normal' }}>Ubicación seleccionada</span>
           </div>
           <div>{currentLoc.referenciaUbicacion}</div>
           {currentLoc.calle && <div>Calle: {currentLoc.calle}</div>}
@@ -235,9 +235,9 @@ export function MapaUbicacion({
         .of-map-btn {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 10px 16px; background: #ffffff; color: #1e293b;
-          border: 1px solid #e2e8f0; border-left: 3px solid #1f355a;
-          font-family: JetBrains Mono,monospace; font-size: 10px;
-          font-weight: 600; cursor: pointer; transition: all 0.2s;
+          border: 1px solid #e2e8f0; border-radius: var(--radius-lg);
+          font-family: var(--apple-font-display); font-size: 13px;
+          font-weight: 500; cursor: pointer; transition: all 0.2s;
         }
         .of-map-btn:hover { background: #f1f5f9; border-color: #1f355a; }
       `}</style>

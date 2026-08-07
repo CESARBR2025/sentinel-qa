@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, Clock, User, LayoutGrid, Send } from 'lucide-react';
+import { Clock, User, LayoutGrid, Send } from 'lucide-react';
 import { RolField } from '@/components/rol_servicios/RolInputs';
 import { ServiceTable } from '@/components/rol_servicios/ServiceTable';
 import { ServiceFooter } from '@/components/rol_servicios/ServiceFooter';
@@ -12,7 +12,7 @@ export default function ModuloRolZen() {
   const [extraordinary, setExtraordinary] = useState<ServiceRow[]>([]);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Carga de fuentes idéntica al diseño Sentinel */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
 
@@ -20,7 +20,7 @@ export default function ModuloRolZen() {
       <SubHeader backHref="/dashboard" backLabel="Dashboard" title="Rol de" accent="Servicios" accentColor="#3e5171" />
 
       {/* CONTENIDO PRINCIPAL */}
-      <main style={{ padding: '40px 48px' }}>
+      <main style={{ flex: 1, padding: '40px 48px' }}>
         
         {/* SECCIÓN DE CONFIGURACIÓN (REDISEÑADA TÉCNICA) */}
         <section style={{ 
@@ -110,6 +110,7 @@ export default function ModuloRolZen() {
 
       {/* FOOTER (IDÉNTICO AL DISEÑO CENTINELA) */}
       <footer style={{ 
+        marginTop: 'auto',
         padding: '32px 48px', 
         fontFamily: 'JetBrains Mono, monospace', 
         fontSize: 10, 

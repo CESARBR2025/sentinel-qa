@@ -67,7 +67,7 @@ export function MapaPinFijo({ lat, lng, label, color }: Props) {
 
   if (status === 'unavailable') {
     return (
-      <div style={{ height: 280, background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#94a3b8' }}>
+      <div style={{ height: 280, background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
         Mapa no disponible
       </div>
     )
@@ -75,13 +75,13 @@ export function MapaPinFijo({ lat, lng, label, color }: Props) {
 
   if (status === 'loading') {
     return (
-      <div style={{ height: 280, background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#94a3b8' }}>
+      <div style={{ height: 280, background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#94a3b8' }}>
         Cargando mapa...
       </div>
     )
   }
 
   return (
-    <div ref={mapRef} style={{ width: '100%', height: 280, borderRadius: 2, border: '1px solid #e2e8f0' }} />
+    <div ref={mapRef} style={{ width: '100%', height: 280, borderRadius: 'var(--radius-lg)', border: '1px solid #e2e8f0' }} />
   )
 }

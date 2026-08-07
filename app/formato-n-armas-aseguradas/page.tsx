@@ -22,21 +22,20 @@ export default async function FormatoNArmasAseguradasPage() {
   return (
     <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
       <style>{fontsImport}</style>
-      <DashboardHeader user={user} roleLabel="Armas Aseguradas" />
+      <DashboardHeader user={user} roleLabel="Armas Aseguradas" backHref="/envio-de-formatos" backLabel="Envío de Formatos" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Armas de Fuego"
           accent="Aseguradas"
           subtitle="Formato N a Coordinación"
-          actions={<>
-            <PageHeaderLink href="/envio-de-formatos" variant="secondary">← Envío de Formatos</PageHeaderLink>
+          actions={
             <PageHeaderLink href="/formato-n-armas-aseguradas/nuevo">
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 <Plus size={14} /> NUEVA ARMA
               </span>
             </PageHeaderLink>
-          </>}
+          }
         />
 
         <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, overflow: 'auto' }}>
