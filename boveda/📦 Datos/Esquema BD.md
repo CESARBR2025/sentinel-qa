@@ -309,20 +309,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 - `cat_tipos_observacion_codigo_uq`: `CREATE UNIQUE INDEX cat_tipos_observacion_codigo_uq ON public.cat_tipos_observacion USING btree (codigo)`
 
-### \`cat_turnos\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `integer` | NO | `nextval('cat_turnos_id_seq'::regclass)` |
-| 2 | `nombre` | `text` | NO | — |
-| 3 | `hora_inicio` | `time without time zone` | NO | — |
-| 4 | `hora_fin` | `time without time zone` | NO | — |
-| 5 | `activo` | `boolean` | NO | `true` |
-
-**Índices**
-
-- `cat_turnos_nombre_uq`: `CREATE UNIQUE INDEX cat_turnos_nombre_uq ON public.cat_turnos USING btree (nombre)`
-
 ### \`contestaciones\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -654,17 +640,14 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
 | 2 | `incidente_id` | `uuid` | NO | — |
 | 3 | `establecimiento` | `text` | SÍ | — |
-| 4 | `direccion` | `text` | SÍ | — |
-| 5 | `inmueble` | `text` | SÍ | — |
-| 6 | `responsable` | `text` | SÍ | — |
-| 7 | `reporte_descripcion` | `text` | SÍ | — |
-| 8 | `hora_canalizacion` | `text` | SÍ | — |
-| 9 | `unidad_arribo` | `text` | SÍ | — |
-| 10 | `hora_arribo` | `text` | SÍ | — |
-| 11 | `nombre_responsable` | `text` | SÍ | — |
-| 12 | `nombre_verificador` | `text` | SÍ | — |
-| 13 | `activaciones` | `integer` | NO | `0` |
-| 14 | `creado_en` | `timestamp` | NO | `now()` |
+| 4 | `inmueble` | `text` | SÍ | — |
+| 5 | `responsable` | `text` | SÍ | — |
+| 6 | `reporte_descripcion` | `text` | SÍ | — |
+| 7 | `nombre_responsable` | `text` | SÍ | — |
+| 8 | `nombre_verificador` | `text` | SÍ | — |
+| 9 | `activaciones` | `integer` | NO | `0` |
+| 10 | `creado_en` | `timestamp` | NO | `now()` |
+| 11 | `es_falso` | `boolean` | SÍ | — |
 
 **Foreign Keys**
 
@@ -1816,24 +1799,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 **Índices**
 
 - `users_email_unique`: `CREATE UNIQUE INDEX users_email_unique ON public.users USING btree (email)`
-
-### \`usuario_modulos\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `integer` | NO | `nextval('usuario_modulos_id_seq'::regclass)` |
-| 2 | `user_id` | `text` | NO | — |
-| 3 | `modulo_id` | `integer` | NO | — |
-| 4 | `puede_ver` | `boolean` | NO | `true` |
-
-**Foreign Keys**
-
-- `usuario_modulos_modulo_id_modulos_id_fk`: `modulo_id` → `modulos(id)`
-- `usuario_modulos_user_id_users_id_fk`: `user_id` → `users(id)`
-
-**Índices**
-
-- `usuario_modulos_user_id_modulo_id_unique`: `CREATE UNIQUE INDEX usuario_modulos_user_id_modulo_id_unique ON public.usuario_modulos USING btree (user_id, modulo_id)`
 
 ### \`verifications\`
 

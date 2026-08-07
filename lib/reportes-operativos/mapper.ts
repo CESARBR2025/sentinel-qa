@@ -1,7 +1,8 @@
 import type {
   VehiculoRow, CateoRow, DetencionOfiRow, DetencionIncRow,
   OrdenAprehensionRow, HidrocarburoRow, ArmaRow, DrogaRow,
-  ExtorsionRow, ExtorsionDetalleRow, ReporteCampoGeneralRow, ReporteCampoIncidenteGeneralRow,
+  ExtorsionRow, ExtorsionDetalleRow, AlarmaEscolarDetalleRow,
+  ReporteCampoGeneralRow, ReporteCampoIncidenteGeneralRow,
 } from './types'
 
 function toStr(val: unknown): string | null {
@@ -114,6 +115,29 @@ export function rowToExtorsionDetalle(row: Record<string, unknown>): ExtorsionDe
     modusOperandi: toStr(row.modus_operandi),
     unidad: toStr(row.unidad),
     resultado: toStr(row.resultado),
+  }
+}
+
+export function rowToAlarmaEscolarDetalle(row: Record<string, unknown>): AlarmaEscolarDetalleRow {
+  return {
+    folio: toStr(row.folio),
+    folioReporte: toStr(row.folio_reporte),
+    fecha: row.fecha ?? null,
+    hora: toStr(row.hora),
+    establecimiento: toStr(row.establecimiento),
+    direccion: toStr(row.direccion),
+    inmueble: toStr(row.inmueble),
+    responsable: toStr(row.responsable),
+    nombreResponsable: toStr(row.nombre_responsable),
+    reporteDescripcion: toStr(row.reporte_descripcion),
+    prioridad: toStr(row.prioridad),
+    activaciones: typeof row.activaciones === 'number' ? row.activaciones : null,
+    esFalso: typeof row.es_falso === 'boolean' ? row.es_falso : null,
+    horaCanalizacion: row.hora_canalizacion ?? null,
+    unidadArribo: toStr(row.unidad_arribo),
+    horaArribo: row.hora_arribo ?? null,
+    oficial: toStr(row.oficial),
+    nombreVerificador: toStr(row.nombre_verificador),
   }
 }
 

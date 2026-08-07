@@ -501,6 +501,24 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         </div>
 
                         <div>
+                            <label>Inmueble</label>
+                            <input type="text" name="inmueble" defaultValue="Edificio principal" />
+                        </div>
+
+                        <div>
+                            <label>Tipo de Señal</label>
+                            <select name="reporteDescripcion" defaultValue="Alarma Instantánea">
+                                <option value="Alarma Instantánea">Alarma Instantánea</option>
+                                <option value="Detector Inalámbrico Desconectado">Detector Inalámbrico Desconectado</option>
+                                <option value="Apagado CA">Apagado CA</option>
+                                <option value="Alarma de Robo">Alarma de Robo</option>
+                                <option value="Detector Manipulado">Detector Manipulado</option>
+                                <option value="Alarma de Pánico">Alarma de Pánico</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div>
                             <label>¿Origen del Reporte?</label>
                             <select
                                 value={esLlamadaAlarma ? "true" : "false"}
@@ -517,6 +535,11 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         </div>
 
                         <div>
+                            <label>Cargo del Responsable</label>
+                            <input type="text" name="responsable" placeholder="Dirección, Delegada, Vocal..." />
+                        </div>
+
+                        <div>
                             <label>Nombre del Responsable</label>
                             <input
                                 type="text"
@@ -530,20 +553,28 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         </div>
 
                         <div>
-                            <label>Inmueble</label>
-                            <input type="text" name="inmueble" defaultValue="Edificio principal" />
+                            <label>Verificador (operador C4)</label>
+                            <input type="text" name="nombreVerificador" placeholder="Nombre de quien verifica" />
                         </div>
 
-                        {/* NUEVO CAMPO NUMÉRICO */}
                         <div>
                             <label>Número de Activaciones</label>
                             <input
                                 type="number"
-                                name="numeroActivaciones"
+                                name="activaciones"
                                 min="1"
                                 defaultValue="1"
                                 placeholder="0"
                             />
+                        </div>
+
+                        <div>
+                            <label>¿Se confirmó como falsa?</label>
+                            <select name="esFalso" defaultValue="">
+                                <option value="">Sin confirmar</option>
+                                <option value="true">Sí, alarma falsa</option>
+                                <option value="false">No, alarma real</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -681,11 +712,6 @@ export default function Formulario911({ user, catalogos, despachadores }: {
                         <div style={{ marginTop: "16px" }}>
                             <label>Observaciones del Operador</label>
                             <textarea name="observaciones" rows={3} defaultValue="Reporte de prueba para verificar flujo de creación" placeholder="Notas internas..." />
-                        </div>
-
-                        <div style={{ marginTop: "16px" }}>
-                            <label>Observaciones</label>
-                            <textarea rows={4} defaultValue="Sin novedades adicionales" placeholder="Notas adicionales del operador..." />
                         </div>
                 </div>
                 </div>

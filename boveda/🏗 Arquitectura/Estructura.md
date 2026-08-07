@@ -66,6 +66,8 @@
 │   │   ├── despacho/
 │   │   │   └── page.tsx
 │   │   ├── reportes/
+│   │   │   ├── alarma-escolar/
+│   │   │   │   └── page.tsx
 │   │   │   ├── extorsion/
 │   │   │   │   └── page.tsx
 │   │   │   ├── numeros/
@@ -270,6 +272,10 @@
 │   │   │   └── generar-ppt/
 │   │   │       └── route.ts
 │   │   ├── reportes/
+│   │   │   ├── alarma-escolar/
+│   │   │   │   └── exportar/
+│   │   │   ├── extorsion/
+│   │   │   │   └── exportar/
 │   │   │   ├── formato-n-armas-aseguradas/
 │   │   │   │   ├── [id]/
 │   │   │   │   └── route.ts
@@ -591,6 +597,7 @@
 │   │   ├── reportes/
 │   │   │   ├── BotonExportarExcel.tsx
 │   │   │   ├── FiltroRangoFechas.tsx
+│   │   │   ├── TablaAlarmaEscolar.tsx
 │   │   │   ├── TablaExtorsion.tsx
 │   │   │   └── TablaNumerosTelefonicos.tsx
 │   │   ├── whatsapp/
@@ -599,6 +606,7 @@
 │   │   ├── Bitacora911.tsx
 │   │   ├── DespachadorActividadTracker.tsx
 │   │   ├── FiltrosIncidentes.tsx
+│   │   ├── MapaFicha911.tsx
 │   │   ├── ModalConfirmacion911.tsx
 │   │   ├── ModuleCard.tsx
 │   │   └── Pagination.tsx
@@ -1032,6 +1040,8 @@
 │   │   │   ├── 0042_notificaciones_escalacion.sql
 │   │   │   ├── 0043_actividad_despachador.sql
 │   │   │   ├── 0044_extorsion_resultado.sql
+│   │   │   ├── 0045_alarma_escolar_ajustes.sql
+│   │   │   ├── 0046_alarma_escolar_direccion.sql
 │   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
@@ -1398,6 +1408,9 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
 
 
 

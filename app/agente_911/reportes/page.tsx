@@ -2,7 +2,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Phone, ChevronRight, PhoneOff } from 'lucide-react'
+import { Phone, ChevronRight, PhoneOff, School } from 'lucide-react'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader } from '@/components/partials/PageHeader'
 import { tieneAccesoSeccion } from '@/lib/911/permisos'
@@ -133,6 +133,33 @@ export default async function Agente911ReportesPage() {
               <div>
                 <div className="card-911-stat-label">Datos</div>
                 <div className="card-911-stat-value">9 campos</div>
+              </div>
+              <div>
+                <div className="card-911-stat-label">Salida</div>
+                <div className="card-911-stat-value">Excel</div>
+              </div>
+            </div>
+            <ChevronRight className="card-911-chevron" size={20} />
+          </Link>
+
+          <Link href="/agente_911/reportes/alarma-escolar" className="card-911">
+            <div className="card-911-icon co-icon">
+              <School size={32} strokeWidth={1.5} />
+            </div>
+            <span className="card-911-chip">Alarma escolar</span>
+            <div className="card-911-body">
+              <h3 className="card-911-title">Reporte de Alarmas Escolares</h3>
+              <p className="card-911-desc">
+                Concentrado de alarmas escolares reportadas al 911
+                (establecimiento, dirección, responsable, canalización, unidades de arribo y verificación),
+                con filtro por rango de fechas y exportación a Excel
+              </p>
+              <div className="card-911-meta">Establecimientos · Export a Excel</div>
+            </div>
+            <div className="card-911-stats">
+              <div>
+                <div className="card-911-stat-label">Datos</div>
+                <div className="card-911-stat-value">12 campos</div>
               </div>
               <div>
                 <div className="card-911-stat-label">Salida</div>

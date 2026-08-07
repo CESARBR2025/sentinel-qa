@@ -87,6 +87,12 @@ const req = (fd: FormData, k: string) => {
 }
 const num = (fd: FormData, k: string) => { const v = fd.get(k); return v ? Number(v) : null }
 const bool = (fd: FormData, k: string) => fd.get(k) === 'true' || fd.get(k) === 'on'
+const boolOrNull = (fd: FormData, k: string) => {
+  const v = fd.get(k)
+  if (v === 'true') return true
+  if (v === 'false') return false
+  return null
+}
 
 // Valores permitidos — validación en servidor, no confiar en cliente
 const CANALES = ['911', 'whatsapp', 'radio'] as const
@@ -968,15 +974,14 @@ export async function createAlarmaEscolar(formData: FormData) {
     if (activaciones < 0) throw new ValidationError('activaciones no puede ser negativo')
 
     await query(
-      `INSERT INTO incidente_alarma_escolar (incidente_id, establecimiento, direccion, inmueble, responsable, reporte_descripcion, hora_canalizacion, unidad_arribo, hora_arribo, nombre_responsable, nombre_verificador, activaciones) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+      `INSERT INTO incidente_alarma_escolar (incidente_id, establecimiento, inmueble, responsable, reporte_descripcion, nombre_responsable, nombre_verificador, activaciones, es_falso) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
       [
         incidenteId,
-        str(formData, 'establecimiento'), str(formData, 'direccion'),
+        str(formData, 'establecimiento'),
         str(formData, 'inmueble'), str(formData, 'responsable'),
-        str(formData, 'reporteDescripcion'), str(formData, 'horaCanalizacion'),
-        str(formData, 'unidadArribo'), str(formData, 'horaArribo'),
+        str(formData, 'reporteDescripcion'),
         str(formData, 'nombreResponsable'), str(formData, 'nombreVerificador'),
-        activaciones,
+        activaciones, boolOrNull(formData, 'esFalso'),
       ],
     )
 

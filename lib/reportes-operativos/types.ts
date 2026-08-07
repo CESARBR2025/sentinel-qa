@@ -83,6 +83,30 @@ export interface ExtorsionDetalleRow {
   resultado: string | null
 }
 
+// Reporte de Alarmas Escolares 911: establecimiento y detalle de atención.
+// unidadArribo/horaArribo/horaCanalizacion/oficial vienen del join con el flujo real de
+// Despacho + Reporte de Campo (incidente_despacho*), no se capturan a mano.
+export interface AlarmaEscolarDetalleRow {
+  folio: string | null
+  folioReporte: string | null
+  fecha: unknown
+  hora: string | null
+  establecimiento: string | null
+  direccion: string | null
+  inmueble: string | null
+  responsable: string | null
+  nombreResponsable: string | null
+  reporteDescripcion: string | null
+  prioridad: string | null
+  activaciones: number | null
+  esFalso: boolean | null
+  horaCanalizacion: unknown
+  unidadArribo: string | null
+  horaArribo: unknown
+  oficial: string | null
+  nombreVerificador: string | null
+}
+
 export interface ReporteCampoGeneralRow {
   fecha: unknown
   folio: string | null

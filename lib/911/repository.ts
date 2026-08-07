@@ -127,7 +127,8 @@ export async function obtenerIncidente(id: string): Promise<IncidenteDetalle | n
 export async function obtenerIncidenteConExtras(id: string): Promise<Record<string, unknown> | null> {
   const result = await query<Record<string, unknown>>(
     `SELECT row_to_json(i.*) AS inc, cti.nombre AS tipo_nombre, cp.nombre AS prioridad_nombre,
-            cte.nombre AS emergencia_nombre, row_to_json(ie.*) AS ext, row_to_json(iae.*) AS ala,
+            cte.nombre AS emergencia_nombre, TRIM(CONCAT_WS(' ', u.name, u.apellido)) AS capturado_por_nombre,
+            row_to_json(ie.*) AS ext, row_to_json(iae.*) AS ala,
             json_build_object(
               'id', orc.id,
               'incidente_id', orc.incidente_id,
@@ -150,6 +151,7 @@ export async function obtenerIncidenteConExtras(id: string): Promise<Record<stri
      LEFT JOIN incidente_extorsion ie ON i.id = ie.incidente_id
      LEFT JOIN incidente_alarma_escolar iae ON i.id = iae.incidente_id
      LEFT JOIN ofi_reportes_campo orc ON i.id = orc.incidente_id
+     LEFT JOIN users u ON i.capturado_por = u.id
      WHERE i.id = $1
      LIMIT 1`,
     [id],

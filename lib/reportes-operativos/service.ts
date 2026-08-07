@@ -8,6 +8,7 @@ import {
     obtenerOrdenesAprehension, obtenerHidrocarburos,
     obtenerArmas, obtenerDrogas,
     obtenerExtorsionesDetalle, obtenerNumerosTelefonicos911,
+    obtenerAlarmasEscolaresDetalle,
 } from './repository'
 
 function parseJsonb(val: unknown): Record<string, unknown>[] {
@@ -244,5 +245,36 @@ export async function obtenerDatosNumeros911(desde?: string, hasta?: string) {
             ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
             : toStr(r.fecha),
         incidencia: toStr(r.incidencia) || '—',
+    }))
+}
+
+export async function obtenerDatosAlarmasEscolares(desde?: string, hasta?: string) {
+    const d = desde ?? '2000-01-01'
+    const h = hasta ?? new Date().toISOString().split('T')[0]
+    const rows = await obtenerAlarmasEscolaresDetalle(d, h)
+    const horaMx = (v: unknown) => v instanceof Date
+        ? v.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+        : toStr(v)
+    return rows.map(r => ({
+        folio: toStr(r.folio),
+        folioReporte: toStr(r.folioReporte) || '—',
+        fecha: r.fecha instanceof Date
+            ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
+            : toStr(r.fecha),
+        hora: toStr(r.hora) || '—',
+        establecimiento: toStr(r.establecimiento) || '—',
+        direccion: toStr(r.direccion) || '—',
+        inmueble: toStr(r.inmueble) || '—',
+        responsable: toStr(r.responsable) || '—',
+        nombreResponsable: toStr(r.nombreResponsable) || '—',
+        reporteDescripcion: toStr(r.reporteDescripcion) || '—',
+        prioridad: toStr(r.prioridad) || '—',
+        activaciones: r.activaciones ?? 0,
+        esFalso: r.esFalso === true ? 'Sí' : r.esFalso === false ? 'No' : 'Sin confirmar',
+        horaCanalizacion: horaMx(r.horaCanalizacion) || '—',
+        unidadArribo: toStr(r.unidadArribo) || '—',
+        horaArribo: horaMx(r.horaArribo) || '—',
+        oficial: toStr(r.oficial) || '—',
+        nombreVerificador: toStr(r.nombreVerificador) || '—',
     }))
 }
