@@ -592,5 +592,10 @@
       "result": "Graphify First-Hop Summary\nGraph: 4691 nodes, 14874 edges, 173 communities, density 0.0014, average degree 6.3415, undirected\n\nTop hubs:\n  1. auth (degree 169, community 1 Community 1, lib/auth.ts)\n  2. query() (degree 73, community 65 Community 65, lib/db.ts)\n  3. DashboardHeader() (degree 71, community 1 Community 1, components/partials/Header.tsx)\n  4. PageHeader() (degree 57, community 1 Community 1, components/partials/PageHeader.tsx)\n  5. PageHeaderLink() (degree 45, community 1 Community 1, components/partials/PageHeader.tsx)\n\nKey communities:\n  1. Community 0 - Community 0: 211 nodes, 571 internal edges, density 0.0258; top nodes: route.ts, 06c55f5 Merge branch 'feature/testing' into feature/reportes, 8355ac0 Merge branch 'feature/testing' into feature/implementacion-consumir-datos-denuncia\n  2. Community 1 - Community 1: 185 nodes, 624 internal edges, density 0.0367; top nodes: auth.ts, auth, 0068216 Mejora de Dashboard, Login y transiciones de pantallas\n  3. Community 2 - Community 2: 138 nodes, 250 internal edges, density 0.0264; top nodes: page.tsx, core.ts, 046f18c Merge pull request #19 from presidenciaSJR/conexion\n  4. Community 3 - Community 3: 113 nodes, 206 internal edges, density 0.0326; top nodes: actions.ts, service.ts, types.ts\n  ... (truncated)",
       "ts": 1786122065974
     }
-  }
+  },
+  "ymSearchCount": 1,
+  "ymDocNudge": {
+    "911": 1786371496165
+  },
+  "ymEditCount": 3
 }

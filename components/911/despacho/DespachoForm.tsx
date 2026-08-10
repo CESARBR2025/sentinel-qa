@@ -38,7 +38,11 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
     if (incidenteLat != null) params.set('lat', String(incidenteLat))
     if (incidenteLng != null) params.set('lng', String(incidenteLng))
     if (prioritarioPatrullaId) params.set('prioritarioPatrullaId', prioritarioPatrullaId)
-    params.set('incidenteId', incidenteId)
+    // En refuerzo NO se manda incidenteId: el backend usa ese id para excluir al incidente
+    // actual del cálculo de "ocupadas" (necesario en despacho inicial, donde aún no existe
+    // ningún despacho confirmado). En refuerzo el incidente ya tiene unidades comprometidas
+    // y deben contar como ocupadas igual que en cualquier otro incidente.
+    if (!esRefuerzo) params.set('incidenteId', incidenteId)
     fetch(`/api/despacho/unidades-cercanas?${params.toString()}`)
       .then(res => res.json())
       .then((data: UnidadParaDespacho[]) => {
@@ -51,7 +55,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
       })
       .catch(() => setUnidadesDisponibles([]))
       .finally(() => setCargandoUnidades(false))
-  }, [incidenteLat, incidenteLng, prioritarioPatrullaId, incidenteId])
+  }, [incidenteLat, incidenteLng, prioritarioPatrullaId, incidenteId, esRefuerzo])
 
   const quitarUnidad = (u: UnidadParaDespacho) => {
     setUnidadesSeleccionadas(prev => prev.filter(x => x.id !== u.id))
@@ -192,7 +196,7 @@ export function DespachoForm({ incidenteId, incidenteLat = null, incidenteLng = 
           incidenteLat={incidenteLat}
           incidenteLng={incidenteLng}
           prioritarioPatrullaId={prioritarioPatrullaId}
-          incidenteId={incidenteId}
+          incidenteId={esRefuerzo ? null : incidenteId}
           incidentePrioridad={incidentePrioridad}
           onConfirmar={sel => { setUnidadesSeleccionadas(sel); setModalAbierto(false) }}
           onClose={() => setModalAbierto(false)}
