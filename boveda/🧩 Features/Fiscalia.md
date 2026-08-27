@@ -25,14 +25,16 @@ flowchart TD
 
 | Archivo | Rol |
 |---------|-----|
-| `lib/fiscalia/types.ts` | Interfaces `AseguradoRow`, `DetalleAsegurado`, `SolicitudEvidencia`, `PuestaDisposicionRow`, `ViaInfraccionDetalle`, ACTAS_CHECKLIST |
-| `lib/fiscalia/mapper.ts` | `rowToAsegurado`, `rowToDetalleDetenidoGuardado`, `rowToPuestaDisposicion` |
-| `lib/fiscalia/repository.ts` | `obtenerSolicitudesPendientes`, `obtenerSolicitudesFinalizadas`, `obtenerDetalleAsegurado`, `actualizarDetallesAsegurado`, `guardarDetenidosDirecciones`, `generarFolioAsegurados`, `guardarPuestaDisposicion`, `obtenerPuestaDisposicionPorReporte`, `listarLiberaciones`, `obtenerDetalleInfraccionVia` |
+| `lib/fiscalia/types.ts` | Interfaces `AseguradoRow`, `DetalleAsegurado`, `SolicitudEvidencia`, `PuestaDisposicionRow`, `ViaInfraccionDetalle`, `AntecedenteExterno`, `ArmaAsegurada`, `ArmaAseguradaInput`, `ListaArmasAseguradas`, ACTAS_CHECKLIST |
+| `lib/fiscalia/mapper.ts` | `rowToAsegurado`, `rowToDetalleDetenidoGuardado`, `rowToPuestaDisposicion`, `rowToAntecedenteExterno`, `rowToArmaAsegurada` |
+| `lib/fiscalia/repository.ts` | `obtenerSolicitudesPendientes`, `obtenerSolicitudesFinalizadas`, `obtenerDetalleAsegurado`, `actualizarDetallesAsegurado`, `guardarDetenidosDirecciones`, `generarFolioAsegurados`, `guardarPuestaDisposicion`, `obtenerPuestaDisposicionPorReporte`, `listarLiberaciones`, `obtenerDetalleInfraccionVia`, `listarAntecedentesExternos`, `insertarAntecedenteExterno`, `eliminarAntecedenteExterno`, `listarArmasAseguradasFiscalia`, `insertarArmaAsegurada`, `eliminarArmaAsegurada` |
 | `lib/fiscalia/service.ts` | Orquestación de procesos de fiscalía |
-| `lib/fiscalia/actions.ts` | Server actions para captura, solicitud, puesta a disposición |
+| `lib/fiscalia/actions.ts` | Server actions para captura, solicitud, puesta a disposición, antecedentes externos y armas aseguradas |
 | `lib/fiscalia/expediente.ts` | Integración con expediente digital |
 | `lib/fiscalia/abrirDocumento.ts` | Apertura de documentos desde el sistema |
 | `lib/fiscalia/useToastStore.ts` | Store para notificaciones toast |
+| `components/fiscalia/AntecedentesExternos.tsx` | Lista + alta/baja de antecedentes externos del detenido (en `FormularioAsegurado`) |
+| `components/fiscalia/ArmasAseguradas.tsx` | Lista + alta/baja de armas de fuego aseguradas (en `FormularioAsegurado`) |
 
 ## BD
 
@@ -45,6 +47,8 @@ flowchart TD
 | `moni_evidencias_denuncia` | `id`, `ofi_reporte_denuncia_id`, `url_archivo`, `nombre_archivo` | Evidencias enviadas por monitorista |
 | `via.v2_infracciones` | `id`, `folio`, `placa`, `tipo_garantia`, `estatus_dependencia`, `dependencia_receptora` | Infracciones VÍA con garantía vehículo |
 | `ofi_oficiales` | `id`, `user_id`, `no_nomina`, `patrulla_id` | Datos del oficial |
+| `antecedentes_externos_detenido` | `id`, `reporte_campo_id` (FK `ofi_reportes_campo`), `tipo` (DELITO/FALTA_ADMINISTRATIVA), `descripcion`, `fecha`, `lugar`, `capturado_por` (FK `users`), `created_at` | Antecedentes/delitos previos del detenido en otras jurisdicciones |
+| `fiscalia_armas_aseguradas` | `id`, `reporte_campo_id` (FK `ofi_reportes_campo`), `tipo_arma`, `marca`, `matricula`, `calibre`, `observaciones`, `capturado_por` (FK `users`), `creado_en` | Armas de fuego aseguradas capturadas estructuradamente (varias por reporte) — fuente del paso 7 de Formato N |
 
 ## Reglas de negocio
 
@@ -55,6 +59,7 @@ flowchart TD
 5. Las actas de puesta a disposición siguen un checklist de 8 elementos
 6. `guardarDetenidosDirecciones` usa transacción: DELETE + INSERT + UPDATE folio
 7. `guardarPuestaDisposicion` usa UPSERT (`ON CONFLICT reporte_campo_id`)
+8. `ArmasAseguradas` (componente en `FormularioAsegurado`) captura tipo/marca/matrícula/calibre de armas de fuego aseguradas por `reporte_campo_id`, con alta/baja simples. `listarArmasAseguradasFiscalia` trae en la misma llamada `num_carpeta_investigacion` del D1 como sugerencia visual (el campo "Carpeta de Investigación" no se persiste en esta tabla — es de referencia). Estas filas alimentan el paso 7 de Formato N vía `sincronizarArmasDelDia` (ver `Formato N.md`, regla 12).
 
 ## REGLA de diseño
 

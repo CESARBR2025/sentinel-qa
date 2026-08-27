@@ -19,11 +19,10 @@
 | `lib/auxiliar/actions.ts` | upsertChecklistAction |
 | `lib/catalogos/actions.ts` | crearOficial, actualizarOficial, destituirOficial, reactivarOficial, buscarUsuariosReincorporar, crearPatrullaAction, actualizarPatrullaAction, eliminarPatrullaAction |
 | `lib/corralon/actions.ts` | obtenerDashboardCorralon, obtenerSolicitudes |
-| `lib/fiscalia/actions.ts` | obtenerDashboardFiscalia, obtenerSolicitudes, accionTomarCaso, accionPedirEvidencias, obtenerDatosAseguradoAction, guardarDetallesAseguradoAction, obtenerLiberacionesAction, obtenerAseguradosAction, obtenerDetalleAseguradoCompletoAction, guardarDetallesAseguradosAction, obtenerPuestaDisposicionAction, guardarPuestaDisposicionAction, obtenerDetalleInfraccionViaAction, guardarOficioAction, obtenerDashboardJuzgado, obtenerAseguradosJuzgadoAction, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarPuestaDisposicionJuzgadoAction, listarAntecedentesExternosAction, agregarAntecedenteExternoAction, eliminarAntecedenteExternoAction |
+| `lib/fiscalia/actions.ts` | obtenerDashboardFiscalia, obtenerSolicitudes, accionTomarCaso, accionPedirEvidencias, obtenerDatosAseguradoAction, guardarDetallesAseguradoAction, obtenerLiberacionesAction, obtenerAseguradosAction, obtenerDetalleAseguradoCompletoAction, guardarDetallesAseguradosAction, obtenerPuestaDisposicionAction, guardarPuestaDisposicionAction, obtenerDetalleInfraccionViaAction, guardarOficioAction, obtenerDashboardJuzgado, obtenerAseguradosJuzgadoAction, obtenerDetalleAseguradoCompletoJuzgadoAction, obtenerPuestaDisposicionJuzgadoAction, guardarPuestaDisposicionJuzgadoAction, listarAntecedentesExternosAction, agregarAntecedenteExternoAction, eliminarAntecedenteExternoAction, listarArmasAseguradasAction, agregarArmaAseguradaAction, eliminarArmaAseguradaAction |
 | `lib/formatos-udai/actions.ts` | guardarComplementoIncidencia |
 | `lib/incidentes/actions.ts` | createIncidente, createIncidenteCliente, verificarTelefonoFrecuente, addPersonaAfectada, deletePersonaAfectada, createRondinEscalado, createDespacho, enviarRefuerzos, cerrarPorDetencion, createExtorsion, createAlarmaEscolar |
 | `lib/monitorista/actions.ts` | solicitarEvidencia, subirEvidencia, completarSolicitud, cancelarSolicitud |
-| `lib/n-coordinacion/actions.ts` | guardarDatosCoordinacion |
 | `lib/notificaciones/actions.ts` | sesionConRol, marcarLeida, marcarTodasLeidas |
 | `lib/notificaciones/admin-actions.ts` | guardarMatrizAction, enviarAvisoAction, guardarRetencionAction, purgarAction |
 | `lib/oficial/actions.ts` | crearReporteCampoOficial, marcarEnCaminoOficial, marcarEnSitioOficial, asignarPatrulla, reportarUbicacionOficial, actualizarTelefono |
@@ -33,6 +32,15 @@
 | `lib/rol-servicios/actions.ts` | createRol, updateEncabezadoRol, createAsignacion, deleteAsignacion, upsertEstadoFuerza, createObservacion, deleteObservacion, guardarFirmas |
 | `lib/rol-servicios/catalogos-actions.ts` | createSector, createRadio, createBodyCam, createConcepto, createTipoObservacion, createTipoEmergencia, createMedioCanalizacion |
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
+
+
 
 
 

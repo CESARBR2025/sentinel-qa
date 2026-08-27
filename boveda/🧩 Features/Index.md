@@ -37,13 +37,6 @@
 | expediente | (Pendiente) | ✨ Detectado |
 | fiscalia | (Pendiente) | ✨ Detectado |
 | flota | (Pendiente) | ✨ Detectado |
-| formato-n-armas-aseguradas | (Pendiente) | ✨ Detectado |
-| formato-n-atencion-victimas | (Pendiente) | ✨ Detectado |
-| formato-n-eventos | (Pendiente) | ✨ Detectado |
-| formato-n-fge | (Pendiente) | ✨ Detectado |
-| formato-n-fgr | (Pendiente) | ✨ Detectado |
-| formato-n-medios-alternativos | (Pendiente) | ✨ Detectado |
-| formato-n-rnd | (Pendiente) | ✨ Detectado |
 | formatos-udai | (Pendiente) | ✨ Detectado |
 | health | (Pendiente) | ✨ Detectado |
 | incidentes | (Pendiente) | ✨ Detectado |
@@ -53,7 +46,6 @@
 | modulo_incidentes | (Pendiente) | ✨ Detectado |
 | monitorista | (Pendiente) | ✨ Detectado |
 | n-coordinacion | (Pendiente) | ✨ Detectado |
-| nCoordinacion | (Pendiente) | ✨ Detectado |
 | notificaciones | (Pendiente) | ✨ Detectado |
 | offline | (Pendiente) | ✨ Detectado |
 | oficial | (Pendiente) | ✨ Detectado |
@@ -81,6 +73,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
 ## Features con documentación de módulo
 
 | Feature | Descripción |
@@ -89,6 +90,7 @@
 | [KPI Incidencias](KPI%20Incidencias.md) | Mapa y tabla de incidencias por rango con KPIs de estatus/prioridad (`/agente_despacho/kpi-incidencias`). |
 | [Reporte de Llamadas de Extorsión 911](Reporte%20de%20Llamadas%20de%20Extorsión%20911.md) | Formato C4 de extorsión con resolución de unidad real (default `'C4'`). |
 | [Reporte de Alarmas Escolares 911](Reporte%20de%20Alarmas%20Escolares%20911.md) | Formato C4 de alarmas escolares con datos de canalización/cierre. |
+| [Parte de Novedades C4](Parte%20de%20Novedades%20C4.md) | El reporte diario más grande del sistema: 34 tablas, ventana 06:00→06:00, stepper de 11 pasos, autollenado + captura manual + generador `.docx`. |
 
 
 

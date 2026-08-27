@@ -4,7 +4,9 @@ import { User, Smartphone, ClipboardList } from 'lucide-react';
 import { styles } from './styles';
 import { DescargaPagination } from './DescargaPagination';
 
-export const DescargaTable = ({ data }: { data: any[] }) => {
+type TableRow = Record<string, string | number | boolean | null | undefined>
+
+export const DescargaTable = ({ data }: { data: TableRow[] }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
     const totalRecords = data.length;
@@ -19,11 +21,11 @@ export const DescargaTable = ({ data }: { data: any[] }) => {
                 <table style={{ ...styles.table, minWidth: '100%' }}>
                     <thead>
                         <tr>
-                            <th style={styles.th}>Folio Temporal</th>
-                            <th style={styles.th}>Fecha de Registro</th>
-                            <th style={styles.th}>Nombre del Afectado</th>
-                            <th style={styles.th}>Teléfono de Contacto</th>
-                            <th style={styles.th}>Documentación Validada</th>
+                            <th style={styles.th}>Folio temporal</th>
+                            <th style={styles.th}>Fecha de registro</th>
+                            <th style={styles.th}>Nombre del afectado</th>
+                            <th style={styles.th}>Teléfono de contacto</th>
+                            <th style={styles.th}>Documentación validada</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +38,7 @@ export const DescargaTable = ({ data }: { data: any[] }) => {
                                 <td style={styles.td}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <User size={14} color="#64748B" />
-                                        <span style={{ fontWeight: 600, textTransform: 'uppercase' }}>{item.nombreAfectado}</span>
+                                        <span style={{ fontWeight: 600 }}>{item.nombreAfectado}</span>
                                     </div>
                                 </td>
                                 <td style={styles.td}>

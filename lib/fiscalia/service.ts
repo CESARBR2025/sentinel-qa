@@ -18,11 +18,14 @@ import {
   listarAntecedentesExternos,
   insertarAntecedenteExterno,
   eliminarAntecedenteExterno,
+  listarArmasAseguradasFiscalia,
+  insertarArmaAsegurada,
+  eliminarArmaAsegurada,
 } from './repository'
 import { rowToSolicitud } from './mapper'
 import { tienePermiso as tienePermisoFiscalia } from './permisos'
 import { tienePermiso as tienePermisoJuzgado } from '@/lib/agente_juzgado/permisos'
-import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow, AntecedenteExterno, AntecedenteExternoInput } from './types'
+import type { SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow, AntecedenteExterno, AntecedenteExternoInput, ArmaAseguradaInput, ListaArmasAseguradas } from './types'
 
 export async function verificarRolFiscalia(userId: string): Promise<boolean> {
   return tienePermisoFiscalia(userId, 'fiscalia', 'ver')
@@ -168,4 +171,20 @@ export async function agregarAntecedenteExternoService(
 
 export async function eliminarAntecedenteExternoService(id: string): Promise<void> {
   await eliminarAntecedenteExterno(id)
+}
+
+export async function listarArmasAseguradasService(reporteCampoId: string): Promise<ListaArmasAseguradas> {
+  return listarArmasAseguradasFiscalia(reporteCampoId)
+}
+
+export async function agregarArmaAseguradaService(
+  reporteCampoId: string,
+  input: ArmaAseguradaInput,
+  capturadoPor: string,
+): Promise<void> {
+  await insertarArmaAsegurada(reporteCampoId, input, capturadoPor)
+}
+
+export async function eliminarArmaAseguradaService(id: string): Promise<void> {
+  await eliminarArmaAsegurada(id)
 }

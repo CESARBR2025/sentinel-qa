@@ -151,3 +151,50 @@
 5. `app/admin/roles/agregar/page.tsx` recibió **solo** el fix mínimo de posicionamiento del footer (`display:flex/flexDirection:column` en el `<main>` root + `flex:1` en el div interno). Su deuda de lenguaje visual anterior (Google Fonts muertas, sin `DashboardHeader`, `maxWidth` fijo que viola `DESIGN.md §5`) queda anotada como pendiente, fuera de alcance.
 
 **Consecuencias**: Las 34 páginas que usan `DashboardFooter` quedan visualmente alineadas con `/agente_despacho` y con footer pegado al fondo con contenido corto (flujo normal con contenido largo). `DESIGN.md §4` ahora documenta `DashboardFooter` como componente REGLA y `§10` movió estas páginas a Apple-style donde aplica. Deuda detectada y no resuelta (anotada para planes futuros): `maxWidth: '1400px'` inline en `analisis/iph` y `analisis/pendiente-analisis` (contradice `DESIGN.md §5`), el `maxWidth: '1200px'` y el lenguaje táctico completo de `admin/roles/agregar`, y consolidar `.desp-footer` de `agente_despacho` con el componente compartido.
+
+## ADR-015: `cat_sectores` es el catálogo canónico de sectores (Etapa 0 Parte de Novedades C-4, 2026-08-10)
+
+**Contexto**: Existían dos catálogos de sector compitiendo: `via.sectores` (id_sector uuid, poblado con ORIENTE/PONIENTE/CENTRO, **sin FKs**) y `public.cat_sectores` (integer, **vacío**, pero con la única FK real del sistema: `roles_servicio.sector_id`). Además `ofi_oficiales` **no tenía columna de sector** (el plan la asumía; verificado contra BD real, sus únicas rutas a "sector" eran `departamento_id` → `v2_departamentos` con Infracciones/Liberaciones/Tránsito, y `patrulla_id` → `v2_patrullas.departamento` que vale `'SSPM'` en el 100%).
+
+**Decisión**: `public.cat_sectores` es el canónico (schema principal + FK real). Se sembró con ORIENTE/PONIENTE/CENTRO y se agregó `ofi_oficiales.sector_id` con FK. `via.sectores` queda como catálogo del subsistema VIA, mapeado por `clave = nombre_sector`. El sector de un hecho se resuelve por el oficial que lo atendió, con fallback por colonia **no implementado** (no existe catálogo colonia→sector en el esquema; solo texto libre en `ofi_reporte_denuncia.sector` y `iph_detenidos.sector_hecho/sector_arresto`); lo no resuelto cae en "sin asignar" y se distribuye a mano en el stepper.
+
+**Consecuencias**: `sector.ts` en `lib/novedades/` centraliza la resolución. Los oficiales existentes quedan en NULL hasta que Administración los asigne. CENTRO es la tercera columna de las tablas T0/T2/T7 del documento.
+
+## ADR-016: `turno` se queda como enum TS, no como catálogo con FK (Etapa 0 Parte de Novedades C-4, 2026-08-10)
+
+**Contexto**: La regla general del proyecto es "catálogos con FK, nunca texto libre". `turno` es un enum cerrado de tres valores (MATUTINO/VESPERTINO/NOCTURNO) que el usuario selecciona de un `<select>` y que ningún reporte consume como dimensión (cada fila de `incidentes_camara` ya trae su propio `turno`). Convertirlo en tabla agregaría un JOIN a cada query de cámaras sin eliminar ninguna inconsistencia posible.
+
+**Decisión**: `turno` se queda como tipo union (`Turno` en `lib/monitorista/types.ts`) + `<select>`. Los horarios (07:00-15:00 / 15:00-22:00 / 22:00-07:00) se centralizan en `lib/monitorista/turnos.ts`, antes escritos a mano en cinco archivos. `fecha` de `incidentes_camara` pasa a significar inequívocamente **la fecha de inicio del turno** (no la de término) — el formulario la calcula según el turno y muestra la jornada en texto. Gestión de turnos por usuario, si algún día se quiere, es extensión de Rol de Servicios, no de `users`.
+
+**Consecuencias**: Sin tabla nueva, sin migración de columna, sin FK. El fix de semántica de fecha destapa un bug preexistente de captura del turno NOCTURNO (una misma jornada quedaba con fecha distinta según la hora de guardado).
+
+## ADR-017: Ventana única 06:00 → 06:00 pese al literal "DE 05:00 A 05:00 HORAS" del documento original (Etapa 0 Parte de Novedades C-4, 2026-08-10)
+
+**Contexto**: La tabla T5 de Plataforma México del `FORMATO NOVEDADES.docx` original imprime "DE 05:00 A 05:00 HORAS". El usuario decidió que **todo** el parte se rige por una sola ventana: 06:00 de D-1 a 06:00 de D.
+
+**Decisión**: Ventana única 06→06 para las 34 tablas. Ninguna query usa `::date` sobre timestamps (recortar por día natural es incorrecto por construcción cuando la ventana no coincide con el día); todas filtran `columna >= $inicio AND columna < $fin`. El literal de T5 se corrige a 06:00 en el generador. La excepción es `incidentes_camara`, que es agregado por turno con `fecha` = D-1 (ver ADR-016).
+
+**Consecuencias**: Helper único `ventanaNovedades(fecha)` en `lib/novedades/ventana.ts`. Evita reproducir el bug de timezone ya corregido en Formato N (`buscarIncidentesPorRango`/`buscarDetencionesPorRango`).
+
+## ADR-018: Se agrega la columna CENTRO al formato oficial (Etapa 0 Parte de Novedades C-4, 2026-08-10)
+
+**Contexto**: El `.docx` original solo trae ORIENTE y PONIENTE en las tablas de sector. `cat_sectores` ya contempla CENTRO como tercer sector.
+
+**Decisión**: Las tablas T0, T2 y T7 pasan de `ORIENTE | PONIENTE | TOTALES` a `ORIENTE | PONIENTE | CENTRO | TOTALES`. Es la **única desviación estructural** respecto del original; conviene socializarla con el Secretario antes del primer envío. Las columnas se generan iterando `cat_sectores` activos (si se da de alta un cuarto sector, la tabla crece sola).
+
+**Consecuencias**: Al generar el `.docx` hay que recalcular los anchos DXA de esas tres tablas sobre el total fijo de 9360 — no basta con añadir un valor al arreglo.
+
+## ADR-019: Auditoría de deuda técnica en BD — criterio y bajas ejecutadas (Etapa 10 Parte de Novedades C-4, 2026-08-10)
+
+**Contexto**: Se auditaron las tablas de BD buscando tablas muertas (0 filas, 0 referencias en código, 0 FKs entrantes). Criterio: una tabla es candidata a eliminar **solo** si cumple las tres condiciones; cualquier excepción la saca de la lista. `lib/admin/sistema-constants.ts` se excluyó del grep de referencias porque solo lista nombres de tabla (falsos positivos).
+
+**Decisión**: Se eliminaron 3 tablas, todas con evidencia completa:
+1. `novedades_captura` — intento previo abandonado del Parte de Novedades; la reemplazan `novedades_estatus_dia`/`novedades_seccion`/`novedades_filas` (Etapa 2, migración 0051).
+2. `ofi_fichas_inteligencia` — apuntaba a `iph_detenidos` y `ofi_reportes_campo`; nadie la lee ni la escribe (migración 0052).
+3. `solicitudes_detenido` — apuntaba a `users`; sin uso (migración 0052).
+
+Cada `DROP` se precedió de reconfirmar `count(*) = 0` y `grep` en 0 **inmediatamente antes**, más respaldo previo en `/tmp`. Las tres salieron también de `lib/admin/sistema-constants.ts`.
+
+**Fuera de alcance — requieren decisión del usuario**: `solicitud_fotos` (3 filas huérfanas de prueba del flujo descartado de fotos), y la feature "fichas de inteligencia" a medias (`fichas_inteligencia_detenidos` con 1 INSERT sin lectura, `iph_detenidos.ficha_inteligencia_id`/`ficha_inteligencia_completa` sin FK). No se tocaron. Catálogos vacíos pero cableados (`cat_body_cams`, `cat_radios`, `cat_tipos_observacion`, `cat_sectores`, `cat_estado_fuerza_conceptos`) no son deuda — faltan sembrarse (los dos últimos los siembra la Etapa 0 de este plan).
+
+**Consecuencias**: La próxima auditoría no repite el trabajo; `novedades_captura`, `ofi_fichas_inteligencia` y `solicitudes_detenido` ya no existen en el esquema.

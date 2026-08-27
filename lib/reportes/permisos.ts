@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import * as core from '@/lib/permisos/core'
 
-export const SECCIONES = ['formato_n_coordinacion', 'reportes_ciudadano'] as const
+export const SECCIONES = ['formato_n_coordinacion', 'reportes_ciudadano', 'parte_novedades_c4'] as const
 export type Seccion = typeof SECCIONES[number]
 export type Accion = core.Accion
 export type PermisoSeccion = core.PermisoSeccion
@@ -28,6 +28,19 @@ export async function tieneAccesoFormatoN(usuarioId: string): Promise<boolean> {
 
 export async function verificarAccesoFormatoNApi(usuarioId: string, accion: Accion): Promise<NextResponse | null> {
   if (!(await core.tienePermiso(usuarioId, 'formato_n_coordinacion', accion))) {
+    return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
+  }
+  return null
+}
+
+// ─── Parte de Novedades C-4 ───
+
+export async function tieneAccesoNovedades(usuarioId: string): Promise<boolean> {
+  return core.tienePermiso(usuarioId, 'parte_novedades_c4', 'ver')
+}
+
+export async function verificarAccesoNovedadesApi(usuarioId: string, accion: Accion): Promise<NextResponse | null> {
+  if (!(await core.tienePermiso(usuarioId, 'parte_novedades_c4', accion))) {
     return NextResponse.json({ error: 'Sin permiso' }, { status: 403 })
   }
   return null

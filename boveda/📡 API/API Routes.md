@@ -56,6 +56,11 @@
 | `monitorista/solicitudes/[id]` | GET | (Pendiente) |
 | `monitorista/solicitudes/[id]/completar` | POST | (Pendiente) |
 | `nCoordinacion/generar` | GET | (Pendiente) |
+| `novedades/dia` | GET | Parte de Novedades C-4: día completo (calculado + capturado + estatus) |
+| `novedades/confirmar` | POST | Snapshot + confirmación de una sección (`{fecha, seccion, datos}`) |
+| `novedades/guardar` | POST | Guarda el draft de una sección sin confirmarla |
+| `novedades/estatus` | GET | Estatus por rango de fechas (`?desde=&hasta=`) para el consolidado |
+| `novedades/generar` | GET | Genera el `.docx` completo (`?fecha=YYYY-MM-DD`) |
 | `notificaciones` | GET | (Pendiente) |
 | `notificaciones/contador` | GET | (Pendiente) |
 | `notificaciones/leer` | POST | (Pendiente) |
@@ -83,22 +88,28 @@
 | `reportes/extorsion/exportar` | GET | (Pendiente) |
 | `reportes/formato-n-armas-aseguradas` | GET, POST | (Pendiente) |
 | `reportes/formato-n-armas-aseguradas/[id]` | GET, PATCH | (Pendiente) |
+| `reportes/formato-n-armas-aseguradas/sincronizar` | POST | (Pendiente) |
 | `reportes/formato-n-atencion-victimas` | GET, POST | (Pendiente) |
 | `reportes/formato-n-atencion-victimas/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-consolidado` | POST | (Pendiente) |
+| `reportes/formato-n-estatus` | POST, DELETE | (Pendiente) |
 | `reportes/formato-n-eventos` | GET, POST | (Pendiente) |
 | `reportes/formato-n-eventos/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-eventos/fuente` | GET | (Pendiente) |
+| `reportes/formato-n-eventos/sincronizar` | POST | (Pendiente) |
 | `reportes/formato-n-fge` | GET, POST | (Pendiente) |
 | `reportes/formato-n-fge/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-fge/calcular` | GET | (Pendiente) |
 | `reportes/formato-n-fgr` | GET, POST | (Pendiente) |
 | `reportes/formato-n-fgr/[id]` | GET, PATCH | (Pendiente) |
+| `reportes/formato-n-fgr/calcular` | GET | (Pendiente) |
 | `reportes/formato-n-medios-alternativos` | GET, POST | (Pendiente) |
 | `reportes/formato-n-medios-alternativos/[id]` | GET, PATCH | (Pendiente) |
+| `reportes/formato-n-observaciones` | GET, POST | (Pendiente) |
 | `reportes/formato-n-rnd` | GET, POST | (Pendiente) |
 | `reportes/formato-n-rnd/[id]` | GET, PATCH | (Pendiente) |
 | `reportes/formato-n-rnd/fuente` | GET | (Pendiente) |
+| `reportes/formato-n-rnd/sincronizar` | POST | (Pendiente) |
 | `reportes/numeros-extorsion/exportar` | GET | (Pendiente) |
 | `rol-servicios/externos/rh` | GET | (Pendiente) |
 | `uploads/[...path]` | GET | (Pendiente) |
@@ -129,6 +140,15 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
+
+
 
 
 

@@ -12,6 +12,12 @@ interface Departamento {
   nombre: string
 }
 
+interface Sector {
+  id: number
+  clave: string
+  nombre: string
+}
+
 interface Props {
   oficialId: string
   userId: string
@@ -20,7 +26,9 @@ interface Props {
   telefono: string | null
   departamentoId: string | null
   patrullaId: string | null
+  sectorId: number | null
   deptos: Departamento[]
+  sectores: Sector[]
   patrullas: PatrullaAsignacion[]
   onClose: () => void
 }
@@ -270,7 +278,9 @@ export default function ModalReactivarOficial({
   telefono,
   departamentoId,
   patrullaId,
+  sectorId,
   deptos,
+  sectores,
   patrullas,
   onClose,
 }: Props) {
@@ -417,6 +427,21 @@ export default function ModalReactivarOficial({
                 patrullas={patrullas}
                 defaultValue={patrullaId ?? undefined}
               />
+            </div>
+            <div>
+              <label style={labelStyle}>Sector</label>
+              <select
+                name="sectorId"
+                style={selectStyle}
+                defaultValue={sectorId != null ? String(sectorId) : ''}
+              >
+                <option value="">— Sin asignar —</option>
+                {sectores.map((s) => (
+                  <option key={s.id} value={String(s.id)}>
+                    {s.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

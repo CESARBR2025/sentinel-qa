@@ -94,6 +94,17 @@ This replaces inline `query(...)` with `LEFT JOIN roles`.
 - All mappers accept `Record<string, unknown>` and return typed interfaces
 - Mapper functions are pure — no side effects, no async
 
+## Formularios multi-paso con Zustand (REGLA)
+
+**Todo formulario institucional nuevo (stepper, wizard o multi-sección) DEBE controlarse con un store Zustand.** Referencia de implementación: `lib/oficial/store.ts` (`useOficialFormStore`) y `lib/reportes/formato-n-store.ts` (`useFormatoNStore`).
+
+Reglas:
+- **Store en `lib/<modulo>/store.ts`** — estado (navegación, loading/error, drafts de cada sección) + acciones que centralizan toda la lógica de fetch/guardado. No colocar fetch en los componentes.
+- **Componentes de UI presentacionales** — leen del store con selectores (`useStore(s => s.campo)`) y disparan acciones; sin `useState` para datos del formulario ni llamadas `fetch` directas.
+- **Drafts persistentes entre pasos** — el estado del formulario vive en el store, no en `useState` local con `key={...}` (eso remonta el componente y pierde lo escrito al cambiar de paso).
+- **Un store por formulario** — no crear un store genérico "de formularios"; cada formulario define su propio estado/acciones tipadas.
+- Los `useEffect` del store sirven para la carga inicial (`cargar(fecha)`); la UI solo renderiza.
+
 ## Diseño visual (UI) — fuente única en DESIGN.md
 
 **Toda la información visual (tokens, tipografía, componentes, layout, responsive, do's/don'ts) vive en el archivo raíz `DESIGN.md`.** Esta es la fuente de verdad única para diseño. Si el código difiere de `DESIGN.md`, el código se corrige.

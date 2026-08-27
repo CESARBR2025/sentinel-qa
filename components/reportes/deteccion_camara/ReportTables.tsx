@@ -1,31 +1,36 @@
 'use client'
 import { styles } from './styles'
 
-export function ReportTable({ data }: { data: any[] }) {
+type TableRow = Record<string, string | number | boolean | null | undefined>
+
+export function ReportTable({ data }: { data: TableRow[] }) {
   return (
     <div style={styles.tableContainer}>
       <div style={styles.tableHeader}>
-        <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '20px', fontWeight: 700 }}>
-          <span style={{ color: '#1f355a', marginRight: '8px' }}>|</span> REGISTROS POR TURNO
-        </h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ width: 3, height: 16, background: '#1f355a', borderRadius: 'var(--radius-full)', flexShrink: 0 }} />
+          <h3 style={{ fontFamily: 'var(--apple-font-display)', margin: 0, fontSize: '18px', fontWeight: 600, color: '#0f172a' }}>
+            Registros por turno
+          </h3>
+        </div>
       </div>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1400px' }}>
           <thead>
             <tr style={{ background: '#F8FAFC' }}>
-              <th style={styles.th}>FECHA</th>
-              <th style={styles.th}>TURNO</th>
-              <th style={styles.th}>PERS. S/N</th>
-              <th style={styles.th}>PERS. C/A</th>
-              <th style={styles.th}>VEH. REVISIÓN</th>
-              <th style={styles.th}>VEH. REPUVE</th>
-              <th style={styles.th}>PERSEC.</th>
-              <th style={styles.th}>ASEG.</th>
-              <th style={styles.th}>RECUP.</th>
-              <th style={styles.th}>INCENDIO</th>
-              <th style={styles.th}>H. TRÁNSITO</th>
-              <th style={styles.th}>MOTOS</th>
-              <th style={styles.totalTh}>TOTAL PERS.</th>
+              <th style={styles.th}>Fecha</th>
+              <th style={styles.th}>Turno</th>
+              <th style={styles.th}>Pers. s/n</th>
+              <th style={styles.th}>Pers. c/a</th>
+              <th style={styles.th}>Veh. revisión</th>
+              <th style={styles.th}>Veh. repuve</th>
+              <th style={styles.th}>Persec.</th>
+              <th style={styles.th}>Aseg.</th>
+              <th style={styles.th}>Recup.</th>
+              <th style={styles.th}>Incendio</th>
+              <th style={styles.th}>H. tránsito</th>
+              <th style={styles.th}>Motos</th>
+              <th style={styles.totalTh}>Total pers.</th>
             </tr>
           </thead>
           <tbody>
@@ -40,7 +45,7 @@ export function ReportTable({ data }: { data: any[] }) {
                 </td>
                 <td style={styles.td}>{r.persSinNovedad}</td>
                 <td style={styles.td}>
-                  {r.persConAntecedentes > 0
+                  {Number(r.persConAntecedentes) > 0
                     ? <span style={styles.badge('#FEE2E2', '#B91C1C')}>{r.persConAntecedentes}</span>
                     : 0}
                 </td>
@@ -48,7 +53,7 @@ export function ReportTable({ data }: { data: any[] }) {
                 <td style={styles.td}>{r.vehiculosRepuve}</td>
                 <td style={styles.td}>{r.persecuciones}</td>
                 <td style={styles.td}>
-                  {r.asegurados > 0
+                  {Number(r.asegurados) > 0
                     ? <span style={styles.badge('#dbdfe5', '#172844')}>{r.asegurados}</span>
                     : 0}
                 </td>

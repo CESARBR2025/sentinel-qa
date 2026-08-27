@@ -1,127 +1,114 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Calendar, CheckCircle2, CircleDot, Download } from 'lucide-react'
-import { pageWrap, fontsImport } from '@/components/reportes/form-styles'
+import { useRouter } from 'next/navigation'
+import { Calendar, CheckCircle2, CircleDot, FileDown, Edit3, ChevronRight } from 'lucide-react'
+import { pageWrap, inputStyle } from '@/components/reportes/form-styles'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader } from '@/components/partials/PageHeader'
 
-type Periodo = 'diario' | 'semanal' | 'mensual'
-
-interface Evento {
-  id: string
-  hora: string
-  region: string
-  evento: string
-  ubicacion: string | null
-  descripcion: string | null
-  atenciones: string | null
-}
-
-interface PeriodoMetricas {
-  id: string
-  periodo: Periodo
-  carpetas_iniciadas: number
-  numero_cateos: number
-  vehiculos_asegurados: number
-  domicilios_cateados: number
-  personas_aseguradas: number
-  aprehensiones: number
-  audiencias_iniciales: number
-  abreviados: number
-  audiencias_intermedias: number
-}
-
-type Fge = PeriodoMetricas
-type Fgr = PeriodoMetricas
-
-interface Rnd {
-  id: string
-  hora_detencion: string
-  delito: string
-  autoridad_que_realizo_detencion: string
-  folio: string
-}
-
-interface Medios {
-  id: string
-  periodo: Periodo
-  asuntos_canalizados_por_fiscalia: number
-  acuerdos: number
-  monto_reparacion_danos: number
-}
-
-interface Victimas {
-  id: string
-  periodo: Periodo
-  numero_atenciones: number
-  atenciones_medicas: number
-  atenciones_psicologicas: number
-  asesorias_juridicas: number
-  observaciones: string | null
-}
-
-interface Arma {
-  id: string
-  carpeta_investigacion: string | null
-  tipo_arma: string
-  matricula: string | null
-  calibre: string | null
-  observaciones: string | null
-}
-
-interface Consolidado {
+interface EstatusDia {
   fecha: string
-  eventos: Evento[]
-  fge: Fge[]
-  fgr: Fgr[]
-  rnd: Rnd[]
-  medios: Medios[]
-  victimas: Victimas[]
-  armas: Arma[]
+  eventos_confirmado: boolean
+  fge_confirmado: boolean
+  fgr_confirmado: boolean
+  rnd_confirmado: boolean
+  medios_confirmado: boolean
+  victimas_confirmado: boolean
+  armas_confirmado: boolean
+  observaciones_confirmado: boolean
+  completado_en: string | null
+}
+
+interface DiaResumen {
+  fecha: string
+  estatus: EstatusDia | null
 }
 
 const cardStyle: React.CSSProperties = {
-  background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, padding: 20, marginBottom: 16, overflowX: 'auto',
+  background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-lg)',
+  boxShadow: 'var(--shadow-card)', padding: '20px 22px', marginBottom: 16,
 }
 
-const tagCapturado: React.CSSProperties = {
-  fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em',
-  color: '#047857', background: '#d1fae5', padding: '4px 8px', borderRadius: 2, display: 'inline-flex', alignItems: 'center', gap: 4,
+const tagBase: React.CSSProperties = {
+  fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 600, letterSpacing: 'normal', textTransform: 'none',
+  padding: '5px 12px', borderRadius: 'var(--radius-full)', display: 'inline-flex', alignItems: 'center', gap: 6,
 }
 
-const tagSinCapturar: React.CSSProperties = {
-  fontFamily: 'JetBrains Mono', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em',
-  color: '#b45309', background: '#fef3c7', padding: '4px 8px', borderRadius: 2, display: 'inline-flex', alignItems: 'center', gap: 4,
+const tagListo: React.CSSProperties = {
+  ...tagBase, color: '#16a34a', background: '#dcfce7',
+}
+
+const tagPendiente: React.CSSProperties = {
+  ...tagBase, color: '#b45309', background: '#fef3c7',
+}
+
+const btnBase: React.CSSProperties = {
+  fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, letterSpacing: 'normal', textTransform: 'none',
+  textDecoration: 'none', borderRadius: 'var(--radius-lg)', display: 'inline-flex', alignItems: 'center', gap: 8,
+  cursor: 'pointer', border: 'none', transition: 'transform .3s ease-out, box-shadow .3s ease-out, background-color .15s ease, color .15s ease',
+}
+
+const linkBtn: React.CSSProperties = {
+  ...btnBase, background: '#0f172a', color: '#fff', padding: '10px 20px',
+}
+
+const linkBtnSecondary: React.CSSProperties = {
+  ...btnBase, background: '#f1f5f9', color: '#475569', padding: '10px 18px', border: '1px solid #e2e8f0',
+}
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b',
+  letterSpacing: 'normal', textTransform: 'none', display: 'block', marginBottom: 6,
 }
 
 export default function ConsolidarFormatoNPage() {
-  const [fechaInicio, setFechaInicio] = useState('')
-  const [fechaFin, setFechaFin] = useState('')
-  const [data, setData] = useState<Consolidado[] | null>(null)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const hoy = new Date().toISOString().slice(0, 10)
+  const [fechaInicio, setFechaInicio] = useState(hoy)
+  const [fechaFin, setFechaFin] = useState(hoy)
+  const [data, setData] = useState<DiaResumen[] | null>(null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const cargar = async () => {
-    if (!fechaInicio || !fechaFin) { setError('Selecciona el rango de fechas'); return }
-    setLoading(true)
-    setError('')
+  const cargar = async (inicio: string, fin: string) => {
     try {
       const res = await fetch('/api/reportes/formato-n-consolidado', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fecha_inicio: fechaInicio, fecha_fin: fechaFin }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fecha_inicio: inicio, fecha_fin: fin }),
       })
       if (!res.ok) { const e = await res.json(); throw new Error(e.error) }
-      setData(await res.json())
+      const rows: { fecha: string; estatus: EstatusDia | null }[] = await res.json()
+      setData(rows.map(r => ({ fecha: r.fecha, estatus: r.estatus })))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error')
     } finally { setLoading(false) }
   }
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    cargar(hoy, hoy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const confirmadas = (e: EstatusDia | null) => e ? [e.eventos_confirmado, e.fge_confirmado, e.fgr_confirmado, e.rnd_confirmado, e.medios_confirmado, e.victimas_confirmado, e.armas_confirmado, e.observaciones_confirmado].filter(Boolean).length : 0
+  const esListo = (e: EstatusDia | null) => confirmadas(e) === 8
+
   return (
     <div style={{ ...pageWrap, display: 'flex', flexDirection: 'column' }}>
-      <style>{fontsImport}</style>
-      <DashboardHeader roleLabel="Consolidado Formato N" backHref="/envio-de-formatos" backLabel="Envío de Formatos" />
+      <style>{`
+        .enf-btn:active { transform: scale(0.97); box-shadow: var(--apple-shadow-glass); transition: transform .12s ease-out, box-shadow .12s ease-out; }
+        .enf-btn:hover { transform: translateY(-2px); box-shadow: var(--apple-shadow-glass-hover); }
+        @media (prefers-reduced-motion: reduce) {
+          .enf-btn, .enf-btn:hover, .enf-btn:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
+        }
+      `}</style>
+      <DashboardHeader
+        roleLabel="Consolidado Formato N"
+        backHref="/agente_reportes"
+        backLabel="Panel de Reportes"
+        onBack={() => router.push('/agente_reportes')}
+      />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
@@ -132,303 +119,65 @@ export default function ConsolidarFormatoNPage() {
 
         <div style={{ ...cardStyle, display: 'flex', gap: 16, alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, minWidth: 160 }}>
-            <label style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 4 }}>Desde</label>
-            <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter', fontSize: 14, color: '#1e293b', outline: 'none' }} />
+            <label style={labelStyle}>Desde</label>
+            <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} style={inputStyle} />
           </div>
           <div style={{ flex: 1, minWidth: 160 }}>
-            <label style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, display: 'block', marginBottom: 4 }}>Hasta</label>
-            <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 2, fontFamily: 'Inter', fontSize: 14, color: '#1e293b', outline: 'none' }} />
+            <label style={labelStyle}>Hasta</label>
+            <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} style={inputStyle} />
           </div>
-          <button onClick={cargar} disabled={loading} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', background: loading ? '#94a3b8' : '#0f172a', color: '#fff', border: 'none', borderRadius: 2, padding: '12px 28px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Calendar size={14} /> {loading ? 'CARGANDO...' : 'CARGAR DATOS'}
+          <button onClick={() => { setError(''); setLoading(true); cargar(fechaInicio, fechaFin); }} disabled={loading} className="enf-btn" style={{ ...linkBtn, background: loading ? '#94a3b8' : '#0f172a', cursor: loading ? 'not-allowed' : 'pointer' }}>
+            <Calendar size={14} /> {loading ? 'Cargando...' : 'Cargar datos'}
           </button>
         </div>
 
-        {error && <div style={{ ...cardStyle, borderColor: '#fca5a5', background: '#fef2f2', color: '#dc2626', fontFamily: 'JetBrains Mono', fontSize: 12 }}>{error}</div>}
+        {error && <div style={{ ...cardStyle, borderColor: '#fca5a5', background: '#fef2f2', color: '#dc2626', fontFamily: 'var(--apple-font-display)', fontSize: 13 }}>{error}</div>}
 
         {data && (
-          <>
-            {data.map((dia) => (
-              <div key={dia.fecha} style={{ marginBottom: 40 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                  <div style={{ width: 4, height: 24, background: '#0f172a' }} />
-                  <h2 style={{ fontFamily: 'Barlow Condensed', fontSize: 26, fontWeight: 800, color: '#0f172a', margin: 0, textTransform: 'uppercase' }}>{dia.fecha}</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {data.map((dia) => {
+              const listo = esListo(dia.estatus)
+              const n = confirmadas(dia.estatus)
+              return (
+                <div key={dia.fecha} style={cardStyle}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                    <div style={{ width: 4, height: 28, borderRadius: 'var(--radius-full)', background: listo ? '#16a34a' : '#94a3b8' }} />
+                    <div style={{ flex: 1, minWidth: 140 }}>
+                      <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 20, fontWeight: 600, color: '#0f172a', letterSpacing: 'normal', textTransform: 'none' }}>{dia.fecha}</div>
+                      <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, color: '#64748b', marginTop: 2 }}>
+                        {listo
+                          ? (dia.estatus?.completado_en ? `Completado a las ${new Date(dia.estatus.completado_en).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}` : 'Completado')
+                          : `Reporte del día · ${n}/8 secciones completas`}
+                      </div>
+                    </div>
+                    <div>
+                      {listo
+                        ? <span style={tagListo}><CheckCircle2 size={12} /> Listo</span>
+                        : <span style={tagPendiente}><CircleDot size={12} /> Pendiente</span>}
+                    </div>
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      {listo ? (
+                        <>
+                          <Link href={`/api/nCoordinacion/generar?fecha=${dia.fecha}`} className="enf-btn" style={linkBtn}>
+                            <FileDown size={14} /> Descargar Word
+                          </Link>
+                          <Link href={`/envio-de-formatos/reporte/${dia.fecha}`} className="enf-btn" style={linkBtnSecondary}>
+                            <Edit3 size={14} /> Editar
+                          </Link>
+                        </>
+                      ) : (
+                        <Link href={`/envio-de-formatos/reporte/${dia.fecha}`} className="enf-btn" style={linkBtn}>
+                          Completar reporte <ChevronRight size={14} />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <DiaConsolidado dia={dia} />
-              </div>
-            ))}
-
-            <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
-              <button onClick={() => window.print()} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', background: '#1f355a', color: '#fff', border: 'none', borderRadius: 2, padding: '14px 28px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Download size={14} /> IMPRIMIR / GUARDAR PDF
-              </button>
-              <Link href="/envio-de-formatos" style={{ ...linkBtn, padding: '14px 28px', display: 'inline-flex', alignItems: 'center' }}>IR A SECCIONES INDIVIDUALES</Link>
-            </div>
-          </>
+              )
+            })}
+          </div>
         )}
       </main>
     </div>
-  )
-}
-
-function DiaConsolidado({ dia }: { dia: Consolidado }) {
-  return (
-    <>
-      {/* 1. Eventos Informados */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>1. Eventos Informados</h3>
-          {dia.eventos.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Registros guardados en Formato N para esta fecha.</p>
-        {dia.eventos.length === 0 ? (
-          <>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin registro capturado para esta fecha.</p>
-            <Link href="/formato-n-eventos/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>CAPTURAR AHORA</Link>
-          </>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                <th style={thStyle}>Hora</th><th style={thStyle}>Región</th><th style={thStyle}>Evento</th><th style={thStyle}>Ubicación</th><th style={thStyle}>Descripción</th><th style={thStyle}>Atenciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dia.eventos.map((e) => (
-                <tr key={e.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={tdStyle}>{e.hora}</td>
-                  <td style={tdStyle}>{e.region}</td>
-                  <td style={tdStyle}>{e.evento}</td>
-                  <td style={tdStyle}>{e.ubicacion || '—'}</td>
-                  <td style={tdStyle}>{e.descripcion || '—'}</td>
-                  <td style={tdStyle}>{e.atenciones || '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* 2. FGE */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>2. Eventos FGE</h3>
-          {dia.fge.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Registros guardados en Formato N para esta fecha.</p>
-        {dia.fge.length === 0 ? (
-          <>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin registro capturado para esta fecha.</p>
-            <Link href="/formato-n-fge/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>CAPTURAR AHORA</Link>
-          </>
-        ) : (
-          <PeriodoMetricasBlocks rows={dia.fge} />
-        )}
-      </div>
-
-      {/* 3. FGR */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>3. Eventos FGR</h3>
-          {dia.fgr.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Datos de la Fiscalía General de la República (dependencia externa) — captura 100% manual.</p>
-        {dia.fgr.length === 0 ? (
-          <>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin registro capturado para esta fecha.</p>
-            <Link href="/formato-n-fgr/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>CAPTURAR AHORA</Link>
-          </>
-        ) : (
-          <PeriodoMetricasBlocks rows={dia.fgr} />
-        )}
-      </div>
-
-      {/* 4. RND */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>4. Registro Nacional de Detenciones</h3>
-          {dia.rnd.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Registros guardados en Formato N para esta fecha.</p>
-        {dia.rnd.length === 0 ? (
-          <>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin registro capturado para esta fecha.</p>
-            <Link href="/formato-n-rnd/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>CAPTURAR AHORA</Link>
-          </>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                <th style={thStyle}>Hora</th><th style={thStyle}>Delito</th><th style={thStyle}>Autoridad</th><th style={thStyle}>Folio</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dia.rnd.map((r) => (
-                <tr key={r.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={tdStyle}>{r.hora_detencion}</td>
-                  <td style={tdStyle}>{r.delito}</td>
-                  <td style={tdStyle}>{r.autoridad_que_realizo_detencion}</td>
-                  <td style={tdStyle}>{r.folio}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* 5. Medios Alternativos */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>5. Medios Alternativos</h3>
-          {dia.medios.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Asuntos canalizados por Fiscalía, acuerdos y montos — captura 100% manual.</p>
-        {dia.medios.length === 0 ? (
-          <>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin registro capturado para esta fecha.</p>
-            <Link href="/formato-n-medios-alternativos/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>CAPTURAR AHORA</Link>
-          </>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                <th style={thStyle}>Periodo</th><th style={thStyle}>Asuntos canalizados</th><th style={thStyle}>Acuerdos</th><th style={thStyle}>Monto reparación de daños</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dia.medios.map((m) => (
-                <tr key={m.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={tdStyle}>{m.periodo.toUpperCase()}</td>
-                  <td style={tdStyle}>{m.asuntos_canalizados_por_fiscalia}</td>
-                  <td style={tdStyle}>{m.acuerdos}</td>
-                  <td style={tdStyle}>${Number(m.monto_reparacion_danos).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* 6. Atención a Víctimas */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>6. Atención a Víctimas</h3>
-          {dia.victimas.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Atenciones médicas, psicológicas y jurídicas — captura 100% manual.</p>
-        {dia.victimas.length === 0 ? (
-          <>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin registro capturado para esta fecha.</p>
-            <Link href="/formato-n-atencion-victimas/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>CAPTURAR AHORA</Link>
-          </>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                <th style={thStyle}>Periodo</th><th style={thStyle}>Nº atenciones</th><th style={thStyle}>Médicas</th><th style={thStyle}>Psicológicas</th><th style={thStyle}>Asesorías jurídicas</th><th style={thStyle}>Observaciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dia.victimas.map((v) => (
-                <tr key={v.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={tdStyle}>{v.periodo.toUpperCase()}</td>
-                  <td style={tdStyle}>{v.numero_atenciones}</td>
-                  <td style={tdStyle}>{v.atenciones_medicas}</td>
-                  <td style={tdStyle}>{v.atenciones_psicologicas}</td>
-                  <td style={tdStyle}>{v.asesorias_juridicas}</td>
-                  <td style={tdStyle}>{v.observaciones || '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* 7. Armas Aseguradas */}
-      <div style={cardStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>7. Armas de Fuego Aseguradas</h3>
-          {dia.armas.length > 0
-            ? <span style={tagCapturado}><CheckCircle2 size={11} /> CAPTURADO</span>
-            : <span style={tagSinCapturar}><CircleDot size={11} /> SIN CAPTURAR</span>}
-        </div>
-        <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#64748b', margin: '0 0 12px 0' }}>Registros guardados en Formato N para esta fecha.</p>
-        {dia.armas.length === 0 ? (
-          <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#94a3b8', fontStyle: 'italic' }}>Sin armas registradas para esta fecha.</p>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                <th style={thStyle}>Carpeta de investigación</th><th style={thStyle}>Tipo de arma</th><th style={thStyle}>Matrícula</th><th style={thStyle}>Calibre</th><th style={thStyle}>Observaciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dia.armas.map((a) => (
-                <tr key={a.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={tdStyle}>{a.carpeta_investigacion || '—'}</td>
-                  <td style={tdStyle}>{a.tipo_arma}</td>
-                  <td style={tdStyle}>{a.matricula || '—'}</td>
-                  <td style={tdStyle}>{a.calibre || '—'}</td>
-                  <td style={tdStyle}>{a.observaciones || '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        <Link href="/formato-n-armas-aseguradas/nuevo" style={{ ...linkBtn, marginTop: 12, display: 'inline-flex' }}>{dia.armas.length === 0 ? 'CAPTURAR AHORA' : 'AGREGAR OTRA'}</Link>
-      </div>
-    </>
-  )
-}
-
-const thStyle: React.CSSProperties = { fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '8px 10px', fontWeight: 600 }
-const tdStyle: React.CSSProperties = { fontFamily: 'Inter', fontSize: 13, color: '#1e293b', padding: '8px 10px' }
-
-const linkBtn: React.CSSProperties = {
-  fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em',
-  background: '#f1f5f9', color: '#0f172a', padding: '10px 18px', textDecoration: 'none', borderRadius: 2, border: '1px solid #e2e8f0',
-}
-
-function Metric({ label, value }: { label: string; value: number }) {
-  return (
-    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: 12 }}>
-      <div style={{ fontFamily: 'Barlow Condensed', fontSize: 28, fontWeight: 800, color: '#0f172a' }}>{value}</div>
-      <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
-    </div>
-  )
-}
-
-function PeriodoMetricasBlocks({ rows }: { rows: PeriodoMetricas[] }) {
-  return (
-    <>
-      {rows.map((row, idx) => (
-        <div key={row.id} style={{ marginBottom: idx < rows.length - 1 ? 20 : 0 }}>
-          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 700, color: '#1f355a', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>{row.periodo}</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
-            <Metric label="Carpetas iniciadas" value={row.carpetas_iniciadas} />
-            <Metric label="Cateos" value={row.numero_cateos} />
-            <Metric label="Vehículos asegurados" value={row.vehiculos_asegurados} />
-            <Metric label="Domicilios cateados" value={row.domicilios_cateados} />
-            <Metric label="Personas aseguradas" value={row.personas_aseguradas} />
-            <Metric label="Aprehensiones" value={row.aprehensiones} />
-            <Metric label="Audiencias iniciales" value={row.audiencias_iniciales} />
-            <Metric label="Abreviados" value={row.abreviados} />
-            <Metric label="Audiencias intermedias" value={row.audiencias_intermedias} />
-          </div>
-        </div>
-      ))}
-    </>
   )
 }

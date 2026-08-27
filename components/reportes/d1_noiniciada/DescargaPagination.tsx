@@ -20,13 +20,15 @@ export function DescargaPagination({
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center', 
-            background: '#FFFFFF'
+            background: '#FFFFFF',
+            flexWrap: 'wrap',
+            gap: 12
         }}>
-            <div style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#64748B', fontWeight: 600 }}>
-                MOSTRANDO {totalRecords === 0 ? 0 : startIndex + 1} - {Math.min(startIndex + itemsPerPage, totalRecords)} DE {totalRecords} PENDIENTES
+            <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                Mostrando {totalRecords === 0 ? 0 : startIndex + 1} - {Math.min(startIndex + itemsPerPage, totalRecords)} de {totalRecords} pendientes
             </div>
 
-            <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 <button 
                     disabled={currentPage === 1}
                     onClick={() => onPageChange(1)}
@@ -40,11 +42,11 @@ export function DescargaPagination({
                 ><ChevronLeft size={14} /></button>
 
                 <div style={{ 
-                    fontFamily: 'JetBrains Mono', fontSize: '11px', 
-                    fontWeight: 700, margin: '0 15px', color: '#0F172A',
-                    background: '#F1F5F9', padding: '4px 12px', borderRadius: '4px'
+                    fontFamily: 'var(--apple-font-display)', fontSize: '12px', 
+                    fontWeight: 600, margin: '0 12px', color: '#0F172A',
+                    background: '#F1F5F9', padding: '4px 12px', borderRadius: 'var(--radius-md)'
                 }}>
-                    PÁG. {currentPage} / {totalPages || 1}
+                    Pág. {currentPage} / {totalPages || 1}
                 </div>
 
                 <button 

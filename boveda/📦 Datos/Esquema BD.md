@@ -1,6 +1,6 @@
 # Esquema de Base de Datos — Sentinel SSPM
 
-> Documentación generada desde `information_schema` el 2026-08-07.
+> Documentación generada desde `information_schema` el 2026-08-10.
 > Fuente de verdad del schema real en PostgreSQL.
 
 ---
@@ -129,6 +129,20 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 **Índices**
 
 - `cat_body_cams_codigo_uq`: `CREATE UNIQUE INDEX cat_body_cams_codigo_uq ON public.cat_body_cams USING btree (codigo)`
+
+### \`cat_clasificacion_delitos\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `integer` | NO | `nextval('cat_clasificacion_delitos_id_seq'::regclass)` |
+| 2 | `delito` | `text` | NO | — |
+| 3 | `familia` | `text` | NO | — |
+| 4 | `activo` | `boolean` | NO | `true` |
+| 5 | `creado_en` | `timestamp` | NO | `now()` |
+
+**Índices**
+
+- `cat_clasificacion_delitos_delito_key`: `CREATE UNIQUE INDEX cat_clasificacion_delitos_delito_key ON public.cat_clasificacion_delitos USING btree (delito)`
 
 ### \`cat_dependencias\`
 
@@ -433,6 +447,29 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 - `fichas_inteligencia_detenidos_folio_key`: `CREATE UNIQUE INDEX fichas_inteligencia_detenidos_folio_key ON public.fichas_inteligencia_detenidos USING btree (folio)`
 
+### \`fiscalia_armas_aseguradas\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
+| 2 | `reporte_campo_id` | `uuid` | NO | — |
+| 3 | `tipo_arma` | `text` | NO | — |
+| 4 | `marca` | `text` | SÍ | — |
+| 5 | `matricula` | `text` | SÍ | — |
+| 6 | `calibre` | `text` | SÍ | — |
+| 7 | `observaciones` | `text` | SÍ | — |
+| 8 | `capturado_por` | `text` | NO | — |
+| 9 | `creado_en` | `timestamp` | NO | `now()` |
+
+**Foreign Keys**
+
+- `faa_capturado_por_fk`: `capturado_por` → `users(id)`
+- `faa_reporte_campo_fk`: `reporte_campo_id` → `ofi_reportes_campo(id)`
+
+**Índices**
+
+- `faa_reporte_campo_idx`: `CREATE INDEX faa_reporte_campo_idx ON public.fiscalia_armas_aseguradas USING btree (reporte_campo_id)`
+
 ### \`formato_incidencia_complemento\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -499,6 +536,11 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 7 | `observaciones` | `text` | SÍ | — |
 | 8 | `capturado_por` | `text` | NO | — |
 | 9 | `creado_en` | `timestamp` | NO | `now()` |
+| 10 | `origen_fiscalia_arma_id` | `uuid` | SÍ | — |
+
+**Índices**
+
+- `fnaa_origen_fiscalia_arma_uq`: `CREATE UNIQUE INDEX fnaa_origen_fiscalia_arma_uq ON public.formato_n_armas_aseguradas USING btree (origen_fiscalia_arma_id) WHERE (origen_fiscalia_arma_id IS NOT NULL)`
 
 ### \`formato_n_atencion_victimas\`
 
@@ -520,6 +562,23 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 - `fnav_fecha_periodo_uq`: `CREATE UNIQUE INDEX fnav_fecha_periodo_uq ON public.formato_n_atencion_victimas USING btree (fecha, periodo)`
 - `formato_n_atencion_victimas_fecha_key`: `CREATE UNIQUE INDEX formato_n_atencion_victimas_fecha_key ON public.formato_n_atencion_victimas USING btree (fecha)`
 
+### \`formato_n_estatus_dia\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `fecha` | `date` | NO | — |
+| 2 | `eventos_confirmado` | `boolean` | NO | `false` |
+| 3 | `fge_confirmado` | `boolean` | NO | `false` |
+| 4 | `fgr_confirmado` | `boolean` | NO | `false` |
+| 5 | `rnd_confirmado` | `boolean` | NO | `false` |
+| 6 | `medios_confirmado` | `boolean` | NO | `false` |
+| 7 | `victimas_confirmado` | `boolean` | NO | `false` |
+| 8 | `armas_confirmado` | `boolean` | NO | `false` |
+| 9 | `observaciones_confirmado` | `boolean` | NO | `false` |
+| 10 | `completado_en` | `timestamp` | SÍ | — |
+| 11 | `actualizado_por` | `text` | SÍ | — |
+| 12 | `actualizado_en` | `timestamp` | NO | `now()` |
+
 ### \`formato_n_eventos\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -534,6 +593,11 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 8 | `atenciones` | `text` | SÍ | — |
 | 9 | `capturado_por` | `text` | NO | — |
 | 10 | `creado_en` | `timestamp` | NO | `now()` |
+| 11 | `origen_incidente_id` | `uuid` | SÍ | — |
+
+**Índices**
+
+- `fne_origen_incidente_uq`: `CREATE UNIQUE INDEX fne_origen_incidente_uq ON public.formato_n_eventos USING btree (origen_incidente_id) WHERE (origen_incidente_id IS NOT NULL)`
 
 ### \`formato_n_fge\`
 
@@ -632,6 +696,11 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 6 | `folio` | `text` | NO | — |
 | 7 | `capturado_por` | `text` | NO | — |
 | 8 | `creado_en` | `timestamp` | NO | `now()` |
+| 9 | `origen_reporte_campo_id` | `uuid` | SÍ | — |
+
+**Índices**
+
+- `fnrnd_origen_reporte_campo_uq`: `CREATE UNIQUE INDEX fnrnd_origen_reporte_campo_uq ON public.formato_n_rnd USING btree (origen_reporte_campo_id) WHERE (origen_reporte_campo_id IS NOT NULL)`
 
 ### \`incidente_alarma_escolar\`
 
@@ -1141,23 +1210,64 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 - `notificaciones_suscripciones_evento_rol_id_key`: `CREATE UNIQUE INDEX notificaciones_suscripciones_evento_rol_id_key ON public.notificaciones_suscripciones USING btree (evento, rol_id)`
 
-### \`novedades_captura\`
+### \`novedades_estatus_dia\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `fecha` | `date` | NO | — |
+| 2 | `periodo_confirmado` | `boolean` | NO | `false` |
+| 3 | `resumen_confirmado` | `boolean` | NO | `false` |
+| 4 | `subsecretaria_confirmado` | `boolean` | NO | `false` |
+| 5 | `analisis_confirmado` | `boolean` | NO | `false` |
+| 6 | `c4_confirmado` | `boolean` | NO | `false` |
+| 7 | `transito_confirmado` | `boolean` | NO | `false` |
+| 8 | `prevencion_confirmado` | `boolean` | NO | `false` |
+| 9 | `delictivos_confirmado` | `boolean` | NO | `false` |
+| 10 | `operativos_confirmado` | `boolean` | NO | `false` |
+| 11 | `resumen_nov_confirmado` | `boolean` | NO | `false` |
+| 12 | `fuerza_confirmado` | `boolean` | NO | `false` |
+| 13 | `completado_en` | `timestamp` | SÍ | — |
+| 14 | `actualizado_por` | `text` | SÍ | — |
+| 15 | `actualizado_en` | `timestamp` | NO | `now()` |
+
+**Foreign Keys**
+
+- `novedades_estatus_dia_actualizado_por_fkey`: `actualizado_por` → `users(id)`
+
+### \`novedades_filas\`
 
 | # | Columna | Tipo | Nulable | Default |
 |---|---------|------|---------|--------|
 | 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
 | 2 | `fecha` | `date` | NO | — |
-| 3 | `capturado_por` | `text` | NO | — |
-| 4 | `datos` | `jsonb` | SÍ | `'{}'::jsonb` |
-| 5 | `creado_en` | `timestamp` | SÍ | `now()` |
+| 3 | `seccion` | `text` | NO | — |
+| 4 | `orden` | `integer` | NO | `0` |
+| 5 | `datos` | `jsonb` | NO | `'{}'::jsonb` |
+| 6 | `capturado_por` | `text` | SÍ | — |
+| 7 | `creado_en` | `timestamp` | NO | `now()` |
+| 8 | `actualizado_en` | `timestamp` | NO | `now()` |
 
 **Foreign Keys**
 
-- `novedades_captura_capturado_por_fkey`: `capturado_por` → `users(id)`
+- `novedades_filas_capturado_por_fkey`: `capturado_por` → `users(id)`
 
 **Índices**
 
-- `novedades_captura_fecha_key`: `CREATE UNIQUE INDEX novedades_captura_fecha_key ON public.novedades_captura USING btree (fecha)`
+- `idx_novedades_filas_fecha_seccion`: `CREATE INDEX idx_novedades_filas_fecha_seccion ON public.novedades_filas USING btree (fecha, seccion, orden)`
+
+### \`novedades_seccion\`
+
+| # | Columna | Tipo | Nulable | Default |
+|---|---------|------|---------|--------|
+| 1 | `fecha` | `date` | NO | — |
+| 2 | `seccion` | `text` | NO | — |
+| 3 | `datos` | `jsonb` | NO | `'{}'::jsonb` |
+| 4 | `capturado_por` | `text` | SÍ | — |
+| 5 | `actualizado_en` | `timestamp` | NO | `now()` |
+
+**Foreign Keys**
+
+- `novedades_seccion_capturado_por_fkey`: `capturado_por` → `users(id)`
 
 ### \`ofi_detalles_asegurados\`
 
@@ -1195,35 +1305,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 - `idx_detalles_asegurados_curp`: `CREATE INDEX idx_detalles_asegurados_curp ON public.ofi_detalles_asegurados USING btree (curp) WHERE (curp IS NOT NULL)`
 - `idx_ofi_da_reporte`: `CREATE INDEX idx_ofi_da_reporte ON public.ofi_detalles_asegurados USING btree (reporte_campo_id)`
 
-### \`ofi_fichas_inteligencia\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
-| 2 | `iph_id` | `uuid` | NO | — |
-| 3 | `reporte_campo_id` | `uuid` | NO | — |
-| 4 | `origen` | `text` | SÍ | — |
-| 5 | `escolaridad` | `text` | SÍ | — |
-| 6 | `estado_civil` | `text` | SÍ | — |
-| 7 | `ocupacion` | `text` | SÍ | — |
-| 8 | `rasgos_particulares` | `text` | SÍ | — |
-| 9 | `eventos_delictivos` | `text` | SÍ | — |
-| 10 | `fecha_hora_analisis` | `timestamp` | SÍ | — |
-| 11 | `expediente_judicial` | `text` | SÍ | — |
-| 12 | `nexos_delictivos` | `text` | SÍ | — |
-| 13 | `zona_operacion` | `text` | SÍ | — |
-| 14 | `puesta_disposicion` | `text` | SÍ | — |
-| 15 | `antecedentes_penales` | `text` | SÍ | — |
-| 16 | `foto_frontal_url` | `text` | SÍ | — |
-| 17 | `foto_objetos_url` | `text` | SÍ | — |
-| 18 | `capturado_por` | `text` | NO | — |
-| 19 | `created_at` | `timestamp` | SÍ | `now()` |
-
-**Foreign Keys**
-
-- `fk_ficha_campo`: `reporte_campo_id` → `ofi_reportes_campo(id)`
-- `fk_ficha_iph`: `iph_id` → `iph_detenidos(id)`
-
 ### \`ofi_oficiales\`
 
 | # | Columna | Tipo | Nulable | Default |
@@ -1241,14 +1322,17 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 | 11 | `ultima_lat` | `numeric` | SÍ | — |
 | 12 | `ultima_lng` | `numeric` | SÍ | — |
 | 13 | `ultima_ubicacion_en` | `timestamp` | SÍ | — |
+| 14 | `sector_id` | `integer` | SÍ | — |
 
 **Foreign Keys**
 
+- `ofi_oficiales_sector_id_fkey`: `sector_id` → `cat_sectores(id)`
 - `ofi_oficiales_user_id_fkey`: `user_id` → `users(id)`
 
 **Índices**
 
 - `idx_ofi_oficiales_patrulla`: `CREATE INDEX idx_ofi_oficiales_patrulla ON public.ofi_oficiales USING btree (patrulla_id)`
+- `idx_ofi_oficiales_sector`: `CREATE INDEX idx_ofi_oficiales_sector ON public.ofi_oficiales USING btree (sector_id)`
 - `uq_ofi_oficiales_num_empleado`: `CREATE UNIQUE INDEX uq_ofi_oficiales_num_empleado ON public.ofi_oficiales USING btree (numero_empleado)`
 
 ### \`ofi_puesta_disposicion\`
@@ -1680,25 +1764,6 @@ La aplicación **no debe modificarlas directamente**. Las columnas `rol_id` y `d
 
 - `solicitudes_c4_internas_creado_por_users_id_fk`: `creado_por` → `users(id)`
 - `solicitudes_c4_internas_solicitud_id_solicitudes_informacion_id`: `solicitud_id` → `solicitudes_informacion(id)`
-
-### \`solicitudes_detenido\`
-
-| # | Columna | Tipo | Nulable | Default |
-|---|---------|------|---------|--------|
-| 1 | `id` | `uuid` | NO | `gen_random_uuid()` |
-| 2 | `nombre_detenido` | `text` | NO | — |
-| 3 | `folio` | `text` | NO | — |
-| 4 | `tipo_evento` | `text` | SÍ | — |
-| 5 | `delitos` | `text` | SÍ | — |
-| 6 | `falta_admin` | `text` | SÍ | — |
-| 7 | `modus_operandi` | `text` | SÍ | — |
-| 8 | `solicitado_por` | `text` | NO | — |
-| 9 | `creado_en` | `timestamp` | SÍ | `now()` |
-| 10 | `completado_en` | `timestamp` | SÍ | — |
-
-**Foreign Keys**
-
-- `solicitudes_detenido_solicitado_por_fkey`: `solicitado_por` → `users(id)`
 
 ### \`solicitudes_evidencia\`
 

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import OficialesTable from './OficialesTable'
-import type { Departamento, OficialLista } from '@/lib/admin-transito/types'
+import type { Departamento, OficialLista, Sector } from '@/lib/admin-transito/types'
 import type { PatrullaAsignacion } from '@/lib/flota/types'
 
 const TODOS = '__all__'
@@ -19,9 +19,10 @@ const labelCls = 'mb-1.5 block text-[10px] font-medium uppercase tracking-[0.15e
 // Tabla de oficiales con filtros funcionales (cliente). Recibe la lista completa
 // que ya carga el server component y filtra en memoria: texto (nombre, nómina,
 // empleado, correo, teléfono), departamento, estatus y patrulla.
-export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas }: {
+export default function OficialesTablaConFiltros({ oficiales, deptos, sectores, patrullas }: {
   oficiales: OficialLista[]
   deptos: Departamento[]
+  sectores: Sector[]
   patrullas: PatrullaAsignacion[]
 }) {
   const [busqueda, setBusqueda] = useState('')
@@ -191,7 +192,7 @@ export default function OficialesTablaConFiltros({ oficiales, deptos, patrullas 
             </tr>
           </thead>
           <tbody>
-            <OficialesTable oficiales={filtrados} deptos={deptos} patrullas={patrullas} />
+            <OficialesTable oficiales={filtrados} deptos={deptos} sectores={sectores} patrullas={patrullas} />
           </tbody>
         </table>
       </div>

@@ -36,35 +36,36 @@ export function FiltrosIncidencias() {
     if (to) params.set('to', to)
     params.set('tipo', tipo)
     router.push(`?${params.toString()}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tipo])
 
   return (
     <section style={styles.filterCard}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr auto auto', gap: '20px', alignItems: 'flex-end' }}>
-        <div>
-          <label style={styles.label}>Tipo de Reporte</label>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'flex-end' }}>
+        <div style={{ flex: '1 1 200px', minWidth: 160 }}>
+          <label style={styles.label}>Tipo de reporte</label>
           <select
             style={{ ...styles.input, appearance: 'none', cursor: 'pointer', fontWeight: 600, color: '#0F172A' }}
             value={tipo}
             onChange={e => setTipo(e.target.value)}
           >
-            <option value="diario">DIARIO</option>
-            <option value="semanal">SEMANAL</option>
+            <option value="diario">Diario</option>
+            <option value="semanal">Semanal</option>
           </select>
         </div>
-        <div>
-          <label style={styles.label}>Fecha Inicial</label>
+        <div style={{ flex: '1 1 200px', minWidth: 160 }}>
+          <label style={styles.label}>Fecha inicial</label>
           <input type="date" style={{ ...styles.input, color: '#0F172A' }} value={from} onChange={e => setFrom(e.target.value)} />
         </div>
-        <div>
-          <label style={styles.label}>Fecha Final</label>
+        <div style={{ flex: '1 1 200px', minWidth: 160 }}>
+          <label style={styles.label}>Fecha final</label>
           <input type="date" style={{ ...styles.input, color: '#0F172A' }} value={to} onChange={e => setTo(e.target.value)} />
         </div>
         <button style={{ ...styles.primaryButton, background: '#1f355a' }} onClick={handleGenerar}>
-          <Search size={18} /> GENERAR
+          <Search size={16} /> Generar
         </button>
         <button style={{ ...styles.primaryButton, background: '#ffffff', color: '#64748b', border: '1px solid #e2e8f0' }} onClick={handleLimpiar}>
-          <X size={18} /> LIMPIAR
+          <X size={16} /> Limpiar
         </button>
       </div>
     </section>

@@ -56,6 +56,8 @@ flowchart TD
 | Ruta | Vista | Patrón |
 |------|-------|-------|
 | `/reporte-detenidos` | Tabla de detenidos completos (columnas: Nombre, **Folio D1**, **IPH**, Evento, Delitos, Falta Administrativa, Modus Operandi, Fecha — el folio mostrado es `folioDenuncia`, no el folio interno de reporte de campo) | `DashboardHeader` + `PageHeader` (`← Panel de Reportes` + `GENERAR PPT`) + `.pad-pagina` |
+
+**UI mejorada (2026-08-10)** — `components/reporte-detenidos/TablaDetenidosReporte.tsx` (client component, patrón de `TablaIncidencias` de KPI): franja de 4 KPIs (total, con delito, con falta administrativa, este mes), toolbar de filtros (búsqueda por nombre/folio/IPH/delito, rango desde–hasta, tipo todos/delito/falta), columnas sortables con iconos `lucide-react`, chips de rubro (delito `#fee2e2`/`#b91c1c`, falta `#fef3c7`/`#b45309`), badge de IPH teal, export CSV, paginación, header sticky y empty state. `BotonGenerarPpt` se conserva en el `PageHeader`.
 | `/fiscalia/asegurados/[reporteCampoId]` (o equivalente) | Captura de datos biográficos + antecedentes externos | `FormularioAsegurado` + `AntecedentesExternos` (acento `#7c3aed`) |
 
 ## Reglas de negocio

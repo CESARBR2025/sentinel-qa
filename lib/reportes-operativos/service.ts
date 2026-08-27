@@ -51,7 +51,9 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
             _tipo: toStr(v.tipo),
         }]
     })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const motos = todosVeh.filter(v => v._tipo === 'motocicleta').map(({ _tipo, ...r }) => r)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const vehiculos = todosVeh.filter(v => v._tipo !== 'motocicleta').map(({ _tipo, ...r }) => r)
 
     // Cateos
@@ -82,7 +84,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     // Órdenes de aprehensión
     const ordenes = ordRows.flatMap((r: OrdenAprehensionRow) =>
         parseJsonb(r.ordenes).map((o: Record<string, unknown>) => ({
-            fecha: o.fecha || (r.fecha instanceof Date
+            fecha: o.fecha ? String(o.fecha) : (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : String(r.fecha ?? '—')),
             folio: toStr(r.folio),
@@ -96,7 +98,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     // Hidrocarburos
     const hidrocarburo = hidRows.flatMap((r: HidrocarburoRow) =>
         parseJsonb(r.hidrocarburos).map((h: Record<string, unknown>) => ({
-            fecha: h.fecha || (r.fecha instanceof Date
+            fecha: h.fecha ? String(h.fecha) : (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : String(r.fecha ?? '—')),
             folio: toStr(r.folio),
@@ -112,7 +114,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     // Armas
     const armas = armRows.flatMap((r: ArmaRow) =>
         parseJsonb(r.armas).map((a: Record<string, unknown>) => ({
-            fecha: a.fecha || (r.fecha instanceof Date
+            fecha: a.fecha ? String(a.fecha) : (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : String(r.fecha ?? '—')),
             folio: toStr(r.folio),
@@ -126,7 +128,7 @@ export async function obtenerDatosOperativos(desde?: string, hasta?: string) {
     // Drogas
     const droga = droRows.flatMap((r: DrogaRow) =>
         parseJsonb(r.drogas).map((d: Record<string, unknown>) => ({
-            fecha: d.fecha || (r.fecha instanceof Date
+            fecha: d.fecha ? String(d.fecha) : (r.fecha instanceof Date
                 ? r.fecha.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : String(r.fecha ?? '—')),
             folio: toStr(r.folio),

@@ -5,6 +5,7 @@ import { obtenerRndPorFecha, type FormatoNRnd } from '@/lib/reportes/formato-n-r
 import { obtenerMediosAlternativosPorFechaPeriodo, type FormatoNMediosAlternativos } from '@/lib/reportes/formato-n-medios-alternativos-service'
 import { obtenerAtencionVictimasPorFechaPeriodo, type FormatoNAtencionVictimas } from '@/lib/reportes/formato-n-atencion-victimas-service'
 import { obtenerArmasAseguradasPorFecha, type FormatoNArmaAsegurada } from '@/lib/reportes/formato-n-armas-aseguradas-service'
+import { obtenerEstatusDia, type FormatoNEstatusDia } from '@/lib/reportes/formato-n-estatus-service'
 
 export interface FormatoNConsolidado {
   fecha: string
@@ -15,6 +16,7 @@ export interface FormatoNConsolidado {
   medios: FormatoNMediosAlternativos[]
   victimas: FormatoNAtencionVictimas[]
   armas: FormatoNArmaAsegurada[]
+  estatus: FormatoNEstatusDia | null
 }
 
 async function porPeriodos<T>(
@@ -30,7 +32,7 @@ async function porPeriodos<T>(
 }
 
 export async function obtenerFormatoNConsolidado(fecha: string): Promise<FormatoNConsolidado> {
-  const [eventos, fge, fgr, rnd, medios, victimas, armas] = await Promise.all([
+  const [eventos, fge, fgr, rnd, medios, victimas, armas, estatus] = await Promise.all([
     obtenerEventosPorFecha(fecha),
     porPeriodos(obtenerFgePorFechaPeriodo, fecha),
     porPeriodos(obtenerFgrPorFechaPeriodo, fecha),
@@ -38,9 +40,10 @@ export async function obtenerFormatoNConsolidado(fecha: string): Promise<Formato
     porPeriodos(obtenerMediosAlternativosPorFechaPeriodo, fecha),
     porPeriodos(obtenerAtencionVictimasPorFechaPeriodo, fecha),
     obtenerArmasAseguradasPorFecha(fecha),
+    obtenerEstatusDia(fecha),
   ])
 
-  return { fecha, eventos, fge, fgr, rnd, medios, victimas, armas }
+  return { fecha, eventos, fge, fgr, rnd, medios, victimas, armas, estatus }
 }
 
 function enumerarFechas(fechaInicio: string, fechaFin: string): string[] {

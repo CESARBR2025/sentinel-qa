@@ -32,6 +32,8 @@ export async function crearOficial(formData: FormData) {
   const telefono = (formData.get('telefono') as string) || null
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
+  const sectorIdRaw = formData.get('sectorId') as string | null
+  const sectorId = sectorIdRaw && sectorIdRaw !== '' ? Number(sectorIdRaw) : null
 
   const rolOficial = await query<{ id: number }>(
     `SELECT id FROM roles WHERE nombre = 'Oficial de Campo' LIMIT 1`,
@@ -54,18 +56,18 @@ export async function crearOficial(formData: FormData) {
       await query(
         `UPDATE ofi_oficiales SET
           no_nomina = $1, numero_empleado = $2, telefono = $3,
-          departamento_id = $4, patrulla_id = $5,
+          departamento_id = $4, patrulla_id = $5, sector_id = $6,
           ofi_estatus = 'activo', updated_at = NOW()
-        WHERE user_id = $6`,
-        [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, userId],
+        WHERE user_id = $7`,
+        [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId, userId],
       )
     } else {
       await query(
         `INSERT INTO ofi_oficiales
           (user_id, no_nomina, numero_empleado, telefono,
-           departamento_id, patrulla_id, ofi_estatus)
-         VALUES ($1, $2, $3, $4, $5, $6, 'activo')`,
-        [userId, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId],
+           departamento_id, patrulla_id, sector_id, ofi_estatus)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, 'activo')`,
+        [userId, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId],
       )
     }
 
@@ -97,9 +99,9 @@ export async function crearOficial(formData: FormData) {
     await query(
       `INSERT INTO ofi_oficiales
         (user_id, no_nomina, numero_empleado, telefono,
-         departamento_id, patrulla_id, ofi_estatus)
-       VALUES ($1, $2, $3, $4, $5, $6, 'activo')`,
-      [result.user.id, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId],
+         departamento_id, patrulla_id, sector_id, ofi_estatus)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'activo')`,
+      [result.user.id, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId],
     )
 
     if (result?.token) {
@@ -127,11 +129,13 @@ export async function obtenerOficialesLista() {
       u.apellido AS user_apellido,
       u.email AS user_email,
       d.nombre AS departamento_nombre,
-      p.placa AS patrulla_unidad
+      p.placa AS patrulla_unidad,
+      s.nombre AS sector_nombre
     FROM ofi_oficiales o
     LEFT JOIN users u ON u.id = o.user_id
     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
     LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+    LEFT JOIN cat_sectores s ON s.id = o.sector_id
     ORDER BY o.created_at DESC`,
   )
 
@@ -147,6 +151,8 @@ export async function obtenerOficialesLista() {
     departamentoNombre: (row.departamento_nombre as string) ?? null,
     patrullaId: (row.patrulla_id as string) ?? null,
     patrullaUnidad: (row.patrulla_unidad as string) ?? null,
+    sectorId: row.sector_id != null ? Number(row.sector_id) : null,
+    sectorNombre: (row.sector_nombre as string) ?? null,
     userId: (row.user_id as string) ?? null,
     ofiEstatus: (row.ofi_estatus as string) ?? 'activo',
     createdAt: row.created_at as string,
@@ -180,6 +186,8 @@ export async function reactivarOficialConDatos(formData: FormData) {
   const telefono = (formData.get('telefono') as string) || null
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
+  const sectorIdRaw = formData.get('sectorId') as string | null
+  const sectorId = sectorIdRaw && sectorIdRaw !== '' ? Number(sectorIdRaw) : null
 
   if (!oficialId || !userId) {
     redirect('/admin-transito/oficiales?error=datos_invalidos')
@@ -194,10 +202,10 @@ export async function reactivarOficialConDatos(formData: FormData) {
   await query(
     `UPDATE ofi_oficiales SET
       no_nomina = $1, telefono = $2,
-      departamento_id = $3, patrulla_id = $4,
+      departamento_id = $3, patrulla_id = $4, sector_id = $5,
       ofi_estatus = 'activo', updated_at = NOW()
-    WHERE id = $5`,
-    [noNomina, telefono, departamentoId, patrullaId, oficialId],
+    WHERE id = $6`,
+    [noNomina, telefono, departamentoId, patrullaId, sectorId, oficialId],
   )
   await query(
     `UPDATE users SET rol_id = $1 WHERE id = $2`,
@@ -218,11 +226,13 @@ export async function obtenerOficialPorId(id: string) {
       u.apellido AS user_apellido,
       u.email AS user_email,
       d.nombre AS departamento_nombre,
-      p.placa AS patrulla_unidad
+      p.placa AS patrulla_unidad,
+      s.nombre AS sector_nombre
     FROM ofi_oficiales o
     LEFT JOIN users u ON u.id = o.user_id
     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
     LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+    LEFT JOIN cat_sectores s ON s.id = o.sector_id
     WHERE o.id = $1
     LIMIT 1`,
     [id],
@@ -243,6 +253,8 @@ export async function obtenerOficialPorId(id: string) {
     departamentoNombre: (row.departamento_nombre as string) ?? null,
     patrullaId: (row.patrulla_id as string) ?? null,
     patrullaUnidad: (row.patrulla_unidad as string) ?? null,
+    sectorId: row.sector_id != null ? Number(row.sector_id) : null,
+    sectorNombre: (row.sector_nombre as string) ?? null,
     userId: (row.user_id as string) ?? null,
     ofiEstatus: (row.ofi_estatus as string) ?? 'activo',
     createdAt: row.created_at as string,
@@ -263,6 +275,8 @@ export async function actualizarOficial(formData: FormData) {
   const telefono = (formData.get('telefono') as string) || null
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
+  const sectorIdRaw = formData.get('sectorId') as string | null
+  const sectorId = sectorIdRaw && sectorIdRaw !== '' ? Number(sectorIdRaw) : null
 
   if (!id) {
     redirect(`/admin-transito/oficiales?error=datos_invalidos`)
@@ -282,10 +296,10 @@ export async function actualizarOficial(formData: FormData) {
   await query(
     `UPDATE ofi_oficiales SET
       no_nomina = $1, numero_empleado = $2, telefono = $3,
-      departamento_id = $4, patrulla_id = $5,
+      departamento_id = $4, patrulla_id = $5, sector_id = $6,
       updated_at = NOW()
-    WHERE id = $6`,
-    [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, id],
+    WHERE id = $7`,
+    [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId, id],
   )
 
   revalidatePath('/admin-transito/oficiales')

@@ -1,38 +1,4 @@
 import { query } from '@/lib/db'
-import { obtenerArmas } from '@/lib/reportes-operativos/repository'
-
-export interface ArmaFuente {
-  fecha: string
-  folio: string
-  tipo_arma: string
-  observaciones: string | null
-}
-
-// Jala armas de fuego ya capturadas en reportes de campo (ofi_reportes_campo)
-// El jsonb armas_fuego trae { datos, cartuchos, observaciones, ... } por cada arma.
-export async function obtenerArmasParaFormatoN(fecha: string): Promise<ArmaFuente[]> {
-  const rows = await obtenerArmas(fecha, fecha)
-  const resultado: ArmaFuente[] = []
-  for (const r of rows) {
-    const folio = String(r.folio ?? '')
-    const armasRaw = (r.armas as unknown) ?? []
-    const arr = Array.isArray(armasRaw) ? (armasRaw as unknown[]) : []
-    for (const a of arr) {
-      const obj = a as Record<string, unknown>
-      const datos = obj.datos != null ? String(obj.datos) : ''
-      const cartuchos = obj.cartuchos != null ? String(obj.cartuchos) : ''
-      const observaciones = obj.observaciones != null ? String(obj.observaciones) : ''
-      const descripcion = [datos, cartuchos].filter(Boolean).join(' — ') || 'Arma de fuego'
-      resultado.push({
-        fecha,
-        folio,
-        tipo_arma: descripcion,
-        observaciones: observaciones || (folio ? `Folio: ${folio}` : null),
-      })
-    }
-  }
-  return resultado
-}
 
 export interface FormatoNArmaAsegurada {
   id: string
@@ -44,6 +10,7 @@ export interface FormatoNArmaAsegurada {
   observaciones: string | null
   capturado_por: string
   creado_en: string
+  origen_fiscalia_arma_id: string | null
 }
 
 function formatFecha(v: unknown): string {
@@ -63,6 +30,7 @@ function rowTo(r: Record<string, unknown>): FormatoNArmaAsegurada {
     observaciones: r.observaciones != null ? String(r.observaciones) : null,
     capturado_por: String(r.capturado_por),
     creado_en: String(r.creado_en),
+    origen_fiscalia_arma_id: r.origen_fiscalia_arma_id != null ? String(r.origen_fiscalia_arma_id) : null,
   }
 }
 
@@ -114,4 +82,99 @@ export async function actualizarArmaAsegurada(id: string, data: Partial<Omit<For
   if (cols.length === 0) return
   params.push(id)
   await query(`UPDATE formato_n_armas_aseguradas SET ${cols.join(', ')} WHERE id = $${idx}`, params)
+}
+
+export interface FuenteArma {
+  id: string
+  fecha: string
+  tipo_arma: string
+  marca: string | null
+  matricula: string | null
+  calibre: string | null
+  observaciones: string | null
+  carpeta_investigacion: string | null
+}
+
+export async function buscarArmasFiscaliaPorRango(fechaInicio: string, fechaFin: string): Promise<FuenteArma[]> {
+  const r = await query<Record<string, unknown>>(
+    `SELECT a.id, i.fecha_hora_inicio::date AS fecha,
+            a.tipo_arma, a.marca, a.matricula, a.calibre, a.observaciones,
+            d.num_carpeta_investigacion AS carpeta_investigacion
+     FROM fiscalia_armas_aseguradas a
+     JOIN ofi_reportes_campo rc ON rc.id = a.reporte_campo_id
+     JOIN incidentes i ON i.id = rc.incidente_id
+     LEFT JOIN ofi_reporte_denuncia d ON d.reporte_campo_id = rc.id
+     WHERE i.fecha_hora_inicio::date BETWEEN $1 AND $2
+     ORDER BY i.fecha_hora_inicio DESC`,
+    [fechaInicio, fechaFin],
+  )
+  return r.rows.map(row => ({
+    id: String(row.id),
+    fecha: String(row.fecha).slice(0, 10),
+    tipo_arma: String(row.tipo_arma),
+    marca: row.marca != null ? String(row.marca) : null,
+    matricula: row.matricula != null ? String(row.matricula) : null,
+    calibre: row.calibre != null ? String(row.calibre) : null,
+    observaciones: row.observaciones != null ? String(row.observaciones) : null,
+    carpeta_investigacion: row.carpeta_investigacion != null ? String(row.carpeta_investigacion) : null,
+  }))
+}
+
+export interface ArmaOrigenInput extends FormatoNArmaAseguradaInput {
+  origen_fiscalia_arma_id: string
+}
+
+async function upsertArmaDesdeFiscalia(data: ArmaOrigenInput): Promise<void> {
+  await query(
+    `INSERT INTO formato_n_armas_aseguradas (fecha, carpeta_investigacion, tipo_arma, matricula, calibre, observaciones, capturado_por, origen_fiscalia_arma_id)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+     ON CONFLICT (origen_fiscalia_arma_id) WHERE origen_fiscalia_arma_id IS NOT NULL
+     DO UPDATE SET tipo_arma = EXCLUDED.tipo_arma, matricula = EXCLUDED.matricula,
+       calibre = EXCLUDED.calibre, observaciones = EXCLUDED.observaciones`,
+    [data.fecha, data.carpeta_investigacion ?? null, data.tipo_arma, data.matricula ?? null, data.calibre ?? null, data.observaciones ?? null, data.capturado_por, data.origen_fiscalia_arma_id],
+  )
+}
+
+export async function eliminarDuplicadosArmasDelDia(fecha: string): Promise<void> {
+  // Huérfanos previos al upsert por origen_fiscalia_arma_id: debe correr ANTES
+  // del match por campos exactos, o ese match puede quedarse con el huérfano
+  // en vez del enlazado (bug real, ver boveda/🗺 Roadmap/Troubleshooting.md).
+  await query(`
+    DELETE FROM formato_n_armas_aseguradas a
+    USING formato_n_armas_aseguradas b
+    WHERE a.fecha = $1
+      AND b.fecha = $1
+      AND a.origen_fiscalia_arma_id IS NULL
+      AND b.origen_fiscalia_arma_id IS NOT NULL
+      AND a.tipo_arma = b.tipo_arma
+      AND COALESCE(a.matricula, '') = COALESCE(b.matricula, '')
+  `, [fecha])
+  await query(`
+    DELETE FROM formato_n_armas_aseguradas a
+    USING formato_n_armas_aseguradas b
+    WHERE a.fecha = $1
+      AND b.fecha = $1
+      AND a.tipo_arma = b.tipo_arma
+      AND COALESCE(a.matricula, '') = COALESCE(b.matricula, '')
+      AND COALESCE(a.calibre, '') = COALESCE(b.calibre, '')
+      AND (b.creado_en < a.creado_en OR (b.creado_en = a.creado_en AND b.id::text < a.id::text))
+  `, [fecha])
+}
+
+export async function sincronizarArmasDelDia(fecha: string, capturadoPor: string): Promise<FormatoNArmaAsegurada[]> {
+  const armas = await buscarArmasFiscaliaPorRango(fecha, fecha)
+  await eliminarDuplicadosArmasDelDia(fecha)
+  for (const a of armas) {
+    await upsertArmaDesdeFiscalia({
+      fecha,
+      carpeta_investigacion: a.carpeta_investigacion,
+      tipo_arma: a.tipo_arma,
+      matricula: a.matricula,
+      calibre: a.calibre,
+      observaciones: a.observaciones,
+      capturado_por: capturadoPor,
+      origen_fiscalia_arma_id: a.id,
+    })
+  }
+  return obtenerArmasAseguradasPorFecha(fecha)
 }

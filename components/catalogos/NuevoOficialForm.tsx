@@ -12,9 +12,16 @@ interface Departamento {
   nombre: string
 }
 
+interface Sector {
+  id: number
+  clave: string
+  nombre: string
+}
+
 interface Props {
   deptos: Departamento[]
   patrullas: PatrullaAsignacion[]
+  sectores: Sector[]
 }
 
 const labelStyle: React.CSSProperties = {
@@ -55,7 +62,7 @@ function onUpper(e: React.ChangeEvent<HTMLInputElement>) {
   e.target.value = e.target.value.toUpperCase()
 }
 
-export default function NuevoOficialForm({ deptos, patrullas }: Props) {
+export default function NuevoOficialForm({ deptos, patrullas, sectores }: Props) {
   return (
     <form action={crearOficial} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div
@@ -205,6 +212,17 @@ export default function NuevoOficialForm({ deptos, patrullas }: Props) {
           <div>
             <label style={labelStyle}>Unidad / Patrulla</label>
             <PatrullaSelector patrullas={patrullas} />
+          </div>
+          <div>
+            <label style={labelStyle}>Sector</label>
+            <select name="sectorId" style={selectStyle}>
+              <option value="">— Sin asignar —</option>
+              {sectores.map((s) => (
+                <option key={s.id} value={String(s.id)}>
+                  {s.nombre}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

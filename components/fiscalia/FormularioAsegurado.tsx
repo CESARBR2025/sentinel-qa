@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Hash, FileText, Fingerprint, Calendar, Clock, BookOpen, User,
@@ -9,6 +9,7 @@ import {
 import GoogleMapPicker from '@/components/maps/GoogleMapPicker'
 import { guardarDetallesAseguradosAction } from '@/lib/fiscalia/actions'
 import { AntecedentesExternos } from '@/components/fiscalia/AntecedentesExternos'
+import { ArmasAseguradas } from '@/components/fiscalia/ArmasAseguradas'
 import type { DetalleAseguradoCompleto, DetenidoDireccionInput } from '@/lib/fiscalia/types'
 
 interface Props {
@@ -171,7 +172,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
     data.detenidos.forEach((_, i) => {
       initAutocomplete(i)
     })
-  }, [placesLoaded, readOnly, data.detenidos.length])
+  }, [placesLoaded, readOnly, data.detenidos.length]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const debounceTimers = useRef<(ReturnType<typeof setTimeout> | null)[]>([])
 
@@ -304,7 +305,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
         streetViewInstances.current[i] = null
       }
     })
-  }, [placesLoaded, readOnly, vistaMapa, detenidosDir])
+  }, [placesLoaded, readOnly, vistaMapa, detenidosDir]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function updateDetenido(i: number, field: string, value: string | number | null) {
     if (readOnly) return
@@ -938,6 +939,7 @@ export function FormularioAsegurado({ reporteCampoId, data, onGuardar, redirectP
       ))}
 
       <AntecedentesExternos reporteCampoId={reporteCampoId} readOnly={readOnly} />
+      <ArmasAseguradas reporteCampoId={reporteCampoId} readOnly={readOnly} />
 
       {errorMaps && (
         <div style={{

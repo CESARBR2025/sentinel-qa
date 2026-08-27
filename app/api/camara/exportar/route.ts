@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { obtenerPorTurno, obtenerConcentradoDiario, obtenerTotalesCamara } from '@/lib/camara/repository'
 import type { IncidenteCamara } from '@/lib/camara/types'
+import { TURNOS } from '@/lib/monitorista/turnos'
 import { tienePermiso } from '@/lib/incidentes/permisos'
 import ExcelJS from 'exceljs'
 
@@ -148,18 +149,18 @@ export async function GET(req: NextRequest) {
     const hasta = p.get('to') || new Date().toISOString().split('T')[0]
 
     const [t1, t2, t3, concentrado] = await Promise.all([
-        obtenerPorTurno('MATUTINO', desde, hasta),
-        obtenerPorTurno('VESPERTINO', desde, hasta),
-        obtenerPorTurno('NOCTURNO', desde, hasta),
+        obtenerPorTurno(TURNOS[0].clave, desde, hasta),
+        obtenerPorTurno(TURNOS[1].clave, desde, hasta),
+        obtenerPorTurno(TURNOS[2].clave, desde, hasta),
         obtenerConcentradoDiario(desde, hasta),
     ])
 
     const wb = new ExcelJS.Workbook()
     wb.creator = 'CENTINELA · SSPM'
 
-    crearHoja(wb, 'TURNO 1 MATUTINO', 'REGISTROS DIARIOS — TURNO 1 MATUTINO', t1)
-    crearHoja(wb, 'TURNO 2 VESPERTINO', 'REGISTROS DIARIOS — TURNO 2 VESPERTINO', t2)
-    crearHoja(wb, 'TURNO 3 NOCTURNO', 'REGISTROS DIARIOS — TURNO 3 NOCTURNO', t3)
+    crearHoja(wb, `TURNO 1 ${TURNOS[0].clave}`, `REGISTROS DIARIOS — TURNO 1 ${TURNOS[0].clave}`, t1)
+    crearHoja(wb, `TURNO 2 ${TURNOS[1].clave}`, `REGISTROS DIARIOS — TURNO 2 ${TURNOS[1].clave}`, t2)
+    crearHoja(wb, `TURNO 3 ${TURNOS[2].clave}`, `REGISTROS DIARIOS — TURNO 3 ${TURNOS[2].clave}`, t3)
     crearHoja(wb, 'CONCENTRADO', 'CONCENTRADO MENSUAL — TODOS LOS TURNOS', concentrado, { conTurno: true })
 
     const buffer = await wb.xlsx.writeBuffer()

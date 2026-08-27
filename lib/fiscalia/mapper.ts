@@ -1,4 +1,4 @@
-import type { SolicitudEvidencia, ViaInfraccionDetalle, AseguradoRow, DetalleAseguradoCompleto, DetalleDetenidoGuardado, PuestaDisposicionRow, AntecedenteExterno } from './types'
+import type { SolicitudEvidencia, ViaInfraccionDetalle, AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, AntecedenteExterno, ArmaAsegurada } from './types'
 
 function str(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -230,6 +230,19 @@ export function rowToAntecedenteExterno(row: Record<string, unknown>): Anteceden
     lugar: str(row.lugar),
     capturadoPorNombre: str(row.capturado_por_nombre),
     createdAt: str(row.created_at) ?? '',
+  }
+}
+
+export function rowToArmaAsegurada(row: Record<string, unknown>): ArmaAsegurada {
+  return {
+    id: str(row.id) ?? '',
+    tipoArma: str(row.tipo_arma) ?? '',
+    marca: str(row.marca),
+    matricula: str(row.matricula),
+    calibre: str(row.calibre),
+    observaciones: str(row.observaciones),
+    createdAt: str(row.created_at) ?? '',
+    capturadoPorNombre: str(row.capturado_por_nombre),
   }
 }
 

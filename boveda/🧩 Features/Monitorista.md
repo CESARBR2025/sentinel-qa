@@ -49,7 +49,7 @@ flowchart TD
 | `solicitudes_evidencia` | `id`, `incidente_id`, `folio_incidente`, `solicitado_por`, `status`, `creado_en`, `completado_en` | Solicitudes de evidencia |
 | `evidencias` | `id`, `solicitud_id`, `tipo`, `url_expediente`, `subido_por` | Archivos subidos como evidencia |
 | `monitorista_historial` | `id`, `monitorista_id`, `accion`, `incidente_id`, `solicitud_id`, `creado_en` | Bitácora de acciones |
-| `incidentes_camara` | `id`, `fecha`, `turno`, `total_personas_revisadas`, `vehiculos_revisar` | Reporte diario de cámara |
+| `incidentes_camara` | `id`, `fecha`, `turno`, `total_personas_revisadas`, `vehiculos_revisar` | Reporte diario de cámara — **`fecha` = fecha de INICIO del turno** (Etapa 0.6 del Parte de Novedades; el NOCTURNO cruza la medianoche 22:00→07:00, capturado de madrugada guarda AYER) |
 | `iph_detenidos` | `id`, `folio_iph`, `alias`, `delito` | Registro IPH de detenidos (módulo Análisis) |
 | `fichas_inteligencia_detenidos` | `id`, `nombre_detenido`, `folio`, `foto_frontal_url`, `iph` | Fichas de inteligencia (módulo Análisis) |
 | `ofi_reporte_denuncia` | `id`, `folio_denuncia`, `monitorista_fechas_requeridas` (JSONB), `estado_evidencia` | Denuncias con estado de evidencia |

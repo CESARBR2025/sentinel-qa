@@ -42,6 +42,8 @@ export async function crearOficial(formData: FormData) {
   const telefono = strUpper((formData.get('telefono') as string) ?? '')
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
+  const sectorIdRaw = formData.get('sectorId') as string | null
+  const sectorId = sectorIdRaw && sectorIdRaw !== '' ? Number(sectorIdRaw) : null
   const rolOficial = await obtenerRolOficialCampo()
 
   if (userId) {
@@ -49,13 +51,13 @@ export async function crearOficial(formData: FormData) {
     const existing = await query<{ id: string }>(`SELECT id FROM ofi_oficiales WHERE user_id = $1 LIMIT 1`, [userId])
     if (existing.rows.length) {
       await query(
-        `UPDATE ofi_oficiales SET no_nomina=$1, numero_empleado=$2, telefono=$3, departamento_id=$4, patrulla_id=$5, ofi_estatus='activo', updated_at=NOW() WHERE user_id=$6`,
-        [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, userId],
+        `UPDATE ofi_oficiales SET no_nomina=$1, numero_empleado=$2, telefono=$3, departamento_id=$4, patrulla_id=$5, sector_id=$6, ofi_estatus='activo', updated_at=NOW() WHERE user_id=$7`,
+        [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId, userId],
       )
     } else {
       await query(
-        `INSERT INTO ofi_oficiales (user_id, no_nomina, numero_empleado, telefono, departamento_id, patrulla_id, ofi_estatus) VALUES ($1,$2,$3,$4,$5,$6,'activo')`,
-        [userId, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId],
+        `INSERT INTO ofi_oficiales (user_id, no_nomina, numero_empleado, telefono, departamento_id, patrulla_id, sector_id, ofi_estatus) VALUES ($1,$2,$3,$4,$5,$6,$7,'activo')`,
+        [userId, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId],
       )
     }
     revalidatePath(BASE_OFICIALES)
@@ -74,8 +76,8 @@ export async function crearOficial(formData: FormData) {
     if (!result?.user?.id) throw new Error('Error al crear usuario')
     await query(`UPDATE users SET rol_id = $1 WHERE id = $2`, [rolOficial, result.user.id])
     await query(
-      `INSERT INTO ofi_oficiales (user_id, no_nomina, numero_empleado, telefono, departamento_id, patrulla_id, ofi_estatus) VALUES ($1,$2,$3,$4,$5,$6,'activo')`,
-      [result.user.id, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId],
+      `INSERT INTO ofi_oficiales (user_id, no_nomina, numero_empleado, telefono, departamento_id, patrulla_id, sector_id, ofi_estatus) VALUES ($1,$2,$3,$4,$5,$6,$7,'activo')`,
+      [result.user.id, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId],
     )
     if (result?.token) await eliminarSesion(result.token)
   } catch (e) {
@@ -100,11 +102,13 @@ export async function actualizarOficial(formData: FormData) {
   const telefono = strUpper((formData.get('telefono') as string) ?? '')
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
+  const sectorIdRaw = formData.get('sectorId') as string | null
+  const sectorId = sectorIdRaw && sectorIdRaw !== '' ? Number(sectorIdRaw) : null
 
   if (!id) redirect(`${BASE_OFICIALES}?error=datos_invalidos`)
 
   if (userId) await actualizarUserInfo(userId, { userName, userApellido, userEmail })
-  await actualizarOficialRecord(id, { noNomina, numeroEmpleado, telefono, departamentoId, patrullaId })
+  await actualizarOficialRecord(id, { noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId })
 
   revalidatePath(BASE_OFICIALES)
   redirect(`${BASE_OFICIALES}?exito=actualizado`)
@@ -134,14 +138,16 @@ export async function reactivarOficial(formData: FormData) {
   const telefono = strUpper((formData.get('telefono') as string) ?? '')
   const departamentoId = (formData.get('departamentoId') as string) || null
   const patrullaId = (formData.get('patrullaId') as string) || null
+  const sectorIdRaw = formData.get('sectorId') as string | null
+  const sectorId = sectorIdRaw && sectorIdRaw !== '' ? Number(sectorIdRaw) : null
 
   if (!oficialId || !userId) redirect(`${BASE_OFICIALES}?error=datos_invalidos`)
 
   const rolOficial = await obtenerRolOficialCampo()
 
   await query(
-    `UPDATE ofi_oficiales SET no_nomina=$1, telefono=$2, departamento_id=$3, patrulla_id=$4, ofi_estatus='activo', updated_at=NOW() WHERE id=$5`,
-    [noNomina, telefono, departamentoId, patrullaId, oficialId],
+    `UPDATE ofi_oficiales SET no_nomina=$1, telefono=$2, departamento_id=$3, patrulla_id=$4, sector_id=$5, ofi_estatus='activo', updated_at=NOW() WHERE id=$6`,
+    [noNomina, telefono, departamentoId, patrullaId, sectorId, oficialId],
   )
   await query(`UPDATE users SET rol_id = $1 WHERE id = $2`, [rolOficial, userId])
 

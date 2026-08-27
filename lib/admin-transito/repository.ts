@@ -1,12 +1,19 @@
 import { query } from '@/lib/db'
-import type { Departamento, OficialLista, UserBasico } from './types'
-import { rowToDepartamento, rowToOficialLista, rowToUserBasico } from './mapper'
+import type { Departamento, OficialLista, Sector, UserBasico } from './types'
+import { rowToDepartamento, rowToOficialLista, rowToSector, rowToUserBasico } from './mapper'
 
 export async function listarDepartamentosActivos(): Promise<Departamento[]> {
   const result = await query<Record<string, unknown>>(
     `SELECT id, clave, nombre FROM via.v2_departamentos WHERE activo = true ORDER BY nombre`,
   )
   return result.rows.map(rowToDepartamento)
+}
+
+export async function listarSectoresActivos(): Promise<Sector[]> {
+  const result = await query<Record<string, unknown>>(
+    `SELECT id, clave, nombre FROM cat_sectores WHERE activo = true ORDER BY nombre`,
+  )
+  return result.rows.map(rowToSector)
 }
 
 export async function getUserRole(userId: string): Promise<string | null> {
@@ -48,24 +55,25 @@ export async function upsertOficial(
   telefono: string | null,
   departamentoId: string | null,
   patrullaId: string | null,
+  sectorId: number | null,
 ): Promise<void> {
   const existing = await obtenerOficialExistente(userId)
   if (existing) {
     await query(
       `UPDATE ofi_oficiales SET
         no_nomina = $1, numero_empleado = $2, telefono = $3,
-        departamento_id = $4, patrulla_id = $5,
+        departamento_id = $4, patrulla_id = $5, sector_id = $6,
         ofi_estatus = 'activo', updated_at = NOW()
-      WHERE user_id = $6`,
-      [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, userId],
+      WHERE user_id = $7`,
+      [noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId, userId],
     )
   } else {
     await query(
       `INSERT INTO ofi_oficiales
         (user_id, no_nomina, numero_empleado, telefono,
-         departamento_id, patrulla_id, ofi_estatus)
-       VALUES ($1, $2, $3, $4, $5, $6, 'activo')`,
-      [userId, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId],
+         departamento_id, patrulla_id, sector_id, ofi_estatus)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'activo')`,
+      [userId, noNomina, numeroEmpleado, telefono, departamentoId, patrullaId, sectorId],
     )
   }
 }
@@ -82,11 +90,13 @@ export async function listarOficiales(): Promise<OficialLista[]> {
       u.apellido AS user_apellido,
       u.email AS user_email,
       d.nombre AS departamento_nombre,
-      p.placa AS patrulla_unidad
+      p.placa AS patrulla_unidad,
+      s.nombre AS sector_nombre
     FROM ofi_oficiales o
     LEFT JOIN users u ON u.id = o.user_id
     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
     LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+    LEFT JOIN cat_sectores s ON s.id = o.sector_id
     ORDER BY o.created_at DESC`,
   )
   return result.rows.map(rowToOficialLista)
@@ -103,15 +113,15 @@ export async function destituirOficial(oficialId: string, userId: string): Promi
 export async function reactivarOficial(
   oficialId: string,
   userId: string,
-  data: { noNomina: string | null; telefono: string | null; departamentoId: string | null; patrullaId: string | null },
+  data: { noNomina: string | null; telefono: string | null; departamentoId: string | null; patrullaId: string | null; sectorId: number | null },
 ): Promise<void> {
   await query(
     `UPDATE ofi_oficiales SET
       no_nomina = $1, telefono = $2,
-      departamento_id = $3, patrulla_id = $4,
+      departamento_id = $3, patrulla_id = $4, sector_id = $5,
       ofi_estatus = 'activo', updated_at = NOW()
-    WHERE id = $5`,
-    [data.noNomina, data.telefono, data.departamentoId, data.patrullaId, oficialId],
+    WHERE id = $6`,
+    [data.noNomina, data.telefono, data.departamentoId, data.patrullaId, data.sectorId, oficialId],
   )
   await query(`UPDATE users SET rol_id = $1 WHERE id = $2`, [userId])
 }
@@ -124,11 +134,13 @@ export async function obtenerOficialPorId(id: string): Promise<OficialLista | nu
       u.apellido AS user_apellido,
       u.email AS user_email,
       d.nombre AS departamento_nombre,
-      p.placa AS patrulla_unidad
+      p.placa AS patrulla_unidad,
+      s.nombre AS sector_nombre
     FROM ofi_oficiales o
     LEFT JOIN users u ON u.id = o.user_id
     LEFT JOIN via.v2_departamentos d ON d.id = o.departamento_id
     LEFT JOIN via.v2_patrullas p ON p.id = o.patrulla_id
+    LEFT JOIN cat_sectores s ON s.id = o.sector_id
     WHERE o.id = $1
     LIMIT 1`,
     [id],
@@ -152,15 +164,15 @@ export async function actualizarUserInfo(
 
 export async function actualizarOficialRecord(
   id: string,
-  data: { noNomina: string | null; numeroEmpleado: string | null; telefono: string | null; departamentoId: string | null; patrullaId: string | null },
+  data: { noNomina: string | null; numeroEmpleado: string | null; telefono: string | null; departamentoId: string | null; patrullaId: string | null; sectorId: number | null },
 ): Promise<void> {
   await query(
     `UPDATE ofi_oficiales SET
       no_nomina = $1, numero_empleado = $2, telefono = $3,
-      departamento_id = $4, patrulla_id = $5,
+      departamento_id = $4, patrulla_id = $5, sector_id = $6,
       updated_at = NOW()
-    WHERE id = $6`,
-    [data.noNomina, data.numeroEmpleado, data.telefono, data.departamentoId, data.patrullaId, id],
+    WHERE id = $7`,
+    [data.noNomina, data.numeroEmpleado, data.telefono, data.departamentoId, data.patrullaId, data.sectorId, id],
   )
 }
 

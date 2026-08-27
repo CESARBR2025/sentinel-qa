@@ -272,15 +272,19 @@
 │   │   │   │   └── exportar/
 │   │   │   ├── formato-n-armas-aseguradas/
 │   │   │   │   ├── [id]/
+│   │   │   │   ├── sincronizar/
 │   │   │   │   └── route.ts
 │   │   │   ├── formato-n-atencion-victimas/
 │   │   │   │   ├── [id]/
 │   │   │   │   └── route.ts
 │   │   │   ├── formato-n-consolidado/
 │   │   │   │   └── route.ts
+│   │   │   ├── formato-n-estatus/
+│   │   │   │   └── route.ts
 │   │   │   ├── formato-n-eventos/
 │   │   │   │   ├── [id]/
 │   │   │   │   ├── fuente/
+│   │   │   │   ├── sincronizar/
 │   │   │   │   └── route.ts
 │   │   │   ├── formato-n-fge/
 │   │   │   │   ├── [id]/
@@ -288,13 +292,17 @@
 │   │   │   │   └── route.ts
 │   │   │   ├── formato-n-fgr/
 │   │   │   │   ├── [id]/
+│   │   │   │   ├── calcular/
 │   │   │   │   └── route.ts
 │   │   │   ├── formato-n-medios-alternativos/
 │   │   │   │   ├── [id]/
 │   │   │   │   └── route.ts
+│   │   │   ├── formato-n-observaciones/
+│   │   │   │   └── route.ts
 │   │   │   ├── formato-n-rnd/
 │   │   │   │   ├── [id]/
 │   │   │   │   ├── fuente/
+│   │   │   │   ├── sincronizar/
 │   │   │   │   └── route.ts
 │   │   │   └── numeros-extorsion/
 │   │   │       └── exportar/
@@ -403,6 +411,9 @@
 │   ├── envio-de-formatos/
 │   │   ├── consolidar/
 │   │   │   └── page.tsx
+│   │   ├── reporte/
+│   │   │   └── [fecha]/
+│   │   │       └── page.tsx
 │   │   └── page.tsx
 │   ├── fiscalia/
 │   │   ├── asegurados/
@@ -422,48 +433,6 @@
 │   │   ├── solicitudes/
 │   │   │   ├── [solicitudId]/
 │   │   │   │   └── page.tsx
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-armas-aseguradas/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-atencion-victimas/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-eventos/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-fge/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-fgr/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-medios-alternativos/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
-│   │   │   └── page.tsx
-│   │   └── page.tsx
-│   ├── formato-n-rnd/
-│   │   ├── [id]/
-│   │   │   └── page.tsx
-│   │   ├── nuevo/
 │   │   │   └── page.tsx
 │   │   └── page.tsx
 │   ├── formatos-udai/
@@ -500,8 +469,6 @@
 │   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── nCoordinacion/
 │   │   └── page.tsx
 │   ├── notificaciones/
 │   │   └── page.tsx
@@ -673,6 +640,7 @@
 │   │   └── CambiarSesionDev.tsx
 │   ├── fiscalia/
 │   │   ├── AntecedentesExternos.tsx
+│   │   ├── ArmasAseguradas.tsx
 │   │   ├── ButtonVerDetalles.tsx
 │   │   ├── CapturarDetallesForm.tsx
 │   │   ├── CargarOficioSection.tsx
@@ -763,7 +731,8 @@
 │   │   ├── SolicitudC4Form.tsx
 │   │   └── VisitaModal.tsx
 │   ├── reporte-detenidos/
-│   │   └── BotonGenerarPpt.tsx
+│   │   ├── BotonGenerarPpt.tsx
+│   │   └── TablaDetenidosReporte.tsx
 │   ├── reportes/
 │   │   ├── d1/
 │   │   │   ├── D1Filters.tsx
@@ -1040,6 +1009,8 @@
 │   │   │   ├── 0044_extorsion_resultado.sql
 │   │   │   ├── 0045_alarma_escolar_ajustes.sql
 │   │   │   ├── 0046_alarma_escolar_direccion.sql
+│   │   │   ├── 0047_formato_n_origen_sync.sql
+│   │   │   ├── 0048_fiscalia_armas_aseguradas.sql
 │   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
@@ -1110,7 +1081,6 @@
 │   │   ├── service.ts
 │   │   └── types.ts
 │   ├── n-coordinacion/
-│   │   ├── actions.ts
 │   │   └── repository.ts
 │   ├── notificaciones/
 │   │   ├── actions.ts
@@ -1160,15 +1130,16 @@
 │   │   ├── formato-n-armas-aseguradas-service.ts
 │   │   ├── formato-n-atencion-victimas-service.ts
 │   │   ├── formato-n-consolidado-service.ts
+│   │   ├── formato-n-estatus-service.ts
 │   │   ├── formato-n-eventos-service.ts
 │   │   ├── formato-n-fge-service.ts
 │   │   ├── formato-n-fgr-service.ts
 │   │   ├── formato-n-medios-alternativos-service.ts
 │   │   ├── formato-n-rnd-service.ts
+│   │   ├── formato-n-store.ts
 │   │   ├── mapper.ts
 │   │   ├── permisos.ts
-│   │   ├── repository.ts
-│   │   └── types.ts
+│   │   └── repository.ts
 │   ├── reportes-incidentes/
 │   │   ├── mapper.ts
 │   │   ├── repository.ts
@@ -1244,6 +1215,16 @@
 │   ├── etapa-5.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
+├── plan-armas-fiscalia/
+│   ├── 00-contexto.md
+│   ├── etapa-1.md
+│   ├── etapa-2.md
+│   ├── etapa-3.md
+│   ├── etapa-4.md
+│   ├── etapa-5.md
+│   ├── etapa-6.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
 ├── plan-dashboard-kpi-admin/
 │   ├── 00-contexto.md
 │   ├── etapa-01.md
@@ -1266,6 +1247,15 @@
 │   ├── etapa-07.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
+├── plan-formato-n-fge-fgr/
+│   ├── ETAPA-1.md
+│   ├── ETAPA-2.md
+│   ├── ETAPA-3.md
+│   ├── ETAPA-4.md
+│   ├── ETAPA-5.md
+│   ├── ETAPA-6.md
+│   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
 ├── plan-notificaciones-forzadas/
 │   ├── 00-contexto.md
 │   ├── etapa-1.md
@@ -1281,6 +1271,19 @@
 │   ├── etapa-2.md
 │   ├── etapa-3.md
 │   ├── PROMPT-DEEPSEEK.md
+│   └── README.md
+├── plan-parte-novedades-c4/
+│   ├── ETAPA-0.md
+│   ├── ETAPA-1.md
+│   ├── ETAPA-10.md
+│   ├── ETAPA-2.md
+│   ├── ETAPA-3.md
+│   ├── ETAPA-4.md
+│   ├── ETAPA-5.md
+│   ├── ETAPA-6.md
+│   ├── ETAPA-7.md
+│   ├── ETAPA-8.md
+│   ├── ETAPA-9.md
 │   └── README.md
 ├── plan-pwa-push/
 │   ├── 00-contexto.md
@@ -1415,6 +1418,15 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
+
+
+
+
+
+
+
+
 
 
 

@@ -20,7 +20,7 @@ export const TABLAS_RESET_SISTEMA = [
   'incidentes_camara',
   // Reporte de campo / D1 / oficial
   'ofi_reportes_campo', 'ofi_reporte_denuncia', 'ofi_detalles_asegurados',
-  'ofi_fichas_inteligencia', 'ofi_puesta_disposicion', 'solicitud_fotos',
+  'ofi_puesta_disposicion', 'solicitud_fotos',
   // Notificaciones (generadas, no config)
   'notificaciones', 'notificaciones_eventos', 'notificaciones_lecturas',
   // Monitorista
@@ -34,8 +34,8 @@ export const TABLAS_RESET_SISTEMA = [
   // Rol de servicios
   'rol_asignaciones', 'rol_estado_fuerza', 'rol_observaciones', 'roles_servicio',
   // Solicitudes / novedades / auxiliar
-  'solicitudes_c4_internas', 'solicitudes_detenido', 'solicitudes_evidencia', 'solicitudes_informacion',
-  'novedades_captura', 'auxiliar_checklist', 'contestaciones',
+  'solicitudes_c4_internas', 'solicitudes_evidencia', 'solicitudes_informacion',
+  'auxiliar_checklist', 'contestaciones',
   // Auditoría — se vacía también; el propio reset queda como primer registro nuevo (ver sistema-actions.ts)
   'audit_log',
 ] as const

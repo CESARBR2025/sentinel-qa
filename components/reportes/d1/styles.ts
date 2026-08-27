@@ -5,14 +5,14 @@ export const styles = {
     filterBar: {
         background: 'white',
         padding: '20px',
-        borderRadius: '4px',
+        borderRadius: 'var(--radius-lg)',
         border: '1px solid #E2E8F0',
         marginBottom: '24px',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
         gap: '16px',
         alignItems: 'end',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+        boxShadow: 'var(--shadow-card)'
     },
     filterGroup: {
         display: 'flex',
@@ -20,11 +20,12 @@ export const styles = {
         gap: '6px'
     },
     filterLabel: {
-        fontFamily: 'JetBrains Mono',
-        fontSize: '10px',
-        fontWeight: 700,
+        fontFamily: 'var(--apple-font-display)',
+        fontSize: '12px',
+        fontWeight: 500,
         color: '#64748B',
-        textTransform: 'uppercase' as const
+        textTransform: 'none' as const,
+        letterSpacing: 'normal'
     },
 
     // Tabla y Secciones
@@ -33,10 +34,10 @@ export const styles = {
     },
     tableContainer: {
         background: 'white', 
-        borderRadius: '4px', 
+        borderRadius: 'var(--radius-lg)', 
         border: '1px solid #E2E8F0', 
         overflowX: 'auto' as const, 
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        boxShadow: 'var(--shadow-card)'
     },
     tableHeader: {
         padding: '16px 24px', 
@@ -53,12 +54,14 @@ export const styles = {
     },
     th: {
         padding: '12px 16px', 
-        fontFamily: 'JetBrains Mono', 
-        fontSize: '10px',
+        fontFamily: 'var(--apple-font-display)', 
+        fontSize: '12px',
+        fontWeight: 600,
         color: '#64748B', 
         textAlign: 'left' as const, 
         borderBottom: '2px solid #F1F5F9', 
-        textTransform: 'uppercase' as const, 
+        textTransform: 'none' as const, 
+        letterSpacing: 'normal',
         background: '#F8FAFC', 
         whiteSpace: 'nowrap' as const
     },
@@ -68,35 +71,37 @@ export const styles = {
         color: '#334155', 
         borderBottom: '1px solid #F1F5F9', 
         whiteSpace: 'nowrap' as const,
-        fontFamily: 'Inter'
+        fontFamily: 'var(--apple-font-display)'
     },
 
     // Elementos de Formulario / UI
     input: {
         padding: '8px 12px',
-        borderRadius: '4px',
+        borderRadius: 'var(--radius-lg)',
         border: '1px solid #E2E8F0',
-        fontFamily: 'Inter',
+        fontFamily: 'var(--apple-font-display)',
         fontSize: '13px',
         outline: 'none',
         color: '#0F172A',
-        height: '38px'
+        height: '38px',
+        background: '#f8fafc'
     },
     searchInput: {
         padding: '0 12px 0 32px', 
-        borderRadius: '4px', 
+        borderRadius: 'var(--radius-md)', 
         border: '1px solid #E2E8F0',
-        fontFamily: 'Inter', 
+        fontFamily: 'var(--apple-font-display)', 
         fontSize: '12px', 
         width: '250px', 
         height: '32px', 
-        outline: 'none'
+        outline: 'none',
+        background: '#f8fafc'
     },
     select: {
         padding: '6px 8px',
-        borderRadius: '4px',
+        borderRadius: 'var(--radius-md)',
         border: '1px solid #E2E8F0',
-        fontFamily: 'JetBrains Mono',
+        fontFamily: 'var(--apple-font-display)',
         fontSize: '11px',
         background: '#F8FAFC',
         outline: 'none'
@@ -106,31 +111,35 @@ export const styles = {
     primaryButton: {
         background: '#0F172A', 
         color: 'white', 
-        padding: '10px 16px', 
+        padding: '10px 20px', 
         border: 'none',
-        borderRadius: '4px', 
-        fontFamily: 'JetBrains Mono', 
-        fontSize: '11px', 
+        borderRadius: 'var(--radius-lg)', 
+        fontFamily: 'var(--apple-font-display)', 
+        fontSize: '14px', 
         fontWeight: 600,
         display: 'flex', 
         alignItems: 'center', 
         gap: '8px', 
-        cursor: 'pointer'
+        cursor: 'pointer',
+        textTransform: 'none' as const,
+        letterSpacing: 'normal'
     },
     secondaryButton: {
-        background: '#F8FAFC', 
+        background: '#FFFFFF', 
         color: '#475569', 
         padding: '6px 12px', 
         border: '1px solid #E2E8F0',
-        borderRadius: '4px', 
-        fontFamily: 'JetBrains Mono', 
-        fontSize: '10px', 
-        fontWeight: 700,
+        borderRadius: 'var(--radius-md)', 
+        fontFamily: 'var(--apple-font-display)', 
+        fontSize: '12px', 
+        fontWeight: 600,
         display: 'flex', 
         alignItems: 'center', 
         gap: '6px', 
         cursor: 'pointer',
-        transition: 'all 0.2s ease'
+        transition: 'all 0.2s ease',
+        textTransform: 'none' as const,
+        letterSpacing: 'normal'
     },
 
     // Paginación
@@ -145,9 +154,9 @@ export const styles = {
 
     // Utilidades
     monoData: {
-        fontFamily: 'JetBrains Mono', 
+        fontFamily: 'var(--apple-font-display)', 
         fontWeight: 600, 
-        fontSize: '11px'
+        fontSize: '12px'
     },
     badge: (type: 'success' | 'warning' | 'danger' | 'neutral' | 'primary') => {
         const colors = {
@@ -160,12 +169,12 @@ export const styles = {
         return {
             background: colors[type].bg, 
             color: colors[type].text,
-            padding: '4px 8px', 
-            borderRadius: '3px', 
-            fontSize: '10px',
-            fontWeight: 700, 
-            fontFamily: 'JetBrains Mono', 
-            textTransform: 'uppercase' as const,
+            padding: '3px 10px', 
+            borderRadius: 'var(--radius-full)', 
+            fontSize: '12px',
+            fontWeight: 500, 
+            fontFamily: 'var(--apple-font-display)', 
+            textTransform: 'none' as const,
             display: 'inline-block'
         };
     }

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
-import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
+import { listarDepartamentosActivos, listarSectoresActivos } from '@/lib/admin-transito/repository'
 import { obtenerOficialPorId, actualizarOficial } from '@/lib/admin-transito/actions'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader } from '@/components/partials/PageHeader'
@@ -84,6 +84,8 @@ export default async function EditarOficialPage({
   const deptos = await listarDepartamentosActivos()
 
   const patrullas = await listarPatrullasParaAsignacion()
+
+  const sectores = await listarSectoresActivos()
 
   return (
     <>
@@ -286,6 +288,21 @@ export default async function EditarOficialPage({
                 patrullas={patrullas}
                 defaultValue={oficial.patrullaId ?? undefined}
               />
+            </div>
+            <div>
+              <label style={labelStyle}>Sector</label>
+              <select
+                name="sectorId"
+                style={selectStyle}
+                defaultValue={oficial.sectorId != null ? String(oficial.sectorId) : ''}
+              >
+                <option value="">— Sin asignar —</option>
+                {sectores.map((s) => (
+                  <option key={s.id} value={String(s.id)}>
+                    {s.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

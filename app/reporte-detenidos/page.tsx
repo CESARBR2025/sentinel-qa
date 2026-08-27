@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/partials/PageHeader'
 import { tienePermiso } from '@/lib/reporte-detenidos/permisos'
 import { listarDetenidosCompletos } from '@/lib/reporte-detenidos/repository'
 import { BotonGenerarPpt } from '@/components/reporte-detenidos/BotonGenerarPpt'
+import { TablaDetenidosReporte } from '@/components/reporte-detenidos/TablaDetenidosReporte'
 
 export default async function ReporteDetenidosPage() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -17,8 +18,7 @@ export default async function ReporteDetenidosPage() {
   const detenidos = await listarDetenidosCompletos()
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter, sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader user={user} roleLabel="Agente Reportes" backHref="/agente_reportes" backLabel="Panel de Reportes" />
 
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -30,34 +30,7 @@ export default async function ReporteDetenidosPage() {
           actions={<BotonGenerarPpt />}
         />
 
-        <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 2, overflow: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Inter', fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: '#f1f5f9', textAlign: 'left' }}>
-                {['Nombre', 'Folio D1', 'IPH', 'Evento', 'Delitos', 'Falta Administrativa', 'Modus Operandi', 'Fecha'].map(h => (
-                  <th key={h} style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 10, textTransform: 'uppercase', color: '#64748b', letterSpacing: '0.05em' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {detenidos.length === 0 && (
-                <tr><td colSpan={8} style={{ padding: 32, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 12, color: '#94a3b8' }}>No hay detenidos con las 3 fotos completadas</td></tr>
-              )}
-              {detenidos.map(d => (
-                <tr key={d.id} style={{ borderTop: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '10px 16px' }}>{d.nombre}</td>
-                  <td style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 11 }}>{d.folioDenuncia || '—'}</td>
-                  <td style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 11 }}>{d.iph || '—'}</td>
-                  <td style={{ padding: '10px 16px' }}>{d.evento}</td>
-                  <td style={{ padding: '10px 16px' }}>{d.delito}</td>
-                  <td style={{ padding: '10px 16px' }}>{d.faltaAdministrativa}</td>
-                  <td style={{ padding: '10px 16px' }}>{d.modusOperandi}</td>
-                  <td style={{ padding: '10px 16px', fontFamily: 'JetBrains Mono', fontSize: 11, color: '#64748b' }}>{new Date(d.createdAt).toLocaleDateString('es-MX')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <TablaDetenidosReporte detenidos={detenidos} />
 
         <DashboardFooter />
       </main>

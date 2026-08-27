@@ -4,6 +4,23 @@
 
 ---
 
+## REGLA: nunca convertir fechas/horas de la BD con `.toISOString()` en queries (2026-08-10)
+
+**Síntoma**: filas duplicadas o horas desplazadas (+6h) en syncs que leen timestamps (`incidentes.fecha_hora_inicio`, `ofi_reportes_campo`).
+
+**Causa raíz**: `new Date(String(row.fecha_hora_inicio)).toISOString()` convierte a **UTC** (la sesión de la BD es `America/Mexico_City`, UTC-6). La hora local se guardaba con +6h, y al cambiar la hora entre syncs la clave de dedupe dejaba de coincidir → duplicados.
+
+**Fix correcto**: calcular `fecha`/`hora` en **SQL**, no en JS:
+```sql
+i.fecha_hora_inicio::date AS fecha,
+TO_CHAR(i.fecha_hora_inicio, 'HH24:MI') AS hora
+```
+(Válido para `buscarIncidentesPorRango` y `buscarDetencionesPorRango`. Ver Changelog 2026-08-10.)
+
+**Regla**: en este proyecto (TZ `America/Mexico_City`), cualquier query que extraiga fecha/hora de un timestamp debe usar `::date`/`TO_CHAR(...)` en SQL. Prohibido `toISOString()` para horas locales.
+
+---
+
 ## Bloque "Despachado:" duplicado en el detalle del tablón (2026-08-07) — CORREGIDO
 
 **Síntoma**: al expandir el "Detalle del incidente" de una card en `/agente_911/despacho`, la fecha de despacho aparecía dos veces ("Despachado: ..." y "Despachado: ..." idénticas).
@@ -654,3 +671,64 @@ Verificado contra la BD real (`SELECT ... FROM permisos WHERE usuario_id = ...`)
 2. `lib/permisos/mapa-secciones.ts`: `'/agente_911/ciudadano': ['911_ciudadano', 'incidentes']` (antes solo `['911_ciudadano']`).
 
 **Prevención**: las tres páginas de detalle de incidente por canal (`ciudadano`/`whatsapp`/`rondin`) deben mantener la misma guarda de permiso (sección propia del canal `||` `incidentes` genérico), tanto en la página como en `mapa-secciones.ts`. Si se agrega un cuarto canal, replicar el mismo patrón en ambos lugares.
+
+---
+
+## Stepper de Formato N: información duplicada al "Completar reporte" (Eventos, RND, Armas) + datos cruzados entre fechas
+
+**Síntoma**: al abrir `/envio-de-formatos/reporte/[fecha]` desde "Completar reporte", el paso 1 (Eventos) y el paso 4 (RND) mostraban filas duplicadas del mismo hecho; el paso 7 (Armas) a veces guardaba el mismo registro dos veces; y si se navegaba del reporte de un día al de otro sin recargar la página completa, el stepper podía arrancar en un paso distinto de 1 con datos de la fecha anterior todavía en los inputs.
+
+**Causas raíz** (tres bugs independientes en el mismo flujo):
+
+1. **Sync de Eventos/RND con clave parcial** (`lib/reportes/formato-n-eventos-service.ts` → `sincronizarEventosDelDia`, `lib/reportes/formato-n-rnd-service.ts` → `sincronizarDetencionesDelDia`, corren en cada `cargar()` del stepper): comparaban el incidente/detención origen contra lo ya sincronizado por tupla de campos (`hora|evento|ubicacion` / `hora_detencion|delito|autoridad`, sin `descripcion` ni `folio`). Si el registro origen (`incidentes` / `ofi_reportes_campo`) se editaba después del primer sync (hora, ubicación, delito corregidos), la clave cambiaba y se insertaba una fila **nueva** dejando la vieja huérfana — duplicado visible en la tabla. Dos detenciones reales distintas con la misma hora+delito+oficial además colisionaban (una se perdía silenciosamente por el `folio` no participar en la clave).
+2. **`guardarArmas` sin upsert ni límite de reenvío** (`lib/reportes/formato-n-store.ts`): a diferencia de FGE/FGR/Medios/Víctimas (que tienen `UNIQUE(fecha,periodo)` + fallback a `PATCH` en `409`), Armas es tabla "bitácora" (sin unique, por diseño — un día puede tener varias armas). El botón "Siguiente" no se deshabilitaba durante el `POST` (doble clic = doble insert) y `armasForm` nunca se limpiaba tras guardar, así que volver al paso con "Anterior" y dar "Siguiente" de nuevo reenviaba el mismo registro.
+3. **Store Zustand (singleton de módulo) sin reset entre fechas**: `cargar(fecha)` sobreescribía `fgeVals`/`fgrVals`/`mediosVals`/`victimasVals`/`observacionesTexto` pero no `paso` ni `armasForm`. Como la página no fuerza remount por `fecha` (mismo componente, solo cambia el param de ruta), navegar del reporte del día A al del día B dejaba el stepper en el paso donde se quedó en A, con el borrador de Armas de A todavía en los inputs.
+
+**Fix**:
+1. Migración `lib/db/manual-migrations/0047_formato_n_origen_sync.sql`: agrega `origen_incidente_id` (uuid nullable) a `formato_n_eventos` y `origen_reporte_campo_id` (uuid nullable) a `formato_n_rnd`, cada uno con índice único parcial (`WHERE ... IS NOT NULL`). `sincronizarEventosDelDia`/`sincronizarDetencionesDelDia` ahora hacen `INSERT ... ON CONFLICT (origen_id) DO UPDATE` — idempotente por fila origen real, no por tupla de campos; una edición upstream actualiza la misma fila en vez de crear una nueva. Las funciones `crearEvento`/`crearRnd` (captura manual, sin origen) siguen igual.
+2. `guardarArmas` en el store: si `armasForm.tipo_arma` está vacío, no hace `POST` (no reenvía el último registro); si guarda con éxito, limpia `armasForm`. Nuevo estado `guardando` en el store, seteado durante `avanzar()`, usado en `app/envio-de-formatos/reporte/[fecha]/page.tsx` para deshabilitar "Anterior"/"Siguiente"/"Finalizar reporte" mientras la petición está en curso.
+3. `cargar(fecha)` resetea `paso: 0` y `armasForm` al valor inicial en blanco al principio de la función, antes de cualquier `fetch`.
+
+**Prevención**: cualquier sección "bitácora" (sin `UNIQUE(fecha, periodo)`) que se sincronice desde otra tabla debe enlazarse por el `id` real de la fila origen (columna `origen_*_id` + índice único parcial + `ON CONFLICT DO UPDATE`), nunca por combinación de campos visibles — estos cambian con el tiempo y rompen la deduplicación. Cualquier acción de guardado disparada desde un botón de navegación del stepper (`avanzar`) debe pasar por el flag `guardando` para evitar doble-submit, y el store debe resetear explícitamente todo campo que no se sobreescriba ya en `cargar()` (revisar la lista completa de `FormatoNState` al agregar un campo nuevo).
+
+---
+
+## Formato N (stepper) — paso 3 (FGR) no contaba cateos ni vehículos aunque sí había registro, y el mensaje de confirmación mostraba la sección anterior
+
+**Síntoma**: en el paso 3 (Fiscalía General de la República) el usuario había capturado en su reporte de campo una detención canalizada a FGR con cateo y vehículos asegurados; "Personas Aseguradas" y "Aprehensiones" mostraban 1 (correcto), pero "Número de Cateos" y "Vehículos Asegurados" mostraban 0 pese a existir el dato. Además, al entrar al paso 3 se veía el mensaje "FGE guardado. Confirma para continuar." (de la sección anterior).
+
+**Causa raíz 1 — conteo incompleto**: `calcularConteosFgrPorFecha` (`lib/reportes/formato-n-fgr-service.ts`) solo contaba `ofi_reportes_campo` con `ofi_hay_detencion = true AND ofi_autoridad_recibe = 'FGR'` para personas/aprehensiones, y dejaba `carpetas_iniciadas`, `numero_cateos`, `vehiculos_asegurados` y `domicilios_cateados` **fijos en 0** con un comentario que decía "no tienen fuente distinguible por fiscalía federal en el sistema". Eso era incorrecto: `ofi_hay_cateo` y `ofi_vehiculos` (jsonb array) viven en la **misma fila** de `ofi_reportes_campo` que `ofi_autoridad_recibe`, y `ofi_reporte_denuncia` tiene `reporte_campo_id` para unir y filtrar carpetas por el mismo criterio. Verificado contra la BD real: el reporte `SSPM-AL-20260810-000021` tenía `ofi_hay_cateo=true`, `ofi_hay_vehiculo=true` (2 vehículos), `ofi_autoridad_recibe='FGR'` — exactamente el dato que el paso 3 ignoraba.
+
+**Fix**: `calcularConteosFgrPorFecha` ahora calcula los 6 conteos igual que FGE pero filtrando siempre por `ofi_autoridad_recibe = 'FGR'`: cateos y vehículos de `ofi_reportes_campo` (vehículos con `jsonb_array_elements` para contar cada vehículo, no reportes), y carpetas iniciadas uniendo `ofi_reporte_denuncia` con `ofi_reportes_campo` por `reporte_campo_id`.
+
+**Causa raíz 2 — mensaje de la sección anterior**: `msg` en `useFormatoNStore` es un campo único del store (no por sección). `avanzar()` guarda el mensaje de éxito de la sección actual (p. ej. "FGE guardado...") y **antes** de este fix no se limpiaba al avanzar de paso, así que seguía visible en la sección siguiente.
+
+**Fix**: `setPaso` limpia `msg` al cambiar de paso (cubre el botón "Anterior"); el avance automático dentro de `avanzar()` también limpia `msg` al incrementar `paso`.
+
+**Prevención**: antes de dejar un conteo en 0 "por falta de fuente", verificar contra la BD real si el dato vive en la misma fila/tabla bajo otro filtro — no asumir por el nombre de la sección. Cualquier campo de estado que se muestre condicionado al paso actual (mensajes, banners) debe limpiarse en toda ruta que cambie `paso`, no solo en la ruta "feliz".
+
+---
+
+## Formato N (stepper) — paso 4 (RND) no mostraba el delito de casi ninguna detención
+
+**Síntoma**: en el paso 4 (Registro Nacional de Detenciones) la columna "Delito" aparecía vacía para detenciones reales recién capturadas por un oficial, aunque folio, hora y autoridad sí se veían.
+
+**Causa raíz**: `buscarDetencionesPorRango` (`lib/reportes/formato-n-rnd-service.ts`) leía `rc.delito` de `ofi_reportes_campo` — columna que **nunca se escribe** en el flujo real de captura del oficial. Se verificó el `INSERT INTO ofi_reportes_campo` completo en `crearReporteCampo` (`lib/oficial/repository.ts:88-176`): la lista de columnas no incluye `delito` en ningún punto, y tampoco existe ningún `UPDATE` posterior que la llene. Los únicos registros con `rc.delito` no nulo eran datos semilla antiguos (folios `RND-2026-*`, no `SSPM-*`). El campo "Delito" que el oficial ve en el detalle de su reporte (`app/oficial/reportes/[id]/page.tsx`) en realidad viene de `ofi_reporte_denuncia.delito` (el D1/denuncia, tabla distinta, unida por `reporte_campo_id`) — y ese D1 solo existe si ya se generó la denuncia, lo cual no siempre ha pasado al momento de armar el Formato N del día.
+
+**Fix**: la consulta ahora usa `COALESCE(NULLIF(d.delito,''), NULLIF(rc.delito,''), ti.nombre, 'Sin clasificar')` — une `ofi_reporte_denuncia` (D1, prioridad si ya existe) y `cat_tipos_incidente` vía `incidentes.tipo_incidente_id` (respaldo siempre disponible, mismo patrón que ya usaba el paso 1/Eventos). Verificado contra la BD real: el reporte `SSPM-AL-20260810-000021` (sin D1 generado aún) pasó de mostrar delito vacío a "DESPOJO" (tipo de incidente del despacho original).
+
+**Prevención**: cuando un campo de un formulario de captura del oficial aparece sistemáticamente vacío en un reporte derivado, verificar primero si la columna leída realmente se escribe en algún `INSERT`/`UPDATE` del flujo de captura (`grep` del nombre de columna fuera de `SELECT`) antes de asumir que es un problema de filtro o de fecha — puede ser una columna muerta que nunca tuvo escritor.
+
+---
+
+## Formato N (stepper) — paso 1 (Eventos) y paso 4 (RND) seguían duplicando filas después del fix de `origen_incidente_id`/`origen_reporte_campo_id`
+
+**Síntoma**: tras enlazar el sync por `origen_*_id` (ver entrada anterior "información duplicada... datos cruzados entre fechas"), seguían apareciendo pares de filas para el mismo folio/incidente — una con los datos correctos (delito resuelto, enlazada a la fuente) y otra vieja, sin delito y sin enlace.
+
+**Causa raíz**: las filas creadas por la sincronización **antes** de aplicar la migración 0047 quedaron con `origen_incidente_id`/`origen_reporte_campo_id = NULL`. El `UPSERT` nuevo (`ON CONFLICT (origen_*_id)`) nunca choca contra esas filas huérfanas —no tienen el enlace—, así que cada sync posterior inserta una fila **nueva** correctamente enlazada y dejaba la vieja huérfana intacta: duplicado permanente hasta limpiarlo.
+
+**Fix**: `eliminarDuplicadosEventosDelDia`/`eliminarDuplicadosRndDelDia` (que ya corrían al inicio de cada sync) ganaron un segundo `DELETE`, que se ejecuta **primero**: borra cualquier fila con `origen_*_id IS NULL` cuando existe otra fila del mismo día con `origen_*_id IS NOT NULL` y los mismos campos clave (folio para RND; hora+evento+ubicación para eventos). Es autocurativo — corre en cada carga del stepper, sin necesidad de tocar la BD a mano.
+
+**Cuidado con el orden**: el `DELETE` de duplicados *exactos* que ya existía (mismo hora+evento+ubicación+descripción, o mismo hora+delito+autoridad) debe correr **después** del de huérfanos-por-origen, no antes. Si corre primero y los campos visibles coinciden entre la fila huérfana y la enlazada (pasa fácil con datos de prueba/semilla idénticos), su desempate por `creado_en` más antiguo puede quedarse con la huérfana (la más vieja) y borrar la fila recién enlazada — exactamente al revés de lo que se quiere. Cualquier `DELETE` de deduplicación nuevo que distinga "cuál fila es la buena" por una señal semántica (aquí, tener el enlace a la fuente) debe ir antes que cualquier deduplicación genérica por antigüedad.
+
+**Prevención**: al agregar una nueva regla de limpieza de duplicados a una función que ya tiene otra, revisar el orden de ejecución — no asumir que dos `DELETE`s independientes conmutan. Verificar con datos reales de la BD (no solo el caso feliz) antes de dar el fix por bueno, sobre todo si hay datos semilla/prueba con campos idénticos entre sí.

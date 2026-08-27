@@ -1,12 +1,12 @@
 "use client"
-import { useState, useEffect } from 'react'
-import { FileDown, Table as TableIcon, Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { useState } from 'react'
+import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { styles } from './styles'
 
 interface OperationalTableProps {
     title: string;
     columns: string[];
-    data: any[];
+    data: Record<string, string | number | boolean | null | undefined>[];
 }
 
 export function OperationalTable({ title, columns, data }: OperationalTableProps) {
@@ -25,10 +25,10 @@ export function OperationalTable({ title, columns, data }: OperationalTableProps
     const startIndex = (currentPage - 1) * itemsPerPage
     const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage)
 
-    // Reiniciar a la página 1 cuando se busca algo
-    useEffect(() => {
+    const handleSearch = (term: string) => {
+        setSearchTerm(term)
         setCurrentPage(1)
-    }, [searchTerm])
+    }
 
     return (
         <div style={styles.tableSection}>
@@ -36,15 +36,18 @@ export function OperationalTable({ title, columns, data }: OperationalTableProps
                 
                 {/* ENCABEZADO */}
                 <div style={styles.tableHeader}>
-                    <h3 style={{ fontFamily: 'Barlow Condensed', margin: 0, fontSize: '22px', fontWeight: 700 }}>
-                        <span style={{ color: '#1f355a', marginRight: '8px' }}>|</span> {title}
-                    </h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ width: 3, height: 16, background: '#1f355a', borderRadius: 'var(--radius-full)', flexShrink: 0 }} />
+                        <h3 style={{ fontFamily: 'var(--apple-font-display)', margin: 0, fontSize: '18px', fontWeight: 600, color: '#0f172a' }}>
+                            {title}
+                        </h3>
+                    </div>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ position: 'relative' }}>
                             <Search size={14} style={{ position: 'absolute', left: '10px', top: '9px', color: '#94A3B8' }} />
                             <input 
                                 type="text" placeholder="Buscar..." style={styles.searchInput}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => handleSearch(e.target.value)}
                             />
                         </div>
                     </div>
@@ -62,7 +65,7 @@ export function OperationalTable({ title, columns, data }: OperationalTableProps
                             {paginatedData.length > 0 ? (
                                 paginatedData.map((row, i) => (
                                     <tr key={i} style={{ background: i % 2 === 0 ? 'white' : '#F8FAFC' }}>
-                                        {Object.values(row).map((val: any, idx) => (
+                                        {Object.values(row).map((val, idx) => (
                                             <td key={idx} style={styles.td}>
                                                 {val === 'RECUPERADO' || val === 'ACTIVA' ? <span style={styles.badge('#DCFCE7', '#166534')}>{val}</span> :
                                                  val === 'ROBADO' || val === 'PENDIENTE' ? <span style={styles.badge('#FEE2E2', '#991B1B')}>{val}</span> : val}
@@ -78,52 +81,54 @@ export function OperationalTable({ title, columns, data }: OperationalTableProps
                 </div>
 
                 {/* PIE DE TABLA / PAGINACIÓN */}
-                <div style={{ 
-                    padding: '12px 24px', 
-                    borderTop: '1px solid #E2E8F0', 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
+                <div style={{
+                    padding: '12px 24px',
+                    borderTop: '1px solid #E2E8F0',
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    background: '#FFFFFF'
+                    background: '#FFFFFF',
+                    flexWrap: 'wrap',
+                    gap: 12
                 }}>
-                    <div style={{ fontFamily: 'JetBrains Mono', fontSize: '11px', color: '#64748B' }}>
-                        MOSTRANDO {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} DE {filteredData.length} REGISTROS
+                    <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: '12px', color: '#64748B' }}>
+                        Mostrando {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredData.length)} de {filteredData.length} registros
                     </div>
 
-                    <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                         {/* Botón Ir al Inicio */}
-                        <button 
+                        <button
                             disabled={currentPage === 1}
                             onClick={() => setCurrentPage(1)}
                             style={{ ...styles.secondaryButton, padding: '6px' }}
                         ><ChevronsLeft size={16} /></button>
 
                         {/* Botón Anterior */}
-                        <button 
+                        <button
                             disabled={currentPage === 1}
                             onClick={() => setCurrentPage(currentPage - 1)}
                             style={{ ...styles.secondaryButton, padding: '6px' }}
                         ><ChevronLeft size={16} /></button>
 
-                        <span style={{ 
-                            fontFamily: 'JetBrains Mono', 
-                            fontSize: '12px', 
-                            fontWeight: 700, 
+                        <span style={{
+                            fontFamily: 'var(--apple-font-display)',
+                            fontSize: '12px',
+                            fontWeight: 600,
                             margin: '0 10px',
                             color: '#0F172A'
                         }}>
-                            PÁGINA {currentPage} DE {totalPages || 1}
+                            Página {currentPage} de {totalPages || 1}
                         </span>
 
                         {/* Botón Siguiente */}
-                        <button 
+                        <button
                             disabled={currentPage === totalPages || totalPages === 0}
                             onClick={() => setCurrentPage(currentPage + 1)}
                             style={{ ...styles.secondaryButton, padding: '6px' }}
                         ><ChevronRight size={16} /></button>
 
                         {/* Botón Ir al Final */}
-                        <button 
+                        <button
                             disabled={currentPage === totalPages || totalPages === 0}
                             onClick={() => setCurrentPage(totalPages)}
                             style={{ ...styles.secondaryButton, padding: '6px' }}

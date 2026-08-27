@@ -6,6 +6,94 @@
 
 ## 2026 — Agosto
 
+### — Armas de Fuego Aseguradas: captura estructurada en Fiscalía + auto-sync al paso 7 de Formato N (2026-08-10)
+El paso 7 de Formato N era 100% manual porque no existía fuente estructurada de tipo/marca/matrícula/calibre en ningún lado del sistema (diagnóstico verificado contra BD real: `ofi_reportes_campo.ofi_armas_fuego` es jsonb con `datos` en texto libre; `obtenerArmasParaFormatoN` era código muerto). Se crea la infraestructura en Fiscalía y se sincroniza con el mismo patrón `origen_*_id` + `UPSERT` de Eventos/RND.
+- **Migración `0048_fiscalia_armas_aseguradas.sql`**: tabla `fiscalia_armas_aseguradas` (FK `reporte_campo_id → ofi_reportes_campo(id)` y `capturado_por → users(id)`, regla `NO ACTION` como las gemelas `antecedentes_externos_detenido`/`evidencias_detenido` — verificado contra BD real, el template del plan decía `CASCADE` pero lo real es `NO ACTION`) + columna `origen_fiscalia_arma_id` (uuid, índice único parcial) en `formato_n_armas_aseguradas`.
+- **Backend Fiscalía** (`lib/fiscalia`): tipos `ArmaAsegurada`/`ArmaAseguradaInput`/`ListaArmasAseguradas`, `rowToArmaAsegurada`, `listarArmasAseguradasFiscalia` (trae `num_carpeta_investigacion` del D1 como sugerencia), `insertarArmaAsegurada`, `eliminarArmaAsegurada`, services y actions calcando el patrón de `AntecedenteExterno`.
+- **UI Fiscalía**: `components/fiscalia/ArmasAseguradas.tsx` (lista + alta/baja, estilos idénticos a `AntecedentesExternos.tsx`), montado en `FormularioAsegurado.tsx`.
+- **Sync a Formato N**: `sincronizarArmasDelDia` en `formato-n-armas-aseguradas-service.ts` (`UPSERT ON CONFLICT (origen_fiscalia_arma_id)` + `eliminarDuplicadosArmasDelDia` en el mismo orden que Eventos/RND: huérfanos-por-origen antes que duplicados exactos), carpeta de investigación resuelta del D1 vía `LEFT JOIN ofi_reporte_denuncia` en el momento del sync. Endpoint nuevo `POST /api/reportes/formato-n-armas-aseguradas/sincronizar` + tercera llamada en el `Promise.all` del store `cargar`. Se elimina el código muerto `obtenerArmasParaFormatoN`/`ArmaFuente`.
+- **Paso 7 UI**: tabla de armas auto-sincronizadas (Tipo, Marca, Matrícula, Calibre, Carpeta, Observaciones) + form manual conservado como respaldo para casos que Fiscalía aún no haya procesado. La `carpeta_investigacion` NO se guarda en `fiscalia_armas_aseguradas` (solo sugerencia visual).
+- Verificación contra BD real: sync + idempotencia (2 corridas → 1 fila) + update tras editar tipo (no duplica). Typecheck y build completos OK. Scripts temporales eliminados.
+
+### — Fix timezone + limpieza de duplicados en sync de eventos/RND Formato N (2026-08-10)
+El paso 1 volvió a mostrar filas repetidas. Diagnóstico contra BD real (2026-08-10): `incidentes` tenía **3 eventos reales** (08:10 CRISTALAZO, 11:26 DAÑO, 11:43 DESPOJO), pero `formato_n_eventos` acumulaba **8 filas** (5 duplicadas) y `formato_n_rnd` **4 filas** para 2 detenciones (2 duplicadas).
+- **Causa raíz 1 — timezone**: `buscarIncidentesPorRango`/`buscarDetencionesPorRango` usaban `new Date(...).toISOString()` que convierte a **UTC** — la hora local México (UTC-6) se guardaba +6h (14:10 en vez de 08:10). Eso además rompía la clave de dedupe entre syncs: al cambiar la hora, cada sync creaba filas "nuevas".
+- **Fix**: las queries ahora calculan `fecha`/`hora` en SQL con `fecha_hora_inicio::date` y `TO_CHAR(fecha_hora_inicio,'HH24:MI')` (hora local de la sesión, `America/Mexico_City`) — sin conversión JS a UTC.
+- **Limpieza BD real**: se eliminaron los duplicados existentes y se re-insertaron desde la fuente con la hora local correcta. Quedaron 3 eventos y 2 detenciones (únicos). El dedupe del sync (`eliminarDuplicadosEventosDelDia`/`eliminarDuplicadosRndDelDia`) ahora es consistente porque la hora ya no "flota".
+- Typecheck, lint y build OK.
+
+### — Formato N: FGR paso 3 con fuente automática (detenciones a Fiscalía Federal) (2026-08-10)
+Corrección: el mensaje "Sin fuente automática — solo existe catálogo de Fiscalía del Estado" era incorrecto. El reporte de campo sí guarda el destino legal de la detención con el valor `FGR` (`ofi_autoridad_recibe`, catálogo de `SelectorDestinoLegal.tsx`).
+- **`calcularConteosFgrPorFecha(fecha)`** (`formato-n-fgr-service.ts`): cuenta detenciones con `ofi_hay_detencion = true` y `ofi_autoridad_recibe = 'FGR'` del día → llena `personas_aseguradas` y `aprehensiones`; carpetas/cateos/vehículos/domicilios sin fuente federal quedan en 0.
+- **`GET /api/reportes/formato-n-fgr/calcular`** (nuevo), gate de permiso `ver`.
+- **Store `cargar`**: ejecuta también el cálculo FGR (además del FGE) al abrir el reporte.
+- **Paso 3 UI**: mismo patrón que FGE — tabla de solo lectura con los 6 conteos automáticos + captura manual de las 3 audiencias. Se elimina el banner de "Sin fuente automática".
+- Typecheck, lint y build OK.
+
+### — Formato N: se eliminan botones "Confirmar sección" / "Omitir" de los pasos (2026-08-10)
+El stepper pasa a confirmar al navegar: los pasos quedan presentacionales y "Siguiente" guarda + confirma la sección automáticamente.
+- **`reporte/[fecha]/page.tsx`**: se elimina el componente `Acciones` (botones "Omitir / Sin novedad" y "Confirmar paso/sección") de los 8 pasos. `PasoView` ya no recibe `onGuardar`/`onOmitir` — los pasos solo leen del store. El botón **Siguiente** ahora es el que avanza y, según la sección, ejecuta su `guardar*` (FGE/FGR/Medios/Víctimas/Armas/Observaciones) antes de `confirmarSeccion` (Eventos/RND no guardan, solo confirman — sus datos ya se auto-sincronizan). El último paso tiene botón **"Finalizar reporte"** que guarda observaciones y confirma.
+- Se elimina el import `Save` y el ícono ya no se usa.
+- Typecheck, lint y build OK.
+
+### — Fix duplicados de eventos/detenciones en el sync Formato N (2026-08-10)
+El paso 1 mostraba filas repetidas idénticas (misma hora/evento/ubicación/descripción) — residuos de cuando el formulario permitía capturar manualmente el mismo incidente varias veces. El sync evitaba duplicados nuevos pero no limpiaba los existentes.
+- **`eliminarDuplicadosEventosDelDia(fecha)`** (eventos) y **`eliminarDuplicadosRndDelDia(fecha)`** (RND): DELETE de duplicados por (fecha + hora + evento + ubicación + descripción) conservando la fila más antigua (`creado_en` menor; empate por `id` menor). Se ejecutan al inicio del sync, así la próxima apertura del reporte limpia los datos acumulados.
+- **`sincronizarEventosDelDia` / `sincronizarDetencionesDelDia`**: la clave de dedupe ahora incluye `ubicacion` (eventos) y `autoridad_que_realizo_detencion` (RND), y se agrega un set `vistos` para no re-insertar si la fuente (incidentes/detenciones) ya trae duplicados.
+- Typecheck, lint y build OK. Los duplicados existentes se eliminan al abrir el reporte (el `cargar` corre el sync antes del consolidado).
+
+### — Stepper Formato N: RND y FGE automáticos en tabla, sin buscar/usar (2026-08-10)
+Siguiendo el patrón del paso 1, RND y FGE pasan a datos automáticos visualizados en tabla; el resto conserva captura manual.
+- **RND (paso 4)**: `sincronizarDetencionesDelDia` (en `formato-n-rnd-service.ts`) + `POST /api/reportes/formato-n-rnd/sincronizar` (nuevo). Al abrir el reporte se crean en `formato_n_rnd` las detenciones del día (idempotente por hora+delito). UI = tabla (Hora, Delito, Autoridad, Folio) + "Confirmar sección". Se eliminan `rndForm`, `rndFuente`, `rndBuscando`, `buscarRndFuente`, `guardarRnd` y la captura manual.
+- **FGE (paso 2)**: `calcularConteosPorFecha` se ejecuta en `cargar` (antes botón "Calcular de reportes"). UI = tabla de solo lectura con los 6 conteos automáticos (carpetas, cateos, vehículos, domicilios, personas, aprehensiones) + captura manual de las 3 audiencias (Iniciales, Abreviados, Intermedias). Se elimina `calculando`/`calcularFge`/`setCalculando` del store.
+- **FGR, Medios, Víctimas, Armas y Observaciones**: sin cambios — conservan su captura manual (no tienen fuente automática).
+- Store limpio de estado muerto (`RndForm`, `FuenteRnd`, `setRnd*`, `calcularFge`); la page ya no importa `Calculator`/`Search`/`btnTiny`/`filaFuente`.
+- Typecheck, build y lint (0 errores) OK.
+
+### — Paso 1 Formato N: eventos en tabla, se elimina la captura manual (2026-08-10)
+Con los eventos ya auto-sincronizados del día, el paso 1 pasa de formulario de captura a **tabla de solo lectura**:
+- **`PasoEventos`** reescrito: tabla (`--apple-font-display`, `--radius-lg`, `--shadow-card`, `.tabla-wrap` para scroll móvil) con columnas Hora / Evento / Región / Ubicación / Descripción / Atenciones + botón "Confirmar sección". Empty state "Sin eventos registrados para esta fecha".
+- **`formato-n-store.ts`**: se eliminan `eventosForm`, `EventosForm`, `guardarEventos`, `setEventosForm` y el `Acciones` (Omitir/Confirmar) de eventos — ya no hay datos que capturar.
+- Feature `Formato N.md` actualizado: paso 1 solo visualiza eventos.
+- Typecheck, build y lint (0 errores) OK.
+
+### — Auto-sync de eventos del día en el stepper Formato N (paso 1) (2026-08-10)
+Se elimina el flujo manual "Buscar desde incidentes → Usar" del paso 1 de `/envio-de-formatos/reporte/[fecha]`: al entrar al formulario los eventos de la fecha ya están cargados automáticamente.
+- **`sincronizarEventosDelDia(fecha, capturadoPor)`** en `formato-n-eventos-service.ts`: trae los incidentes del día (`buscarIncidentesPorRango`) y los inserta en `formato_n_eventos` (región default "San Juan del Río"), idempotente por (hora, evento). Devuelve la lista resultante.
+- **`POST /api/reportes/formato-n-eventos/sincronizar`** (nuevo): gate de permiso `crear` + session → `sincronizarEventosDelDia`.
+- **`formato-n-store.ts`**: `cargar` ejecuta el sync antes de pedir el consolidado, así `consolidado.eventos` ya trae los eventos del día. Se eliminan `eventosFuente`, `eventosBuscando`, `buscarEventosFuente` y el tipo `FuenteCandidato` (sin uso).
+- **Paso 1 UI**: sin botón "Buscar desde incidentes" ni "Usar" — se listan los eventos ya registrados (hora + evento + ubicación); el formulario manual queda para agregar eventos no capturados en incidentes.
+- Typecheck, build y lint (0 errores) OK.
+
+### — Stepper Formato N con store Zustand (`formato-n-store.ts`) + REGLA de formularios (2026-08-10)
+El formulario de `/envio-de-formatos/reporte/[fecha]` pasa a controlarse con un store Zustand, y se eleva a regla del software que todo formulario institucional nuevo use Zustand.
+- **`lib/reportes/formato-n-store.ts`** (nuevo): store tipado con navegación (`paso`), `consolidado` cargado, `loading/error/msg`, drafts de las 8 secciones (eventos, fge/fgr, rnd, medios/víctimas, armas, observaciones) y toda la lógica de fetch/guardado centralizada (`cargar`, `confirmarSeccion`, `avanzar`, `guardar*`, `buscar*Fuente`, `calcularFge`). Reutiliza `guardarUpsert` para el patrón POST→409→PATCH de FGE/FGR/medios/víctimas.
+- **`app/envio-de-formatos/reporte/[fecha]/page.tsx`**: componentes presentacionales — leen del store con selectores y disparan acciones, sin `useState` de datos ni `fetch` directos. Los drafts ahora **persisten entre pasos** (antes `key={seccion.key}` remontaba el componente y perdía lo escrito). El `msg` que antes se seteaba sin mostrar ahora se muestra como banner de éxito inline.
+- **Convenciones.md → "Formularios multi-paso con Zustand (REGLA)"**: todo formulario nuevo usa un store por formulario en `lib/<modulo>/store.ts`; componentes presentacionales con selectores; drafts en el store (no `useState` con `key`); sin fetch en la UI.
+- Typecheck, build y lint (0 errores) OK.
+
+### — Migración Apple-style del flujo `/envio-de-formatos` (consolidar + stepper reporte) (2026-08-10)
+Se alinean las dos páginas activas del módulo (`consolidar` y `reporte/[fecha]`) al lenguaje Apple-style de `DESIGN.md`; el redirect server-side de `/envio-de-formatos` no renderiza y no requería cambios.
+- **`components/reportes/form-styles.ts`** (solo lo consumen estas dos páginas): `inputStyle` → `--apple-font-display` 14px, `--radius-lg`, focus tokens; `btnPrimario`/`btnSecundario`/`btnTiny` → sentence-case 600 14px/12px con `--radius-lg`; `Label` → 12px 500; `sectionCard` → superficie plana `--shadow-card` + `--radius-lg` + `overflow:hidden`; `sectionHeader`/`sectionTitleStyle` → flex con título 600 16px acento (antes Barlow Condensed uppercase). Se elimina el `@import` de Google Fonts tácticas (`fontsImport`).
+- **`app/envio-de-formatos/consolidar/page.tsx`**: cards por día a superficie plana `--radius-lg` con `--shadow-card`, barra de estado vertical a `--radius-full` tintada por estado (verde `#16a34a` listo / gris pendiente), badges LISTO/PENDIENTE → pill `--radius-full` con pareja `success-bg`/`warning-bg`, títulos de día sentence-case, botones con hover (`translateY(-2px)` + sombra glass) + press (`scale(0.97)`) y `prefers-reduced-motion` vía `.enf-btn`. Filtro de fechas con labels/inputs Apple.
+- **`app/envio-de-formatos/reporte/[fecha]/page.tsx`**: el stepper de chips numerados (prohibido por DESIGN.md §4) se reemplaza por `StepIndicator` (Paso N de M + nombre + barra `--radius-full`); secciones a `sectionCard` Apple; banners informativos a `--radius-lg`; botones Anterior/Siguiente/Acciones a `btnPrimario`/`btnTiny` Apple.
+- **`components/partials/StepIndicator.tsx`** (corrección hacia DESIGN.md §4, que ya lo documentaba Apple-style): título 600 `clamp(20px,5vw,28px)` sentence-case, nombre 13px 500, barra 3px `--radius-full` — antes Barlow Condensed 800 uppercase + JetBrains Mono.
+- Typecheck y build OK. Lint solo muestra avisos preexistentes (no introducidos).
+
+### — Migración a Apple-style del módulo Reportes (hub + 10 páginas destino) (2026-08-10)
+Se alinea todo el flujo de `agente_reportes` al lenguaje Apple-style de `DESIGN.md` (el hub y sus 10 destinos seguían en el lenguaje táctico: Barlow Condensed/JetBrains Mono, mayúsculas, radios sharp `2-4px`, `borderLeft` 4px como sello de tarjeta, `@import` de Google Fonts).
+- **`OptionSquare`** (`components/reportes/menuOption.tsx`) reescrito: card glass (`var(--apple-glass-bg)`, blur, `--radius-xl`, sombras tintadas de primary), icono 28px gris → acento en hover con `scale(1.1)`, título sentence-case `--apple-font-display` 600 26px, stats con borde superior sutil, CTA "Ingresar" con flecha. Se eliminan los adornos de esquina tipo bracket y el chip "SISTEMA ACTIVO".
+- **Hub `/agente_reportes`**: secciones con barra accent 4×16 `--radius-full` + título 600 22px (antes Barlow uppercase 700 con barra sharp 4×28); root con `--apple-font-display` y fondo `#f1f5f9`; se elimina el `@import` de fuentes tácticas.
+- **`envio-de-formatos`**: el grid inline `repeat(auto-fit, minmax(320px,1fr))` pasa a `.cat-cards-grid` (REGLA §4 — antes dejaba cards con ancho arbitrario); `formatos-udai` idem root/fuentes.
+- **Stats de todas las vistas destino** (`ReportStat`, `IncidenteStat`): se elimina el `borderLeft: 4px solid #1f355a` (sello táctico prohibido en §7), pasan a superficie plana `--shadow-card` + `--radius-lg`, valor 28px 600 tabular-nums, label 12px 500.
+- **Filtros** (`deteccion_camara/ReportFilters`, `incidentes/FiltrosIncidencias`, `modulo_incidentes/ReportFilters`, `d1/D1Filters`, `d1_noiniciada/DescargaFilters`, `sin_robos/ReportFilters`): labels `--apple-font-display` 12px 500, inputs `--radius-lg` bg `#f8fafc`, botones `--radius-lg` sentence-case; los grids inline se reemplazan por flex con `flexWrap` + `minWidth` (responsive sin media query).
+- **Tabs** (`modulo_incidentes/ReportesTabs`): de pestañas con `borderBottom` 4px y Barlow uppercase a pills `--radius-full` (activo `#1f355a`/blanco, inactivo `#f1f5f9`/`#64748b`), con `.scrollbar-hide`.
+- **Tablas y paginación**: headers de tabla `--apple-font-display` 600 12px sentence-case; badges de estatus a pills `--radius-full` 12px 500; paginaciones a `--radius-md` con texto sentence-case ("Mostrando X-Y de Z"); `reporte-detenidos` y `nCoordinacion` migran su tabla/form inline al mismo lenguaje.
+- `reportes_incidentes`: subtitle y botón Excel a sentence-case con acento `#1f355a` (se quita el override verde `#16a34a` de los botones de exportación en `reportes_incidentes`, `d1`, `sin_robos` para respetar "un solo acento por vista").
+- Typecheck y build OK.
+
+## 2026 — Agosto
+
 ### — KPIs Generales: card en /dashboard + Panel 911 (SSPM) (2026-08-07)
 Primer bloque del dashboard de KPIs para el admin de SSPM. Analiza los 3 flujos de reportes 911 (normal, alarma escolar, extorsión) por rango de fecha/hora.
 - **Card "KPIs Generales"** en `/dashboard` (sección "SSPM General", solo `esAdmin`) → `/dashboard/kpis`, con `SegmentPage` nivel 1 **SSPM / Infracciones** (Infracciones = placeholder "Próximamente") y nivel 2 dentro de SSPM el tab **911**.

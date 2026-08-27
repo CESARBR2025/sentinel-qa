@@ -22,15 +22,15 @@ export function StepIndicator({
   return (
     <div style={{ marginBottom: 'clamp(20px, 5vw, 32px)' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
-        <span style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 800, fontSize: 'clamp(20px, 5.5vw, 28px)', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#1f355a' }}>
+        <span style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 'clamp(20px, 5vw, 28px)', letterSpacing: 'normal', textTransform: 'none', color: '#0f172a' }}>
           Paso {paso} de {total}
         </span>
-        <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#94a3b8' }}>
+        <span style={{ fontFamily: 'var(--apple-font-display)', fontSize: 13, fontWeight: 500, letterSpacing: 'normal', textTransform: 'none', color: '#64748b' }}>
           {nombre}
         </span>
       </div>
-      <div style={{ marginTop: 10, height: 2, background: '#e2e8f0', borderRadius: 1 }}>
-        <div style={{ height: '100%', width: `${pct}%`, background: '#1f355a', transition: 'width .25s ease' }} />
+      <div style={{ marginTop: 10, height: 3, background: '#e2e8f0', borderRadius: 'var(--radius-full)' }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: '#1f355a', borderRadius: 'var(--radius-full)', transition: 'width .25s ease' }} />
       </div>
     </div>
   )

@@ -38,20 +38,19 @@ export default async function ReportesIncidentesPage({
   )
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#ffffff', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader user={user} roleLabel="Reporte de Incidentes" backHref="/agente_reportes" backLabel="Panel de Reportes" />
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Reporte de"
           accent="Incidentes"
-          subtitle={`${tipo.toUpperCase()} · SSPM Reportes de Incidentes`}
+          subtitle={`${tipo} · SSPM reportes de incidentes`}
           actions={
             <a
               href={`/api/reportes-incidentes/exportar?from=${sp.from ?? ''}&to=${sp.to ?? ''}&tipo=${tipo}`}
-              style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#16a34a' }}
+              style={{ ...styles.primaryButton, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#1f355a' }}
             >
-              EXCEL
+              Excel
             </a>
           }
         />

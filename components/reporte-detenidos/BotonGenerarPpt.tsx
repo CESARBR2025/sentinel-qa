@@ -33,13 +33,13 @@ export function BotonGenerarPpt() {
       onClick={handleGenerate}
       disabled={pending}
       style={{
-        fontFamily: 'JetBrains Mono', fontSize: 10, fontWeight: 600, textTransform: 'uppercase',
-        letterSpacing: '0.1em', padding: '10px 20px',
-        background: pending ? '#94a3b8' : '#0f172a', color: '#ffffff', border: 'none', borderRadius: 2,
+        fontFamily: 'var(--apple-font-display)', fontSize: 14, fontWeight: 600, textTransform: 'none',
+        letterSpacing: 'normal', padding: '10px 20px',
+        background: pending ? '#94a3b8' : '#0f172a', color: '#ffffff', border: 'none', borderRadius: 'var(--radius-lg)',
         cursor: pending ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 8,
       }}
     >
-      <FileText size={14} /> {pending ? 'GENERANDO...' : 'GENERAR PPT'}
+      <FileText size={16} /> {pending ? 'Generando...' : 'Generar PPT'}
     </button>
   )
 }

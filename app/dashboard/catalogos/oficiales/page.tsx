@@ -1,5 +1,5 @@
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
-import { listarDepartamentosActivos, listarOficiales } from '@/lib/admin-transito/repository'
+import { listarDepartamentosActivos, listarOficiales, listarSectoresActivos } from '@/lib/admin-transito/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import OficialesTablaConFiltros from '@/components/catalogos/OficialesTablaConFiltros'
@@ -13,6 +13,7 @@ export default async function CatalogosOficialesPage({
   const oficiales = await listarOficiales()
   const deptos = await listarDepartamentosActivos()
   const patrullas = await listarPatrullasParaAsignacion()
+  const sectores = await listarSectoresActivos()
 
   return (
     <div>
@@ -34,7 +35,7 @@ export default async function CatalogosOficialesPage({
         </>}
       />
 
-      <OficialesTablaConFiltros oficiales={oficiales} deptos={deptos} patrullas={patrullas} />
+      <OficialesTablaConFiltros oficiales={oficiales} deptos={deptos} sectores={sectores} patrullas={patrullas} />
     </div>
   )
 }

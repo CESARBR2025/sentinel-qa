@@ -20,6 +20,9 @@ interface DashboardHeaderProps {
   // mayoría de los roles ese redirect solo rebota de vuelta a su propio hub).
   backHref?: string;
   backLabel?: string;
+  // Handler opcional de "volver": si se pasa, el botón ejecuta esta función en
+  // vez de navegar a backHref (ej. router.back() con fallback a backHref).
+  onBack?: () => void;
   // Texto sobre el nombre del operador (ej. "Agente Fiscalía", "Juez Cívico") —
   // reemplaza el genérico "Operador Identificado" cuando la página lo necesita.
   roleLabel?: string;
@@ -36,6 +39,7 @@ export function DashboardHeader({
   children,
   backHref,
   backLabel = 'Dashboard',
+  onBack,
   roleLabel = 'Operador Identificado',
   variant = 'apple',
 }: DashboardHeaderProps) {
@@ -80,6 +84,7 @@ export function DashboardHeader({
             href={backHref}
             aria-label={backLabel}
             title={backLabel}
+            onClick={onBack ? (e) => { e.preventDefault(); onBack() } : undefined}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               width: 40, height: 40, flexShrink: 0, marginLeft: -8,
@@ -92,6 +97,7 @@ export function DashboardHeader({
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: esMovil ? 10 : esTablet ? 16 : 24, minWidth: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/chaleco.png"
             alt="S"

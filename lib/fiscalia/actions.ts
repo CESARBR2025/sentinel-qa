@@ -8,12 +8,12 @@ import pool from '@/lib/db'
 import { subirArchivoFiscalia } from './expediente'
 import { enviarCorreoAsignacionFiscalia } from '@/lib/emails/server'
 import { generarFolioAsegurados } from './repository'
-import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService, listarAntecedentesExternosService, agregarAntecedenteExternoService, eliminarAntecedenteExternoService } from './service'
+import { verificarRolFiscalia, verificarRolJuzgado, listarSolicitudesPendientes, listarSolicitudesFinalizadas, tomarCaso, pedirEvidencias, obtenerDatosAsegurado, guardarDetallesAsegurado, listarAseguradosPendientes, obtenerDetalleAseguradoCompletoService, guardarDetallesAseguradosService, obtenerLiberaciones, listarAseguradosConDisposicionService, obtenerPuestaDisposicionService, guardarPuestaDisposicionService, listarAntecedentesExternosService, agregarAntecedenteExternoService, eliminarAntecedenteExternoService, listarArmasAseguradasService, agregarArmaAseguradaService, eliminarArmaAseguradaService } from './service'
 import { obtenerOCrearToken } from '@/lib/recursos/token-recurso'
 import { obtenerDetalleInfraccionVia } from '@/lib/shared/infracciones'
 import { emitir } from '@/lib/notificaciones/emisor'
 import type { ViaInfraccionDetalle } from './types'
-import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow, AntecedenteExterno, AntecedenteExternoInput } from './types'
+import type { UserInfo, SolicitudEvidencia, DetalleAsegurado, DatosAseguradoInput, LiberacionRow, AseguradoRow, DetalleAseguradoCompleto, DetenidoDireccionInput, PuestaDisposicionInput, PuestaDisposicionRow, AntecedenteExterno, AntecedenteExternoInput, ArmaAseguradaInput, ListaArmasAseguradas } from './types'
 
 export async function obtenerDashboardFiscalia(): Promise<UserInfo> {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -597,6 +597,68 @@ export async function eliminarAntecedenteExternoAction(
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Error desconocido'
     console.error('[eliminarAntecedenteExternoAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function listarArmasAseguradasAction(
+  reporteCampoId: string,
+): Promise<{ data: ListaArmasAseguradas | null; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { data: null, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { data: null, error: 'Acceso no autorizado' }
+
+    const data = await listarArmasAseguradasService(reporteCampoId)
+    return { data }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error desconocido'
+    console.error('[listarArmasAseguradasAction]', msg)
+    return { data: null, error: msg }
+  }
+}
+
+export async function agregarArmaAseguradaAction(
+  reporteCampoId: string,
+  input: ArmaAseguradaInput,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await agregarArmaAseguradaService(reporteCampoId, input, session.user.id)
+
+    revalidatePath('/fiscalia/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error desconocido'
+    console.error('[agregarArmaAseguradaAction]', msg)
+    return { success: false, error: msg }
+  }
+}
+
+export async function eliminarArmaAseguradaAction(
+  id: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) return { success: false, error: 'Sesión no válida' }
+
+    const esValido = await verificarRolFiscalia(session.user.id)
+    if (!esValido) return { success: false, error: 'Acceso no autorizado' }
+
+    await eliminarArmaAseguradaService(id)
+
+    revalidatePath('/fiscalia/asegurados')
+    return { success: true }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error desconocido'
+    console.error('[eliminarArmaAseguradaAction]', msg)
     return { success: false, error: msg }
   }
 }

@@ -25,26 +25,26 @@ export const ReportFilters = () => {
 
   return (
     <div style={styles.filterCard}>
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
-        <div style={{ flex: 2, minWidth: '300px' }}>
+      <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+        <div style={{ flex: 2, minWidth: '280px' }}>
           <label style={styles.label}><Search size={10} style={{ marginRight: '4px' }} /> Buscador</label>
           <input style={styles.input} placeholder="Nombre, folio o conclusión..."
             value={q} onChange={e => setQ(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') handleFiltrar() }} />
         </div>
         <div style={{ flex: 1, minWidth: '150px' }}>
-          <label style={styles.label}><Calendar size={10} style={{ marginRight: '4px' }} /> Fecha Inicio</label>
+          <label style={styles.label}><Calendar size={10} style={{ marginRight: '4px' }} /> Fecha inicio</label>
           <input type="date" style={styles.input} value={from} onChange={e => setFrom(e.target.value)} />
         </div>
         <div style={{ flex: 1, minWidth: '150px' }}>
-          <label style={styles.label}><Calendar size={10} style={{ marginRight: '4px' }} /> Fecha Fin</label>
+          <label style={styles.label}><Calendar size={10} style={{ marginRight: '4px' }} /> Fecha fin</label>
           <input type="date" style={styles.input} value={to} onChange={e => setTo(e.target.value)} />
         </div>
         <button style={{ ...styles.primaryButton, background: '#1f355a', height: '42px' }} onClick={handleFiltrar}>
-          <Filter size={14} /> FILTRAR
+          <Filter size={14} /> Filtrar
         </button>
         <button style={{ ...styles.primaryButton, background: '#64748B', height: '42px' }} onClick={handleLimpiar}>
-          <X size={14} /> LIMPIAR
+          <X size={14} /> Limpiar
         </button>
       </div>
     </div>

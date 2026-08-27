@@ -1,67 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import {
-    obtenerEventosDia, obtenerRND, obtenerArmasDia, obtenerDatosCapturados,
-    obtenerConteosDetenidos,
-} from '@/lib/n-coordinacion/repository'
+import { obtenerObservacionesPorFecha } from '@/lib/n-coordinacion/repository'
+import { obtenerFormatoNConsolidado } from '@/lib/reportes/formato-n-consolidado-service'
+import type { FormatoNFge } from '@/lib/reportes/formato-n-fge-service'
+import type { FormatoNFgr } from '@/lib/reportes/formato-n-fgr-service'
 import { tieneAccesoFormatoN } from '@/lib/reportes/permisos'
 import {
-    Document, Packer, Paragraph, Table, TableRow, TableCell, ImageRun,
-    TextRun, WidthType, BorderStyle, AlignmentType, ShadingType,
+    Document, Packer, Table, AlignmentType, WidthType,
 } from 'docx'
-import fs from 'fs'
-import path from 'path'
-import { Header } from 'docx'
-
-const NO_BORDER = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' }
-const THIN = { style: BorderStyle.SINGLE, size: 4, color: '000000' }
-const allBorders = { top: THIN, bottom: THIN, left: THIN, right: THIN }
-const noBorders = { top: NO_BORDER, bottom: NO_BORDER, left: NO_BORDER, right: NO_BORDER }
-
-function r(text: string, opts: { bold?: boolean; size?: number } = {}) {
-    return new TextRun({ text: String(text ?? ''), font: 'Calibri', size: 16, bold: false })
-}
-
-type Alignment = "start" | "center" | "end" | "both" | "mediumKashida" | "distribute" | "numTab" | "highKashida" | "lowKashida" | "thaiDistribute" | "left" | "right"
-
-function p(children: TextRun | TextRun[], opts: { align?: Alignment; before?: number; after?: number } = {}) {
-    return new Paragraph({
-        alignment: opts.align,
-        spacing: { before: opts.before ?? 0, after: opts.after ?? 60 },
-        children: Array.isArray(children) ? children : [children],
-    })
-}
-
-function tc(child: (Paragraph | Table) | (Paragraph | Table)[], opts: { width?: number; shade?: boolean; noBorder?: boolean } = {}) {
-    return new TableCell({
-        width: opts.width ? { size: opts.width, type: WidthType.DXA } : undefined,
-        shading: opts.shade ? { type: ShadingType.CLEAR, color: 'auto', fill: 'D9D9D9' } : undefined,
-        borders: opts.noBorder ? noBorders : allBorders,
-        children: Array.isArray(child) ? child : [child],
-    })
-}
-
-function tr(cells: TableCell[]) { return new TableRow({ children: cells }) }
-
-function hRow(labels: string[], widths: number[], shade = true) {
-    return tr(labels.map((l, i) =>
-        tc(p(r(l), { align: AlignmentType.CENTER, after: 0 }), { width: widths[i], shade })
-    ))
-}
-
-function dRow(values: string[], widths: number[]) {
-    return tr(values.map((v, i) =>
-        tc(p(r(String(v ?? ''), { size: 16 }), { align: AlignmentType.CENTER, after: 0 }), { width: widths[i] })
-    ))
-}
-
-const toN = (v: unknown) => String(v ?? '00').padStart(2, '0')
+import {
+    r, p, tc, tr, hRow, dRow, toN, lineaFirma, encabezadoConLogos,
+} from '@/lib/reportes/docx-helpers'
 
 function tablaFiscalia(
   domiciliosLabel: string,
-  datos: Record<string, unknown> | null,
-  conteos: { carpetas_iniciadas: number; numero_cateos: number; vehiculos_asegurados: number; personas_aseguradas: number }
+  datos: (FormatoNFge | FormatoNFgr) | null,
 ) {
   const wFge = [1872, 1872, 1872, 1872, 1872]
   return new Table({
@@ -69,11 +23,11 @@ function tablaFiscalia(
     rows: [
       hRow(['Carpetas iniciadas','Número de cateos','Vehículos asegurados', domiciliosLabel,'Personas aseguradas'], wFge, false),
       dRow([
-        String(conteos.carpetas_iniciadas),      // automático — D1s generadas
-        String(conteos.numero_cateos),            // automático — cateos BD
-        String(conteos.vehiculos_asegurados),     // automático — vehículos BD
+        toN(datos?.carpetas_iniciadas),      // automático — D1s generadas
+        toN(datos?.numero_cateos),            // automático — cateos BD
+        toN(datos?.vehiculos_asegurados),     // automático — vehículos BD
         toN(datos?.domicilios_cateados),          // manual
-        String(conteos.personas_aseguradas),      // automático — detenidos BD
+        toN(datos?.personas_aseguradas),      // automático — detenidos BD
       ], wFge),
       hRow(['Aprehensiones','Audiencias iniciales','Abreviados','Audiencias intermedias','Audiencias de juicio'], wFge, false),
       dRow([
@@ -100,16 +54,16 @@ export async function GET(req: NextRequest) {
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
     const fechaTexto = `${d} de ${meses[parseInt(m) - 1]} del ${y}`
 
-    const [eventos, rnd, armas, datosCapturados, conteosFge, conteosFgr] = await Promise.all([
-        obtenerEventosDia(fecha),
-        obtenerRND(fecha),
-        obtenerArmasDia(fecha),
-        obtenerDatosCapturados(fecha),
-        obtenerConteosDetenidos(fecha, 'FISCALIA'),
-        obtenerConteosDetenidos(fecha, 'FGR'),
+    const [consolidado, obs] = await Promise.all([
+        obtenerFormatoNConsolidado(fecha),
+        obtenerObservacionesPorFecha(fecha),
     ])
 
-    const { fge, fgr, masc, victimas, obs } = datosCapturados
+    const { eventos, rnd, armas } = consolidado
+    const fge = consolidado.fge.find(f => f.periodo === 'diario') ?? null
+    const fgr = consolidado.fgr.find(f => f.periodo === 'diario') ?? null
+    const masc = consolidado.medios.find(m => m.periodo === 'diario') ?? null
+    const victimas = consolidado.victimas.find(v => v.periodo === 'diario') ?? null
 
     // ── Tabla niveles ─────────────────────────────────────────────────────────
     const NIVELES = [
@@ -152,7 +106,7 @@ export async function GET(req: NextRequest) {
     // ── D. RND ────────────────────────────────────────────────────────────────
     const wRnd = [1500, 3000, 2500, 2360]
     const filasRnd = rnd.length > 0
-        ? rnd.map(row => dRow([String(row.hora_detencion ?? '').slice(0, 5), String(row.delito ?? ''), String(row.autoridad ?? ''), String(row.folio ?? '')], wRnd))
+        ? rnd.map(row => dRow([String(row.hora_detencion ?? '').slice(0, 5), String(row.delito ?? ''), String(row.autoridad_que_realizo_detencion ?? ''), String(row.folio ?? '')], wRnd))
         : [tr([tc(p(r('', { size: 16 }), { after: 0 }), { width: wRnd[0] }), tc(p(r('Sin Novedad', { size: 16 }), { after: 0 }), { width: wRnd[1] }), tc(p(r('', { size: 16 }), { after: 0 }), { width: wRnd[2] }), tc(p(r('', { size: 16 }), { after: 0 }), { width: wRnd[3] })])]
 
     const tablaRnd = new Table({
@@ -201,10 +155,7 @@ export async function GET(req: NextRequest) {
     // ── H. Armas ──────────────────────────────────────────────────────────────
     const wArmas = [2000, 1560, 1800, 1500, 2500]
     const filasArmas = armas.length > 0
-        ? armas.map(row => {
-            const a = row.arma as Record<string, string>
-            return dRow([String(row.carpeta ?? ''), String(a.tipo ?? ''), String(a.serie ?? a.matricula ?? ''), String(a.calibre ?? ''), String(a.observaciones ?? '')], wArmas)
-        })
+        ? armas.map(row => dRow([String(row.carpeta_investigacion ?? ''), String(row.tipo_arma ?? ''), String(row.matricula ?? ''), String(row.calibre ?? ''), String(row.observaciones ?? '')], wArmas))
         : [tr([tc(p(r('Sin Novedad', { size: 16 }), { after: 0 }), { width: wArmas[0] }), tc(p(r('', { size: 16 }), { after: 0 }), { width: wArmas[1] }), tc(p(r('', { size: 16 }), { after: 0 }), { width: wArmas[2] }), tc(p(r('', { size: 16 }), { after: 0 }), { width: wArmas[3] }), tc(p(r('', { size: 16 }), { after: 0 }), { width: wArmas[4] })])]
 
     const tablaArmas = new Table({
@@ -213,17 +164,6 @@ export async function GET(req: NextRequest) {
     })
 
     // ── Firmas ────────────────────────────────────────────────────────────────
-    function lineaFirma() {
-        return new Table({
-            width: { size: 3000, type: WidthType.DXA },
-            alignment: AlignmentType.CENTER,
-            rows: [tr([new TableCell({
-                borders: { top: NO_BORDER, left: NO_BORDER, right: NO_BORDER, bottom: THIN },
-                children: [new Paragraph({ children: [new TextRun({ text: ' ', size: 16 })] })],
-            })])],
-        })
-    }
-
     const tablaFirmas = new Table({
         width: { size: 9360, type: WidthType.DXA },
         rows: [tr([
@@ -239,34 +179,11 @@ export async function GET(req: NextRequest) {
         ])],
     })
 
-    const logoMx = fs.readFileSync(path.join(process.cwd(), 'public', 'logo_gobierno_mx.png'))
-    const logoQro = fs.readFileSync(path.join(process.cwd(), 'public', 'logo_queretaro.jpeg'))
-
     // ── Documento ─────────────────────────────────────────────────────────────
     const doc = new Document({
         sections: [{
             headers: {
-                default: new Header({
-                    children: [
-                        new Table({
-                            width: { size: 9360, type: WidthType.DXA },
-                            borders: { top: NO_BORDER, bottom: NO_BORDER, left: NO_BORDER, right: NO_BORDER },
-                            rows: [tr([
-                                tc([new Paragraph({
-                                    alignment: AlignmentType.LEFT,
-                                    children: [new ImageRun({ data: logoMx, transformation: { width: 80, height: 80 }, type: 'png' })],
-                                })], { width: 2000, noBorder: true }),
-                                tc([
-                                    p(r(''), { after: 0 }),
-                                ], { width: 5360, noBorder: true }),
-                                tc([new Paragraph({
-                                    alignment: AlignmentType.RIGHT,
-                                    children: [new ImageRun({ data: logoQro, transformation: { width: 80, height: 80 }, type: 'jpg' })],
-                                })], { width: 2000, noBorder: true }),
-                            ])],
-                        }),
-                    ],
-                }),
+                default: encabezadoConLogos(),
             },
             properties: {
                 page: {
@@ -292,10 +209,10 @@ export async function GET(req: NextRequest) {
                 tablaEventos,
                 p(r(''), { after: 80 }),
                 p([r('B.  ', { bold: true, size: 16 }), r('Eventos informados por la Fiscalía General del Estado', { size: 16 })], { after: 60 }),
-                tablaFiscalia('Domicilios cateados',   fge, conteosFge),
+                tablaFiscalia('Domicilios cateados',   fge),
                 p(r(''), { after: 80 }),
                 p([r('C.  ', { bold: true, size: 16 }), r('Eventos informados por la Fiscalía General de la República', { size: 16 })], { after: 60 }),
-                tablaFiscalia('Domicilios asegurados', fgr, conteosFgr),
+                tablaFiscalia('Domicilios asegurados', fgr),
                 p(r(''), { after: 80 }),
                 p([r('D.  ', { bold: true, size: 16 }), r('Inscripciones en el Registro Nacional de Detenciones', { size: 16 })], { after: 60 }),
                 tablaRnd,

@@ -164,6 +164,30 @@ export interface AntecedenteExternoInput {
   lugar: string | null
 }
 
+export interface ArmaAsegurada {
+  id: string
+  tipoArma: string
+  marca: string | null
+  matricula: string | null
+  calibre: string | null
+  observaciones: string | null
+  createdAt: string
+  capturadoPorNombre: string | null
+}
+
+export interface ArmaAseguradaInput {
+  tipoArma: string
+  marca: string | null
+  matricula: string | null
+  calibre: string | null
+  observaciones: string | null
+}
+
+export interface ListaArmasAseguradas {
+  items: ArmaAsegurada[]
+  carpetaInvestigacionSugerida: string | null
+}
+
 export interface DetalleAsegurado {
   reporteCampoId: string | null;
   folioDenuncia: string | null;

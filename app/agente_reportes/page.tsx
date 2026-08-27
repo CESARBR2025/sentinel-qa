@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import {
   Camera, Zap, ShieldAlert, Globe, FolderClock, PackageX,
-  Send, FileText, User,
+  Send, User, FileText,
 } from 'lucide-react'
 import { OptionSquare } from '@/components/reportes/menuOption'
 import { DashboardHeader } from '@/components/partials/Header'
@@ -33,7 +33,7 @@ export default async function AgenteReportesPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/login')
 
-  const permisos = await obtenerPermisosUsuario(session.user.id, ['reportes_ciudadano', 'incidentes_camaras', 'modulo_incidentes', 'formato_n_coordinacion', 'reporte_detenidos', 'formatos_udai'] as const)
+  const permisos = await obtenerPermisosUsuario(session.user.id, ['reportes_ciudadano', 'incidentes_camaras', 'modulo_incidentes', 'formato_n_coordinacion', 'reporte_detenidos', 'formatos_udai', 'parte_novedades_c4'] as const)
   if (!permisos.reportes_ciudadano.puede_ver) redirect('/dashboard')
 
   const userWithRole = await getUserWithRole(session.user.id)
@@ -73,7 +73,7 @@ export default async function AgenteReportesPage() {
         {
           titulo: 'Reportes Operativos',
           subtitulo: 'Clasificación y seguimiento detallado: Motos, Vehículos, Cateos, Hidrocarburos y más.',
-          icono: <ShieldAlert size={28} style={{ color: '#1f355a' }} />,
+          icono: <ShieldAlert size={28} />,
           enlace: '/modulo_incidentes',
           seccion: 'modulo_incidentes',
           estadisticas: [{ label: 'Categorías', value: '9' }, { label: 'Estatus', value: 'Seguimiento' }],
@@ -131,20 +131,20 @@ export default async function AgenteReportesPage() {
       titulo: 'Coordinación (Formato N)',
       cards: [
         {
-          titulo: 'Grupo de Coordinación',
-          subtitulo: 'Formato N a Coordinación: captura de eventos, FGE/FGR, RND, medios alternativos, atención a víctimas y armas aseguradas.',
-          icono: <FileText size={28} />,
-          enlace: '/nCoordinacion',
-          seccion: 'formato_n_coordinacion',
-          estadisticas: [],
-        },
-        {
-          titulo: 'Envío de Formatos',
-          subtitulo: 'Formato N a Coordinación: eventos, FGE/FGR, RND, medios alternativos, atención a víctimas y armas aseguradas.',
+          titulo: 'Reporte Diario Coordinación',
+          subtitulo: 'Genera el reporte diario de Coordinación: eventos, FGE/FGR, RND, medios alternativos, atención a víctimas, armas aseguradas y observaciones, con descarga del documento oficial.',
           icono: <Send size={28} />,
-          enlace: '/envio-de-formatos',
+          enlace: '/envio-de-formatos/consolidar',
           seccion: 'formato_n_coordinacion',
           estadisticas: [{ label: 'Registros', value: String(envioFormatosCount) }],
+        },
+        {
+          titulo: 'Parte de Novedades C-4',
+          subtitulo: 'El reporte diario más grande del sistema (34 tablas, ventana 06:00 a 06:00): 911, cámaras, subsecretaría, tránsito, prevención, delictivos, operativos y estado de fuerza.',
+          icono: <FileText size={28} />,
+          enlace: '/envio-de-formatos/novedades',
+          seccion: 'parte_novedades_c4',
+          estadisticas: [],
         },
       ],
     },
@@ -164,11 +164,7 @@ export default async function AgenteReportesPage() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc', color: '#1e293b', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-      `}</style>
-
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#1e293b', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader user={user} roleLabel="Agente Reportes" backHref={backHref} />
 
       <main className="pad-dashboard" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 40 }}>
@@ -183,9 +179,9 @@ export default async function AgenteReportesPage() {
           if (cards.length === 0) return null
           return (
             <section key={seccion.titulo} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ width: 4, height: 28, background: '#1f355a' }} />
-                <h2 style={{ fontFamily: 'Barlow Condensed,sans-serif', fontWeight: 700, fontSize: 22, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0f172a', margin: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
+                <span style={{ width: 4, height: 16, background: '#1f355a', borderRadius: 'var(--radius-full)' }} />
+                <h2 style={{ fontFamily: 'var(--apple-font-display)', fontWeight: 600, fontSize: 22, letterSpacing: 'normal', textTransform: 'none', color: '#0f172a', margin: 0 }}>
                   {seccion.titulo}
                 </h2>
                 <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />

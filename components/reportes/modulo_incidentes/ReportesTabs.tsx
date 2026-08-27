@@ -7,68 +7,69 @@ import {
 import { OperationalTable } from './ReportTables'
 import { styles } from './styles'
 
-export function ReportesTabs({ data }: { data: any }) {
+type TableRow = Record<string, string | number | boolean | null | undefined>
+
+export function ReportesTabs({ data }: { data: Record<string, TableRow[]> }) {
     const [activeTab, setActiveTab] = useState('MOTOS')
 
     return (
         <>
-            {/* SELECTOR DE PESTAÑAS - Ahora con scroll horizontal por si crecen más */}
+            {/* SELECTOR DE PESTAÑAS - pills con scroll horizontal */}
             <div style={{ 
                 display: 'flex', 
-                gap: '5px', 
-                marginBottom: '25px', 
-                borderBottom: '2px solid #E2E8F0',
+                gap: '6px', 
+                marginBottom: '24px', 
                 overflowX: 'auto',
                 whiteSpace: 'nowrap',
-                paddingBottom: '5px'
-            }}>
-                <button onClick={() => setActiveTab('MOTOS')} style={styles.tabButton(activeTab === 'MOTOS')}><Bike size={18}/> MOTOS</button>
-                <button onClick={() => setActiveTab('VEHICULOS')} style={styles.tabButton(activeTab === 'VEHICULOS')}><Car size={18}/> VEHÍCULOS</button>
-                <button onClick={() => setActiveTab('CATEOS')} style={styles.tabButton(activeTab === 'CATEOS')}><Search size={18}/> CATEOS</button>
-                <button onClick={() => setActiveTab('DETENIDOS')} style={styles.tabButton(activeTab === 'DETENIDOS')}><Gavel size={18}/> DETENIDOS</button>
-                <button onClick={() => setActiveTab('FALTAS')} style={styles.tabButton(activeTab === 'FALTAS')}><FileText size={18}/> FALTAS ADM.</button>
-                <button onClick={() => setActiveTab('ORDENES')} style={styles.tabButton(activeTab === 'ORDENES')}><UserCheck size={18}/> ÓRDENES APREH.</button>
-                <button onClick={() => setActiveTab('HIDROCARBURO')} style={styles.tabButton(activeTab === 'HIDROCARBURO')}><Droplet size={18}/> HIDROCARBURO</button>
-                <button onClick={() => setActiveTab('ARMAS')} style={styles.tabButton(activeTab === 'ARMAS')}><Crosshair size={18}/> ARMAS</button>
-                <button onClick={() => setActiveTab('DROGA')} style={styles.tabButton(activeTab === 'DROGA')}><Beaker size={18}/> DOSIS DROGA</button>
+                paddingBottom: '4px'
+            }} className="scrollbar-hide">
+                <button onClick={() => setActiveTab('MOTOS')} style={styles.tabButton(activeTab === 'MOTOS')}><Bike size={14}/> Motos</button>
+                <button onClick={() => setActiveTab('VEHICULOS')} style={styles.tabButton(activeTab === 'VEHICULOS')}><Car size={14}/> Vehículos</button>
+                <button onClick={() => setActiveTab('CATEOS')} style={styles.tabButton(activeTab === 'CATEOS')}><Search size={14}/> Cateos</button>
+                <button onClick={() => setActiveTab('DETENIDOS')} style={styles.tabButton(activeTab === 'DETENIDOS')}><Gavel size={14}/> Detenidos</button>
+                <button onClick={() => setActiveTab('FALTAS')} style={styles.tabButton(activeTab === 'FALTAS')}><FileText size={14}/> Faltas adm.</button>
+                <button onClick={() => setActiveTab('ORDENES')} style={styles.tabButton(activeTab === 'ORDENES')}><UserCheck size={14}/> Órdenes apreh.</button>
+                <button onClick={() => setActiveTab('HIDROCARBURO')} style={styles.tabButton(activeTab === 'HIDROCARBURO')}><Droplet size={14}/> Hidrocarburo</button>
+                <button onClick={() => setActiveTab('ARMAS')} style={styles.tabButton(activeTab === 'ARMAS')}><Crosshair size={14}/> Armas</button>
+                <button onClick={() => setActiveTab('DROGA')} style={styles.tabButton(activeTab === 'DROGA')}><Beaker size={14}/> Dosis droga</button>
             </div>
 
             {/* TABLAS FILTRADAS POR PESTAÑA */}
             
             {activeTab === 'MOTOS' && (
-                <OperationalTable title="MOTOS ROBADAS Y RECUPERADAS" columns={['FECHA', 'FOLIO', 'DATOS', 'ESTATUS', 'CARPETA', 'SEGUIMIENTO']} data={data.motos || []} />
+                <OperationalTable title="Motos robadas y recuperadas" columns={['Fecha', 'Folio', 'Datos', 'Estatus', 'Carpeta', 'Seguimiento']} data={data.motos || []} />
             )}
 
             {activeTab === 'VEHICULOS' && (
-                <OperationalTable title="VEHÍCULOS ROBADOS Y RECUPERADOS" columns={['FECHA', 'FOLIO', 'DATOS', 'ESTATUS', 'CARPETA', 'SEGUIMIENTO']} data={data.vehiculos || []} />
+                <OperationalTable title="Vehículos robados y recuperados" columns={['Fecha', 'Folio', 'Datos', 'Estatus', 'Carpeta', 'Seguimiento']} data={data.vehiculos || []} />
             )}
 
             {activeTab === 'CATEOS' && (
-                <OperationalTable title="CATEOS FGE-FGR" columns={['FECHA', 'FOLIO', 'UBICACIÓN', 'DEPENDENCIA', 'SEGUIMIENTO']} data={data.cateos || []} />
+                <OperationalTable title="Cateos FGE-FGR" columns={['Fecha', 'Folio', 'Ubicación', 'Dependencia', 'Seguimiento']} data={data.cateos || []} />
             )}
 
             {activeTab === 'DETENIDOS' && (
-                <OperationalTable title="DETENIDOS A FISCALÍA" columns={['FECHA', 'FOLIO', 'NOMBRE DETENIDO', 'OBSERVACIONES', 'FISCALÍA', 'SEGUIMIENTO']} data={data.detenidos || []} />
+                <OperationalTable title="Detenidos a fiscalía" columns={['Fecha', 'Folio', 'Nombre detenido', 'Observaciones', 'Fiscalía', 'Seguimiento']} data={data.detenidos || []} />
             )}
 
             {activeTab === 'FALTAS' && (
-                <OperationalTable title="FALTAS ADMINISTRATIVAS" columns={['FECHA', 'FOLIO', 'INFRACTOR', 'OBSERVACIONES', 'SEGUIMIENTO', 'FICHA', 'NOVEDADES']} data={data.faltas || []} />
+                <OperationalTable title="Faltas administrativas" columns={['Fecha', 'Folio', 'Infractor', 'Observaciones', 'Seguimiento', 'Ficha', 'Novedades']} data={data.faltas || []} />
             )}
 
             {activeTab === 'ORDENES' && (
-                <OperationalTable title="ÓRDENES DE APREHENSIÓN" columns={['FECHA', 'FOLIO', 'NOMBRE', 'OBSERVACIONES', 'ESTATUS', 'SEGUIMIENTO']} data={data.ordenes || []} />
+                <OperationalTable title="Órdenes de aprehensión" columns={['Fecha', 'Folio', 'Nombre', 'Observaciones', 'Estatus', 'Seguimiento']} data={data.ordenes || []} />
             )}
 
             {activeTab === 'HIDROCARBURO' && (
-                <OperationalTable title="DETENCIONES DELITO HIDROCARBURO" columns={['FECHA', 'FOLIO', 'NOMBRE', 'VEHÍCULO', 'LITROS', 'TOMA CLANDESTINA', 'OBSERVACIONES', 'SEGUIMIENTO']} data={data.hidrocarburo || []} />
+                <OperationalTable title="Detenciones delito hidrocarburo" columns={['Fecha', 'Folio', 'Nombre', 'Vehículo', 'Litros', 'Toma clandestina', 'Observaciones', 'Seguimiento']} data={data.hidrocarburo || []} />
             )}
 
             {activeTab === 'ARMAS' && (
-                <OperationalTable title="ASEGURAMIENTO DE ARMAS DE FUEGO" columns={['FECHA', 'FOLIO', 'DATOS ARMA', 'CARTUCHOS', 'OBSERVACIONES', 'SEGUIMIENTO']} data={data.armas || []} />
+                <OperationalTable title="Aseguramiento de armas de fuego" columns={['Fecha', 'Folio', 'Datos arma', 'Cartuchos', 'Observaciones', 'Seguimiento']} data={data.armas || []} />
             )}
 
             {activeTab === 'DROGA' && (
-                <OperationalTable title="ASEGURAMIENTO DE DOSIS DE DROGA" columns={['FECHA', 'FOLIO', 'CANTIDAD', 'NOMBRE/TIPO', 'OBSERVACIONES', 'SEGUIMIENTO']} data={data.droga || []} />
+                <OperationalTable title="Aseguramiento de dosis de droga" columns={['Fecha', 'Folio', 'Cantidad', 'Nombre/tipo', 'Observaciones', 'Seguimiento']} data={data.droga || []} />
             )}
         </>
     )

@@ -11,6 +11,7 @@ export interface FormatoNEvento {
   atenciones: string | null
   capturado_por: string
   creado_en: string
+  origen_incidente_id: string | null
 }
 
 function formatFecha(v: unknown): string {
@@ -31,6 +32,7 @@ function rowTo(r: Record<string, unknown>): FormatoNEvento {
     atenciones: r.atenciones != null ? String(r.atenciones) : null,
     capturado_por: String(r.capturado_por),
     creado_en: String(r.creado_en),
+    origen_incidente_id: r.origen_incidente_id != null ? String(r.origen_incidente_id) : null,
   }
 }
 
@@ -70,6 +72,21 @@ export async function crearEvento(data: FormatoNEventoInput): Promise<string> {
   return r.rows[0].id
 }
 
+export interface FormatoNEventoOrigenInput extends FormatoNEventoInput {
+  origen_incidente_id: string
+}
+
+async function upsertEventoDesdeIncidente(data: FormatoNEventoOrigenInput): Promise<void> {
+  await query(
+    `INSERT INTO formato_n_eventos (fecha, hora, region, evento, ubicacion, descripcion, atenciones, capturado_por, origen_incidente_id)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+     ON CONFLICT (origen_incidente_id) WHERE origen_incidente_id IS NOT NULL
+     DO UPDATE SET hora = EXCLUDED.hora, region = EXCLUDED.region, evento = EXCLUDED.evento,
+       ubicacion = EXCLUDED.ubicacion, descripcion = EXCLUDED.descripcion`,
+    [data.fecha, data.hora, data.region, data.evento, data.ubicacion ?? null, data.descripcion ?? null, data.atenciones ?? null, data.capturado_por, data.origen_incidente_id],
+  )
+}
+
 export interface FuenteIncidente {
   id: string
   fecha: string
@@ -81,7 +98,10 @@ export interface FuenteIncidente {
 
 export async function buscarIncidentesPorRango(fechaInicio: string, fechaFin: string): Promise<FuenteIncidente[]> {
   const r = await query<Record<string, unknown>>(
-    `SELECT i.id, i.fecha_hora_inicio, i.descripcion, i.calle, i.colonia, i.entre_calles,
+    `SELECT i.id,
+            i.fecha_hora_inicio::date AS fecha,
+            TO_CHAR(i.fecha_hora_inicio, 'HH24:MI') AS hora,
+            i.descripcion, i.calle, i.colonia, i.entre_calles,
             COALESCE(ti.nombre, 'Sin clasificar') as tipo_incidente
      FROM incidentes i
      LEFT JOIN cat_tipos_incidente ti ON i.tipo_incidente_id = ti.id
@@ -90,17 +110,65 @@ export async function buscarIncidentesPorRango(fechaInicio: string, fechaFin: st
     [fechaInicio, fechaFin],
   )
   return r.rows.map(row => {
-    const fecha_hora = row.fecha_hora_inicio instanceof Date ? row.fecha_hora_inicio : new Date(String(row.fecha_hora_inicio))
     const ubicacionPartes = [row.calle, row.colonia, row.entre_calles].filter(Boolean)
     return {
       id: String(row.id),
-      fecha: isNaN(fecha_hora.getTime()) ? '' : fecha_hora.toISOString().slice(0, 10),
-      hora: isNaN(fecha_hora.getTime()) ? '' : fecha_hora.toISOString().slice(11, 16),
+      fecha: String(row.fecha).slice(0, 10),
+      hora: String(row.hora).slice(0, 5),
       evento: String(row.tipo_incidente),
       ubicacion: ubicacionPartes.length ? ubicacionPartes.join(', ') : null,
       descripcion: row.descripcion != null ? String(row.descripcion) : null,
     }
   })
+}
+
+export async function eliminarDuplicadosEventosDelDia(fecha: string): Promise<void> {
+  // Huérfanos previos al upsert por origen_incidente_id (mismo hora+evento+ubicación, ya
+  // reemplazados por una fila enlazada a la fuente real): se quedaron duplicados porque
+  // nunca calzaron con el ON CONFLICT al no tener el enlace. Limpieza autocurativa en cada
+  // sync — debe correr ANTES del match por campos exactos, o ese match (que no distingue
+  // huérfano de enlazado, solo el más reciente) puede quedarse con el huérfano.
+  await query(`
+    DELETE FROM formato_n_eventos a
+    USING formato_n_eventos b
+    WHERE a.fecha = $1
+      AND b.fecha = $1
+      AND a.origen_incidente_id IS NULL
+      AND b.origen_incidente_id IS NOT NULL
+      AND a.hora = b.hora
+      AND a.evento = b.evento
+      AND COALESCE(a.ubicacion, '') = COALESCE(b.ubicacion, '')
+  `, [fecha])
+  await query(`
+    DELETE FROM formato_n_eventos a
+    USING formato_n_eventos b
+    WHERE a.fecha = $1
+      AND b.fecha = $1
+      AND a.hora = b.hora
+      AND a.evento = b.evento
+      AND COALESCE(a.ubicacion, '') = COALESCE(b.ubicacion, '')
+      AND COALESCE(a.descripcion, '') = COALESCE(b.descripcion, '')
+      AND (b.creado_en < a.creado_en OR (b.creado_en = a.creado_en AND b.id::text < a.id::text))
+  `, [fecha])
+}
+
+export async function sincronizarEventosDelDia(fecha: string, capturadoPor: string): Promise<FormatoNEvento[]> {
+  const incidentes = await buscarIncidentesPorRango(fecha, fecha)
+  // Limpia duplicados exactos heredados de sincronizaciones previas a origen_incidente_id (sin fuente enlazada).
+  await eliminarDuplicadosEventosDelDia(fecha)
+  for (const inc of incidentes) {
+    await upsertEventoDesdeIncidente({
+      fecha,
+      hora: inc.hora,
+      region: 'San Juan del Río',
+      evento: inc.evento,
+      ubicacion: inc.ubicacion,
+      descripcion: inc.descripcion,
+      capturado_por: capturadoPor,
+      origen_incidente_id: inc.id,
+    })
+  }
+  return obtenerEventosPorFecha(fecha)
 }
 
 export async function actualizarEvento(id: string, data: Partial<Omit<FormatoNEventoInput, 'capturado_por'>>): Promise<void> {

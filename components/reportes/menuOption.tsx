@@ -18,71 +18,129 @@ interface OptionSquareProps {
 
 export const OptionSquare = ({ titulo, subtitulo, icono, enlace, estadisticas }: OptionSquareProps) => {
   const [hover, setHover] = useState(false)
-  const blueAccent = '#1f355a'
+  const accentColor = '#1f355a'
+
+  const cardStyle: React.CSSProperties = {
+    background: hover ? 'rgba(255,255,255,0.85)' : 'var(--apple-glass-bg)',
+    backdropFilter: 'blur(20px) saturate(180%)',
+    border: `1px solid ${hover ? 'rgba(31, 53, 90, 0.25)' : 'var(--apple-glass-border)'}`,
+    padding: '24px',
+    position: 'relative',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease-out',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '200px',
+    height: '100%',
+    borderRadius: 'var(--radius-xl)',
+    boxShadow: hover ? 'var(--apple-shadow-glass-hover)' : 'var(--apple-shadow-glass)',
+    transform: hover ? 'translateY(-2px)' : 'translateY(0)',
+    overflow: 'hidden',
+    cursor: 'pointer',
+    width: '100%',
+  }
 
   return (
     <Link
       href={enlace}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      style={{
-        background: '#ffffff',
-        border: `1px solid ${hover ? blueAccent : '#e2e8f0'}`,
-        padding: '32px',
-        position: 'relative',
-        textDecoration: 'none',
-        transition: 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '280px',
-        borderRadius: '2px',
-        boxShadow: hover ? '0 20px 40px -12px rgba(31, 53, 90, 0.15)' : '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-        transform: hover ? 'translateY(-5px)' : 'translateY(0)',
-        overflow: 'hidden'
-      }}
+      style={cardStyle}
     >
-      {/* ADORNOS CENTINELA */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: hover ? '100%' : '24px', height: '2px', background: blueAccent, transition: 'width 0.4s ease' }} />
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '2px', height: hover ? '100%' : '24px', background: blueAccent, transition: 'height 0.4s ease' }} />
-
       {/* HEADER CARD */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
-        <div style={{ color: hover ? blueAccent : '#64748b', transition: 'all 0.3s ease', transform: hover ? 'scale(1.1)' : 'scale(1)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+        <div style={{
+          color: hover ? accentColor : '#64748b',
+          transition: 'all 0.3s ease',
+          transform: hover ? 'scale(1.1)' : 'scale(1)',
+          transformOrigin: 'top left',
+        }}>
           {icono}
         </div>
-        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: hover ? blueAccent : '#94a3b8', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: hover ? blueAccent : '#cbd5e1' }} />
-          SISTEMA ACTIVO
-        </div>
+        {estadisticas.length > 0 && (
+          <div style={{
+            fontFamily: 'var(--apple-font-display)',
+            fontSize: 12,
+            fontWeight: 500,
+            color: hover ? accentColor : '#94a3b8',
+            transition: 'color 0.3s ease',
+          }}>
+            {estadisticas[0].value}
+          </div>
+        )}
       </div>
 
       {/* CONTENIDO */}
-      <div style={{ flexGrow: 1 }}>
-        <h3 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '24px', fontWeight: 800, textTransform: 'uppercase', color: '#0f172a', margin: '0 0 8px 0', letterSpacing: '0.02em' }}>
+      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <h3 style={{
+          fontFamily: 'var(--apple-font-display)',
+          fontSize: 26,
+          fontWeight: 600,
+          letterSpacing: 'normal',
+          textTransform: 'none',
+          color: hover ? '#1f355a' : '#0f172a',
+          margin: '0 0 8px 0',
+          transition: 'color 0.3s ease',
+        }}>
           {titulo}
         </h3>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#64748b', lineHeight: '1.5', margin: 0 }}>
+        <p style={{
+          fontFamily: 'var(--apple-font-display)',
+          fontSize: 13,
+          color: hover ? '#475569' : '#64748b',
+          lineHeight: '1.5',
+          margin: 0,
+          transition: 'color 0.3s ease',
+        }}>
           {subtitulo}
         </p>
       </div>
 
       {/* ESTADÍSTICAS */}
-      <div style={{ display: 'flex', gap: '24px', marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #f1f5f9' }}>
-        {estadisticas.map((stat, i) => (
-          <div key={i}>
-            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '8px', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '4px' }}>
-              {stat.label}
+      {estadisticas.length > 0 && (
+        <div style={{ display: 'flex', gap: '24px', marginTop: 16, paddingTop: 16, borderTop: '1px solid #eef2f7' }}>
+          {estadisticas.map((stat, i) => (
+            <div key={i} style={{ lineHeight: 1 }}>
+              <div style={{
+                fontFamily: 'var(--apple-font-display)',
+                fontSize: 11,
+                color: '#94a3b8',
+                fontWeight: 500,
+                marginBottom: 4,
+                textTransform: 'none',
+                letterSpacing: 'normal',
+              }}>
+                {stat.label}
+              </div>
+              <div style={{
+                fontFamily: 'var(--apple-font-display)',
+                fontSize: 18,
+                fontWeight: 600,
+                color: '#0f172a',
+                fontVariantNumeric: 'tabular-nums',
+              }}>
+                {stat.value}
+              </div>
             </div>
-            <div style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '16px', fontWeight: 700, color: '#1e293b' }}>
-              {stat.value}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* ACCIÓN */}
-      <div style={{ marginTop: '24px', display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', fontWeight: 600, color: hover ? blueAccent : '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
-        Ingresar <ArrowRight size={14} style={{ transform: hover ? 'translateX(5px)' : 'translateX(0)', transition: 'transform 0.3s' }} />
+      <div style={{
+        marginTop: 16,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        fontFamily: 'var(--apple-font-display)',
+        fontSize: 13,
+        fontWeight: 600,
+        color: hover ? accentColor : '#94a3b8',
+        textTransform: 'none',
+        letterSpacing: 'normal',
+        transition: 'color 0.3s ease',
+      }}>
+        Ingresar <ArrowRight size={14} style={{ transform: hover ? 'translateX(4px)' : 'translateX(0)', transition: 'transform 0.3s ease' }} />
       </div>
     </Link>
   )

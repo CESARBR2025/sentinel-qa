@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
-import { listarDepartamentosActivos, obtenerOficialPorId } from '@/lib/admin-transito/repository'
+import { listarDepartamentosActivos, listarSectoresActivos, obtenerOficialPorId } from '@/lib/admin-transito/repository'
 import { actualizarOficial } from '@/lib/catalogos/actions'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import PatrullaSelector from '@/components/admin-transito/PatrullaSelector'
@@ -77,6 +77,7 @@ export default async function CatalogosEditarOficialPage({
 
   const deptos = await listarDepartamentosActivos()
   const patrullas = await listarPatrullasParaAsignacion()
+  const sectores = await listarSectoresActivos()
 
   return (
     <div>
@@ -166,6 +167,17 @@ export default async function CatalogosEditarOficialPage({
             <div>
               <label style={labelStyle}>Unidad / Patrulla</label>
               <PatrullaSelector patrullas={patrullas} defaultValue={oficial.patrullaId ?? undefined} />
+            </div>
+            <div>
+              <label style={labelStyle}>Sector</label>
+              <select name="sectorId" style={selectStyle} defaultValue={oficial.sectorId != null ? String(oficial.sectorId) : ''}>
+                <option value="">— Sin asignar —</option>
+                {sectores.map((s) => (
+                  <option key={s.id} value={String(s.id)}>
+                    {s.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

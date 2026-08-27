@@ -1,45 +1,48 @@
 export const styles = {
     tag: {
-        fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', letterSpacing: '0.4em',
-        color: '#64748B', fontWeight: 700
+        fontFamily: 'var(--apple-font-display)', fontSize: '12px', letterSpacing: 'normal',
+        color: '#64748B', fontWeight: 600, textTransform: 'none' as const
     },
-    filterCard: { 
-        background: 'white', padding: '24px', borderRadius: '4px', 
-        border: '1px solid #E2E8F0', marginBottom: '24px' 
+    filterCard: {
+        background: 'white', padding: '20px', borderRadius: 'var(--radius-lg)',
+        border: '1px solid #E2E8F0', marginBottom: '24px', boxShadow: 'var(--shadow-card)'
     },
-    label: { 
-        fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 700, 
-        color: '#64748B', textTransform: 'uppercase' as const, marginBottom: '8px', display: 'block' 
+    label: {
+        fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 500,
+        color: '#64748B', textTransform: 'none' as const, letterSpacing: 'normal', marginBottom: '8px', display: 'block'
     },
-    input: { 
-        width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #E2E8F0', 
-        fontFamily: "'Inter', sans-serif", fontSize: '14px' 
+    input: {
+        width: '100%', padding: '10px 12px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0',
+        fontFamily: 'var(--apple-font-display)', fontSize: '14px', background: '#f8fafc', outline: 'none'
     },
-    tableSection: { marginBottom: '48px' }, 
-    tableContainer: { background: 'white', borderRadius: '4px', border: '1px solid #E2E8F0', overflowX: 'auto' as const },
+    tableSection: { marginBottom: '48px' },
+    tableContainer: { background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0', overflowX: 'auto' as const, boxShadow: 'var(--shadow-card)' },
     tableHeader: { padding: '20px 24px', borderBottom: '1px solid #E2E8F0' },
     table: { width: '100%', borderCollapse: 'collapse' as const },
-    th: { 
-        padding: '12px 16px', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', 
-        color: '#64748B', textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9' 
+    th: {
+        padding: '12px 16px', fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 600,
+        color: '#64748B', textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9',
+        textTransform: 'none' as const, letterSpacing: 'normal'
     },
-    td: { padding: '14px 16px', fontSize: '13px', color: '#334155', borderBottom: '1px solid #F1F5F9' },
+    td: { padding: '14px 16px', fontSize: '13px', color: '#334155', borderBottom: '1px solid #F1F5F9', fontFamily: 'var(--apple-font-display)' },
     monoDataBlue: {
-        fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: '12px', color: '#1f355a'
+        fontFamily: 'var(--apple-font-display)', fontWeight: 700, fontSize: '12px', color: '#1f355a'
     },
     primaryButton: {
-        background: '#0F172A', color: 'white', padding: '10px 16px', border: 'none',
-        borderRadius: '4px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', fontWeight: 600,
-        display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'
+        background: '#0F172A', color: 'white', padding: '10px 20px', border: 'none',
+        borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: '14px', fontWeight: 600,
+        display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer',
+        textTransform: 'none' as const, letterSpacing: 'normal'
     },
     secondaryButtonBlue: {
-        background: '#eff1f3', color: '#1f355a', padding: '6px 12px', border: '1px solid #dbdfe5',
-        borderRadius: '4px', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 700,
-        display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer'
+        background: '#ffffff', color: '#1f355a', padding: '6px 12px', border: '1px solid #dbdfe5',
+        borderRadius: 'var(--radius-md)', fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 600,
+        display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
+        textTransform: 'none' as const, letterSpacing: 'normal'
     },
     badge: (bg: string, color: string) => ({
-        background: bg, color: color, padding: '2px 6px', borderRadius: '3px',
-        fontSize: '11px', fontWeight: 700, fontFamily: "'JetBrains Mono', monospace"
+        background: bg, color: color, padding: '3px 10px', borderRadius: 'var(--radius-full)',
+        fontSize: '12px', fontWeight: 500, fontFamily: 'var(--apple-font-display)'
     }),
     paginationContainer: {
         display: 'flex',
@@ -51,10 +54,10 @@ export const styles = {
     },
     paginationButton: {
         padding: '6px 12px',
-        fontSize: '11px',
-        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '12px',
+        fontFamily: 'var(--apple-font-display)',
         fontWeight: 600,
-        borderRadius: '4px',
+        borderRadius: 'var(--radius-md)',
         border: '1px solid #E2E8F0',
         background: 'white',
         cursor: 'pointer',
@@ -69,8 +72,8 @@ export const styles = {
         borderColor: '#1f355a'
     },
     paginationText: {
-        fontSize: '11px',
-        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '12px',
+        fontFamily: 'var(--apple-font-display)',
         color: '#64748B'
     }
 };

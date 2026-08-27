@@ -14,6 +14,12 @@ export interface Departamento {
   nombre: string
 }
 
+export interface Sector {
+  id: number
+  clave: string
+  nombre: string
+}
+
 export interface OficialLista {
   id: string
   userName: string
@@ -26,6 +32,8 @@ export interface OficialLista {
   departamentoNombre: string | null
   patrullaId: string | null
   patrullaUnidad: string | null
+  sectorId: number | null
+  sectorNombre: string | null
   userId: string | null
   ofiEstatus: string
   createdAt: string

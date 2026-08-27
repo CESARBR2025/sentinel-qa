@@ -32,8 +32,7 @@ export default async function ReportesOperativosPage({
   const excelHref = `/api/reportes-operativos/exportar-excel?${excelParams}`
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'var(--apple-font-display)' }}>
 
       <DashboardHeader user={user} roleLabel="Resumen de Incidentes" backHref="/agente_reportes" backLabel="Panel de Reportes" />
 
@@ -41,7 +40,7 @@ export default async function ReportesOperativosPage({
         <PageHeader
           title="Reportes"
           accent="Operativos"
-          subtitle="SSPM · Inteligencia Operativa"
+          subtitle="SSPM · Inteligencia operativa"
           actions={<>
             <button style={{ ...styles.primaryButton, background: 'white', color: '#0F172A', border: '1px solid #CBD5E1' }}>
               <FileDown size={16} /> PDF
@@ -56,7 +55,7 @@ export default async function ReportesOperativosPage({
                 gap: '8px',
               }}
             >
-              <Download size={16} /> EXCEL
+              <Download size={16} /> Excel
             </a>
           </>}
         />

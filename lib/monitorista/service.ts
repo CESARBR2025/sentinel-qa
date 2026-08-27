@@ -15,7 +15,10 @@ import {
   insertHistorial,
 } from './repository'
 
-export const TURNOS = ['MATUTINO', 'VESPERTINO', 'NOCTURNO'] as const
+// Los horarios de turno viven en ./turnos (Etapa 0.6). Se re-exporta TURNOS
+// para no romper importaciones existentes que usaban el arreglo de claves.
+export { TURNOS } from './turnos'
+export type { Turno } from './types'
 
 // ==================== Denuncia service ====================
 

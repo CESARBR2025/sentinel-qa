@@ -12,16 +12,18 @@ interface PaginationProps {
 export function PaginacionSinRobos({ currentPage, totalPages, totalResults, onPageChange }: PaginationProps) {
     return (
         <div style={{
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            padding: '16px 24px', 
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '16px 24px',
             borderTop: '1px solid #E2E8F0',
-            background: '#FFFFFF'
+            background: '#FFFFFF',
+            flexWrap: 'wrap',
+            gap: 12
         }}>
             {/* Texto de resultados a la izquierda */}
-            <div style={{ ...styles.tag, letterSpacing: '0.1em' }}>
-                MOSTRANDO <span style={{ color: '#0F172A' }}>{totalResults}</span> RESULTADOS EN TOTAL
+            <div style={{ ...styles.tag }}>
+                Mostrando <span style={{ color: '#0F172A' }}>{totalResults}</span> resultados en total
             </div>
             
             {/* Controles de navegación */}
@@ -47,16 +49,16 @@ export function PaginacionSinRobos({ currentPage, totalPages, totalResults, onPa
                 </button>
                 
                 {/* INDICADOR CENTRAL */}
-                <div style={{ 
-                    fontFamily: "'JetBrains Mono', monospace", 
-                    fontSize: '12px', 
-                    fontWeight: 700,
+                <div style={{
+                    fontFamily: 'var(--apple-font-display)',
+                    fontSize: '12px',
+                    fontWeight: 600,
                     display: 'flex',
                     gap: '4px',
                     alignItems: 'center',
                     margin: '0 4px'
                 }}>
-                    <span style={{ color: '#1f355a', background: '#eff1f3', padding: '4px 10px', borderRadius: '4px' }}>
+                    <span style={{ color: '#1f355a', background: '#eff1f3', padding: '4px 10px', borderRadius: 'var(--radius-md)' }}>
                         {currentPage}
                     </span>
                     <span style={{ padding: '4px 2px', color: '#64748B' }}>/</span>
@@ -89,7 +91,7 @@ export function PaginacionSinRobos({ currentPage, totalPages, totalResults, onPa
 const paginationButtonStyle = {
     background: 'white',
     border: '1px solid #E2E8F0',
-    borderRadius: '4px',
+    borderRadius: 'var(--radius-md)',
     padding: '6px',
     cursor: 'pointer',
     display: 'flex',

@@ -1,10 +1,12 @@
 'use client';
 import { useState } from 'react'; // <--- Importante
-import { User, Smartphone, FileText, FileDown, CheckCircle } from 'lucide-react';
+import { User, Smartphone, FileText, CheckCircle } from 'lucide-react';
 import { styles } from './styles';
 import { PaginacionSinRobos } from './PaginacionSinRobos'; // <--- El que acabamos de crear
 
-export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
+type TableRow = Record<string, string | number | boolean | null | undefined>
+
+export const TablaReportesLimpios = ({ data }: { data: TableRow[] }) => {
     // LOGICA DE PAGINACION
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5; 
@@ -16,22 +18,22 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
         <div style={styles.tableSection}>
             <div style={styles.tableContainer}>
                 {/* Header de la tabla */}
-                <div style={{ ...styles.tableHeader, background: '#F8FAFC', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ ...styles.tableHeader, background: '#F8FAFC', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <CheckCircle size={16} color="#10B981" />
-                        <span style={styles.tag}>REGISTROS SIN NOVEDAD CONFIRMADA</span>
+                        <span style={styles.tag}>Registros sin novedad confirmada</span>
                     </div>
-                    <span style={styles.badge('#dbdfe5', '#1f355a')}>CENTINELA VERIFIED</span>
+                    <span style={styles.badge('#dbdfe5', '#1f355a')}>Centinela verificado</span>
                 </div>
 
                 <table style={styles.table}>
                     <thead>
                         <tr>
-                            <th style={styles.th}>FOLIO</th>
-                            <th style={styles.th}>FECHA</th>
-                            <th style={styles.th}>REPORTANTE</th>
-                            <th style={styles.th}>TELÉFONO</th>
-                            <th style={styles.th}>CONCLUSIÓN</th>
+                            <th style={styles.th}>Folio</th>
+                            <th style={styles.th}>Fecha</th>
+                            <th style={styles.th}>Reportante</th>
+                            <th style={styles.th}>Teléfono</th>
+                            <th style={styles.th}>Conclusión</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,11 +42,11 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                                 <td style={styles.td}>
                                     <span style={styles.monoDataBlue}>#{item.reporte}</span>
                                 </td>
-                                <td style={{ ...styles.td, fontFamily: "'JetBrains Mono', monospace" }}>{item.fecha}</td>
+                                <td style={styles.td}>{item.fecha}</td>
                                 <td style={styles.td}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <User size={14} color="#64748B" />
-                                        <span style={{ fontWeight: 700, textTransform: 'uppercase' }}>{item.nombreReportante}</span>
+                                        <span style={{ fontWeight: 600 }}>{item.nombreReportante}</span>
                                     </div>
                                 </td>
                                 <td style={styles.td}>
@@ -57,7 +59,7 @@ export const TablaReportesLimpios = ({ data }: { data: any[] }) => {
                                     <div style={{ display: 'flex', gap: '6px' }}>
                                         <FileText size={14} color="#94A3B8" />
                                         <span style={{ fontSize: '12px', color: '#64748B', lineHeight: '1.4' }}>
-                                            {item.conclusion.substring(0, 50)}...
+                                            {String(item.conclusion ?? '').substring(0, 50)}...
                                         </span>
                                     </div>
                                 </td>

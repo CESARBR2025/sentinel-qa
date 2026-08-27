@@ -1,5 +1,5 @@
 'use client'
-import { Search, Download } from 'lucide-react'
+import { Search, Download, X } from 'lucide-react'
 import { styles } from './styles'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -26,11 +26,11 @@ export function D1Filters() {
     return (
         <div style={styles.filterBar}>
             <div style={styles.filterGroup}>
-                <label style={styles.filterLabel}>Fecha Inicio</label>
+                <label style={styles.filterLabel}>Fecha inicio</label>
                 <input type="date" style={styles.input} value={from} onChange={e => setFrom(e.target.value)} />
             </div>
             <div style={styles.filterGroup}>
-                <label style={styles.filterLabel}>Fecha Fin</label>
+                <label style={styles.filterLabel}>Fecha fin</label>
                 <input type="date" style={styles.input} value={to} onChange={e => setTo(e.target.value)} />
             </div>
             <div style={styles.filterGroup}>
@@ -39,14 +39,14 @@ export function D1Filters() {
                     onKeyDown={e => { if (e.key === 'Enter') handleFiltrar() }} />
             </div>
             <button style={{ ...styles.primaryButton, height: '38px', justifyContent: 'center', background: '#1f355a' }} onClick={handleFiltrar}>
-                <Search size={16} /> FILTRAR
+                <Search size={16} /> Filtrar
             </button>
             <button style={{ ...styles.primaryButton, height: '38px', justifyContent: 'center', background: '#64748B' }} onClick={handleLimpiar}>
-                X LIMPIAR
+                <X size={16} /> Limpiar
             </button>
             <a href={`/api/d1/exportar?from=${from}&to=${to}&folio=${folio}`}
-                style={{ ...styles.primaryButton, height: '38px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#16a34a' }}>
-                <Download size={16} /> EXCEL
+                style={{ ...styles.primaryButton, height: '38px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#1f355a' }}>
+                <Download size={16} /> Excel
             </a>
         </div>
     )

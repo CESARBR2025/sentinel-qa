@@ -1,47 +1,49 @@
 export const styles = {
-    filterCard: { 
-        background: 'white', padding: '24px', borderRadius: '4px', 
-        border: '1px solid #E2E8F0', marginBottom: '24px' 
+    filterCard: {
+        background: 'white', padding: '20px', borderRadius: 'var(--radius-lg)',
+        border: '1px solid #E2E8F0', marginBottom: '24px', boxShadow: 'var(--shadow-card)'
     },
-    statsGrid: { 
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-        gap: '12px', marginBottom: '32px' 
+    statsGrid: {
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '16px', marginBottom: '32px'
     },
-    // AGREGADO PARA QUE NO MARQUE ERROR
-    tableSection: { marginBottom: '48px' }, 
-    tableContainer: { 
-        background: 'white', borderRadius: '4px', border: '1px solid #E2E8F0', overflowX: 'auto' as const 
+    tableSection: { marginBottom: '48px' },
+    tableContainer: {
+        background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0',
+        overflowX: 'auto' as const, boxShadow: 'var(--shadow-card)'
     },
     tableHeader: { padding: '20px 24px', borderBottom: '1px solid #E2E8F0' },
     table: { width: '100%', borderCollapse: 'collapse' as const },
-    th: { 
-        padding: '12px 16px', fontFamily: 'JetBrains Mono', fontSize: '10px', 
-        color: '#64748B', textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9' 
+    th: {
+        padding: '12px 16px', fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 600,
+        color: '#64748B', textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9',
+        textTransform: 'none' as const, letterSpacing: 'normal'
     },
-    td: { 
-        padding: '14px 16px', fontSize: '13px', color: '#334155', borderBottom: '1px solid #F1F5F9' 
+    td: {
+        padding: '14px 16px', fontSize: '13px', color: '#334155', borderBottom: '1px solid #F1F5F9',
+        fontFamily: 'var(--apple-font-display)'
     },
-    totalTh: { padding: '12px 16px', fontFamily: 'JetBrains Mono', fontSize: '10px', textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9', background: '#F1F5F9', color: '#0F172A', fontWeight: 800 },
-    totalTd: { padding: '14px 16px', fontSize: '13px', borderBottom: '1px solid #F1F5F9', background: '#F8FAFC', fontWeight: 700, color: '#1f355a' },
-    label: { fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' as const, marginBottom: '8px', display: 'block' },
-    input: { width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #E2E8F0', fontFamily: 'Inter' },
+    totalTh: { padding: '12px 16px', fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 600, textAlign: 'left' as const, borderBottom: '2px solid #F1F5F9', background: '#F1F5F9', color: '#0F172A' },
+    totalTd: { padding: '14px 16px', fontSize: '13px', borderBottom: '1px solid #F1F5F9', background: '#F8FAFC', fontWeight: 700, color: '#1f355a', fontFamily: 'var(--apple-font-display)' },
+    label: { fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 500, color: '#64748B', textTransform: 'none' as const, letterSpacing: 'normal', marginBottom: '8px', display: 'block' },
+    input: { width: '100%', padding: '10px 12px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0', fontFamily: 'var(--apple-font-display)', fontSize: '14px', background: '#f8fafc', outline: 'none' },
     primaryButton: {
-        background: '#0F172A', color: 'white', padding: '10px 16px', border: 'none',
-        borderRadius: '4px', fontFamily: 'JetBrains Mono', fontSize: '11px', fontWeight: 600,
-        display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'
+        background: '#0F172A', color: 'white', padding: '10px 20px', border: 'none',
+        borderRadius: 'var(--radius-lg)', fontFamily: 'var(--apple-font-display)', fontSize: '14px', fontWeight: 600,
+        display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer',
+        textTransform: 'none' as const, letterSpacing: 'normal'
     },
-    // AGREGADO EN ROJO
     secondaryButton: {
-        background: '#FFF1F2', color: '#E11D48', padding: '6px 12px', border: '1px solid #FECDD3',
-        borderRadius: '4px', fontFamily: 'JetBrains Mono', fontSize: '10px', fontWeight: 700,
-        display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer'
+        background: '#FFFFFF', color: '#E11D48', padding: '6px 12px', border: '1px solid #FECDD3',
+        borderRadius: 'var(--radius-md)', fontFamily: 'var(--apple-font-display)', fontSize: '12px', fontWeight: 600,
+        display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
+        textTransform: 'none' as const, letterSpacing: 'normal'
     },
-    // AGREGADO EN ROJO
     monoData: {
-        fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '12px', color: '#E11D48'
+        fontFamily: 'var(--apple-font-display)', fontWeight: 700, fontSize: '12px', color: '#E11D48'
     },
     badge: (bg: string, color: string) => ({
-        background: bg, color: color, padding: '2px 6px', borderRadius: '3px',
-        fontSize: '11px', fontWeight: 700, fontFamily: 'JetBrains Mono'
+        background: bg, color: color, padding: '3px 10px', borderRadius: 'var(--radius-full)',
+        fontSize: '12px', fontWeight: 500, fontFamily: 'var(--apple-font-display)'
     })
 }

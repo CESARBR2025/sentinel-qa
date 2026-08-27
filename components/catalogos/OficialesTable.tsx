@@ -14,6 +14,12 @@ interface Departamento {
   nombre: string
 }
 
+interface Sector {
+  id: number
+  clave: string
+  nombre: string
+}
+
 interface Oficial {
   id: string
   userName: string
@@ -25,6 +31,7 @@ interface Oficial {
   departamentoNombre: string | null
   patrullaId: string | null
   patrullaUnidad: string | null
+  sectorId: number | null
   userId: string | null
   ofiEstatus: string
 }
@@ -32,6 +39,7 @@ interface Oficial {
 interface Props {
   oficiales: Oficial[]
   deptos: Departamento[]
+  sectores: Sector[]
   patrullas: PatrullaAsignacion[]
 }
 
@@ -46,10 +54,11 @@ type AccionModal =
       telefono: string | null
       departamentoId: string | null
       patrullaId: string | null
+      sectorId: number | null
     }
   | null
 
-export default function OficialesTable({ oficiales, deptos, patrullas }: Props) {
+export default function OficialesTable({ oficiales, deptos, sectores, patrullas }: Props) {
   const [modal, setModal] = useState<AccionModal>(null)
 
   if (oficiales.length === 0) {
@@ -149,6 +158,7 @@ export default function OficialesTable({ oficiales, deptos, patrullas }: Props) 
                       telefono: o.telefono,
                       departamentoId: o.departamentoId,
                       patrullaId: o.patrullaId,
+                      sectorId: o.sectorId,
                     })
                   }
                   style={{
@@ -233,7 +243,9 @@ export default function OficialesTable({ oficiales, deptos, patrullas }: Props) 
           telefono={modal.telefono}
           departamentoId={modal.departamentoId}
           patrullaId={modal.patrullaId}
+          sectorId={modal.sectorId}
           deptos={deptos}
+          sectores={sectores}
           patrullas={patrullas}
           onClose={() => setModal(null)}
         />

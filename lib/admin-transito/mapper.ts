@@ -1,4 +1,4 @@
-import type { Departamento, OficialLista, UserBasico, UserWithRole } from './types'
+import type { Departamento, OficialLista, Sector, UserBasico, UserWithRole } from './types'
 
 function toStr(val: unknown): string | null {
   if (val === null || val === undefined) return null
@@ -25,6 +25,14 @@ export function rowToDepartamento(row: Record<string, unknown>): Departamento {
   }
 }
 
+export function rowToSector(row: Record<string, unknown>): Sector {
+  return {
+    id: Number(row.id),
+    clave: toStr(row.clave) ?? '',
+    nombre: toStr(row.nombre) ?? '',
+  }
+}
+
 export function rowToOficialLista(row: Record<string, unknown>): OficialLista {
   return {
     id: String(row.id ?? ''),
@@ -38,6 +46,8 @@ export function rowToOficialLista(row: Record<string, unknown>): OficialLista {
     departamentoNombre: toStr(row.departamento_nombre),
     patrullaId: toStr(row.patrulla_id),
     patrullaUnidad: toStr(row.patrulla_unidad),
+    sectorId: row.sector_id != null ? Number(row.sector_id) : null,
+    sectorNombre: toStr(row.sector_nombre),
     userId: toStr(row.user_id),
     ofiEstatus: toStr(row.ofi_estatus) ?? 'activo',
     createdAt: toStr(row.created_at) ?? '',

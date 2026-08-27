@@ -7,12 +7,8 @@ import Link from 'next/link'
 import React from 'react'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
-
-const TURNOS = [
-  { value: 'MATUTINO', label: 'Primer Turno (07:00 - 15:00 HRS)' },
-  { value: 'VESPERTINO', label: 'Segundo Turno (15:00 - 22:00 HRS)' },
-  { value: 'NOCTURNO', label: 'Tercer Turno (22:00 - 07:00 HRS)' },
-]
+import { TURNOS, etiquetaTurno, jornadaTurnoTexto } from '@/lib/monitorista/turnos'
+import type { Turno } from '@/lib/monitorista/types'
 
 const CAMPOS: { label: string; name: string }[] = [
   { label: 'PERSONAS CAPTADAS POR CÁMARA SIN NOVEDAD', name: 'personas_sin_novedad' },
@@ -116,13 +112,16 @@ export default function EditarIncidenteCamaraPage() {
             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div className="grid-2">
                 <div>
-                  <Label>Fecha</Label>
+                  <Label>Fecha de inicio del turno</Label>
                   <input name="fecha" type="date" required style={inputStyle} value={formData.fecha || ''} onChange={e => setFormData(f => ({ ...f, fecha: e.target.value }))} />
+                  <div style={{ fontFamily: 'Inter', fontSize: 11, color: '#475569', marginTop: 6, lineHeight: 1.5 }}>
+                    {formData.fecha && formData.turno ? jornadaTurnoTexto(formData.fecha, formData.turno as Turno) : ''}
+                  </div>
                 </div>
                 <div>
                   <Label>Turno</Label>
                   <select name="turno" required style={inputStyle} value={formData.turno || 'MATUTINO'} onChange={e => setFormData(f => ({ ...f, turno: e.target.value }))}>
-                    {TURNOS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                    {TURNOS.map(t => <option key={t.clave} value={t.clave}>{etiquetaTurno(t.clave)}</option>)}
                   </select>
                 </div>
               </div>

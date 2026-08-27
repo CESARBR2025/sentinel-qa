@@ -7,12 +7,8 @@ import Link from 'next/link'
 import React from 'react'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
-
-const TURNOS = [
-  { value: 'MATUTINO', label: 'Primer Turno (07:00 - 15:00 HRS)' },
-  { value: 'VESPERTINO', label: 'Segundo Turno (15:00 - 22:00 HRS)' },
-  { value: 'NOCTURNO', label: 'Tercer Turno (22:00 - 07:00 HRS)' },
-]
+import { TURNOS, etiquetaTurno, fechaInicioTurno, jornadaTurnoTexto } from '@/lib/monitorista/turnos'
+import type { Turno } from '@/lib/monitorista/types'
 
 const CAMPOS: { label: string; name: string }[] = [
   { label: 'PERSONAS CAPTADAS POR CÁMARA SIN NOVEDAD', name: 'personas_sin_novedad' },
@@ -32,6 +28,8 @@ export default function NuevoIncidenteCamaraPage() {
   const router = useRouter()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<{ msg: string; existenteId?: string } | null>(null)
+  const [turno, setTurno] = useState<Turno>('MATUTINO')
+  const [fecha, setFecha] = useState(() => fechaInicioTurno('MATUTINO'))
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -43,8 +41,8 @@ export default function NuevoIncidenteCamaraPage() {
 
     const numerics = CAMPOS.map(c => c.name)
     const payload: Record<string, string | number> = {
-      fecha: data.fecha as string,
-      turno: data.turno as string,
+      fecha: fecha,
+      turno: turno,
     }
     for (const k of numerics) {
       payload[k] = data[k] ? Number(data[k]) : 0
@@ -108,13 +106,33 @@ export default function NuevoIncidenteCamaraPage() {
             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div className="grid-2">
                 <div>
-                  <Label>Fecha</Label>
-                  <input name="fecha" type="date" required style={inputStyle} defaultValue={new Date().toISOString().slice(0, 10)} />
+                  <Label>Fecha de inicio del turno</Label>
+                  <input
+                    name="fecha"
+                    type="date"
+                    required
+                    style={inputStyle}
+                    value={fecha}
+                    onChange={e => setFecha(e.target.value)}
+                  />
+                  <div style={{ fontFamily: 'Inter', fontSize: 11, color: '#475569', marginTop: 6, lineHeight: 1.5 }}>
+                    {jornadaTurnoTexto(fecha, turno)}
+                  </div>
                 </div>
                 <div>
                   <Label>Turno</Label>
-                  <select name="turno" required style={inputStyle} defaultValue="MATUTINO">
-                    {TURNOS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  <select
+                    name="turno"
+                    required
+                    style={inputStyle}
+                    value={turno}
+                    onChange={e => {
+                      const nuevo = e.target.value as Turno
+                      setTurno(nuevo)
+                      setFecha(fechaInicioTurno(nuevo))
+                    }}
+                  >
+                    {TURNOS.map(t => <option key={t.clave} value={t.clave}>{etiquetaTurno(t.clave)}</option>)}
                   </select>
                 </div>
               </div>

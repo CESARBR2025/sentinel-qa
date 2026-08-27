@@ -6,8 +6,8 @@ import type {
   LiberacionRow,
   DetenidoDireccionInput,
 } from "./types";
-import { rowToAsegurado, rowToDetalleDetenidoGuardado, rowToPuestaDisposicion, rowToAntecedenteExterno } from "./mapper";
-import type { AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, PuestaDisposicionInput, AntecedenteExterno } from "./types";
+import { rowToAsegurado, rowToDetalleDetenidoGuardado, rowToPuestaDisposicion, rowToAntecedenteExterno, rowToArmaAsegurada } from "./mapper";
+import type { AseguradoRow, DetalleDetenidoGuardado, PuestaDisposicionRow, PuestaDisposicionInput, AntecedenteExterno, ArmaAseguradaInput, ListaArmasAseguradas } from "./types";
 
 export async function obtenerSolicitudesPendientes() {
   const result = await query<Record<string, unknown>>(
@@ -692,4 +692,42 @@ export async function insertarAntecedenteExterno(
 
 export async function eliminarAntecedenteExterno(id: string): Promise<void> {
   await query(`DELETE FROM antecedentes_externos_detenido WHERE id = $1`, [id])
+}
+
+export async function listarArmasAseguradasFiscalia(reporteCampoId: string): Promise<ListaArmasAseguradas> {
+  const [items, carpeta] = await Promise.all([
+    query<Record<string, unknown>>(
+      `SELECT a.id, a.tipo_arma, a.marca, a.matricula, a.calibre, a.observaciones, a.creado_en AS created_at,
+              CONCAT(u.name, ' ', COALESCE(u.apellido, '')) AS capturado_por_nombre
+       FROM fiscalia_armas_aseguradas a
+       LEFT JOIN users u ON u.id = a.capturado_por
+       WHERE a.reporte_campo_id = $1
+       ORDER BY a.creado_en ASC`,
+      [reporteCampoId],
+    ),
+    query<{ num_carpeta_investigacion: string | null }>(
+      `SELECT num_carpeta_investigacion FROM ofi_reporte_denuncia WHERE reporte_campo_id = $1 LIMIT 1`,
+      [reporteCampoId],
+    ),
+  ])
+  return {
+    items: items.rows.map(rowToArmaAsegurada),
+    carpetaInvestigacionSugerida: carpeta.rows[0]?.num_carpeta_investigacion ?? null,
+  }
+}
+
+export async function insertarArmaAsegurada(
+  reporteCampoId: string,
+  input: ArmaAseguradaInput,
+  capturadoPor: string,
+): Promise<void> {
+  await query(
+    `INSERT INTO fiscalia_armas_aseguradas (reporte_campo_id, tipo_arma, marca, matricula, calibre, observaciones, capturado_por)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    [reporteCampoId, input.tipoArma, input.marca, input.matricula, input.calibre, input.observaciones, capturadoPor],
+  )
+}
+
+export async function eliminarArmaAsegurada(id: string): Promise<void> {
+  await query(`DELETE FROM fiscalia_armas_aseguradas WHERE id = $1`, [id])
 }

@@ -28,17 +28,17 @@ export function TablaIncidentes({ tipo, data }: Props) {
         'Fecha', 
         'Cárcel', 
         'Fisc.', 
-        'Vehíc. Recup', 
+        'Vehíc. recup', 
         'Cateo FGE', 
         'Operativos', 
         'Cateo FGR', 
         'FGR', 
-        'A. Fuego', 
-        'A. Blancas', 
+        'A. fuego', 
+        'A. blancas', 
         'Droga', 
         'Fiestas'
       ]
-    : ['Fecha', 'Cárcel Municipal', 'Detenidos Fiscalía', 'Detenidos FGR'];
+    : ['Fecha', 'Cárcel municipal', 'Detenidos fiscalía', 'Detenidos FGR'];
 
   return (
     <div style={styles.tableContainer}>

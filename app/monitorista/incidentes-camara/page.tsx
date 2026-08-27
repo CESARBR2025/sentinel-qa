@@ -1,7 +1,8 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { listarRegistros, TURNOS } from '@/lib/monitorista/incidentes-camara-service'
+import { listarRegistros } from '@/lib/monitorista/incidentes-camara-service'
+import { esTurnoValido, etiquetaRangoTurno, TURNOS } from '@/lib/monitorista/turnos'
 import React from 'react'
 import { FilaIncidenteCamara } from '@/components/monitorista/FilaIncidenteCamara'
 import { tienePermiso } from '@/lib/monitorista/permisos'
@@ -20,9 +21,7 @@ export default async function IncidentesCamaraPage({
   if (!(await tienePermiso(session.user.id, 'incidentes_camara', 'ver'))) redirect('/monitorista')
 
   const { turno: turnoFilter, exito } = await searchParams
-  const turnoValido = turnoFilter && TURNOS.includes(turnoFilter as typeof TURNOS[number])
-    ? turnoFilter as typeof TURNOS[number]
-    : undefined
+  const turnoValido = esTurnoValido(turnoFilter) ? turnoFilter : undefined
 
   const registros = await listarRegistros(turnoValido)
 
@@ -94,9 +93,11 @@ export default async function IncidentesCamaraPage({
         <SegmentPage
           tabs={[
             { key: '', label: 'Todos', href: '/monitorista/incidentes-camara' },
-            { key: 'MATUTINO', label: '07-15 hrs', href: '/monitorista/incidentes-camara?turno=MATUTINO' },
-            { key: 'VESPERTINO', label: '15-22 hrs', href: '/monitorista/incidentes-camara?turno=VESPERTINO' },
-            { key: 'NOCTURNO', label: '22-07 hrs', href: '/monitorista/incidentes-camara?turno=NOCTURNO' },
+            ...TURNOS.map(t => ({
+              key: t.clave,
+              label: etiquetaRangoTurno(t.clave),
+              href: `/monitorista/incidentes-camara?turno=${t.clave}`,
+            })),
           ]}
           activeKey={turnoValido ?? ''}
         />

@@ -1,5 +1,5 @@
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
-import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
+import { listarDepartamentosActivos, listarSectoresActivos } from '@/lib/admin-transito/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import { PageHeader, PageHeaderLink } from '@/components/partials/PageHeader'
 import NuevoOficialForm from '@/components/catalogos/NuevoOficialForm'
@@ -13,6 +13,7 @@ export default async function CatalogosNuevoOficialPage({
 
   const deptos = await listarDepartamentosActivos()
   const patrullas = await listarPatrullasParaAsignacion()
+  const sectores = await listarSectoresActivos()
 
   return (
     <div>
@@ -26,7 +27,7 @@ export default async function CatalogosNuevoOficialPage({
         actions={<PageHeaderLink href="/dashboard/catalogos/oficiales" variant="secondary">← Volver</PageHeaderLink>}
       />
 
-      <NuevoOficialForm deptos={deptos} patrullas={patrullas} />
+      <NuevoOficialForm deptos={deptos} patrullas={patrullas} sectores={sectores} />
     </div>
   )
 }

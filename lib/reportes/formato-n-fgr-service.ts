@@ -78,6 +78,62 @@ export async function obtenerFgrPorFechaPeriodo(fecha: string, periodo: Periodo)
   return rowTo(r.rows[0])
 }
 
+export interface ConteosCalculadosFgr {
+  carpetas_iniciadas: number
+  numero_cateos: number
+  vehiculos_asegurados: number
+  domicilios_cateados: number
+  personas_aseguradas: number
+  aprehensiones: number
+}
+
+// Conteos que SÍ se pueden calcular de datos ya capturados: todo lo que el oficial
+// canalizó a Fiscalía General de la República (`ofi_autoridad_recibe = 'FGR'`) en su
+// reporte de campo — la misma fila trae detención, cateo y vehículos asegurados.
+export async function calcularConteosFgrPorFecha(fecha: string): Promise<ConteosCalculadosFgr> {
+  const [detenidosFgr, cateosFgr, vehiculosFgr, carpetasFgr] = await Promise.all([
+    query<{ c: number }>(
+      `SELECT count(*)::int as c FROM ofi_reportes_campo
+       WHERE ofi_hay_detencion = true
+         AND ofi_autoridad_recibe = 'FGR'
+         AND created_at::date = $1`,
+      [fecha],
+    ),
+    query<{ c: number }>(
+      `SELECT count(*)::int as c FROM ofi_reportes_campo
+       WHERE ofi_hay_cateo = true
+         AND ofi_autoridad_recibe = 'FGR'
+         AND created_at::date = $1`,
+      [fecha],
+    ),
+    query<{ c: number }>(
+      `SELECT count(*)::int as c FROM ofi_reportes_campo, jsonb_array_elements(ofi_vehiculos)
+       WHERE ofi_hay_vehiculo = true
+         AND jsonb_array_length(ofi_vehiculos) > 0
+         AND ofi_autoridad_recibe = 'FGR'
+         AND created_at::date = $1`,
+      [fecha],
+    ),
+    query<{ c: number }>(
+      `SELECT count(*)::int as c FROM ofi_reporte_denuncia d
+       JOIN ofi_reportes_campo rc ON rc.id = d.reporte_campo_id
+       WHERE rc.ofi_autoridad_recibe = 'FGR'
+         AND d.fecha_reporte = $1`,
+      [fecha],
+    ),
+  ])
+  const totalDetenidos = detenidosFgr.rows[0]?.c ?? 0
+  const totalCateos = cateosFgr.rows[0]?.c ?? 0
+  return {
+    carpetas_iniciadas: carpetasFgr.rows[0]?.c ?? 0,
+    numero_cateos: totalCateos,
+    vehiculos_asegurados: vehiculosFgr.rows[0]?.c ?? 0,
+    domicilios_cateados: totalCateos,
+    personas_aseguradas: totalDetenidos,
+    aprehensiones: totalDetenidos,
+  }
+}
+
 export interface FormatoNFgrInput {
   fecha: string
   periodo: Periodo

@@ -25,14 +25,13 @@ export default async function DescargasPage({
   const data = await listarSinD1(sp.from || undefined, sp.to || undefined, sp.nombre || undefined)
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'Inter,sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');`}</style>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', color: '#0f172a', fontFamily: 'var(--apple-font-display)' }}>
       <DashboardHeader user={user} roleLabel="D1 No Iniciada" backHref="/agente_reportes" backLabel="Panel de Reportes" />
       <main className="pad-pagina" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <PageHeader
           title="Reportes"
           accent="Sin D1 Iniciada"
-          subtitle="SSPM · Módulo de Trámite Inicial"
+          subtitle="SSPM · Módulo de trámite inicial"
         />
         <DescargaFilters />
         <DescargaTable data={data} />

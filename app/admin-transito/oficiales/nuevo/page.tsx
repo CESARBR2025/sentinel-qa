@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { listarPatrullasParaAsignacion } from '@/lib/flota/service'
-import { listarDepartamentosActivos } from '@/lib/admin-transito/repository'
+import { listarDepartamentosActivos, listarSectoresActivos } from '@/lib/admin-transito/repository'
 import { ToastAuto } from '@/components/ui/ToastAuto'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader } from '@/components/partials/PageHeader'
@@ -21,6 +21,8 @@ export default async function NuevoOficialPage({
 
   const patrullas = await listarPatrullasParaAsignacion()
 
+  const sectores = await listarSectoresActivos()
+
   return (
     <>
       <DashboardHeader user={user} variant="apple" roleLabel="Admin Tránsito" backHref="/admin-transito/oficiales" backLabel="Oficiales" />
@@ -34,7 +36,7 @@ export default async function NuevoOficialPage({
         accent="Oficial"
       />
 
-      <NuevoOficialForm deptos={deptos} patrullas={patrullas} />
+      <NuevoOficialForm deptos={deptos} patrullas={patrullas} sectores={sectores} />
       </main>
     </>
   )
