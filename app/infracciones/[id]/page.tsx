@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PagoInfraccion from '@/features/via/infracciones/components/PagoInfraccion';
 import SeccionLiberacion from '@/features/via/infracciones/components/SeccionLiberacion';
 import { Card } from '@/features/via/infracciones/components/ui/Card';
@@ -73,53 +74,33 @@ export default async function InfraccionCiudadanoPage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    console.log("[PAGE][INFRACCIONES/[id]] INICIO — id:", id);
 
     let tieneCookie = false;
     try {
       tieneCookie = await verificarCookieCiudadano(id);
-      console.log("[PAGE][INFRACCIONES/[id]] verificarCookieCiudadano:", tieneCookie);
-    } catch (e) {
-      console.error("[PAGE][INFRACCIONES/[id]] Error verificando cookie:", e);
+    } catch {
+      // Sin cookie válida → se trata como acceso no autenticado (PinBarrier).
     }
 
     if (!tieneCookie) {
-      console.log("[PAGE][INFRACCIONES/[id]] Sin cookie — consultando folio ligero...");
-      try {
-        const folioData = await InfraccionesRepository.obtenerFolio(id);
-        console.log("[PAGE][INFRACCIONES/[id]] obtenerFolio:", folioData ? folioData.folio : "NULL");
-        if (!folioData) {
-          console.log("[PAGE][INFRACCIONES/[id]] Folio no encontrado → notFound()");
-          notFound();
-        }
-        const nombreInfractor = [folioData.nombre_infractor, folioData.apellido_paterno_infractor, folioData.apellido_materno_infractor]
-          .filter(Boolean).join(" ") || null;
-        return (
-          <PinBarrier
-            infraccionId={id}
-            folio={folioData.folio}
-            nombreInfractor={nombreInfractor}
-          />
-        );
-      } catch (e) {
-        console.error("[PAGE][INFRACCIONES/[id]] Error en query ligera:", e);
-        notFound();
-      }
+      const folioData = await InfraccionesRepository.obtenerFolio(id).catch(() => null);
+      if (!folioData) notFound();
+
+      const nombreInfractor = [folioData.nombre_infractor, folioData.apellido_paterno_infractor, folioData.apellido_materno_infractor]
+        .filter(Boolean).join(" ") || null;
+      return (
+        <PinBarrier
+          infraccionId={id}
+          folio={folioData.folio}
+          nombreInfractor={nombreInfractor}
+        />
+      );
     }
 
-    console.log("[PAGE][INFRACCIONES/[id]] Cookie válida — consultando datos completos...");
     let infraccion: any;
     try {
       infraccion = await InfraccionesService.obtenerPorId(id);
-      console.log("[PAGE][INFRACCIONES/[id]] obtenerPorId OK — folio:", infraccion?.folio);
-    } catch (e) {
-      console.error("[PAGE][INFRACCIONES/[id]] Error al obtener infracción:", e);
-      if (e && typeof e === "object") {
-        const err = e as Record<string, unknown>;
-        console.error("  message:", err.message);
-        console.error("  detail:", err.detail);
-        console.error("  code:", err.code);
-      }
+    } catch {
       notFound();
     }
 

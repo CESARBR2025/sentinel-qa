@@ -85,11 +85,20 @@ export async function capturarInfractorAction(body: {
       `SELECT tipo_garantia FROM via.v2_infracciones WHERE id = $1`,
       [id],
     );
-    if (tipoGarantia.rows[0]?.tipo_garantia !== 'VEHICULO') {
-      return { success: false, error: "Esta infracción no es de tipo vehículo. No puede pasar por el flujo de liberación." };
+    if (tipoGarantia.rows[0]?.tipo_garantia !== "VEHICULO") {
+      return {
+        success: false,
+        error:
+          "Esta infracción no es de tipo vehículo. No puede pasar por el flujo de liberación.",
+      };
     }
 
-    const updateResult = await query<any>(
+    const updateResult = await query<{
+      id: string;
+      folio: string;
+      descuento_aplicado: unknown;
+      fraccion_id: string;
+    }>(
       `UPDATE via.v2_infracciones
        SET nombre_infractor = COALESCE($2, nombre_infractor),
            apellido_paterno_infractor = COALESCE($3, apellido_paterno_infractor),
@@ -121,7 +130,7 @@ export async function capturarInfractorAction(body: {
 
     const infraccion = updateResult.rows[0];
 
-    const conceptoResult = await query<any>(
+    const conceptoResult = await query<{ concept_id: string | null }>(
       `SELECT ccs.concept_id
        FROM via.v2_fracciones_ley fl
        JOIN via.v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
@@ -130,8 +139,6 @@ export async function capturarInfractorAction(body: {
     );
 
     const concepto_id = conceptoResult.rows[0]?.concept_id ?? null;
-
-    const nombreUsuario = `${nombre || ""} ${apellidoP || ""}`.trim();
 
     return {
       success: true,
@@ -170,7 +177,14 @@ export async function obtenerDocumentosLiberacion(
     const esValido = await verificarRolLiberaciones(session.user.id);
     if (!esValido) return { documentos: [], error: "Acceso no autorizado" };
 
-    const solicitudRes = await query<any>(
+    const solicitudRes = await query<{
+      id: string;
+      tipo_liberacion: string | null;
+      es_empresa: boolean | null;
+      nombre_empresa: string | null;
+      rfc_empresa: string | null;
+      estatus: string | null;
+    }>(
       `SELECT id, tipo_liberacion, es_empresa, nombre_empresa, rfc_empresa, estatus
        FROM via.v2_solicitudes_liberacion
        WHERE infraccion_id = $1
@@ -188,7 +202,14 @@ export async function obtenerDocumentosLiberacion(
 
     const solicitud = solicitudRes.rows[0];
 
-    const docsRes = await query<any>(
+    const docsRes = await query<{
+      id: string;
+      tipo_documento: string;
+      url_documento: string;
+      estatus_revision: string | null;
+      observaciones: string | null;
+      created_at: Date;
+    }>(
       `SELECT DISTINCT ON (dl.tipo_documento)
               dl.id, dl.tipo_documento, dl.url_documento, dl.estatus_revision, dl.observaciones, dl.created_at
        FROM via.v2_documentos_liberacion dl
@@ -240,7 +261,7 @@ export async function revisarDocumentoAction(body: {
     if (accion === "RECHAZADO" && !observaciones?.trim())
       return { error: "Se requieren observaciones para rechazar un documento" };
 
-    const result = await query<any>(
+    const result = await query(
       `UPDATE via.v2_documentos_liberacion
        SET estatus_revision = $1, observaciones = $2, fecha_revision = NOW()
        WHERE id = $3
@@ -281,7 +302,7 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
 
     if (!infraccionId) return { error: "infraccionId es requerido" };
 
-    const solicitudRes = await query<any>(
+    const solicitudRes = await query<{ id: string }>(
       `SELECT id FROM via.v2_solicitudes_liberacion
        WHERE infraccion_id = $1
        ORDER BY created_at DESC LIMIT 1`,
@@ -363,14 +384,14 @@ export async function finalizarRevisionAction(infraccionId: string): Promise<{
           row.correo_infractor ||
           "") as string;
 
-        const conceptoRes = await query<any>(
+        const conceptoRes = await query<{ concept_id: number | null }>(
           `SELECT ccs.concept_id
            FROM via.v2_fracciones_ley fl
            JOIN via.v2_catalogo_conceptos_sa7 ccs ON ccs.clasificacion_type = fl.clasificacion
            WHERE fl.id = $1`,
           [row.fraccion_id],
         );
-        concepto_id = (conceptoRes.rows[0]?.concept_id as number) ?? null;
+        concepto_id = conceptoRes.rows[0]?.concept_id ?? null;
       }
     }
 
@@ -429,7 +450,7 @@ export async function obtenerDetalleInfraccionLiberaciones(
 }
 
 const SA7_URL =
-  "https://sanjuandelrio.sytes.net:3044/api/sasiete/generar-orden-completa";
+  "https://sanjuandelrio.sytes.net:3044/api/sasiete/qas/generar-orden-completa";
 
 export async function generarOrdenPagoAction(payload: {
   infraccion_id: string;
@@ -456,7 +477,6 @@ export async function generarOrdenPagoAction(payload: {
       folio,
       correoInfractor,
       descuentoAplicado,
-      cantidad,
     } = payload;
 
     if (
@@ -475,7 +495,9 @@ export async function generarOrdenPagoAction(payload: {
       `SELECT estatus_dependencia FROM via.v2_infracciones WHERE id = $1`,
       [infraccion_id],
     );
-    if (infraccionRow.rows[0]?.estatus_dependencia !== "PENDIENTE_PAGO_LIBERACION") {
+    if (
+      infraccionRow.rows[0]?.estatus_dependencia !== "PENDIENTE_PAGO_LIBERACION"
+    ) {
       return {
         ok: false,
         message:
@@ -491,11 +513,6 @@ export async function generarOrdenPagoAction(payload: {
     }
 
     const CONCEPTO_PRUEBA = "31378";
-    let descuento = 1;
-    const descuentoNum = Number(descuentoAplicado);
-    if (descuentoNum === 70) descuento = 0.3;
-    else if (descuentoNum === 50) descuento = 0.5;
-    if (cantidad) descuento = cantidad;
 
     const payloadSA7 = {
       nombreUsuario: nombre_usuario,

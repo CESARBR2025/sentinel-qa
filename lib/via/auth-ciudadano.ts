@@ -9,8 +9,7 @@ async function tokenCorrespondeAInfraccion(token: string | undefined, infraccion
   try {
     const { payload } = await jwtVerify(token, getSecret());
     return payload.infraccionId === infraccionId;
-  } catch (e) {
-    console.log("[AUTH-CIUDADANO] Error verificando token:", e instanceof Error ? e.message : e);
+  } catch {
     return false;
   }
 }
@@ -22,7 +21,6 @@ async function tokenCorrespondeAInfraccion(token: string | undefined, infraccion
 export async function verificarCookieCiudadano(infraccionId: string): Promise<boolean> {
   const cookieStore = await cookies();
   const token = cookieStore.get("infraccion_access")?.value;
-  console.log("[AUTH-CIUDADANO] Cookie infraccion_access:", token ? "presente" : "ausente");
   return tokenCorrespondeAInfraccion(token, infraccionId);
 }
 

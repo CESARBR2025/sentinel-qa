@@ -245,6 +245,17 @@
 │   │   │   ├── leer/
 │   │   │   │   └── route.ts
 │   │   │   └── route.ts
+│   │   ├── novedades/
+│   │   │   ├── confirmar/
+│   │   │   │   └── route.ts
+│   │   │   ├── dia/
+│   │   │   │   └── route.ts
+│   │   │   ├── estatus/
+│   │   │   │   └── route.ts
+│   │   │   ├── generar/
+│   │   │   │   └── route.ts
+│   │   │   └── guardar/
+│   │   │       └── route.ts
 │   │   ├── oficial/
 │   │   │   └── contador/
 │   │   │       └── route.ts
@@ -410,6 +421,10 @@
 │   │       └── page.tsx
 │   ├── envio-de-formatos/
 │   │   ├── consolidar/
+│   │   │   └── page.tsx
+│   │   ├── novedades/
+│   │   │   ├── [fecha]/
+│   │   │   │   └── page.tsx
 │   │   │   └── page.tsx
 │   │   ├── reporte/
 │   │   │   └── [fecha]/
@@ -638,6 +653,8 @@
 │   │   └── FormularioD1.tsx
 │   ├── dev/
 │   │   └── CambiarSesionDev.tsx
+│   ├── envio-formatos/
+│   │   └── HubFormatos.tsx
 │   ├── fiscalia/
 │   │   ├── AntecedentesExternos.tsx
 │   │   ├── ArmasAseguradas.tsx
@@ -814,6 +831,9 @@
 │   │   └── components/
 │   │       ├── CapturarInfractorSection.tsx
 │   │       └── RevisionDocumentosSection.tsx
+│   ├── novedades/
+│   │   └── components/
+│   │       └── pasos.tsx
 │   └── via/
 │       ├── compartido/
 │       │   └── types/
@@ -1011,6 +1031,10 @@
 │   │   │   ├── 0046_alarma_escolar_direccion.sql
 │   │   │   ├── 0047_formato_n_origen_sync.sql
 │   │   │   ├── 0048_fiscalia_armas_aseguradas.sql
+│   │   │   ├── 0049_novedades_prerrequisitos.sql
+│   │   │   ├── 0050_novedades_persistencia.sql
+│   │   │   ├── 0051_retiro_novedades_captura.sql
+│   │   │   ├── 0052_retiro_deuda_bd.sql
 │   │   │   └── README.md
 │   │   ├── create-admin.ts
 │   │   ├── index.ts
@@ -1079,6 +1103,7 @@
 │   │   ├── permisos.ts
 │   │   ├── repository.ts
 │   │   ├── service.ts
+│   │   ├── turnos.ts
 │   │   └── types.ts
 │   ├── n-coordinacion/
 │   │   └── repository.ts
@@ -1091,6 +1116,33 @@
 │   │   ├── mapper.ts
 │   │   ├── repository.ts
 │   │   └── types.ts
+│   ├── novedades/
+│   │   ├── calculo/
+│   │   │   ├── grupo-a.ts
+│   │   │   ├── grupo-b.ts
+│   │   │   ├── index.ts
+│   │   │   └── manual.ts
+│   │   ├── docx/
+│   │   │   ├── analisis.ts
+│   │   │   ├── c4.ts
+│   │   │   ├── delictivos.ts
+│   │   │   ├── encabezado.ts
+│   │   │   ├── fuerza.ts
+│   │   │   ├── index.ts
+│   │   │   ├── operativos.ts
+│   │   │   ├── prevencion.ts
+│   │   │   ├── resumen-nov.ts
+│   │   │   ├── resumen.ts
+│   │   │   ├── subsecretaria.ts
+│   │   │   └── transito.ts
+│   │   ├── estatus.ts
+│   │   ├── mapper.ts
+│   │   ├── repository.ts
+│   │   ├── sector.ts
+│   │   ├── service.ts
+│   │   ├── store.ts
+│   │   ├── types.ts
+│   │   └── ventana.ts
 │   ├── oficial/
 │   │   ├── actions.ts
 │   │   ├── mapper.ts
@@ -1127,6 +1179,7 @@
 │   │   ├── repository.ts
 │   │   └── types.ts
 │   ├── reportes/
+│   │   ├── docx-helpers.ts
 │   │   ├── formato-n-armas-aseguradas-service.ts
 │   │   ├── formato-n-atencion-victimas-service.ts
 │   │   ├── formato-n-consolidado-service.ts
@@ -1206,72 +1259,6 @@
 │   ├── Login Hi-Fi.html
 │   ├── Login Wireframes.html
 │   └── login-app.jsx
-├── plan-apple-pilot/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-armas-fiscalia/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-dashboard-kpi-admin/
-│   ├── 00-contexto.md
-│   ├── etapa-01.md
-│   ├── etapa-02.md
-│   ├── etapa-03.md
-│   ├── etapa-04.md
-│   ├── etapa-05.md
-│   ├── etapa-06.md
-│   ├── etapa-07.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-footer-sistema/
-│   ├── 00-contexto.md
-│   ├── etapa-01.md
-│   ├── etapa-02.md
-│   ├── etapa-03.md
-│   ├── etapa-04.md
-│   ├── etapa-05.md
-│   ├── etapa-06.md
-│   ├── etapa-07.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-formato-n-fge-fgr/
-│   ├── ETAPA-1.md
-│   ├── ETAPA-2.md
-│   ├── ETAPA-3.md
-│   ├── ETAPA-4.md
-│   ├── ETAPA-5.md
-│   ├── ETAPA-6.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-notificaciones-forzadas/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-notificaciones-tiempo-real/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
 ├── plan-parte-novedades-c4/
 │   ├── ETAPA-0.md
 │   ├── ETAPA-1.md
@@ -1284,38 +1271,6 @@
 │   ├── ETAPA-7.md
 │   ├── ETAPA-8.md
 │   ├── ETAPA-9.md
-│   └── README.md
-├── plan-pwa-push/
-│   ├── 00-contexto.md
-│   ├── etapa-1.md
-│   ├── etapa-2.md
-│   ├── etapa-3.md
-│   ├── etapa-4.md
-│   ├── etapa-5.md
-│   ├── etapa-6.md
-│   ├── etapa-7.md
-│   ├── PROMPT-DEEPSEEK.md
-│   └── README.md
-├── plan-refact-ui/
-│   ├── 00-contexto.md
-│   ├── etapa-01.md
-│   ├── etapa-02.md
-│   ├── etapa-03.md
-│   ├── etapa-04.md
-│   ├── etapa-05.md
-│   ├── etapa-06.md
-│   ├── etapa-07.md
-│   ├── etapa-08.md
-│   ├── etapa-09.md
-│   ├── etapa-10.md
-│   ├── etapa-11.md
-│   ├── etapa-12.md
-│   ├── etapa-13.md
-│   ├── etapa-14.md
-│   ├── etapa-15.md
-│   ├── etapa-16.md
-│   ├── etapa-17.md
-│   ├── etapa-18.md
 │   ├── PROMPT-DEEPSEEK.md
 │   └── README.md
 ├── public/
@@ -1418,6 +1373,7 @@
 └── tsconfig.tsbuildinfo
 ```
 <!-- AUTO-GENERATED END -->
+
 
 
 

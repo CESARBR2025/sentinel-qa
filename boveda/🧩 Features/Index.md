@@ -47,6 +47,7 @@
 | monitorista | (Pendiente) | ✨ Detectado |
 | n-coordinacion | (Pendiente) | ✨ Detectado |
 | notificaciones | (Pendiente) | ✨ Detectado |
+| novedades | (Pendiente) | ✨ Detectado |
 | offline | (Pendiente) | ✨ Detectado |
 | oficial | (Pendiente) | ✨ Detectado |
 | ordenSalida | (Pendiente) | ✨ Detectado |
@@ -68,6 +69,7 @@
 | utils | (Pendiente) | ✨ Detectado |
 | via | (Pendiente) | ✨ Detectado |
 <!-- AUTO-GENERATED END -->
+
 
 
 
