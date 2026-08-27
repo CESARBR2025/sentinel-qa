@@ -605,6 +605,11 @@
       "ts": 1787692190177
     }
   },
-  "ymSearchCount": 2,
-  "ymEditCount": 1
+  "ymSearchCount": 0,
+  "ymEditCount": 8,
+  "ymDocNudge": {
+    "Infracciones": 1787843339584,
+    "Liberaciones": 1787843979032
+  },
+  "ymLastSyncAt": 1787843992387
 }

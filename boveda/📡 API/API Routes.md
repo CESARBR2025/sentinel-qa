@@ -56,14 +56,14 @@
 | `monitorista/solicitudes/[id]` | GET | (Pendiente) |
 | `monitorista/solicitudes/[id]/completar` | POST | (Pendiente) |
 | `nCoordinacion/generar` | GET | (Pendiente) |
-| `novedades/dia` | GET | Parte de Novedades C-4: día completo (calculado + capturado + estatus) |
-| `novedades/confirmar` | POST | Snapshot + confirmación de una sección (`{fecha, seccion, datos}`) |
-| `novedades/guardar` | POST | Guarda el draft de una sección sin confirmarla |
-| `novedades/estatus` | GET | Estatus por rango de fechas (`?desde=&hasta=`) para el consolidado |
-| `novedades/generar` | GET | Genera el `.docx` completo (`?fecha=YYYY-MM-DD`) |
 | `notificaciones` | GET | (Pendiente) |
 | `notificaciones/contador` | GET | (Pendiente) |
 | `notificaciones/leer` | POST | (Pendiente) |
+| `novedades/confirmar` | POST | (Pendiente) |
+| `novedades/dia` | GET | (Pendiente) |
+| `novedades/estatus` | GET | (Pendiente) |
+| `novedades/generar` | GET | (Pendiente) |
+| `novedades/guardar` | POST | (Pendiente) |
 | `oficial/contador` | GET | (Pendiente) |
 | `prevencion/busquedas` | GET, POST | (Pendiente) |
 | `prevencion/busquedas/[id]` | GET, PUT | (Pendiente) |
@@ -140,6 +140,7 @@
 | `via/sa7/buscar-orden` | GET | (Pendiente) |
 | `via/sa7/generar-orden-pago` | POST | (Pendiente) |
 <!-- AUTO-GENERATED END -->
+
 
 
 
