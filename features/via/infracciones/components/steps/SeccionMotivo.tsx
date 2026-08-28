@@ -11,6 +11,7 @@ import { obtenerFraccionesAction, buscarFraccionesPorDescripcionAction } from '@
 import { ResultadoBusquedaMotivo } from '@/features/via/legalidad/types';
 import { useReconocimientoVoz } from '../../hooks/useReconocimientoVoz';
 import { ResultadoMotivoCard } from '../ui/ResultadoMotivoCard';
+import { EspectroVozBarra } from '../EspectroVoz';
 
 interface Fraccion {
     id: string;
@@ -30,7 +31,7 @@ interface SeccionMotivoProps {
     articulos: Articulo[];
     cargandoArticulos: boolean;
     loading: boolean;
-    fieldError: (val: any) => boolean;
+    fieldError: (val: unknown) => boolean;
 }
 
 export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
@@ -56,18 +57,25 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
     const [buscandoMotivo, setBuscandoMotivo] = useState(false);
     const [busquedaSinResultados, setBusquedaSinResultados] = useState(false);
 
-    useEffect(() => {
-        if (!transcripcion) return;
-
+    // El grueso del efecto vive en un helper para que solo la línea de la
+    // llamada quede marcada con el disable de `set-state-in-effect` (mismo
+    // patrón que app/envio-de-formatos/novedades/page.tsx).
+    const buscarMotivoPorVoz = (texto: string) => {
         setBuscandoMotivo(true);
         setBusquedaSinResultados(false);
-        buscarFraccionesPorDescripcionAction(transcripcion)
+        buscarFraccionesPorDescripcionAction(texto)
             .then((res) => {
                 const data = res.success ? res.data : [];
                 setResultadosVoz(data);
                 setBusquedaSinResultados(data.length === 0);
             })
             .finally(() => setBuscandoMotivo(false));
+    };
+
+    useEffect(() => {
+        if (!transcripcion) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        buscarMotivoPorVoz(transcripcion);
     }, [transcripcion]);
 
     const seleccionarResultadoVoz = (resultado: ResultadoBusquedaMotivo) => {
@@ -98,18 +106,22 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
         setBusquedaSinResultados(false);
     };
 
-    useEffect(() => {
-        if (!datos.articuloId) {
+    const cargarFracciones = (articuloId: string) => {
+        if (!articuloId) {
             setFracciones([]);
             return;
         }
-
         setCargandoFracciones(true);
-        obtenerFraccionesAction(datos.articuloId)
+        obtenerFraccionesAction(articuloId)
             .then((res) => {
                 if (res.success) setFracciones(res.data);
             })
             .finally(() => setCargandoFracciones(false));
+    };
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        cargarFracciones(datos.articuloId);
     }, [datos.articuloId]);
 
     return (
@@ -134,7 +146,10 @@ export const SeccionMotivo: React.FC<SeccionMotivoProps> = ({
 
                         <div className="flex-1 min-w-0">
                             {escuchando && (
-                                <p className="text-sm text-slate-600">Escuchando… habla ahora</p>
+                                <div className="space-y-1.5">
+                                    <p className="text-sm text-slate-600">Escuchando… habla ahora</p>
+                                    <EspectroVozBarra activo={escuchando} />
+                                </div>
                             )}
 
                             {!escuchando && transcripcion && (

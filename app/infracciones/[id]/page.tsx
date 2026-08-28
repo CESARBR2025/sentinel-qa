@@ -302,6 +302,7 @@ export default async function InfraccionCiudadanoPage({
                                 <Button
                                     variant="outline"
                                     size="sm"
+                                    nativeButton={false}
                                     className="shrink-0 text-slate-500 hover:text-slate-700"
                                     render={
                                         <a

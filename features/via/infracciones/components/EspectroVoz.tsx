@@ -77,4 +77,43 @@ export const EspectroVoz: React.FC<EspectroVozProps> = ({ activo }) => {
     );
 };
 
+interface EspectroVozBarraProps {
+    activo: boolean;
+}
+
+/**
+ * Variante lineal y compacta del espectro — pensada para caber inline dentro
+ * de una card (p. ej. el bloque de búsqueda por voz del paso "Infracción"),
+ * donde el orbe circular sería demasiado grande. Reutiliza useEspectroAudio,
+ * así que este subárbol es el único que se re-renderiza al ritmo de la
+ * animación, no la sección completa.
+ */
+export const EspectroVozBarra: React.FC<EspectroVozBarraProps> = ({ activo }) => {
+    const { niveles, iniciar, detener } = useEspectroAudio();
+
+    useEffect(() => {
+        if (activo) {
+            iniciar();
+        } else {
+            detener();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activo]);
+
+    return (
+        <div className="flex items-center gap-[3px] h-8" aria-hidden="true">
+            {niveles.map((nivel, i) => (
+                <span
+                    key={i}
+                    className="w-[3px] shrink-0 rounded-full bg-primary transition-all duration-100 ease-out"
+                    style={{
+                        height: `${Math.max(12, (activo ? nivel : 0) * 100)}%`,
+                        opacity: activo ? 0.35 + nivel * 0.65 : 0.2,
+                    }}
+                />
+            ))}
+        </div>
+    );
+};
+
 export default EspectroVoz;
