@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { FileBadge2, Settings, Shield, Radio } from 'lucide-react'
 import { ToastExito } from '@/components/oficial/ToastExito'
+import { ContadorAsignaciones } from '@/components/oficial/ContadorAsignaciones'
 import { verificarRolOficial } from '@/lib/oficial/service'
 import { DashboardHeader } from '@/components/partials/Header'
 import { PageHeader } from '@/components/partials/PageHeader'
@@ -45,15 +46,6 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
         }
         .card-o:hover .co-icon { color: #1f355a; transform: scale(1.1); }
         .co-icon { transition: all 0.3s ease; }
-        .card-disabled { cursor: not-allowed; opacity: 0.62; }
-        .card-disabled:hover { transform: none; box-shadow: var(--apple-shadow-glass); border-color: var(--apple-glass-border); }
-        .card-disabled:hover .co-icon { color: #64748b; transform: none; }
-        .co-badge {
-          font-family: var(--apple-font-display); font-size: 10px; font-weight: 700;
-          letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 9px;
-          border-radius: var(--radius-full); background: #FEF3C7; color: #b45309;
-          line-height: 1; white-space: nowrap;
-        }
         @media (prefers-reduced-motion: reduce) {
           .card-o, .card-o:hover, .card-o:active { transform: none; transition: box-shadow .15s ease, border-color .15s ease; }
           .card-o:hover .co-icon, .card-o:active .co-icon { transform: none; }
@@ -113,17 +105,14 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
             </div>
           </Link>
 
-          {/* Card: Mis Despachos (deshabilitada) */}
-          <div className="card-o card-disabled" aria-disabled="true">
+          {/* Card: Mis Despachos */}
+          <Link href="/oficial/despachos" className="card-o">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
               <div className="co-icon" style={{ color: '#64748b' }}>
                 <Shield size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
-                <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
-                  Despachos
-                </div>
-                <span className="co-badge">Próximamente</span>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Despachos
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
@@ -134,19 +123,17 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
                 Atiende tus despachos activos, revisa reportes cerrados y gestiona denuncias desde un solo lugar
               </p>
             </div>
-          </div>
+            <ContadorAsignaciones />
+          </Link>
 
-          {/* Card: Rondín (deshabilitada) */}
-          <div className="card-o card-disabled" aria-disabled="true">
+          {/* Card: Rondín */}
+          <Link href="/oficial/rondin" className="card-o">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
               <div className="co-icon" style={{ color: '#64748b' }}>
                 <Radio size={32} strokeWidth={1.5} />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
-                <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
-                  Escala a despacho
-                </div>
-                <span className="co-badge">Próximamente</span>
+              <div style={{ fontFamily: 'var(--apple-font-display)', fontSize: 12, fontWeight: 500, color: '#64748b' }}>
+                Escala a despacho
               </div>
             </div>
             <div style={{ flexGrow: 1 }}>
@@ -157,7 +144,7 @@ export default async function OficialDashboardPage({ searchParams }: { searchPar
                 Registra un avistamiento en rondín — genera solicitud de despacho para asignación de unidades
               </p>
             </div>
-          </div>
+          </Link>
 
         </div>
 
